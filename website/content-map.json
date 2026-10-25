@@ -184,8 +184,8 @@
     {
       "source": "docs/spec/values.md",
       "route": "/docs/spec/values/",
-      "title": "Primitive values",
-      "description": "Primitive values: source-backed L documentation, with implementation boundaries and evidence.",
+      "title": "Primitive Types",
+      "description": "Text, Number, Truth and the other primitive type names: meanings, examples and current support.",
       "section": "Language specification",
       "order": 2,
       "role": "normative",
@@ -194,10 +194,30 @@
     {
       "source": "docs/spec/collections-and-categories.md",
       "route": "/docs/spec/collections-and-categories/",
-      "title": "Collections and application categories",
-      "description": "Collections and application categories: source-backed L documentation, with implementation boundaries and evidence.",
+      "title": "Iterative Types",
+      "description": "List and Dictionary: collection structure, vocabulary namespaces and supported operations.",
       "section": "Language specification",
       "order": 3,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/lexical-types.md",
+      "route": "/docs/spec/lexical-types/",
+      "title": "Lexical Types",
+      "description": "Nouns, verbs, adjectives, adverbs, articles and prepositions; root, builtin and user-defined vocabulary.",
+      "section": "Language specification",
+      "order": 4,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/applicational-types.md",
+      "route": "/docs/spec/applicational-types/",
+      "title": "Applicational Types",
+      "description": "App, Service, Class, Object and their callable and definition structures, with current support boundaries.",
+      "section": "Language specification",
+      "order": 5,
       "role": "normative",
       "generated": false
     },
@@ -207,7 +227,7 @@
       "title": "Names, scope, and evaluation state",
       "description": "Names, scope, and evaluation state: source-backed L documentation, with implementation boundaries and evidence.",
       "section": "Language specification",
-      "order": 4,
+      "order": 6,
       "role": "normative",
       "generated": false
     },
@@ -217,7 +237,7 @@
       "title": "Grammar and vocabulary",
       "description": "Grammar and vocabulary: source-backed L documentation, with implementation boundaries and evidence.",
       "section": "Language specification",
-      "order": 5,
+      "order": 7,
       "role": "normative",
       "generated": false
     },
@@ -227,7 +247,7 @@
       "title": "Definitions and extensibility",
       "description": "Definitions and extensibility: source-backed L documentation, with implementation boundaries and evidence.",
       "section": "Language specification",
-      "order": 6,
+      "order": 8,
       "role": "normative",
       "generated": false
     },
@@ -237,7 +257,7 @@
       "title": "Operations and control flow",
       "description": "Operations and control flow: source-backed L documentation, with implementation boundaries and evidence.",
       "section": "Language specification",
-      "order": 7,
+      "order": 9,
       "role": "normative",
       "generated": false
     },
@@ -247,7 +267,7 @@
       "title": "Imports, dictionaries, and program structure",
       "description": "Imports, dictionaries, and program structure: source-backed L documentation, with implementation boundaries and evidence.",
       "section": "Language specification",
-      "order": 8,
+      "order": 10,
       "role": "normative",
       "generated": false
     },
@@ -257,7 +277,7 @@
       "title": "Execution and lifecycle",
       "description": "Execution and lifecycle: source-backed L documentation, with implementation boundaries and evidence.",
       "section": "Language specification",
-      "order": 9,
+      "order": 11,
       "role": "normative",
       "generated": false
     },
@@ -267,7 +287,7 @@
       "title": "Errors, diagnostics, and compatibility",
       "description": "Errors, diagnostics, and compatibility: source-backed L documentation, with implementation boundaries and evidence.",
       "section": "Language specification",
-      "order": 10,
+      "order": 12,
       "role": "normative",
       "generated": false
     },
@@ -277,7 +297,7 @@
       "title": "Glossary",
       "description": "Glossary: source-backed L documentation, with implementation boundaries and evidence.",
       "section": "Language specification",
-      "order": 11,
+      "order": 13,
       "role": "normative",
       "generated": false
     },
@@ -287,7 +307,7 @@
       "title": "Grammar rule inventory",
       "description": "Grammar rule inventory: mechanically generated from current repository inputs; language execution is separate.",
       "section": "Language specification",
-      "order": 40,
+      "order": 42,
       "role": "implementation",
       "generated": true
     },
@@ -297,7 +317,7 @@
       "title": "Vocabulary inventory",
       "description": "Vocabulary inventory: mechanically generated from current repository inputs; language execution is separate.",
       "section": "Language specification",
-      "order": 40,
+      "order": 42,
       "role": "implementation",
       "generated": true
     },

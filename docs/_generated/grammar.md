@@ -24,7 +24,7 @@ Semantic context: [Values and operands](../spec/values.md#declarations-assignmen
 | <code>number</code> | <code>%~%</code> | [Number](../spec/values.md#number) · supported |
 | <code>truth</code> | <code>?~?</code> | [Truth](../spec/values.md#truth) · supported |
 | <code>null</code> | <code>!~!</code> | [Null](../spec/values.md#null-and-internal-states) · partial |
-| <code>type</code> | <code>ARTICLE* &#124; #~#</code> | [Native type categories](../spec/collections-and-categories.md#attributes-definitions-and-lexical-categories) · partial |
+| <code>type</code> | <code>ARTICLE* &#124; #~#</code> | [Native type categories](../spec/lexical-types.md#attributes-definitions-and-lexical-categories) · partial |
 | <code>list</code> | <code>&amp;~&amp;</code> | [List](../spec/collections-and-categories.md#lists) · partial |
 | <code>dict</code> | <code>{~}</code> | [Dictionary](../spec/collections-and-categories.md#dictionaries) · partial |
 
@@ -45,7 +45,7 @@ Semantic context: [Subjects and declarations](../spec/names-and-scope.md#declara
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
-| <code>type</code> | <code>"ID" &#124; PHRASE.DECLARATIVE.TYPE</code> | [Typed declarations](../spec/collections-and-categories.md#attributes-definitions-and-lexical-categories) · partial |
+| <code>type</code> | <code>"ID" &#124; PHRASE.DECLARATIVE.TYPE</code> | [Typed declarations](../spec/lexical-types.md#attributes-definitions-and-lexical-categories) · partial |
 | <code>list</code> | <code>"ID" &#124; PHRASE.DECLARATIVE.LIST</code> | [List declarations](../spec/collections-and-categories.md#lists) · partial |
 | <code>dict</code> | <code>"ID" &#124; PHRASE.DECLARATIVE.DICT</code> | [Dictionary declarations](../spec/collections-and-categories.md#dictionaries) · partial |
 | <code>declarative</code> | <code>"ID" &#124; PHRASE.DECLARATIVE.DEFINITIVE</code> | [Declarations](../spec/definitions.md#create-define-and-describe) · partial |
@@ -53,7 +53,7 @@ Semantic context: [Subjects and declarations](../spec/names-and-scope.md#declara
 | <code>value</code> | <code>"ID" &#124; PHRASE.DECLARATIVE.VALUE</code> | [Value declarations](../spec/values.md#declarations-assignment-and-reading-values) · partial |
 | <code>declaration</code> | <code>"ID" &#124; PHRASE.GENERIC*</code> | [Declaration sites](../spec/names-and-scope.md#declarations-and-definitions) · partial |
 | <code>definitive</code> | <code>ID</code> | [Bound subjects](../spec/names-and-scope.md#possessives-and-member-lookup) · partial |
-| <code>reference</code> | <code>#~#</code> | [Native-category reference](../spec/collections-and-categories.md#attributes-definitions-and-lexical-categories) · partial |
+| <code>reference</code> | <code>#~#</code> | [Native-category reference](../spec/lexical-types.md#attributes-definitions-and-lexical-categories) · partial |
 | <code>definition</code> | <code>ID &#124; PHRASE.GENERIC</code> | [Definition use with relations](../spec/definitions.md#composition-and-source-ownership) · partial |
 | <code>directive</code> | <code>"ID" &#124; PHRASE.DIRECTIVE</code> | [Source action declaration](../spec/definitions.md#source-actions) · partial |
 | <code>utilization</code> | <code>"ID" &#124; PHRASE.UTILIZATION</code> | [Native/source definition body](../spec/definitions.md#framing-and-escaping) · partial |
@@ -84,7 +84,7 @@ Semantic context: [Values and operands](../spec/values.md#declarations-assignmen
 | <code>number</code> | <code>%~%</code> | [Number](../spec/values.md#number) · supported |
 | <code>truth</code> | <code>?~?</code> | [Truth](../spec/values.md#truth) · supported |
 | <code>null</code> | <code>!~!</code> | [Null](../spec/values.md#null-and-internal-states) · partial |
-| <code>type</code> | <code>#~# &#124; PHRASE* &#124; CLAUSE*</code> | [Native type categories](../spec/collections-and-categories.md#attributes-definitions-and-lexical-categories) · partial |
+| <code>type</code> | <code>#~# &#124; PHRASE* &#124; CLAUSE*</code> | [Native type categories](../spec/lexical-types.md#attributes-definitions-and-lexical-categories) · partial |
 | <code>list</code> | <code>&amp;~&amp; &#124; PHRASE* &#124; CLAUSE*</code> | [List](../spec/collections-and-categories.md#lists) · partial |
 | <code>dict</code> | <code>{~} &#124; PHRASE* &#124; CLAUSE*</code> | [Dictionary](../spec/collections-and-categories.md#dictionaries) · partial |
 
@@ -141,7 +141,7 @@ Semantic context: [Construction and typed arguments](../spec/definitions.md#type
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
-| <code>type</code> | <code>OBJECT.TYPE</code> | [Native type categories](../spec/collections-and-categories.md#attributes-definitions-and-lexical-categories) · partial |
+| <code>type</code> | <code>OBJECT.TYPE</code> | [Native type categories](../spec/lexical-types.md#attributes-definitions-and-lexical-categories) · partial |
 | <code>list</code> | <code>OBJECT.LIST</code> | [List](../spec/collections-and-categories.md#lists) · partial |
 | <code>dict</code> | <code>OBJECT.DICT</code> | [Dictionary](../spec/collections-and-categories.md#dictionaries) · partial |
 | <code>declarative</code> | <code>OBJECT.DECLARATIVE</code> | [Nested declaration role](../spec/names-and-scope.md#declarations-and-definitions) · partial |

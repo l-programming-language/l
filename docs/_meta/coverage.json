@@ -140,7 +140,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-value",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -227,7 +227,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-subject",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -403,7 +403,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-subject",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -710,7 +710,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-object",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -861,7 +861,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-phrase-declarative",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -8132,7 +8132,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-op",
-      "semanticDoc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8149,7 +8149,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-prop",
-      "semanticDoc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8166,7 +8166,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-func",
-      "semanticDoc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8183,7 +8183,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-definition",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8200,7 +8200,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-attribute",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8217,7 +8217,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-object",
-      "semanticDoc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "semanticDoc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8234,7 +8234,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-class",
-      "semanticDoc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "semanticDoc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8251,7 +8251,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-service",
-      "semanticDoc": "docs/spec/collections-and-categories.md#services",
+      "semanticDoc": "docs/spec/applicational-types.md#services",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8268,7 +8268,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-app",
-      "semanticDoc": "docs/spec/collections-and-categories.md#apps",
+      "semanticDoc": "docs/spec/applicational-types.md#apps",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -13459,7 +13459,7 @@
       "name": "App",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#apps",
+      "doc": "docs/spec/applicational-types.md#apps",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13490,7 +13490,7 @@
       "name": "Service",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#services",
+      "doc": "docs/spec/applicational-types.md#services",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13523,7 +13523,7 @@
       "name": "Class",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13554,7 +13554,7 @@
       "name": "Object",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13585,7 +13585,7 @@
       "name": "Attribute",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13616,7 +13616,7 @@
       "name": "Definition",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13647,7 +13647,7 @@
       "name": "Function",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13681,7 +13681,7 @@
       "name": "Property",
       "role": "explanatory",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13713,7 +13713,7 @@
       "name": "Operation",
       "role": "explanatory",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13745,7 +13745,7 @@
       "name": "Noun",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13776,7 +13776,7 @@
       "name": "Verb",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13807,7 +13807,7 @@
       "name": "Adjective",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -13838,7 +13838,7 @@
       "name": "Adverb",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -14051,7 +14051,7 @@
       "name": "App",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#apps",
+      "doc": "docs/spec/applicational-types.md#apps",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go"
@@ -14077,7 +14077,7 @@
       "name": "Service",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#services",
+      "doc": "docs/spec/applicational-types.md#services",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go"
@@ -14103,7 +14103,7 @@
       "name": "Class",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go"
@@ -14129,7 +14129,7 @@
       "name": "Object",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go"
@@ -14155,7 +14155,7 @@
       "name": "Attribute",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go"
@@ -14181,7 +14181,7 @@
       "name": "Definition",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go"
@@ -14207,7 +14207,7 @@
       "name": "Function",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go"
@@ -14233,7 +14233,7 @@
       "name": "Property",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go"
@@ -14259,7 +14259,7 @@
       "name": "Operation",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go"

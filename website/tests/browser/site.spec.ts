@@ -139,7 +139,7 @@ test('no-JavaScript reading, native menu and reduced motion', async ({ browser }
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4321/docs/spec/values/');
-  await expect(page.getByRole('heading', { name: 'Primitive values', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Primitive Types', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await expect(page.locator('#starlight__sidebar')).toBeVisible();
   await page.locator('#starlight__sidebar a[href="/docs/spec/grammar/"]').click();

@@ -280,7 +280,7 @@ Semantic context: [pointer](../spec/values.md#pointer).
 
 This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
 
-Semantic context: [op](../spec/collections-and-categories.md#functions-properties-and-operations).
+Semantic context: [op](../spec/applicational-types.md#functions-properties-and-operations).
 
 | Field | Value |
 | --- | --- |
@@ -298,7 +298,7 @@ Semantic context: [op](../spec/collections-and-categories.md#functions-propertie
 
 This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
 
-Semantic context: [prop](../spec/collections-and-categories.md#functions-properties-and-operations).
+Semantic context: [prop](../spec/applicational-types.md#functions-properties-and-operations).
 
 | Field | Value |
 | --- | --- |
@@ -316,7 +316,7 @@ Semantic context: [prop](../spec/collections-and-categories.md#functions-propert
 
 This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
 
-Semantic context: [func](../spec/collections-and-categories.md#functions-properties-and-operations).
+Semantic context: [func](../spec/applicational-types.md#functions-properties-and-operations).
 
 | Field | Value |
 | --- | --- |
@@ -334,7 +334,7 @@ Semantic context: [func](../spec/collections-and-categories.md#functions-propert
 
 This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
 
-Semantic context: [definition](../spec/collections-and-categories.md#attributes-definitions-and-lexical-categories).
+Semantic context: [definition](../spec/applicational-types.md#attributes-and-definitions).
 
 | Field | Value |
 | --- | --- |
@@ -352,7 +352,7 @@ Semantic context: [definition](../spec/collections-and-categories.md#attributes-
 
 This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
 
-Semantic context: [attribute](../spec/collections-and-categories.md#attributes-definitions-and-lexical-categories).
+Semantic context: [attribute](../spec/applicational-types.md#attributes-and-definitions).
 
 | Field | Value |
 | --- | --- |
@@ -370,7 +370,7 @@ Semantic context: [attribute](../spec/collections-and-categories.md#attributes-d
 
 This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
 
-Semantic context: [object](../spec/collections-and-categories.md#classes-and-objects).
+Semantic context: [object](../spec/applicational-types.md#classes-and-objects).
 
 | Field | Value |
 | --- | --- |
@@ -388,7 +388,7 @@ Semantic context: [object](../spec/collections-and-categories.md#classes-and-obj
 
 This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
 
-Semantic context: [class](../spec/collections-and-categories.md#classes-and-objects).
+Semantic context: [class](../spec/applicational-types.md#classes-and-objects).
 
 | Field | Value |
 | --- | --- |
@@ -406,7 +406,7 @@ Semantic context: [class](../spec/collections-and-categories.md#classes-and-obje
 
 This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
 
-Semantic context: [service](../spec/collections-and-categories.md#services).
+Semantic context: [service](../spec/applicational-types.md#services).
 
 | Field | Value |
 | --- | --- |
@@ -424,7 +424,7 @@ Semantic context: [service](../spec/collections-and-categories.md#services).
 
 This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
 
-Semantic context: [app](../spec/collections-and-categories.md#apps).
+Semantic context: [app](../spec/applicational-types.md#apps).
 
 | Field | Value |
 | --- | --- |

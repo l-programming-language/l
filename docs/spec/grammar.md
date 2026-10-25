@@ -79,7 +79,7 @@ These two builtin declarations use a directive phrase:
 
 `for` introduces the action body. `Building`, `Running`, `Starting`, and `Awaiting` are applicative verb forms in that body; `any App` declares the argument, and `it` refers to it. The source conjunction `and then` separates the actions. The bars inside each quoted label declare inflections; they are unrelated to the grammar JSON's sequence notation. These definitions are implicitly loaded already, so do not redeclare them in a program.
 
-Other prepositions in the examples have different jobs: `from` and `as` in the basic program's Use sentence select the IO dictionary and local alias. The [Main descriptor example](collections-and-categories.md#describe-with-an-adjective) shows `of`, `with`, and `using` in Function/Object/Service construction. The presence of `at` or `in` in a grammar rule does not authorize a guessed list-indexing expression; [Lists](collections-and-categories.md#lists) documents that boundary.
+Other prepositions in the examples have different jobs: `from` and `as` in the basic program's Use sentence select the IO dictionary and local alias. The [Main descriptor example](lexical-types.md#describe-with-an-adjective) shows `of`, `with`, and `using` in Function/Object/Service construction. The presence of `at` or `in` in a grammar rule does not authorize a guessed list-indexing expression; [Lists](collections-and-categories.md#lists) documents that boundary.
 
 ## Clauses and grammatical forms
 

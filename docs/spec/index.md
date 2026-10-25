@@ -1,47 +1,38 @@
 # L Language Specification
 
-L is a human-readable, extensible language with application values. This specification describes the language implemented by the current checkout and the boundary of its Rust target. It is a source-backed account, not a claim of independent maintainer ratification or standards approval.
+L expresses values, program structure and behavior through grammatical sentences. This specification describes the current language and its Rust target; start with the [first program](../guide/first-program.md) to see them together.
 
 ## Scope and conformance
 
-The maintained repository contracts take precedence over this explanatory consolidation. A conforming description preserves source bytes, source ownership, declaration identity, and the distinction between generation and execution. Where implementation and intent disagree, this specification identifies the boundary instead of declaring the discrepancy a new language guarantee.
-
-L source is processed by Lyger into AML and logeme compositions. Logiceme interprets those compositions into Rust source bundles. A separate native build coordinator invokes Cargo and publishes the executable and companion artifacts. Running that executable starts the orchestrator; source lifecycle instructions control separate App processes. Merely parsing source, producing AML, or returning an `Executable` source bundle does not execute an application.
-
-The implementation tools are Go programs; Rust is the generated target. Releases embed the English (`eng`) source lexicon. See the [release scope and compatibility policy](../releases/index.md#versioning-and-compatibility).
+The maintained repository contracts govern source bytes, ownership, declaration identity and execution. Lyger translates L into AML/logeme compositions; Logiceme generates Rust source; Cargo builds the native program. Running that program starts the orchestrator, which controls separate App processes. Generating source alone does not run it.
 
 ## Reading the specification
 
-The chapters form a continuous description:
+The type reference answers two questions: **what does this value represent?** and **what role does this word play in a sentence?**
 
-1. [Lexical structure and source organization](lexical-structure.md): bytes, names, literals, statements, and paragraphs.
-2. [Primitive values](values.md): Text, Number, Truth, and the bounded status of other value categories.
-3. [Collections and application categories](collections-and-categories.md): Lists, Dictionaries, Apps, Services, source groups, and callable representations.
-4. [Names, scope, and state](names-and-scope.md): declarations, pronouns, aliases, visibility, and definite assignment.
-5. [Grammar and vocabulary](grammar.md): the exact configuration notation, grammatical families, and support boundaries.
-6. [Definitions and extensibility](definitions.md): actions, descriptors, inflections, typed slots, and native definitions.
-7. [Operations and control flow](control-flow.md): sequencing, comparison, selection, termination, and recognized unsupported forms.
-8. [Imports and program structure](imports.md): dictionaries, explicit source files, ownership, and dependency boundaries.
-9. [Execution and lifecycle](execution.md): Build, Run, Stop, Await, continuations, and output.
-10. [Errors and compatibility](errors.md): failure stages and diagnostic boundaries.
-11. [Glossary](glossary.md): the language and compiler's own terms.
+| Family | What it describes | Examples |
+| --- | --- | --- |
+| [Primitive Types](values.md) | Individual data values and scalar parameter categories. | Text, Number, Truth, Thing |
+| [Iterative Types](collections-and-categories.md) | Collections and named-member namespaces. | List, Dictionary |
+| [Lexical Types](lexical-types.md) | Grammatical roles of words. | Nouns, Verbs, Adjectives, Adverbs, Articles, Prepositions |
+| [Applicational Types](applicational-types.md) | Application structure and behavior. | App, Service, Class, Object, Function |
 
-Use the [builtin reference](../reference/builtins/index.md) for implicit definitions, the [standard library](../stdlib/index.md) for explicitly imported dictionaries, and the maintained [architecture](../architecture.md) for implementation structure. The [logeme model](../../builtins/LOGEMES.md) and [Rust target reference](../../builtins/README.md) describe composition below the source language.
+These are related dimensions: `App` is a noun grammatically and names an applicational type. Each page starts with the complete category table, including names with limited support.
+
+Read [lexical structure](lexical-structure.md) for literals and paragraphs, [names and scope](names-and-scope.md) for binding and visibility, and [grammar](grammar.md) for sentence forms. [Definitions](definitions.md), [control flow](control-flow.md), [imports](imports.md), and [execution](execution.md) explain how those pieces become a program. Consult [errors](errors.md) and the [glossary](glossary.md) for diagnostics and terminology.
+
+The [builtin reference](../reference/builtins/index.md) documents implicit words; the [standard library](../stdlib/index.md) documents explicit imports. Native definitions use the separate [logeme model](../../builtins/LOGEMES.md) and [Rust target contracts](../../builtins/README.md).
 
 ## Role, support, and evidence
 
-The [evidence guide](../contributing/evidence.md) defines document roles, implementation support, and verification stages. Grammar recognition does not establish executable behavior; an existing test records an assertion, not a fresh result.
+Tables distinguish executable behavior, recognized but incomplete forms, and internal representations. Example labels identify **runnable**, **compile-only**, **invalid**, or **fragment** source; runnable examples may intentionally fail. Existing test evidence is not a new execution result. The [evidence guide](../contributing/evidence.md) explains these labels.
 
-Read each example's classification: **runnable** may deliberately fail at runtime; **compile-only** makes no runtime claim; **invalid** expects compiler rejection; **fragment** omits context or illustrates a statically reviewed form. Unsupported forms are labeled where shown.
-
-Code blocks marked `l` contain L source; `rust` contains native fragments; `text` may contain grammar notation or AML. Start with the complete [first program](../guide/first-program.md).
+Code blocks marked `l` contain L; `rust` contains native fragments; `text` may contain grammar notation or AML. Native Rust syntax inside a definition does not become ordinary L syntax.
 
 ## Language guarantees and target limits
 
-Source paragraph identity, binding, explicit import ownership, and raw captured output are maintained language/runtime contracts. Cargo layouts, Rust `f64` encoding, Tokio supervision, and native library visibility are implementation details that explain the supported target. This distinction matters when reading native-backed definitions: Rust syntax accepted inside a deliberately native fragment is not automatically L syntax.
-
-Native macOS and Linux execution is supported by the maintained contract. Cross-compilation, Phase 2 in-code concurrency, inferred ownership/lifetimes, general asynchronous source functions, and automatic Deferred execution are outside this release boundary. The current site describes an unreleased/local checkout unless authoritative release identity is supplied.
+Source ownership, binding and raw captured output follow the language/runtime contracts. Cargo layouts, Rust encoding and native library visibility describe the current target. Native macOS/Linux execution is supported; cross-compilation, in-code concurrency, inferred ownership/lifetimes, general async source functions and automatic Deferred execution are outside this release. Releases embed English resources and follow the [pre-1.0 compatibility policy](../releases/index.md#versioning-and-compatibility).
 
 ## Sources and review
 
-Primary sources are [architecture](../architecture.md), [CLI/runtime semantics](../cli-build.md), [validation policy](../development-harness.md), [error model](../error-model.md), [Lyger](../../lyger/lyger_service.go), and the [integration evidence ledger](../../testdata/integration/IMPLEMENTATION.md). The machine-readable review record is [semantics.json](../_meta/semantics.json); the [specification audit](../_meta/specification-audit.md) records unresolved discrepancies. These maintenance files are source artifacts, not language APIs.
+See [architecture](../architecture.md), [CLI/runtime semantics](../cli-build.md), [validation policy](../development-harness.md), and the [error model](../error-model.md). [Semantic mappings](../_meta/semantics.json) and the [specification audit](../_meta/specification-audit.md) record source evidence and unresolved support boundaries.

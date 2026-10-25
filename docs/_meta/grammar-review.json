@@ -16,7 +16,7 @@
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.",
+      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type\u2019s support boundary before using a configured value pattern.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -43,7 +43,7 @@
           "notes": "A retained Null token pattern. Ordinary source primitive loading/native scalar emission does not establish a general Null literal; explicit typed definition Null arguments have a narrower contract."
         },
         "type": {
-          "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+          "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Native type categories",
           "support": "partial",
           "notes": "Matches the native type token category. Construction and usable values depend on the explicit source type whitelist, descriptor binding and selected category."
@@ -75,7 +75,7 @@
       "notes": "A subject participates in declaration/binding and paragraph antecedent selection. Its cases distinguish declared names, resolved references and definitions.",
       "cases": {
         "type": {
-          "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+          "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Typed declarations",
           "support": "partial",
           "notes": "A quoted declaration plus typed declarative phrase. Native whitelist and construction rules determine the represented category."
@@ -123,7 +123,7 @@
           "notes": "A resolved identifier preserves its selected owner and canonical declaration; it is not a fresh declaration."
         },
         "reference": {
-          "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+          "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Native-category reference",
           "support": "partial",
           "notes": "A #~# type token selects a native category rather than a quoted source identifier. Its supported role depends on the enclosing grammar."
@@ -152,7 +152,7 @@
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.",
+      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type\u2019s support boundary before using a configured value pattern.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -179,7 +179,7 @@
           "notes": "A retained Null token pattern. Ordinary source primitive loading/native scalar emission does not establish a general Null literal; explicit typed definition Null arguments have a narrower contract."
         },
         "type": {
-          "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+          "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Native type categories",
           "support": "partial",
           "notes": "Matches the native type token category. Construction and usable values depend on the explicit source type whitelist, descriptor binding and selected category."
@@ -255,7 +255,7 @@
       "notes": "This phrase participates in construction or argument attachment. Native placeholders have explicit type and encoding contracts; do not infer arbitrary coercions.",
       "cases": {
         "type": {
-          "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+          "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Native type categories",
           "support": "partial",
           "notes": "Matches the native type token category. Construction and usable values depend on the explicit source type whitelist, descriptor binding and selected category."
@@ -778,25 +778,25 @@
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.observative.active": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.observative.passive": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.observative.applicative": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.terminative.imperative": {
       "doc": "docs/spec/control-flow.md#exit-and-return",

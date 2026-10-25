@@ -24,7 +24,7 @@ These terms describe L and its implementation. They should not be replaced autom
 | Source occurrence | A particular original or included file occurrence with import ancestry |
 | Dictionary | Either a collection/namespace value or an indexed vocabulary source unit; context distinguishes them |
 
-For these terms in actual L, read the [annotated basic program](grammar.md#read-a-complete-sentence-in-context). In `The App Prints message`, App is the grammatical subject and message is the grammatical object. A capitalized **Object** source category instead denotes the file-owning construction shown in [the Class/Object example](collections-and-categories.md#compose-an-object-inside-nested-classes). A [paragraph example](names-and-scope.md#paragraph-scope) shows why physical paragraphs and lexical scope must also be distinguished.
+For these terms in actual L, read the [annotated basic program](grammar.md#read-a-complete-sentence-in-context). In `The App Prints message`, App is the grammatical subject and message is the grammatical object. A capitalized **Object** source category instead denotes the file-owning construction shown in [the Class/Object example](applicational-types.md#compose-an-object-inside-nested-classes). A [paragraph example](names-and-scope.md#paragraph-scope) shows why physical paragraphs and lexical scope must also be distinguished.
 
 ## Application organization
 
@@ -44,7 +44,7 @@ For these terms in actual L, read the [annotated basic program](grammar.md#read-
 | Output | Finalized raw captured stdout of the selected invocation |
 | Error | Selected process operation/invocation failure, separate from compiler lerrors |
 
-The [App example](collections-and-categories.md#create-and-execute-an-app) puts Basic, Execute, and Output in context. Compare it with the [explicit App lifecycle example](collections-and-categories.md#run-an-app-and-read-its-output) and [execution chapter](execution.md): standalone Service declarations create no package or process, and awaiting a launched target owns its finalized result and continuation.
+The [App example](applicational-types.md#create-and-execute-an-app) puts Basic, Execute, and Output in context. Compare it with the [explicit App lifecycle example](../guide/apps-and-services.md#run-an-app) and [execution chapter](execution.md): standalone Service declarations create no package or process, and awaiting a launched target owns its finalized result and continuation.
 
 ## Compiler and backend
 

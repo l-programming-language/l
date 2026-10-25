@@ -97,55 +97,55 @@
       "notes": "The configured pointer root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API."
     },
     "nouns.op": {
-      "doc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "op",
       "support": "partial",
       "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
     },
     "nouns.prop": {
-      "doc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "prop",
       "support": "partial",
       "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
     },
     "nouns.func": {
-      "doc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "func",
       "support": "partial",
       "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
     },
     "nouns.definition": {
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "topic": "definition",
       "support": "partial",
       "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
     },
     "nouns.attribute": {
-      "doc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "topic": "attribute",
       "support": "partial",
       "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
     },
     "nouns.object": {
-      "doc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "topic": "object",
       "support": "partial",
       "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
     },
     "nouns.class": {
-      "doc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "topic": "class",
       "support": "partial",
       "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
     },
     "nouns.service": {
-      "doc": "docs/spec/collections-and-categories.md#services",
+      "doc": "docs/spec/applicational-types.md#services",
       "topic": "service",
       "support": "partial",
       "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
     },
     "nouns.app": {
-      "doc": "docs/spec/collections-and-categories.md#apps",
+      "doc": "docs/spec/applicational-types.md#apps",
       "topic": "app",
       "support": "partial",
       "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
@@ -244,7 +244,7 @@
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization."
+      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization."
     },
     "verbs.terminative": {
       "doc": "docs/spec/control-flow.md#exit-and-return",

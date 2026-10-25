@@ -937,7 +937,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-value",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -1024,7 +1024,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-subject",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -1200,7 +1200,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-subject",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -1507,7 +1507,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-object",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -1658,7 +1658,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/grammar.md#grammar-phrase-declarative",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "sources": [
         "lexicon/eng/grammar.json",
         "lyger/grammar_terms.go",
@@ -8929,7 +8929,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-op",
-      "semanticDoc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8946,7 +8946,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-prop",
-      "semanticDoc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8963,7 +8963,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-func",
-      "semanticDoc": "docs/spec/collections-and-categories.md#functions-properties-and-operations",
+      "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8980,7 +8980,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-definition",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -8997,7 +8997,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-attribute",
-      "semanticDoc": "docs/spec/collections-and-categories.md#attributes-definitions-and-lexical-categories",
+      "semanticDoc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -9014,7 +9014,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-object",
-      "semanticDoc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "semanticDoc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -9031,7 +9031,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-class",
-      "semanticDoc": "docs/spec/collections-and-categories.md#classes-and-objects",
+      "semanticDoc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -9048,7 +9048,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-service",
-      "semanticDoc": "docs/spec/collections-and-categories.md#services",
+      "semanticDoc": "docs/spec/applicational-types.md#services",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
@@ -9065,7 +9065,7 @@
       "role": "implementation",
       "support": "partial",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-app",
-      "semanticDoc": "docs/spec/collections-and-categories.md#apps",
+      "semanticDoc": "docs/spec/applicational-types.md#apps",
       "sources": [
         "lexicon/eng/vocabulary.json"
       ],
