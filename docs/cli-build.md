@@ -13,9 +13,7 @@ The compiler prints the published executable's absolute path on success. Buildin
 
 ## Invocation and assets
 
-See the [CLI reference](cli/build.md) for command syntax, help and version output.
-
-Options precede the source filename, which defaults to `main.l` in the invocation directory. Use `--` before a filename beginning with a dash. Extra arguments, unknown options and explicit `-os` values are errors; see [planned OS selection](cli/build.md#target-os).
+[CLI options](cli/build.md) precede the source filename (default: `main.l` in the invocation directory). Use `--` for filenames starting with a dash. Extra arguments and unknown options reject; [`-os` is unimplemented](cli/build.md#target-os).
 
 Embedded English resources work with relocated binaries, symlinks and `go run`, independently of CWD. Relative output paths use invocation CWD. [Developer overrides](development-harness.md#compiler-defaults) support compiler resource development.
 
@@ -25,7 +23,7 @@ shadow them. Explicit `.l` imports resolve relative to their importing source.
 Imported dictionary helpers resolve relative to their resource provider and do
 not read unrelated host files. Install instructions are in [README](../README.md).
 
-Help, version output and successful builds return 0; invalid invocations and unsupported build hosts return 2; build or output-write failures return 1. Diagnostics retain their phase/cause on stderr. Successful build stdout contains only the executable path plus a newline. Standalone [`l --version`](cli/build.md#version) prints the embedded release version without initializing the compiler.
+Help, version and builds return 0 on success; invalid invocations or unsupported hosts return 2; build or output-write failures return 1. Diagnostics retain phase/cause on stderr. Build stdout contains the executable path and newline; standalone [`l --version` or `l -v`](cli/build.md#version) prints the version without compiler initialization.
 
 ## Output and publication
 

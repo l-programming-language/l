@@ -36,9 +36,9 @@ type buildCommand struct {
 var errUnsupportedBuildHost = lerrors.Unsupported.Errorf("native builds require macOS or Linux")
 
 const buildUsage = `Usage: l build [--language LANGUAGE] [--assets ROOT] [--output-dir DIRECTORY] [main.l]
-       l --version
+       l (--version | -v)
 
---version prints the embedded major.minor.patch release version and exits.
+--version or -v prints the embedded major.minor.patch release version and exits.
 Build native macOS or Linux executables beside the source, or in --output-dir.
 The default source is main.l. Options must precede the source filename.
 Language resources are embedded in the executable. The default language is eng.
@@ -146,7 +146,7 @@ func resolveBuildCommand(command *buildCommand) (*cliData, compilerInitOptions, 
 }
 
 func run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
-	if len(args) == 1 && args[0] == "--version" {
+	if len(args) == 1 && (args[0] == "--version" || args[0] == "-v") {
 		if _, err := fmt.Fprintln(stdout, distribution.Version()); err != nil {
 			return 1
 		}

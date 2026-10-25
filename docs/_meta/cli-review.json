@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewPolicy": "Manually reviewed command/option surface from the current parser. A changed parser hash requires review of its behavior and documentation before this manifest is edited. references:generate never updates this approval hash. Aliases and flag-parser spelling variants are grouped with the corresponding option.",
   "sourceHashes": {
-    "cmd/l/command.go": "6399cb7f2dec1503c1259bcd6008b32255eacb09aba41070038eb6fc154a34d0"
+    "cmd/l/command.go": "dc055bf2a377f3040975d99eb0a088deb6d2269b5886143a966387fe3e631b64"
   },
   "entries": [
     {
@@ -87,7 +87,7 @@
         "version_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Standalone flag only; prints the embedded major.minor.patch release version and a newline without compiler initialization."
+      "notes": "Standalone --version/-v prints the embedded version and newline without compiler initialization."
     },
     {
       "id": "cli:--help",

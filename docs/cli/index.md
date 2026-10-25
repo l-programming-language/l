@@ -1,17 +1,18 @@
 # The L command line
 
-The `l` compiler produces native executables on macOS or Linux. `l build` publishes a program; invoking that executable runs it.
+L builds native macOS/Linux programs. Run the published executable directly; see the [runtime guide](runtime.md).
 
 ## Available commands
 
-Use `build` to compile, `--help` for usage, and [`--version`](build.md#version) to identify the installed compiler. Start with [installation](installation.md), then the [build reference](build.md) and [runtime guide](runtime.md).
+| Invocation | Behavior |
+| --- | --- |
+| `l build [main.l]` | Compile and publish; source defaults to `main.l`. |
+| `l --help`, `l -h`, `l -help` | Show usage. Use alone. |
+| `l build --help` | Show build usage before a filename; also accepts `-h`, `-help`, `--h`. |
+| `l --version`, `l -v` | Print `0.0.1` plus a newline. Use alone. |
 
-```sh
-l --version
-l build ./demo/basic/main.l
-./demo/basic/main
-```
+Build options: [`--output-dir` and `--`](build.md#options). Compiler contributors have [`--assets` and `--language` overrides](../development-harness.md#compiler-defaults). See [installation](installation.md) and [troubleshooting](troubleshooting.md).
 
 ## Evidence and authority
 
-[command.go](../../cmd/l/command.go) defines the CLI; [command tests](../../cmd/l/command_test.go) and [version tests](../../cmd/l/command_version_test.go) verify it. The [CLI/runtime contract](../cli-build.md) defines publication and process semantics. See [troubleshooting](troubleshooting.md) for failures.
+The [parser](../../cmd/l/command.go), [command tests](../../cmd/l/command_test.go), [version tests](../../cmd/l/command_version_test.go) and [runtime contract](../cli-build.md) define these interfaces.

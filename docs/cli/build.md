@@ -35,7 +35,7 @@ In `v0.0.1`, builds target the host OS and architecture; `-os`/`--os` is rejecte
 
 ## Version
 
-`l --version` writes the embedded `major.minor.patch` version and one newline to stdout: `0.0.1` for release `v0.0.1`. Stderr stays empty; success returns 0 and an output-write failure returns 1. Supply it alone: extra arguments, `l build --version`, and aliases such as `-v` are invalid (status 2). No checkout, assets, or Rust toolchain is needed.
+`l --version` or `l -v` prints the embedded `0.0.1` plus a newline for release `v0.0.1`, without compiler initialization or external resources. Stderr stays empty; status is 0, or 1 if stdout fails. Use either alone: `l -v extra`, `l build --version` and `l build -v` return 2.
 
 ## Published files
 
