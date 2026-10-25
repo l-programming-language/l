@@ -1,0 +1,31 @@
+#!/bin/sh
+set -eu
+
+# Install beside Cargo.toml. App.Name is a complete shell-quoted argument,
+# prepared separately from the TOML representation used by install/cargo.lu.
+app_name='lucid_nested_rust'
+project_dir=$(CDPATH= cd -P -- "$(dirname -- "$0")" && pwd -P)
+
+case $(uname -s) in
+    Darwin|Linux) ;;
+    *) printf '%s\n' 'generated L applications support native macOS and Linux only' >&2; exit 1 ;;
+esac
+
+# Select the installed stable toolchain's native target explicitly. An inherited
+# Cargo target setting must not turn this native launcher into a cross-build.
+native_target=$(rustc +stable -vV | sed -n 's/^host: //p')
+if [ -z "$native_target" ]; then
+    printf '%s\n' 'could not determine the stable Rust native target' >&2
+    exit 1
+fi
+
+cargo +stable build \
+    --manifest-path "$project_dir/Cargo.toml" \
+    --target-dir "$project_dir/target" \
+    --target "$native_target" \
+    --release \
+    --bin "$app_name"
+
+# The parent shell's CWD and standard streams are preserved. No service or
+# background process is installed; the generated runtime owns its App children.
+exec "$project_dir/target/$native_target/release/$app_name" "$@"

@@ -1,0 +1,67 @@
+
+
+// package main
+
+
+
+
+
+
+struct EmptyMissing {}
+
+
+
+struct EmptyExplicit {}
+
+
+
+trait MarkerMissing {}
+
+
+
+trait MarkerExplicit {}
+
+
+
+
+
+struct WithField {
+
+
+
+    value: i32, // control
+
+
+}
+
+
+
+fn main( ) -> (()) {
+    
+        
+let missing = EmptyMissing {}
+
+;
+
+
+let explicit = EmptyExplicit {}
+
+;
+
+
+let control = WithField{value: 7} 
+
+;
+
+
+
+let _: EmptyMissing = missing;
+let _: EmptyExplicit = explicit;
+let _: i32 = control.value;
+let _: Option<&dyn MarkerMissing> = None;
+let _: Option<&dyn MarkerExplicit> = None;
+
+
+
+    
+}

@@ -1,0 +1,16 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Execute Glyph
+// Schedule the supplied future.
+// Execute adds no function, invocation, async wrapper, or task group.
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+tokio::spawn([|Meta.Key|]);
+}-|/|}
+
+// Exactly one Instantiation child whose output role is an invocation.
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiation"}--{
+tokio::spawn([|Conjoinments.Instantiation|]);
+}-|/|}
+// End Execute Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String]}-|/|}

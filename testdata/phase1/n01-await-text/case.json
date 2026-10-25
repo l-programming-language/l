@@ -1,0 +1,18 @@
+{
+  "id": "N01",
+  "title": "await-text",
+  "profile": "print",
+  "apps": [],
+  "setup": [],
+  "assertions": [
+    "Reject Text operand at the source Await statement with a TypeMismatch requiring App, without publishing an executable."
+  ],
+  "expected_compile_error": {
+    "category": "TypeMismatch",
+    "span": "offending source statement",
+    "publication": "none; preserve any previously published program"
+  },
+  "files": [
+    "main.l"
+  ]
+}

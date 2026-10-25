@@ -1,0 +1,64 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Evaluate Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+(/={tags: Op.Tags}=={if Meta.Key == "Evaluate"}=={
+( (/={tags: Meta.Tags}=={for Calculation in Conjoinments.Calculations}=={[|%Calculation%|] }=/) )
+}=/)
+(/={tags: Op.Tags}=={if Meta.Key != "Evaluate"}=={
+(/={tags: Meta.Tags}=={for Calculation in Conjoinments.Calculations}=={[|%Calculation%|] }=/)
+}=/)
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Evaluation"}--{
+(/={tags: Meta.Tags}=={if Meta.Key == Void}=={(/={tags: Meta.Tags}=={for Count in Count(Conjoinments.Operations)}=={(/={tags: Meta.Tags}=={if Count == 1}=={
+if [|%Conjoinments.Calculations[0]%|] {
+    [|Conjoinments.Operations[0]|]
+} }=/)(/={tags: Meta.Tags}=={if Count > 1 && if Count < Length(Conjoinments.Operations)}=={else if [|%Conjoinments.Calculations[Add(Count, -1)]%|] {
+    [|Conjoinments.Operations[Add(Count, -1)]|]
+} }=/)(/={tags: Meta.Tags}=={if Count > 1 && if Count == Length(Conjoinments.Operations)}=={(/={tags: Meta.Tags}=={if Conjoinments.Calculations[Add(Count, -1)] != Void}=={else if [|%Conjoinments.Calculations[Add(Count, -1)]%|] {
+    [|Conjoinments.Operations[Add(Count, -1)]|]
+} }=/)(/={tags: Meta.Tags}=={if Conjoinments.Calculations[Add(Count, -1)] == Void}=={else {
+    [|Conjoinments.Operations[Add(Count, -1)]|]
+}
+}=/)}=/)}=/)}=/)
+(/={tags: Meta.Tags}=={if Meta.Key != Void}=={
+match [|Meta.Key|] {
+(/={tags: Meta.Tags}=={for Count in Count(Conjoinments.Operations)}=={
+(/={tags: Meta.Tags}=={if Conjoinments.Calculations[Add(Count, -1)] != Void}=={
+    [|%Conjoinments.Calculations[Add(Count, -1)]%|] => {
+        [|Conjoinments.Operations[Add(Count, -1)]|]
+    },
+}=/)
+(/={tags: Meta.Tags}=={if Conjoinments.Calculations[Add(Count, -1)] == Void}=={
+    _ => {
+        [|Conjoinments.Operations[Add(Count, -1)]|]
+    },
+}=/)
+}=/)
+}
+}=/)
+}-|/|}
+
+// CI: ordered Tokio selection; preparation places an explicit default last.
+{|/|-{tags: Meta.Tags}--{if Type == "Execution"}--{
+tokio::select! {
+biased;
+(/={tags: Meta.Tags}=={for Evaluation in Conjoinments.Evaluations}=={
+    [|Evaluation|]
+}=/)
+}
+}-|/|}
+
+// BI: one supplied Definition followed by its selected body.
+// Definition owns the complete left = future fragment.
+{|/|-{tags: Meta.Tags}--{if Type == "Declaration"}--{
+(/={tags: Meta.Tags}=={for Definition in Conjoinments.Definitions}=={[|Definition|] => {}=/)
+(/={tags: Meta.Tags}=={for Operation in Conjoinments.Operations}=={
+    [|Operation|]
+}=/)
+},
+}-|/|}
+// End Evaluate Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String, Default: String]}-|/|}

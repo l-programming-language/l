@@ -1,0 +1,23 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Evaluation Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+[|Evaluate(Calculations = Conjoinments.Calculations, Key = Meta.Key)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Evaluate"}--{
+[|Evaluate("Evaluation", Operations = Conjoinments.Operations, Calculations = Conjoinments.Calculations, Key = Meta.Key)|]
+}-|/|}
+
+// CI: execution-aware evaluation selects one communication alternative.
+{|/|-{tags: Meta.Tags}--{if Type == "Execute"}--{
+[|Evaluate("Execution", Evaluations = Conjoinments.Evaluations)|]
+}-|/|}
+
+// BI: declare one case, keeping its communication, binding, and body together.
+{|/|-{tags: Meta.Tags}--{if Type == "Declare"}--{
+[|Evaluate("Declaration", Definitions = Conjoinments.Definitions, Operations = Conjoinments.Operations, Default = Meta.Default)|]
+}-|/|}
+// End Evaluation Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String, Default: String]}-|/|}

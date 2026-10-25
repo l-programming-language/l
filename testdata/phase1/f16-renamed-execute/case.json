@@ -1,0 +1,20 @@
+{
+  "id": "F16",
+  "title": "renamed-execute",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Alias preserves source action body and its Await; spelling Execute is not required."
+  ],
+  "expected_runtime": {
+    "stdout": "A\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l"
+  ]
+}

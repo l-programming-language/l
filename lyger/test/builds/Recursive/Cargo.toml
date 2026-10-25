@@ -1,0 +1,18 @@
+[package]
+name = "Recursive"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+autobins = false
+autolib = false
+autoexamples = false
+autotests = false
+autobenches = false
+
+[[bin]]
+name = "Recursive"
+path = "src/__l_service_main.rs"
+
+[dependencies]
+

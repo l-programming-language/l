@@ -1,0 +1,10 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~identity~, Inputs: ~&[Prop{Key: value, Type: i32}Prop]&~, Outputs: ~&[i32]&~|}^W^BOD^E{|Statement: ~return value;~|}`</S|>
+<|S|>`FW{|Key: ~add~, Inputs: ~&[Prop{Key: left, Type: i32}Prop, Prop{Key: right, Type: i32}Prop]&~, Outputs: ~&[i32]&~|}^W^BOD^E{|Statement: ~return left + right;~|}`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(MOB{|Key: ~first~|}^KY{|Key: ~identity~, Inputs: ~&[7]&~|}*MOB{|Key: ~total~|}^KY{|Key: ~add~, Inputs: ~&[first, 5]&~|}*BOD^E{|Statement: ~assert_eq!(total, 12);~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

@@ -1,0 +1,94 @@
+name: Prepare L checks
+description: Select pinned tools, restore build caches, and compile offline test dependencies.
+inputs:
+  cold-cache:
+    description: Bypass all cache restores and saves for a fresh runner check.
+    default: 'false'
+outputs:
+  dependency-cache-key:
+    description: Stable tool and dependency identity shared by every stage on this platform.
+    value: ${{ steps.dependencies.outputs.cache-primary-key }}
+  dependency-cache-hit:
+    description: Whether the exact tool and dependency cache was restored.
+    value: ${{ steps.dependencies.outputs.cache-hit }}
+  dependency-cache-paths:
+    description: Reusable tools and dependencies; compiler outputs and reports are excluded.
+    value: |
+      ${{ steps.metadata.outputs.gomodcache }}
+      ~/.cargo/registry/cache
+      ~/.cargo/registry/index
+      ~/.cargo/registry/src
+      ~/.cargo/git/db
+      ~/.rustup/toolchains/${{ steps.metadata.outputs.rust }}-*
+      .harness/tools
+  build-cache-key:
+    description: Exact source and dependency build identity for this platform.
+    value: ${{ steps.build.outputs.cache-primary-key }}
+  build-cache-hit:
+    description: Whether the exact platform build cache was restored.
+    value: ${{ steps.build.outputs.cache-hit }}
+  build-cache-paths:
+    description: Compiler outputs shared by all stages; reports are excluded.
+    value: ${{ steps.paths.outputs.paths }}
+runs:
+  using: composite
+  steps:
+    - name: Set up pinned Go
+      id: go
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      with:
+        go-version-file: .go-version
+        cache: false
+        check-latest: false
+    - name: Read tool and cache identities
+      id: metadata
+      shell: bash
+      run: scripts/l-ci metadata
+    - name: Restore pinned tools and dependencies
+      id: dependencies
+      if: inputs.cold-cache != 'true'
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        key: l-ci-deps-v2-${{ runner.os }}-${{ runner.arch }}-go${{ steps.metadata.outputs.go }}-rust${{ steps.metadata.outputs.rust }}-golangci${{ steps.metadata.outputs.golangci-lint }}-actionlint${{ steps.metadata.outputs.actionlint }}-${{ steps.metadata.outputs.dependency-key }}
+        path: |
+          ${{ steps.metadata.outputs.gomodcache }}
+          ~/.cargo/registry/cache
+          ~/.cargo/registry/index
+          ~/.cargo/registry/src
+          ~/.cargo/git/db
+          ~/.rustup/toolchains/${{ steps.metadata.outputs.rust }}-*
+          .harness/tools
+    - name: Select compiler caches for all checks
+      id: paths
+      shell: bash
+      env:
+        L_CI_RUST_VERSION: ${{ steps.metadata.outputs.rust }}
+        L_CI_NATIVE_CACHE: ${{ steps.metadata.outputs.native-cache }}
+      run: |
+        {
+          echo 'paths<<L_CACHE_PATHS'
+          echo '.harness/cache/go-build'
+          echo '.harness/cache/golangci-lint'
+          echo '.harness/cache/rust-parity'
+          echo '.harness/cache/rust-runtime-parity'
+          echo '.harness/cache/rust-runtime-parity-inputs'
+          echo '.harness/cache/rust-empty-error-runtime'
+          echo '.harness/cache/rust-empty-error-runtime-inputs'
+          echo '.harness/cache/rust-empty-error-frontend'
+          echo '.harness/cache/rust-empty-error-frontend-inputs'
+          echo "$L_CI_NATIVE_CACHE"
+          echo ".harness/cache/lucid-rust-$L_CI_RUST_VERSION"
+          echo 'L_CACHE_PATHS'
+        } >> "$GITHUB_OUTPUT"
+    - name: Restore compiler outputs for all checks
+      id: build
+      if: inputs.cold-cache != 'true'
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        key: l-ci-build-v4-${{ runner.os }}-${{ runner.arch }}-go${{ steps.metadata.outputs.go }}-rust${{ steps.metadata.outputs.rust }}-${{ steps.metadata.outputs.dependency-key }}-${{ steps.metadata.outputs.source-key }}
+        restore-keys: |
+          l-ci-build-v4-${{ runner.os }}-${{ runner.arch }}-go${{ steps.metadata.outputs.go }}-rust${{ steps.metadata.outputs.rust }}-${{ steps.metadata.outputs.dependency-key }}-
+        path: ${{ steps.paths.outputs.paths }}
+    - name: Fetch and compile locked offline dependencies
+      shell: bash
+      run: scripts/l-ci bootstrap

@@ -1,0 +1,4 @@
+interface:
+  display_name: "l Frontend Trace"
+  short_description: "Trace l source through lyger's compiler stages"
+  default_prompt: "Use $l-frontend-trace to locate the earliest failing compiler stage in the current prototype tests."

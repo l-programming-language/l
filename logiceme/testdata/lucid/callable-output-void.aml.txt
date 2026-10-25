@@ -1,0 +1,11 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`DA^E{|Statement: ~type Void = u8;~|}`</S|>
+<|S|>`FW{|Key: ~make_flat~, Inputs: ~&[]&~, Outputs: ~&[Void]&~|}^W^BOD^E{|Statement: ~return 1u8;~|}`</S|>
+<|S|>`FW{|Func: ~#[Func{Key: make_record, Inputs: &[]&, Outputs: &[Void]&}Func]#~|}^W^BOD^E{|Statement: ~return 2u8;~|}`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(MOB{|Key: ~flat~|}^KY{|Key: ~make_flat~|}*MOB{|Key: ~record~|}^KY{|Key: ~make_record~|}*KOB{|Key: ~closure_flat~|}^BW{|Inputs: ~&[]&~, Outputs: ~&[Void]&~|}^W^BOD^E{|Statement: ~return 3u8;~|}*KOB{|Key: ~closure_record~|}^BW{|Func: ~#[Func{Inputs: &[]&, Outputs: &[Void]&}Func]#~|}^W^BOD^E{|Statement: ~return 4u8;~|}*MOB{|Key: ~third~|}^KY{|Key: ~closure_flat~|}*MOB{|Key: ~fourth~|}^KY{|Key: ~closure_record~|}*BOD^E{|Statement: ~let _: Void = flat; let _: Void = record; let _: Void = third; let _: Void = fourth; assert_eq!((flat, record, third, fourth), (1, 2, 3, 4));~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

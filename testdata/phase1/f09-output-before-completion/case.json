@@ -1,0 +1,32 @@
+{
+  "id": "F09",
+  "title": "output-before-completion",
+  "profile": "gate",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [
+    "Create a fresh short Unix socket path and an empty lifetime-lock directory in test-owned temporary storage; set L_PHASE1_SOCKET and L_PHASE1_DIRECTORY for the orchestrator. Start the controller before the program.",
+    "Each child has its own connection. Parse a complete ready <label> <pid> line and reject duplicate/unexpected labels. Record direct PIDs separately from controller and orchestrator.",
+    "Controller commands are exactly release followed by LF; readiness does not release a child. Test deadlines bound failures only.",
+    "Keep every controller connection open until runtime shutdown has been observed. Require spontaneous child disconnection and lifetime-lock release before controller closure or fallback signals; record cleanup failures before fallback. Lock release alone does not prove direct-child reaping.",
+    "Never release the child. Fatal output access may race with child readiness; readiness is not required. Verify any successfully created child is cleaned on failure."
+  ],
+  "assertions": [
+    "Read does not implicitly join, return empty/stale output or race on live capture.",
+    "The child is blocked if it reaches its body, so this is not scheduler-dependent even if the compiler/runtime is fast."
+  ],
+  "expected_runtime": {
+    "stdout": "",
+    "exit_status": 1,
+    "stderr_contains": [
+      "Output",
+      "unavailable"
+    ]
+  },
+  "files": [
+    "main.l",
+    "../companions/gate.l",
+    "../companions/actions.l"
+  ]
+}

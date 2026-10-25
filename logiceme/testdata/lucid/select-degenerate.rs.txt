@@ -1,0 +1,93 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+_ = async {
+    ()
+}
+ => {
+
+    
+
+print!("only default");
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+_ = async {
+    ()
+}
+ => {
+
+},
+
+
+
+}
+
+
+
+
+
+
+
+
+{ ::core::future::pending::<()>().await } 
+
+
+
+
+
+
+print!("after pending selection");
+
+
+
+
+});
+
+
+
+    
+}

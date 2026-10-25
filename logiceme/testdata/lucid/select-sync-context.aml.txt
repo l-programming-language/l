@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src","Deps":"[\"tokio = { version = \\\"=1.53.1\\\", features = [\\\"rt\\\", \\\"sync\\\", \\\"macros\\\"] }\"]"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(BOD^E{|Statement: ~let (tx, mut rx) = tokio::sync::mpsc::channel::<String>(1);~|}*BOG^CI^BI^DOC{|Keys: ~&[_]&~|}^CE{|Ops: ~&[Op{Type: Calculate, Operator: <-, Operands: &[rx]&}Op]&~|}*BOD^E{|Statement: ~drop(tx);~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

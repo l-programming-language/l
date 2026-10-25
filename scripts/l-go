@@ -1,0 +1,34 @@
+#!/bin/sh
+set -eu
+
+repo_root=$(CDPATH= cd -P "$(dirname "$0")/.." && pwd)
+version=$(cat "$repo_root/.go-version")
+case "$version" in ''|*[!0-9.]*) echo "invalid .go-version" >&2; exit 2;; esac
+if command -v go >/dev/null 2>&1 && [ "$(GOTOOLCHAIN=local go version | awk '{print $3}')" = "go$version" ]; then
+  exec env GOTOOLCHAIN=local go "$@"
+fi
+case $(uname -s) in Darwin) platform=darwin;; Linux) platform=linux;; *) echo "Go bootstrap supports macOS and Linux" >&2; exit 2;; esac
+case $(uname -m) in arm64|aarch64) architecture=arm64;; x86_64) architecture=amd64;; *) echo "unsupported Go architecture" >&2; exit 2;; esac
+archive="go$version.$platform-$architecture.tar.gz"
+checksum=$(awk -v name="$archive" '$2 == name {print $1}' "$repo_root/.ci/go-checksums.txt")
+[ "${#checksum}" = 64 ] || { echo "missing Go checksum for $archive" >&2; exit 2; }
+directory="$repo_root/.harness/tools/go/$version/$platform-$architecture"
+if [ ! -x "$directory/go/bin/go" ]; then
+  mkdir -p "$(dirname "$directory")"
+  temporary=$(mktemp -d "$(dirname "$directory")/.install-XXXXXX")
+  trap 'rm -rf "$temporary"' EXIT HUP INT TERM
+  curl --fail --location --silent --show-error --retry 2 --connect-timeout 30 --max-time 300 \
+    "https://go.dev/dl/$archive" -o "$temporary/archive.tar.gz"
+  if command -v sha256sum >/dev/null 2>&1; then
+    actual=$(sha256sum "$temporary/archive.tar.gz" | awk '{print $1}')
+  else
+    actual=$(shasum -a 256 "$temporary/archive.tar.gz" | awk '{print $1}')
+  fi
+  [ "$actual" = "$checksum" ] || { echo "Go archive checksum mismatch" >&2; exit 2; }
+  tar -xzf "$temporary/archive.tar.gz" -C "$temporary"
+  rm "$temporary/archive.tar.gz"
+  mv "$temporary" "$directory"
+  trap - EXIT HUP INT TERM
+fi
+[ "$(GOTOOLCHAIN=local "$directory/go/bin/go" version | awk '{print $3}')" = "go$version" ] || { echo "cached Go version mismatch" >&2; exit 2; }
+exec env GOTOOLCHAIN=local "$directory/go/bin/go" "$@"

@@ -1,0 +1,8 @@
+[workspace]
+resolver = "3"
+members = [
+ "orchestrator",
+ "apps/app-000",
+ "apps/app-001",
+ "support/runtime",
+]

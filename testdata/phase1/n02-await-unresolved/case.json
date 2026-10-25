@@ -1,0 +1,18 @@
+{
+  "id": "N02",
+  "title": "await-unresolved",
+  "profile": "print",
+  "apps": [],
+  "setup": [],
+  "assertions": [
+    "Reject MissingApp as an unresolved operand at the source Await statement, without falling back to a string/path lookup or publishing an executable."
+  ],
+  "expected_compile_error": {
+    "category": "unresolved reference",
+    "span": "offending source statement",
+    "publication": "none; preserve any previously published program"
+  },
+  "files": [
+    "main.l"
+  ]
+}

@@ -1,0 +1,31 @@
+
+
+// package main
+
+
+
+
+fn identity<T>( value: T) -> (T) {
+    
+        
+
+return value;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let value = identity::<u8, u16>(1u8)
+;
+
+
+
+let _: u8 = value;
+
+
+
+    
+}

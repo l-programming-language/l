@@ -1,0 +1,15 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Calculate Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+(/={tags: Meta.Tags}=={for Op in Meta.Ops}=={(/={tags: Op.Tags}=={if Op.Type == "Calculate"}=={ [|Op.Prefix|] ([|Op.Operands[0]|] [|Op.Operator|] [|Op.Operands[1]|]) [|Op.Postfix|] }=/)(/={tags: Op.Tags}=={if Op.Type != "Calculate"}=={ [|Op.Prefix|] [|Op.Operands[0]|] [|Op.Operator|] [|Op.Operands[1]|] [|Op.Postfix|] }=/)}=/)
+}-|/|}
+// CE: copied communication Op branches, rendered as awaited Tokio calls.
+// One operand receives; two operands send. Result handling is not supplied here.
+// These fragments are not select guards; Rust selection remains unsupported.
+{|/|-{tags: Meta.Tags}--{if Type == "Execution"}--{
+(/={tags: Meta.Tags}=={for Op in Meta.Ops}=={(/={tags: Meta.Tags}=={if Length(Meta.Ops[0].Operands) == 1}=={([|Op.Operands[0]|]).recv().await}=/)(/={tags: Meta.Tags}=={if Length(Meta.Ops[0].Operands) == 2}=={([|Op.Operands[0]|]).send([|Op.Operands[1]|]).await}=/)}=/)
+}-|/|}
+// End Calculate Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Ops: Array-Op]}-|/|}

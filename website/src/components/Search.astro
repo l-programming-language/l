@@ -1,0 +1,19 @@
+---
+import DefaultSearch from '@astrojs/starlight/components/Search.astro';
+---
+<DefaultSearch {...Astro.props} />
+<script>
+  // Starlight loads Pagefind during idle time. If a reader opens search before
+  // that first load finishes, focus the input as soon as it becomes available.
+  // Starlight continues to own the dialog, shortcuts, closing and result UI.
+  for (const search of document.querySelectorAll('site-search')) {
+    if (search.querySelector('input')) continue;
+    const observer = new MutationObserver(() => {
+      const input = search.querySelector('input');
+      if (!input) return;
+      if (search.querySelector('dialog')?.open) input.focus();
+      observer.disconnect();
+    });
+    observer.observe(search, { childList: true, subtree: true });
+  }
+</script>

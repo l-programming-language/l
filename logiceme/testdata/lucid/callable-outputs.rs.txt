@@ -1,0 +1,73 @@
+
+
+// package main
+
+
+
+
+fn omitted( ) {
+    
+        
+
+let _omitted = 1;
+
+
+
+    
+}
+fn empty( ) {
+    
+        
+
+let _empty = 2;
+
+
+
+    
+}
+fn unit( ) -> (()) {
+    
+        
+
+return ();
+
+
+
+    
+}
+fn number( ) -> (i32) {
+    
+        
+
+return 4;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let _a = omitted()
+;
+
+
+let _b = empty()
+;
+
+
+let _c = unit()
+;
+
+
+let number = number()
+;
+
+
+
+assert_eq!(number, 4);
+
+
+
+    
+}

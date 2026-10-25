@@ -1,0 +1,40 @@
+
+
+// package main
+
+
+
+
+
+
+fn main() {
+    let mut visits = 0;
+
+
+
+
+
+
+while visits < 2  {
+    
+
+print!("{}", visits);
+
+
+
+
+visits = visits + 1;
+
+
+
+}
+
+
+
+
+
+
+
+    print!("after");
+}
+

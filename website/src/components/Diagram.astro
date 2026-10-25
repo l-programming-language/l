@@ -1,0 +1,9 @@
+---
+interface Props { name: 'compiler-pipeline' | 'runtime-lifecycle' | 'process-model'; alt: string; caption: string; }
+const { name, alt, caption } = Astro.props;
+---
+<figure class="l-diagram">
+  <img class="dark:sl-block light:sl-hidden" src={`/assets/l/diagrams/${name}-dark.svg`} alt={alt} loading="lazy" width="1440" height="820" />
+  <img class="dark:sl-hidden light:sl-block" src={`/assets/l/diagrams/${name}-light.svg`} alt={alt} loading="lazy" width="1440" height="820" />
+  <figcaption>{caption} <a href={`/assets/l/diagrams/${name}-light.svg`}>Open full-size diagram</a>.</figcaption>
+</figure>

@@ -1,0 +1,25 @@
+
+
+// package main
+
+
+use std::hint::black_box;
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+print!("{}", black_box("operation-first"));
+
+
+
+
+print!("{}", black_box("operation-second"));
+
+
+
+    
+}
+

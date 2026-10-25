@@ -1,0 +1,32 @@
+
+
+// package main
+
+
+use std::hint::black_box;
+
+
+fn Void( pair: (i32, i32), r#type: i32) -> (i32) {
+    
+        
+
+return black_box(pair.0 + pair.1 + r#type);
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let total = Void((2, 3), 4)
+;
+
+
+
+assert_eq!(total, 9);
+
+
+
+    
+}

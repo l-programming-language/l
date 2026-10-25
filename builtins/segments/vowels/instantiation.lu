@@ -1,0 +1,19 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Instantiation Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+[|Instantiate(Key = Meta.Key, Props = Meta.Props, Lifetimes = Meta.Lifetimes, GenericTypes = Meta.GenericTypes)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Operate"}--{[|Instantiate("Operation", Receiver = Meta.Receiver, Key = Meta.Key, Inputs = Meta.Inputs, Operation = Conjoinments.Operation, Lifetimes = Meta.Lifetimes, GenericTypes = Meta.GenericTypes)|]}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiate"}--{
+[|Instantiate("Instantiation", Key = Meta.Key, Funcs = Meta.Funcs, Lifetimes = Meta.Lifetimes, GenericTypes = Meta.GenericTypes)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Describe"}--{
+[|Instantiate("Description", Key = Meta.Key, Props = Meta.Props, Lifetimes = Meta.Lifetimes, GenericTypes = Meta.GenericTypes)|]
+}-|/|}
+// End Instantiation Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String, Receiver: string, Inputs: Array-String, Funcs: Array-Func, Props: Array-Prop, Func: Func, Prop: Prop, Lifetimes: String, GenericTypes: String]}-|/|}

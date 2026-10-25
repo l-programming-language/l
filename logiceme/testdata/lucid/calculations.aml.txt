@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(DOB{|Keys: ~&[value]&~|}^DE{|Ops: ~&[Op{Type: Calculate, Postfix: ), Prefix: (, Operator: +, Operands: &[1, 2]&}Op, Op{Operands: &[3, 4]&, Prefix: &[+(]&, Type: Calculate, Operator: +, Postfix: &[)]&}Op]&~|}*BOD^E{|Statement: ~print!("{}", value);~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

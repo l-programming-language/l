@@ -1,0 +1,21 @@
+#!/bin/sh
+set -eu
+
+if [ "$#" -ne 1 ]; then
+    printf '%s\n' 'usage: stop.sh PID' >&2
+    exit 2
+fi
+
+application_pid=$1
+case "$application_pid" in
+    ''|*[!0-9]*) printf '%s\n' 'PID must be an integer greater than one' >&2; exit 2 ;;
+esac
+if ! [ "$application_pid" -gt 1 ] 2>/dev/null ||
+   ! [ "$application_pid" -le 2147483647 ] 2>/dev/null; then
+    printf '%s\n' 'PID must be an integer from 2 through 2147483647' >&2
+    exit 2
+fi
+
+# Signal the explicitly selected orchestrator, which cleans its owned children.
+# Do not infer ownership from process names, stale PID files, or process groups.
+kill -TERM "$application_pid"

@@ -1,0 +1,161 @@
+package main
+
+// This diagnostic is injected into cmd/l with a temporary Go overlay.
+// It is not part of the current acceptance suite.
+import (
+	"bytes"
+	"crypto/sha256"
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+	"reflect"
+	"runtime/debug"
+	"sort"
+	"strings"
+	"testing"
+)
+
+func TestHarnessCompilerProbe(t *testing.T) {
+	dir := os.Getenv("L_HARNESS_ARTIFACT_DIR")
+	if dir == "" {
+		t.Fatal("L_HARNESS_ARTIFACT_DIR is required")
+	}
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		t.Fatal(err)
+	}
+	report := map[string]interface{}{"probe": "compiler", "diagnostic_only": true, "phase": "initialize"}
+	if cwd, err := os.Getwd(); err == nil {
+		report["working_directory"] = cwd
+	}
+	write := func(name string, data []byte) {
+		if err := os.WriteFile(filepath.Join(dir, name), data, 0600); err != nil {
+			t.Errorf("write %s: %v", name, err)
+		}
+	}
+	c := newCompiler(compilerTestCLI())
+	normalReturn := false
+	var originatingSource []byte
+	defer func() {
+		r := recover()
+		if !normalReturn {
+			report["panic"] = fmt.Sprint(r)
+			write("panic-stack.txt", debug.Stack())
+			t.Errorf("compiler probe panicked during %v: %v", report["phase"], r)
+		}
+		comparisons := map[string]interface{}{}
+		for _, item := range []struct {
+			name     string
+			actual   []byte
+			expected []byte
+		}{
+			{"main", c.mainBytes, []byte(INITTEST)},
+			{"originating-source", originatingSource, []byte(COMPTEST)},
+			{"asm", c.asmBytes, expectedCompilerAML(t)},
+		} {
+			write(item.name+".actual.raw", item.actual)
+			write(item.name+".expected.raw", item.expected)
+			first := -1
+			for i := 0; i < len(item.actual) && i < len(item.expected); i++ {
+				if item.actual[i] != item.expected[i] {
+					first = i
+					break
+				}
+			}
+			if first == -1 && len(item.actual) != len(item.expected) {
+				first = len(item.actual)
+				if len(item.expected) < first {
+					first = len(item.expected)
+				}
+			}
+			comparisons[item.name] = map[string]interface{}{
+				"equal":      bytes.Equal(item.actual, item.expected),
+				"actual_nil": item.actual == nil, "expected_nil": item.expected == nil,
+				"actual_length": len(item.actual), "expected_length": len(item.expected),
+				"actual_sha256":        fmt.Sprintf("%x", sha256.Sum256(item.actual)),
+				"expected_sha256":      fmt.Sprintf("%x", sha256.Sum256(item.expected)),
+				"first_differing_byte": first,
+			}
+		}
+		write("compiled.actual.raw", c.compiledBytes)
+		report["byte_comparisons"] = comparisons
+		report["compiler_error"] = fmt.Sprint(c.err)
+		report["compilation_nil"] = c.compilation == nil
+		if p := c.compilation; p != nil {
+			write("compilation-main.raw", p.MainBytes)
+			write("compilation-expanded.raw", p.CompiledBytes)
+			write("compilation-asm.raw", p.ASMBytes)
+			keys := make([]string, 0, len(p.Memory))
+			for key := range p.Memory {
+				keys = append(keys, key)
+			}
+			sort.Strings(keys)
+			state := map[string]interface{}{
+				"error": fmt.Sprint(p.Error), "main_path": p.MainPath, "root_directory": p.RootDir,
+				"statements": len(p.Statements), "pending_statements": len(p.ProcStatements),
+				"memory_keys": keys, "program_nil": p.Program == nil,
+				"empty_as_expected": reflect.DeepEqual(p, getTestCompiler()),
+			}
+			if p.Program != nil {
+				state["book_count"] = len(p.Program.Books)
+				write("program-aml.raw", p.Program.AMLBytes)
+			}
+			cacheKeys := make([]string, 0, len(p.TextCache))
+			for key := range p.TextCache {
+				cacheKeys = append(cacheKeys, key)
+			}
+			sort.Strings(cacheKeys)
+			cache := make([]map[string]interface{}, 0, len(cacheKeys))
+			for i, key := range cacheKeys {
+				name := fmt.Sprintf("literal-%04d.raw", i)
+				write(name, p.TextCache[key])
+				cache = append(cache, map[string]interface{}{"key": key, "file": name, "length": len(p.TextCache[key])})
+			}
+			state["literal_cache"] = cache
+			report["compilation"] = state
+			if p.Error != nil {
+				t.Errorf("compilation error: %v", p.Error)
+			}
+		}
+		if c.err != nil {
+			t.Errorf("compiler error: %v", c.err)
+		}
+		report["probe_failed"] = t.Failed()
+		data, err := json.MarshalIndent(report, "", "  ")
+		if err != nil {
+			t.Errorf("encode report: %v", err)
+			return
+		}
+		write("report.json", append(data, '\n'))
+	}()
+
+	conf := getTestOptions()
+	if conf == nil { normalReturn = true; t.Fatal("canonical resource prerequisite failed") }
+	c.initialize(compilerInitOptions{AssetRoot: conf.AssetRoot})
+	want := &compiler{
+		cli: compilerTestCLI(), options: *conf, lyger: getTestLygerService(conf), log: getTestLogService(conf),
+		compilation: getTestCompiler(), mainBytes: []byte(INITTEST),
+	}
+	report["initialization_matches_acceptance"] = reflect.DeepEqual(c, want)
+	if !reflect.DeepEqual(c, want) {
+		t.Error("initialization state differs from current acceptance expectation")
+	}
+	if c.err != nil {
+		normalReturn = true
+		return
+	}
+	report["phase"] = "compile"
+	result := c.compile()
+	if result != nil && result.Compilation != nil {
+		var statements []string
+		for _, statement := range result.Compilation.SourceStatements {
+			if statement.Span.Path == c.cli.mainPath { statements = append(statements, strings.TrimSpace(string(statement.Raw))) }
+		}
+		originatingSource = []byte(strings.Join(statements, "\n"))
+	}
+	matched := c.err == nil && bytes.Equal(originatingSource, []byte(COMPTEST)) && bytes.Equal(c.asmBytes, expectedCompilerAML(t))
+	report["compilation_matches_acceptance"] = matched
+	if !matched { t.Error("compiled originating-source/application-AML differs from current acceptance expectation") }
+	report["phase"] = "complete"
+	normalReturn = true
+}

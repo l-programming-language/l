@@ -1,0 +1,24 @@
+{
+  "id": "F07",
+  "title": "missing-companion-launch-failure",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [
+    "Compile/package successfully in a test-owned output tree, then remove only Worker's generated companion executable before running the orchestrator. Record this as artifact fault injection; do not modify L source or protected fixtures."
+  ],
+  "assertions": [
+    "No child process is created; no OS Wait is called for the failed launch.",
+    "Run creates a terminal failed attempt; Await resolves its startup cause instead of reporting never started.",
+    "Output of that failed attempt is available and empty after completion."
+  ],
+  "expected_runtime": {
+    "stdout": "startup-failed|",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l"
+  ]
+}

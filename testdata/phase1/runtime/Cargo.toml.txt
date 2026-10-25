@@ -1,0 +1,11 @@
+[workspace]
+members = ["driver", "companion"]
+resolver = "3"
+
+[workspace.dependencies]
+tokio = { version = "=1.53.1", features = ["rt", "rt-multi-thread", "macros", "process", "io-util", "io-std", "signal", "sync", "time"] }
+nix = { version = "=0.31.3", features = ["signal", "process", "fs"] }
+
+# Native supervision fault fixtures exercise real Rust unwinding.
+[profile.dev]
+panic = "unwind"

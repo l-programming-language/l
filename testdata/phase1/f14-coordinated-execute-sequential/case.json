@@ -1,0 +1,30 @@
+{
+  "id": "F14",
+  "title": "coordinated-execute-sequential",
+  "profile": "gate",
+  "apps": [
+    "First",
+    "Second"
+  ],
+  "setup": [
+    "Create a fresh short Unix socket path and an empty lifetime-lock directory in test-owned temporary storage; set L_PHASE1_SOCKET and L_PHASE1_DIRECTORY for the orchestrator. Start the controller before the program.",
+    "Each child has its own connection. Parse a complete ready <label> <pid> line and reject duplicate/unexpected labels. Record direct PIDs separately from controller and orchestrator.",
+    "Controller commands are exactly release followed by LF; readiness does not release a child. Test deadlines bound failures only.",
+    "Keep every controller connection open until runtime shutdown has been observed. Require spontaneous child disconnection and lifetime-lock release before controller closure or fallback signals; record cleanup failures before fallback. Lock release alone does not prove direct-child reaping.",
+    "Accept and release A first; then accept and release B. The controller must support unexpected B arrival without deadlocking the test: record it as an ordering violation and still perform fallback cleanup."
+  ],
+  "assertions": [
+    "AST/call-order assertions require Build A, Run A, Await A, then Build B, Run B, Await B.",
+    "Runtime launch/join boundary tracing, if used, must be an observation of actual runtime state; absence of B for a sleep interval is not proof."
+  ],
+  "expected_runtime": {
+    "stdout": "A\nB\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l",
+    "../companions/gate.l",
+    "../companions/actions.l"
+  ]
+}

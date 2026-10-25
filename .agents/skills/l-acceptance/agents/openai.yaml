@@ -1,0 +1,4 @@
+interface:
+  display_name: "l Acceptance"
+  short_description: "Verify the fixed l prototype acceptance gate"
+  default_prompt: "Use $l-acceptance to run the unchanged prototype suite and report its current acceptance status."

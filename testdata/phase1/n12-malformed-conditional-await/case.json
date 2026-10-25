@@ -1,0 +1,20 @@
+{
+  "id": "N12",
+  "title": "malformed-conditional-await",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "The stray CONDITIONAL annotation in the proposed lexical example is not accepted as new syntax."
+  ],
+  "expected_compile_error": {
+    "category": "Syntax",
+    "span": "offending source statement",
+    "publication": "none; preserve any previously published program"
+  },
+  "files": [
+    "main.l"
+  ]
+}

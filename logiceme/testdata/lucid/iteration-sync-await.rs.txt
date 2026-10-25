@@ -1,0 +1,36 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let (_tx, mut rx) = tokio::sync::mpsc::channel::<i32>(1);
+
+
+
+
+
+while let Some(number) = (rx).recv().await {
+    
+
+print!("{}", number);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+    
+}

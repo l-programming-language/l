@@ -1,0 +1,37 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Definition Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+[|Define([|"Consonant"|] Keys = Meta.Keys, Values = Meta.Values)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Define"}--{
+[|Define([|"Consonant"|] Keys = Meta.Keys, Values = Conjoinments.Declaration)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Operate"}--{
+[|Define([|"Consonant"|] Keys = Meta.Keys, Values = Conjoinments.Operation)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Declare"}--{
+[|Declare([|"Consonant"|] Keys = Meta.Keys, Type = Meta.Type, Calculation = Conjoinments.Calculation, Operation = Conjoinments.Operation, Description = Conjoinments.Description, Evaluation = Conjoinments.Evaluation, Instantiation = Conjoinments.Instantiation, Iteration = Conjoinments.Iteration, Execution = Conjoinments.Execution)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Calculate"}--{
+[|Define([|"Consonant"|] Keys = Meta.Keys, Values = Conjoinments.Calculation)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Evaluate"}--{
+[|Define([|"Consonant"|] Keys = Meta.Keys, Values = Conjoinments.Evaluation)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiate"}--{
+[|Define([|"Consonant"|] Keys = Meta.Keys, Values = Conjoinments.Instantiation)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Iterate"}--{
+[|Define("Iteration", Keys = Meta.Keys, Iteration = Conjoinments.Iteration)|]
+}-|/|}
+// End Definition Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Keys: Array-Key, Key: String, Values: Array-Value, Value: String, Type: String]}-|/|}

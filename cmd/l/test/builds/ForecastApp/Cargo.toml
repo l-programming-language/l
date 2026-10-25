@@ -1,0 +1,12 @@
+[package]
+name = "ForecastApp"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "ForecastApp"
+path = "src/main.rs"
+
+[dependencies]
+

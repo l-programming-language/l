@@ -1,0 +1,27 @@
+
+
+// package main
+
+
+
+
+
+
+struct Pair { a: i32, b: i32 }
+
+fn main( ) -> (()) {
+    
+        
+let value = Pair{a: 11, b: 22} 
+
+
+;
+
+
+
+print!("{}", value.a + value.b);
+
+
+
+    
+}

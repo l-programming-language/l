@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`HA^U^(FW{|Key: ~helper~, Outputs: ~&[()]&~|}^W^BOD^E{|Statement: ~print!("{}", black_box("description-helper"));~, Imports: ~&[std::hint::black_box]&~|}*FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^BOD^E{|Statement: ~helper();~, Imports: ~&[std::hint::black_box]&~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

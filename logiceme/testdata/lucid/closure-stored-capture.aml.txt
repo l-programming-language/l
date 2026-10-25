@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(BOD^E{|Statement: ~let owner = String::from("borrowed");~|}*KOB{|Key: ~inspect~|}^BW{|Inputs: ~&[Prop{Key: extra, Type: usize}Prop]&~|}^W^BOD^E{|Statement: ~return owner.len() + extra;~|}*MOB{|Key: ~length~|}^KY{|Key: ~inspect~, Inputs: ~&[2]&~|}*BOD^E{|Statement: ~assert_eq!(length, 10); assert_eq!(owner, "borrowed");~|}*BOD^E{|Statement: ~let assigned;~|}*KO{|Key: ~assigned~|}^BW{|Func: ~#[Func{Inputs: &[Prop{Key: value, Type: i32}Prop]&, Outputs: &[i32]&}Func]#~|}^W^BOD^E{|Statement: ~return value * 2;~|}*MOB{|Key: ~doubled~|}^KY{|Key: ~assigned~, Inputs: ~&[9]&~|}*BOD^E{|Statement: ~assert_eq!(doubled, 18); assert_eq!(owner.len(), 8);~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

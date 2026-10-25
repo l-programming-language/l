@@ -1,0 +1,46 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let (tx, mut rx) = tokio::sync::mpsc::channel::<String>(1);
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+_ = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+},
+
+
+
+}
+
+
+
+
+
+drop(tx);
+
+
+
+    
+}

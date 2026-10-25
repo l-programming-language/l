@@ -1,0 +1,38 @@
+---
+const stages = [
+  { title: 'L source', text: 'Write sentences, Apps, and Services.' },
+  { title: 'Rust source', text: 'L generates Rust source for your program.' },
+  { title: 'Native build', text: 'The Rust toolchain builds native artifacts.' },
+  { title: 'Run', text: 'Launch the executable to run your program.' },
+];
+---
+
+<figure class="l-rust-pipeline not-content" aria-labelledby="rust-pipeline-caption">
+  <ol class="l-rust-stages" role="list">
+    {stages.map((stage, index) => <li>
+      <span class="l-stage-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+      <div><strong>{stage.title}</strong><p>{stage.text}</p></div>
+      {index < stages.length - 1 && <span class="l-stage-arrow" aria-hidden="true">→</span>}
+    </li>)}
+  </ol>
+  <figcaption id="rust-pipeline-caption"><code>l build</code> generates Rust and builds your program. Execution starts when you run the resulting executable.</figcaption>
+</figure>
+
+<style>
+  @layer l {
+    .l-rust-pipeline { margin: 2rem 0; }
+    .l-rust-stages { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.5rem; padding: 0; margin: 0; list-style: none; }
+    .l-rust-stages > li { position: relative; min-width: 0; padding: 1.4rem; margin: 0; background: var(--l-surface); border: 1px solid var(--sl-color-hairline); border-radius: 1rem; }
+    .l-stage-number { display: block; margin-bottom: 1.5rem; font: .7rem var(--sl-font-mono); color: var(--sl-color-accent-high); }
+    .l-rust-stages strong { font-size: 1.1rem; line-height: 1.3; color: var(--sl-color-white); }
+    .l-rust-stages p { margin: .6rem 0 0; font-size: .85rem; line-height: 1.7; color: var(--sl-color-gray-3); }
+    .l-stage-arrow { position: absolute; top: 50%; right: -2rem; transform: translateY(-50%); font-size: 1.5rem; line-height: 1; color: var(--sl-color-accent-high); }
+    figcaption { margin-top: 1rem; color: var(--sl-color-gray-3); font-size: .8rem; }
+    @media (max-width: 60rem) {
+      .l-rust-stages { grid-template-columns: 1fr; gap: 2rem; }
+      .l-rust-stages > li { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: 1rem; padding: 1.2rem; }
+      .l-stage-number { margin: .25rem 0 0; }
+      .l-stage-arrow { top: auto; right: auto; bottom: -1.8rem; left: 50%; transform: translateX(-50%) rotate(90deg); }
+    }
+  }
+</style>

@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "archive": "L-documentation-web-assets.zip",
+  "archiveSha256": "c0fadfb33bc38651f96d3302647f7a461a4ed90fb0ece15864f05201ec35e8f7",
+  "originalLogoSha256": "32a11e04ca3b6cb2ef9af8e1c9a2a09d43010be4a8e9369ff1b23162e35e0ae2",
+  "geometry": "Vector geometry and brand marks are preserved. Native SVG labels distinguish App processes, additional App-constructed Service libraries and structural standalone Service declarations without artifacts.",
+  "review": "Byte sizes and SHA-256 hashes identify the current assets. Labels describe the App-only process and App-owned library contracts; asset metadata does not establish compiler/runtime or website test results.",
+  "excluded": [
+    "preview application",
+    "reports",
+    "pack JavaScript",
+    "pack CSS",
+    "lexical highlighter",
+    "copied code examples",
+    "source archive"
+  ],
+  "licenseNotes": "Original logo supplied by the user. Surrounding visual assets authored for this project. No new blanket asset license is inferred. Repository source examples remain under the repository LICENSE.",
+  "assets": [
+    {
+      "path": "public/assets/l/brand/logo-tile.svg",
+      "bytes": 1773,
+      "sha256": "32a11e04ca3b6cb2ef9af8e1c9a2a09d43010be4a8e9369ff1b23162e35e0ae2"
+    },
+    {
+      "path": "public/assets/l/brand/mark-on-dark.svg",
+      "bytes": 995,
+      "sha256": "4e1aebf0380fce539dd2282b36fce1aa1e91cfd2a4852748bdd4949de1a6c6ee"
+    },
+    {
+      "path": "public/assets/l/brand/mark-on-light.svg",
+      "bytes": 935,
+      "sha256": "ba67f0d34b93545364a0b4ddbbbd60b546ca8f5084e1b2e810223d75c3ff111f"
+    },
+    {
+      "path": "public/assets/l/brand/lockup-docs-dark.svg",
+      "bytes": 7626,
+      "sha256": "09e9906ad37ce396a1901bba9790b4d19c7be04fe9acc055870a539e90ea5456"
+    },
+    {
+      "path": "public/assets/l/brand/lockup-docs-light.svg",
+      "bytes": 7566,
+      "sha256": "fdd59b9f8199b8f705635fdfc3481a1747a87695652de865f28a154771041d9a"
+    },
+    {
+      "path": "public/assets/l/diagrams/compiler-pipeline-dark.svg",
+      "bytes": 195969,
+      "sha256": "53f1d3e9eb5ddd08bd53dcbd55b3563f768c4c0ad9549aff04aeb22f2757a758"
+    },
+    {
+      "path": "public/assets/l/diagrams/compiler-pipeline-light.svg",
+      "bytes": 195974,
+      "sha256": "529e9e606ef108ec94190b7b6eef8a420ae1a90746f120516b8d27df0dbc0295"
+    },
+    {
+      "path": "public/assets/l/diagrams/runtime-lifecycle-dark.svg",
+      "bytes": 178960,
+      "sha256": "786775eb3163ff253c20f146e7a7322c3d23dedd0ee2efbe8190caf2bd0a0566"
+    },
+    {
+      "path": "public/assets/l/diagrams/runtime-lifecycle-light.svg",
+      "bytes": 178965,
+      "sha256": "5b6d82b137a0244aba293169f37fdbe2e04992989f348c1bf8f1faa0399ae415"
+    },
+    {
+      "path": "public/assets/l/diagrams/process-model-dark.svg",
+      "bytes": 71339,
+      "sha256": "edd1551bbb68e128942393484c91a6318bcccdb2a796aec4801f495043386520"
+    },
+    {
+      "path": "public/assets/l/diagrams/process-model-light.svg",
+      "bytes": 71344,
+      "sha256": "9fb8f75cf579dc83425e9781e70a4f2f8eea58edb99300beed3faa65bcc3e039"
+    },
+    {
+      "path": "public/assets/l/illustrations/hero-source-to-native-dark.svg",
+      "bytes": 26215,
+      "sha256": "b7e90b55d4aba94df5ddbfdb0be3b08bbdcd45c3f769991cd101a5237adae310"
+    },
+    {
+      "path": "public/assets/l/illustrations/hero-source-to-native-light.svg",
+      "bytes": 26155,
+      "sha256": "30dca6131b107eb870f14dc3782c2403ce16c97a9d5732abbe9732f7b9882e3d"
+    },
+    {
+      "path": "public/assets/l/illustrations/readable-source.svg",
+      "bytes": 19666,
+      "sha256": "b43dab48c6e544e6aeb9d96b75071362c7641263692732f9060ba4553a6ede4e"
+    },
+    {
+      "path": "public/assets/l/illustrations/applications.svg",
+      "bytes": 8847,
+      "sha256": "d83c21e3df0b13da3d906c787d80ee672e53e4d4c237357511b9fdcd110402e3"
+    },
+    {
+      "path": "public/assets/l/illustrations/dictionaries.svg",
+      "bytes": 12169,
+      "sha256": "b2ca304210e510620ea49f6ef74cfff531134f0f731f97e80a11c57b9d5dea77"
+    },
+    {
+      "path": "public/assets/l/illustrations/native-builds.svg",
+      "bytes": 24213,
+      "sha256": "e72b0e7e2deb368fa1308e219c03438ec3900dec77644060e0c1ac55a8f95b44"
+    },
+    {
+      "path": "public/assets/l/favicons/favicon.svg",
+      "bytes": 1041,
+      "sha256": "fda59d86e28b84ad17f3b95432509bf0919a9b8e81b50257969ba07456e1aec3"
+    },
+    {
+      "path": "public/assets/l/favicons/favicon.ico",
+      "bytes": 3844,
+      "sha256": "77a0cd1a9b5bf68617b556bc592ddaff0c37a413c01fabc5f58e95a01e0866a7"
+    },
+    {
+      "path": "public/assets/l/favicons/apple-touch-icon.png",
+      "bytes": 3471,
+      "sha256": "db2b6074bc9109c9782f6b959862d51cd44bdccaf26d2f222442628993ce5ffe"
+    },
+    {
+      "path": "public/assets/l/social/og-default.png",
+      "bytes": 111309,
+      "sha256": "6d48bbe1b16b4c55c4d361639f51eb385bea8ddfd9dcca6f541bdc5b128d9a86"
+    },
+    {
+      "path": "public/assets/l/social/og-getting-started.png",
+      "bytes": 99184,
+      "sha256": "389a86be6c25819d469ea85704fc51375a11456c30abf52da08217c139e3e34b"
+    },
+    {
+      "path": "public/assets/l/social/og-compiler.png",
+      "bytes": 101823,
+      "sha256": "46083df5bdde8179586eb100ff67f5bbd2d6deb35eb4b63a88b4e5e27cd1a64d"
+    },
+    {
+      "path": "public/assets/l/social/og-runtime.png",
+      "bytes": 103901,
+      "sha256": "33394d0ab6c4132a3cbd6567567794dbc1504841a99d25a134d4f6b9a87e6f9d"
+    },
+    {
+      "path": "public/assets/l/icons/book.svg",
+      "bytes": 314,
+      "sha256": "556845ea24a637d8174e58b18a5f0fe34466b1dc84da60df23d1c7fbf714b53c"
+    },
+    {
+      "path": "public/assets/l/icons/code.svg",
+      "bytes": 269,
+      "sha256": "f161c5b1ba355762e5d0fc6a4c2611136170d6729942e84b3878bc82cdc453cd"
+    },
+    {
+      "path": "public/assets/l/icons/compiler.svg",
+      "bytes": 351,
+      "sha256": "9c597c06e86a07a6976f572a7f482720998f42de889f832ce007ab1804126e97"
+    },
+    {
+      "path": "public/assets/l/icons/dictionary.svg",
+      "bytes": 315,
+      "sha256": "53a975ec01570cd00cf398475eaff1d0d635fe42075a7a8d1d346242040a40e7"
+    },
+    {
+      "path": "public/assets/l/icons/app.svg",
+      "bytes": 318,
+      "sha256": "24a7132c70a879b8c60a968b6cf8c867d026bdb2961165290128b607f1e86406"
+    },
+    {
+      "path": "public/assets/l/icons/service.svg",
+      "bytes": 380,
+      "sha256": "bb407c809fb577763b170436d9473e3bc33f1d70093e796553d47d0f1824e86c"
+    },
+    {
+      "path": "public/assets/l/icons/arrow-right.svg",
+      "bytes": 260,
+      "sha256": "83f1c00fed37673799e1905050f6a1687bde535a2e17dbaeb23dc6b07352528d"
+    }
+  ]
+}

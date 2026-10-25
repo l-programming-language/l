@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "l_service_worker"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src","StructureVersion":"2","Deps":"[\"service = { package = \\\"Worker\\\", path = \\\"../../services/service-000\\\" }\"]"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"],"Target":{"Kind":"bin","Name":"l_service_worker","Root":"main","Primary":true}}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main">
+<|W|><|S|>`A`</S|></W|>
+<|W|><|S|>`FW{|Func: ~Func{Key: main}Func~|}^W^BOD^E{|Statement: ~service::worker::main();~|}`</S|></W|>
+</SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

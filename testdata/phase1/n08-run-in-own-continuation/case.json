@@ -1,0 +1,24 @@
+{
+  "id": "N08",
+  "title": "run-in-own-continuation",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Current invocation remains occupied throughout its continuation; recursive Run is rejected without spawning a second child.",
+    "Compile-time inline expansion must terminate and preserve a source-attributed diagnostic/runtime guard."
+  ],
+  "expected_runtime": {
+    "stdout": "",
+    "exit_status": 1,
+    "stderr_contains": [
+      "Run",
+      "outstanding"
+    ]
+  },
+  "files": [
+    "main.l"
+  ]
+}

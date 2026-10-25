@@ -1,0 +1,635 @@
+{
+  "schemaVersion": 1,
+  "pages": [
+    {
+      "source": "docs/index.md",
+      "route": "/docs/",
+      "title": "L documentation",
+      "description": "L documentation: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Start here",
+      "order": 0,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/index.md",
+      "route": "/docs/guide/",
+      "title": "Learn L",
+      "description": "Learn L: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 0,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/first-program.md",
+      "route": "/docs/guide/first-program/",
+      "title": "Build your first program",
+      "description": "Build your first program: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 1,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/values.md",
+      "route": "/docs/guide/values/",
+      "title": "Work with values",
+      "description": "Work with values: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 2,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/names-and-paragraphs.md",
+      "route": "/docs/guide/names-and-paragraphs/",
+      "title": "Names and paragraphs",
+      "description": "Names and paragraphs: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 3,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/definitions.md",
+      "route": "/docs/guide/definitions/",
+      "title": "Define vocabulary and behavior",
+      "description": "Define vocabulary and behavior: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 4,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/control-flow.md",
+      "route": "/docs/guide/control-flow/",
+      "title": "Decisions, sequencing and termination",
+      "description": "Decisions, sequencing and termination: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 5,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/imports.md",
+      "route": "/docs/guide/imports/",
+      "title": "Import dictionaries and project source",
+      "description": "Import dictionaries and project source: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 6,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/apps-and-services.md",
+      "route": "/docs/guide/apps-and-services/",
+      "title": "Organize Apps and Services",
+      "description": "Organize Apps and Services: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 7,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/lifecycle.md",
+      "route": "/docs/guide/lifecycle/",
+      "title": "Manage lifecycle and captured output",
+      "description": "Manage lifecycle and captured output: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 8,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/guide/native-definitions.md",
+      "route": "/docs/guide/native-definitions/",
+      "title": "Write native-backed definitions",
+      "description": "Write native-backed definitions: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Guide",
+      "order": 9,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/cli/index.md",
+      "route": "/docs/cli/",
+      "title": "The L command line",
+      "description": "The L command line: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "CLI",
+      "order": 0,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/cli/installation.md",
+      "route": "/docs/cli/installation/",
+      "title": "Build and install the compiler",
+      "description": "Build and install the compiler: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "CLI",
+      "order": 1,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/cli/build.md",
+      "route": "/docs/cli/build/",
+      "title": "l build reference",
+      "description": "l build reference: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "CLI",
+      "order": 2,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/cli/runtime.md",
+      "route": "/docs/cli/runtime/",
+      "title": "Running a published program",
+      "description": "Running a published program: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "CLI",
+      "order": 3,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/cli/troubleshooting.md",
+      "route": "/docs/cli/troubleshooting/",
+      "title": "Diagnose a build or program failure",
+      "description": "Diagnose a build or program failure: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "CLI",
+      "order": 4,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/_generated/cli-help.md",
+      "route": "/docs/cli/source-help/",
+      "title": "Source-derived CLI help",
+      "description": "Source-derived CLI help: mechanically generated from current repository inputs; language execution is separate.",
+      "section": "CLI",
+      "order": 40,
+      "role": "implementation",
+      "generated": true
+    },
+    {
+      "source": "docs/spec/index.md",
+      "route": "/docs/spec/",
+      "title": "L Language Specification",
+      "description": "L Language Specification: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 0,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/lexical-structure.md",
+      "route": "/docs/spec/lexical-structure/",
+      "title": "Lexical structure and source organization",
+      "description": "Lexical structure and source organization: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 1,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/values.md",
+      "route": "/docs/spec/values/",
+      "title": "Primitive values",
+      "description": "Primitive values: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 2,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/collections-and-categories.md",
+      "route": "/docs/spec/collections-and-categories/",
+      "title": "Collections and application categories",
+      "description": "Collections and application categories: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 3,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/names-and-scope.md",
+      "route": "/docs/spec/names-and-scope/",
+      "title": "Names, scope, and evaluation state",
+      "description": "Names, scope, and evaluation state: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 4,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/grammar.md",
+      "route": "/docs/spec/grammar/",
+      "title": "Grammar and vocabulary",
+      "description": "Grammar and vocabulary: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 5,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/definitions.md",
+      "route": "/docs/spec/definitions/",
+      "title": "Definitions and extensibility",
+      "description": "Definitions and extensibility: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 6,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/control-flow.md",
+      "route": "/docs/spec/control-flow/",
+      "title": "Operations and control flow",
+      "description": "Operations and control flow: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 7,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/imports.md",
+      "route": "/docs/spec/imports/",
+      "title": "Imports, dictionaries, and program structure",
+      "description": "Imports, dictionaries, and program structure: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 8,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/execution.md",
+      "route": "/docs/spec/execution/",
+      "title": "Execution and lifecycle",
+      "description": "Execution and lifecycle: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 9,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/errors.md",
+      "route": "/docs/spec/errors/",
+      "title": "Errors, diagnostics, and compatibility",
+      "description": "Errors, diagnostics, and compatibility: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 10,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/spec/glossary.md",
+      "route": "/docs/spec/glossary/",
+      "title": "Glossary",
+      "description": "Glossary: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Language specification",
+      "order": 11,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/_generated/grammar.md",
+      "route": "/docs/spec/grammar-reference/",
+      "title": "Grammar rule inventory",
+      "description": "Grammar rule inventory: mechanically generated from current repository inputs; language execution is separate.",
+      "section": "Language specification",
+      "order": 40,
+      "role": "implementation",
+      "generated": true
+    },
+    {
+      "source": "docs/_generated/vocabulary.md",
+      "route": "/docs/spec/vocabulary-reference/",
+      "title": "Vocabulary inventory",
+      "description": "Vocabulary inventory: mechanically generated from current repository inputs; language execution is separate.",
+      "section": "Language specification",
+      "order": 40,
+      "role": "implementation",
+      "generated": true
+    },
+    {
+      "source": "docs/reference/builtins/index.md",
+      "route": "/docs/reference/builtins/",
+      "title": "Builtin reference",
+      "description": "Builtin reference: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Builtins",
+      "order": 0,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/builtins/definitions.md",
+      "route": "/docs/reference/builtins/definitions/",
+      "title": "Construction and definition builtins",
+      "description": "Construction and definition builtins: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Builtins",
+      "order": 5,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/builtins/lifecycle.md",
+      "route": "/docs/reference/builtins/lifecycle/",
+      "title": "Lifecycle and observation builtins",
+      "description": "Lifecycle and observation builtins: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Builtins",
+      "order": 5,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/index.md",
+      "route": "/docs/reference/logemes/",
+      "title": "Logemes and the Rust target",
+      "description": "Logemes and the Rust target: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 0,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/alphabet.md",
+      "route": "/docs/reference/logemes/alphabet/",
+      "title": "The alphabet and composition",
+      "description": "The alphabet and composition: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/aml.md",
+      "route": "/docs/reference/logemes/aml/",
+      "title": "AML, ownership and the source-bundle boundary",
+      "description": "AML, ownership and the source-bundle boundary: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/calculations.md",
+      "route": "/docs/reference/logemes/calculations/",
+      "title": "Calculations and descriptions",
+      "description": "Calculations and descriptions: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/callables.md",
+      "route": "/docs/reference/logemes/callables/",
+      "title": "Operations and callable forms",
+      "description": "Operations and callable forms: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/declarations.md",
+      "route": "/docs/reference/logemes/declarations/",
+      "title": "Declarations, definitions and file boundaries",
+      "description": "Declarations, definitions and file boundaries: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/instantiation.md",
+      "route": "/docs/reference/logemes/instantiation/",
+      "title": "Instantiation, records, traits and scheduling",
+      "description": "Instantiation, records, traits and scheduling: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/iteration.md",
+      "route": "/docs/reference/logemes/iteration/",
+      "title": "Iteration and conditional binding",
+      "description": "Iteration and conditional binding: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/metadata.md",
+      "route": "/docs/reference/logemes/metadata/",
+      "title": "Metadata and native input contracts",
+      "description": "Metadata and native input contracts: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/selection.md",
+      "route": "/docs/reference/logemes/selection/",
+      "title": "Conditional and readiness selection",
+      "description": "Conditional and readiness selection: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/reference/logemes/support.md",
+      "route": "/docs/reference/logemes/support/",
+      "title": "Backend support and evidence",
+      "description": "Backend support and evidence: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Logemes",
+      "order": 5,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "builtins/LOGEMES.md",
+      "route": "/docs/reference/logemes/design-model/",
+      "title": "Target-independent logeme model",
+      "description": "Target-independent logeme model, projected from its maintained canonical repository source.",
+      "section": "Logemes",
+      "order": 30,
+      "role": "future",
+      "generated": false
+    },
+    {
+      "source": "logiceme/testdata/lucid/README.md",
+      "route": "/docs/reference/logemes/lucid-suite/",
+      "title": "Maintained Lucid suite",
+      "description": "Maintained Lucid suite, projected from its maintained canonical repository source.",
+      "section": "Logemes",
+      "order": 30,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "builtins/CONTRACTS.md",
+      "route": "/docs/reference/logemes/operational-contracts/",
+      "title": "Operational composition contracts",
+      "description": "Operational composition contracts, projected from its maintained canonical repository source.",
+      "section": "Logemes",
+      "order": 30,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "builtins/README.md",
+      "route": "/docs/reference/logemes/rust-contract/",
+      "title": "Rust target contract",
+      "description": "Rust target contract, projected from its maintained canonical repository source.",
+      "section": "Logemes",
+      "order": 30,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/_generated/lucid.md",
+      "route": "/docs/reference/logemes/lucid-cases/",
+      "title": "Lucid case inventory",
+      "description": "Lucid case inventory: mechanically generated from current repository inputs; language execution is separate.",
+      "section": "Logemes",
+      "order": 40,
+      "role": "implementation",
+      "generated": true
+    },
+    {
+      "source": "docs/stdlib/index.md",
+      "route": "/docs/stdlib/",
+      "title": "Standard library",
+      "description": "Standard library: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Standard library",
+      "order": 0,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/stdlib/eng/io.md",
+      "route": "/docs/stdlib/eng/io/",
+      "title": "IO",
+      "description": "IO: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Standard library",
+      "order": 1,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/internals/index.md",
+      "route": "/docs/internals/",
+      "title": "Inside the compiler",
+      "description": "Inside the compiler: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Internals",
+      "order": 0,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/architecture.md",
+      "route": "/docs/internals/architecture/",
+      "title": "Architecture of `l`",
+      "description": "Architecture of `l`: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Internals",
+      "order": 10,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/cli-build.md",
+      "route": "/docs/internals/build-and-runtime/",
+      "title": "Building and running L programs",
+      "description": "Building and running L programs: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Internals",
+      "order": 11,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/error-model.md",
+      "route": "/docs/internals/error-model/",
+      "title": "Compiler and build errors",
+      "description": "Compiler and build errors: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Internals",
+      "order": 12,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "logiceme/AML.md",
+      "route": "/docs/internals/aml-protocol/",
+      "title": "AML protocol",
+      "description": "AML protocol, projected from its maintained canonical repository source.",
+      "section": "Internals",
+      "order": 30,
+      "role": "implementation",
+      "generated": false
+    },
+    {
+      "source": "docs/contributing/index.md",
+      "route": "/docs/contributing/",
+      "title": "Contribute to L documentation",
+      "description": "Contribute to L documentation: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Contributing",
+      "order": 0,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/contributing/local-development.md",
+      "route": "/docs/contributing/local-development/",
+      "title": "Develop the documentation locally",
+      "description": "Develop the documentation locally: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Contributing",
+      "order": 1,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/contributing/documentation.md",
+      "route": "/docs/contributing/documentation/",
+      "title": "Author and maintain documentation",
+      "description": "Author and maintain documentation: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Contributing",
+      "order": 2,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/contributing/evidence.md",
+      "route": "/docs/contributing/evidence/",
+      "title": "Evidence and documentation review",
+      "description": "Evidence and documentation review: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Contributing",
+      "order": 3,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/development-harness.md",
+      "route": "/docs/contributing/l-development/",
+      "title": "Development and acceptance",
+      "description": "Development and acceptance: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Contributing",
+      "order": 10,
+      "role": "normative",
+      "generated": false
+    },
+    {
+      "source": "docs/releases/index.md",
+      "route": "/releases/",
+      "title": "Releases and source identity",
+      "description": "Releases and source identity: source-backed L documentation, with implementation boundaries and evidence.",
+      "section": "Releases",
+      "order": 0,
+      "role": "explanatory",
+      "generated": false
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`HY{|Key: ~Borrowed~, Props: ~&[Prop{Key: value, Type: &'a T}Prop]&~, Lifetimes: ~'a~, GenericTypes: ~T: 'a~|}`</S|>
+<|S|>`HY{|Key: ~Pair~, Props: ~&[Prop{Key: first, Type: &'a T}Prop, Prop{Key: second, Type: &'b U}Prop]&~, Lifetimes: ~'a, 'b~, GenericTypes: ~T: 'a, U: 'b~|}`</S|>
+<|S|>`HY{|Key: ~Plain~, Props: ~&[Prop{Key: value, Type: u8}Prop]&~|}`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(BOD^E{|Statement: ~let owner = String::from("borrowed"); let count = 3u8;~|}*MOB{|Key: ~explicit~|}^Y{|Key: ~Borrowed~, Props: ~&[Prop{Key: value, Value: &owner}Prop]&~, Lifetimes: ~'_~, GenericTypes: ~String~|}*MOB{|Key: ~inferred~|}^Y{|Key: ~Borrowed~, Props: ~&[Prop{Key: value, Value: &owner}Prop]&~|}*MOB{|Key: ~pair~|}^Y{|Key: ~Pair~, Props: ~&[Prop{Key: first, Value: &owner}Prop, Prop{Key: second, Value: &count}Prop]&~, Lifetimes: ~'_, '_~, GenericTypes: ~String, u8~|}*MOB{|Key: ~plain~|}^Y{|Key: ~Plain~, Props: ~&[Prop{Key: value, Value: count}Prop]&~|}*BOD^E{|Statement: ~let _: Borrowed<'_, String> = explicit; let _: Borrowed<'_, String> = inferred; let _: Pair<'_, '_, String, u8> = pair; let _: u8 = plain.value; assert_eq!(owner, "borrowed"); assert_eq!(count, 3);~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

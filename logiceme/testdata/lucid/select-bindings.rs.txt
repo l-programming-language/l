@@ -1,0 +1,346 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+let (tx, mut rx) = tokio::sync::mpsc::channel::<String>(1);
+
+
+
+
+let mut existing: Option<String> = None;
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+received = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+    
+
+if let Some(text) = received { print!("{}", text); }
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+r#type = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+    
+
+drop(r#type);
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+selected_with_body = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+    
+existing = selected_with_body;
+
+
+
+print!("{}", existing.is_some());
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+selected_without_body = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+    
+existing = selected_without_body;
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+_ = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+    
+
+print!("discarded binding");
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+_ = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+explicit_disposal = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+    
+
+::core::mem::drop(explicit_disposal);
+
+
+
+
+print!("explicit disposal before body");
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+native_value = async {
+    String::from("OC singular")
+}
+ => {
+
+    
+
+print!("{}", native_value);
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+native_values = async {
+    String::from("OC plural")
+}
+ => {
+
+    
+
+print!("{}", native_values);
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+calculated = async {
+    21 + 21
+
+}
+ => {
+
+    
+
+print!("{}", calculated);
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+drop((tx, existing));
+
+
+
+
+});
+
+
+
+    
+}

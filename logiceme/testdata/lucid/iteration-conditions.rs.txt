@@ -1,0 +1,104 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+
+
+
+
+loop {
+    
+
+print!("unconditional once");
+
+
+
+
+break;
+
+
+
+}
+
+
+
+
+
+
+
+let mut countdown = 2;
+
+
+
+
+
+
+while countdown > 0 {
+    
+
+print!("{}", countdown);
+
+
+
+
+countdown = countdown - 1;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+let ready = true;
+
+
+
+
+let mut remaining = 2;
+
+
+
+
+
+
+
+while ready && remaining > 0  {
+    
+
+print!("adapter {}", remaining);
+
+
+
+
+remaining = remaining - 1;
+
+
+
+}
+
+
+
+
+
+
+
+
+print!("after conditions");
+
+
+
+    
+}

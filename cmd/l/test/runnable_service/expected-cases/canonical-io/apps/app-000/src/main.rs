@@ -1,0 +1,26 @@
+#![forbid(unsafe_code)]
+mod config;
+
+
+// package main
+
+
+
+
+fn main( ) {
+    
+        
+
+if let Err(error) = config::initialize_configuration_settings() { ::std::eprintln!("configuration startup: {error}"); ::std::process::exit(1); }
+
+
+
+    
+        
+
+{ struct LPrintValue<T>(T); trait LPrint { fn l_print(self); } impl<T: ::core::convert::AsRef<[u8]>> LPrint for &LPrintValue<T> { fn l_print(self) { use ::std::io::Write as _; let mut output = ::std::io::stdout().lock(); output.write_all(self.0.as_ref()).and_then(|_| output.write_all(b"\n")).expect("failed printing to stdout"); } } impl LPrint for &&LPrintValue<&f64> { fn l_print(self) { fn l_format_number(value: f64) -> Vec<u8> { if value == 0.0 { return value.to_string().into_bytes(); } let scientific = format!("{value:e}"); let Some((native_digits, exponent)) = scientific.split_once('e') else { return scientific.into_bytes(); }; let exponent: i32 = exponent.parse().expect("native finite float exponent"); let magnitude = native_digits.trim_start_matches('-'); let places = magnitude.split_once('.').map_or(0, |(_, fraction)| fraction.len()) as i32; let mut decimal_exponent = exponent - places; let mut coefficient: u128 = magnitude.replace('.', "").parse().expect("native finite float digits");  let exact_lower_midpoint = |coefficient: u128, decimal_exponent: i32| { let bits = value.abs().to_bits(); let binary_exponent = ((bits >> 52) & 0x7ff) as i32; let mut significand = bits & ((1_u64 << 52) - 1); let mut power = if binary_exponent == 0 { -1074 } else { significand |= 1_u64 << 52; binary_exponent - 1023 - 52 }; let zeros = significand.trailing_zeros(); significand >>= zeros; power += zeros as i32; let mut midpoint = 2 * coefficient - 1; if decimal_exponent >= 0 { for _ in 0..decimal_exponent { let Some(product) = midpoint.checked_mul(5) else { return false; }; midpoint = product; } } else { for _ in 0..-decimal_exponent { if midpoint % 5 != 0 { return false; } midpoint /= 5; } } midpoint == u128::from(significand) && decimal_exponent - 1 == power }; if coefficient % 2 == 1 && exact_lower_midpoint(coefficient, decimal_exponent) { coefficient -= 1; } while coefficient % 10 == 0 { coefficient /= 10; decimal_exponent += 1; } let mut digits = coefficient.to_string(); let mut result = if value.abs() >= 0.0001 && value.abs() < 1_000_000.0 { let point = digits.len() as i32 + decimal_exponent; if point <= 0 { format!("0.{}{digits}", "0".repeat((-point) as usize)) } else if point >= digits.len() as i32 { format!("{digits}{}", "0".repeat((point - digits.len() as i32) as usize)) } else { digits.insert(point as usize, '.'); digits } } else { let exponent = decimal_exponent + digits.len() as i32 - 1; if digits.len() > 1 { digits.insert(1, '.'); } format!("{digits}e{exponent:+03}") }; if value.is_sign_negative() { result.insert(0, '-'); } result.into_bytes() } use ::std::io::Write as _; let bytes = l_format_number(*self.0); let mut output = ::std::io::stdout().lock(); output.write_all(&bytes).and_then(|_| output.write_all(b"\n")).expect("failed printing to stdout"); } } impl<T: ::std::fmt::Display> LPrint for &&&LPrintValue<T> { fn l_print(self) { ::std::println!("{}", self.0); } } (&&LPrintValue(&("work completed"))).l_print(); }
+
+
+
+    
+}

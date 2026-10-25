@@ -1,0 +1,21 @@
+{
+  "id": "F01",
+  "title": "execute-success",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Exactly one child invocation. Execute returns only after capture finalization; stdout is forwarded only by Show.",
+    "Start/Execute lower through their source-defined bodies, not a name special case."
+  ],
+  "expected_runtime": {
+    "stdout": "Hello\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l"
+  ]
+}

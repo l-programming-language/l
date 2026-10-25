@@ -1,0 +1,16 @@
+[package]
+name = "main"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+
+[dependencies]
+
+tokio = { version = "=1.53.1", features = ["rt-multi-thread", "macros", "process", "io-util", "io-std", "signal", "sync", "time"] }
+
+nix = { version = "=0.31.3", features = ["signal", "process"] }
+

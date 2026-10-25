@@ -1,0 +1,21 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Define Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{[|Meta.Keys~|] = [|&Meta.Values~&|];}-|/|}
+{|/|-{tags: Meta.Tags}--{if Type == "Declaration"}--{let [|Meta.Keys~|] = [|&Meta.Values~&|];}-|/|}
+
+// Conditional binding fragment. The enclosing evaluation or iteration
+// supplies control flow and the body.
+{|/|-{tags: Meta.Tags}--{if Type == "Evaluation"}--{let [|Meta.Keys~|] = [|&Meta.Values~&|]}-|/|}
+
+// Define a label directly on the supplied iteration.
+{|/|-{tags: Meta.Tags}--{if Type == "Iteration"}--{[|Meta.Keys~|]: [|Conjoinments.Iteration|]}-|/|}
+
+// C qualifies this definition with asynchronous value construction.
+// The enclosing composition supplies the fragment's final punctuation.
+{|/|-{tags: Meta.Tags}--{if Type == "Execution"}--{[|Meta.Keys~|] = async {
+    [|&Meta.Values~&|]
+}}-|/|}
+// End Define Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Keys: Array-Key, Key: String, Values: Array-Value, Value: String, Func: Func]}-|/|}

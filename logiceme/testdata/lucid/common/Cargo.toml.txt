@@ -1,0 +1,12 @@
+[package]
+name = "lucid_nested_rust"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "lucid_nested_rust"
+path = "src/main.rs"
+
+[dependencies]
+

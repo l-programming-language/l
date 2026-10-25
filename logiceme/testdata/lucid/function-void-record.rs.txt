@@ -1,0 +1,26 @@
+
+
+// package main
+
+
+
+
+fn Void( ) -> (()) {
+    
+        
+
+let _value = 1;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let _unit = Void()
+;
+
+
+    
+}

@@ -1,0 +1,250 @@
+[
+  {
+    "source": "fallthrough.l",
+    "stdout": "First\nSecond\ndone",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "First\nSecond\n"
+  },
+  {
+    "source": "exit-program.l",
+    "stdout": "First\n",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "First\n"
+  },
+  {
+    "source": "exit-error.l",
+    "stdout": "First\n",
+    "stderr": "paragraph stopped\n",
+    "status": 1,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "First\n"
+  },
+  {
+    "source": "multiple-subjects.l",
+    "stdout": "Second\nsecond-end|First\n",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "Second\nFirst\n"
+  },
+  {
+    "source": "repeated-activation.l",
+    "stdout": "Repeat\nRepeat\nRepeat\nRepeat\nRepeat\nRepeat\n",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "Repeat"
+    ],
+    "runs": "Repeat\nRepeat\n",
+    "numbered": "Repeat#1\nRepeat#1\nRepeat#2\nRepeat#2\nRepeat#1\nRepeat#2\n"
+  },
+  {
+    "source": "run-within-paragraph.l",
+    "stdout": "Other\nInner\nfinisheddone",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "Worker",
+      "Other"
+    ],
+    "runs": "Inner\nOther\n"
+  },
+  {
+    "source": "coordinate-existing.l",
+    "stdout": "Second\nFirst\ndone",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "Second\nFirst\n"
+  },
+  {
+    "source": "public-values.l",
+    "stdout": "public7true",
+    "stderr": "",
+    "status": 0,
+    "apps": [],
+    "runs": ""
+  },
+  {
+    "source": "local-shadowing.l",
+    "stdout": "inner7truesecondouter",
+    "stderr": "",
+    "status": 0,
+    "apps": [],
+    "runs": ""
+  },
+  {
+    "source": "local-definitions.l",
+    "stdout": "First local\nSecond local\ndone",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "First local\nSecond local\n"
+  },
+  {
+    "source": "local-imports.l",
+    "stdout": "Imported\ndone",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "Worker"
+    ],
+    "runs": "Imported\n"
+  },
+  {
+    "source": "no-activation.l",
+    "stdout": "done",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": ""
+  },
+  {
+    "source": "Build-only.l",
+    "stdout": "done",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": ""
+  },
+  {
+    "source": "separate-dispatch.l",
+    "stdout": "First\nSecond\ndone",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "First\nSecond\n"
+  },
+  {
+    "source": "renamed-action.l",
+    "stdout": "Second\nFirst\ndone",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "Second\nFirst\n"
+  },
+  {
+    "source": "canonical-aliases.l",
+    "stdout": "First\nSecond\ndone",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "First\nSecond\n"
+  },
+  {
+    "source": "First-only.l",
+    "stdout": "First\ndone",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "First\n"
+  },
+  {
+    "source": "shared-First-only.l",
+    "stdout": "First\n",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "First",
+      "Second"
+    ],
+    "runs": "First\n"
+  },
+  {
+    "source": "unread-local-output.l",
+    "stdout": "done",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "Worker"
+    ],
+    "runs": "Unread\n"
+  },
+  {
+    "source": "unread-unavailable-output.l",
+    "stdout": "",
+    "stderr": "Worker: Output is unavailable before completed invocation capture\n",
+    "status": 1,
+    "apps": [
+      "Worker"
+    ],
+    "runs": ""
+  },
+  {
+    "source": "numeric-declared-name.l",
+    "stdout": "payload",
+    "stderr": "",
+    "status": 0,
+    "apps": [],
+    "runs": ""
+  },
+  {
+    "source": "coordinated-alias-number.l",
+    "stdout": "left1",
+    "stderr": "",
+    "status": 0,
+    "apps": [],
+    "runs": ""
+  },
+  {
+    "source": "coordinated-descriptor-runtime.l",
+    "stdout": "1ready:worker\n",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "Worker"
+    ],
+    "runs": "worker\n"
+  },
+  {
+    "source": "logger-control.l",
+    "stdout": "Control\n",
+    "stderr": "",
+    "status": 0,
+    "apps": [
+      "Worker"
+    ],
+    "runs": "Control\n",
+    "numbered": "Control#1\n"
+  }
+]

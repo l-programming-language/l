@@ -1,0 +1,11 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`MY{|Key: ~Empty~, Funcs: ~&[]&~, Lifetimes: ~'a~, GenericTypes: ~T~|}`</S|>
+<|S|>`MY{|Key: ~Reader~, Funcs: ~&[Func{Key: read, Inputs: &[Prop{Key: value, Type: &'a T}Prop]&, Outputs: &[&'a T]&}Func, Func{Key: clone_value, Inputs: &[Prop{Key: value, Type: &'a T}Prop]&, Outputs: &[T]&}Func]&~, Lifetimes: ~'a~, GenericTypes: ~T: Clone + 'a~|}`</S|>
+<|S|>`MY{|Key: ~Plain~, Funcs: ~&[Func{Key: value, Inputs: &[]&, Outputs: &[u8]&}Func]&~|}`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(BOD^E{|Statement: ~let _: Option<&dyn Empty<'static, u8>> = None;~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

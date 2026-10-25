@@ -1,0 +1,36 @@
+
+
+// package main
+
+
+
+
+fn late<'a>( value: &'a u8) -> (&'a u8) {
+    
+        
+
+return value;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+
+let owner = 1u8;
+
+
+
+let value = late::<'static>(&owner)
+;
+
+
+
+let _: &u8 = value;
+
+
+
+    
+}

@@ -1,0 +1,109 @@
+//! Test-only lifetime protocol shared by the Rust native fixtures and Go watchdog.
+use nix::libc;
+use std::fs::{File, OpenOptions};
+use std::io::{self, Read, Seek, SeekFrom, Write};
+use std::os::fd::AsRawFd;
+use std::path::Path;
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::time::{Duration, Instant};
+
+static NEXT: AtomicU64 = AtomicU64::new(0);
+#[derive(Clone, Debug)]
+pub struct Lifetime {
+    pub record: String,
+    pub label: String,
+    pub pid: i32,
+    pub pgid: i32,
+}
+pub fn quote(value: &str) -> String {
+    let mut out = String::from("\"");
+    for c in value.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if c < ' ' => out.push_str(&format!("\\u{:04x}", c as u32)),
+            c => out.push(c),
+        }
+    }
+    out.push('"');
+    out
+}
+impl Lifetime {
+    pub fn json(&self) -> String {
+        format!(
+            "{{\"Record\":{},\"Label\":{},\"PID\":{},\"PGID\":{}}}",
+            quote(&self.record),
+            quote(&self.label),
+            self.pid,
+            self.pgid
+        )
+    }
+}
+pub fn lock(file: &File, mode: i32) -> io::Result<()> {
+    if unsafe { libc::flock(file.as_raw_fd(), mode) } == 0 {
+        Ok(())
+    } else {
+        Err(io::Error::last_os_error())
+    }
+}
+pub fn held(path: &Path) -> io::Result<bool> {
+    let f = OpenOptions::new().read(true).write(true).open(path)?;
+    match lock(&f, libc::LOCK_EX | libc::LOCK_NB) {
+        Ok(()) => Ok(false),
+        Err(e) if e.kind() == io::ErrorKind::WouldBlock => Ok(true),
+        Err(e) => Err(e),
+    }
+}
+// This is the first helper action, before output, blocking, or descendant spawn.
+pub fn register(label: &str) -> io::Result<Option<(File, Lifetime)>> {
+    let Some(dir) = std::env::var_os("P1_OWNERSHIP") else {
+        return Ok(None);
+    };
+    let mut admission = match File::open(Path::new(&dir).join("admission")) {
+        Ok(f) => f,
+        Err(e) if e.kind() == io::ErrorKind::NotFound => return Ok(None),
+        Err(e) => return Err(e),
+    };
+    let deadline = Instant::now() + Duration::from_secs(1);
+    loop {
+        match lock(&admission, libc::LOCK_SH | libc::LOCK_NB) {
+            Ok(()) => break,
+            Err(e) if e.kind() == io::ErrorKind::WouldBlock && Instant::now() < deadline => {
+                std::thread::sleep(Duration::from_millis(1))
+            }
+            Err(e) => return Err(e),
+        }
+    }
+    let mut state = [0; 4];
+    admission.seek(SeekFrom::Start(0))?;
+    if admission.read_exact(&mut state).is_err() || &state != b"open" {
+        return Ok(None);
+    }
+    let pid = std::process::id() as i32;
+    let (mut file, record) = loop {
+        let name = format!("alive-{}-{}", pid, NEXT.fetch_add(1, Ordering::Relaxed));
+        match OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create_new(true)
+            .open(Path::new(&dir).join(&name))
+        {
+            Ok(f) => break (f, name),
+            Err(e) if e.kind() == io::ErrorKind::AlreadyExists => continue,
+            Err(e) => return Err(e),
+        }
+    };
+    lock(&file, libc::LOCK_EX | libc::LOCK_NB)?;
+    let lifetime = Lifetime {
+        record,
+        label: label.to_owned(),
+        pid,
+        pgid: unsafe { libc::getpgrp() },
+    };
+    writeln!(file, "{}", lifetime.json())?;
+    file.flush()?;
+    Ok(Some((file, lifetime)))
+}

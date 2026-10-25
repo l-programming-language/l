@@ -1,0 +1,12 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`DA^E{|Statement: ~#[allow(non_snake_case)]
+fn Void() -> i32 { 7 }
+struct Fixture;
+impl Fixture { #[allow(non_snake_case)] fn Void(&self) -> i32 { 8 } }~|}`</S|>
+<|S|>`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(MOB{|Key: ~plain~|}^KY{|Key: ~Void~|}*BOD^E{|Statement: ~let fixture = Fixture;~|}*MOB{|Key: ~method~|}^KY{|Receiver: ~fixture~, Key: ~Void~|}*BOD^E{|Statement: ~let Void = String::from("value");~|}*MOB{|Key: ~length~|}^KY{|Receiver: ~Void~, Key: ~len~|}*BOD^E{|Statement: ~assert_eq!(plain, 7); assert_eq!(method, 8); assert_eq!(length, 5);~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

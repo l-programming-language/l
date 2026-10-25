@@ -1,0 +1,23 @@
+{
+  "id": "N05",
+  "title": "await-never-started",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "No child creation, no OS Wait and no continuation execution."
+  ],
+  "expected_runtime": {
+    "stdout": "",
+    "exit_status": 1,
+    "stderr_contains": [
+      "Await",
+      "invocation"
+    ]
+  },
+  "files": [
+    "main.l"
+  ]
+}

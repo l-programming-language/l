@@ -1,0 +1,137 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let mut rounds = 0;
+
+
+
+'forever: 
+
+
+
+
+loop {
+    
+
+rounds = rounds + 1;
+
+
+
+
+if rounds < 2 { continue 'forever; }
+
+
+
+
+break 'forever;
+
+
+
+}
+
+
+
+
+
+
+
+let mut countdown = 2;
+
+
+
+'condition: 
+
+
+while countdown > 0 {
+    
+
+countdown = countdown - 1;
+
+
+
+
+continue 'condition;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+let mut numbers = vec![1, 2].into_iter();
+
+
+
+'binding: 
+
+while let Some(number) = numbers.next() {
+    
+
+print!("bound {}", number);
+
+
+
+
+if number == 1 { continue 'binding; }
+
+
+
+
+break 'binding;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+'traverse: 
+
+
+
+for value in 0..3 {
+    
+
+if value == 0 { continue 'traverse; }
+
+
+
+
+print!("item {}", value);
+
+
+
+
+break 'traverse;
+
+
+
+}
+
+
+
+
+
+
+    
+}

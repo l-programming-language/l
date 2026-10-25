@@ -1,0 +1,255 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+let (tx_a, mut rx_a) = tokio::sync::mpsc::channel::<String>(1);
+
+
+
+
+let (tx_b, mut rx_b) = tokio::sync::mpsc::channel::<String>(1);
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+_ = async {
+    (rx_a).recv().await
+
+
+}
+ => {
+
+    
+
+print!("a1");
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    (rx_b).recv().await
+
+
+}
+ => {
+
+    
+
+print!("b1");
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    ()
+}
+ => {
+
+    
+
+print!("first-authored default");
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+_ = async {
+    (rx_a).recv().await
+
+
+}
+ => {
+
+    
+
+print!("a2");
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    (rx_b).recv().await
+
+
+}
+ => {
+
+    
+
+print!("b2");
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    ()
+}
+ => {
+
+    
+
+print!("middle-authored default");
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+_ = async {
+    (rx_a).recv().await
+
+
+}
+ => {
+
+    
+
+print!("a3");
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    (rx_b).recv().await
+
+
+}
+ => {
+
+    
+
+print!("b3");
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    ()
+}
+ => {
+
+    
+
+print!("last-authored default");
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+drop((tx_a, tx_b));
+
+
+
+
+});
+
+
+
+    
+}

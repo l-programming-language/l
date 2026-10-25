@@ -1,0 +1,23 @@
+# Lyger frontend
+
+Read [architecture](../docs/architecture.md), [runtime semantics](../docs/cli-build.md) and [acceptance](../docs/development-harness.md). Use the frontend-trace skill to locate the earliest failing boundary.
+
+Implicit `builtins/<configured-language>/core.l` defines foundational words; `stdlib/index.json` selects the Rust IO dictionary. Dictionary units own private lexical roots inheriting builtins; the program root does not own their records. Native backend assets live under `builtins/segments` and `builtins/templates`. Preserve source-defined expansion, descriptors and bindings; do not special-case vocabulary or demo names.
+
+The frontend selects Rust, including definition atoms, source paths and orchestration. Keep analysis in the typed Rust plan and encoding/composition in the Rust emitter. Native fragments are opaque leaves. Plan storage, mutability, captures, effects and definite assignment from semantic uses and paragraph scopes; never infer these from native text or rewrite completed source. Existing glyph-local generic inputs do not authorize a new public metadata interface or automatic generic argument forwarding.
+
+Keep lexical part of speech, morphology/possession, storage category and value type distinct. Preserve original spans, source order, literal bytes, typed origins and paragraph identity through preprocessing/imports. Retry order never determines pronouns: they bind the last subject defined in their source paragraph. AML Class/Text groups source-file Objects recursively. It is not an L paragraph, lexical scope, or runtime activation; the former Feature/PARAGRAPH layer has been removed.
+
+Maintain literal-pool, semantic-memory and ordered-instruction ownership. Lower through existing application structures and render required output views without discarding the graph to match CLI state. Canonical grammar/vocabulary resources are protected compiler inputs; there are no mirror synchronization groups. Only diagnostic views may normalize UUIDs/map order.
+
+Retain `ApplicationUnits`, `AppArtifact` and `OrchestratorUnit` with their App contracts. Workspace projection preserves App-constructed Service libraries and primary Service topology. Standalone Service declarations remain structural and create no packages; standalone Service body effects reject. Build/Run/Stop/Await and implicit Output/Error require an App. Preserve lexical action/member shadowing, the source-defined `any App` signatures of Start/Execute, and App-only continuation ownership. Classes remain source groups. See the [Service boundary coverage](../testdata/service-execution/coverage.md).
+
+Reuse existing glyph composition; keep language interpretation out of the CLI. Assignments write stable variables at their instruction positions. Definite assignment intersects continuing paths, excluding exiting branches. Output availability is checked at runtime; stored Output values do not become fresh reads after reruns.
+
+Use selected resource filesystems, implicit builtin units and explicit IO imports. Explicit `.l` inclusions retain their provider and ownership; dictionary exports retain canonical definitions/private helpers. Do not restore adjacent bootstraps, configuration mirrors, semantic rewrite helpers or fallback loading. Root guidance governs fixed expectations and finite amendments.
+
+Recursive source construction retains interleaved Class/Object membership in both AML views. Emit StructureVersion 2 for populated Classes, direct child Dimensions, and immediate Class Parent. Preserve atomic publication of complete AML views, book-wide identities, and explicit Object Attributes; never inject shared code through a Class.
+
+The [Rust frontend suite](test/README.md) preserves language, ownership, source-order, literal and runtime obligations with canonical Rust fixtures. Tests call real compilation and pass actual, unmodified AML to the backend. The [implementation ledger](../testdata/integration/IMPLEMENTATION.md) records verification by phase; a historical snapshot is not the status of this checkout.
+
+Follow the [temporary validation pause](../docs/development-harness.md#temporary-validation-pause). Local bootstrap, full lint, full ordinary/native suites and `scripts/l-check` require an explicit user request. Automatic Linux PR validation is authorized; manual dispatch requires explicit authorization. For requested full validation, require passing workflow lint, both Go lint profiles, both unfiltered test phases and tagged native compilation under the [approved budgets](../docs/development-harness.md#validation-budgets). Focused checks do not establish full validation; report unrun stages.

@@ -1,0 +1,7 @@
+Use ProbeIO's Print from `../companions/gate.l` as "Print".
+"WorkerText" is `A`.
+Create "Worker" as a New Basic App.
+The App Prints WorkerText.
+Run Worker.
+Await Worker.
+Show `unreachable`.

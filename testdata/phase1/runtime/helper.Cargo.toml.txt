@@ -1,0 +1,12 @@
+[package]
+name = "l-runtime-parity-helper"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+nix.workspace = true
+
+[[bin]]
+name = "helper"
+path = "helper.rs"

@@ -1,0 +1,48 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+
+
+
+match 2_i32 {
+
+
+    0 => {
+        
+
+let _ = "only zero";
+
+
+
+    },
+
+
+
+
+    1 => {
+        
+
+let _ = "only one";
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+    
+}

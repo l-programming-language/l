@@ -1,0 +1,21 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Operate Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{(/={tags: Meta.Tags}=={for Definition in Conjoinments.Definitions}=={[|Definition|]
+}=/)}-|/|}
+{|/|-{tags: Meta.Tags}--{if Type == "Declaration"}--{
+|[|Meta.Func.Inputs~|]|(/={tags: Meta.Tags}=={if Meta.Func.Outputs != Void}=={ -> [|(Meta.Func.Outputs~)|]}=/) {
+  (/={tags: Meta.Tags}=={for Operation in Conjoinments.Operations}=={
+    [|Operation|]
+  }=/)
+}
+}-|/|}
+{|/|-{tags: Meta.Tags}--{if Type == "Definition"}--{fn [|Meta.Func.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/)([|(Meta.Func.Receiver~)|] [|Meta.Func.Inputs~|])(/={tags: Meta.Tags}=={if Meta.Func.Outputs != Void}=={ -> [|(Meta.Func.Outputs~)|]}=/) {
+    (/={tags: Meta.Tags}=={for Operation in Conjoinments.Operations}=={
+        [|Operation|]
+    }=/)
+}
+}-|/|}
+// End Operate Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Func: Func, Lifetimes: String, GenericTypes: String]}-|/|}

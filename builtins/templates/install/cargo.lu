@@ -1,0 +1,14 @@
+[package]
+name = [|App.Name|]
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = [|App.Name|]
+path = [|App.MainLocation|]
+
+[dependencies]
+{|/|-{tags: ["Depends"]}--{for Dep in App.Deps}--{
+[|Dep|]
+}-|/|}

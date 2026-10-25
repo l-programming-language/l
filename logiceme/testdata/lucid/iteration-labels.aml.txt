@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(BOD^E{|Statement: ~let mut rounds = 0;~|}*PO{|Key: ~'forever~|}^X^W^(BOD^E{|Statement: ~rounds = rounds + 1;~|}*BOD^E{|Statement: ~if rounds < 2 { continue 'forever; }~|}*BOD^E{|Statement: ~break 'forever;~|})*BOD^E{|Statement: ~let mut countdown = 2;~|}*PO{|Keys: ~&['condition]&~|}^X^(E{|Statement: ~countdown > 0~|}*W^(BOD^E{|Statement: ~countdown = countdown - 1;~|}*BOD^E{|Statement: ~continue 'condition;~|}))*BOD^E{|Statement: ~let mut numbers = vec![1, 2].into_iter();~|}*PO{|Key: ~'binding~|}^X^(OG{|Key: ~Some(number)~, Value: ~numbers.next()~|}*W^(BOD^E{|Statement: ~print!("bound {}", number);~|}*BOD^E{|Statement: ~if number == 1 { continue 'binding; }~|}*BOD^E{|Statement: ~break 'binding;~|}))*PO{|Key: ~'traverse~|}^X{|Iterable: ~0..3~, Key: ~value~, RangeArity: ~1~|}^W^(BOD^E{|Statement: ~if value == 0 { continue 'traverse; }~|}*BOD^E{|Statement: ~print!("item {}", value);~|}*BOD^E{|Statement: ~break 'traverse;~|}))`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

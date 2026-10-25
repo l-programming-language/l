@@ -1,0 +1,92 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+let (tx, mut rx) = tokio::sync::mpsc::channel::<String>(1);
+
+
+
+
+drop(tx);
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+closed = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+    
+
+match closed { Some(text) => print!("{}", text), None => print!("closed"), }
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    ()
+}
+ => {
+
+    
+
+print!("not ready");
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+print!("after closed receive");
+
+
+
+
+});
+
+
+
+    
+}

@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(BOP^X{|Iterable: ~0..2~, RangeArity: ~0~|}^W^BOD^E{|Statement: ~print!("wildcard");~|}*BOP^X{|Iterable: ~(0..3).rev().filter(|value| *value != 1)~, Key: ~value~, RangeArity: ~1~|}^W^BOD^E{|Statement: ~print!("single {}", value);~|}*BOP^X{|Iterable: ~vec![(0, "left"), (1, "right")]~, Key: ~value~|}^W^BOD^E{|Statement: ~print!("discarded {}", value);~|}*BOP^X{|Iterable: ~(10..12).enumerate()~, Index: ~index~, Key: ~value~, RangeArity: ~2~|}^W^BOD^E{|Statement: ~print!("pair {} {}", index, value);~|}*BOP^X{|Iterable: ~["a", "b"].iter()~, Key: ~text~, RangeArity: ~1~|}^W^BOD^E{|Statement: ~print!("borrow {}", text);~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

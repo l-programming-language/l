@@ -1,0 +1,15 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Execution Glyph
+// V: direct, validated call fragment; Key includes the invocation arguments.
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+[|Execute(Key = Meta.Key)|]
+}-|/|}
+
+// MV: execute one invocation assembled by an Instantiation child, normally KY.
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiate"}--{
+[|Execute("Instantiation", Instantiation = Conjoinments.Instantiation)|]
+}-|/|}
+// End Execution Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String]}-|/|}

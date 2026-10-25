@@ -1,0 +1,9 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~late~, Inputs: ~&[Prop{Key: value, Type: &'a u8}Prop]&~, Outputs: ~&[&'a u8]&~, Lifetimes: ~'a~|}^W^(BOD^E{|Statement: ~return value;~|})`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(BOD^E{|Statement: ~let owner = 1u8;~|}*MOB{|Key: ~value~|}^KY{|Key: ~late~, Inputs: ~&[&owner]&~, Lifetimes: ~'static~|}*BOD^E{|Statement: ~let _: &u8 = value;~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

@@ -1,0 +1,31 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+
+
+while 1_i32 {
+    
+
+break;
+
+
+
+}
+
+
+
+
+
+
+
+
+    
+}

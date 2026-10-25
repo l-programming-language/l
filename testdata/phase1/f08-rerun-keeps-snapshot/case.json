@@ -1,0 +1,26 @@
+{
+  "id": "F08",
+  "title": "rerun-keeps-snapshot",
+  "profile": "counter",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [
+    "Create an empty test-owned directory and set L_PHASE1_DIRECTORY. No other process uses its count file."
+  ],
+  "assertions": [
+    "There are two process creations, two invocation identities and two reaps.",
+    "snapshot retains first invocation's bytes; direct Output reads second invocation.",
+    "A new run is allowed only after the first join/continuation is finished."
+  ],
+  "expected_runtime": {
+    "stdout": "value#1\nvalue#2\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l",
+    "../companions/counter.l",
+    "../companions/actions.l"
+  ]
+}

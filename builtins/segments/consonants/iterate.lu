@@ -1,0 +1,48 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Iterate Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+(/={tags: Meta.Tags}=={if Meta.Iterable == Void}=={
+(/={tags: Meta.Tags}=={if Conjoinments.Definition != Void}=={while [|%Conjoinments.Definition%|] {
+    [|Conjoinments.Operation|]
+}
+}=/)
+(/={tags: Meta.Tags}=={if Conjoinments.Definition == Void && if Conjoinments.Calculation != Void}=={while [|%Conjoinments.Calculation%|] {
+    [|Conjoinments.Operation|]
+}
+}=/)
+(/={tags: Meta.Tags}=={if Conjoinments.Definition == Void && if Conjoinments.Calculation == Void && if Conjoinments.Evaluation != Void}=={while [|%Conjoinments.Evaluation%|] {
+    [|Conjoinments.Operation|]
+}
+}=/)
+(/={tags: Meta.Tags}=={if Conjoinments.Definition == Void && if Conjoinments.Calculation == Void && if Conjoinments.Evaluation == Void}=={loop {
+    [|Conjoinments.Operation|]
+}
+}=/)
+}=/)
+(/={tags: Meta.Tags}=={if Meta.Iterable != Void}=={
+(/={tags: Meta.Tags}=={if Meta.RangeArity == "0"}=={for _ in [|Meta.Iterable|] {
+    [|Conjoinments.Operation|]
+}
+}=/)
+(/={tags: Meta.Tags}=={if Meta.RangeArity == "1"}=={for [|Meta.Key|] in [|Meta.Iterable|] {
+    [|Conjoinments.Operation|]
+}
+}=/)
+(/={tags: Meta.Tags}=={if Meta.RangeArity != "0" && if Meta.RangeArity != "1"}=={
+(/={tags: Meta.Tags}=={if Meta.Index == Void}=={for (_, [|Meta.Key|]) in [|Meta.Iterable|] {
+    [|Conjoinments.Operation|]
+}
+}=/)
+(/={tags: Meta.Tags}=={if Meta.Index != Void}=={for ([|Meta.Index|], [|Meta.Key|]) in [|Meta.Iterable|] {
+    [|Conjoinments.Operation|]
+}
+}=/)
+}=/)
+}=/)
+}-|/|}
+// Copied RangeArity branches select wildcard, single, or pair patterns.
+// Iterable must already yield the required items; no index or channel adapter is added.
+// End Iterate Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String, Value: String, Iterable: String, Index: String, RangeArity: String]}-|/|}

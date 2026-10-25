@@ -1,0 +1,12 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`DA^E{|Statement: ~fn main() {
+    let mut visits = 0;~|}`</S|>
+<|S|>`PA^X^(I^E{|Statement: ~visits < 2~|}*W^(BOD^E{|Statement: ~print!("{}", visits);~|}*BOD^E{|Statement: ~visits = visits + 1;~|}))`</S|>
+<|S|>`DA^E{|Statement: ~    print!("after");
+}~|}`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

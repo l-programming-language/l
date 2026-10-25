@@ -1,0 +1,107 @@
+name: L CI
+
+# Pull requests validate Linux; manual dispatch can also select macOS.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platforms to validate
+        required: true
+        type: choice
+        default: linux
+        options:
+          - linux
+          - macos
+          - both
+      cold_cache:
+        description: Bypass caches to validate a fresh runner
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  GOENV: 'off'
+  GOFLAGS: ''
+  GOWORK: 'off'
+  GOTOOLCHAIN: local
+  GOMAXPROCS: '4'
+  GOCACHE: ${{ github.workspace }}/.harness/cache/go-build
+
+jobs:
+  check:
+    name: Checks (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON(inputs.platform == 'both' && '["ubuntu-24.04","macos-15"]' || inputs.platform == 'macos' && '["macos-15"]' || '["ubuntu-24.04"]') }}
+    steps:
+      - name: Check out the tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare all checks
+        id: prepare
+        uses: ./.github/actions/prepare
+        with:
+          cold-cache: ${{ inputs.cold_cache && 'true' || 'false' }}
+      - name: Run lint, acceptance, and native compilation
+        env:
+          CARGO_INCREMENTAL: '0'
+        run: scripts/l-check
+      - name: Retain fresh validation evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: checks-${{ matrix.os }}-${{ github.run_attempt }}
+          path: |
+            .harness/runs/
+            .harness/phase1/cli/**/*.stdout
+            .harness/phase1/cli/**/*.stderr
+            .harness/phase1/cli/**/*.json
+            .harness/phase1/cli/**/sources/**/*.l
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+      - name: Save pinned tools and dependencies from trusted successful runs
+        if: success() && !inputs.cold_cache && github.event_name != 'pull_request' && steps.prepare.outputs.dependency-cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: ${{ steps.prepare.outputs.dependency-cache-key }}
+          path: ${{ steps.prepare.outputs.dependency-cache-paths }}
+      - name: Save compiler outputs from trusted successful runs
+        if: success() && !inputs.cold_cache && github.event_name != 'pull_request' && steps.prepare.outputs.build-cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: ${{ steps.prepare.outputs.build-cache-key }}
+          path: ${{ steps.prepare.outputs.build-cache-paths }}
+
+  required:
+    name: L CI
+    needs: [check]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require every selected platform and stage to succeed
+        env:
+          CHECK_RESULT: ${{ needs.check.result }}
+        run: |
+          if [ "$CHECK_RESULT" != success ]; then
+            echo "A required L check failed, was cancelled, or was skipped: $CHECK_RESULT" >&2
+            exit 1
+          fi

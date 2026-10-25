@@ -1,0 +1,199 @@
+// Test-owned observer client. Production runtime.rs/process_unix.rs remain exact
+// resources. The private contract is intentionally absent in the red baseline.
+mod runtime;
+#[path = "process_unix.rs"] mod process;
+mod ownership;
+use runtime::{Invocation, Runtime};
+use runtime::test_support::{self, Checkpoint, Dependencies, SignalTarget, Stream, TerminalRequest, Wait};
+use std::io;
+use std::process::Stdio;
+use std::sync::{Arc, Mutex};
+use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
+use std::time::Duration;
+use tokio::process::{Child, Command};
+use tokio::time::Instant;
+
+struct Probe {
+    profile:String,
+    first:AtomicBool,
+    pid:AtomicU32,
+    waits:AtomicUsize,
+    signals:Mutex<Vec<nix::sys::signal::Signal>>,
+    first_signal:Mutex<Option<Instant>>,
+    publication:Mutex<Option<Arc<Invocation>>>,
+}
+impl Probe {
+    fn new(profile:&str)->Arc<Self>{Arc::new(Self{profile:profile.to_owned(),first:AtomicBool::new(true),pid:AtomicU32::new(0),waits:AtomicUsize::new(0),signals:Mutex::new(Vec::new()),first_signal:Mutex::new(None),publication:Mutex::new(None)})}
+}
+impl Dependencies for Probe {
+    fn start(&self,command:&mut Command)->io::Result<Child>{let child=command.spawn()?;self.pid.store(child.id().unwrap(),Ordering::SeqCst);Ok(child)}
+    fn wait<'a>(&'a self,child:&'a mut Child)->Wait<'a>{self.waits.fetch_add(1,Ordering::SeqCst);Box::pin(child.wait())}
+    fn signal(&self,target:SignalTarget,signal:nix::sys::signal::Signal)->io::Result<()> {
+        self.signals.lock().unwrap().push(signal);
+        let first=self.first.swap(false,Ordering::SeqCst);
+        if first{*self.first_signal.lock().unwrap()=Some(Instant::now());}
+        if self.profile=="stop-error-retained"&&first{return Err(io::Error::from_raw_os_error(nix::libc::EACCES));}
+        if self.profile=="live-permission-error-and-other-causes-remain"{return Err(io::Error::from_raw_os_error(nix::libc::EPERM));}
+        if self.profile=="signal-time-consumes-window-and-later-signals-do-not-renew-it"&&first{std::thread::sleep(Duration::from_secs(2));}
+        let result=match target {
+            SignalTarget::Group(pid)=>nix::sys::signal::killpg(nix::unistd::Pid::from_raw(pid as i32),signal),
+            SignalTarget::Leader(pid)=>nix::sys::signal::kill(nix::unistd::Pid::from_raw(pid as i32),signal),
+        };
+        match result{Ok(())|Err(nix::errno::Errno::ESRCH)=>{},Err(error)=>return Err(io::Error::from_raw_os_error(error as i32))}
+        if self.profile=="cleanup-once"{return Err(io::Error::other("injected cleanup failure"));}
+        Ok(())
+    }
+    fn capture<'a>(&self,_stream:Stream,writer:Box<dyn io::Write+Send+'a>)->Box<dyn io::Write+Send+'a>{writer}
+    fn checkpoint(&self,point:Checkpoint,invocation:Arc<Invocation>){if matches!(point,Checkpoint::PrePublication){*self.publication.lock().unwrap()=Some(invocation);}}
+    fn terminal_entered(&self,_request:TerminalRequest){}
+}
+fn has_errno(error:&(dyn std::error::Error+'static),errno:i32)->bool {
+    let mut next=Some(error);
+    while let Some(error)=next {if error.downcast_ref::<io::Error>().is_some_and(|e|e.raw_os_error()==Some(errno)){return true}next=error.source();}
+    false
+}
+async fn wait_pid(path:&str)->u32 {
+    let until=Instant::now()+Duration::from_secs(5);
+    while Instant::now()<until {if let Ok(value)=std::fs::read_to_string(path){if let Ok(pid)=value.parse(){return pid}}tokio::time::sleep(Duration::from_millis(10)).await;}
+    panic!("helper did not start")
+}
+async fn joined(app:&Arc<runtime::App>)->runtime::Snapshot {
+    let invocation=app.wait().await.unwrap();assert!(invocation.claim_continuation().unwrap());invocation.finish_continuation();invocation.snapshot().unwrap()
+}
+async fn stop_error()->u8 {
+    let probe=Probe::new("stop-error-retained");
+    let runtime=test_support::new_observed(probe.clone(),Box::pin(tokio::io::stdout()),Box::pin(tokio::io::stderr())).unwrap();
+    let app=runtime.app("companion/helper");let invocation=app.run().unwrap();
+    let pid=wait_pid(&std::env::var("L_RUNTIME_PID").unwrap()).await;
+    let _ = app.stop().await;
+    assert!(has_errno(&app.error().unwrap().unwrap(),nix::libc::EACCES),"Stop lost structured EACCES cause");
+    nix::sys::signal::kill(nix::unistd::Pid::from_raw(pid as i32),nix::sys::signal::Signal::SIGKILL).unwrap();
+    let until=Instant::now()+Duration::from_secs(3);
+    while invocation.snapshot().is_none()&&Instant::now()<until{tokio::time::sleep(Duration::from_millis(1)).await;}
+    assert!(invocation.snapshot().is_some(),"capture publication watchdog");
+    assert!(has_errno(&app.error().unwrap().unwrap(),nix::libc::EACCES),"completion replaced selected Stop error");
+    let snapshot=joined(&app).await;assert!(snapshot.error.is_some());
+    assert!(!has_errno(&app.error().unwrap().unwrap(),nix::libc::EACCES),"Await did not reselect execution result");
+    assert_eq!(probe.waits.load(Ordering::SeqCst),1,"child Wait ownership");
+    runtime.shutdown().await.unwrap();0
+}
+async fn already_cancelled()->u8 {
+    let probe=Probe::new("already-cancelled");
+    let runtime=test_support::new_observed(probe.clone(),Box::pin(tokio::io::stdout()),Box::pin(tokio::io::stderr())).unwrap();
+    runtime.shutdown().await.unwrap();let app=runtime.app("companion/helper");let _=app.run();
+    let invocation=test_support::latest_invocation(&app).expect("cancelled Run must retain its finalized attempt");
+    let snapshot=invocation.snapshot().expect("cancelled capture must be finalized");
+    assert!(snapshot.error.is_some());assert!(snapshot.stdout.is_empty()&&snapshot.stderr.is_empty());
+    assert!(app.output().unwrap().is_empty());assert!(app.error().unwrap().is_some());
+    assert_eq!(probe.pid.load(Ordering::SeqCst),0);assert_eq!(probe.waits.load(Ordering::SeqCst),0);
+    assert!(!std::path::Path::new(&std::env::var("L_RUNTIME_PID").unwrap()).exists());
+    assert!(app.wait().await.is_err(),"public Await after shutdown remains cancellation");0
+}
+async fn cleanup_once()->u8 {
+    let probe=Probe::new("cleanup-once");
+    let runtime=test_support::new_observed(probe,Box::pin(tokio::io::stdout()),Box::pin(tokio::io::stderr())).unwrap();
+    let app=runtime.app("companion/helper");app.run().unwrap();joined(&app).await;
+    let error=app.error().unwrap().expect("cleanup fault disappeared");
+    runtime.finish(Err(runtime.fail(error))).await
+}
+
+// The missing private seam must wrap the real Invocation; this fixture does
+// not implement its termination window, Wait ownership or signal policy.
+struct GroupDependencies {
+    waits:AtomicUsize, signals:Mutex<Vec<nix::sys::signal::Signal>>,
+    mode:AtomicUsize, results:Mutex<Vec<Option<i32>>>, delay:Duration, first_returned:Mutex<Option<Instant>>,
+    signaled:tokio::sync::Notify,
+}
+impl Dependencies for GroupDependencies {
+    fn start(&self,command:&mut Command)->io::Result<Child>{command.spawn()}
+    fn wait<'a>(&'a self,child:&'a mut Child)->Wait<'a>{self.waits.fetch_add(1,Ordering::SeqCst);Box::pin(child.wait())}
+    fn signal(&self,target:SignalTarget,signal:nix::sys::signal::Signal)->io::Result<()> {
+        self.signals.lock().unwrap().push(signal);
+        let mode=self.mode.load(Ordering::SeqCst);
+        if mode==1 {std::thread::sleep(self.delay);}
+        let result=if mode==2 {Ok(())}else if mode==3 {Err(io::Error::from_raw_os_error(nix::libc::EPERM))}else {
+            let native=match target {SignalTarget::Group(pid)=>nix::sys::signal::killpg(nix::unistd::Pid::from_raw(pid as i32),signal),SignalTarget::Leader(pid)=>nix::sys::signal::kill(nix::unistd::Pid::from_raw(pid as i32),signal)};
+            native.map_err(|e|io::Error::from_raw_os_error(e as i32))
+        };
+        if mode==1 {*self.first_returned.lock().unwrap()=Some(Instant::now());}
+        self.results.lock().unwrap().push(result.as_ref().err().and_then(io::Error::raw_os_error));self.signaled.notify_one();result
+    }
+    fn capture<'a>(&self,_stream:Stream,writer:Box<dyn io::Write+Send+'a>)->Box<dyn io::Write+Send+'a>{writer}
+    fn checkpoint(&self,_point:Checkpoint,_invocation:Arc<Invocation>){}
+    fn terminal_entered(&self,_request:TerminalRequest){}
+}
+struct Group { invocation:Arc<test_support::ObservedInvocation>, member:Child, dependencies:Arc<GroupDependencies>, member_waits:usize }
+impl Group {
+    async fn new(delay:Duration)->Self {
+        let helper=std::env::current_exe().unwrap().parent().unwrap().join("companion/helper");
+        let mut leader=Command::new(&helper);leader.env("L_RUNTIME_CASE","group-observation").stdin(Stdio::piped()).stdout(Stdio::null()).stderr(Stdio::null()).process_group(0);
+        let leader=leader.spawn().unwrap();let pid=leader.id().unwrap();
+        let mut member=Command::new(helper);member.env("L_RUNTIME_CASE","group-observation").stdin(Stdio::piped()).stdout(Stdio::null()).stderr(Stdio::null()).process_group(i32::try_from(pid).unwrap());
+        let member=member.spawn().unwrap();
+        let dependencies=Arc::new(GroupDependencies{waits:AtomicUsize::new(0),signals:Mutex::new(Vec::new()),mode:AtomicUsize::new(0),results:Mutex::new(Vec::new()),delay,first_returned:Mutex::new(None),signaled:tokio::sync::Notify::new()});
+        let invocation=Arc::new(test_support::observe_invocation(leader,dependencies.clone(),delay));
+        assert_eq!(invocation.pid(),pid);Self{invocation,member,dependencies,member_waits:0}
+    }
+    fn pid(&self)->u32 {self.invocation.pid()}
+    async fn reap_leader(&self){assert!(!self.invocation.wait().await.unwrap().success());}
+    async fn reap_member(&mut self){assert_eq!(self.member_waits,0);self.member_waits+=1;let _=self.member.wait().await;}
+    fn observations(&self,signals:usize){assert_eq!(self.dependencies.waits.load(Ordering::SeqCst),1);let actual=self.dependencies.signals.lock().unwrap();assert_eq!(actual.len(),signals);assert!(actual.iter().all(|s|*s==nix::sys::signal::Signal::SIGKILL));}
+    async fn cleanup(&mut self){let _=process::terminate_group(self.pid());if self.dependencies.waits.load(Ordering::SeqCst)==0{let _=self.invocation.wait().await;}if self.member_waits==0{self.reap_member().await;}}
+}
+impl Drop for Group {fn drop(&mut self){let _=process::terminate_group(self.pid());let _=self.member.start_kill();}}
+async fn zombie(pid:u32){
+    let until=Instant::now()+Duration::from_secs(3);
+    while Instant::now()<until {match nix::sys::signal::killpg(nix::unistd::Pid::from_raw(pid as i32),None){Err(nix::errno::Errno::EPERM)=>return,Ok(())=>{},other=>panic!("group vanished before member Wait: {other:?}")}tokio::time::sleep(Duration::from_millis(1)).await;}
+    panic!("group never became zombie-only")
+}
+#[derive(Debug)] struct OtherCause(Arc<()>);
+impl std::fmt::Display for OtherCause {fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{write!(f,"permission denied plus other cleanup cause")}}
+impl std::error::Error for OtherCause {}
+async fn group_observation(profile:&str)->u8 {
+    let delay=match profile {"persistent-zombie-retains-permission-error"=>Duration::from_millis(50),"signal-time-consumes-window-and-later-signals-do-not-renew-it"=>Duration::from_millis(20),_=>Duration::from_secs(2)};
+    let mut group=Group::new(delay).await;let pid=group.pid();
+    if !cfg!(target_os="macos") {
+        let error=process::final_group_result(pid,Err(io::Error::from_raw_os_error(nix::libc::EPERM)),Some(Instant::now()+delay)).await.unwrap_err();
+        assert_eq!(error.raw_os_error(),Some(nix::libc::EPERM));assert_eq!(group.dependencies.waits.load(Ordering::SeqCst),0);assert!(group.dependencies.signals.lock().unwrap().is_empty());group.cleanup().await;return 0;
+    }
+    if profile=="live-permission-error-and-other-causes-remain" {
+        group.dependencies.mode.store(3,Ordering::SeqCst);
+        assert_eq!(group.invocation.terminate(false).await.unwrap_err().raw_os_error(),Some(nix::libc::EPERM));assert_eq!(group.invocation.deadline(),None);
+        for errno in [nix::libc::EPERM,nix::libc::EACCES] {let error=process::final_group_result(pid,Err(io::Error::from_raw_os_error(errno)),Some(Instant::now()+delay)).await.unwrap_err();assert_eq!(error.raw_os_error(),Some(errno));}
+        let token=Arc::new(());let result=process::final_group_result(pid,Err(io::Error::other(OtherCause(token.clone()))),Some(Instant::now()+delay)).await.unwrap_err();
+        assert!(Arc::ptr_eq(&result.get_ref().unwrap().downcast_ref::<OtherCause>().unwrap().0,&token),"native cleanup cause identity lost");
+        assert!(nix::sys::signal::killpg(nix::unistd::Pid::from_raw(pid as i32),None).is_ok());assert_eq!(group.dependencies.waits.load(Ordering::SeqCst),0);assert_eq!(group.dependencies.signals.lock().unwrap().len(),1);group.cleanup().await;return 0;
+    }
+    if profile=="no-prior-success-keeps-final-error" {
+        process::terminate_group(pid).unwrap();group.reap_leader().await;zombie(pid).await;
+        assert_eq!(group.invocation.terminate(true).await.unwrap_err().raw_os_error(),Some(nix::libc::EPERM));assert_eq!(group.invocation.deadline(),None);assert_eq!(group.member_waits,0);group.observations(1);group.reap_member().await;return 0;
+    }
+    if profile=="signal-time-consumes-window-and-later-signals-do-not-renew-it"{group.dependencies.mode.store(1,Ordering::SeqCst);}
+    group.invocation.terminate(false).await.unwrap();group.reap_leader().await;zombie(pid).await;
+    let deadline=group.invocation.deadline().expect("successful initial signal must start observation window");
+    match profile {
+        "zombie-reaped-within-original-window"=>{
+            // Consume notification for first signal; second signal's notification
+            // occurs only after its real EPERM observation.
+            group.dependencies.signaled.notified().await;
+            let invocation=group.invocation.clone();let task=tokio::spawn(async move{invocation.terminate(true).await});
+            group.dependencies.signaled.notified().await;assert_eq!(group.dependencies.results.lock().unwrap().last(),Some(&Some(nix::libc::EPERM)),"final signal did not observe real zombie EPERM");group.reap_member().await;task.await.unwrap().unwrap();group.observations(2);
+        }
+        "persistent-zombie-retains-permission-error"=>{
+            assert_eq!(group.invocation.terminate(true).await.unwrap_err().raw_os_error(),Some(nix::libc::EPERM));assert!(Instant::now()>=deadline);assert_eq!(group.invocation.deadline(),Some(deadline));assert_eq!(group.member_waits,0);group.observations(2);group.reap_member().await;
+            assert_eq!(process::final_group_result(pid,Err(io::Error::from_raw_os_error(nix::libc::EPERM)),Some(deadline)).await.unwrap_err().raw_os_error(),Some(nix::libc::EPERM));
+        }
+        "signal-time-consumes-window-and-later-signals-do-not-renew-it"=>{
+            assert!(deadline<=group.dependencies.first_returned.lock().unwrap().unwrap(),"signal duration excluded from window");
+            group.dependencies.mode.store(2,Ordering::SeqCst);group.invocation.terminate(false).await.unwrap();assert_eq!(group.invocation.deadline(),Some(deadline),"later successful signal renewed deadline");group.observations(2);group.reap_member().await;
+        }
+        _=>panic!("unknown group profile {profile}")
+    }
+    assert_eq!(group.member_waits,1);0
+}
+fn main()->std::process::ExitCode {
+    let profile=std::env::args().nth(1).unwrap();
+    let executor=tokio::runtime::Builder::new_multi_thread().enable_all().build().unwrap();
+    let status=executor.block_on(async {match profile.as_str(){"already-cancelled"=>already_cancelled().await,"stop-error-retained"=>stop_error().await,"cleanup-once"=>cleanup_once().await,other=>group_observation(other).await}});
+    executor.shutdown_background();std::process::ExitCode::from(status)
+}

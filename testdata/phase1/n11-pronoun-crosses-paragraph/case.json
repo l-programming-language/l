@@ -1,0 +1,18 @@
+{
+  "id": "N11",
+  "title": "pronoun-crosses-paragraph",
+  "profile": "print",
+  "apps": [],
+  "setup": [],
+  "assertions": [
+    "A blank source paragraph boundary clears the prior subject; async binding does not introduce a global last-App variable."
+  ],
+  "expected_compile_error": {
+    "category": "unresolved paragraph pronoun",
+    "span": "offending source statement",
+    "publication": "none; preserve any previously published program"
+  },
+  "files": [
+    "main.l"
+  ]
+}

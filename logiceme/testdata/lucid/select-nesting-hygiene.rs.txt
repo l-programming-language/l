@@ -1,0 +1,219 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+let (tx_a, mut rx_a) = tokio::sync::mpsc::channel::<String>(1);
+
+
+
+
+let (tx_b, mut rx_b) = tokio::sync::mpsc::channel::<String>(1);
+
+
+
+
+let __l_select_0 = "user binding survives";
+
+
+
+
+let mut outer_value: Option<String> = None;
+
+
+
+
+let mut inner_value: Option<String> = None;
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+selected_outer = async {
+    (rx_a).recv().await
+
+
+}
+ => {
+
+    
+outer_value = selected_outer;
+
+
+
+print!("outer {}", outer_value.is_some());
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+selected_inner = async {
+    (rx_b).recv().await
+
+
+}
+ => {
+
+    
+inner_value = selected_inner;
+
+
+
+print!("inner {}", inner_value.is_some());
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    ()
+}
+ => {
+
+    
+
+print!("inner fallback");
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+print!("outer body once");
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    ()
+}
+ => {
+
+    
+
+print!("outer fallback");
+
+
+
+
+},
+
+
+
+}
+
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+selected_again = async {
+    (rx_a).recv().await
+
+
+}
+ => {
+
+    
+outer_value = selected_again;
+
+
+
+print!("second assignment");
+
+
+
+
+},
+
+
+
+    
+
+
+_ = async {
+    ()
+}
+ => {
+
+},
+
+
+
+}
+
+
+
+
+
+print!("{}", __l_select_0);
+
+
+
+
+drop((tx_a, tx_b, outer_value, inner_value));
+
+
+
+
+});
+
+
+
+    
+}

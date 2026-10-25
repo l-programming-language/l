@@ -1,0 +1,18 @@
+[package]
+name = "Worker"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+autobins = false
+autolib = false
+autoexamples = false
+autotests = false
+autobenches = false
+
+[lib]
+name = "Worker"
+path = "src/main.rs"
+
+[dependencies]
+

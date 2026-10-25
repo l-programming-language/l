@@ -1,0 +1,8 @@
+{
+  "format": 1,
+  "languages": {
+    "eng": {
+      "io": {"entry": "stdlib/eng/io/dictionary.l", "dictionary": "IO"}
+    }
+  }
+}

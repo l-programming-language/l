@@ -1,0 +1,108 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+
+
+for _ in 0..2 {
+    
+
+print!("wildcard");
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+for value in (0..3).rev().filter(|value| *value != 1) {
+    
+
+print!("single {}", value);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+for (_, value) in vec![(0, "left"), (1, "right")] {
+    
+
+print!("discarded {}", value);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+for (index, value) in (10..12).enumerate() {
+    
+
+print!("pair {} {}", index, value);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+for text in ["a", "b"].iter() {
+    
+
+print!("borrow {}", text);
+
+
+
+}
+
+
+
+
+
+
+    
+}

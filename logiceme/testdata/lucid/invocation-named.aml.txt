@@ -1,0 +1,9 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src","Deps":"[\"tokio = { version = \\\"=1.53.1\\\", features = [\\\"rt\\\", \\\"sync\\\"] }\"]"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~helper~, Outputs: ~&[()]&~|}^W^BOD^E{|Statement: ~print!("helper");~|}`</S|>
+<|S|>`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(MOB{|Key: ~_unit~|}^KY{|Key: ~helper~|}*MOB{|Key: ~highest~|}^KY{|Key: ~std::cmp::max~, Inputs: ~&[2, 3]&~|}*BOD^E{|Statement: ~let text = String::from("rust");~|}*MOB{|Key: ~length~|}^KY{|Receiver: ~text~, Key: ~len~|}*BOD^E{|Statement: ~assert_eq!(highest, 3); assert_eq!(length, 4);~|}*BOD^E{|Statement: ~let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();~|}*BOD^E{|Statement: ~rt.block_on(async {~|}*BOC^MV^KY{|Key: ~std::future::ready~, Inputs: ~&[()]&~|}*BOD^E{|Statement: ~});~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

@@ -1,0 +1,672 @@
+{
+  "nouns": {
+    "it": {
+      "root": "it",
+      "pos": "noun",
+      "type": "pronoun.definitive",
+      "postfixes": {"---they": "plural"},
+      "value": "IT(inputs[0])",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    },
+    "that": {
+      "root": "that",
+      "pos": "noun",
+      "type": "pronoun.objective",
+      "postfixes": {"---ose": "plural"},
+      "value": "THAT(inputs[0])",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    },
+    "this": {
+      "root": "this",
+      "pos": "noun",
+      "type": "pronoun.subjective",
+      "postfixes": {"---ese": "plural"},
+      "value": "THIS(inputs[0])",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    },
+    "input": {
+      "root": "input",
+      "pos": "noun",
+      "type": "functional.inflective",
+      "postfixes": {"-s": "plural"},
+      "value": "INPUT(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "output": {
+      "root": "output",
+      "pos": "noun",
+      "type": "functional.deflective",
+      "postfixes": {"-s": "plural"},
+      "value": "OUTPUT(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "error": {
+      "root": "error",
+      "pos": "noun",
+      "type": "functional.error",
+      "postfixes": {"-s": "plural"},
+      "value": "ERROR(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "list": {
+      "root": "list",
+      "pos": "noun",
+      "type": "iterative.list",
+      "postfixes": {"-s": "plural"},
+      "value": "LIST(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "dictionary": {
+      "root": "dictionary",
+      "pos": "noun",
+      "type": "iterative.dictionary",
+      "postfixes": {"--ies": "plural"},
+      "value": "DICTIONARY(inputs[0], inputs[1])",
+      "inputs": ["text", "*.thing"],
+      "outputs": ["value"]
+    },
+    "null": {
+      "root": "null",
+      "pos": "noun",
+      "type": "primitive.null",
+      "postfixes": {"-s": "plural"},
+      "value": "NULL(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "thing": {
+      "root": "thing",
+      "pos": "noun",
+      "type": "primitive.thing",
+      "postfixes": {"-s": "plural"},
+      "value": "THING(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "text": {
+      "root": "text",
+      "pos": "noun",
+      "type": "primitive.text",
+      "postfixes": {"-s": "plural"},
+      "value": "TEXT(inputs[0])",
+      "inputs": ["*.text"],
+      "outputs": ["value"]
+    },
+    "number": {
+      "root": "number",
+      "pos": "noun",
+      "type": "primitive.number",
+      "postfixes": {"-s": "plural"},
+      "value": "NUMBER(inputs[0])",
+      "inputs": ["*.number"],
+      "outputs": ["value"]
+    },
+    "byte": {
+      "root": "byte",
+      "pos": "noun",
+      "type": "primitive.byte",
+      "postfixes": {"-s": "plural"},
+      "value": "BYTES(inputs[0])",
+      "inputs": ["*.byte"],
+      "outputs": ["value"]
+    },
+    "truth": {
+      "root": "truth",
+      "pos": "noun",
+      "type": "primitive.truth",
+      "postfixes": {"-s": "plural"},
+      "value": "TRUTH(inputs[0])",
+      "inputs": ["*.truth"],
+      "outputs": ["value"]
+    },
+    "pointer": {
+      "root": "pointer",
+      "pos": "noun",
+      "type": "primitive.pointer",
+      "postfixes": {"-s": "plural"},
+      "value": "POINTER(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "op": {
+      "root": "op",
+      "pos": "noun",
+      "type": "applicative.operation",
+      "postfixes": {"-s": "plural"},
+      "value": "OP(inputs[0], inputs[1], inputs[2], inputs[3])",
+      "inputs": ["text", "numbers", "text", "text"],
+      "outputs": ["value"]
+    },
+    "prop": {
+      "root": "prop",
+      "pos": "noun",
+      "type": "applicative.property",
+      "postfixes": {"-s": "plural"},
+      "value": "PROP(inputs[0], inputs[1], inputs[2])",
+      "inputs": ["text", "text", "thing"],
+      "outputs": ["value"]
+    },
+    "func": {
+      "root": "func",
+      "pos": "noun",
+      "type": "applicative.function",
+      "postfixes": {"-s": "plural"},
+      "value": "FUNC(inputs[0], inputs[1], inputs[2], inputs[3])",
+      "inputs": ["text", "props", "texts", "prop"],
+      "outputs": ["value"]
+    },
+    "definition": {
+      "root": "definition",
+      "pos": "noun",
+      "type": "applicative.definition",
+      "postfixes": {"-s": "plural"},
+      "value": "DEF(inputs[0])",
+      "inputs": ["text"],
+      "outputs": ["value"]
+    },
+    "attribute": {
+      "root": "attribute",
+      "pos": "noun",
+      "type": "applicative.attribute",
+      "postfixes": {"-s": "plural"},
+      "value": "ATTRIBUTE(inputs[0], inputs[1])",
+      "inputs": ["definition", "attributes"],
+      "outputs": ["value"]
+    },
+    "object": {
+      "root": "object",
+      "pos": "noun",
+      "type": "applicative.object",
+      "postfixes": {"-s": "plural"},
+      "value": "OBJECT(inputs[0], inputs[1])",
+      "inputs": ["definition", "attributes"],
+      "outputs": ["value"]
+    },
+    "class": {
+      "root": "class",
+      "pos": "noun",
+      "type": "applicative.class",
+      "postfixes": {"-es": "plural"},
+      "value": "CLASS(inputs[0], inputs[1])",
+      "inputs": ["objects", "classes"],
+      "outputs": ["value"]
+    },
+    "service": {
+      "root": "service",
+      "pos": "noun",
+      "type": "applicative.service",
+      "postfixes": {"-s": "plural"},
+      "value": "SERVICE(inputs[0], inputs[1], inputs[2])",
+      "inputs": ["objects", "classes", "services"],
+      "outputs": ["value"]
+    },
+    "app": {
+      "root": "app",
+      "pos": "noun",
+      "type": "applicative.app",
+      "postfixes": {"-s": "plural"},
+      "value": "APP(inputs[0], inputs[1], inputs[2])",
+      "inputs": ["objects", "services", "dictionary"],
+      "outputs": ["value"]
+    }
+  },
+  "verbs": {
+    "passive": {
+      "root": "is",
+      "pos": "verb",
+      "type": "action.passive",
+      "postfixes": {"-nt": "null"},
+      "value": "IS(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "associative": {
+      "root": "use",
+      "pos": "verb",
+      "type": "action.associative",
+      "postfixes": {"-s": "active", "-d": "passive", "--ing": "applicative", "-r": "objective"},
+      "value": "USE(inputs[0])",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    },
+    "declarative": {
+      "root": "create",
+      "pos": "verb",
+      "type": "action.declarative",
+      "postfixes": {"-s": "active", "-d": "passive", "--ing": "applicative", "--or": "objective"},
+      "value": "DECLARE(inputs[0])",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    },
+    "definitive": {
+      "root": "define",
+      "pos": "verb",
+      "type": "action.definitive",
+      "postfixes": {"-s": "active", "-d": "passive", "--ing": "applicative", "-r": "objective"},
+      "value": "DEFINE(inputs[0])",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    },
+    "descriptive": {
+      "root": "describe",
+      "pos": "verb",
+      "type": "action.descriptive",
+      "postfixes": {"-s": "active", "-d": "passive", "--ing": "applicative", "-r": "objective"},
+      "value": "DESCRIBE(inputs[0])",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    },
+    "expansive": {
+      "root": "put",
+      "pos": "verb",
+      "type": "action.expansive",
+      "postfixes": {"-s": "active", "-": "passive", "-ting": "applicative", "-er": "objective"},
+      "value": "PUT(inputs[0], inputs[1], inputs[2])",
+      "inputs": ["*.thing", "*.noun.iterative", "text"],
+      "outputs": ["value"]
+    },
+    "locative": {
+      "root": "place",
+      "pos": "verb",
+      "type": "action.locative",
+      "postfixes": {"-s": "active", "-d": "passive", "--ing": "applicative", "-r": "objective"},
+      "value": "PLACE(inputs[0], inputs[1], inputs[2])",
+      "inputs": ["*.thing", "*.noun.iterative", "text"],
+      "outputs": ["value"]
+    },
+    "receptive": {
+      "root": "get",
+      "pos": "verb",
+      "type": "action.receptive",
+      "postfixes": {"-s": "active", "---otten": "passive", "-ting": "applicative", "-ter": "objective"},
+      "value": "GET(inputs[0], inputs[1])",
+      "inputs": ["text", "*.noun.iterative"],
+      "outputs": ["value"]
+    },
+    "reductive": {
+      "root": "take",
+      "pos": "verb",
+      "type": "action.reductive",
+      "postfixes": {"-s": "active", "-n": "passive", "--ing": "applicative", "-r": "objective"},
+      "value": "TAKE(inputs[0], inputs[1])",
+      "inputs": ["text", "*.noun.iterative"],
+      "outputs": ["value"]
+    },
+    "generative": {
+      "root": "build",
+      "pos": "verb",
+      "type": "action.generative",
+      "postfixes": {"-s": "active", "--t": "passive", "-ing": "applicative", "-er": "objective"},
+      "value": "BUILD(inputs[0])",
+      "inputs": ["*.noun.app"],
+      "outputs": ["value"]
+    },
+    "executive": {
+      "root": "run",
+      "pos": "verb",
+      "type": "action.executive",
+      "postfixes": {"-s": "active", "--an": "passive", "-ning": "applicative", "-ner": "objective"},
+      "value": "RUN(inputs[0])",
+      "inputs": ["*.noun.app"],
+      "outputs": ["value"]
+    },
+    "suspensive": {
+      "root": "await",
+      "pos": "verb",
+      "type": "action.suspensive",
+      "postfixes": {
+        "-s": "active",
+        "-ed": "passive",
+        "-ing": "applicative"
+      },
+      "value": "AWAIT(inputs[0])",
+      "inputs": ["*.noun.app"],
+      "outputs": ["value"]
+    },
+    "interruptive": {
+      "root": "stop",
+      "pos": "verb",
+      "type": "action.interruptive",
+      "postfixes": {"-s": "active", "-ped": "passive", "-ping": "applicative", "-pper": "objective"},
+      "value": "STOP(inputs[0])",
+      "inputs": ["*.noun.app"],
+      "outputs": ["value"]
+    },
+    "inflective": {
+      "root": "import",
+      "pos": "verb",
+      "type": "action.inflective",
+      "postfixes": {"-s": "active", "-ed": "passive", "-ing": "applicative", "-er": "objective"},
+      "value": "IMPORT(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "deflective": {
+      "root": "export",
+      "pos": "verb",
+      "type": "action.deflective",
+      "postfixes": {"-s": "active", "-ed": "passive", "-ing": "applicative", "-er": "objective"},
+      "value": "EXPORT(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "observative": {
+      "root": "show",
+      "pos": "verb",
+      "type": "action.observative",
+      "postfixes": {"-s": "active", "-ed": "passive", "-ing": "applicative", "-er": "objective"},
+      "value": "SHOW(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "terminative": {
+      "root": "exit",
+      "pos": "verb",
+      "type": "action.terminative",
+      "postfixes": {"-s": "active", "-ed": "passive", "-ing": "applicative", "-er": "objective"},
+      "value": "EXIT(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "appropriative": {
+      "root": "have",
+      "pos": "verb",
+      "type": "operation.appropriative",
+      "postfixes": {"---s": "active", "---d": "passive", "--ing": "applicative", "-r": "objective"},
+      "value": "HAVE(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "comparative": {
+      "root": "equal",
+      "pos": "verb",
+      "type": "operation.comparative",
+      "postfixes": {"-s": "active", "-ed": "passive", "-ing": "applicative", "-er": "objective"},
+      "value": "EQUAL(inputs[0])",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    }
+  },
+  "adjectives": {
+    "visibility.public": {
+      "root": "public",
+      "pos": "adjective",
+      "type": "visibility.public",
+      "postfixes": {}
+    },
+    "initialization": {
+      "root": "new",
+      "pos": "adjective",
+      "type": "initialization",
+      "postfixes": {},
+      "value": "NEW(inputs[0])",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    },
+    "abstraction": {
+      "root": "generic",
+      "pos": "adjective",
+      "type": "abstraction",
+      "postfixes": {},
+      "value": "GENERIC(inputs[0])",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    }
+  },
+  "adverbs": {
+    "visibility.public": {
+      "root": "publicly",
+      "pos": "adverb",
+      "type": "visibility.public",
+      "postfixes": {}
+    },
+    "nullification": {
+      "root": "not",
+      "pos": "adverb",
+      "type": "nullification",
+      "postfixes": {},
+      "value": "NOT(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "comparison.subtraction": {
+      "root": "less",
+      "pos": "adverb",
+      "type": "comparison.subtraction",
+      "postfixes": {},
+      "value": "LESSER(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "comparison.multiplication": {
+      "root": "greater",
+      "pos": "adverb",
+      "type": "comparison.multiplication",
+      "postfixes": {},
+      "value": "GREATER(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "progression": {
+      "root": "then",
+      "pos": "adverb",
+      "type": "abstraction",
+      "postfixes": {},
+      "value": "THEN(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    }
+  },
+  "prepositions": {
+    "definement.declarative": {
+      "root": "as",
+      "pos": "preposition",
+      "type": "definement.declarative",
+      "postfixes": {},
+      "value": "AS(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "definement.definitive": {
+      "root": "of",
+      "pos": "preposition",
+      "type": "definement.definitive",
+      "postfixes": {},
+      "value": "OF(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "definement.locative": {
+      "root": "at",
+      "pos": "preposition",
+      "type": "definement.locative",
+      "postfixes": {},
+      "value": "AT(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "consignment.associative": {
+      "root": "with",
+      "pos": "preposition",
+      "type": "consignment.associative",
+      "postfixes": {},
+      "value": "WITH(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "consignment.inflective": {
+      "root": "in",
+      "pos": "preposition",
+      "type": "consignment.inflective",
+      "postfixes": {},
+      "value": "IN(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "consignment.deflective": {
+      "root": "out",
+      "pos": "preposition",
+      "type": "consignment.deflective",
+      "postfixes": {},
+      "value": "OUT(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "consignment.indicative": {
+      "root": "by",
+      "pos": "preposition",
+      "type": "consignment.indicative",
+      "postfixes": {},
+      "value": "BY(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "conjoinment.objective": {
+      "root": "from",
+      "pos": "preposition",
+      "type": "conjoinment.objective",
+      "postfixes": {},
+      "value": "FROM(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "conjoinment.subjective": {
+      "root": "to",
+      "pos": "preposition",
+      "type": "conjoinment.subjective",
+      "postfixes": {},
+      "value": "TO(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "conjoinment.comparative": {
+      "root": "than",
+      "pos": "preposition",
+      "type": "conjoinment.comparative",
+      "postfixes": {},
+      "value": "THAN(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "conjoinment.directive": {
+      "root": "for",
+      "pos": "preposition",
+      "type": "conjoinment.directive",
+      "postfixes": {},
+      "value": "FOR(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    }
+  },
+  "articles": {
+    "variable": {
+      "root": "any",
+      "pos": "article",
+      "type": "variable",
+      "postfixes": {},
+      "value": "ANY(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "none": {
+      "root": "no",
+      "pos": "article",
+      "type": "none",
+      "postfixes": {},
+      "value": "NO(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "indefinite": {
+      "root": "a",
+      "pos": "article",
+      "type": "indefinite",
+      "postfixes": {"-n": "alt"},
+      "value": "A(inputs)",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    },
+    "definite": {
+      "root": "the",
+      "pos": "article",
+      "type": "definite",
+      "postfixes": {},
+      "value": "THE(inputs)",
+      "inputs": ["*.noun"],
+      "outputs": ["value"]
+    }
+  },
+  "conjunctions": {
+    "mutual": {
+      "root": "and",
+      "pos": "conjunction",
+      "type": "mutual",
+      "postfixes": {},
+      "value": "AND(inputs)",
+      "inputs": [
+        "*.thing"
+      ],
+      "outputs": [
+        "value"
+      ]
+    },
+    "exclusive": {
+      "root": "or",
+      "pos": "conjunction",
+      "type": "exclusive",
+      "postfixes": {},
+      "value": "OR(inputs)",
+      "inputs": [
+        "*.thing"
+      ],
+      "outputs": [
+        "value"
+      ]
+    }
+  },
+  "evaluations": {
+    "conditional": {
+      "root": "if",
+      "pos": "evaluation",
+      "type": "conditional",
+      "postfixes": {},
+      "value": "IF(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "exceptional": {
+      "root": "else",
+      "pos": "evaluation",
+      "type": "exceptional",
+      "postfixes": {},
+      "value": "ELSE(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "alternative": {
+      "root": "otherwise",
+      "pos": "evaluation",
+      "type": "alternative",
+      "postfixes": {},
+      "value": "OTHERWISE(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    },
+    "iterative": {
+      "root": "while",
+      "pos": "evaluation",
+      "type": "iterative",
+      "postfixes": {},
+      "value": "WHILE(inputs)",
+      "inputs": ["*.thing"],
+      "outputs": ["value"]
+    }
+  }
+}

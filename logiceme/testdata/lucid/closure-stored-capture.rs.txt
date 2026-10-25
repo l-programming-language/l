@@ -1,0 +1,66 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let owner = String::from("borrowed");
+
+
+
+let inspect = |extra: usize| {
+  
+    
+
+return owner.len() + extra;
+
+
+
+  
+}
+;
+
+
+let length = inspect(2)
+;
+
+
+
+assert_eq!(length, 10); assert_eq!(owner, "borrowed");
+
+
+
+
+let assigned;
+
+
+
+assigned = |value: i32| -> (i32) {
+  
+    
+
+return value * 2;
+
+
+
+  
+}
+;
+
+
+let doubled = assigned(9)
+;
+
+
+
+assert_eq!(doubled, 18); assert_eq!(owner.len(), 8);
+
+
+
+    
+}

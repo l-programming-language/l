@@ -1,0 +1,20 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Calculation Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+[|Meta.Statement|]
+}-|/|}
+{|/|-{tags: Meta.Tags}--{if Type == "Calculate"}--{
+[|Calculate(Ops = Meta.Ops)|]
+}-|/|}
+{|/|-{tags: Meta.Tags}--{if Type == "Evaluate"}--{
+[|Evaluate(Calculations = Conjoinments.Calculations, Key = Meta.Key)|]
+}-|/|}
+
+// CE: communication is calculated with the existing Op operand model.
+{|/|-{tags: Meta.Tags}--{if Type == "Execute"}--{
+[|Calculate("Execution", Ops = Meta.Ops)|]
+}-|/|}
+// End Calculation Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Statement: String, Key: String, Ops: Array-Op, Op: Op]}-|/|}

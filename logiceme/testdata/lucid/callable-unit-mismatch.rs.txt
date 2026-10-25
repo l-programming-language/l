@@ -1,0 +1,26 @@
+
+
+// package main
+
+
+
+
+fn unit_only( value: i32) {
+    
+        
+
+return value;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let _unit = unit_only(1)
+;
+
+
+    
+}

@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+repo_root=$(CDPATH= cd -P "$(dirname "$0")/.." && pwd)
+cd "$repo_root"
+mkdir -p "$repo_root/.harness/bin" "$repo_root/.harness/cache/go-build"
+GOENV=off GOFLAGS= GOWORK=off GOCACHE="$repo_root/.harness/cache/go-build" \
+  "$repo_root/scripts/l-go" build -mod=readonly -buildvcs=false -o "$repo_root/.harness/bin/l-ci" ./tools/ci
+exec "$repo_root/.harness/bin/l-ci" "$@"
