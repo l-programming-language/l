@@ -1548,14 +1548,12 @@
     }
   ],
   "absent_files": [
-    "cmd/l/legacy_async_migration_test.go",
     "cmd/l/test/configurations/test_conf.json",
     "cmd/l/test/lexicon/eng/grammar.json",
     "cmd/l/test/lexicon/eng/vocabulary.json",
     "configuration",
     "configurations",
     "configurations/test_conf.json",
-    "lyger/legacy_async_migration_test.go",
     "lyger/test/configurations/test_conf.json",
     "lyger/test/lexicon/eng/grammar.json",
     "lyger/test/lexicon/eng/vocabulary.json"
