@@ -108,21 +108,30 @@ test('mobile navigation and visible keyboard focus', async ({ page }) => {
 });
 
 test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ page }) => {
-  for (const [route, fixture] of [['/docs/guide/apps-and-services/', '../cmd/l/test/runnable_service/canonical-io.l'], ['/docs/guide/first-program/', '../demo/basic/main.l']]) {
+  for (const [route, fixture, start, end] of [
+    ['/docs/guide/apps-and-services/', '../cmd/l/test/runnable_service/canonical-io.l', 0, undefined],
+    ['/docs/guide/apps-and-services/', '../lyger/test/workspace/services.l', 1, 12],
+    ['/docs/guide/native-definitions/', '../cmd/l/test/runnable_service/probe.l', 0, 3],
+    ['/docs/guide/native-definitions/', '../cmd/l/test/runnable_service/basic.l', 0, 4],
+    ['/docs/guide/first-program/', '../demo/basic/main.l', 0, undefined],
+  ] as const) {
     await page.goto(route);
-    const source = await fs.readFile(fixture, 'utf8');
+    const source = (await fs.readFile(fixture, 'utf8')).split('\n').slice(start, end).join('\n').trimEnd();
     // Expressive Code uses divs per line and a newline sentinel for empty lines.
-    expect((await page.locator('pre[data-language="l"] .ec-line .code').allTextContents()).map((line) => line.replace(/\n$/, '')).join('\n').trimEnd()).toBe(source.trimEnd());
+    const blocks = await page.locator('pre[data-language="l"]').evaluateAll((pres) => pres.map((pre) => [...pre.querySelectorAll('.ec-line .code')].map((line) => line.textContent?.replace(/\n$/, '')).join('\n').trimEnd()));
+    expect(blocks).toContain(source);
   }
   await expect(page.locator('pre[data-language="sh"]').first()).toContainText('./bin/l build');
   await page.goto('/docs/stdlib/');
   expect(JSON.parse((await page.locator('pre[data-language="json"] code').textContent())!)).toEqual(JSON.parse(await fs.readFile('../stdlib/index.json', 'utf8')));
   await page.goto('/docs/reference/logemes/rust-contract/');
   await expect(page.locator('pre[data-language="rust"]')).toContainText("'outer: loop {");
-  await page.goto('/docs/guide/native-definitions/');
-  const aml = await fs.readFile('../logiceme/testdata/lucid/declaration-evaluation.aml.txt', 'utf8');
+  await page.goto('/docs/internals/aml-protocol/');
+  const reference = await fs.readFile('../logiceme/AML.md', 'utf8');
+  const aml = reference.match(/## Complete composed example\n[\s\S]*?```text\n([\s\S]*?)\n```/);
+  expect(aml).not.toBeNull();
   const blocks = await page.locator('pre[data-language="text"]').evaluateAll((pres) => pres.map((pre) => [...pre.querySelectorAll('.ec-line .code')].map((line) => line.textContent?.replace(/\n$/, '')).join('\n')));
-  expect(blocks.map((x) => x.trimEnd())).toContain(aml.trimEnd());
+  expect(blocks.map((x) => x.trimEnd())).toContain(aml![1].trimEnd());
   expect(await page.locator('main app, main logeme, main outline').count()).toBe(0);
 });
 

@@ -1,6 +1,6 @@
 # Manage lifecycle and captured output
 
-The orchestrator owns separate OS processes for Apps. Ordered operations make launch, completion and continuation effects explicit. This chapter explains the maintained runtime contract; it does not claim that native verification ran during website construction.
+The orchestrator owns separate App processes. Await makes completion and continuation effects explicit.
 
 <!-- diagram:runtime-lifecycle -->
 
@@ -8,49 +8,51 @@ The orchestrator owns separate OS processes for Apps. Ordered operations make la
 
 | Form | Effect |
 | --- | --- |
-| Build | Check readiness of an already compiled companion; no compilation at runtime |
-| Run | Launch or record a terminal startup failure; return after launch acknowledgment |
-| Stop | Request forceful termination of the owned process group; do not join |
-| Await | Join the finalized result and claim the continuation once |
-| Start | Source-defined App action: Build then Run |
-| Execute | Source-defined App action: Start then Await |
-| Output | Read finalized raw stdout; no implicit wait |
+| Build | Check an already compiled companion; no runtime compilation |
+| Run | Launch or record startup failure; return after launch acknowledgment |
+| Stop | Request forceful process-group termination without joining |
+| Await | Join the finalized result; activate its continuation once |
+| Start | Source-defined Build then Run |
+| Execute | Source-defined Start then Await |
+| Output | Read finalized raw stdout without waiting |
 | Error | Inspect the selected operation/invocation error |
 
-Start and Execute retain `any App` signatures.
+Start and Execute accept `any App`.
 
 ## Keep an invocation outstanding until Await finishes
 
-One invocation remains outstanding until its first Await continuation completes. Process exit alone does not free the target for another Run. Duplicate Run, Build while an invocation is outstanding, Await/Stop before Run, and reading unavailable Output are fatal lifecycle misuse.
-
-Repeated Await returns the cached immutable result and does not repeat continuation effects. A new accepted invocation receives fresh continuation locals. Aliases share the same target and invocation slot, so renaming a value does not create another independently running instance.
-
-The maintained repeated-activation example demonstrates both retained snapshots and a later invocation:
+Process exit alone does not permit another Run: the first Await continuation must finish. Duplicate Run, Build while outstanding, Await/Stop before Run and unavailable Output reads are fatal misuse. Repeated Await returns the cached immutable result without repeating continuation effects. Aliases share the target and invocation slot.
 
 <!-- example:repeated-activation -->
 
-The existing paragraph witness expects six `Repeat\n` lines. Each Show reads the particular stored or current value expressed by the source; the compiler does not rewrite all snapshots to the latest Output.
+Worker aliases Repeat. The first Await runs the continuation's two Shows; the second invocation gets fresh locals and repeats them. The final two Shows read the earlier snapshot and latest Output separately. The retained assertion is six `Repeat\n` lines.
 
 ## Output and errors are different streams
 
-Output preserves raw stdout, including NUL, whitespace and Unicode. Stderr is captured separately and is not forwarded automatically. Stderr alone does not imply failure. Ordinary child failure is a stored result, not an implicit Exit of the orchestrator.
+Output preserves raw stdout, including NUL, whitespace and Unicode. Stderr is captured separately; it is neither forwarded automatically nor itself evidence of failure. Child failure becomes a stored result rather than an implicit orchestrator Exit.
 
-Reading finalized Output before Await is possible once capture and cleanup are finished, but it does not run the continuation. Use Await when the next operation requires completion rather than trying to predict a race. The [intentional newline-mismatch demo](../../demo/paragraphs/main.l) demonstrates why captured text must not be trimmed for comparisons.
+The [Stop witness](../../testdata/phase1/language/lang-10.l) declares Worker and gives its continuation this condition: ``If Worker has an Error, show `error|`, else show `success|`.`` It then performs:
+
+<!-- example:runtime-stop-await -->
+
+Stop returns before Await joins and activates that condition. A short-lived child may finish first, so either success or termination can win; repeated Await does not repeat the check. A Stop delivery error and the invocation result are distinct: Await reselects the invocation's immutable result.
+
+Finalized Output can be read before Await without activating the continuation. Use Await for deterministic completion. Print's newline is retained; the [newline-mismatch demo](../../demo/paragraphs/main.l) shows why trimming changes comparisons.
 
 ## Nested work belongs to the continuation
 
 <!-- example:nested-continuation -->
 
-A continuation may Run and Await another target. It cannot Run the same target whose continuation is still active. The retained expected output here is `Other\nInner\nfinisheddone`, showing inline continuation ordering rather than a background callback.
+A continuation can Run/Await another target, but cannot rerun its own active target. Inline ordering produces `Other\nInner\nfinisheddone`.
 
 ## Termination and cleanup
 
-Stop requests SIGKILL and still requires Await to join. Normal fallthrough and bare Exit clean up owned processes without running unawaited continuations. Explicit error/fatal misuse exits 1 after cleanup; SIGINT/SIGTERM abort source flow and select 130/143. A successful bare Exit selects 0 if cleanup succeeds.
+Stop requests SIGKILL; Await still joins. Fallthrough and bare Exit clean owned processes without running unawaited continuations. Bare Exit succeeds if cleanup succeeds; explicit errors/fatal misuse exit 1. SIGINT/SIGTERM abort source flow and select 130/143.
 
-The runtime imposes no normal duration timeout, process-count limit or output-capture cap. Its two-second post-exit/cancellation pipe-drain bound is a cleanup rule. Deliberately escaped process groups and uncatchable orchestrator termination are outside the guarantee.
+There is no normal duration timeout, process-count limit or capture cap. The two-second post-exit/cancellation pipe-drain bound is a cleanup rule. Escaped process groups and uncatchable orchestrator termination are outside the guarantee.
 
-The [full runtime guide](../cli-build.md#app-execution-semantics) defines operation-error selection, startup failure, races and cleanup precedence. For a deliberate compiler error example:
+The [runtime contract](../cli-build.md#app-execution-semantics) details startup, error selection and cleanup precedence. Operand types are checked earlier:
 
 <!-- example:invalid-await-text -->
 
-That Text is not an App; the [negative fixture](../../testdata/phase1/n01-await-text/case.json) requires a TypeMismatch and no new executable publication.
+Text cannot be Awaited; the [negative fixture](../../testdata/phase1/n01-await-text/case.json) requires TypeMismatch and no new executable publication.

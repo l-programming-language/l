@@ -46,7 +46,7 @@ The maintained basic program uses Execute then Show:
 
 <!-- example:basic -->
 
-Its expected stdout is `Hello World!` followed by LF, because Print supplied that newline. The example has existing compiler/runtime witnesses; this documentation task did not execute it.
+Its expected stdout is `Hello World!` followed by LF, because Print supplied that newline. The linked fixture records its expected output.
 
 ## Exit
 

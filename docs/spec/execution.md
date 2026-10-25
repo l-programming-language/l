@@ -14,7 +14,7 @@ An App is a process target. Standalone Service declarations remain structural an
 
 Children inherit the caller's environment and CWD, receive EOF on stdin, and receive no synthesized runtime arguments. Runtime argument transport and process return-value transport are outside the current contract. The process result carries raw captured output and error state instead.
 
-**App lifecycle example — runtime witness retained, not run in this pass.**
+**App lifecycle example.**
 
 <!-- example:runnable-app -->
 
@@ -61,7 +61,7 @@ Repeated/cached Await observes the same result and cannot claim the continuation
 
 A continuation Exit terminates the whole program. Global shutdown aborts source flow instead of returning from public Await into a continuation. Fallthrough cleanup does not execute continuations for unawaited invocations.
 
-**Supported first-Await activation — complete runtime witness, not run here.**
+**Supported first-Await activation.**
 
 <!-- example:runtime-continuation-once -->
 
@@ -93,4 +93,4 @@ Tokio is internal runtime implementation, not a public L concurrency standard li
 
 ## Sources and witnesses
 
-Normative maintained source: [CLI/runtime contract](../cli-build.md). Implementation: [typed process instructions](../../lyger/instructions.go), [builtin process operations](../../lyger/builtin_operations.go), [paragraph instructions](../../lyger/paragraph_instructions.go), and [orchestration flow](../../lyger/orchestration_flow.go). Witnesses: [phase-one suite](../../lyger/phase1_language_test.go), [paragraph examples](../../demo/paragraphs/README.md), [Service coverage](../../testdata/service-execution/coverage.md), and [runtime contract](../../testdata/phase1/runtime/contract.md). Historical runtime outcomes remain revision-specific; this pass did not execute them.
+Normative maintained source: [CLI/runtime contract](../cli-build.md). Implementation: [typed process instructions](../../lyger/instructions.go), [builtin process operations](../../lyger/builtin_operations.go), [paragraph instructions](../../lyger/paragraph_instructions.go), and [orchestration flow](../../lyger/orchestration_flow.go). Witnesses: [phase-one suite](../../lyger/phase1_language_test.go), [paragraph examples](../../demo/paragraphs/README.md), [Service coverage](../../testdata/service-execution/coverage.md), and [runtime contract](../../testdata/phase1/runtime/contract.md). Recorded runtime outcomes apply to their tested revisions and hosts.

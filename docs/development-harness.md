@@ -8,7 +8,6 @@ Expensive local validation requires an explicit author request. Repository Actio
 automatically validate Linux when a pull request opens, receives commits, or reopens.
 Manual dispatch also supports macOS. The required `L CI` check on `main` remains
 removed; pull-request, deletion and force-push protections remain.
-`dev` stays directly pushable.
 
 Do not automatically run local bootstrap, full-module lint, full ordinary/native
 suites, or `scripts/l-check`. Run them only when explicitly requested by the user.
@@ -133,7 +132,7 @@ requires observable process and resource cleanup.
 Setup, lint and tagged compilation alone do not establish runtime acceptance.
 
 `main` still requires a pull request, but its required `L CI` status check has
-not been reinstated. `dev` remains directly pushable. Existing deletion and
+not been reinstated. Existing deletion and
 force-push protections remain in force; merging and public release are separate
 steps.
 

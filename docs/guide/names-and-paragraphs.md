@@ -1,35 +1,33 @@
 # Names and paragraphs
 
-L resolves names through lexical source scopes, declaration records and member tables. A paragraph is both a source organization unit and, in the supported execution model, a place where local storage and continuation activation can be tracked. It is not an implicit concurrently scheduled task.
+A name belongs to a lexical scope. Paragraphs can introduce local names and organize behavior; they are not automatically concurrent tasks.
 
 ## Read the physical boundaries
 
-A first code line with a four-space opening prefix begins an encapsulated paragraph. Its following lines need not remain indented. A physical blank line closes it. Keep the blank lines when copying an example: flattening a program into one paragraph can change its meaning.
+Four spaces before a paragraph's first code line open a local scope. Following lines need not stay indented; a physical blank line outside comments or literals closes it. Preserve these boundaries when copying examples.
 
 <!-- example:local-shadowing -->
 
-Here the first paragraph defines its own `message`, `count` and `enabled`. The second defines another `message`. The last Show occurs in the enclosing scope and refers to the original `outer` value. The retained expected stdout is `inner7truesecondouter` with no trailing newline.
+The initial message is `outer`. Each indented paragraph owns its own message; the first also owns count and enabled. The final Show refers to the outer message. Expected stdout is `inner7truesecondouter`, without a newline.
 
-Unmarked declarations stay local to their lexical scope. `Publicly define` and supported Public construction forms publish into the containing program. Public is a visibility rule; it is not a lifetime, mutability, network endpoint or process-selection modifier.
+Unmarked declarations remain in their scope. Public/Publicly publish only the selected declaration into the enclosing program scope; inside an indexed dictionary, publication stays within that dictionary's own source unit. Public changes visibility only and preserves the declaration's identity.
 
 ## Pronouns refer to subjects
 
-Pronouns bind the last subject defined in their source paragraph. They do not mean the most recently printed value or whichever App most recently completed. In the basic program, `The App` refers to the App just constructed. In a source-defined action such as `Building any App and then Running it`, `it` follows the action's bound subject.
+Pronouns bind the last subject defined in their source paragraph, not the last printed value or completed App. In the basic program, The App refers to the App just constructed. In `Building any App and then Running it`, it refers to the action's App argument.
 
-Prefer explicit names when an example introduces multiple subjects. The maintained [multiple-subjects example](../../demo/paragraphs/multiple-subjects.l) uses `First's Output` and `Second's Output` explicitly while joining in reverse order. Possessives perform member access; they are not a second declaration of the owner.
-
-Native Output/Error lookup requires an actual App. A type namespace may hold static definitions, but merely naming `App` does not create a running invocation.
+Use explicit names when several subjects appear: the [multiple-subjects example](../../demo/paragraphs/multiple-subjects.l) joins in reverse order using `First's Output` and `Second's Output`. These possessives select members without redeclaring their owners. Native Output/Error needs an actual App; a static type namespace alone has no invocation.
 
 ## A continuation has an activation
 
 <!-- example:paragraph-fallthrough -->
 
-Each App-led paragraph declares an App body and a continuation. The first Await for that invocation joins its result and activates the associated continuation. `Execute First and Second` expands a complete Execute for First before the complete Execute for Second. The expected stream is `First\nSecond\ndone`.
+Here `The App Prints firstText` runs inside First. The following Define and Show form its **continuation**: orchestrator actions deferred until the invocation's first Await joins it. The Second paragraph works the same way.
 
-Repeated Await returns the same finalized result without repeating the continuation. A fresh accepted invocation gets fresh local continuation storage. An ordinary paragraph executes when reached instead of waiting for an App invocation.
+`Execute First and Second` starts and awaits First, runs First's continuation, then does the same for Second. Finally Show writes `done`; expected stdout is `First\nSecond\ndone`. Repeated Await returns the finalized result without repeating the continuation. A new invocation gets fresh continuation storage; an ordinary paragraph executes when reached.
 
 ## Assignment must be established
 
-The typed plan checks definite assignment on continuing control-flow paths. A declaration in one conditional branch does not establish a value in another continuing branch. An Exit branch stops continuing and is treated accordingly. Output readiness remains a runtime check even when name and type resolution succeed.
+A value must be assigned on every continuing path before use. Assignment in one conditional branch does not establish it on another; an Exit branch no longer continues. Output readiness is checked at runtime even when names and types resolve.
 
-See [source meaning and scope ownership](../architecture.md#source-meaning-and-output-views), [paragraph examples](../../demo/paragraphs/README.md), and the [language specification](../spec/index.md) for the complete binding rules. Next, [define new vocabulary](definitions.md).
+See [scope ownership](../architecture.md#source-meaning-and-output-views), [paragraph examples](../../demo/paragraphs/README.md), and the [specification](../spec/index.md). Next, [define new vocabulary](definitions.md).

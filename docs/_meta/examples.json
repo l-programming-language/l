@@ -947,6 +947,40 @@
       ],
       "lang": "l",
       "sha256": "e25ec0d5689457b789b00f440f16fee9e0bc0d7661b3384593d27386ceee44f3"
+    },
+    {
+      "id": "constructed-service-composition",
+      "source": "lyger/test/workspace/services.l",
+      "classification": "fragment",
+      "description": "Left/Right Service descriptors and a Grouped App construction from the maintained workspace fixture; requires the preceding IO.Print import and omits the second App.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/service_workspace_test.go",
+        "lyger/service_review_regression_test.go"
+      ],
+      "sha256": "1f58d1f9cb54a0ad5ea75c624a72b2927605f2f4b20ec3672fc6277d1de4a49f",
+      "lang": "l",
+      "lines": {
+        "start": 2,
+        "end": 12
+      }
+    },
+    {
+      "id": "native-dictionary-use",
+      "source": "cmd/l/test/runnable_service/basic.l",
+      "classification": "fragment",
+      "description": "ProbeIO caller import and App-body use; requires sibling probe.l and omits the later Build/Run/Await/Show instructions. The Text includes an explicit newline.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/runnable_service_test.go",
+        "cmd/l/runnable_service_native_test.go"
+      ],
+      "sha256": "d5f7458b98b50106a02c00a70e5c43486c7f6cab2a52c06589c7aec2c5efa5b2",
+      "lang": "l",
+      "lines": {
+        "start": 1,
+        "end": 4
+      }
     }
   ]
 }

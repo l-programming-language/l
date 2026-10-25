@@ -14,7 +14,7 @@ l build --language eng --output-dir './output directory' './source directory/mai
 l build -- -example.l
 ```
 
-The Go FlagSet accepts both single- and double-hyphen spellings and either a separate value or `=value`. Prefer the documented double-hyphen forms. An explicitly empty flag value is rejected. Whitespace-only or unavailable language identifiers fail compiler initialization. Repeating a value option follows FlagSet's last-value behavior; this is parser behavior, not a distinct language feature.
+Options accept single or double hyphens and either a separate value or `=value`. Prefer the double-hyphen forms above. Empty values are rejected; whitespace-only or unavailable language identifiers fail initialization. If an option repeats, its last value wins.
 
 ## Options
 
@@ -29,13 +29,13 @@ Relative source, asset and output paths use caller CWD. Resolution does not chan
 
 ## Legacy OS option
 
-The legacy `-os`/`--os` flag is registered solely to produce an unsupported-option diagnostic. The stored historical parser field `ubuntu` does not choose a target. The host operating system and architecture determine the native build.
+The legacy `-os`/`--os` option is rejected. Native builds target the host operating system and architecture.
 
 ## Help
 
 `l --help`, `l -h`, and `l -help` show build help when supplied as the sole top-level argument. `l build --help`, `l build -h`, and `l build -help` request command help before a filename. Help returns 0 and writes to stdout unless that write fails. A help flag after a filename is another positional argument and does not bypass ordering rules.
 
-The precise usage text is source-derived from `buildUsage` in [command.go](../../cmd/l/command.go); it is not a runtime capture in this pass. Examples such as `l run main.l` and `l --version` are errors, not undocumented conveniences.
+See [command.go](../../cmd/l/command.go) for exact help text. Commands such as `l run main.l` and `l --version` are unsupported.
 
 ## Published files
 
@@ -71,4 +71,4 @@ Successful build stdout contains only the absolute published executable path and
 
 ## Verification witnesses
 
-[Command tests](../../cmd/l/command_test.go) cover help, defaults, option order, empty options, unsupported commands and resource diagnostics. [Publication tests](../../cmd/l/build_publish_test.go) cover preserved prior outputs, matched concurrent generations and unrelated destinations. [Cargo identity tests](../../cmd/l/cargo_identity_integration_test.go) inspect genuine native artifact identity. They are existing witnesses, not tests run by this website pass.
+[Command tests](../../cmd/l/command_test.go) cover help, defaults, option order, empty options, unsupported commands and resource diagnostics. [Publication tests](../../cmd/l/build_publish_test.go) cover preserved prior outputs, matched concurrent generations and unrelated destinations. [Cargo identity tests](../../cmd/l/cargo_identity_integration_test.go) inspect genuine native artifact identity.

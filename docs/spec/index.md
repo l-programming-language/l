@@ -30,15 +30,11 @@ Use the [builtin reference](../reference/builtins/index.md) for implicit definit
 
 ## Role, support, and evidence
 
-Three independent labels are used by the coverage manifest. A role describes what a document is for: normative contract, explanatory guide, implementation detail, or future design. Support describes a feature: supported within a stated boundary, partial, rejected, design-only, internal, or unresolved. Evidence describes the observation: static source inspection, an existing test witness, or a verification actually executed at a named stage.
+The [evidence guide](../contributing/evidence.md) defines document roles, implementation support, and verification stages. Grammar recognition does not establish executable behavior; an existing test records an assertion, not a fresh result.
 
-A grammar rule establishes a recognizable form, not working native behavior. A test file is a witness of an assertion the repository maintains, not a report that the test passed today. Generation, native compilation, runtime observation, and full acceptance are separate stages. This documentation pass uses static inspection and existing witnesses; language execution was not performed under the local validation pause.
+Read each example's classification: **runnable** may deliberately fail at runtime; **compile-only** makes no runtime claim; **invalid** expects compiler rejection; **fragment** omits context or illustrates a statically reviewed form. Unsupported forms are labeled where shown.
 
-Code blocks marked `l` contain L source; `rust` blocks are target-specific native fragments; `text` blocks may show grammar notation or AML. Explanatory fragments are not implicitly executable programs. The complete basic example below is included from the maintained repository fixture; its expected behavior is an existing test contract rather than a new runtime observation.
-
-Read each example's classification and explanation together. A **runnable** example may deliberately exit with an error; **compile-only** supplies no runtime claim; **invalid** demonstrates an expected compiler rejection. A **fragment** may omit surrounding declarations or illustrate a form reviewed only through static source inspection. Unsupported source forms are labeled at the example itself, and internal-only categories are not given invented construction syntax.
-
-<!-- example:basic -->
+Code blocks marked `l` contain L source; `rust` contains native fragments; `text` may contain grammar notation or AML. Start with the complete [first program](../guide/first-program.md).
 
 ## Language guarantees and target limits
 

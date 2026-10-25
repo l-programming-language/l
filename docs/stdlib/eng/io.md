@@ -16,7 +16,7 @@ The maintained basic example uses the active application-body form `The App Prin
 
 <!-- example:basic -->
 
-This fixture is backed by existing frontend/native/runtime assertions. It was not executed in this documentation pass. An arbitrary isolated Print sentence is not assumed to be valid in every outer/application ownership context merely because its inflection exists.
+Use Print in an App body, as shown here; its grammatical forms do not make every execution context valid.
 
 ## Public and private names
 

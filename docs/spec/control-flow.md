@@ -8,7 +8,7 @@ Statements retain their original order after source expansion. Coordinated unary
 
 Run acknowledges launch before the next instruction, while the child process continues independently. This permits overlapping OS processes; it does not establish parallel evaluation of arbitrary expressions. Native fragments may have their own Rust evaluation rules. Logeme assembly order is not a general source expression-order promise.
 
-**Supported coordination — excerpt from a complete runtime witness, not run in this documentation pass.** The [two-App program](../../demo/phase1/main.l) declares First and Second before these instructions:
+**Supported coordination.** The [two-App program](../../demo/phase1/main.l) declares First and Second before these instructions:
 
 <!-- example:control-ordered-apps -->
 
@@ -50,7 +50,7 @@ The unusual inclusive-order spelling follows the actual grammar sequence; it is 
 
 If selects a branch from a supported condition. An attached else belongs to the unmatched if. Otherwise can attach to an immediately preceding unmatched conditional in the same source paragraph; it does not search arbitrary earlier paragraphs or create an unconditional fallback after unrelated statements.
 
-**Supported equality and selection — complete runtime witness, not run here.** This program makes the wait explicit on the branch that continues:
+**Supported equality and selection.** This program makes the wait explicit on the branch that continues:
 
 <!-- example:values-truth-condition -->
 
@@ -72,7 +72,7 @@ The grammar contains While and collection operations Put, Place, Get, and Take. 
 
 <!-- example:control-while-unsupported -->
 
-The [grammar's `conditional.while` rule](../../lexicon/eng/grammar.json) recognizes a condition followed by an imperative clause. The [instruction builder](../../lyger/instructions.go) accepts If/else/Otherwise conditionals and rejects the While kind. No parsing, compilation, or execution of this documentation-only fragment was performed. It supplies no supported way to repeat Show; use it to recognize the unsupported boundary.
+The [grammar's `conditional.while` rule](../../lexicon/eng/grammar.json) recognizes a condition followed by an imperative clause. The [instruction builder](../../lyger/instructions.go) accepts If/else/Otherwise conditionals and rejects the While kind. It supplies no supported way to repeat Show; use it to recognize the unsupported boundary.
 
 The Rust backend separately supports bounded iteration compositions described in the [target reference](../../builtins/README.md#iteration-and-definition-contract). It rejects the legacy three-part X form. Native loop composition does not confer source-level iteration semantics, collection ordering, bounds behavior, or break/continue vocabulary.
 
@@ -92,13 +92,13 @@ IO.Print is an imported application/native action that adds one newline. See [IO
 
 <!-- example:basic -->
 
-`The App Prints message` belongs to Hello's generated program and appends LF through imported IO.Print. Execute waits for that invocation; `Show Hello's Output` then writes the captured `Hello World!\n` exactly. Show does not add a second LF. The canonical CLI witness owns that expected output; it was not executed for this documentation change.
+`The App Prints message` belongs to Hello's generated program and appends LF through imported IO.Print. Execute waits for that invocation; `Show Hello's Output` then writes the captured `Hello World!\n` exactly. Show does not add a second LF. The canonical CLI witness records that expected output.
 
 ## Exit and Return
 
 Bare Exit terminates the whole L program after cleanup and succeeds if cleanup succeeds. Exit with an explicit Error/text failure follows the maintained error path and returns failure. Exit inside a continuation or expanded source action still exits the orchestrator; it is not merely a return from the nearest paragraph.
 
-**Supported whole-program termination — complete runtime witness, not run here.**
+**Supported whole-program termination.**
 
 <!-- example:control-bare-exit -->
 

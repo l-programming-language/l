@@ -34,4 +34,4 @@ Deferred and three-part loops are rejected/removed. Function receiver methods, g
 
 ## Support assets
 
-Config and Cargo templates assemble application configuration and manifests. Start/stop templates produce deployment artifacts; runtime/main, runtime/runtime and Unix/other process templates supply lifecycle support. They are separate from the eighteen segments and from L's public standard library. A documentation build does not run generated scripts or bootstrap toolchains. Optional compiler validation remains subject to the [development policy](../../development-harness.md#temporary-validation-pause).
+Config and Cargo templates assemble application configuration and manifests. Start/stop templates produce deployment artifacts; runtime/main, runtime/runtime and Unix/other process templates supply lifecycle support. They are separate from the eighteen segments and from L's public standard library.

@@ -203,7 +203,7 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
     text = text.slice(0, change.start) + change.replacement + text.slice(change.end); boundary = change.start;
   }
   const source = sourceURL(root, page.source, identity);
-  const edit = source && !page.generated ? source.replace(`/blob/${identity.docsCommit}/`, '/edit/main/') : false;
+  const edit = source && !page.generated && identity.channel === 'production' ? source.replace(`/blob/${identity.docsCommit}/`, '/edit/main/') : false;
   const metadata = { ...authored, title: page.title, description: page.description, slug: page.route.slice(1, -1), editUrl: edit, sourcePath: page.source, documentRole: page.role, generatedReference: page.generated };
   const attribution = `\n\n---\n\n${page.generated ? '**Generated reference.** Refresh the canonical snapshot; do not edit its website projection.' : '**Canonical source:**'} ${source ? `[${page.source}](${source})` : `\`${page.source}\``}.${identity.dirty && source ? ' Source links show the committed base; this local checkout contains changes.' : ''}\n`;
   return `---\n${yaml(metadata)}---\n\n${text.trim()}${attribution}`;

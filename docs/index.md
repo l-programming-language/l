@@ -2,7 +2,7 @@
 
 L is a human-readable language with applications as values. It generates Rust source and uses the Rust toolchain to build native artifacts for your current macOS or Linux host. Building and running are separate steps: run the generated executable to start your program.
 
-This site documents the current repository checkout. It presents an **Unreleased / Local** documentation view when no authoritative release identity is available. New specification prose is source-backed documentation, not a claim of independent standards approval or maintainer ratification.
+This site documents the current repository checkout. It presents an **Unreleased / Local** documentation view when no authoritative release identity is available. Example labels distinguish supported behavior from fragments and expected failures.
 
 <!-- illustration:source-to-native -->
 
@@ -22,9 +22,7 @@ This site documents the current repository checkout. It presents an **Unreleased
 
 ## Read evidence with the claim
 
-Document role, implementation support, and verification are separate. A guide explains a workflow; a specification chapter states maintained contracts and clearly delimited observations; an implementation reference explains internal mechanisms. A grammar entry may be recognized without having an executable implementation.
-
-An existing test is a witness to the intended assertion. It is not a result from this documentation build. Source generation, native compilation, runtime execution and full acceptance establish different things. The [evidence guide](contributing/evidence.md) explains these distinctions; the [integration ledger](../testdata/integration/IMPLEMENTATION.md) records revision-specific historical runs.
+Example classifications describe their intended use, not a fresh test result. The [evidence guide](contributing/evidence.md) defines support and verification stages; the [integration ledger](../testdata/integration/IMPLEMENTATION.md) records results for specific revisions and hosts.
 
 ## Maintained technical guides
 

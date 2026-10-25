@@ -92,7 +92,7 @@ App-led paragraph continuations receive fresh local storage for each accepted in
 
 <!-- example:repeated-activation -->
 
-The indented App paragraph owns the continuation's `result`. Each outer Run/Await pair starts and joins an invocation, activating that continuation once and showing its local result twice. The outer `snapshot` is assigned after the first Await; the second invocation does not rewrite it. The retained test expects six `Repeat\n` lines: two from each continuation and two from the final Show statements. Because both App invocations print the same text, the separate [counter-based snapshot witness](../../testdata/phase1/f08-rerun-keeps-snapshot/case.json) checks differing invocation bytes. Neither witness was run for this documentation edit.
+The indented App paragraph owns the continuation's `result`. Each outer Run/Await pair starts and joins an invocation, activating that continuation once and showing its local result twice. The outer `snapshot` is assigned after the first Await; the second invocation does not rewrite it. The retained test expects six `Repeat\n` lines: two from each continuation and two from the final Show statements. Because both App invocations print the same text, the separate [counter-based snapshot witness](../../testdata/phase1/f08-rerun-keeps-snapshot/case.json) checks differing invocation bytes.
 
 ## Diagnostics
 

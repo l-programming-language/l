@@ -8,8 +8,6 @@ Start with three source forms already used by the maintained examples: backtick-
 
 The three public declarations survive the paragraph boundary. `Show Greeting`, `Show Count`, and `Show Enabled` produce the expected bytes `public7true`: each writes its value without inserting spaces or line breaks. The Dictionary declaration establishes a vocabulary namespace; it is not a demonstration of a generic key/value collection API.
 
-The public-values case is covered by [paragraph integration assertions](../../cmd/l/paragraph_integration_test.go). The example's expected byte stream is recorded in the manifest; it was not run by the website build.
-
 ## Read pipe-delimited word forms
 
 In the example above, `"Display|-s|-ed|-ing|-er"` declares the spellings of one action. Each pipe (`|`) separates a grammatical form. This is called **inflection** or **lexical casing**: it tells L how a word can fit into a sentence. Capitalization is a separate matter; L looks up these names without regard to letter case.
@@ -44,7 +42,7 @@ The quoted name `"message"` receives the backtick-delimited Text `Hello World!`,
 
 Literal handling preserves bytes and their source attribution. Periods and whitespace inside a quoted literal are not sentence boundaries. The quote scanner recognizes escaped delimiters so they do not close the literal, but that scanner is not a general promise of C-style escape decoding. Do not infer that writing a backslash followed by `n` automatically means an LF byte.
 
-Captured App output is also Text and preserves raw stdout, including whitespace, NUL and non-ASCII bytes. The browser's Unicode text display is not a byte inspector. The documentation pipeline refuses unsafe decoding rather than silently claiming a changed display is the canonical source.
+Captured App output is also Text and preserves raw stdout, including whitespace, NUL and non-ASCII bytes. A browser's Unicode display does not expose every byte.
 
 `IO.Print` writes supported byte-like Text with an added newline; `Show` writes Text exactly. A read of Output is meaningful only after capture finalization. A stored copy remains a snapshot if the target is run again.
 
@@ -57,8 +55,6 @@ Captured App output is also Text and preserves raw stdout, including whitespace,
 The current scalar Number representation is finite binary64. Its encoder uses a round-trip decimal representation for Rust and preserves negative zero and the parsed rounding. There is no public guarantee of arbitrary-precision arithmetic or a family of integer widths.
 
 Numeric parsing and source-token boundaries both matter. In particular, an entry accepted by the number parser is not necessarily a complete standalone source token. Overflow remains an error with its native parse cause, and stored nonfinite values are unsupported. The [number encoder](../../lyger/native_encoding.go) and [numeric resolution tests](../../lyger/numeric_resolution_test.go) are the precise evidence for numeric boundaries.
-
-Number formatting in the native print definition is deliberate, including decimal/scientific display and signed zero. Do not substitute JavaScript number formatting for the language's expected output in documentation checks.
 
 ## Other categories require their own contracts
 

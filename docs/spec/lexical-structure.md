@@ -36,7 +36,7 @@ Backticks delimit Text. Double quotes identify a declaration label. A bare use o
 
 <!-- example:lexical-declared-name -->
 
-This is an excerpt from [the complete basic example](../guide/index.md), whose earlier import binds `Print`. `"message"` declares a name; backtick-delimited `Hello World!` supplies its Text value. The later bare `message` reads that binding as the App's print operand. The excerpt omits the import and execution steps and is not a standalone program; the complete source has an existing native execution witness, not a new run from this documentation pass.
+This is an excerpt from [the complete basic example](../guide/first-program.md), whose earlier import binds `Print`. `"message"` declares a name; backtick-delimited `Hello World!` supplies its Text value. The later bare `message` reads that binding as the App's print operand. The excerpt omits import and execution steps; use the linked program to run it.
 
 The scanner skips a backslash and following byte while locating a quote terminator. Unquoting a backtick literal specifically replaces a backslash-escaped backtick with a literal backtick. General Text is not a C or JSON string with automatic `\n` interpretation. Definition templates have an explicitly narrower escape-decoding step described in [native definitions](definitions.md#framing-and-escaping). Literal contents, including braces, angle brackets, periods, and markup-like strings, must remain data through preprocessing.
 
@@ -82,10 +82,10 @@ This canonical observer demonstrates why name resolution matters:
 
 <!-- example:lexical-numeric-name -->
 
-The quoted label declares a Text binding named `1e999`. `Show 1e999` therefore reads `payload`; it is not an attempt to construct an overflowing Number. Without a resolving binding, the numeric spelling has a range error. The inspected numeric-resolution test checks the binding and retained literal; the displayed observer has not been run in this documentation pass.
+The quoted label declares a Text binding named `1e999`. `Show 1e999` therefore reads `payload`; it is not an attempt to construct an overflowing Number. Without a resolving binding, the numeric spelling has a range error. The numeric-resolution test checks this binding and retained literal.
 
 Grammar patterns such as `%~%` and `?~?` name typed token categories. They are not instructions to surround ordinary numbers and Truth literals with those characters. The actual source examples use `7`, `-12.5`, `true`, and `false`.
 
 ## Sources and witnesses
 
-Implementations: [source preparation](../../lyger/source.go), [parser](../../lyger/parser.go), [literal unquoting](../../lyger/grammar.go), [token loading](../../lyger/lexicon.go), [lexical forms](../../lyger/lexical_types.go), [type and inflection utilities](../../lyger/utilities.go), and [definition slots](../../lyger/definition.go). Existing witnesses: [source framing](../../lyger/source_test.go), [paragraph positions](../../lyger/paragraph_source_test.go), [literal framing](../../lyger/literal_framing_regression_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), and [slot names](../../lyger/definition_slot_names_test.go). These witnesses were inspected, not executed in this documentation pass.
+Implementations: [source preparation](../../lyger/source.go), [parser](../../lyger/parser.go), [literal unquoting](../../lyger/grammar.go), [token loading](../../lyger/lexicon.go), [lexical forms](../../lyger/lexical_types.go), [type and inflection utilities](../../lyger/utilities.go), and [definition slots](../../lyger/definition.go). Existing witnesses: [source framing](../../lyger/source_test.go), [paragraph positions](../../lyger/paragraph_source_test.go), [literal framing](../../lyger/literal_framing_regression_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), and [slot names](../../lyger/definition_slot_names_test.go).

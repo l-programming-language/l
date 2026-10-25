@@ -1,53 +1,45 @@
 # Build your first program
 
-The maintained basic demo introduces the whole source-to-native path without adding a project bootstrap. Builtins are part of the compiler's selected distribution; `IO.Print` is an explicit library import.
+The basic demo imports a printing action, constructs an App, runs it and displays its output. The compiler supplies builtins; IO is imported explicitly.
 
 ## Read the program
 
 <!-- example:basic -->
 
-The first sentence imports the `Print` member of `IO` from the indexed `io` dictionary and gives it the local name `Print`. Backticks delimit Text. Double quotes introduce names: `"message"` names a value, and `"Hello"` names the App being constructed.
+``Use IO's Print from `io` as "Print"`` imports a dictionary member under the local name Print. The possessive `'s` selects a member: IO's Print is a printing action; Hello's Output is the App's captured stdout. Backticks delimit Text, while double quotes introduce names: `"message"` names a value and `"Hello"` names an App.
 
-`New Basic App` uses the implicit Basic descriptor. Basic composes the App's entry structure from Main and Process definitions. `The App Prints message` puts the printing action in the App body. `Execute Hello` expands the source-defined App action into Start followed by Await; Start itself performs Build followed by Run.
+`New Basic App` constructs an App with the standard entry structure supplied by Basic, Main and Process. `The App` refers to Hello just declared. `Prints` is the active form of Print, so `The App Prints message` places that action in Hello's body. See [word forms](values.md#read-pipe-delimited-word-forms).
 
-The final `Show` writes the App's captured stdout. It does not launch the App, wait for it, or add another newline.
+`Execute Hello` performs Start followed by Await; Start performs Build followed by Run. The final Show writes the captured output without launching, waiting or adding a newline.
 
 ## Build and run
 
-After completing the [compiler setup](../cli/index.md), run from the repository root:
+After [compiler setup](../cli/index.md), run from the repository root:
 
 ```sh
 ./bin/l build demo/basic/main.l
 ./demo/basic/main
 ```
 
-The first command generates Rust and invokes Cargo, then prints the absolute path to the published executable. It does not run the program. The second command runs the orchestrator, which executes the source actions and manages the App process.
+The first command generates Rust, invokes Cargo and prints the published executable's absolute path. The second runs the orchestrator, which executes source actions and manages the App process. Building alone does not run the program.
 
-The existing test witness expects these stdout bytes from the generated program:
-
-```text
-Hello World!
-```
-
-The exact expected stream is `Hello World!` followed by one LF byte. Stderr is empty and the expected exit status is 0. This is the retained assertion in [the distribution CLI tests](../../acceptance/distribution/cli/cli_test.go), not a claim that native verification ran during this documentation pass.
+Expected stdout is `Hello World!` followed by one LF byte; stderr is empty and exit status is 0. These exact results are asserted by [the distribution CLI tests](../../acceptance/distribution/cli/cli_test.go).
 
 ## Keep the output together
 
-Building `main.l` publishes `main` beside it and a companion directory named `main.apps`. Move or distribute both together. The executable uses its adjacent immutable generation, so copying only `main` can prevent its App from launching.
+Building `main.l` publishes `main` beside it and a companion directory `main.apps`. Distribute both together: the executable needs its adjacent immutable companion generation to launch Apps.
 
-To choose a separate publication directory, put the option before the filename:
+To choose a publication directory, put the option before the filename:
 
 ```sh
 ./bin/l build --output-dir ./build/hello demo/basic/main.l
 ./build/hello/main
 ```
 
-The output-directory option is resolved from the command's working directory. The compiler does not change that directory to locate its own resources. See [publication and companion layout](../cli-build.md#output-and-publication) for generation details and failed-build behavior.
+Relative output paths use the command's working directory. The compiler does not change it to find resources. See [publication and companion layout](../cli-build.md#output-and-publication) for generation details and failed-build behavior.
 
 ## Recognize common first-program failures
 
-Without the explicit import, `Print` is not supplied by implicit builtins. `Run Hello` starts a process but does not wait; use `Await Hello` before an action that requires its finalized output. Comparing `message` with `Hello's Output` also needs care: the App prints a newline, so the two Text values are not byte-equal.
-
-The [paragraph negative demo](../../demo/paragraphs/main.l) intentionally exposes that newline difference. Do not trim output or edit its expectation to make it pass.
+Print requires its import. Run starts an App without waiting; Await joins its finalized result. Print adds a newline, so `message` and `Hello's Output` are not byte-equal. The [paragraph negative demo](../../demo/paragraphs/main.l) intentionally demonstrates this difference; trimming its output would change the assertion.
 
 Next, learn how [values and output](values.md) are represented.

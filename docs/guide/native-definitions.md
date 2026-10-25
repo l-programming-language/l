@@ -1,35 +1,33 @@
 # Write native-backed definitions
 
-Native-backed definitions are an advanced extension boundary. They connect typed L arguments to logeme compositions and explicit Rust fragments. They require knowledge of the maintained backend contracts; the language does not infer arbitrary ownership, lifetime or concurrency behavior from embedded text.
+Native-backed definitions bind typed L arguments to logeme compositions containing explicit Rust. They require the target's contracts; L does not infer ownership, lifetimes or concurrency from native text.
 
 ## Start from the existing foundation
 
-<!-- example:builtin-core -->
+The retained ProbeIO fixture defines a native operation and exposes it through a dictionary:
 
-This is the canonical builtin unit displayed as a reference fragment, not a program to paste into a project. The compiler already loads it. Process supplies a syllable sequence; Function packages callable metadata; Return contributes native statement text; descriptors compose Main and Basic.
+<!-- example:native-dictionary-definition -->
 
-The outer quoted `<DEF>` markers identify a definition body. The framing helper requires one complete outer pair, optionally enclosed in complete backticks. Explicit internal template parsing has its own markerless boundary. Ordinary Text containing incomplete or interior markers remains ordinary data; the documentation must not reinterpret it as HTML.
+`Define` introduces Log and its inflections; Logger is its constructed form. `<DEF>…<DEF>` frames the body inside backticks: both markers have the same spelling. `E` emits the Rust statement; `BOD^E` wraps that Calculation as a declaration item in the composition. `{|Statement: …|}` supplies the Statement metadata; `~…~` encloses its literal native text. These delimiters are logeme syntax, not HTML.
+
+Its caller imports the dictionary member and supplies App-body work:
+
+<!-- example:native-dictionary-use -->
+
+This excerpt requires sibling `probe.l`; the [complete caller](../../cmd/l/test/runnable_service/basic.l) ends with Build, Run, Await and Show. The Text deliberately includes a newline: this test-owned probe writes exact bytes, whereas public IO.Print adds a newline. The [implicit core](../../builtins/eng/core.l) is already loaded; do not redeclare it.
 
 ## Typed slots cross an encoding boundary
 
-An encoded slot such as `<@Output|Thing@>` carries a label and type. Binding substitutes according to that declared argument kind. Native fragments are not interchangeable with source Text: Text-to-Rust expressions use protected quoting, while native bodies retain their explicit target meaning.
+`<@Output|Thing@>` declares the argument label and binding kind. Here the caller supplies Text: this probe uses Rust’s `.as_bytes()`, so it does not implement every scalar kind that Thing can bind. `<@Process@>` in the core instead refers to an already instantiated definition; omitting the type does not mean Text. [Typed slots](../spec/definitions.md#typed-slots) lists the supported kinds and dotted-name rules.
 
-Number arguments use the shared finite binary64 encoder. Literal preservation, expanded diagnostic views, and completed AML are different representations. Do not “clean up” escaping in an example or parse AML with an XML formatter; doing so can change literal content or backend delimiters.
-
-Slot labels accept the implementation's dotted identifier contract. A valid L label is not automatically a valid Rust identifier, and a Rust keyword is not automatically forbidden as an L label. Each boundary validates its own syntax.
+Text receives protected Rust quoting; Number uses finite binary64 encoding. Native fragments retain target meaning. Literal source, diagnostic views and AML are distinct: do not normalize escapes or format AML as XML.
 
 ## Read a complete backend witness
 
-<!-- example:aml-declaration-evaluation -->
-
-This is a complete maintained AML input for a backend generation/native-compilation witness, presented here as a fragment of the overall toolchain. The language is AML, not L. The `W`, `FW`, `FOB`, `GA`, `I` and related pieces participate in the frozen logeme system; their composition roles belong in the [concrete reference](../reference/logemes/index.md).
-
-The backend's returned Executable is a source bundle. A caller must validate and materialize files, invoke Cargo, select actual compiled artifacts, and execute a program separately. Lucid's compile-only evidence does not establish runtime behavior for every composition.
+The [declaration/evaluation witness](../../logiceme/testdata/lucid/declaration-evaluation.aml.txt) is AML, not L. [Alphabet and composition](../reference/logemes/alphabet.md) explains its glyphs, `^` integration, `*` siblings and parentheses. The returned Executable is a source bundle; materialization, Cargo compilation and execution are separate steps. Lucid's native-compilation checks do not establish general runtime behavior.
 
 ## Stay inside the approved surface
 
-The eighteen Rust segments are frozen by the [Lucid suite](../../logiceme/testdata/lucid/README.md). Native lifetime/generic interiors are only accepted on their approved glyph-local forms. They are not L-language generics or ownership inference, and they do not belong to arbitrary Func/Prop/Op fields or inherited Class/Object defaults.
+The eighteen Rust segments are frozen. Lifetime/generic inputs are glyph-local native interiors, not L generics, Func/Prop/Op fields or inherited defaults. Rust rejects Deferred metadata; scheduling supplies no automatic deferred cleanup. Unsupported closures or asynchronous compositions remain unsupported.
 
-Rust templates exclude Deferred and reject supplied Deferred metadata. There is no automatic deferred-call cleanup contract to infer from scheduling. Unsupported composition, closure or asynchronous forms must stay classified as unsupported or design material instead of becoming tutorial promises.
-
-Before extending a template, review [builtins contracts](../../builtins/CONTRACTS.md), [the Rust reference](../../builtins/README.md), and [AML](../../logiceme/AML.md). Documentation discrepancies authorize a documented audit item, not a compiler or frozen-fixture repair.
+Before extending a template, read [definitions](../spec/definitions.md), [builtin contracts](../../builtins/CONTRACTS.md), [Rust forms](../../builtins/README.md) and [AML](../../logiceme/AML.md).

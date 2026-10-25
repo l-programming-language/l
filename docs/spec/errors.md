@@ -42,11 +42,11 @@ Generated programs have their own runtime statuses: normal fallthrough/bare Exit
 
 A recognized While clause can reach an Unsupported instruction boundary. A missing name reaches a reference boundary. A configured Pointer noun or backend callable template does not establish an operational source construct; its documentation must state the narrower known facts rather than promise a future behavior.
 
-The specification audit records Byte/Bytes/Pointer/Null construction gaps, collection action support, joined conditions, source versus native callable forms, and other unresolved distinctions. Those notes are reasons to investigate a specific feature, not permission to change compiler behavior or protected fixtures during documentation work.
+The specification audit records Byte/Bytes/Pointer/Null construction gaps, collection action support, joined conditions, source versus native callable forms, and other unresolved distinctions. Check those boundaries before relying on a feature.
 
 ### Rejected operands: a type error and a missing name
 
-These are complete negative compiler fixtures, not runnable examples. The website includes their source; the compiler rejection tests were not run in this pass.
+These complete fixtures demonstrate expected compiler rejections.
 
 <!-- example:invalid-await-text -->
 
@@ -66,7 +66,7 @@ For a grammar-recognized but unsupported form, see the [While illustration](cont
 
 Build does not create an invocation. Await therefore fails at generated-runtime execution with an invocation-related diagnostic. The [N07 contract](../../testdata/phase1/n07-build-is-not-run/case.json) expects empty stdout, status 1, and diagnostic text containing `Await` and `invocation`; it is not a compiler-rejection test. This is a display-only negative example, not a successful tutorial. No language stage was executed here.
 
-**Explicit program failure — complete maintained runtime witness, not run here.**
+**Explicit program failure.**
 
 <!-- example:paragraph-error-exit -->
 

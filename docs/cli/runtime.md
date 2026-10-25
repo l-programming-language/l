@@ -8,16 +8,7 @@ Keep the executable and adjacent `.apps` directory together. Children inherit th
 
 ## Lifecycle and output
 
-| Source operation | Effect |
-| --- | --- |
-| Build | Check the target's prebuilt artifact readiness. |
-| Run | Launch, returning after launch acknowledgment or terminal startup failure. |
-| Stop | Request process-group termination without joining. |
-| Await | Join finalized output and cleanup; activate the invocation's continuation once. |
-| Start | Source-defined App action: Build, then Run. |
-| Execute | Source-defined App action: Start, then Await. |
-
-Start and Execute retain App signatures. A completed process still occupies its invocation slot until its first Await continuation finishes. A second Run while that invocation is outstanding is an error. Aliases share the target and invocation, rather than launching a copied process.
+Follow the [lifecycle guide](../guide/lifecycle.md) for Build, Run, Stop, Await, Start and Execute, including invocation reuse and aliases.
 
 Output is finalized raw stdout, preserving whitespace, newlines, NUL and partial failed-run output. Reading it before completion fails; the read does not wait. Await makes completion available and runs the continuation. Show writes without adding a newline. Stderr is captured separately and is not automatically forwarded; stderr alone does not imply child failure.
 

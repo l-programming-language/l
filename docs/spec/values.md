@@ -72,7 +72,7 @@ The maintained conditional-Await program stores a Truth and compares it with `tr
 
 <!-- example:values-truth-condition -->
 
-`enabled` receives a Truth, not the Text spelling of that word. Its equality comparison selects the `await Worker` branch; the following declaration snapshots the finalized Output. The existing LANG-13 native witness expects `condition` followed by one LF. This is a complete source program with an existing witness, **not execution performed during this documentation pass**. Replacing `true` with backtick Text would change the operand type and would not create implicit truthiness.
+`enabled` receives a Truth, not the Text spelling of that word. Its equality comparison selects the `await Worker` branch; the following declaration snapshots the finalized Output. The existing LANG-13 native witness expects `condition` followed by one LF. Replacing `true` with backtick Text would change the operand type and would not create implicit truthiness.
 
 ## Thing
 
