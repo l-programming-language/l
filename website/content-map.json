@@ -162,16 +162,6 @@
       "generated": false
     },
     {
-      "source": "docs/_generated/cli-help.md",
-      "route": "/docs/cli/source-help/",
-      "title": "Source-derived CLI help",
-      "description": "Source-derived CLI help: mechanically generated from current repository inputs; language execution is separate.",
-      "section": "Contributing",
-      "order": 11,
-      "role": "implementation",
-      "generated": true
-    },
-    {
       "source": "docs/spec/index.md",
       "route": "/docs/spec/",
       "title": "L Language Specification",
@@ -620,6 +610,16 @@
       "order": 10,
       "role": "normative",
       "generated": false
+    },
+    {
+      "source": "docs/_generated/cli-help.md",
+      "route": "/docs/cli/source-help/",
+      "title": "Source-derived CLI help",
+      "description": "Source-derived CLI help: mechanically generated from current repository inputs; language execution is separate.",
+      "section": "Contributing",
+      "order": 11,
+      "role": "implementation",
+      "generated": true
     },
     {
       "source": "docs/releases/index.md",
