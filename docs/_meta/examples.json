@@ -49,6 +49,39 @@
       "lang": "l"
     },
     {
+      "id": "guide-text-value",
+      "source": "demo/basic/main.l",
+      "classification": "fragment",
+      "description": "Text declaration from the complete Hello World program.",
+      "sha256": "20ec30ca4fe054c11a28ce96c35e6e960f6af48921f1da1041e29fe9d88ae741",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 3,
+        "end": 3
+      }
+    },
+    {
+      "id": "guide-number-value",
+      "source": "demo/paragraphs/public-values.l",
+      "classification": "fragment",
+      "description": "Number declaration from the complete public-values example.",
+      "sha256": "41b11a3bfa7e5b4a5b2f800976015b04e17f661cfd13d2a1606f4da7cd560162",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 2,
+        "end": 2
+      }
+    },
+    {
       "id": "local-shadowing",
       "source": "demo/paragraphs/local-shadowing.l",
       "classification": "runnable",
