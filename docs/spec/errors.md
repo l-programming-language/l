@@ -74,11 +74,9 @@ First's child succeeds and its continuation shows `First\n`. The equality condit
 
 ## Compatibility and releases
 
-No official released L version is manufactured by this documentation. Local/unreleased identity, source fingerprints, and Git base revision describe the checkout actually used. Historical test results apply only to their recorded revision and host. A dirty checkout is not fully identified by HEAD.
+L uses `vMAJOR.MINOR.PATCH` release tags. Backward compatibility is not guaranteed before `v1.0.0`; consult the [versioning policy and release notes](../releases/index.md#versioning-and-compatibility) before upgrading. Historical test results apply to their recorded revision and host; local previews report their own source identity.
 
-The maintained current contracts and protected resources define compatibility obligations. There is no inferred promise of Semantic Versioning, complete backward compatibility across unreleased changes, portable native fragments, or cross-target behavior. The retired generated-Go target and rejected Deferred/legacy loop forms must not reappear as supported options through old examples.
-
-Native fragments and byte-preserving source APIs have intentional implementation boundaries. Source lexicon selection is distinct from target selection. Documentation for a later indexed dictionary or release requires its own reviewed source evidence; current absence is not evidence of a permanently closed standard library.
+Native fragments remain target-specific, and source lexicon selection is separate from target selection. The retired generated-Go target and rejected Deferred/legacy loop forms remain unsupported. New dictionaries or supported forms are documented with their release.
 
 ## Sources and witnesses
 

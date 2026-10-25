@@ -7,8 +7,8 @@ The `l` program compiles L source into native Rust executables on macOS or Linux
 The current parser implements `build` and help. It has no `run`, `test`, `init`, `fmt`, `docs`, or `--version` command. Use the [installation guide](installation.md), then the [build reference](build.md). The [runtime guide](runtime.md) explains how the published program differs from its compiler.
 
 ```sh
-./bin/l --help
-./bin/l build ./demo/basic/main.l
+l --help
+l build ./demo/basic/main.l
 ./demo/basic/main
 ```
 

@@ -6,7 +6,7 @@ import RustPipeline from './RustPipeline.astro';
 const paths = [
   { n: '01', title: 'Learn L', text: 'Start with a real program. Follow values, names and paragraphs through to Apps and Services.', link: '/docs/guide/', action: 'Follow the guide', icon: 'book' },
   { n: '02', title: 'Know the language', text: 'Read the specification, exact grammar and supported behavior—with the boundaries made explicit.', link: '/docs/spec/', action: 'Read the specification', icon: 'code' },
-  { n: '03', title: 'Build locally', text: 'Install the compiler from source, build for your native host and keep companion artifacts together.', link: '/docs/cli/', action: 'Use the CLI', icon: 'compiler' },
+  { n: '03', title: 'Build locally', text: 'Install L, build for your native host and keep companion artifacts together.', link: '/docs/cli/', action: 'Use the CLI', icon: 'compiler' },
 ];
 ---
 <div class="l-home">
@@ -35,8 +35,8 @@ const paths = [
     <div class="l-paths">{paths.map((p) => <a href={p.link} class="l-path"><div class="l-path-top"><span class="l-icon" style={`--l-icon: url(/assets/l/icons/${p.icon}.svg)`} aria-hidden="true"></span><span>{p.n}</span></div><h3>{p.title}</h3><p>{p.text}</p><strong>{p.action} <span aria-hidden="true">→</span></strong></a>)}</div>
   </section>
   <section class="l-build" aria-labelledby="build-heading">
-    <div><p class="l-eyebrow">A compiler, then a program</p><h2 id="build-heading">Build once.<br />Run the result.</h2><p>The build command produces a native executable and any required companion programs. Building does not execute your program.</p><a class="l-text-link" href="/docs/cli/installation/">Source installation and prerequisites →</a></div>
-    <div><Code code={'bash ./install.sh\n./bin/l build ./demo/basic/main.l\n./demo/basic/main'} lang="sh" title="From the repository root" /><p class="l-small">Follow the <a href="/docs/cli/installation/">source-install prerequisites</a>. Keep the executable and its <code>.apps</code> directory together.</p></div>
+    <div><p class="l-eyebrow">A compiler, then a program</p><h2 id="build-heading">Build once.<br />Run the result.</h2><p>The build command produces a native executable and any required companion programs. Building does not execute your program.</p><a class="l-text-link" href="/docs/cli/installation/">Install L and prepare your toolchain →</a></div>
+    <div><Code code={'l build ./demo/basic/main.l\n./demo/basic/main'} lang="sh" title="From the repository root" /><p class="l-small">Complete <a href="/docs/cli/installation/">installation</a> first. Keep the executable and its <code>.apps</code> directory together.</p></div>
   </section>
   <section aria-labelledby="pipeline-heading" class="l-pipeline">
     <p class="l-eyebrow">From source to execution</p><h2 id="pipeline-heading">From L source to native programs</h2>

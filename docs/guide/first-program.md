@@ -17,7 +17,7 @@ The basic demo imports a printing action, constructs an App, runs it and display
 After [compiler setup](../cli/index.md), run from the repository root:
 
 ```sh
-./bin/l build demo/basic/main.l
+l build demo/basic/main.l
 ./demo/basic/main
 ```
 
@@ -32,7 +32,7 @@ Building `main.l` publishes `main` beside it and a companion directory `main.app
 To choose a publication directory, put the option before the filename:
 
 ```sh
-./bin/l build --output-dir ./build/hello demo/basic/main.l
+l build --output-dir ./build/hello demo/basic/main.l
 ./build/hello/main
 ```
 

@@ -2,7 +2,7 @@
 
 L is a human-readable language with applications as values. It generates Rust source and uses the Rust toolchain to build native artifacts for your current macOS or Linux host. Building and running are separate steps: run the generated executable to start your program.
 
-This site documents the current repository checkout. It presents an **Unreleased / Local** documentation view when no authoritative release identity is available. Example labels distinguish supported behavior from fragments and expected failures.
+Install L from [GitHub Releases](https://github.com/l-programming-language/l/releases/latest). Read the [versioning policy](releases/index.md#versioning-and-compatibility) before upgrading: backward compatibility is not guaranteed before `v1.0.0`. Example labels distinguish supported behavior from fragments and expected failures.
 
 <!-- illustration:source-to-native -->
 
@@ -27,5 +27,3 @@ Example classifications describe their intended use, not a fresh test result. Th
 ## Maintained technical guides
 
 The four existing repository guides remain at their canonical paths: [architecture](architecture.md), [CLI and runtime semantics](cli-build.md), [development and acceptance](development-harness.md), and [compiler errors](error-model.md). The website renders these sources instead of maintaining independent copies.
-
-Website CI/CD is prepared but disabled. No deployment has been performed.
