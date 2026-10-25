@@ -126,7 +126,13 @@ func TestBuildCommandRunDiagnostics(t *testing.T) {
 		message string
 	}{
 		{"global help", []string{"--help"}, 0, "Usage:"},
+		{"global short help", []string{"-h"}, 0, "Usage:"},
+		{"global single-hyphen help", []string{"-help"}, 0, "Usage:"},
 		{"command help", []string{"build", "--help"}, 0, "Usage:"},
+		{"command short help", []string{"build", "-h"}, 0, "Usage:"},
+		{"command single-hyphen help", []string{"build", "-help"}, 0, "Usage:"},
+		{"command double-hyphen short help", []string{"build", "--h"}, 0, "Usage:"},
+		{"unsupported global help spelling", []string{"--h"}, 2, "unknown command"},
 		{"invalid invocation", []string{"run"}, 2, "unknown command"},
 		{"missing asset directory", []string{"build", "--assets", missingAssets, mainPath}, 1, missingAssets},
 		{"asset root is a file", []string{"build", "--assets", assetFile, mainPath}, 1, "not a directory"},
@@ -143,8 +149,18 @@ func TestBuildCommandRunDiagnostics(t *testing.T) {
 				t.Fatalf("status=%d; want %d; stdout=%q stderr=%q", status, tc.status, stdout.String(), stderr.String())
 			}
 			if tc.status == 0 {
-				if stderr.Len() != 0 || !strings.Contains(stdout.String(), tc.message) {
+				if stderr.Len() != 0 || stdout.String() != buildUsage {
 					t.Fatalf("help streams: stdout=%q stderr=%q", stdout.String(), stderr.String())
+				}
+				for _, invocation := range []string{
+					"l build [--output-dir DIRECTORY] [main.l]",
+					"l (--help | -h | -help)",
+					"l build (--help | -h | -help | --h)",
+					"l (--version | -v)",
+				} {
+					if !strings.Contains(stdout.String(), invocation) {
+						t.Errorf("help omits supported invocation %q", invocation)
+					}
 				}
 			} else if stdout.Len() != 0 || !strings.Contains(stderr.String(), tc.message) || strings.Contains(stderr.String(), "<nil>") {
 				t.Fatalf("error streams lost provenance: stdout=%q stderr=%q", stdout.String(), stderr.String())

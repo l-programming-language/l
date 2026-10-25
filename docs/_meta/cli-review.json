@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewPolicy": "Manually reviewed command/option surface from the current parser. A changed parser hash requires review of its behavior and documentation before this manifest is edited. references:generate never updates this approval hash. Aliases and flag-parser spelling variants are grouped with the corresponding option.",
   "sourceHashes": {
-    "cmd/l/command.go": "dc055bf2a377f3040975d99eb0a088deb6d2269b5886143a966387fe3e631b64"
+    "cmd/l/command.go": "c6b04031528b51d3474fafa701093ecc5e7010359f4408eac767e1b88d94102f"
   },
   "entries": [
     {

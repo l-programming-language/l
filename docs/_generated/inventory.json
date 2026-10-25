@@ -4,7 +4,7 @@
     "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "stdlib/index.json": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1",
-    "cmd/l/command.go": "dc055bf2a377f3040975d99eb0a088deb6d2269b5886143a966387fe3e631b64",
+    "cmd/l/command.go": "c6b04031528b51d3474fafa701093ecc5e7010359f4408eac767e1b88d94102f",
     "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
     "logiceme/lucid_generation_test.go": "722e4fd3b6e504e96cafd8cb1ab11e3fd598e536d4e8d155d6cf055ba3154bdf",
     "logiceme/testdata/lucid/templates.sha256.json": "b32aaec967c1746e9f82d11815fa0e68ed811a0cdfaaf5632c4531abb33e83a4",
