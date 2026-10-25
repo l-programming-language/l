@@ -49,7 +49,7 @@ an absence of production callers alone does not make a tested contract disposabl
 
 ## Embedded builtins and explicit dictionaries
 
-The asset-only root distribution package embeds canonical resource files and
+The root distribution package embeds canonical resource files and
 exposes them through `fs.FS`. Lyger and logeme use one selected filesystem.
 Embedded resources are the default; an explicit complete directory
 override is useful for development. Resource files stay in their native JSON, L

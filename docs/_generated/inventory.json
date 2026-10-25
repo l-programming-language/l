@@ -4,7 +4,7 @@
     "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "stdlib/index.json": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1",
-    "cmd/l/command.go": "e9eaad7354ef67b1f6336f3e7a44c6eddb77004b9e184b044892db54b6f6143d",
+    "cmd/l/command.go": "e3bb1fd13c5e893482d0fa2ec17a3f96de528bc3967b53344fa53f96027ff850",
     "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
     "logiceme/lucid_generation_test.go": "722e4fd3b6e504e96cafd8cb1ab11e3fd598e536d4e8d155d6cf055ba3154bdf",
     "logiceme/testdata/lucid/templates.sha256.json": "b32aaec967c1746e9f82d11815fa0e68ed811a0cdfaaf5632c4531abb33e83a4",
@@ -9954,6 +9954,26 @@
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "Select source lexicon; bundled default eng. Explicit empty values fail."
+    },
+    {
+      "id": "cli:--version",
+      "kind": "cli",
+      "name": "--version",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/cli/build.md#version",
+      "sources": [
+        "cmd/l/command.go",
+        "version.go",
+        "VERSION"
+      ],
+      "witnesses": [
+        "cmd/l/command_version_test.go",
+        "cmd/l/command_test.go",
+        "version_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Standalone flag only; prints the embedded major.minor.patch release version and a newline without compiler initialization."
     },
     {
       "id": "cli:--help",

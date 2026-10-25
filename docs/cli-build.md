@@ -13,11 +13,7 @@ The compiler prints the published executable's absolute path on success. Buildin
 
 ## Invocation and assets
 
-```text
-l build [--language LANGUAGE] [--assets ROOT] [--output-dir DIRECTORY] [SOURCE]
-l build --help
-l --help
-```
+See the [CLI reference](cli/build.md) for command syntax, help and version output.
 
 Options precede the source filename. The default source is `main.l` relative to the invocation directory. Use `--` before a filename beginning with a dash. Extra arguments, unknown options and explicit legacy `-os` values are errors. The tested CLI data field's stored `ubuntu` default does not select a build target.
 
@@ -36,7 +32,7 @@ shadow them. Explicit `.l` imports resolve relative to their importing source.
 Imported dictionary helpers resolve relative to their resource provider and do
 not read unrelated host files. Install instructions are in [README](../README.md).
 
-Help and successful builds return status 0; invalid invocation and unsupported hosts return 2; initialization, compilation, generation, Cargo build, publication and output-write failures return 1. Diagnostics go to stderr and retain their phase/cause, including when writing the diagnostic also fails. Successful stdout contains only the executable path plus a newline.
+Help, version output and successful builds return 0; invalid invocations and unsupported build hosts return 2; build or output-write failures return 1. Diagnostics retain their phase/cause on stderr. Successful build stdout contains only the executable path plus a newline. Standalone [`l --version`](cli/build.md#version) prints the embedded release version without initializing the compiler.
 
 ## Output and publication
 

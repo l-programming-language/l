@@ -56,6 +56,6 @@ A manual example run must report the exact source fingerprint, host, compiler id
 
 ## Review identity and branding
 
-Local and archive builds must not invent release versions, commit IDs or timestamps. Future root `VERSION` support is a release contract, not permission to initialize a fictitious official number. Production builds fail closed without valid release identity; docs-only corrections retain the released language identity and record a separate documentation revision.
+Root `VERSION` supplies the embedded compiler version and local documentation label. Update it for each release. Local and archive builds cannot establish production identity; authenticated release proof remains required. Docs-only corrections retain the released language identity and record their own revision.
 
 Use the curated vector logo geometry and theme variants. Diagrams need nearby explanatory prose, especially because their visible labels are outlined paths. Use system fonts, Starlight controls and the small L theme layer; do not activate the asset pack's alternate theme, navigation or copy scripts.

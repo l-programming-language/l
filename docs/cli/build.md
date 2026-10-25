@@ -6,7 +6,7 @@
 l build [--language LANGUAGE] [--assets ROOT] [--output-dir DIRECTORY] [main.l]
 ```
 
-Only `build` is a command. Options follow `build` and precede the source filename. With no source argument, `main.l` is resolved relative to the invocation directory. Exactly one positional filename is accepted. `--` ends option parsing, including for a filename beginning with a dash.
+Build options follow `build` and precede the source filename. With no source argument, `main.l` is resolved relative to the invocation directory. Exactly one positional filename is accepted. `--` ends option parsing, including for a filename beginning with a dash.
 
 ```sh
 l build
@@ -33,9 +33,11 @@ The legacy `-os`/`--os` option is rejected. Native builds target the host operat
 
 ## Help
 
-`l --help`, `l -h`, and `l -help` show build help when supplied as the sole top-level argument. `l build --help`, `l build -h`, and `l build -help` request command help before a filename. Help returns 0 and writes to stdout unless that write fails. A help flag after a filename is another positional argument and does not bypass ordering rules.
+`--help`, `-h`, and `-help` show [CLI usage](../../cmd/l/command.go) alone or after `build`, before a filename. Help writes to stdout and returns 0, or 1 if writing fails. After a filename, a help flag is another positional argument.
 
-See [command.go](../../cmd/l/command.go) for exact help text. Commands such as `l run main.l` and `l --version` are unsupported.
+## Version
+
+`l --version` writes the embedded `major.minor.patch` version and one newline to stdout: `0.0.1` for release `v0.0.1`. Stderr stays empty; success returns 0 and an output-write failure returns 1. Supply it alone: extra arguments, `l build --version`, and aliases such as `-v` are invalid (status 2). No checkout, assets, or Rust toolchain is needed.
 
 ## Published files
 
@@ -53,22 +55,22 @@ main.apps/
       app-000
 ```
 
-The companion inventory contains the program's App binaries. App-constructed Service libraries remain build dependencies and add no executable companions; standalone Service declarations add no packages. Publication uses version-1 manifests with the `apps` inventory.
+The version-1 manifest lists App binaries under `apps`. App-constructed Service libraries are build dependencies, not executable companions; standalone Service declarations add no packages.
 
-Every build stages privately, compiles all required workspace members, validates Cargo's artifact identities, publishes the complete immutable companion generation, then atomically replaces the adjacent orchestrator. Failed builds preserve a previously working output. Old generations remain for already-running orchestrators. The compiler rejects unrelated output files and symlinked companion/generation directories instead of overwriting them.
+Builds privately compile and validate all artifacts before publishing an immutable companion generation and atomically replacing the orchestrator. Failures preserve working output; old generations remain for running programs. Unrelated outputs and symlinked companion/generation directories are rejected.
 
-The executable finds its own companion generation relative to its executable location. Move it and its `.apps` directory together. The source filename stem remains the public output basename even when internal Cargo names need collision avoidance. See the maintained [publication contract](../cli-build.md#output-and-publication) for failure and concurrent-build details.
+Move the executable and its `.apps` directory together: it finds companions relative to itself. The source filename stem determines the output basename. The [publication contract](../cli-build.md#output-and-publication) covers failure and concurrent-build details.
 
 ## Streams and statuses
 
 | Status | Boundary |
 | --- | --- |
-| 0 | Help or a successful native build. |
+| 0 | Help, version output, or a successful native build. |
 | 2 | Invalid invocation or unsupported host. |
 | 1 | Resolution, asset initialization, compilation, generation, Cargo, publication, or output-write failure. |
 
-Successful build stdout contains only the absolute published executable path and a newline. Compiler diagnostics go to stderr. Building does not run source instructions, Apps or generated deployment scripts. Application exit status and stdout belong to the separately invoked program.
+Successful builds print only the absolute executable path and a newline; diagnostics go to stderr. Building never runs source instructions, Apps or deployment scripts. The separately invoked program owns its status and stdout.
 
 ## Verification witnesses
 
-[Command tests](../../cmd/l/command_test.go) cover help, defaults, option order, empty options, unsupported commands and resource diagnostics. [Publication tests](../../cmd/l/build_publish_test.go) cover preserved prior outputs, matched concurrent generations and unrelated destinations. [Cargo identity tests](../../cmd/l/cargo_identity_integration_test.go) inspect genuine native artifact identity.
+[Version tests](../../cmd/l/command_version_test.go) check exact output and invalid combinations; [command tests](../../cmd/l/command_test.go) cover help, defaults, option order and resource diagnostics. [Publication tests](../../cmd/l/build_publish_test.go) cover preserved prior outputs, matched concurrent generations and unrelated destinations. [Cargo identity tests](../../cmd/l/cargo_identity_integration_test.go) inspect genuine native artifact identity.

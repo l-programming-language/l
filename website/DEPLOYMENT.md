@@ -49,7 +49,7 @@ Manifest checks do not execute language tools. Fixture tests exercise rejection 
 
 ## Release and correction identity
 
-An initial language release requires a root VERSION, matching tag, and identical language/docs SHA. This task creates no VERSION and invents no released L version.
+Root `VERSION` starts at `0.0.1`. Each release requires its matching `vVERSION` tag, identical language/docs SHA and authenticated native proof; the file alone does not establish a release.
 
 A docs-only correction retains the published language version/commit and native manifest. Both conservative Git release fingerprints and shared reference-source fingerprints must still match. Changes outside `docs/` and `website/`, including code, tests, resources, workflows, lockfiles, install scripts or root README, are conservatively release-relevant. A substantive language change requires a new release decision. A changed historical/internal Markdown file included in the source inventory also requires an explicit reviewed inventory decision; no automatic exception is inferred.
 

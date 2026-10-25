@@ -28,7 +28,7 @@ Standard-library navigation comes from index language/key identities joined to a
 
 ## Identity and release boundary
 
-`/version.json` exposes nullable language version/commit, docs commit/revision, channel, dirty status and source fingerprint. No root VERSION is created. Local builds use the Unreleased/Local label; Git-less archives retain null Git fields. The dirty flag prevents HEAD from being mistaken for the complete current content.
+`/version.json` exposes language version/commit, docs commit/revision, channel, dirty status and source fingerprint. Local builds read root `VERSION` and display `0.0.1 / Local`; Git-less archives retain null Git fields. Dirty status distinguishes current content from HEAD.
 
 The source fingerprint hashes sorted portable paths and exact bytes from root Go files; compiler, backend, resource, stdlib, lexicon, error, utility, acceptance, test, demo, script and harness directories; and relevant root tool/module pins. Generated target/cache directories are excluded. The exact implementation is `inputInventory` in scripts/provenance.mjs. Additions and deletions change the digest. Docs revision hashes canonical docs and website inputs, excluding generated output, caches and reports. There are no wall-clock timestamps in generated identity.
 

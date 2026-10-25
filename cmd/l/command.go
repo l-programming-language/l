@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"runtime"
 
+	distribution "github.com/l-programming-language/l"
 	"github.com/l-programming-language/l/lerrors"
 	Lyger "github.com/l-programming-language/l/lyger"
 )
@@ -35,7 +36,9 @@ type buildCommand struct {
 var errUnsupportedBuildHost = lerrors.Unsupported.Errorf("native builds require macOS or Linux")
 
 const buildUsage = `Usage: l build [--language LANGUAGE] [--assets ROOT] [--output-dir DIRECTORY] [main.l]
+       l --version
 
+--version prints the embedded major.minor.patch release version and exits.
 Build native macOS or Linux executables beside the source, or in --output-dir.
 The default source is main.l. Options must precede the source filename.
 Language resources are embedded in the executable. The default language is eng.
@@ -144,6 +147,12 @@ func resolveBuildCommand(command *buildCommand) (*cliData, compilerInitOptions, 
 }
 
 func run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
+	if len(args) == 1 && args[0] == "--version" {
+		if _, err := fmt.Fprintln(stdout, distribution.Version()); err != nil {
+			return 1
+		}
+		return 0
+	}
 	command, err := parseCommand(args)
 	if errors.Is(err, flag.ErrHelp) {
 		if _, err := fmt.Fprint(stdout, buildUsage); err != nil {

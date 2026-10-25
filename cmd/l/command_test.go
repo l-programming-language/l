@@ -30,6 +30,7 @@ func TestBuildCommandCompatibilityParsing(t *testing.T) {
 		{"assets before command", []string{"--assets", "resources", "build", "project/main.l"}, nil, true, false},
 		{"options after source", []string{"build", "project/main.l", "--assets=resources"}, nil, true, false},
 		{"source after separator", []string{"build", "--", "-source.l"}, &cliData{"build", "-source.l", "ubuntu"}, false, false},
+		{"version spelling after separator", []string{"build", "--", "--version"}, &cliData{"build", "--version", "ubuntu"}, false, false},
 		{"missing command", nil, nil, true, false},
 		{"unknown command", []string{"run", "main.l"}, nil, true, false},
 		{"extra source", []string{"build", "main.l", "other.l"}, nil, true, false},
@@ -184,6 +185,10 @@ func TestBuildCommandOutputFailure(t *testing.T) {
 	}
 	if status := run(context.Background(), []string{"--help"}, closed, io.Discard); status != 1 {
 		t.Fatalf("help with unavailable output returned status %d; want 1", status)
+	}
+	var stderr bytes.Buffer
+	if status := run(context.Background(), []string{"--version"}, closed, &stderr); status != 1 || stderr.Len() != 0 {
+		t.Fatalf("version with unavailable output: status=%d stderr=%q; want 1, empty stderr", status, stderr.String())
 	}
 	if status := run(context.Background(), []string{"invalid-command"}, io.Discard, closed); status != 2 {
 		t.Fatalf("unavailable diagnostic changed invocation status to %d; want 2", status)

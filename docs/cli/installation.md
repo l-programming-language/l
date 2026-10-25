@@ -9,10 +9,10 @@ mkdir -p "$HOME/.local/bin"
 chmod +x ./l
 mv ./l "$HOME/.local/bin/l"
 export PATH="$HOME/.local/bin:$PATH"
-l --help
+l --version
 ```
 
-Add the same `PATH` export to your shell configuration for new terminals. Examples throughout this site use `l` on `PATH`. Read the [versioning and compatibility policy](../releases/index.md#versioning-and-compatibility) before upgrading.
+Add the `PATH` export to your shell configuration. `l --version` reports `0.0.1` for the first release. Read the [compatibility policy](../releases/index.md#versioning-and-compatibility) before upgrading.
 
 ## Prerequisites
 
@@ -35,7 +35,7 @@ git clone https://github.com/l-programming-language/l.git
 cd l
 bash ./install.sh
 export PATH="$PWD/bin:$PATH"
-l --help
+l --version
 ```
 
 Check out the release's tag before building when you need a specific version. [install.sh](../../install.sh) verifies Go dependencies and builds the self-contained `bin/l` with `-mod=readonly`; it does not prepare Rust.
