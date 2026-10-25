@@ -577,7 +577,7 @@ func prepareEvaluation(g *Glyph, ctx glyphContext, roles map[int]string, names *
 		if _, local := m["Key"]; !local {
 			inherited := g.SegmentalSystem.fileMeta.Get("Key")
 			if inherited.Type == "SourceString" {
-				// The legacy merge ignores a type change when bytes are equal.
+				// The merge ignores a type change when bytes are equal.
 				// Restore provenance on this glyph's private record only.
 				key := g.Meta.get("Key")
 				g.Meta.Metas[key.metaIndex] = &MetaObj{Key: "Key", Value: inherited.Value, Type: inherited.Type}

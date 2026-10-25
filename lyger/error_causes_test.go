@@ -19,7 +19,7 @@ import (
 
 func TestDiagnosticContextPreservesCause(t *testing.T) {
 	cause := errors.New("invalid operand 50%")
-	t.Run("legacy statement", func(t *testing.T) {
+	t.Run("statement context", func(t *testing.T) {
 		c := &Compilation{}
 		if !c.checkLError(cause, []byte("source.l:2")) {
 			t.Fatal("failure was not recorded")
@@ -124,7 +124,7 @@ func TestNumericRangeErrorsReturn(t *testing.T) {
 	}
 }
 
-func TestNumericProbeCompatibility(t *testing.T) {
+func TestNumericProbeValues(t *testing.T) {
 	for _, raw := range []string{"42", "-0.125", "1e3"} {
 		p, err := loadPrimitive([]byte(raw))
 		want, parseErr := strconv.ParseFloat(raw, 64)

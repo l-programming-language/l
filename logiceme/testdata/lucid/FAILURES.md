@@ -3,7 +3,7 @@
 This ledger separates the maintained compile-only corpus from dated validation
 results. The [suite guide](README.md#current-inventory) owns current counts and
 commands; the [Rust reference](../../../builtins/README.md#current-integration-limits)
-owns supported contracts and remaining limits. Historical results do not validate
+owns supported contracts and remaining limits. Dated results do not validate
 a later checkout or authorize changes to frozen inputs.
 
 ## Latest recorded verification — October 15, 2026
@@ -42,11 +42,10 @@ Expected and Generated native phases retain their separate obligations; an
 unrelated Cargo failure cannot satisfy an intentional diagnostic case.
 
 The current API generates Rust and offers only optional runtime support through
-`GenerationOptions.IncludeRuntime`; the retired output-target selector is not a
-current interface. App-constructed libraries, structural Service rejection, raw
+`GenerationOptions.IncludeRuntime`; output-target selection is not an interface. App-constructed libraries, structural Service rejection, raw
 AML library/bin targets, workspace runtime support and App execution have
 separate regressions. The Lucid corpus does not establish general ownership
 inference, method definitions, async definitions, composed implementations or
 runtime fairness/cancellation.
 Consult the [current limits](../../../builtins/README.md#current-integration-limits)
-before treating an old preparation branch as supported.
+before treating a preparation branch as supported.

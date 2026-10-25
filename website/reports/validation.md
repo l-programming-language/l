@@ -36,7 +36,7 @@ Visual inspection covered development, Lucid, builtin, documentation-contributio
 and release pages at 390 and 1440 pixels in both themes: 20 readable states with
 no horizontal document overflow. Search finds the current validation-budget
 section and its anchor works. A sweep of 130 projected/built pages found no
-references to the deleted documents or retired amendment anchors.
+references to the excluded documents or invalid amendment anchors.
 
 The build reports Astro's existing catch-all/custom-404 priority warning; the
 actual 404 route and response pass. The archive reuses installed locked Node

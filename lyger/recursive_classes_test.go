@@ -28,7 +28,7 @@ func TestFrontendFeatureTypeRemoved(t *testing.T) {
 		t.Fatal(err)
 	}
 	if bytes.Contains(encoded, []byte("features")) || bytes.Contains(encoded, []byte("inputs[2]")) {
-		t.Errorf("obsolete Class constructor argument survives: %s", encoded)
+		t.Errorf("unexpected Class constructor argument emitted: %s", encoded)
 	}
 	result, err := NewLygerService(cfg).Compile([]byte("\"Feature\" is `ordinary text`.\n"), "feature-name.l")
 	if err != nil || result == nil {

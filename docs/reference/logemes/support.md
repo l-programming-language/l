@@ -30,7 +30,7 @@ The [latest recorded backend ledger](../../../logiceme/testdata/lucid/FAILURES.m
 
 ## Integration limits
 
-Deferred and three-part loops are rejected/removed. Function receiver methods, general async definitions, explicit capture policy, arbitrary future adapters, general compositional enums/patterns, implementations, independent method generic parameters and ownership inference remain outside the bounded reference. Retained compiler branches are not authorization to advertise them. The [maintained limits](../../../builtins/README.md#current-integration-limits) are the canonical source for precise qualifications.
+Deferred and three-part loops are unsupported. Function receiver methods, general async definitions, explicit capture policy, arbitrary future adapters, general compositional enums/patterns, implementations, independent method generic parameters and ownership inference remain outside the bounded reference. Retained compiler branches are not authorization to advertise them. The [maintained limits](../../../builtins/README.md#current-integration-limits) are the canonical source for precise qualifications.
 
 ## Support assets
 

@@ -16,7 +16,6 @@ func TestLoweredValueImportOrderAndOwnership(t *testing.T) {
 	left := orchestrationEvaluation("message", "std::fmt", "crate::runtime")
 	right := orchestrationEvaluation("message", "std::fmt", "std::borrow::Cow")
 	// Production emits the supplied metadata in order, including repetitions.
-	// Import union belonged to the retired incremental facade.
 	if combined != `E{|Imports: ~&["std::string::ToString", "std::fmt", "crate::runtime", "std::string::ToString"]&~, Statement: ~message~|}` ||
 		base != `E{|Imports: ~&["std::fmt"]&~, Statement: ~message~|}` ||
 		left != `E{|Imports: ~&["std::fmt", "crate::runtime"]&~, Statement: ~message~|}` ||

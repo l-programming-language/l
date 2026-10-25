@@ -77,8 +77,8 @@ l build [--language LANGUAGE] [--assets ROOT] [--output-dir DIRECTORY] [main.l]
   `builtins`, and `stdlib`, with no compiler configuration file or embedded fallback.
 - `--output-dir DIRECTORY` writes both outputs there, preserving the source's
   filename stem. Relative paths use the calling directory.
-- Builds target the current macOS or Linux host and architecture. The legacy
-  `-os` option and cross-compilation are unsupported.
+- Builds target the current macOS or Linux host and architecture.
+  OS selection through `-os` is planned after `v0.0.1`.
 
 For example:
 

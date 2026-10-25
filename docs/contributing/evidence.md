@@ -19,7 +19,7 @@ Newly authored specification chapters consolidate maintained contracts and sourc
 | --- | --- |
 | Supported | Accepted and implemented within the documented boundary |
 | Partial | Some specific forms/stages work; the omitted boundary is named |
-| Unsupported or removed | Recognized/rejected, unavailable, or intentionally retired |
+| Unsupported | Recognized/rejected or unavailable |
 | Internal-only | An implementation representation, not a constructible public facility |
 | Design-only | A conceptual model with no present support claim |
 | Unresolved | Conflicting evidence requires further investigation |

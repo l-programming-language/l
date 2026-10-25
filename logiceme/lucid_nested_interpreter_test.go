@@ -158,7 +158,7 @@ func TestLucidNestedBoundConjoinmentModifiers(t *testing.T) {
 	}
 }
 
-func TestLucidRootMetadataPassCompatibility(t *testing.T) {
+func TestLucidRootMetadataPass(t *testing.T) {
 	for _, language := range []string{"Rust"} {
 		t.Run(language, func(t *testing.T) {
 			source := "[|Meta.Statement|]" + nestedRenderCondition("tail", true)

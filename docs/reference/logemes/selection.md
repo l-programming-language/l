@@ -18,7 +18,7 @@ CI forwards ordered BI Evaluation children to biased Tokio selection. Each BI re
 | OC with explicit `()` | A caller-supplied ready alternative. |
 | Empty CI | Remain pending using the existing future expression. |
 
-OC is childless and takes one nonempty Value/Values. DOC takes one Calculation and excludes native Values. Both need one caller-supplied Key/Keys name or `_`. BI owns the selected body; guard bindings belong to that alternative. Bare calculations, legacy DO/DOB guards, multiple guards/bodies/defaults and invalid placement reject before rendering.
+OC is childless and takes one nonempty Value/Values. DOC takes one Calculation and excludes native Values. Both need one caller-supplied Key/Keys name or `_`. BI owns the selected body; guard bindings belong to that alternative. Bare calculations, DO/DOB guards, multiple guards/bodies/defaults and invalid placement reject before rendering.
 
 ## Limits and witnesses
 

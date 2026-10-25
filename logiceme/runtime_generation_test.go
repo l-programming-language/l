@@ -25,7 +25,7 @@ func TestSegmentDefaultsIsolation(t *testing.T) {
 	}
 	for _, segment := range []Segment{first.Execute, first.Declaration, second.Execute} {
 		if !reflect.DeepEqual(segment.Meta, wantMeta) || !reflect.DeepEqual(segment.Inputs, []string{"Type"}) {
-			t.Fatalf("default segment changed its effective legacy inputs/metadata: %#v", segment)
+			t.Fatalf("default segment changed its effective inputs/metadata: %#v", segment)
 		}
 	}
 	first.Execute.Inputs[0] = "private mutation"

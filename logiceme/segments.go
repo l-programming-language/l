@@ -986,7 +986,7 @@ func loadSegmentalSystem(resources fs.FS) (SegmentalSystem, error) {
 			Symbol: definition.symbol, Type: "logiceme", SubType: definition.subtype,
 			Name: definition.name, Inputs: []string{"Type"},
 		}
-		// Preserve the effective legacy ReadString record, including its final
+		// Preserve the effective ReadString record, including its final
 		// backtick. This storage refactor does not change the glyph protocol.
 		segment.Meta.Add("", "string", "Default`")
 		if err := system.AddLogiceme(segment, true, resources); err != nil {

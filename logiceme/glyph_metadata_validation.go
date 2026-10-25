@@ -61,7 +61,7 @@ func validateGlyphMetadata(g *Glyph, ctx glyphContext) error {
 	}
 	form := glyphForm(g)
 	if _, exists := m["Deferred"]; exists {
-		return lerrors.Unsupported.Errorf("Rust %s: Deferred is removed; Rust has no deferred execution operation", form)
+		return lerrors.Unsupported.Errorf("Rust %s: Deferred is unsupported; Rust has no deferred execution operation", form)
 	}
 	inputs, supported := nativeSourceInputs[form]
 	if !supported {

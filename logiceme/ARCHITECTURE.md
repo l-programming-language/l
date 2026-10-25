@@ -6,7 +6,7 @@ assembler. [LOGEMES.md](../builtins/LOGEMES.md) defines the logical alphabet;
 defines the input boundary. This map distinguishes existing entry points from
 required architecture: a template route is not evidence that every contract is met.
 The frontend, CLI and raw API generate Rust. Runtime support is the only
-generation option; no output-target selector remains. See the [migration record](../testdata/integration/IMPLEMENTATION.md)
+generation option; no output-target selector remains. See the [implementation record](../testdata/integration/IMPLEMENTATION.md)
 for dated generation, native execution and acceptance evidence.
 
 ## Position in L
@@ -64,7 +64,7 @@ replace L's App lifecycle.
 | [support_templates.go](support_templates.go), [bundle_support.go](bundle_support.go) | Support loading/rendering, linking, path validation and dependencies |
 | [workspace_runtime.go](workspace_runtime.go) | Separate workspace entry and runtime-library bundles |
 | [glyph_render.go](glyph_render.go) | Rust executable-case selection, primitive dispatch and explicit child forwarding |
-| [glyph_prepare.go](glyph_prepare.go), [native_metadata.go](native_metadata.go), [glyph_metadata_validation.go](glyph_metadata_validation.go), [glyph_roles.go](glyph_roles.go) | Rust record preparation, local input validation and role checks; older branches remain beyond the bounded Lucid scope |
+| [glyph_prepare.go](glyph_prepare.go), [native_metadata.go](native_metadata.go), [glyph_metadata_validation.go](glyph_metadata_validation.go), [glyph_roles.go](glyph_roles.go) | Rust record preparation, local input validation and role checks; additional branches remain beyond the bounded Lucid scope |
 | [source_graph.go](source_graph.go), [source_headers.go](source_headers.go) | Recursive source ownership, explicit binary/library targets, module declarations and structural header assembly separate from frozen A |
 | [builtins](../builtins) | Target segment primitives, vowel forwarding and dedicated support templates |
 | [distribution.go](../distribution.go) | Embedded asset filesystem |
@@ -140,7 +140,7 @@ Calculation, I/Evaluation or OG/DOG condition inputs before rendering. It does
 not interpret a Calculation as a step or a Definition as initialization. OG/DOG
 retain native pattern/value metadata through the existing Definition interface;
 PO forwards its one Iteration child directly, so its label targets the loop rather
-than a generated wrapper block. Legacy three-part composition is rejected, not
+than a generated wrapper block. Three-part composition is rejected, not
 expanded. Caller-owned iterator expressions and explicit await remain native
 inputs; no helper loop or iterator adaptation is prepared.
 
@@ -174,9 +174,8 @@ Direct primitive interpretation can bypass AML preparation. A read-only Rust-onl
 `metaSwitch` fallback returns String/`Void` for exactly these two missing names; it
 does not mutate metadata, promote explicit native `Void` to absence, or change
 generic systemless lookup. Shared ordered rendering and binding restoration remain unchanged.
-Frozen inputs and the verified corpus define the supported boundary; old form
-tables and migration diagnostics do not complete the older ownership or
-structural-preparation framework.
+Frozen inputs and the verified corpus define the supported boundary; preparation
+tables and diagnostics do not establish general ownership or structural inference.
 
 ### Link files and assemble support
 
@@ -258,7 +257,7 @@ unrelated native form.
 
 | Work | Begin with | Evidence required |
 | --- | --- | --- |
-| Alphabet/classification | LOGEMES and target segments | Semantic reading, child roles and finite compatibility plan |
+| Alphabet/classification | LOGEMES and target segments | Semantic reading, child roles and explicit change scope |
 | AML framing/paths | AML, scanner, compiler | Complete documents, preserved literals, ordered full bundles |
 | Nested rendering | Lucid parser/interpreter | Exact shared interpreter regressions and composed Rust programs |
 | Target support | Service, selected assets, target support | Every artifact/path, resource errors, configuration/dependency isolation |
@@ -269,8 +268,7 @@ compositions and adds scoped selection, iteration,
 declaration, invocation, callable, trait, empty-composition, keyed-pattern and
 generic/lifetime coverage. It owns the current inventory and expected native
 contracts. Shared low-level interpreter regressions retain Rust and systemless
-controls. Historical passing reports
-from the removed broad Rust matrix do not validate current templates.
+controls. Passing reports from other matrices do not validate these templates.
 
 The [acceptance guide](../docs/development-harness.md) owns the repository gate;
 the Rust suite owns its separate Expected/Generated native compilation stage.
@@ -278,7 +276,7 @@ The [current ledger](testdata/lucid/FAILURES.md) records dated exact-generation,
 validation, native-compilation and acceptance evidence. The 18 template hashes
 remain frozen after finite reviewed amendments, linked from the
 [Rust reference](../builtins/README.md). Those records authorize no future
-interface expansion. That corpus remains compile-only. The separate migration
+interface expansion. That corpus remains compile-only. The separate runtime
 regressions exercise generated native applications and topology; deployment
 scripts remain unexecuted. Report each evidence layer and any outstanding
 acceptance failures separately.
@@ -287,7 +285,7 @@ acceptance failures separately.
 
 The disclosure's stages (technical pages 27-46, summarized in LOGEMES) motivate
 the separation of structure, composition, interpretation and source assembly.
-Its example deployment scripts and historical alphabet do not override current
+Its example deployment scripts and alphabet do not override current
 contracts. Keep this map about responsibilities and stable entry points, not
 temporary failures or a full list of functions.
 

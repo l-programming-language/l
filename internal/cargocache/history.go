@@ -125,7 +125,7 @@ func currentNextHistory(root string, previous, files map[string][]byte, history 
 		if !info.Mode().IsRegular() {
 			return nil, fmt.Errorf("retired current Cargo cache input must be regular: %s", name)
 		}
-		// Legacy caches can contain future-dated inputs. They must undergo
+		// Caches can contain future-dated inputs. They must undergo
 		// normal Cargo freshness checks rather than preserving that timestamp.
 		if info.ModTime().After(now) {
 			continue

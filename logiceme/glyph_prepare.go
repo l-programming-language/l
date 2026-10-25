@@ -43,12 +43,12 @@ func (n *generatedNames) fresh(base string) string {
 }
 
 var supportedGlyphForms = strings.Fields("A EA BA DA KA HA GA MA PA E DE GE CE ME I GI CI BI MI HI O OB OC OG FO FOB KO KOB BO BOD BOK BOH BOG BOM BOP BOC DO DOB DOC DOG GO GOB MO MOB HOB PO U MU FU BU W FW BW FWC HW DW X CX Y KY KYC MY HY FY DY V MV DV CV")
-var retiredGlyphForms = map[string]string{"FA": "BA Parameter: List", "DU": "BA or an explicit O default", "FI": "U Relation: Requirements", "DI": "U Relation: Bounds", "CY": "DY in an expression role", "BY": "MO associated equality", "GY": "HY Shape: Sum", "KU": "FU with a U payload", "HU": "FU with a U payload", "PI": "U Shape: Positional", "KI": "U Shape: Record", "GU": "U Shape: Field", "HO": "HOB", "CW": "FWC", "MW": "FW inside FY/MY"}
+var unsupportedGlyphForms = map[string]string{"FA": "BA Parameter: List", "DU": "BA or an explicit O default", "FI": "U Relation: Requirements", "DI": "U Relation: Bounds", "CY": "DY in an expression role", "BY": "MO associated equality", "GY": "HY Shape: Sum", "KU": "FU with a U payload", "HU": "FU with a U payload", "PI": "U Shape: Positional", "KI": "U Shape: Record", "GU": "U Shape: Field", "HO": "HOB", "CW": "FWC", "MW": "FW inside FY/MY"}
 
 func validateGlyphForm(g *Glyph) error {
 	f := glyphForm(g)
-	if to, ok := retiredGlyphForms[f]; ok {
-		return lerrors.Unsupported.Errorf("Rust form %s is retired; migrate to %s", f, to)
+	if to, ok := unsupportedGlyphForms[f]; ok {
+		return lerrors.Unsupported.Errorf("Rust form %s is unsupported; use %s", f, to)
 	}
 	for _, v := range supportedGlyphForms {
 		if v == f {
@@ -68,7 +68,7 @@ func (g *Glyph) setSourceMeta(k, v string) {
 	if v == "Void" {
 		kind = "SourceString"
 	}
-	// The legacy dictionary treats an unchanged value as a no-op, including
+	// The dictionary treats an unchanged value as a no-op, including
 	// its type. Rust must distinguish the supplied identifier Void from the
 	// absent-value sentinel even though their text is identical.
 	if old := g.Meta.get(k); old.metaVal == v && old.metaType != kind {
@@ -185,7 +185,7 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 	g.setSourceMeta("BodyEnd", "")
 	g.setSourceMeta("SelectionGuard", strconv.FormatBool(ctx.role == "selection"))
 	if _, ok := m["Deferred"]; ok {
-		return lerrors.Unsupported.Errorf("Rust %s: Deferred is removed; Rust has no deferred execution operation", form)
+		return lerrors.Unsupported.Errorf("Rust %s: Deferred is unsupported; Rust has no deferred execution operation", form)
 	}
 	if v, ok := m["Mutable"]; ok {
 		if v != "True" && v != "False" {

@@ -9,7 +9,7 @@ for ownership boundaries, and [AML.md](../logiceme/AML.md) for input structure.
 ## Authority and change scope
 
 Follow the current user-approved scope. Future design constraints below are not
-standing authorization to replace templates, add inputs or migrate callers. The
+standing authorization to replace templates, add inputs or change callers. The
 18 Rust segments remain frozen; consult the [current Rust reference](README.md).
 Existing behavioral inputs,
 oracles, and resources remain protected by the
@@ -19,7 +19,7 @@ for a finite approved amendment; never update expected bytes merely to match a b
 
 Proposed syllables are not operational until parsing, template cases, forwarding,
 validation, documentation, and end-to-end tests agree. Preserve established
-pairings until an explicit migration addresses their callers. Do not grant every
+pairings until an explicit change addresses their callers. Do not grant every
 letter permutation meaning or silently reuse an occupied spelling.
 
 ## Logical ownership for future changes
@@ -191,7 +191,7 @@ entry as supported:
   and conditional-definition repetition, with one Operation body. I is the
   retained Boolean adapter with ordered Calculations. OG/DOG owns
   `let pattern = value` only as X's direct condition; PO owns a label directly
-  on its Iteration child, without an extra block. The legacy initializer,
+  on its Iteration child, without an extra block. The initializer,
   condition and step composition is rejected, not lowered. No iterator adapter,
   hidden mutation, borrowing or async wrapper is introduced. See the
   [iteration contract](README.md#iteration-and-definition-contract).
@@ -211,7 +211,7 @@ Only template Default cases must stand alone. Qualified Definition fragments are
 completed by their enclosing compositions, and definitions/native leaves retain
 their own punctuation. Existing category/record interfaces retain these bounded
 contracts. The suite checks exact
-generation and native compilation. Separate [migration/runtime tests](../testdata/integration/IMPLEMENTATION.md)
+generation and native compilation. Separate [runtime tests](../testdata/integration/IMPLEMENTATION.md)
 exercise actual Rust processes; their outcomes do not broaden the logeme interfaces.
 
 ## Verification contract
@@ -222,9 +222,9 @@ book's ordered inventory and artifacts. Segment and interpreter tests supplement
 not replace, that boundary. A source bundle is not proof of compilation/execution.
 
 The [Rust suite](../logiceme/testdata/lucid/README.md) owns the current case
-inventory, composed baseline and explicitly scoped extensions. The 18 Rust segment definitions remain frozen. The earlier
-broad matrix has been removed; do not restore it from historical instructions.
-Expanding the suite or changing templates needs a separately scoped task.
+inventory, composed baseline and explicitly scoped extensions. The 18 Rust
+segment definitions remain frozen. Replacing or expanding the suite or changing
+templates needs a separately scoped task.
 The [dated results](../logiceme/testdata/lucid/FAILURES.md) record observed
 outcomes and evidence, not a blanket parity claim.
 
@@ -260,7 +260,7 @@ by the [Rust suite](../logiceme/testdata/lucid/README.md). Do not execute
 generated Rust applications as an incidental test step. Supervised runtime
 regressions intentionally execute bounded native programs; deployment scripts
 remain artifacts.
-Focused tests, documentation checks, and historical ledgers are not acceptance.
+Focused tests, documentation checks, and dated ledgers are not acceptance.
 
 ## Dependency and runtime boundaries
 

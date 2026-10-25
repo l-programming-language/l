@@ -12,9 +12,9 @@ import (
 	"testing"
 )
 
-// These native boundaries were not covered by the parity corpus's ordinary
-// decimal values and UTF-8 Error messages. The previous Go runtime's formatter
-// is the oracle; the actual selected Rust support is compiled unchanged.
+// These native boundaries complement ordinary decimal values and UTF-8 Error
+// messages. Go's formatter is the oracle; the actual selected Rust support is
+// compiled unchanged.
 func TestRuntimeScalarParity(t *testing.T) {
 	t.Parallel()
 	var source strings.Builder

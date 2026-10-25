@@ -30,13 +30,12 @@ Apps run as separate OS processes while the orchestrator preserves ordered sourc
 | `builtins/operations/rust` | Typed builtin process-operation compositions selected by the frontend |
 | `builtins/segments` and `builtins/templates` | Frozen Rust templates with reviewed composition amendments and retained Cargo/configuration/runtime support assets; the maintained Lucid suite defines verified scope |
 
-Logeme is implemented under the historical name `logiceme`. Frontend fields named ASM or AML hold structured markup rather than machine assembly. The backend's `Executable` holds source bundles; the caller owns persistence, building, and execution. The AML and template protocol is described below.
+Logeme is implemented in `logiceme/`. Frontend fields named ASM or AML hold structured markup rather than machine assembly. The backend's `Executable` holds source bundles; the caller owns persistence, building, and execution. The AML and template protocol is described below.
 
 ## Production boundaries and retained APIs
 
 Frontend checks use the same checked grammar/lexicon loaders, source preparation,
-import classifier and typed Rust planner/emitter as compilation. The obsolete
-scanner and incremental orchestration test facades are removed; tests observe
+import classifier and typed Rust planner/emitter as compilation. Tests observe
 actual storage, instruction reachability and emitted AML. Generic/systemless
 Lucid interpretation and the exercised host-file AML scanner remain distinct
 supported contracts, even where their repository callers are tests.
@@ -122,7 +121,7 @@ Literal restoration visits each original statement token once and checks exact p
 
 The builder retains `SourcePaths` as a physical-dependency projection, including local empty, comment-only and import-only files. Embedded logical origins are recorded in the source-unit inventory and never treated as host paths. The working Compilation carries this inventory to the executable coordinator, which applies its canonical path and filesystem identity checks before staging or publication. Repeated imports keep their original occurrence order and expansion behavior; statement spans continue to supply diagnostic and paragraph provenance.
 
-Pronouns resolve from source order within their paragraph, independently of the order in which unresolved statements become known. Possessives select members of explicit or resolved values. A source paragraph is unrelated to the source-file hierarchy: Classes group files, and Objects own files. The former AML Feature/PARAGRAPH layer is removed.
+Pronouns resolve from source order within their paragraph, independently of the order in which unresolved statements become known. Possessives select members of explicit or resolved values. A source paragraph is unrelated to the source-file hierarchy: Classes group files, and Objects own files. AML does not define a Feature/PARAGRAPH layer.
 
 The [semantic resolver](../lyger/semantic_resolution.go) starts lookup at each token's lexical scope and borrows the source-scope plan and canonical semantic maps. The program root scope owns `Compilation.Memory` and inherits builtin declarations; dictionary unit roots inherit builtins without seeing caller locals; the resolver has no second memory map or fallback for unscoped tokens. Source scopes retain declaration tokens; semantic `Subjects` connects each token to its registered record, including aliases and qualified declarations. Each lexical layer checks the complete qualified query first, preserving explicitly Public qualified bindings with private owners. Otherwise the longest locally visible owner prefix commits the remainder to canonical member tables; a reserved owner or missing member stays pending instead of reopening outer lookup. Possessive static lookup uses the same member traversal. Checked alias traversal selects a canonical owner before member lookup. Alias records remain addressable under their source names, while a shared dictionary retains its canonical ID and member namespace. Missing dependencies wait for the existing no-progress-checked retry loop.
 
@@ -175,7 +174,7 @@ The current CLI tests distinguish five views:
 
 ## Application structure and execution
 
-The structural mapping is Program to books, App to Book, Service to Chapter, recursive Class to Text, and Object/source file to Sentence. [Construction nodes](../lyger/construction.go), [typed definition instantiation](../lyger/definition.go), and [lowering](../lyger/lowering.go) retain source-defined descriptors. [Source hierarchy lowering](../lyger/source_hierarchy.go) traverses each ordered Class/Object child exactly once; [program.go](../lyger/program.go) publishes the complete graph only after both AML views render. Populated Classes select StructureVersion 2 with direct child Dimensions and immediate Class Parent. Ordinary flat construction retains its source order; Rust workspace topology is a separate projection. Class membership never creates a lexical scope or runtime activation. Feature is no longer an exposed built-in L value type or an AML hierarchy level.
+The structural mapping is Program to books, App to Book, Service to Chapter, recursive Class to Text, and Object/source file to Sentence. [Construction nodes](../lyger/construction.go), [typed definition instantiation](../lyger/definition.go), and [lowering](../lyger/lowering.go) retain source-defined descriptors. [Source hierarchy lowering](../lyger/source_hierarchy.go) traverses each ordered Class/Object child exactly once; [program.go](../lyger/program.go) publishes the complete graph only after both AML views render. Populated Classes select StructureVersion 2 with direct child Dimensions and immediate Class Parent. Ordinary flat construction retains its source order; Rust workspace topology is a separate projection. Class membership never creates a lexical scope or runtime activation. Feature is not a built-in L value type or an AML hierarchy level.
 
 Application defaults are `rust`, version `0.0.0`, logical generation directory `/src`, and Host `http://127.0.0.1`. Source declarations determine application/component names and body content. Descriptor rules are selected by target type, expanded with cycle checks, and retain explicit parameter relationships. Function syntax is recognized from its embedded `Func` structure, so renaming the source-defined Function word does not change generation behavior.
 

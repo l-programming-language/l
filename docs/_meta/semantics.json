@@ -653,7 +653,7 @@
         "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
         "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
         "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/lexical_types.go": "713f95b316cae234620c7cf8495e8c42a047f91f1a9ab9f3987ed06aa33d91dc"
+        "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -684,7 +684,7 @@
         "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
         "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
         "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/lexical_types.go": "713f95b316cae234620c7cf8495e8c42a047f91f1a9ab9f3987ed06aa33d91dc"
+        "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -746,7 +746,7 @@
         "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
         "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
         "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/lexical_types.go": "713f95b316cae234620c7cf8495e8c42a047f91f1a9ab9f3987ed06aa33d91dc"
+        "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1369,7 +1369,7 @@
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
       "sourceHashes": {
         "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1394,7 +1394,7 @@
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
       "sourceHashes": {
         "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1421,7 +1421,7 @@
       "sourceHashes": {
         "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
         "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1448,7 +1448,7 @@
       "sourceHashes": {
         "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
         "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1475,7 +1475,7 @@
       "sourceHashes": {
         "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
         "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1502,7 +1502,7 @@
       "sourceHashes": {
         "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
         "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1526,8 +1526,8 @@
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
       "sourceHashes": {
-        "lyger/orchestration_emit.go": "185b763b77a4b411d9913e062bd28c9d1e1eaa4287d0c489483295585fe0c69a",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "lyger/orchestration_emit.go": "6d180dfddce5c33579cb6e3f999fb211d829a3dda90f59d2cc301dbb4a18d3a2",
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1552,9 +1552,9 @@
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
       "sourceHashes": {
-        "lyger/orchestration_emit.go": "185b763b77a4b411d9913e062bd28c9d1e1eaa4287d0c489483295585fe0c69a",
+        "lyger/orchestration_emit.go": "6d180dfddce5c33579cb6e3f999fb211d829a3dda90f59d2cc301dbb4a18d3a2",
         "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1579,7 +1579,7 @@
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
       "sourceHashes": {
         "lyger/orchestration_plan.go": "df6f86ea9897332d3100e74d6314075c7a755875a62e2051a4003febff4c7c6b",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -1604,7 +1604,7 @@
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
       "sourceHashes": {
         "lyger/orchestration_plan.go": "df6f86ea9897332d3100e74d6314075c7a755875a62e2051a4003febff4c7c6b",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -2011,7 +2011,7 @@
       "sourceHashes": {
         "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
         "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532",
-        "docs/cli-build.md": "591eeb5614430b1a2d4b713e062bbb34360b34c7cc9d124a0ccc234322ffa158"
+        "docs/cli-build.md": "fa443f13da867ad9c5f2b6f679518d4ef2701cfaa4465632dd28cea1c81f3e59"
       },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [

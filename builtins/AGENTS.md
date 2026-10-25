@@ -31,8 +31,8 @@ The repository root instructions remain applicable.
   These local String inputs qualify existing forms; they are not record fields.
   Additional inputs or mutability/capture interfaces need a separately scoped
   change with explicit type/default/absence rules.
-- Rust Execute/Execution exclude Deferred. No replacement
-  syllable or implicit cleanup is introduced by that removal; see the
+- Rust Execute/Execution exclude Deferred. No scope-exit
+  syllable or implicit cleanup is defined; see the
   [Rust execution contract](README.md#execution-without-deferred).
 - Use composed examples and tests. EA is an emergency whole-file escape, not the
   default authoring path or a substitute for exercising a supported syllable.
@@ -76,8 +76,8 @@ compilation, runtime or acceptance result.
 The 18 Rust segments are frozen assets with explicitly reviewed amendments and
 bounded compiler integration. The suite retains exact bundle comparisons,
 Expected/Generated native compilation and a template hash check. Consult the
-[current integration limits](README.md#current-integration-limits); old preparation
-code and the retired broad matrix do not certify other forms.
+[current integration limits](README.md#current-integration-limits); preparation
+code and broad test matrices do not certify other forms.
 
 - Preserve the frozen conditions, selectors, inputs, primitive forwarding and
   template bytes unless the user explicitly scopes a later asset change. Do not
@@ -108,7 +108,7 @@ code and the retired broad matrix do not certify other forms.
   [iteration](README.md#iteration-and-definition-contract) and
   [keyed GI](README.md#keyed-gi-pattern-selection) contracts. OC/DOC own selection
   assignments, OG/DOG own conditional binding, and PO labels its Iteration
-  directly. BI Default orders branches only; legacy three-part X rejects.
+  directly. BI Default orders branches only; three-part X rejects.
   Native patterns and caller-supplied async scaffolding do not establish general
   structural-pattern, enum or async-function interfaces.
 - Tokio supplies Rust runtime process supervision. Execute/Execution have

@@ -74,7 +74,7 @@ The grammar contains While and collection operations Put, Place, Get, and Take. 
 
 The [grammar's `conditional.while` rule](../../lexicon/eng/grammar.json) recognizes a condition followed by an imperative clause. The [instruction builder](../../lyger/instructions.go) accepts If/else/Otherwise conditionals and rejects the While kind. It supplies no supported way to repeat Show; use it to recognize the unsupported boundary.
 
-The Rust backend separately supports bounded iteration compositions described in the [target reference](../../builtins/README.md#iteration-and-definition-contract). It rejects the legacy three-part X form. Native loop composition does not confer source-level iteration semantics, collection ordering, bounds behavior, or break/continue vocabulary.
+The Rust backend separately supports bounded iteration compositions described in the [target reference](../../builtins/README.md#iteration-and-definition-contract). It rejects the three-part X form. Native loop composition does not confer source-level iteration semantics, collection ordering, bounds behavior, or break/continue vocabulary.
 
 ## Arithmetic and native calculations
 

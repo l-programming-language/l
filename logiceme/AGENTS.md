@@ -33,8 +33,8 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
 - Validate logical child roles and execution contexts before rendering. Preserve
   Rust checks and the generic systemless interpreter's independent contracts.
 - Rust rejects supplied Deferred metadata before rendering, including False.
-  Its removal from Execute/Execution does not authorize changing that diagnostic,
-  widening execution roles or synthesizing scope-exit behavior; see the
+  Preserve its Unsupported diagnostic; do not widen execution roles or
+  synthesize scope-exit behavior; see the
   [execution contract](../builtins/README.md#execution-without-deferred).
 - Shared Lucid fixes must preserve literal spans, child occurrences, loop
   iteration/binding scope, and template-owned separators for Rust and generic systemless interpretation.
@@ -65,12 +65,12 @@ native compilation. The maintained Rust corpus preserves its composed baseline
 and scoped extensions. Follow the
 [Rust stage instructions](testdata/lucid/README.md) for exact bundle checks
 and separate compilation. The 18 Rust segments are frozen by that suite; do not
-change them outside an explicitly scoped amendment or restore the retired matrix
+change them outside an explicitly scoped amendment or substitute a different matrix
 to make the current tests pass.
 The [result ledger](testdata/lucid/FAILURES.md) records exact generation,
-expected/actual native compilation and acceptance separately; it does not prove
-compatibility of every retained compiler branch. Runtime behavior is checked
-separately by supervised native regressions and the [migration record](../testdata/integration/IMPLEMENTATION.md).
+expected/actual native compilation and acceptance separately; it does not establish
+correctness of every compiler branch. Runtime behavior is checked
+separately by supervised native regressions and the [implementation record](../testdata/integration/IMPLEMENTATION.md).
 Retain shared backend controls and the required downstream test identities;
 their native observers check the Rust frontend/CLI obligations.
 

@@ -32,7 +32,7 @@ func integrityFixture(t *testing.T) (string, contract, string) {
 	}
 	c := contract{SchemaVersion: 2, Module: "example.test/l",
 		ProtectedFiles: []fileContract{{Path: "testdata/main.l", SHA256: hash}},
-		AbsentFiles:    []string{"retired.json"}, Tests: []testContract{{Package: ".", Name: "TestOriginal"}}}
+		AbsentFiles:    []string{"excluded.json"}, Tests: []testContract{{Package: ".", Name: "TestOriginal"}}}
 	if err := os.MkdirAll(filepath.Join(root, "harness"), 0755); err != nil {
 		t.Fatal(err)
 	}
@@ -59,9 +59,9 @@ func TestCurrentIntegrity(t *testing.T) {
 					t.Fatal(err)
 				}
 			case "absent file":
-				writeIntegrityFile(t, root, "retired.json", "{}")
+				writeIntegrityFile(t, root, "excluded.json", "{}")
 			case "absent symlink":
-				if err := os.Symlink("missing", filepath.Join(root, "retired.json")); err != nil {
+				if err := os.Symlink("missing", filepath.Join(root, "excluded.json")); err != nil {
 					t.Fatal(err)
 				}
 			case "contract changed":

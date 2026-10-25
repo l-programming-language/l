@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewPolicy": "Manually reviewed command/option surface from the current parser. A changed parser hash requires review of its behavior and documentation before this manifest is edited. references:generate never updates this approval hash. Aliases and flag-parser spelling variants are grouped with the corresponding option.",
   "sourceHashes": {
-    "cmd/l/command.go": "e3bb1fd13c5e893482d0fa2ec17a3f96de528bc3967b53344fa53f96027ff850"
+    "cmd/l/command.go": "6399cb7f2dec1503c1259bcd6008b32255eacb09aba41070038eb6fc154a34d0"
   },
   "entries": [
     {
@@ -159,7 +159,7 @@
       "name": "-os",
       "role": "normative",
       "support": "rejected",
-      "doc": "docs/cli/build.md#legacy-os-option",
+      "doc": "docs/cli/build.md#target-os",
       "sources": [
         "cmd/l/command.go"
       ],
@@ -167,7 +167,7 @@
         "cmd/l/command_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Registered solely to reject target selection; current host determines native output."
+      "notes": "OS targeting follows v0.0.1; currently rejected."
     }
   ]
 }

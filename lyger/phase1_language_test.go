@@ -239,7 +239,7 @@ func phase1ReceiverShape(t *testing.T, f *observedSourceFile, wantAwait bool) {
 		}
 		switch call.Name {
 		case "lRun", "lAwait", "lStop", "lBuild", "lShow", "lFail", "lOutput", "lError", "lShutdown":
-			t.Errorf("legacy free helper %s remains", call.Name)
+			t.Errorf("unexpected free helper %s remains", call.Name)
 		}
 	}
 	if wantAwait && (phase1Calls(f, "Await") == 0 || phase1Calls(f, "ClaimContinuation") == 0 || phase1Calls(f, "FinishContinuation") == 0) {

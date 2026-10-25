@@ -43,7 +43,7 @@ Build native macOS or Linux executables beside the source, or in --output-dir.
 The default source is main.l. Options must precede the source filename.
 Language resources are embedded in the executable. The default language is eng.
 Use --assets to select a complete development resource bundle instead.
-Cross-compilation and the legacy -os flag are not supported.
+-os target selection is planned after v0.0.1; builds currently target the host.
 `
 
 // parseCommand supplies the command options and established CLI data projection.
@@ -64,8 +64,8 @@ func parseCommand(args []string) (*buildCommand, error) {
 	flags.StringVar(&command.Assets, "assets", "", "compiler asset root")
 	flags.StringVar(&command.Output, "output-dir", "", "output directory")
 	flags.StringVar(&command.Language, "language", Lyger.DefaultLanguage, "source language")
-	flags.Func("os", "unsupported legacy target flag", func(string) error {
-		return lerrors.InvalidInput.Errorf("-os is no longer supported; builds target the native host")
+	flags.Func("os", "unimplemented target flag", func(string) error {
+		return lerrors.InvalidInput.Errorf("-os is not implemented; builds target the native host")
 	})
 	if err := flags.Parse(args[1:]); err != nil {
 		if errors.Is(err, flag.ErrHelp) {
@@ -93,8 +93,7 @@ func parseCommand(args []string) (*buildCommand, error) {
 			return nil, lerrors.InvalidInput.Errorf("source file must not be empty")
 		}
 	}
-	// osType is an established parser compatibility field. Runtime targeting is
-	// explicit in buildOptions and does not use this legacy distribution name.
+	// osType is parser data; native targeting uses buildOptions.
 	command.CLI = &cliData{jobType: "build", mainPath: source, osType: "ubuntu"}
 	return command, nil
 }

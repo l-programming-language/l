@@ -166,7 +166,7 @@ func inspectIntegrity(root string, c contract, originalContractHash string) inte
 			if os.IsNotExist(err) {
 				err = nil
 			} else if err == nil {
-				err = fmt.Errorf("retired input must remain absent")
+				err = fmt.Errorf("excluded input must remain absent")
 			}
 		}
 		add("absent_file", relative, err)

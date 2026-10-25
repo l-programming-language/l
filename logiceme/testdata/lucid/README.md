@@ -104,7 +104,7 @@ primary source/expansion span, rejects unrelated compiler errors, and never trea
 dependency/setup failures as an expected negative.
 
 `selection-invalid/` contains 35 complete AML documents for invalid CI/BI/OC/DOC
-compositions. They cover legacy/bare guard rejection, Definition metadata and
+compositions. They cover DO/DOB and bare guard rejection, Definition metadata and
 cardinality, placement and unsupported codas as well as existing CI/BI rules.
 Checks assert the classified underlying semantic cause separately
 from application/file context, no panic, unchanged input, and zero returned bundle.
@@ -152,7 +152,7 @@ responsibility; successful compilation
 does not prove runtime order, termination or channel behavior.
 
 `iteration-invalid/` contains 50 complete AML documents covering conflicting
-conditions, iterator/condition mixtures, legacy three-part composition, body and
+conditions, iterator/condition mixtures, three-part composition, body and
 child cardinality, ordinary Definitions used as conditions, OG/DOG metadata and
 placement, and PO child/label/coda rules. They use the same classified-cause,
 zero-bundle, immutability and no-panic requirements as the 35 selection-invalid

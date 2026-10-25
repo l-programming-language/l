@@ -36,9 +36,9 @@ func TestReleaseSourceResources(t *testing.T) {
 			return nil
 		}
 		files = append(files, path)
-		for _, retired := range []string{"builtins/go/", "builtins/eng/go/", "stdlib/eng/go/"} {
-			if strings.HasPrefix(path, retired) {
-				t.Errorf("retired generated-Go resource is embedded: %s", path)
+		for _, excluded := range []string{"builtins/go/", "builtins/eng/go/", "stdlib/eng/go/"} {
+			if strings.HasPrefix(path, excluded) {
+				t.Errorf("unsupported generated-Go resource is embedded: %s", path)
 			}
 		}
 		return nil

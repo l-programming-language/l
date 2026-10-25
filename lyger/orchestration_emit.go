@@ -127,7 +127,7 @@ func orchestrationStorageDeclaration(slot *orchestrationStorage) (glyph, native 
 		}
 		return orchestrationBinding(pattern, initial), "let " + pattern + " = " + initial + ";", nil
 	} else if slot.Mutable {
-		// Frozen BO does not consume its legacy Mutable projection. A typed
+		// Frozen BO does not consume the Mutable projection. A typed
 		// declaration atom expresses inferred mutability without a new input
 		// contract, initializer or template rewrite.
 		native := "let mut " + name + ": " + typeName + ";"

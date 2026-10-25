@@ -70,7 +70,7 @@ func prepareSourceHeaders(app *App, includeRuntime bool, workspace *WorkspaceRun
 	v2 := app.Outline.Meta.GetVal("StructureVersion") == "2"
 	for _, object := range objects {
 		// Explicit topology and runtime support own these source items. The
-		// legacy nonruntime bundle keeps its frozen A-only header contract.
+		// nonruntime bundle keeps its frozen A-only header contract.
 		object.header.structural = v2 || includeRuntime
 	}
 	var primary *Object

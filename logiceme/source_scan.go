@@ -50,7 +50,7 @@ func framedStructuralTags(content []byte, wanted string) ([]structuralSpan, erro
 			continue
 		}
 		if fields[0] == "PARAGRAPH" || fields[0] == "/PARAGRAPH" {
-			return nil, lerrors.InvalidInput.Errorf("PARAGRAPH was removed from AML; migrate its Objects and shared Attributes to Classes and explicit compositions")
+			return nil, lerrors.InvalidInput.Errorf("PARAGRAPH is unsupported in AML; use Classes and explicit compositions for Objects and shared Attributes")
 		}
 		if fields[0] == wanted {
 			if depth == 0 {
@@ -286,7 +286,7 @@ func scanSourceProgram(scanner *Scanner) error {
 }
 
 // Read the original ordered records. ScanBook's ordinary MetaDict deliberately
-// retains its legacy duplicate behavior for generic host-AML callers.
+// retains its duplicate behavior for generic host-AML callers.
 func bookSettings(tags []Tag, book Book) ([]MetaObj, error) {
 	groups, _, err := ParseTags(tags, book.Program, "Tag", "SETTINGS")
 	if err != nil {

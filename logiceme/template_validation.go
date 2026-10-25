@@ -51,7 +51,7 @@ func (cache *lucidTemplateValidationCache) remember(key lucidTemplateValidationK
 
 var validatedLucidTemplates lucidTemplateValidationCache
 
-// Validate the framing that the legacy Lucid parser indexes directly. This
+// Validate the framing that the Lucid parser indexes directly. This
 // checks template structure, without changing source text or interpreting it.
 func validateLucidTemplate(content []byte, requireTags bool) error {
 	source := string(content)

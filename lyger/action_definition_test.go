@@ -136,7 +136,7 @@ func TestActionGraphErrorsDoNotPartiallyLoad(t *testing.T) {
 	}
 	for _, invalid := range []*lexeme{nil, cycle, {Root: "missing", Actions: []*lexeme{nil}}} {
 		if err := invalid.construct(); err == nil {
-			t.Fatal("invalid legacy graph accepted")
+			t.Fatal("invalid action graph accepted")
 		}
 	}
 	container := &lexeme{Root: "container"}

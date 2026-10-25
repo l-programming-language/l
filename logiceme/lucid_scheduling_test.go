@@ -52,7 +52,7 @@ func TestLucidDeferredRejected(t *testing.T) {
 				}
 			}
 			if err == nil {
-				lucidIssue(t, r, "production validation: accepted removed Deferred input")
+				lucidIssue(t, r, "production validation: accepted unsupported Deferred input")
 				return
 			}
 			r.GenerationError = err.Error()
@@ -63,7 +63,7 @@ func TestLucidDeferredRejected(t *testing.T) {
 			for errors.Unwrap(cause) != nil {
 				cause = errors.Unwrap(cause)
 			}
-			want := "Rust " + c.form + ": Deferred is removed; Rust has no deferred execution operation"
+			want := "Rust " + c.form + ": Deferred is unsupported; Rust has no deferred execution operation"
 			if cause.Error() != want {
 				lucidIssue(t, r, "production validation: cause=%q want=%q", cause.Error(), want)
 			}

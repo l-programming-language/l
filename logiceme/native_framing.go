@@ -9,7 +9,7 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-// nativeValueMask keeps native metadata opaque while the legacy structural
+// nativeValueMask keeps native metadata opaque while the structural
 // scanners examine AML. Tokens are absent from the entire original input and
 // restoration is one pass: restored source is never rescanned as metadata.
 type nativeValueMask struct {

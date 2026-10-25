@@ -120,8 +120,7 @@ initialization, compilation, generation or build failure.
 The independent harness and generated process runtime do not depend on
 `lerrors`. The [execution contract](cli-build.md) independently governs App launch, Await, raw streams and process cleanup.
 
-Unchecked legacy
-regex/metadata/math indexing and UUID paths, suppressed recursive-parser errors,
+Unchecked regex/metadata/math indexing and UUID paths, suppressed recursive-parser errors,
 and non-error-returning convenience loaders retain their existing behavior.
 There is no blanket recovery, severity system, serialization API, recursive
 classifier, status mapping, retry policy or centralized message catalog.

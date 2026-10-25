@@ -87,7 +87,7 @@ func TestLiteralFramingClassification(t *testing.T) {
 	}
 }
 
-func TestLiteralFramingParserCompatibility(t *testing.T) {
+func TestLiteralFramingParserForms(t *testing.T) {
 	span := SourceSpan{Path: "literal.l", Start: SourcePosition{Line: 7, Column: 3}}
 	for _, source := range []string{"A", "`A`", "<DEF>A<DEF>", "`<DEF>A<DEF>`", " \t`<DEF>A<DEF>`\n "} {
 		t.Run("valid "+source, func(t *testing.T) {

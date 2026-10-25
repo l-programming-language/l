@@ -232,7 +232,7 @@
     },
     {
       "path": "logiceme/feature_removal_test.go",
-      "sha256": "5ad478bd54ed1af9ee8778e58743944fa021110caec8546549e0f72747949476"
+      "sha256": "f6df2dc8b764716b3bc9c4cb8d033ecd339bb8370db144d84ae31508624da1e1"
     },
     {
       "path": "logiceme/testdata/runtime/Cargo.lock",
@@ -288,7 +288,7 @@
     },
     {
       "path": "lyger/recursive_classes_test.go",
-      "sha256": "d2e3402f0f3ee7f411fe2b1cc813d3d6c99b8f221b26e7fd58978e6a05070478"
+      "sha256": "ecec33ac760b6aa355def0ac5d8907e69f9eb5b2c6f208b34aa08e944ac6a18e"
     },
     {
       "path": "lyger/refactor_value_characterization_test.go",
@@ -976,7 +976,7 @@
     },
     {
       "path": "cmd/l/runnable_service_native_test.go",
-      "sha256": "78b2de2b495f817610a614de2881c57778b3a08bc04f300affef71505b0c225e"
+      "sha256": "b035f1cbcd6253f19e028f03a60e898ab23e6eb53c920dede005004469c105a4"
     },
     {
       "path": "cmd/l/runnable_service_test.go",
@@ -984,7 +984,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/README.md",
-      "sha256": "e5be1d5e73868905a61e53c8d941a9f7db8fd4871a6a808c398a4c1b061cb694"
+      "sha256": "0499d0370cea11d8b5c7df5c7591be56ef17a22aac421eef3693f97e33a673cb"
     },
     {
       "path": "cmd/l/test/runnable_service/alias.l",

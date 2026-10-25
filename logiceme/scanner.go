@@ -482,7 +482,7 @@ func ScanOutline(tags []Tag, outlineBytes []byte) (Outline, error) {
 			return reOutline, lerrors.Syntax.Errorf("outline: %w", err)
 		}
 		if _, present := keys["Features"]; present {
-			return reOutline, lerrors.InvalidInput.Errorf("Features were removed from AML; migrate Objects and shared Attributes to Classes and explicit compositions")
+			return reOutline, lerrors.InvalidInput.Errorf("Features are unsupported in AML; use Classes and explicit compositions for Objects and shared Attributes")
 		}
 		jsonType := determineJSONSliceType(jsonBytes, "Outline")
 		counts[jsonType]++

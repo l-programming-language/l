@@ -4,7 +4,7 @@
     "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "stdlib/index.json": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1",
-    "cmd/l/command.go": "e3bb1fd13c5e893482d0fa2ec17a3f96de528bc3967b53344fa53f96027ff850",
+    "cmd/l/command.go": "6399cb7f2dec1503c1259bcd6008b32255eacb09aba41070038eb6fc154a34d0",
     "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
     "logiceme/lucid_generation_test.go": "722e4fd3b6e504e96cafd8cb1ab11e3fd598e536d4e8d155d6cf055ba3154bdf",
     "logiceme/testdata/lucid/templates.sha256.json": "b32aaec967c1746e9f82d11815fa0e68ed811a0cdfaaf5632c4531abb33e83a4",
@@ -131,7 +131,6 @@
     "logiceme/testdata/lucid/iteration-invalid/iterator-calculation-conflict.aml.txt": "288edd20ea6a71615ff78fc2c985886022555d49e67272e9eff32640da5f4f93",
     "logiceme/testdata/lucid/iteration-invalid/iterator-definition-conflict.aml.txt": "404aed2bf4f5282ffb6e089c82002743f8d8092b245dab3be6f1c0e92933fd83",
     "logiceme/testdata/lucid/iteration-invalid/iterator-evaluation-conflict.aml.txt": "b4991af92506b3898f8232f16813b88998a530dc335945532912b9e6a340315a",
-    "logiceme/testdata/lucid/iteration-invalid/legacy-three-part.aml.txt": "783f4827ebdf2e2eb71ecffedeaabafdd71b8ad6f1f9cf6ad1bd5b4c041ef346",
     "logiceme/testdata/lucid/iteration-invalid/missing-body.aml.txt": "3accfdb518040e4a175ee72e1ab7db0a29ed991ab6137d6f3c2617ad6fefc0b3",
     "logiceme/testdata/lucid/iteration-invalid/multiple-bodies.aml.txt": "b87d8321c3b4917f12e5959b33dabbf540b0b933fba9835974b9e9646be36448",
     "logiceme/testdata/lucid/iteration-invalid/og-child.aml.txt": "edc427c5dfa93e3a51eb635cfb078adf714ae3fcdfc271db739bb0e7e86503e7",
@@ -163,6 +162,7 @@
     "logiceme/testdata/lucid/iteration-invalid/repeated-calculation.aml.txt": "241319c6c27b604a048ecf41d25846da1ff083125fa115dbb57fdde50be571d2",
     "logiceme/testdata/lucid/iteration-invalid/repeated-definition.aml.txt": "6c339b7c539d3fe9ae023ecfaf168d0e655eb10e51f7ef608883117b8f98dc87",
     "logiceme/testdata/lucid/iteration-invalid/repeated-evaluation.aml.txt": "60d222f428175804bd3aacacbb1809b371a1604525ae8f2846d5a9b022a0b1fd",
+    "logiceme/testdata/lucid/iteration-invalid/three-part.aml.txt": "783f4827ebdf2e2eb71ecffedeaabafdd71b8ad6f1f9cf6ad1bd5b4c041ef346",
     "logiceme/testdata/lucid/iteration-invalid/unsupported-evaluation-adapter.aml.txt": "63cb93ebb57781811ad5f35bee8fec55bd63578a1b72f04fc5ef8b32176bce3e",
     "logiceme/testdata/lucid/iteration-invalid/wrong-category-body.aml.txt": "3ccf146bd0d081830ca2d96d3cba8f19a6644798a10ae8b2e012898634b75ef4",
     "logiceme/testdata/lucid/keyed-invalid/body-without-pattern.aml.txt": "495779a07b0481e42691d24d98da518b14305ffcbd5a909fc40b686824026de4",
@@ -191,6 +191,8 @@
     "logiceme/testdata/lucid/selection-invalid/ci-file-scope.aml.txt": "7063c2fa97c94bbe6db74eef67113dd58e1c5b06cd78856408d345262da23bef",
     "logiceme/testdata/lucid/selection-invalid/ci-non-bi-child.aml.txt": "db3a8068c58a0e41e80e032e3f3eac8d35d9037cfe060d8fd45fa67ec7d8524a",
     "logiceme/testdata/lucid/selection-invalid/default-missing-definition.aml.txt": "dde6bb8f52a355fff585fd64f169eee5d6d2c7348584ee538112c3d1004457b4",
+    "logiceme/testdata/lucid/selection-invalid/do-guard.aml.txt": "08fab56aae3ed3702cf9a3ae8240858395376c35875d662b37fa2f9211dac3f1",
+    "logiceme/testdata/lucid/selection-invalid/dob-guard.aml.txt": "f21d2cb42d483ee00b310712e44d98589c59d62c9d6bbccbaac4a44c36decfd5",
     "logiceme/testdata/lucid/selection-invalid/doc-missing-child.aml.txt": "c4b89d31895edc1255b1dc3ba953ddc0127910b194735416cd1f77045eb7fd3d",
     "logiceme/testdata/lucid/selection-invalid/doc-multiple-children.aml.txt": "197b6969a8f0da59ea96623bc880759551a6c3dc23b8aa78c9025764c49b0f3d",
     "logiceme/testdata/lucid/selection-invalid/doc-native-value.aml.txt": "93855e92b71d7a12375504d9ab7d107a524ab62c8c7e1298c0e84766664258b4",
@@ -201,8 +203,6 @@
     "logiceme/testdata/lucid/selection-invalid/guard-parameter.aml.txt": "3e6ce207fc029c559ec416ceb8f7cdda3188c9ca8e5af28eaed3faeb11581567",
     "logiceme/testdata/lucid/selection-invalid/guard-type.aml.txt": "f8a84a9cd2da4b4f321a0c4626d2a493b926051f859032a8a8a402ad411e3e01",
     "logiceme/testdata/lucid/selection-invalid/invalid-default.aml.txt": "deec344213af8fda4e1ef5a99b8592a86b4a55fb5bc8a73f3ff9ef5871d6d1ea",
-    "logiceme/testdata/lucid/selection-invalid/legacy-do-guard.aml.txt": "08fab56aae3ed3702cf9a3ae8240858395376c35875d662b37fa2f9211dac3f1",
-    "logiceme/testdata/lucid/selection-invalid/legacy-dob-guard.aml.txt": "f21d2cb42d483ee00b310712e44d98589c59d62c9d6bbccbaac4a44c36decfd5",
     "logiceme/testdata/lucid/selection-invalid/missing-guard.aml.txt": "bb6346325794df2366d99f88f988661f989f855c9a7a710990baf2e71cd00eda",
     "logiceme/testdata/lucid/selection-invalid/missing-name.aml.txt": "de97c01a873ebfdd7751bc36736402e5725d8fa68020ee608f8f8e5ef6c3e6d9",
     "logiceme/testdata/lucid/selection-invalid/mixed-guards.aml.txt": "7b52cbcc15d109eaa9e5784df03ec66de3ac3bec0ce5f67c91a97605eeeeb54f",
@@ -710,7 +710,6 @@
     "logiceme/testdata/lucid/iteration-invalid/iterator-calculation-conflict.aml.txt",
     "logiceme/testdata/lucid/iteration-invalid/iterator-definition-conflict.aml.txt",
     "logiceme/testdata/lucid/iteration-invalid/iterator-evaluation-conflict.aml.txt",
-    "logiceme/testdata/lucid/iteration-invalid/legacy-three-part.aml.txt",
     "logiceme/testdata/lucid/iteration-invalid/missing-body.aml.txt",
     "logiceme/testdata/lucid/iteration-invalid/multiple-bodies.aml.txt",
     "logiceme/testdata/lucid/iteration-invalid/og-child.aml.txt",
@@ -742,6 +741,7 @@
     "logiceme/testdata/lucid/iteration-invalid/repeated-calculation.aml.txt",
     "logiceme/testdata/lucid/iteration-invalid/repeated-definition.aml.txt",
     "logiceme/testdata/lucid/iteration-invalid/repeated-evaluation.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/three-part.aml.txt",
     "logiceme/testdata/lucid/iteration-invalid/unsupported-evaluation-adapter.aml.txt",
     "logiceme/testdata/lucid/iteration-invalid/wrong-category-body.aml.txt",
     "logiceme/testdata/lucid/keyed-invalid/body-without-pattern.aml.txt",
@@ -770,6 +770,8 @@
     "logiceme/testdata/lucid/selection-invalid/ci-file-scope.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/ci-non-bi-child.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/default-missing-definition.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/do-guard.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/dob-guard.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/doc-missing-child.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/doc-multiple-children.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/doc-native-value.aml.txt",
@@ -780,8 +782,6 @@
     "logiceme/testdata/lucid/selection-invalid/guard-parameter.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/guard-type.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/invalid-default.aml.txt",
-    "logiceme/testdata/lucid/selection-invalid/legacy-do-guard.aml.txt",
-    "logiceme/testdata/lucid/selection-invalid/legacy-dob-guard.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/missing-guard.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/missing-name.aml.txt",
     "logiceme/testdata/lucid/selection-invalid/mixed-guards.aml.txt",
@@ -10045,7 +10045,7 @@
       "name": "-os",
       "role": "normative",
       "support": "rejected",
-      "doc": "docs/cli/build.md#legacy-os-option",
+      "doc": "docs/cli/build.md#target-os",
       "sources": [
         "cmd/l/command.go"
       ],
@@ -10053,7 +10053,7 @@
         "cmd/l/command_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Registered solely to reject target selection; current host determines native output."
+      "notes": "OS targeting follows v0.0.1; currently rejected."
     },
     {
       "id": "lucid:generics-functions",
@@ -12603,21 +12603,6 @@
       "evidence": "existing-backend-rejection-witness-not-run"
     },
     {
-      "id": "lucid-invalid:iteration-invalid/legacy-three-part.aml.txt",
-      "kind": "lucid-rejection",
-      "name": "iteration-invalid/legacy-three-part.aml.txt",
-      "role": "implementation",
-      "support": "rejected",
-      "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-legacy-three-part-aml-txt",
-      "sources": [
-        "logiceme/testdata/lucid/iteration-invalid/legacy-three-part.aml.txt"
-      ],
-      "witnesses": [
-        "logiceme/lucid_generation_test.go"
-      ],
-      "evidence": "existing-backend-rejection-witness-not-run"
-    },
-    {
       "id": "lucid-invalid:iteration-invalid/missing-body.aml.txt",
       "kind": "lucid-rejection",
       "name": "iteration-invalid/missing-body.aml.txt",
@@ -13083,6 +13068,21 @@
       "evidence": "existing-backend-rejection-witness-not-run"
     },
     {
+      "id": "lucid-invalid:iteration-invalid/three-part.aml.txt",
+      "kind": "lucid-rejection",
+      "name": "iteration-invalid/three-part.aml.txt",
+      "role": "implementation",
+      "support": "rejected",
+      "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-three-part-aml-txt",
+      "sources": [
+        "logiceme/testdata/lucid/iteration-invalid/three-part.aml.txt"
+      ],
+      "witnesses": [
+        "logiceme/lucid_generation_test.go"
+      ],
+      "evidence": "existing-backend-rejection-witness-not-run"
+    },
+    {
       "id": "lucid-invalid:iteration-invalid/unsupported-evaluation-adapter.aml.txt",
       "kind": "lucid-rejection",
       "name": "iteration-invalid/unsupported-evaluation-adapter.aml.txt",
@@ -13503,6 +13503,36 @@
       "evidence": "existing-backend-rejection-witness-not-run"
     },
     {
+      "id": "lucid-invalid:selection-invalid/do-guard.aml.txt",
+      "kind": "lucid-rejection",
+      "name": "selection-invalid/do-guard.aml.txt",
+      "role": "implementation",
+      "support": "rejected",
+      "doc": "docs/_generated/lucid.md#invalid-selection-invalid-do-guard-aml-txt",
+      "sources": [
+        "logiceme/testdata/lucid/selection-invalid/do-guard.aml.txt"
+      ],
+      "witnesses": [
+        "logiceme/lucid_generation_test.go"
+      ],
+      "evidence": "existing-backend-rejection-witness-not-run"
+    },
+    {
+      "id": "lucid-invalid:selection-invalid/dob-guard.aml.txt",
+      "kind": "lucid-rejection",
+      "name": "selection-invalid/dob-guard.aml.txt",
+      "role": "implementation",
+      "support": "rejected",
+      "doc": "docs/_generated/lucid.md#invalid-selection-invalid-dob-guard-aml-txt",
+      "sources": [
+        "logiceme/testdata/lucid/selection-invalid/dob-guard.aml.txt"
+      ],
+      "witnesses": [
+        "logiceme/lucid_generation_test.go"
+      ],
+      "evidence": "existing-backend-rejection-witness-not-run"
+    },
+    {
       "id": "lucid-invalid:selection-invalid/doc-missing-child.aml.txt",
       "kind": "lucid-rejection",
       "name": "selection-invalid/doc-missing-child.aml.txt",
@@ -13646,36 +13676,6 @@
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-invalid-default-aml-txt",
       "sources": [
         "logiceme/testdata/lucid/selection-invalid/invalid-default.aml.txt"
-      ],
-      "witnesses": [
-        "logiceme/lucid_generation_test.go"
-      ],
-      "evidence": "existing-backend-rejection-witness-not-run"
-    },
-    {
-      "id": "lucid-invalid:selection-invalid/legacy-do-guard.aml.txt",
-      "kind": "lucid-rejection",
-      "name": "selection-invalid/legacy-do-guard.aml.txt",
-      "role": "implementation",
-      "support": "rejected",
-      "doc": "docs/_generated/lucid.md#invalid-selection-invalid-legacy-do-guard-aml-txt",
-      "sources": [
-        "logiceme/testdata/lucid/selection-invalid/legacy-do-guard.aml.txt"
-      ],
-      "witnesses": [
-        "logiceme/lucid_generation_test.go"
-      ],
-      "evidence": "existing-backend-rejection-witness-not-run"
-    },
-    {
-      "id": "lucid-invalid:selection-invalid/legacy-dob-guard.aml.txt",
-      "kind": "lucid-rejection",
-      "name": "selection-invalid/legacy-dob-guard.aml.txt",
-      "role": "implementation",
-      "support": "rejected",
-      "doc": "docs/_generated/lucid.md#invalid-selection-invalid-legacy-dob-guard-aml-txt",
-      "sources": [
-        "logiceme/testdata/lucid/selection-invalid/legacy-dob-guard.aml.txt"
       ],
       "witnesses": [
         "logiceme/lucid_generation_test.go"

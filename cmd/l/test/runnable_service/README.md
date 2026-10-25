@@ -1,7 +1,6 @@
 # Retained process fixtures
 
-The historical directory and test names are retained for coverage continuity.
-The fourteen positive programs now construct Apps directly. Standalone Services
+The fourteen positive programs construct Apps directly. Standalone Services
 remain structural records: declarations emit no independent source target,
 process adapter, or continuation, and standalone Service bodies are unsupported.
 `library-only.l` retains its original body as a negative diagnostic witness.
@@ -34,8 +33,8 @@ orchestrator Rust sources and manifests. The App body and orchestrator oracles
 materialize the exact expected-only transformations previously checked by the
 App shape controls; no generated output was captured. App manifests use the
 retained ordinary App manifest contract. The original mixed Host App expectation
-is unchanged. Obsolete standalone library and adapter expectation trees are
-retired by the finite amendment.
+is unchanged. Standalone library and adapter expectation trees are
+excluded by the finite amendment.
 
 Shared `expected/config.rs` retains empty orchestrator settings.
 `expected/app-config.rs` is a byte-identical copy of the existing mixed Host App

@@ -122,7 +122,7 @@ func TestFrontendProbeBackingFilesAreInert(t *testing.T) {
 	}
 }
 
-func TestHarnessRejectsRetiredBackendOption(t *testing.T) {
+func TestHarnessRejectsUnsupportedBackendOption(t *testing.T) {
 	root := integrationFixture(t)
 	t.Setenv("L_HARNESS_ROOT", root)
 	t.Setenv("L_HARNESS_ORIGINAL_GOFLAGS", "")
@@ -134,7 +134,7 @@ func TestHarnessRejectsRetiredBackendOption(t *testing.T) {
 		t.Errorf("expected immediate unknown option: code=%d stdout=%s stderr=%s", code, &stdout, &stderr)
 	}
 	if _, err := os.Stat(filepath.Join(root, ".harness/runs")); !errors.Is(err, os.ErrNotExist) {
-		t.Errorf("retired option allocated a run: %v", err)
+		t.Errorf("unsupported option allocated a run: %v", err)
 	}
 }
 

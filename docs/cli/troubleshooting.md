@@ -2,7 +2,7 @@
 
 ## Invalid invocation
 
-Status 2 with usage usually means a missing `build` command, an unknown command/option, a legacy OS selector, too many filenames, or options after the source. Move options before the filename and use `--` for a filename beginning with `-`. A non-macOS/non-Linux host also returns 2. `l --help` is a useful parser-only check.
+Status 2 with usage usually means a missing `build` command, an unknown command/option, an unimplemented OS selector, too many filenames, or options after the source. Move options before the filename and use `--` for a filename beginning with `-`. A non-macOS/non-Linux host also returns 2. `l --help` checks invocation without compiling.
 
 ## Missing source or resources
 

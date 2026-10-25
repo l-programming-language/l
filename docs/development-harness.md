@@ -306,7 +306,7 @@ scoped task; protected bytes still require a finite approved amendment.
 
 ## Current integrity and amendments
 
-[harness/contract.json](../harness/contract.json) protects current test sources, expected-value helpers, inputs, case oracles and canonical resources with explicit approved hashes. It records required absent legacy paths and the original named-test obligations. Current source membership is derived from the protected source paths, not an old migration ledger. Expected helpers outside `_test.go` are equally protected. Adding a current fixture must update the current contract through review, not revive a historical migration manifest.
+[harness/contract.json](../harness/contract.json) protects current test sources, expected-value helpers, inputs, case oracles and canonical resources with explicit approved hashes. It records required absent paths and the original named-test obligations. Current source membership is derived from the protected source paths, not an old migration ledger. Expected helpers outside `_test.go` are equally protected. Adding a current fixture must update the current contract through review, not revive a historical migration manifest.
 
 Never regenerate hashes or expected values to make an implementation failure pass. Preserve raw expected streams/statuses, actual behavioral assertions, canonical grammar/vocabulary and source-defined builtins. A fixture/oracle amendment requires explicit authorization identifying its exact scope and reason. Historical exceptions grant no standing permission to change expectations. Source expansion preserves declaration targets, typed slots and order; compiler output must follow source semantics rather than fixture-specific substitutions.
 

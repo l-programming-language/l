@@ -30,6 +30,6 @@ A value must be assigned on every path that continues to its use; Exit paths can
 
 ## Iteration has a bounded implementation surface
 
-`While` is rejected in the enclosing program; general source collection iteration is unsupported. Backend loop compositions do not supply L `for`/`while` syntax, arithmetic precedence or short-circuit guarantees. The [iteration reference](../reference/logemes/iteration.md) and [Lucid suite](../../logiceme/testdata/lucid/README.md) document compile-only backend witnesses and removed forms.
+`While` is rejected in the enclosing program; general source collection iteration is unsupported. Backend loop compositions do not supply L `for`/`while` syntax, arithmetic precedence or short-circuit guarantees. The [iteration reference](../reference/logemes/iteration.md) and [Lucid suite](../../logiceme/testdata/lucid/README.md) document compile-only backend witnesses and unsupported forms.
 
 Continue with [imports and dictionaries](imports.md).

@@ -16,7 +16,7 @@ import (
 
 // Exercise the production parser's established CLI data projection.
 // These tests remain serial because they also observe process-global flags.
-func TestBuildCommandCompatibilityParsing(t *testing.T) {
+func TestBuildCommandParsing(t *testing.T) {
 	for _, tc := range []struct {
 		name string
 		args []string
@@ -34,9 +34,9 @@ func TestBuildCommandCompatibilityParsing(t *testing.T) {
 		{"missing command", nil, nil, true, false},
 		{"unknown command", []string{"run", "main.l"}, nil, true, false},
 		{"extra source", []string{"build", "main.l", "other.l"}, nil, true, false},
-		{"legacy OS before command", []string{"-os", "ubuntu", "build"}, nil, true, false},
-		{"legacy OS after command", []string{"build", "--os=centos"}, nil, true, false},
-		{"legacy OS after source", []string{"build", "main.l", "-os", "ubuntu"}, nil, true, false},
+		{"OS before command", []string{"-os", "ubuntu", "build"}, nil, true, false},
+		{"OS after command", []string{"build", "--os=centos"}, nil, true, false},
+		{"OS after source", []string{"build", "main.l", "-os", "ubuntu"}, nil, true, false},
 		{"unknown flag", []string{"build", "main.l", "--unknown"}, nil, true, false},
 		{"missing assets argument", []string{"build", "--assets"}, nil, true, false},
 		{"missing language argument", []string{"build", "--language"}, nil, true, false},

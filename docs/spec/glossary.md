@@ -55,7 +55,7 @@ The [App example](collections-and-categories.md#create-and-execute-an-app) puts 
 | AML | Assembly Markup Language; structure/settings/content markup, not machine-code assembly |
 | Observable AML | Frontend inspection view retained alongside backend-ready framing |
 | Canonical backend AML | Framed input supplied to the backend without post-hoc source rewriting |
-| Logiceme / logeme | Go assembler/source-generation implementation historically housed in `logiceme/` |
+| Logiceme / logeme | Go assembler/source-generation implementation in `logiceme/` |
 | Executable | Backend API source bundle; the object is not a running application |
 | Lucid | Template language interpreting native source fragments |
 | Logeme / segment | One alphabet unit with logical ownership and target template |

@@ -25,9 +25,9 @@ Options accept single or double hyphens and either a separate value or `=value`.
 
 Relative source and output paths use the invocation directory without changing it. Compiler contributors can use [developer resource overrides](../development-harness.md#compiler-defaults); ordinary builds need neither override.
 
-## Legacy OS option
+## Target OS
 
-The legacy `-os`/`--os` option is rejected. Native builds target the host operating system and architecture.
+In `v0.0.1`, builds target the host OS and architecture; `-os`/`--os` is rejected. OS selection through Rust target configuration is planned after this release.
 
 ## Help
 

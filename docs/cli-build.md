@@ -15,7 +15,7 @@ The compiler prints the published executable's absolute path on success. Buildin
 
 See the [CLI reference](cli/build.md) for command syntax, help and version output.
 
-Options precede the source filename. The default source is `main.l` relative to the invocation directory. Use `--` before a filename beginning with a dash. Extra arguments, unknown options and explicit legacy `-os` values are errors. The tested CLI data field's stored `ubuntu` default does not select a build target.
+Options precede the source filename, which defaults to `main.l` in the invocation directory. Use `--` before a filename beginning with a dash. Extra arguments, unknown options and explicit `-os` values are errors; see [planned OS selection](cli/build.md#target-os).
 
 Embedded English resources work with relocated binaries, symlinks and `go run`, independently of CWD. Relative output paths use invocation CWD. [Developer overrides](development-harness.md#compiler-defaults) support compiler resource development.
 
@@ -221,10 +221,5 @@ decodes the bounded manifest contract. `cargo_workspace.go` coordinates members
 and selects artifacts, while `cargo.go`, `cargo_artifact.go`, `cargo_lock.go` and
 `cargo_cache.go` own invocation, provenance, lock identities and cache admission.
 Platform-specific cache lock files retain their operating-system constraints.
-`build.go` owns immutable publication. The retained `cargo_dependencies.lock` is
-the same pinned input under its new name.
-
-Source bundles no longer carry the unused constant entry directory. The Cargo
-package plan still carries its actual source entrypoint. These ownership changes
-do not alter workspace contents, target naming, error precedence, executable
-publication or persistent cache locations.
+`build.go` owns immutable publication. `cargo_dependencies.lock` pins dependency resolution. The Cargo package plan
+carries the source entrypoint.

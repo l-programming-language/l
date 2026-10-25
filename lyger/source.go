@@ -218,7 +218,7 @@ func indexSource(data []byte) (sourceIndex, error) {
 }
 
 // PrepareSource preserves provenance before caching text or removing comments.
-// PreparedBytes is the internal parser view; it is not a compatibility output.
+// PreparedBytes is the internal parser view; Original retains the source bytes.
 func PrepareSource(path string, content []byte) (*PreparedSource, error) {
 	p := &PreparedSource{Path: path, Original: bytes.Clone(content), TextCache: make(map[string][]byte)}
 	parts, err := sourceParts(content)

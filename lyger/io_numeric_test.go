@@ -12,7 +12,7 @@ import (
 	Logiceme "github.com/l-programming-language/l/logiceme"
 )
 
-// The pre-migration formatter's binary64 policy is an independent oracle.
+// The binary64 formatting policy is an independent oracle.
 // Instantiate the selected source-defined Log; no generated source is patched.
 func TestSourceLogNumberFormatting(t *testing.T) {
 	prototype, err := os.ReadFile("../stdlib/eng/io/dictionary.l")

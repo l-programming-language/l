@@ -30,7 +30,7 @@ var lucidIterationInvalid = []struct {
 	{"iterator-calculation-conflict", "X", "iterator does not accept condition children", lerrors.InvalidInput},
 	{"iterator-evaluation-conflict", "X", "iterator does not accept condition children", lerrors.InvalidInput},
 	{"iterator-definition-conflict", "X", "iterator does not accept condition children", lerrors.InvalidInput},
-	{"legacy-three-part", "X", "three-part iteration is unsupported; move initialization and steps into explicit compositions", lerrors.InvalidInput},
+	{"three-part", "X", "three-part iteration is unsupported; move initialization and steps into explicit compositions", lerrors.InvalidInput},
 	{"missing-body", "X", "Body requires 1..1 Operation children", lerrors.InvalidInput},
 	{"multiple-bodies", "X", "Body requires 1..1 Operation children", lerrors.InvalidInput},
 	{"wrong-category-body", "X", "Body requires 1..1 Operation children", lerrors.InvalidInput},

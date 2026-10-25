@@ -682,7 +682,7 @@ func TestRunnableServiceAppOnlyManifestV1Control(t *testing.T) {
 	recorder := nativetest.CLIProbe(t)
 	stdout, stderr, err := runBuildCommand(t, phase1.CLI(t), project, runnableRecorderEnv(recorder), "build", "main.l")
 	if err != nil || len(stderr) != 0 || string(stdout) != filepath.Join(project, "main")+"\n" {
-		t.Fatalf("App compatibility build = %v/%q/%q", err, stdout, stderr)
+		t.Fatalf("App build = %v/%q/%q", err, stdout, stderr)
 	}
 	binary := filepath.Join(project, "main")
 	recorder.AssertPublished(t, binary)

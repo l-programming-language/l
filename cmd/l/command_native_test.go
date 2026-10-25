@@ -36,7 +36,7 @@ func TestBuildCommandOptionsAndNativeResolution(t *testing.T) {
 		t.Fatalf("native resolution used ambient target or lost output path: %#v", options)
 	}
 	if command.CLI.mainPath != "project/story.l" {
-		t.Fatal("path resolution mutated the parsed compatibility view")
+		t.Fatal("path resolution mutated the parsed command data")
 	}
 	for _, host := range []string{"windows", "freebsd", "plan9"} {
 		if _, err := nativeBuildOptions(output, host, "amd64"); !errors.Is(err, errUnsupportedBuildHost) {

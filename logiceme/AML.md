@@ -9,9 +9,9 @@ The [Rust suite](testdata/lucid/README.md) preserves the original flat composed
 baseline and adds scoped selection, iteration, declaration, invocation, callable,
 trait, empty-composition, keyed-pattern and generic/lifetime coverage. Its
 inventory and dated results define that compile-only scope. Separate [frontend/runtime
-migration evidence](../testdata/integration/IMPLEMENTATION.md) covers the Rust
+evidence](../testdata/integration/IMPLEMENTATION.md) covers the Rust
 CLI and supervised native programs. Source-graph schemas
-and older preparation branches are documented separately.
+and preparation branches are documented separately.
 
 ## Preserve the representation boundary
 
@@ -19,7 +19,7 @@ Lyger's observable AML and its canonical backend AML describe the same graph but
 are not interchangeable byte strings. Backend syllabic sequences are framed with
 backticks and tags. Use the existing frontend-to-backend handoff; do not repair
 test inputs with ad hoc replacements or change protected observable output.
-ASM/JIT names in historical fields do not mean this is machine code.
+ASM/JIT field names do not mean this is machine code.
 
 The markup is a configured, framed protocol, not general XML or HTML. Use its
 scanner and literal boundaries. Do not use substring searches or a generic XML
@@ -136,7 +136,7 @@ List an object in one of these membership lists for its owner, not both.
 
 The source hierarchy is Service → recursive Class/Object membership. Classes
 organize files, not runtime values. Populated Classes use `StructureVersion: "2"`;
-legacy flat Service/Object inputs retain their existing interpretation.
+flat Service/Object inputs use the flat assembly path.
 
 ### Object definitions and content
 
@@ -191,7 +191,7 @@ prefix would produce `/srcmain.rs`, not `/src/main.rs`. Final Rust paths are
 validated, including duplicate and reserved-support collisions.
 
 `AppMeta.AppGenDir` is separate from object placement: it does not relocate the
-objects assembled from Services/Objects. Legacy flat Rust support looks for
+objects assembled from Services/Objects. Flat Rust support looks for
 `main.rs` beneath AppGenDir, defaulting to `/src` when it is missing or empty,
 and puts configuration/runtime source support beside it. Keep this value aligned
 with the entry object's resolved path. To use the minimal outline's `/main.rs`,
@@ -203,18 +203,18 @@ repair a mismatch between these locations. See [bundle_support.go](bundle_suppor
 
 - Use separate JSON records for AppMeta, Services, Classes, and Objects.
   Put all entries of a category in one array. `ScanOutline` classifies each record
-  once; version 2 rejects repeated category records, while the legacy reader
+  once; version 2 rejects repeated category records, while the flat reader
   replaces the previous array rather than appending. Combining Services and
   Objects into one JSON record is not a supported substitute. See [scanner.go](scanner.go).
 - Version-2 CONTENT supplies depth-first, interleaved generation order. A child
   Class is traversed where its TEXT occurs among direct Object Sentences.
   GenericObjects/DynamicObjects and Dimensions are membership lists, not a
-  separate ordering program. Legacy flat Services retain their existing order.
+  separate ordering program. Flat Services retain their declared order.
 - Require unique catalog identities, resolvable references, consistent ownership,
   acyclic parent relationships, and unique final output paths. Validate both
   names and paths: different service names do not prevent file collisions, and
   renaming a function does not rename its containing Object.
-- Do not rely on legacy first-match/default-location behavior for version-2
+- Do not rely on flat first-match/default-location behavior for version-2
   source graphs. All references and final paths are validated before publication.
 
 ## Classes as optional source groups
@@ -234,7 +234,7 @@ within their kind across the Book; module names are unique within a parent modul
 
 The following schema drives Rust source-graph validation and structural header
 assembly. Module declarations belong to the assembler, not the frozen A template.
-Topology/library migration regressions supplement the flat Lucid corpus.
+Topology/library regressions supplement the flat Lucid corpus.
 
 Each version-2 Service supplies `Target` with `Kind: "bin"` or `"lib"`, target
 `Name`, `Root` Object identity and Boolean `Primary`. Each Class supplies its
@@ -256,9 +256,8 @@ emitted.
 
 The matching Chapter contains main's Sentence and Models' TEXT. Models contains
 its root Sentence and Details' TEXT; Details contains its root Sentence. Each
-composed Sentence starts with A. The previous broad Rust Class matrix remains
-removed. The unchanged [Lucid suite](testdata/lucid/README.md) covers its
-maintained flat compositions; the [migration tests](../testdata/integration/IMPLEMENTATION.md)
+composed Sentence starts with A. The [Lucid suite](testdata/lucid/README.md) covers
+flat compositions; the [topology tests](../testdata/integration/IMPLEMENTATION.md)
 separately check recursive topology and actual library use.
 
 The compiler emits crate-root safety attributes, child module declarations and
@@ -275,11 +274,11 @@ one library and exactly one Primary binary. Alternatively, a sole library target
 with `Primary: false` returns only declared sources and Cargo.toml; IncludeRuntime
 and supplied executable SETTINGS reject. Explicit targets disable automatic bin, lib,
 example, test and benchmark discovery. Additional binaries are source artifacts,
-not new L App identities. Legacy flat inputs keep one binary at AppGenDir/main.rs.
+not new L App identities. Flat inputs keep one binary at AppGenDir/main.rs.
 EA remains an opaque whole-file exception and supplies its own literal header;
 it cannot appear beside A or be used to bypass composed module testing.
 
-### Class metadata and removed Features
+### Class metadata and unsupported Features
 
 Class `Meta` is an ordinary JSON object of generation metadata. Ordinary local
 keys override ancestor keys without modifying parent/sibling scopes. Rust
@@ -291,13 +290,13 @@ files. Package metadata does not turn source grouping into lifetime ownership.
 Reusable shared Attributes are attached explicitly to Object compositions in
 their reviewed order.
 
-Features and PARAGRAPH have been removed from canonical AML and active assembly.
+Features and PARAGRAPH are unsupported in canonical AML and active assembly.
 An outline Features key, including an empty array, or structural PARAGRAPH is a
-classified migration error. No compatibility reader silently discards content.
-Move old file membership into recursive Classes, inherited ordinary data into
-Class Meta, and shared logical behavior into explicit compositions. Native source
-containing these words remains literal data. This removal does not remove or
-redefine L source paragraphs or runtime activations.
+classified error; the reader never silently discards their content.
+Express file membership with recursive Classes, inherited ordinary data with
+Class Meta, and shared logical behavior with explicit compositions. Native source
+containing these words remains literal data. L source paragraphs and runtime
+activations are separate concepts.
 
 ## Syllables, integration and data
 
@@ -339,11 +338,11 @@ syntax. Escaping Rust literals, TOML entries and shell arguments are separate
 target-preparation responsibilities.
 
 Rust's template inputs, conditions and forwarding are frozen. Changes or additional
-metadata require an explicitly reviewed task. Older preparation code still accepts
+metadata require an explicitly reviewed task. Preparation code accepts
 fields such as `Mutable` and `Capture`, but those fields are not consumed by the
 copied templates and do not establish supported syntax or ownership behavior.
-Do not use leftover validation tables or retired-form diagnostics as migration
-instructions for the current templates. Current cases supply explicit native
+Validation tables and unsupported-form diagnostics do not expand the current
+template contracts. Current cases supply explicit native
 mutability and async scaffolding where needed.
 
 ### Rust lifetime and generic inputs
@@ -440,8 +439,8 @@ An unrelated syntax error, missing dependency or unrelated generator rejection c
 an intentional Rust semantic-negative case. Preserve causes and source context.
 The [current suite](testdata/lucid/README.md) records complete successful-build
 and intended native-negative scenarios, bounded malformed-composition cases,
-and separate Expected/Generated compilation contracts. Its inventory supplies
-the current counts rather than historical matrix obligations.
+and separate Expected/Generated compilation contracts. Its inventory defines
+the current obligations.
 
 For end-to-end tests, pass a stored complete document to Evaluate and compare
 every returned artifact, not only main.rs. Verify ordered application/path
@@ -451,7 +450,7 @@ never substitute expected code or formatting repairs. See the
 [minimum composed corpus](../builtins/CONTRACTS.md#verification-contract).
 The [result ledger](testdata/lucid/FAILURES.md) records exact bundles,
 expected/actual compilation contracts and acceptance separately for each scoped
-extension. Those cases remain compile-only. Separate migration/runtime tests
+extension. Those cases remain compile-only. Separate runtime tests
 execute bounded generated native applications; deployment scripts remain
 unexecuted. Consult the [implementation record](../testdata/integration/IMPLEMENTATION.md)
 for their actual status rather than inferring full acceptance.

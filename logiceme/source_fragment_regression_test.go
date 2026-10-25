@@ -17,11 +17,11 @@ func TestExecutionOperandFramingRegression(t *testing.T) {
 		{"slice_literal_index", "&[[]int{1}[0]]&", []string{"[]int{1}[0]"}},
 		{"leading_ampersand", "&[&items[0]]&", []string{"&items[0]"}},
 		{"marked_bracket_payload", "&[[channels[0]]]&", []string{"[channels[0]]"}},
-		{"legacy_plain", "[ch]", []string{"ch"}},
-		{"legacy_index", "[channels[0]]", []string{"channels[0]"}},
+		{"plain", "[ch]", []string{"ch"}},
+		{"index", "[channels[0]]", []string{"channels[0]"}},
 		{"unframed", "ch", []string{"ch"}},
 		{"marked_empty", "&[]&", []string{""}},
-		{"legacy_empty", "[]", []string{""}},
+		{"empty", "[]", []string{""}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			defer executionRegistryPanicAsFailure(t)
@@ -106,8 +106,8 @@ func TestSourceFragmentInterpolationRegression(t *testing.T) {
 	}
 }
 
-func TestSourceFragmentPublicInterpolationCompatibility(t *testing.T) {
-	// The public API has no target language; its historical percent behavior stays
+func TestSourceFragmentPublicInterpolation(t *testing.T) {
+	// The public API has no target language; its percent behavior stays
 	// generic regardless of the opaque source bytes.
 	for _, tc := range []struct{ name, marker, want string }{
 		{"percent", "%", "`firstlast`"},

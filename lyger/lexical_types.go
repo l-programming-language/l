@@ -26,7 +26,7 @@ type lexeme struct {
 	Outputs     []string          `json:"outputs,omitempty"`
 }
 
-// validateInputs checks a legacy use without changing its formal signature or
+// validateInputs checks a lexeme use without changing its formal signature or
 // positional arguments. Reference resolution and value types belong to the
 // semantic instruction and definition-instantiation layers.
 func (l *lexeme) validateInputs() error {
@@ -51,7 +51,7 @@ func (l *lexeme) validateInputs() error {
 	return nil
 }
 
-// construct retains the legacy validation boundary. It does not fabricate a
+// construct validates the action graph. It does not fabricate a
 // template from action names or resolve scoped references without their source.
 func (l *lexeme) construct() error {
 	active := make(map[*lexeme]bool)

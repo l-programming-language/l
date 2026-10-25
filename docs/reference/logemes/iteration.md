@@ -19,9 +19,9 @@ OG takes one Key/Keys native pattern and one nonempty Value/Values, without chil
 
 This allows the label to target the loop itself. Condition bindings have their Rust loop-body scope; they do not become surrounding L paragraph bindings. Native pattern syntax is supplied data, not a general pattern language invented at the AML boundary.
 
-## Removed forms and native failures
+## Unsupported forms and native failures
 
-Three-part initialization/condition/step loops are removed and rejected before rendering. No retained preparation field restores them. Multiple bodies, mixed iterator/condition inputs, wrong child roles, misplaced OG/DOG and invalid label compositions also reject.
+Three-part initialization/condition/step loops are unsupported and rejected before rendering. Multiple bodies, mixed iterator/condition inputs, wrong child roles, misplaced OG/DOG and invalid label compositions also reject.
 
 [Conditions](../../../logiceme/testdata/lucid/iteration-conditions.aml.txt), [bindings](../../../logiceme/testdata/lucid/iteration-bindings.aml.txt), [traversal](../../../logiceme/testdata/lucid/iteration-traversal.aml.txt), [labels](../../../logiceme/testdata/lucid/iteration-labels.aml.txt), [nested scope](../../../logiceme/testdata/lucid/iteration-nesting-scope.aml.txt) and [explicit async](../../../logiceme/testdata/lucid/iteration-async.aml.txt) are bounded complete-AML witnesses. Native negative controls require E0308 for a nonboolean condition, E0425 for a binding used outside its scope and E0728 for await in synchronous context.
 

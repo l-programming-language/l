@@ -32,7 +32,7 @@ The index uses `(language, key)` as dictionary identity; released entries use `e
 
 Each new dictionary requires reviewed export names, authored anchors, source/include dependencies, visibility evidence, support status, and deterministic hashes. The current mapping includes IO.Print and records private Log/Logger machinery.
 
-An index addition, rename, removal, entry-file change, or relevant included-source change must make classification/freshness checks fail until its mapping and prose are reviewed. New private helpers also require a review of whether public behavior or visibility changed. Removing an export must update its documentation and compatibility note rather than leave a stale searchable API page.
+An index addition, rename, removal, entry-file change, or relevant included-source change must make classification/freshness checks fail until its mapping and prose are reviewed. New private helpers also require a review of whether public behavior or visibility changed. Removing an export must update its documentation and release notes rather than leave a stale searchable API page.
 
 Mechanical extraction may enumerate index entries and source dependencies. It must not infer exports by regex over Create/Define text: source-defined expansion, canonical aliases, dictionary roots, and publication rules determine semantic visibility. Where a future dictionary exceeds what explicit reviewed mappings can safely establish, an opt-in exporter should reuse the real frontend rather than introduce a competing L parser.
 

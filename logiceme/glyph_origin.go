@@ -34,7 +34,7 @@ func attachGlyphOrigins(g *Glyph) error {
 		}
 		node.origin = source
 		// Restore real occurrence text for diagnostics and identifier hygiene;
-		// legacy expansion placeholders are never source identities.
+		// expansion placeholders are never source identities.
 		node.Name = source.source[source.start:source.end]
 		for i := range node.Conjoinments {
 			if err := attach(&node.Conjoinments[i], source.children[i]); err != nil {

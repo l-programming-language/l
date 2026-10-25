@@ -54,7 +54,7 @@ async function fixture(t) {
     'logiceme/testdata/lucid/README.md': '# Synthetic Lucid witness\n',
     'docs/spec/grammar.md': '# Grammar\n\n## Statement structure\n\nConfigured grammar and its limits.\n',
     'docs/spec/values.md': '# Values\n\n## Text\n\nA source-backed value category.\n',
-    'docs/cli/build.md': '# Build\n\n## Command syntax\n\nBuild a source.\n\n## Legacy os option\n\nRejected.\n',
+    'docs/cli/build.md': '# Build\n\n## Command syntax\n\nBuild a source.\n\n## Target OS\n\nRejected.\n',
     'docs/reference/logemes/index.md': '# Logemes\n\n## Segment A\n\nBounded backend behavior.\n',
     'docs/stdlib/io.md': '# IO\n\n## Print\n\nPublic output action.\n',
   };
@@ -70,7 +70,7 @@ async function fixture(t) {
     schemaVersion: 1, sourceHashes: { 'cmd/l/command.go': sha256(files['cmd/l/command.go']) },
     entries: ['build', '-os'].map((name) => ({
       id: `cli:${name}`, kind: 'cli', name, role: 'normative', support: name === '-os' ? 'rejected' : 'supported',
-      doc: `docs/cli/build.md#${name === '-os' ? 'legacy-os-option' : 'command-syntax'}`,
+      doc: `docs/cli/build.md#${name === '-os' ? 'target-os' : 'command-syntax'}`,
       sources: ['cmd/l/command.go'], witnesses: ['cmd/l/command_test.go'], evidence: 'static-inspection; existing-witness-not-run',
     })),
   }));

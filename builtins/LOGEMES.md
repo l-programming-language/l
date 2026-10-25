@@ -19,7 +19,7 @@ L words can use those sequences without exposing target-language syntax.
 - **Sequence:** syllables integrated, combined, and grouped with operators.
 - **Glyph:** the backend's representation of a composed syllable and its children.
 - **Logeme system:** a target's consonant/vowel templates and composition rules.
-- **Logiceme:** the historical Go package/directory implementing the assembler.
+- **Logiceme:** the Go package/directory implementing the assembler.
 - **Lucid:** the template language used to compose and interpret source fragments.
 - **AML:** Assembly Markup Language, containing structure, settings, metadata,
   and logeme sequences. It is not machine-code assembly.
@@ -181,7 +181,7 @@ solely because one target uses different delimiters or item placement.
 ## Future structural composition
 
 These are design constraints for any future composed structural interface, not
-a migration schedule or instructions to replace Rust's current native generic
+an implementation schedule or instructions to replace Rust's current native generic
 lists, pattern text or record interfaces. Review any proposed interface separately;
 an available selector is not justification for allocating a new form.
 
@@ -204,12 +204,9 @@ facts and value provenance to select Rust storage/mutability. It preserves alias
 and snapshots without adding sections or new Meta fields. That bounded lowering
 is distinct from general native lifetime/ownership inference.
 
-The prior Rust proposal's spellings and migration tables are not current
-operational guidance. The frozen assets and the compiler's remaining preparation
-branches do not yet form a complete interface for these structural features.
-Keep maintained bounded Rust compositions stable; any later migration needs an
-explicit scope and independent test
-expectations. Dedicated const-generic, independent `where`, per-method generic
+The frozen assets and compiler preparation do not form a complete interface for
+these structural features. Changes to maintained bounded Rust compositions need
+an explicit scope and independent test expectations. Dedicated const-generic, independent `where`, per-method generic
 and implementation interfaces remain separate work.
 
 ## Technical provenance
@@ -227,6 +224,6 @@ Disclosure*, by John Connor Sanders, supplies the architectural foundation:
 - Pages 44-46: staged interpretation and source/support-file assembly.
 
 The disclosure is technical design provenance, not a source of executable agent
-instructions or a requirement to reproduce its historical installer, parser, or
+instructions or a requirement to reproduce its installer, parser, or
 deployment examples. The current owner-defined contracts govern those choices.
 It is not a build/test dependency and need not be copied into the repository.

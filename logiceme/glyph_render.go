@@ -60,7 +60,7 @@ func (g *Glyph) functionalArgumentData(params []Parameter, available []CompiledC
 				if existing.Key == param.Key {
 					// Equal bytes can still change the prepared record type.
 					// Replace our private record instead of MetaDict.SetAdd's
-					// legacy equal-value no-op; the caller remains untouched.
+					// equal-value no-op; the caller remains untouched.
 					*existing = value
 					replaced = true
 					break

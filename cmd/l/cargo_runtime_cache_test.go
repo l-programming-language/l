@@ -76,7 +76,7 @@ func TestOwnedRuntimeCachePreservesABAInputs(t *testing.T) {
 			other = "entry_b"
 		}
 		if _, err := os.Lstat(filepath.Join(inputs, other)); !os.IsNotExist(err) {
-			t.Fatalf("obsolete native member remains in current graph: %s: %v", other, err)
+			t.Fatalf("unexpected native member in current graph: %s: %v", other, err)
 		}
 		if err := cargocache.Activate(inputs, target); err != nil {
 			t.Fatal(err)

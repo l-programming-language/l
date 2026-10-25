@@ -76,7 +76,7 @@ First's child succeeds and its continuation shows `First\n`. The equality condit
 
 L uses `vMAJOR.MINOR.PATCH` release tags. Backward compatibility is not guaranteed before `v1.0.0`; consult the [versioning policy and release notes](../releases/index.md#versioning-and-compatibility) before upgrading. Historical test results apply to their recorded revision and host; local previews report their own source identity.
 
-Native fragments remain target-specific, and source lexicon selection is separate from target selection. The retired generated-Go target and rejected Deferred/legacy loop forms remain unsupported. New dictionaries or supported forms are documented with their release.
+Native fragments remain target-specific. Generated Go, Deferred and three-part loop forms are unsupported. New dictionaries or supported forms are documented with their release.
 
 ## Sources and witnesses
 

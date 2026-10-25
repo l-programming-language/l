@@ -110,7 +110,7 @@ The six core scenarios have distinct obligations:
 
 | Case | Verified composition | Boundary of the evidence |
 | --- | --- | --- |
-| grouping | I/GE retains `2 * (1 + 2)` through GOB binding | Expression grouping, not a migration to another form |
+| grouping | I/GE retains `2 * (1 + 2)` through GOB binding | Expression grouping within the declared form |
 | statements | Three BOD/E statements remain ordered within W/FW | `let mut` is explicit native text, not mutability metadata |
 | fields | DA/E declaration plus Y/MOB two-field construction | Native record declaration does not test HY's struct shell |
 | calculations | DE/DOB retains both Ops, grouping, prefixes and postfixes | Supplied operand syntax remains native data |
@@ -466,7 +466,7 @@ public BI Key, extra metadata, record field or logical category is introduced.
 
 CI accepts only BI children, at most one default, inside a callable. Every BI,
 including `Default: True`, requires exactly one OC/DOC Definition and zero/one W
-body. Bare Calculations and legacy DO/DOB guards are rejected. OC/DOC are allowed
+body. Bare Calculations and DO/DOB guards are rejected. OC/DOC are allowed
 only as direct BI children; they are not standalone statements or general future
 adapters. Native async scaffolding remains explicit; Cargo checks actual placement.
 
@@ -527,9 +527,8 @@ Operation body and one of four abstract behaviors:
 The I route represents the same Boolean condition category; it is not a fifth
 loop mode. Conflicting condition categories, repeated conditions, iterator/condition
 mixtures and missing or extra bodies are rejected before rendering. An ordinary
-O/OB/DO/DOB is not a conditional Definition. The former initializer/Evaluation/step
-composition is explicitly rejected: no three-part lowering, hidden initializer,
-first-iteration flag or automatic post-step remains on X.
+O/OB/DO/DOB is not a conditional Definition. Initializer/Evaluation/step composition is rejected. X provides no three-part
+lowering, hidden initializer, first-iteration flag or automatic post-step.
 
 OG consumes exactly one nonempty Key/Keys pattern and one explicit, nonempty
 Value/Values expression with no children. DOG consumes exactly one nonempty
@@ -583,11 +582,11 @@ Supplying Deferred in Rust AML is still rejected before rendering with the
 existing `Unsupported` classification and diagnostic, including False:
 
 ```text
-Rust <form>: Deferred is removed; Rust has no deferred execution operation
+Rust <form>: Deferred is unsupported; Rust has no deferred execution operation
 ```
 
-Omitting Deferred is the supported interface. Its removal introduces no new
-syllable or replacement scope-exit facility. No `compile_error!` marker remains in the 18 Rust segment assets. This
+Omitting Deferred is the supported interface; no scope-exit syllable or facility
+is defined. The 18 Rust segment assets contain no `compile_error!` marker. This
 is an asset inventory fact, not a claim that all template routes or compiler
 preparation branches are integrated.
 
@@ -662,10 +661,10 @@ follow-up work; this reference does not authorize repairs or interface changes.
 | --- | --- |
 | Named invocation and callable names | KY's omitted Receiver/native scalar `Void` handling and exact `Meta.Func.Key` provenance have the bounded contracts above. Singular output and indexed MY Key/Outputs~ provenance are covered separately; other Func fields, general signatures and KYC semantics remain outside these contracts. |
 | Typed and anonymous callables | FW/BW and named/anonymous KY have the bounded contract above. BW is restricted to KY or KO/KOB inside callable scope; inferred parameter types, function receiver methods and generic closure declarations remain unsupported. FW parameters have the separate local-input contract above. |
-| Deferred | Removed from Execute/Execution inputs and forwarding; any supplied Deferred, including False, retains its existing compiler rejection. No deferred-execution operation is implemented. |
+| Deferred | Absent from Execute/Execution inputs and forwarding; any supplied Deferred, including False, retains its existing compiler rejection. No deferred-execution operation is implemented. |
 | Selection | CI/BI supports the [bounded selection contract](#cibi-selection-contract). No fairness, cancellation, destructor timing or Rust runtime behavior is established by compilation. |
-| Three-part loops | Removed from the X contract and rejected as an incompatible composition before rendering. Iterate has no three-part marker or compiler expansion. |
-| Other callable/asynchronous forms | Old preparation entries do not supply missing template cases. Function receivers, explicit capture policy, async definitions and general future adapters remain outside the bounded witnesses. Named FW generic/lifetime parameters use the separate contract above. FWC/KYC remain outside the callable contract. |
+| Three-part loops | Unsupported by X and rejected before rendering. Iterate has no three-part marker or compiler expansion. |
+| Other callable/asynchronous forms | Preparation entries do not supply missing template cases. Function receivers, explicit capture policy, async definitions and general future adapters remain outside the bounded witnesses. Named FW generic/lifetime parameters use the separate contract above. FWC/KYC remain outside the callable contract. |
 | Output-field provenance | Exact `Meta.Func.Outputs~` preserves supplied native types, including `Void`, for flat/record FW and BW. Empty-output behavior is preserved. Indexed Funcs Key and Outputs~ have the bounded MY contract above; other indexed fields are not broadened. |
 | MY trait signatures | Receiverless Funcs records and optional outputs are covered above. Empty traits have the bounded empty-composition contract; supplied Receiver metadata is rejected. Trait-level parameter lists use the local-input contract above. Composed methods, per-method parameters and implementations remain outside these contracts. |
 | Generics, enums and patterns | Local String parameters/arguments are supported only on FW/HY/MY/Y/named KY as described above. Const-generic, where-clause, per-method and implementation interfaces remain separate work. OG/DOG do not establish general compositional patterns or enums. |
@@ -735,5 +734,5 @@ limits. Generated actual files are compiled without repair or substitution.
 Preserve shared interpreter regressions and L/Lyger integration checks.
 The [acceptance guide](../docs/development-harness.md) owns the full repository
 gate; the dated ledger records its last verified result. Do not infer a new gate
-result from documentation edits, broaden the suite incidentally, revive removed
-matrices, or update template hashes to accommodate production changes.
+result from documentation edits, broaden or replace the suite incidentally, or
+update template hashes to accommodate production changes.

@@ -41,17 +41,17 @@ func TestWorkspaceRuntimeBridge(t *testing.T) {
 	service := NewLogicemeService(config)
 	input := workspaceRuntimeInput()
 	before := bytes.Clone(input)
-	legacy, err := service.Evaluate(input, GenerationOptions{IncludeRuntime: true})
+	direct, err := service.Evaluate(input, GenerationOptions{IncludeRuntime: true})
 	if err != nil {
 		t.Fatal(err)
 	}
-	legacyBefore := fmt.Sprintf("%#v", legacy)
+	directBefore := fmt.Sprintf("%#v", direct)
 	descriptor := WorkspaceRuntime{Package: "l_runtime_support_2", RelativeDirectory: "../support/runtime"}
 	entry, support, err := service.EvaluateWorkspaceEntry(input, descriptor)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(input, before) || fmt.Sprintf("%#v", legacy) != legacyBefore {
+	if !bytes.Equal(input, before) || fmt.Sprintf("%#v", direct) != directBefore {
 		t.Fatal("workspace bridge mutated input or previous direct bundle")
 	}
 	entryFiles, supportFiles := workspaceFiles(t, entry), workspaceFiles(t, support)
@@ -76,9 +76,9 @@ func TestWorkspaceRuntimeBridge(t *testing.T) {
 	if !bytes.Contains(entryFiles["/Cargo.toml"], []byte(`l_runtime_support_2 = { path = "../support/runtime" }`)) {
 		t.Fatal("allocated runtime dependency missing")
 	}
-	legacyFiles := workspaceFiles(t, legacy)
+	directFiles := workspaceFiles(t, direct)
 	for _, name := range []string{"/src/config.rs", "/start.sh", "/stop.sh"} {
-		if !bytes.Equal(entryFiles[name], legacyFiles[name]) {
+		if !bytes.Equal(entryFiles[name], directFiles[name]) {
 			t.Fatalf("workspace changed ordinary entry support %s", name)
 		}
 	}
@@ -109,7 +109,7 @@ func TestWorkspaceRuntimeBridge(t *testing.T) {
 	}
 	entryBefore, supportBefore := fmt.Sprintf("%#v", entry), fmt.Sprintf("%#v", support)
 	again, err := service.Evaluate(input, GenerationOptions{IncludeRuntime: true})
-	if err != nil || !reflect.DeepEqual(again, legacy) {
+	if err != nil || !reflect.DeepEqual(again, direct) {
 		t.Fatalf("workspace mode leaked into direct API: %v", err)
 	}
 	entryAgain, supportAgain, err := service.EvaluateWorkspaceEntry(input, descriptor)

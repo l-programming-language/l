@@ -553,9 +553,9 @@ func (li *LucidInterpreter) addHandler(funcStr string) int {
 			varS := strings.Split(checkedInput, ":")[1]
 			inputType, inputVal := li.determineVarValues(varS)
 			if inputType == "Number" {
-				intVal := inputVal.([]interface{})[0].(reflect.Value).Int() //nolint:errcheck // The legacy Number working-variable representation contains reflected numeric values.
+				intVal := inputVal.([]interface{})[0].(reflect.Value).Int() //nolint:errcheck // The Number working-variable representation contains reflected numeric values.
 				s := fmt.Sprintf("%v", intVal)
-				iVal, _ := strconv.Atoi(s) //nolint:errcheck // Retain the legacy numeric conversion result, including saturation on host-int overflow.
+				iVal, _ := strconv.Atoi(s) //nolint:errcheck // Retain the numeric conversion result, including saturation on host-int overflow.
 				intInputs = append(intInputs, iVal)
 			} else {
 				fmt.Println("===========================TYPE ERROR IN ADD HANDLER========================")
@@ -911,8 +911,8 @@ func (li *LucidInterpreter) conditionComparison(value interface{}, valueType, co
 	if valueType == "Number" {
 		varStr := fmt.Sprintf("%v", value)
 		if strings.Contains(varStr, ".") {
-			checkVar, _ := strconv.ParseFloat(varStr, 64)      //nolint:errcheck // Preserve legacy comparisons using the parser result on invalid or out-of-range numbers.
-			checkCondVar, _ := strconv.ParseFloat(condVal, 64) //nolint:errcheck // Preserve legacy comparisons using the parser result on invalid or out-of-range numbers.
+			checkVar, _ := strconv.ParseFloat(varStr, 64)      //nolint:errcheck // Preserve comparisons using the parser result on invalid or out-of-range numbers.
+			checkCondVar, _ := strconv.ParseFloat(condVal, 64) //nolint:errcheck // Preserve comparisons using the parser result on invalid or out-of-range numbers.
 			if condOperator == "GreaterOrEqual" {
 				if checkVar >= checkCondVar {
 					return "true"
@@ -931,8 +931,8 @@ func (li *LucidInterpreter) conditionComparison(value interface{}, valueType, co
 				}
 			}
 		} else {
-			checkVar, _ := strconv.Atoi(varStr)      //nolint:errcheck // Preserve legacy comparisons using the parser result on invalid or out-of-range numbers.
-			checkCondVar, _ := strconv.Atoi(condVal) //nolint:errcheck // Preserve legacy comparisons using the parser result on invalid or out-of-range numbers.
+			checkVar, _ := strconv.Atoi(varStr)      //nolint:errcheck // Preserve comparisons using the parser result on invalid or out-of-range numbers.
+			checkCondVar, _ := strconv.Atoi(condVal) //nolint:errcheck // Preserve comparisons using the parser result on invalid or out-of-range numbers.
 			if condOperator == "GreaterOrEqual" {
 				if checkVar >= checkCondVar {
 					return "true"
@@ -1258,7 +1258,7 @@ func (li *LucidInterpreter) interpretNativeLiteral(source string) string {
 }
 
 // SourceString distinguishes an explicitly supplied native identifier from the
-// legacy absent-value sentinel. It is internal prepared metadata, never AML.
+// absent-value sentinel. It is internal prepared metadata, never AML.
 func (li *LucidInterpreter) explicitSourceString(variable string) bool {
 	if li.SegmentalSystem == nil || li.SegmentalSystem.Language != "Rust" || !strings.HasPrefix(variable, "Meta.") {
 		return false
