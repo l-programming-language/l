@@ -166,8 +166,8 @@
       "route": "/docs/cli/source-help/",
       "title": "Source-derived CLI help",
       "description": "Source-derived CLI help: mechanically generated from current repository inputs; language execution is separate.",
-      "section": "CLI",
-      "order": 40,
+      "section": "Contributing",
+      "order": 11,
       "role": "implementation",
       "generated": true
     },

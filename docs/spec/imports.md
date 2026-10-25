@@ -4,9 +4,7 @@ Builtins are implicit; optional library vocabulary is imported explicitly. Resol
 
 ## Implicit builtins
 
-Every compilation selects `builtins/<language>/core.l` from the configured complete distribution. The builtin unit owns its canonical definitions and supplies an inherited lexical environment to the program and each imported dictionary. There is no adjacent project bootstrap or copied lexicon fallback.
-
-English is the only bundled source lexicon. Selecting another language requires a complete suitable asset set; the option alone does not make translation of arbitrary source vocabulary available. Native output remains Rust.
+Released compilers load the embedded English `builtins/eng/core.l`. The builtin unit owns its canonical definitions and supplies an inherited lexical environment to the program and each imported dictionary. No project bootstrap or lexicon copy is needed; [resource overrides](../development-harness.md#compiler-defaults) are for compiler development.
 
 ## Indexed dictionaries
 

@@ -429,14 +429,22 @@ and after, then resume that allowance. Never grant a fresh execution budget.
 
 ## Compiler defaults
 
-Lyger accepts typed language, resource and provenance options. Logiceme accepts
-a resource filesystem and constructs the 18 glyphs from private typed defaults.
-The CLI's `--language` defaults to `eng`; `--assets` selects a complete bundle
-without a settings file. Generated Rust configuration modules retain their existing
-contract. The compiler's `configuration/` and `configurations/` directories remain
-required absent, and all eleven distribution-probe identities remain required.
-Resource selection, literal preservation, malformed/missing asset diagnostics,
-isolation and CWD-independent compilation remain tested contracts.
+Released binaries embed English resources; users need no overrides. These options support compiler development:
+
+| Override | Default | Developer use |
+| --- | --- | --- |
+| `--assets ROOT` | Embedded resources | Replace the entire resource filesystem with a complete `lexicon`, `builtins` and `stdlib` bundle, including backend templates. |
+| `--language LANGUAGE` | `eng` | Select matching source resources within that bundle. Other source languages remain out of scope until after `v1.0.0`. |
+
+From the repository root, exercise its English resource files with an installed compiler:
+
+```sh
+l build --assets . --language eng demo/basic/main.l
+```
+
+Both options precede the source filename. Relative asset paths use invocation CWD without changing it. Empty values reject; invalid or unavailable languages fail initialization. Overrides have no embedded fallback or settings file. Keep the bundle's templates and dependencies compatible with the compiler. Bare imports use its `stdlib/index.json`; dictionary helpers resolve inside that provider, never unrelated host files.
+
+Lyger accepts typed language, resource and provenance options; Logiceme accepts the same filesystem and constructs 18 glyphs from private defaults. Generated Rust configuration contracts, absent `configuration/` and `configurations/` directories, all eleven distribution probes, literal preservation, resource diagnostics, isolation and CWD-independent compilation remain required. See [complete CLI help](_generated/cli-help.md).
 
 ## October 14, 2026 standalone Service retirement amendment
 

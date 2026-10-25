@@ -42,7 +42,7 @@ Output is Text containing finalized raw stdout. Error is the selected process op
 
 ## Availability and errors
 
-The bundled builtin source is English. Custom complete asset bundles select their own resources, including source-defined construction descriptors and typed process operations. Missing/inconsistent resources fail initialization; they do not fall back to an adjacent bootstrap.
+English builtins and their backend resources are embedded and loaded automatically. Compiler developers can [override the resource bundle](../../development-harness.md#compiler-defaults).
 
 Wrong action parameter counts/types, unsupported target owners, unknown descriptor targets, inaccessible source declarations, and cycles are real errors. Builtin definitions do not hide lifecycle misuse, insert Await, trim output, or infer initialization. The [specification](../../spec/index.md) separates their source contract from backend-native facilities.
 

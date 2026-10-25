@@ -17,14 +17,7 @@ See the [CLI reference](cli/build.md) for command syntax, help and version outpu
 
 Options precede the source filename. The default source is `main.l` relative to the invocation directory. Use `--` before a filename beginning with a dash. Extra arguments, unknown options and explicit legacy `-os` values are errors. The tested CLI data field's stored `ubuntu` default does not select a build target.
 
-Embedded resources work with relocated binaries, symlinks and `go run`, independently
-of CWD. `--language LANGUAGE` defaults to `eng`, the only bundled language;
-alternatives require suitable selected assets. Empty, invalid or unavailable
-explicit selections fail. [Localization remains partial](architecture.md#source-meaning-and-output-views).
-
-`--assets ROOT` selects one complete filesystem bundle containing `lexicon`,
-`builtins`, and `stdlib`, without a configuration file or embedded fallback.
-Relative asset/output options resolve against invocation CWD without changing it.
+Embedded English resources work with relocated binaries, symlinks and `go run`, independently of CWD. Relative output paths use invocation CWD. [Developer overrides](development-harness.md#compiler-defaults) support compiler resource development.
 
 Builtins are implicit. Bare dictionary paths such as `io` resolve only through
 the selected bundle's `stdlib/index.json`; neighboring `io` or `io.l` cannot

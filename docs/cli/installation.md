@@ -2,7 +2,7 @@
 
 ## Install a released binary
 
-Download L for your macOS or Linux host and CPU architecture from [GitHub Releases](https://github.com/l-programming-language/l/releases/latest). Extract the download, then run these commands from the directory containing `l`:
+Download the English L binary for your macOS or Linux host and CPU architecture from [GitHub Releases](https://github.com/l-programming-language/l/releases/latest). Language resources are embedded; no separate bundle is required. Extract it, then run from the directory containing `l`:
 
 ```sh
 mkdir -p "$HOME/.local/bin"
@@ -24,7 +24,7 @@ Running a published L program requires neither the L compiler nor Go/Rust toolch
 
 Follow your release's toolchain and dependency setup instructions before the first native build. L uses pinned, frozen, offline Cargo dependencies; installing Rust alone does not populate that cache.
 
-For repository-based setup, install Go 1.27.1 as pinned in [.go-version](../../.go-version), then run `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching source checkout. This downloads pinned tools and locked dependencies and compiles their caches; it can take several minutes. Preserve the retained locks rather than removing `--frozen`. Custom asset bundles must retain compatible templates and dependencies. See the [development policy](../development-harness.md#temporary-validation-pause).
+For repository-based setup, install Go 1.27.1 as pinned in [.go-version](../../.go-version), then run `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching source checkout. This downloads pinned tools and locked dependencies and compiles their caches; it can take several minutes. Preserve the retained locks rather than removing `--frozen`. See the [development policy](../development-harness.md#temporary-validation-pause).
 
 ## Source-build installation
 

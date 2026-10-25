@@ -3,29 +3,27 @@
 ## Command syntax
 
 ```text
-l build [--language LANGUAGE] [--assets ROOT] [--output-dir DIRECTORY] [main.l]
+l build [--output-dir DIRECTORY] [main.l]
 ```
 
-Build options follow `build` and precede the source filename. With no source argument, `main.l` is resolved relative to the invocation directory. Exactly one positional filename is accepted. `--` ends option parsing, including for a filename beginning with a dash.
+English grammar, vocabulary, builtins, standard library and backend resources are embedded in `l`; no resource selection or separate bundle is needed. Build options precede the single source filename, which defaults to `main.l` in the invocation directory. `--` ends option parsing for filenames beginning with a dash.
 
 ```sh
-l build
-l build --language eng --output-dir './output directory' './source directory/main.l'
+l build main.l
+l build --output-dir './output directory' './source directory/main.l'
 l build -- -example.l
 ```
 
-Options accept single or double hyphens and either a separate value or `=value`. Prefer the double-hyphen forms above. Empty values are rejected; whitespace-only or unavailable language identifiers fail initialization. If an option repeats, its last value wins.
+Options accept single or double hyphens and either a separate value or `=value`. Prefer double hyphens. Empty values are rejected; repeated options use the last value.
 
 ## Options
 
 | Option | Default | Meaning |
 | --- | --- | --- |
-| `--language LANGUAGE` | `eng` | Select the source lexicon and matching source resources. Only English is bundled. |
-| `--assets ROOT` | Embedded resources | Select one complete filesystem containing `lexicon`, `builtins`, and `stdlib`. |
 | `--output-dir DIRECTORY` | Source directory | Put the published executable and companion directory together here. |
 | `--` | None | Stop flag parsing before the optional filename. |
 
-Relative source, asset and output paths use caller CWD. Resolution does not change CWD. An explicit asset provider has no embedded fallback and no compiler configuration JSON. Bare dictionary imports use that provider's standard-library index; explicit `.l` imports remain relative to the importing source's provider.
+Relative source and output paths use the invocation directory without changing it. Compiler contributors can use [developer resource overrides](../development-harness.md#compiler-defaults); ordinary builds need neither override.
 
 ## Legacy OS option
 

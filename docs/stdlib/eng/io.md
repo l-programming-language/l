@@ -64,7 +64,7 @@ The enclosing App result can therefore be unsuccessful. L program code still dec
 
 ## Availability and limits
 
-The inspected index contains this English dictionary at `stdlib/eng/io/dictionary.l`. It is available from embedded assets or a complete selected filesystem bundle containing that entry and its dependencies. No release number or prebuilt download availability is invented.
+The English IO dictionary at `stdlib/eng/io/dictionary.l` is embedded in the compiler. Import it with `Use`; no separate library installation is needed.
 
 Additional standard-library dictionaries belong in the index-driven [catalog](../index.md), with their own reviewed public exports and evidence. IO's single-file implementation is not a restriction on future dictionary organization.
 

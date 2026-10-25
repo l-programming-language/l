@@ -4,11 +4,11 @@ L releases are published through the repository's GitHub CI/CD. Get the [latest 
 
 ## Download L
 
-Choose the release asset matching your operating system and CPU architecture. Read its release notes, then follow [installation](../cli/installation.md) to put `l` on `PATH` and build your first program.
+Choose the binary for your operating system and CPU architecture. English grammar, vocabulary, builtins, standard library, and backend resources are embedded. Follow [installation](../cli/installation.md) for the external build-tool prerequisites and `PATH` setup.
 
 ## Versioning and compatibility
 
-L release tags use **major.minor.patch**, starting at `v0.0.1`. `l --version` reports the bare version, `0.0.1`, embedded from the root `VERSION` file when the compiler is built.
+Releases are **English-only**. Other source languages are out of scope until after `v1.0.0`. Tags use **major.minor.patch**, starting at `v0.0.1`; `l --version` reports the bare version, `0.0.1`.
 
 Backward compatibility is **not guaranteed before `v1.0.0`**. Read the release notes before upgrading between any pre-1.0 versions, including minor and patch updates.
 

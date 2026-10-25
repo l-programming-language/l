@@ -9913,7 +9913,7 @@
       "name": "--assets",
       "role": "normative",
       "support": "supported",
-      "doc": "docs/cli/build.md#options",
+      "doc": "docs/development-harness.md#compiler-defaults",
       "sources": [
         "cmd/l/command.go"
       ],
@@ -9945,7 +9945,7 @@
       "name": "--language",
       "role": "normative",
       "support": "supported",
-      "doc": "docs/cli/build.md#options",
+      "doc": "docs/development-harness.md#compiler-defaults",
       "sources": [
         "cmd/l/command.go"
       ],

@@ -18,9 +18,7 @@ The learning path starts with a complete maintained program and adds one concept
 
 ## What you need
 
-The CLI generates Rust source and builds for your current macOS or Linux host. Follow the [installation prerequisites](../cli/installation.md#prerequisites), including the pinned Rust/Cargo toolchain and dependencies, then return to [the first program](first-program.md). A website-only contributor needs the independent Node package, not the native toolchain.
-
-The source language bundled here is English (`eng`). The site's English interface is a separate concern. A language-selection CLI flag does not establish that another source lexicon is available or fully localized.
+The compiler embeds English language resources and generates Rust for your macOS or Linux host. Follow the [installation prerequisites](../cli/installation.md#prerequisites), including the Rust/Cargo toolchain and dependencies, then return to [the first program](first-program.md).
 
 ## How examples are presented
 

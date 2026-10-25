@@ -26,8 +26,4 @@ Lookup checks a complete qualified binding before traversing members of its sele
 
 ## Use a complete custom resource bundle
 
-`--assets ROOT` selects a complete replacement filesystem containing lexicon, builtins, stdlib and backend assets. It does not merge local overrides with embedded defaults. Relative asset paths use the invocation's working directory.
-
-Only English (`eng`) is bundled. Another source-language code needs suitable assets and still faces partial localization support; selecting it does not translate a program.
-
-See [CLI resources](../cli-build.md#invocation-and-assets), [resource architecture](../architecture.md#embedded-builtins-and-explicit-dictionaries), and [stdlib](../stdlib/index.md). Next, organize [Apps and Services](apps-and-services.md).
+Released compilers embed the English resources used above. Compiler developers can [override the resource bundle](../development-harness.md#compiler-defaults). Next, organize [Apps and Services](apps-and-services.md).

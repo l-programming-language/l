@@ -6,7 +6,7 @@ Status 2 with usage usually means a missing `build` command, an unknown command/
 
 ## Missing source or resources
 
-Check the path relative to the invocation directory. `--assets` is a complete replacement, not an overlay; a missing vocabulary, grammar, builtin, dictionary or native asset fails without embedded fallback. A resource directory from an older checkout may no longer satisfy the selected compiler. Ordinary users should prefer the embedded bundle.
+Check source paths relative to the invocation directory. Released binaries embed English resources. If testing modified compiler resources, see [developer overrides](../development-harness.md#compiler-defaults).
 
 Bare imports resolve through the selected [stdlib index](../../stdlib/index.json). An adjacent `io.l` does not override the indexed `io` dictionary. Explicit `.l` paths resolve relative to the importing source.
 

@@ -1,6 +1,6 @@
 # Standard library
 
-L's standard library supplies explicitly imported vocabulary dictionaries. It is separate from implicit builtins, compiler implementation packages, and native logeme templates. Availability is determined by the selected complete distribution's `stdlib/index.json`.
+L's standard library supplies explicitly imported vocabulary dictionaries. English releases embed the library and its `stdlib/index.json`; builtins remain implicit.
 
 <!-- illustration:dictionaries -->
 
@@ -8,9 +8,7 @@ L's standard library supplies explicitly imported vocabulary dictionaries. It is
 
 <!-- stdlib-catalog -->
 
-The rendered catalog joins every language/dictionary entry in the source index to its authored reference and reviewed public exports. Repository readers can inspect [the source index](../../stdlib/index.json) and the current [IO reference](eng/io.md) directly.
-
-This is the current inspected catalog, not a permanent limit on the standard library. More indexed dictionaries can be added without changing the site's directory model or import resolver documentation. No math, filesystem, networking, collections, or concurrency module is invented here.
+The catalog joins each indexed dictionary to its reference and reviewed public exports. See [the source index](../../stdlib/index.json), [IO reference](eng/io.md), and [site provenance](../releases/index.md#inspect-this-sites-provenance) for the documented revision.
 
 ## Import model
 
@@ -22,21 +20,17 @@ Use IO's Print from `io` as "Print".
 
 The bare `io` key resolves only through the selected index. A neighboring file cannot shadow it. An explicit `.l` dependency follows source-relative inclusion rules instead. Dictionary helpers retain their private source-unit lexical environment and can depend on implicit builtins without becoming public API.
 
-English is the only bundled source lexicon; the catalog language column concerns L source, not the site's interface locale. An alternate `--language` selection requires corresponding resources rather than automatic translation of these imports.
-
 ## Public exports and evidence
 
 A registered Dictionary and its owned public members define the supported import surface. The source index tells us where the dictionary lives and which namespace to resolve; it does not describe exported signatures, effects, overloads, visibility, or native correctness.
 
 Reference pages therefore pair each documented export with reviewed definitions and frontend ownership/visibility witnesses. An existing test is identified as an existing witness. A matching content hash proves freshness of that review dependency, not that the export compiled or executed during a website build.
 
-No authoritative release version is assigned to the current catalog. Availability is stated for the inspected local/unreleased source. Future release metadata can identify the exact catalog snapshot when an actual release exists.
-
 ## Catalog maintenance
 
-The documentation pipeline treats the index as an open language-to-dictionary map. Dictionary inventory identity is the pair `(language, key)`; the entry path and exported namespace are reviewed properties, not assumed from the key. A future dictionary page follows `docs/stdlib/<language>/<key>.md` or an explicit content-map route for a nested key.
+The index uses `(language, key)` as dictionary identity; released entries use `eng`. Entry paths and exported namespaces are reviewed properties, not inferred from keys. Dictionary pages follow `docs/stdlib/<language>/<key>.md` or explicit content-map routes for nested keys.
 
-Each new indexed dictionary requires a reviewed export mapping with canonical export names, authored anchors, source entry/include dependencies, visibility evidence, support status, and deterministic hashes. Export identities include language and dictionary key, so two lexicons can document distinct APIs without collision. The current mapping includes IO.Print and explicitly records private Log/Logger machinery.
+Each new dictionary requires reviewed export names, authored anchors, source/include dependencies, visibility evidence, support status, and deterministic hashes. The current mapping includes IO.Print and records private Log/Logger machinery.
 
 An index addition, rename, removal, entry-file change, or relevant included-source change must make classification/freshness checks fail until its mapping and prose are reviewed. New private helpers also require a review of whether public behavior or visibility changed. Removing an export must update its documentation and compatibility note rather than leave a stale searchable API page.
 

@@ -8,7 +8,7 @@ The maintained repository contracts take precedence over this explanatory consol
 
 L source is processed by Lyger into AML and logeme compositions. Logiceme interprets those compositions into Rust source bundles. A separate native build coordinator invokes Cargo and publishes the executable and companion artifacts. Running that executable starts the orchestrator; source lifecycle instructions control separate App processes. Merely parsing source, producing AML, or returning an `Executable` source bundle does not execute an application.
 
-The implementation tools are Go programs. Rust is the generated target. English (`eng`) is the only bundled natural-language lexicon. The website interface language, source lexicon, and native output target are three different choices; an English website does not constrain a future source lexicon, and a `--language` option does not establish another implemented lexicon.
+The implementation tools are Go programs; Rust is the generated target. Releases embed the English (`eng`) source lexicon. See the [release scope and compatibility policy](../releases/index.md#versioning-and-compatibility).
 
 ## Reading the specification
 
