@@ -1,5 +1,6 @@
 name: L documentation checks
-# INACTIVE: no setup/build command copies this file into .github/workflows.
+# Historical activation template; maintained checks now live in
+# .github/workflows/docs-check.yml. No setup/build command copies this file.
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -27,8 +28,7 @@ jobs:
           cache-dependency-path: website/package-lock.json
       - run: npm ci
       - run: npm run test:browsers:install
-      # On activation replace this delivered-state aggregate with the same steps
-      # excluding ci:verify-disabled; never weaken content/build/browser checks.
+      # The active workflow uses verify:website, including the deployment guard.
       - name: Verify the complete website
         run: |
           npm run references:check

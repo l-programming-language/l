@@ -46,4 +46,4 @@ For missing routes, inspect the content map. For broken fragments, check the tar
 
 Website commands do not run the compiler or native suites. Compiler bootstrap and expensive validation remain subject to the [temporary validation pause](../development-harness.md#temporary-validation-pause).
 
-The optional example verifier requires explicit invocation and an existing compiler; it does not replace acceptance. Website CI/CD remains prepared but disabled. No deployment has been performed.
+The optional example verifier requires explicit invocation and an existing compiler; it does not replace acceptance. Documentation CI runs website checks on pull requests; release and deployment remain disabled. `npm run ci:verify-disabled` verifies that deployment stays disabled while the approved validation workflows are active.

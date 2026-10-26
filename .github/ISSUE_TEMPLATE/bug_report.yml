@@ -1,0 +1,50 @@
+name: Bug report
+description: Report a reproducible compiler, runtime, documentation, or tooling problem.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues before filing. Include the smallest useful reproduction and keep compiler diagnostics separate from application output.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened, and how does it affect you?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include source/input files or a minimal example, exact commands, and any required setup. For documentation issues, link the affected page.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Describe the expected result and link the relevant contract or documentation if known.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and evidence
+      description: Include exit status and relevant stdout/stderr or CI report links. Preserve meaningful whitespace and newlines; remove secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include L version or commit, operating system/architecture, and relevant Go, Rust/Cargo, or Node/npm versions. State which validation was run.
+    validations:
+      required: true
+  - type: checkboxes
+    id: preparation
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for this problem.
+          required: true

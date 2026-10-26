@@ -1,0 +1,48 @@
+name: Change request
+description: Propose a feature, documentation improvement, maintenance task, or CI change.
+title: "[Change]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this issue to agree on the problem and scope before implementing a change. Link the issue from every related pull request.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or motivation
+      description: Who needs this change, and what is difficult or missing today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change and scope
+      description: Describe the desired behavior, affected areas, and any alternatives considered.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List observable outcomes that would complete this issue, including relevant tests and documentation or doc-site updates.
+    validations:
+      required: true
+  - type: textarea
+    id: contracts
+    attributes:
+      label: Logeme and protected-contract impact
+      description: Identify any affected logeme templates/interfaces, protected fixtures, expected bytes, locks, or tool pins. State "None" if unaffected. Frozen/protected changes require explicit, finite scope approval; filing this issue does not grant it.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Link related issues, documentation, examples, or designs.
+  - type: checkboxes
+    id: preparation
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for this request.
+          required: true

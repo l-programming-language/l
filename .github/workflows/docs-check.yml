@@ -1,0 +1,50 @@
+name: L documentation checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  website:
+    name: Documentation site
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: website
+        shell: bash
+    steps:
+      - name: Check out the tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up the pinned Node runtime
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: website/.node-version
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - name: Install locked website dependencies
+        run: npm ci
+      - name: Install Chromium and Linux browser dependencies
+        run: npm run test:browsers:install -- --with-deps
+      - name: Check, build, and test the documentation site
+        run: npm run verify:website
+      - name: Retain website evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: docs-check-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            website/reports/
+            website/test-results/
+          if-no-files-found: warn
+          retention-days: 7

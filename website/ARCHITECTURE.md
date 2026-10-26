@@ -40,7 +40,7 @@ The supplied SVG mark geometry is preserved. A thin CSS layer maps brand colors 
 
 `check` validates canonical content plus Astro types. Node tests exercise transformations, ownership, inventory changes and provenance. Build checks inspect actual emitted HTML, links, fragments, images, 404 and search assets. Playwright tests operate on `build` plus `preview`, including keyboard search, themes, no-JavaScript reading, mobile navigation, asset/network errors, screenshots and axe checks. Neither build nor tests run L examples or language validation.
 
-All new website automation is physically inactive under ci-templates. Existing language CI is unchanged. Initial/final workflow byte comparisons are task evidence, not permanent website policy locks.
+The active documentation workflow runs the website verification aggregate on pull requests and manual dispatch. The quality workflow audits website dependencies. Both use read-only permissions; release and recovery templates remain inactive under `ci-templates`. The deployment guard permits these reviewed validation workflows while rejecting publication capabilities. Existing language CI retains its complete compiler validation stages.
 
 The L grammar and keyboard-focus hook are configured in `ec.config.mjs`, as required for non-JSON Expressive Code options shared with the Code component. Code blocks and wide tables remain keyboard accessible without JavaScript. A small Search wrapper handles the initial Pagefind idle-load focus race while retaining Starlight's dialog and controls. Astro telemetry is disabled per command, and foreground `--ignore-lock` mode lets the supervisor and browser tests own server lifetime.
 

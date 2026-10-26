@@ -4,7 +4,7 @@ The independent, private npm package renders canonical repository documentation 
 
 The production origin is **https://ldocs.org/**. Local development and preview keep navigation on localhost.
 
-**Website CI/CD is prepared but disabled. No deployment has been performed.**
+**[Documentation checks](../.github/workflows/docs-check.yml) run on pull requests. Website deployment remains disabled.**
 
 ## Setup and local use
 
@@ -39,7 +39,9 @@ npm run verify:website
 
 `test:browsers:install` explicitly downloads Playwright's Chromium browser; it is not an npm install hook. Set `PLAYWRIGHT_BROWSERS_PATH="$PWD/.cache/ms-playwright"` for a project-local browser cache. The Playwright configuration uses that location by default. Browser tests start and stop their own preview server; close other servers on port 4321. Install browser dependencies through your normal host setup if required; no privileged installer runs automatically.
 
-`verify:website` runs disabled-CI verification, reference freshness, content/type checks, unit tests, **one** build with static output checks, and browser tests. It never invokes Go/Rust, native samples, bootstrap, `scripts/l-check`, or the language harness. Tests exercise real assertions and fail on incomplete evidence or output. Reports and screenshots live under ignored `reports/`; the maintained [validation summary](reports/validation.md) records actual outcomes.
+`verify:website` verifies that deployment remains disabled, then runs reference freshness, content/type checks, unit tests, **one** build with static output checks, and browser tests. It never invokes Go/Rust, native samples, bootstrap, `scripts/l-check`, or the language harness. Tests exercise real assertions and fail on incomplete evidence or output. Reports and screenshots live under ignored `reports/`; the maintained [validation summary](reports/validation.md) records actual outcomes.
+
+The documentation workflow runs this aggregate on Ubuntu for every PR opening, update, and reopening, and supports manual dispatch. It installs the locked dependencies and Chromium with its Linux dependencies, then retains reports and failure traces for seven days. No path filter excludes changes to canonical sources outside `website/`. The repository's [local validation pause](../docs/development-harness.md#temporary-validation-pause) still applies to expensive local checks.
 
 ## Content and references
 

@@ -142,7 +142,8 @@ cross-compilation remain outside this build command.
 
 ## Validation and development
 
-Start with [AGENTS.md](AGENTS.md) and the [development guide](docs/development-harness.md).
+Start with the [contribution guide](CONTRIBUTING.md), [AGENTS.md](AGENTS.md),
+and the [development guide](docs/development-harness.md).
 
 **Expensive local validation remains paused.** Pull requests automatically run
 the full Linux gate when opened, updated with commits, or reopened. Manual
