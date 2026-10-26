@@ -31,7 +31,7 @@ remain useful during development but do not establish completion.
 
 Tool versions and verified official lint archive checksums live in
 [.ci-tools.json](../.ci-tools.json); [.go-version](../.go-version) selects Go
-1.27.1 and [.ci/go-checksums.txt](../.ci/go-checksums.txt) pins its fallback
+1.27.3 and [.ci/go-checksums.txt](../.ci/go-checksums.txt) pins its fallback
 archives, without changing the module's Go 1.20 language declaration. Rust remains
 1.98.1, golangci-lint is 2.14.0, and actionlint is 1.7.12. Lint tools, fallback Go,
 Go build caches, seed projects and run evidence stay in ignored repository
