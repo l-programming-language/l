@@ -82,7 +82,7 @@ func TestCanonicalFunctionMissingMemberDoesNotFallBack(t *testing.T) {
 				kept = append(kept, line)
 			}
 			files[core] = &fstest.MapFile{Data: []byte(strings.Join(kept, "\n"))}
-			_, _, _, err := builtinProcessGenerate(files, "    Publicly create \"Work\" as a New Function with No Inputs and No Outputs.\nShow `body`.\n\nWork.\n")
+			_, _, _, err := builtinProcessGenerate(files, functionSource("Work", "", "", "Show `body`.")+"Work.\n")
 			if err == nil || !strings.Contains(err.Error(), member) {
 				t.Fatalf("missing bound %s composition did not reject: %v", member, err)
 			}
@@ -91,10 +91,7 @@ func TestCanonicalFunctionMissingMemberDoesNotFallBack(t *testing.T) {
 }
 
 func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: "    Publicly create \"Done\" as a New Function with No Inputs and No Outputs.\nReturn.\n"})
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := executableTestResult(t, memberResolutionSource{main: "    Publicly create \"Done\" as a New Function with No Inputs and No Outputs.\nReturn.\n"}).Compilation
 	var definition *sourceFunction
 	for _, function := range c.Semantics.Functions {
 		definition = function
@@ -111,7 +108,7 @@ func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
 	}
 	callee.Members["Invoke"] = parseTestDefinition(t, strings.Replace(string(definition.Members["Invoke"].Original), "Value: ~<@Target@>~", "Value: ~/* selected invocation */ <@Target@>~", 1))
 	emitter := orchestrationEmitter{
-		plan: &orchestrationPlan{}, functionDepth: 1, functionWords: &caller,
+		plan: &orchestrationPlan{Identities: map[*record]uint64{callee.Definition: 1}}, functionDepth: 1, functionWords: &caller,
 		functionContracts: map[*record]*sourceFunction{callee.Definition: &callee},
 	}
 	statements, err := emitter.functionInstruction(&orchestrationInstruction{

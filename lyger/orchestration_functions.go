@@ -226,13 +226,18 @@ func (e *orchestrationEmitter) collectFunctionContracts(body []*orchestrationIns
 }
 
 func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruction) ([]string, error) {
+	var types []runtimeTypeRef
+	if current.Source.Kind == instructionReturn {
+		types = current.Source.Function.Outputs
+	} else if current.Target != nil {
+		types = current.Target.RuntimeType.Inputs
+	}
+	if len(types) != len(current.Arguments) && current.Source.Kind != instructionFunction {
+		return nil, lerrors.Internal.Errorf("Function transfer does not match its signature")
+	}
 	var arguments []string
-	for _, value := range current.Arguments {
-		expression, err := e.value(value)
-		if err != nil {
-			return nil, err
-		}
-		argument, err := runtimeCopyExpression(expression, orchestrationAccessSnapshot)
+	for i, value := range current.Arguments {
+		argument, err := e.transferRuntimeValue(value, types[i])
 		if err != nil {
 			return nil, err
 		}
@@ -250,7 +255,7 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		if contract == nil {
 			return nil, lerrors.Internal.Errorf("invocation has no bound Function composition")
 		}
-		target, err := e.value(current.Target)
+		target, err := e.transferRuntimeValue(current.Target, current.Target.RuntimeType)
 		if err != nil {
 			return nil, err
 		}
@@ -265,7 +270,7 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 			return nil, err
 		}
 		result, err := instantiateFunctionWord(contract, "Invoke", map[string]string{
-			"Target": target.text, "Name": name, "Arguments": strings.Join(append([]string{"&lContext", name + ".0.clone()"}, arguments...), ", "), "Exit": orchestrationOperation(exit),
+			"Target": target, "Name": name, "Arguments": strings.Join(append([]string{"&lContext", name + ".0.clone()"}, arguments...), ", "), "Exit": orchestrationOperation(exit),
 		})
 		if err != nil {
 			return nil, err

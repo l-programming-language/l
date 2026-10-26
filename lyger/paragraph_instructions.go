@@ -18,7 +18,7 @@ type paragraphPlanner struct {
 }
 
 func (b *instructionBuilder) scopeInstructions(instructions []*instruction) ([]*instruction, error) {
-	p := paragraphPlanner{builder: b, producers: make(map[*record]*App), led: make(map[*lexicalScope]bool)}
+	p := paragraphPlanner{builder: b, led: make(map[*lexicalScope]bool)}
 	b.semantics.Continuations = make(map[*App]*scopedInstructions)
 	for _, ordered := range b.scopes.Ordered {
 		if !ordered.Scope.isParagraph() {
@@ -35,8 +35,20 @@ func (b *instructionBuilder) scopeInstructions(instructions []*instruction) ([]*
 			}
 		}
 	}
-	root := &scopedInstructions{Scope: b.scopes.Root}
-	blocks := map[*lexicalScope]*scopedInstructions{b.scopes.Root: root}
+	for _, function := range b.semantics.Functions {
+		body, err := p.scoped(function.Scope, function.Body)
+		if err != nil {
+			return nil, err
+		}
+		function.Body = body
+	}
+	return p.scoped(b.scopes.Root, instructions)
+}
+
+func (p *paragraphPlanner) scoped(scope *lexicalScope, instructions []*instruction) ([]*instruction, error) {
+	p.producers = make(map[*record]*App)
+	root := &scopedInstructions{Scope: scope}
+	blocks := map[*lexicalScope]*scopedInstructions{scope: root}
 	var blockFor func(*lexicalScope, *instruction) *scopedInstructions
 	blockFor = func(scope *lexicalScope, origin *instruction) *scopedInstructions {
 		if block := blocks[scope]; block != nil {
@@ -49,7 +61,7 @@ func (b *instructionBuilder) scopeInstructions(instructions []*instruction) ([]*
 		return block
 	}
 	for _, current := range instructions {
-		scope := b.ordered[current.Statement].Scope
+		scope := p.builder.ordered[current.Statement].Scope
 		if scope == nil {
 			return nil, lerrors.Internal.Errorf("instruction has no lexical scope")
 		}

@@ -5,17 +5,11 @@ import (
 	"testing"
 )
 
-const functionPublicationSource = "    Publicly create \"Publish\" as a New Function with Inputs of \"Value\" as Text and Outputs of Text.\nPublicly define \"Message\" as Value.\nPublicly create \"Report|-s|-ed|-ing\" for Showing Message and then Showing any Text.\nReport `|`.\nReturn Message.\n\nPublish `first` as \"First\".\nPublish `second` as \"Second\".\nShow First and Second.\n"
+var functionPublicationSource = functionSource("Publish", "\"Value\" as Text", "Text", "Publicly define \"Message\" as Value.\nPublicly create \"Report|-s|-ed|-ing\" for Showing Message and then Showing any Text.\nReport `|`.\nReturn Message.") + "Publish `first` as \"First\".\nPublish `second` as \"Second\".\nShow First and Second.\n"
 
 func TestFunctionBodyPublication(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: functionPublicationSource})
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
-	plan, err := planOrchestration(c.Semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	c := executableTestResult(t, memberResolutionSource{main: functionPublicationSource}).Compilation
+	plan := requireOrchestrationPlan(t, c.Semantics)
 	function := processTestFunction(plan.Root.Body)
 	if function == nil || len(function.Captures) != 0 || len(function.CaptureHandles) != 0 {
 		t.Fatal("Function-owned public declarations were captured before execution")
@@ -26,9 +20,7 @@ func TestFunctionBodyPublication(t *testing.T) {
 			t.Fatalf("%s lost its declaring-unit publication", name)
 		}
 	}
-	if _, err := functionGenerated(t, functionPublicationSource); err != nil {
-		t.Fatal(err)
-	}
+	requireFunctionGenerated(t, functionPublicationSource)
 }
 
 func TestFunctionPublicValuesRemainDefinitelyAssigned(t *testing.T) {
@@ -53,10 +45,7 @@ func TestFunctionBodyPublicationNative(t *testing.T) {
 const functionMapSource = "Define \"callbacks\" as a New Map of Identity.\nPut Identity in callbacks as `key`.\nDefine \"callback\" as a New Identity from callbacks at `key`.\ncallback `mapped` as \"Result\".\nShow Result.\n"
 
 func TestFunctionSignatureMap(t *testing.T) {
-	_, err := functionGenerated(t, identityFunction+functionMapSource)
-	if err != nil {
-		t.Fatal(err)
-	}
+	requireFunctionGenerated(t, identityFunction+functionMapSource)
 }
 
 func functionMapExtractionSource() string {
@@ -65,10 +54,7 @@ func functionMapExtractionSource() string {
 }
 
 func TestFunctionSignatureMapExtraction(t *testing.T) {
-	generated, err := functionGenerated(t, functionMapExtractionSource())
-	if err != nil {
-		t.Fatal(err)
-	}
+	generated := requireFunctionGenerated(t, functionMapExtractionSource())
 	if !strings.Contains(generated, ".expect_type(LType::Map(Box::new(LType::Function(") {
 		t.Fatal("bound Function Map type lost its typed read")
 	}

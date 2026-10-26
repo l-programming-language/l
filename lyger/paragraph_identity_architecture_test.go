@@ -15,10 +15,7 @@ func TestParagraphIdentityArtifactCollisionReservation(t *testing.T) {
 		for _, text := range []string{"first private", "second private"} {
 			source.main += "\n    \"message\" is `" + text + "`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints message.\n"
 		}
-		compilation := compileMemberResolutionSource(t, source)
-		if compilation.Error != nil {
-			t.Fatal(compilation.Error)
-		}
+		compilation := executableTestResult(t, source).Compilation
 		workers := paragraphBindingDeclarations(t, compilation, "Worker", 2)
 		for _, worker := range workers {
 			if worker.record.ID != "Worker" || worker.record.Value.Applicative.App.ID != "Worker" {
@@ -61,10 +58,7 @@ func TestParagraphIdentityArtifactCollisionReservation(t *testing.T) {
 func TestParagraphIdentityApplicationOrderIgnoresResolutionOrder(t *testing.T) {
 	source := paragraphSource(t)
 	source.main = paragraphGlobals + "Create \"Earlier\" as a New Future App.\nThe App Prints x1.\nCreate \"Later\" as a New Basic App.\nThe App Prints x2.\n\"Future\" describes a Generic App with a New Main Service using any Process.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	units, err := (&CompilationResult{Compilation: compilation}).ApplicationUnits()
 	if err != nil {
 		t.Fatal(err)
@@ -81,10 +75,7 @@ func TestParagraphIdentityApplicationOrderIgnoresResolutionOrder(t *testing.T) {
 func TestParagraphIdentityCoordinatedAppConstructionSource(t *testing.T) {
 	source := paragraphSource(t)
 	source.main = paragraphGlobals + "\"First\" is a New Basic App and \"Second\" is a New Basic App.\nFirst Prints x1.\nSecond Prints x2.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	declarations := paragraphBindingDeclarations(t, compilation, "Second", 1)
 	statement := declarations[0].statement.sGram
 	if len(statement.clauses) != 1 {
@@ -105,10 +96,7 @@ func TestParagraphIdentityCoordinatedAppConstructionSource(t *testing.T) {
 func TestParagraphIdentityRootAppKeepsBuildName(t *testing.T) {
 	source := paragraphSource(t)
 	source.main = paragraphGlobals + "Create \"Worker\" as a New Basic App.\nThe App Prints x1.\n\n    Create \"Worker\" as a New Basic App.\nThe App Prints x2.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	units, err := (&CompilationResult{Compilation: compilation}).ApplicationUnits()
 	if err != nil {
 		t.Fatal(err)

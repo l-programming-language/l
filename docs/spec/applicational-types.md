@@ -59,7 +59,7 @@ Show Result.
 
 Four leading spaces begin the private body; a blank line ends it. Public exposes Echo, not Value. The label supplies ordinary verb inflections. A member word can form a sentence such as `The User walks to the Store`: User selects its Walk definition and Store supplies the Location argument. See [word forms](../guide/values.md#read-pipe-delimited-word-forms).
 
-Each invocation checks ordered argument/result types and has fresh locals. Every continuing result-bearing path must Return. Return binds the Function's builtin member; Exit retains whole-program termination. Copies and aliases preserve signatures and captures, including callable parameters such as `"Callback" as Echo`.
+Invocations check ordered types and have fresh locals. Function signatures include canonical constructor identity; incompatible constructors reject, including boxed values. Copies and aliases retain signatures and captures. Every continuing result-bearing path must Return through its bound member; Exit terminates the program.
 
 The header retains surrounding conditions and coordinated effects. Captures must be assigned when it executes; ordinary values snapshot and explicit Pointers share targets. An invocation assigns its explicit results, without inferring assignment from side effects. A Function may Await an App and its continuation. Dictionary/Class units have no executable initialization phase.
 

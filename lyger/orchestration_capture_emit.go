@@ -46,11 +46,7 @@ func (e *orchestrationEmitter) bindCapture(current *orchestrationInstruction) ([
 func (e *orchestrationEmitter) captureEnvironment(values []*orchestrationValue, handles []*orchestrationCallableReference) (string, string, error) {
 	var fields, types []string
 	for _, capture := range values {
-		value, err := e.value(capture)
-		if err != nil {
-			return "", "", err
-		}
-		field, err := boxRuntimeValue(value)
+		field, err := e.transferRuntimeValue(capture, runtimeTypeRef{Kind: valueThing})
 		if err != nil {
 			return "", "", err
 		}

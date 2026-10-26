@@ -21,14 +21,8 @@ var sourceActionArgumentCases = []struct{ name, source, output string }{
 func TestSourceActionArgumentBoundaries(t *testing.T) {
 	for _, tc := range sourceActionArgumentCases {
 		t.Run(tc.name, func(t *testing.T) {
-			c := compileMemberResolutionSource(t, memberResolutionSource{main: tc.source})
-			if c.Error != nil {
-				t.Fatal(c.Error)
-			}
-			plan, err := planOrchestration(c.Semantics)
-			if err != nil {
-				t.Fatal(err)
-			}
+			c := executableTestResult(t, memberResolutionSource{main: tc.source}).Compilation
+			plan := requireOrchestrationPlan(t, c.Semantics)
 			found := false
 			visitCapturePlan(plan.Root.Body, func(call *orchestrationInstruction) {
 				if call.Source.Kind != instructionCall || call.Source.Target.Record.ID != "Report" {
@@ -51,10 +45,7 @@ func TestSourceActionArgumentBoundaries(t *testing.T) {
 			if !found {
 				t.Fatal("source action was not planned")
 			}
-			generated, err := functionGenerated(t, tc.source)
-			if err != nil {
-				t.Fatal(err)
-			}
+			generated := requireFunctionGenerated(t, tc.source)
 			if tc.name == "once" && strings.Count(generated, ".get(0_f64)?") != 1 {
 				t.Fatal("actual argument expression was not evaluated once")
 			}

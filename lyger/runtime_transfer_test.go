@@ -19,16 +19,13 @@ var runtimeTransferCases = []struct{ name, signature, setup, body, observe, outp
 const transferShape = "\"Person\" is a New Adjective describing any Instance.\nIt describes a Generic Instance with a `name` Text.\n\n"
 
 func runtimeTransferSource(name, signature, setup, body, observe string) string {
-	return fmt.Sprintf("    Publicly create \"Keep%s\" as a New Function with Inputs of \"Value\" as %s and Outputs of %s.\n%s\n\n%s\nKeep%s Input%s as \"Result%s\".\n%s\n\n", name, signature, signature, body, setup, name, name, name, observe)
+	return fmt.Sprintf(functionSource("Keep%s", "\"Value\" as %s", "%s", "%s")+"%s\nKeep%s Input%s as \"Result%s\".\n%s\n\n", name, signature, signature, body, setup, name, name, name, observe)
 }
 
 func TestRuntimeTransfersThroughFunctions(t *testing.T) {
 	for _, tc := range runtimeTransferCases {
 		t.Run(tc.name, func(t *testing.T) {
-			_, err := functionGenerated(t, transferShape+runtimeTransferSource(tc.name, tc.signature, tc.setup, tc.body, tc.observe))
-			if err != nil {
-				t.Fatal(err)
-			}
+			requireFunctionGenerated(t, transferShape+runtimeTransferSource(tc.name, tc.signature, tc.setup, tc.body, tc.observe))
 		})
 	}
 }

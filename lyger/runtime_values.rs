@@ -14,7 +14,7 @@ enum LType {
     Pointer(Box<LType>),
     Error,
     App,
-    Function(Vec<LType>, Vec<LType>),
+    Function(u64, Vec<LType>, Vec<LType>),
 }
 impl LType {
     fn accepts(&self, other: &Self) -> bool {

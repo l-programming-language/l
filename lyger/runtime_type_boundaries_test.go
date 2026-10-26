@@ -30,10 +30,7 @@ func TestRuntimeHandleReads(t *testing.T) {
 		{"Function", identityFunction + runtimeFunctionReadSource, ".expect_type(LType::Function("},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			source, err := functionGenerated(t, tc.source)
-			if err != nil {
-				t.Fatal(err)
-			}
+			source := requireFunctionGenerated(t, tc.source)
 			if !strings.Contains(source, tc.contains) {
 				t.Fatalf("typed handle read missing %q", tc.contains)
 			}

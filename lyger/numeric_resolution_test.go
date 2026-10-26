@@ -118,10 +118,7 @@ func TestNumericResolutionSourceNames(t *testing.T) {
 func TestNumericResolutionLocalShadowing(t *testing.T) {
 	source := "\"1e999\" is `outer`.\n\n" +
 		"    Show 1e999.\n\"1e999\" is `inner`.\nShow 1e999.\n\nShow 1e999.\n"
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
 	declarations := paragraphBindingDeclarations(t, c, "1e999", 2)
 	outer, local := declarations[0].record, declarations[1].record
 	if outer == local || outer.storageScope != c.Scope.Root || local.storageScope == c.Scope.Root || c.Memory["1e999"] != outer {

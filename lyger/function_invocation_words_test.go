@@ -9,16 +9,11 @@ func TestFunctionInvocationWords(t *testing.T) {
 	for _, source := range []string{
 		identityFunction + "Identity `direct` as \"Result\".\nShow Result.\n",
 		identityFunction + "Define \"Saved\" as Identity.\nSaved `copy` as \"Result\".\nShow Result.\n",
-		"    Publicly create \"Echo|-es|-ed|-ing|-er\" as a New Function with Inputs of \"Value\" as Text and Outputs of Text.\nReturn Value.\n\nEcho `direct` as \"Result\".\nShow Result.\n",
-		"    Publicly create \"Done\" as a New Function with No Inputs and No Outputs.\nShow `done`.\n\nDone.\n",
+		functionSource("Echo|-es|-ed|-ing|-er", "\"Value\" as Text", "Text", "Return Value.") + "Echo `direct` as \"Result\".\nShow Result.\n",
+		functionSource("Done", "", "", "Show `done`.") + "Done.\n",
 	} {
-		c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
-		if c.Error != nil {
-			t.Fatal(c.Error)
-		}
-		if _, err := planOrchestration(c.Semantics); err != nil {
-			t.Fatal(err)
-		}
+		c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
+		requireOrchestrationPlan(t, c.Semantics)
 	}
 	c := compileMemberResolutionSource(t, memberResolutionSource{main: identityFunction + "Call Identity with `unsupported` as \"Result\".\n"})
 	if c.Error == nil {
@@ -53,13 +48,8 @@ func TestFunctionMemberSentence(t *testing.T) {
 	const source = "Create \"User\" as a Dictionary.\nDefine \"Store\" as `store`.\n\n" +
 		"    Publicly create User's \"Walk|-s|-ed|-ing|-er\" as a New Function with Inputs of \"Location\" as Text and No Outputs.\nShow Location.\n\n" +
 		"The User walks to the Store.\n"
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
-	if _, err := planOrchestration(c.Semantics); err != nil {
-		t.Fatal(err)
-	}
+	c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
+	requireOrchestrationPlan(t, c.Semantics)
 	last := c.Semantics.Instructions[len(c.Semantics.Instructions)-1]
 	if last.Kind != instructionInvoke || last.Target.Record.ID != "User.Walk" || len(last.Arguments) != 1 || last.Arguments[0].Record.ID != "Store" {
 		t.Fatal("subject, inflected member, or prepositional argument changed binding")
@@ -67,10 +57,7 @@ func TestFunctionMemberSentence(t *testing.T) {
 }
 
 func TestFunctionReturnUsesBoundMember(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: identityFunction})
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := executableTestResult(t, memberResolutionSource{main: identityFunction}).Compilation
 	for _, function := range c.Semantics.Functions {
 		if function.Template == nil || function.Return == nil || function.ReturnTemplate == nil {
 			t.Fatal("Function lost its source definitions")
@@ -88,20 +75,15 @@ func TestFunctionReturnUsesBoundMember(t *testing.T) {
 }
 
 func TestFunctionWordsComposeWithActions(t *testing.T) {
-	const walk = "    Publicly create \"Walk|-s|-ed|-ing|-er\" as a New Function with Inputs of \"Location\" as Text and No Outputs.\nShow Location.\n\n"
+	var walk = functionSource("Walk|-s|-ed|-ing|-er", "\"Location\" as Text", "", "Show Location.")
 	for name, source := range map[string]string{
 		"generic":     walk + "Create \"Travel|-s|-ed|-ing|-er\" for Walking any Text.\nTravel `store`.\n",
 		"coordinated": walk + "Walk `store` and then Show `after`.\n",
 		"conditional": walk + "If true, Walk `store`, else Walk `park`.\n",
 	} {
 		t.Run(name, func(t *testing.T) {
-			c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
-			if c.Error != nil {
-				t.Fatal(c.Error)
-			}
-			if _, err := planOrchestration(c.Semantics); err != nil {
-				t.Fatal(err)
-			}
+			c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
+			requireOrchestrationPlan(t, c.Semantics)
 			last := c.Semantics.Instructions[len(c.Semantics.Instructions)-1]
 			switch name {
 			case "generic":
@@ -129,10 +111,7 @@ func TestFunctionReturnAliasesKeepSelectedDefinition(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			source := strings.Replace(identityFunction, "Return Value.", body, 1) + "Identity `done` as \"Result\".\nShow Result.\n"
-			c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
-			if c.Error != nil {
-				t.Fatal(c.Error)
-			}
+			c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
 			for _, function := range c.Semantics.Functions {
 				if len(function.Body) != 1 || function.Body[0].Kind != instructionReturn || function.Body[0].Function != function {
 					t.Fatal("aliased return lost its Function binding")
@@ -142,20 +121,15 @@ func TestFunctionReturnAliasesKeepSelectedDefinition(t *testing.T) {
 					t.Fatalf("aliased return changed selected definition: %v", err)
 				}
 			}
-			if _, err := functionGenerated(t, source); err != nil {
-				t.Fatal(err)
-			}
+			requireFunctionGenerated(t, source)
 		})
 	}
 }
 
 func TestFunctionImportedReturnAlias(t *testing.T) {
-	const main = "Use Finish from `local-words.l` as \"Complete\".\n\n" +
-		"    Publicly create \"Identity\" as a New Function with Inputs of \"Value\" as Text and Outputs of Text.\nComplete Value.\n\nIdentity `done` as \"Result\".\nShow Result.\n"
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: main, library: "Use Function's Return as \"Finish\".\n"})
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	main := "Use Finish from `local-words.l` as \"Complete\".\n\n" +
+		functionSource("Identity", "\"Value\" as Text", "Text", "Complete Value.") + "Identity `done` as \"Result\".\nShow Result.\n"
+	c := executableTestResult(t, memberResolutionSource{main: main, library: "Use Function's Return as \"Finish\".\n"}).Compilation
 	result := &CompilationResult{Compilation: c}
 	if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
 		t.Fatal(err)
@@ -167,17 +141,13 @@ func TestFunctionConstructorAliasKeepsCallbackContract(t *testing.T) {
 		"    Publicly create \"Identity\" as a New Callable with Inputs of \"Value\" as Text and Outputs of Text.\nReturn Value.\n\n" +
 		"    Publicly create \"Apply\" as a New Callable with Inputs of \"Callback\" as Identity and Outputs of Text.\nCallback `done` as \"Result\".\nReturn Result.\n\n" +
 		"Apply Identity as \"Selected\".\nShow Selected.\n"
-	if _, err := functionGenerated(t, source); err != nil {
-		t.Fatal(err)
-	}
+	requireFunctionGenerated(t, source)
 }
 
 func TestFunctionEmptyCallbackKeepsBoundDefinition(t *testing.T) {
-	const source = "    Publicly create \"Done\" as a New Function with No Inputs and No Outputs.\nShow `done`.\n\n" +
-		"    Publicly create \"Apply\" as a New Function with Inputs of \"Callback\" as Function and No Outputs.\nCallback.\n\nApply Done.\n"
-	if _, err := functionGenerated(t, source); err != nil {
-		t.Fatal(err)
-	}
+	var source = functionSource("Done", "", "", "Show `done`.") +
+		functionSource("Apply", "\"Callback\" as Function", "", "Callback.") + "Apply Done.\n"
+	requireFunctionGenerated(t, source)
 }
 
 func TestFunctionMemberAndComposedWordsNative(t *testing.T) {

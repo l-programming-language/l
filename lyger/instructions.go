@@ -553,7 +553,9 @@ func (b *instructionBuilder) customCall(clause *clauseGram, ctx instructionConte
 		call.Callable = clause.verb.binding.Record
 		call.Arguments = argumentValues
 		call.Target = &instructionValue{Kind: operandSymbol, Type: valueLexeme, ID: callee.ID, Record: callee, Token: clause.verb}
-		call.Actions, err = b.clauses(body, instructionContext{statement: definition, order: ctx.order, arguments: arguments, owner: ctx.owner, callSite: ctx.invocationSite()})
+		expanded := ctx
+		expanded.statement, expanded.arguments, expanded.callSite = definition, arguments, ctx.invocationSite()
+		call.Actions, err = b.clauses(body, expanded)
 		if err != nil {
 			return nil, err
 		}
@@ -836,9 +838,7 @@ func buildInstructions(statements []*lStatement, scopes *scopePlan, semantics *s
 	if err := b.prepareCaptures(); err != nil {
 		return nil, err
 	}
-	functions := make(map[*lexicalScope]*sourceFunction)
 	for _, function := range semantics.Functions {
-		functions[function.Scope] = function
 		function.Body = nil
 	}
 	var result []*instruction
@@ -846,18 +846,19 @@ func buildInstructions(statements []*lStatement, scopes *scopePlan, semantics *s
 	var previousStatement *lStatement
 	for _, ordered := range scopes.Ordered {
 		statement := ordered.Statement
-		if !selected[statement] {
-			continue
-		}
 		if statement.source == nil || statement.sGram == nil || statement.sGram.predicate == nil {
 			return nil, ordered.Source.wrapError(lerrors.Internal.Errorf("instruction lowering requires successful statement grammar"))
 		}
-		function := functions[ordered.Scope]
-		ctx := instructionContext{statement: statement, order: ordered.Order, function: function}
-		header := function != nil && statement == function.Header
-		if header {
-			ctx.function = nil
+		// Headers execute in the enclosing activation; child scopes inherit their Function.
+		var function *sourceFunction
+		for scope := ordered.Scope; scope != nil; scope = scope.parent {
+			if scope.function != nil && statement != scope.function.Header {
+				function = scope.function
+				break
+			}
 		}
+		ctx := instructionContext{statement: statement, order: ordered.Order, function: function}
+		header := ordered.Scope.function != nil && statement == ordered.Scope.function.Header
 		if ordered.IncomingSubjectToken != nil {
 			var err error
 			ctx.owner, err = b.symbolValue(ordered.IncomingSubjectToken)
@@ -891,7 +892,7 @@ func buildInstructions(statements []*lStatement, scopes *scopePlan, semantics *s
 			previous, previousStatement = nil, nil
 			continue
 		}
-		if function != nil && !header {
+		if function != nil {
 			function.Body = append(function.Body, instructions...)
 		} else {
 			result = append(result, instructions...)

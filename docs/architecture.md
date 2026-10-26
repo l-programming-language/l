@@ -156,8 +156,6 @@ Definition framing is structural: one complete outer marker pair, optionally ins
 
 Grammar includes value/subject/object roles, phrases, clauses, conditions, predicates, and statements. Its JSON notation expresses optional/repeated items and alternative cases; Go code implements their interpretation. Vocabulary localization remains partial because grammar loading and semantic type names retain English-specific logic. Import operators follow the loaded root-form lexical roles: associative verb, objective preposition, and declarative preposition. Import aliases remove only the original file clause, retaining configured operator spelling, owner punctuation, identifier quoting, and source attribution. Possessive suffix recognition is case-insensitive without changing owner bytes.
 
-Maintain explicit distinctions among raw input, internal cached/stamped source, restored expanded source, the tested compiler result, and backend input. The immutable expectations constrain a result view, including historical byte forms. A backend adapter or internal representation change must preserve those bytes; an explanatory diagnostic is not an alternative accepted output.
-
 The expanded-source view preserves declaration names, descriptor targets, template references, typed parameters, source order and ordinary literal bytes. Program-file inclusions expand at their import positions; implicit builtin and dictionary units retain their own ownership rather than masquerading as copied program text. A member import retains its local alias statement. Resolution scheduling never reorders the source view. Display rendering removes comments, source stamps and literal-cache identities, strips definition framing and decodes its display escaping once; ordinary literals retain their escaping. It emits deterministic period/newline separators without a final newline and preserves raw main-source bytes separately. It does not widen Function to Definition, substitute Noun.Process or erase Syllables annotations.
 
 The current CLI tests distinguish five views:
@@ -198,52 +196,17 @@ The checked grammar loader validates [configured rule references](../lyger/gramm
 
 ## Native executable pipeline
 
-[Application units](../lyger/application_units.go) retain the semantic App/book graph. The Rust workspace projection assigns one binary package to each App and library-only packages to its additional constructed Services. Constructed identity and App ownership determine package identity, not a descriptor prototype. Recursive Classes map to modules; Objects remain files. The coordinator owns physical workspace paths and dependency relationships. Source topology does not add runtime or lexical scopes.
+[Application units](../lyger/application_units.go) preserve the source graph: each App owns a binary, its additional Services become libraries, Classes become modules, and Objects remain files. Standalone Services create no package, process or continuation. Raw AML retains independent library/bin targets. Programs without Apps still use the orchestrator with an empty generation manifest.
 
-`ApplicationUnits` and `OrchestratorUnit` expose App sources and ordered App process operations. Standalone Service declarations acquire no library, executable configuration, runtime members or continuation ownership. Raw AML continues to support explicit library and binary targets independently of L declarations.
+The [typed plan](../lyger/orchestration_plan.go) resolves storage, captures, definite assignment and transfers before AML generation. Functions bind invocation verbs and instantiate their selected builtin definitions for construction, suspension, invocation and returns. Lyger supplies resolved signature/value atoms; Logiceme renders callable syntax. Generated bodies stay composed, and authored native leaves remain opaque.
 
-The [typed plan](../lyger/orchestration_plan.go) resolves types, activation storage, captures and definite assignment before AML composition. Functions bind invocation verbs and use canonical builtin/logeme definitions for construction, invocation and returns. Parameters/results become native signatures; approved AML lifetime/generic inputs carry explicit bindings. There is no separate `Call` primitive or runtime L-signature dispatcher. Captures snapshot ordinary values and retain explicit Pointer identity; paragraphs add neither tasks nor hidden initial values.
+A Function stores its retained environment and a typed native function pointer. Its boxed future borrows the program context and returns a typed result tuple or program Exit. Invocation preserves the callable; arguments/results snapshot ordinary values, share Pointer targets and box concrete values when Thing is required. Function types include canonical constructor identity: incompatible contracts reject, including extraction from erased storage. Aliases preserve that identity. A composed Return must belong to the enclosing Function's constructor.
 
-A stored Function pairs its owned capture environment with a typed native function pointer. The pointer borrows one `(Runtime, LProgram)` context and returns a boxed future whose result carries a typed output tuple or program Exit. Lyger encodes this ABI as signature atoms; builtin words compose suspension, invocation, binding and result propagation. Function storage inside Thing or collections may erase that typed pair through `Any`, but checked extraction restores its concrete signature before invocation. There is no invocation on an erased value.
+[Scoped instructions](../lyger/paragraph_instructions.go) retain child paragraphs inside their enclosing Function or App continuation. A nested Function's header executes in its enclosing activation. [Activation frames](../lyger/orchestration_scope.go) provide fresh private storage and retain published bindings; captured environments survive through their owners. Source-word arguments evaluate once before entering a retained environment. Uninitialized reads, invalid borrows and ownership cycles reject.
 
-Lyger encodes resolved native type/name/value atoms in approved AML fields; Logiceme renders declarations and composes syntax from them, then assembles selected support resources. Function bodies remain composed: native-expression leaves cannot contain generated declarations, closures or dispatch machinery. Authored builtin native leaves remain opaque. Rust ownership helpers may implement resolved storage semantics, while [App runtime support](../builtins/templates/runtime/runtime.lu) owns process supervision, raw capture and immutable completion. Each direct child has one Wait owner; callbacks do not hold lifecycle locks.
+[CLI/runtime semantics](cli-build.md) owns process supervision, continuation claiming, exact Output bytes, termination, cleanup bounds and publication. The CLI builds complete workspaces with pinned Rust and frozen offline dependencies, verifies artifacts and publishes companions before the orchestrator. It never runs generated deployment scripts.
 
-The CLI validates and materializes complete bundles into a Cargo workspace, builds all targets with Rust 1.98.1 and frozen offline dependencies, and verifies Cargo artifact identities. It snapshots binaries before publishing immutable companion generations and replacing the orchestrator last. Older generations remain runnable; relocated programs need no compiler toolchain. Version-1 manifests retain the `apps` inventory. Service libraries preserve their checked dependencies; standalone Services create no package or process. Generated deployment scripts are never executed. See [CLI publication](cli-build.md).
-
-[Scoped instructions](../lyger/paragraph_instructions.go) retain ordinary ordered
-blocks and per-target continuations for App-led paragraphs. A paragraph's original
-opener determines its execution category, even when import expansion removes that
-sentence. An instruction's data owner, Run callee and continuation owner are
-separate. A temporary producer analysis keeps a saved Output assignment and its
-following uses in the selected continuation; a conditional remains one atomic
-control-flow tree. Coordinated unary actions expand their whole resolved body once
-per operand. True multi-parameter arity remains checked.
-
-[Activation frames](../lyger/orchestration_scope.go) preserve fresh private storage,
-published bindings and canonical process identity. Await claims one invocation's
-continuation once; targets sharing a paragraph retain distinct activations.
-Self-Await observes the cached result; nested Await can activate another App.
-An invocation remains occupied until its continuation finishes, rejecting a
-same-target Run during that continuation. Imported blocks retain their enclosing
-activation. Callable aliases retain the selected capture environment. Missing
-initialization, invalid borrow overlap and ownership cycles reject; static
-captures retain definition-site bindings.
-
-Bare Exit still terminates main, including when expanded from a source action.
-Normal, error and signal exits clean owned processes without running unawaited
-continuations. SIGINT/SIGTERM preserve statuses 130/143; broken output pipes
-produce cleanup and status 1. Runtime cleanup checks errors and owns all launched
-Wait operations. The two-second post-exit/cancellation pipe-drain bound remains;
-normal process duration and process/capture capacity have no imposed cap. Escaped
-process groups and uncatchable termination remain documented limits. Phase 2
-in-code concurrency, runtime argument transport and nested layout syntax are
-outside the supported execution model.
-
-Programs without Apps produce an orchestrator and empty generation manifest through the same pipeline; paragraph scoping introduces no second backend.
-
-Expression lowering retains concrete types and ordered dependencies through display, conversion, assignment and control flow. It does not rediscover imports from operand categories or mutate sibling values. Definition arguments retain their exact-construction/case-folded-rendering boundaries and raw ledger.
-
-`Lyger.NewLygerService(options)` takes `Lyger.Options` by value: `Language` (empty defaults to `eng`), `Resources` (nil selects embedded assets), and `AssetRoot` (physical provenance for diagnostics and overwrite protection, never provider selection). `Logiceme.NewLogicemeService(resources)` takes `fs.FS`, also defaulting nil to embedded assets. Pass the same explicit provider to both services; neither falls back to embedded files. See [developer overrides](development-harness.md#compiler-defaults). Host AML reads remain host-file operations; asset errors retain their phase, resource name and cause.
+Both compiler services accept the same resource filesystem; explicit providers have no embedded fallback. Lyger's AssetRoot records physical provenance, not resource selection. See [developer defaults](development-harness.md#compiler-defaults) for API options. Host AML reads remain host-file operations; resource errors preserve phase and cause.
 
 ## AML and logeme protocol
 

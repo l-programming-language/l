@@ -30,10 +30,7 @@ func TestPlanOwnershipAtValueBoundaries(t *testing.T) {
 		{Kind: instructionShow, Value: planTestRef(source)},
 		{Kind: instructionShow, Value: planTestRef(target)},
 		assign}
-	plan, err := planOrchestration(semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	plan := requireOrchestrationPlan(t, semantics)
 	if plan.Root.Body[0].Value.Access != orchestrationAccessSnapshot || plan.Root.Body[1].Value.Access != orchestrationAccessBorrow || plan.Root.Body[2].Value.Access != orchestrationAccessBorrow {
 		t.Fatal("Text assignment must own an independent snapshot; reads must borrow retained storage")
 	}
@@ -93,10 +90,7 @@ func TestPlanActivationIdentityAndCapture(t *testing.T) {
 		second: {Scope: scope, Body: []*instruction{assign, read}},
 	}
 	semantics.Instructions = []*instruction{{Kind: instructionAwait, Target: firstRef}}
-	plan, err := planOrchestration(semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	plan := requireOrchestrationPlan(t, semantics)
 	outer := plan.Root.Body[0].Continuation
 	inner := outer.Body[1].Continuation
 	if outer.Scope != inner.Scope || outer.ID == inner.ID || outer.Storage[0] == inner.Storage[0] || outer.Body[2].Value.Storage != outer.Storage[0] {
@@ -124,10 +118,7 @@ func TestPlanStaticCaptureAndBoundedContinuation(t *testing.T) {
 	semantics.Apps = []*App{app}
 	semantics.Continuations = map[*App]*scopedInstructions{app: {Scope: &lexicalScope{kind: lexicalParagraph}, Body: []*instruction{{Kind: instructionAwait, Target: appRef}, {Kind: instructionShow, Value: planTestRef(private)}}}}
 	semantics.Instructions = []*instruction{{Kind: instructionAwait, Target: appRef}}
-	plan, err := planOrchestration(semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	plan := requireOrchestrationPlan(t, semantics)
 	body := plan.Root.Body[0].Continuation.Body
 	if body[0].Continuation != nil || body[0].App != app || body[0].Effects&orchestrationEffectAwait == 0 || body[1].Value.Storage != nil || body[1].Value.Literal == nil {
 		t.Fatal("self-Await must remain a real join; static captures retain their defining value without runtime storage")
@@ -139,4 +130,13 @@ func TestPlanStaticCaptureAndBoundedContinuation(t *testing.T) {
 	if plan, err := planOrchestration(semantics); err == nil || !strings.Contains(err.Error(), "outside its paragraph activation") || plan != nil {
 		t.Fatalf("escaping private runtime capture = %#v/%v", plan, err)
 	}
+}
+
+func requireOrchestrationPlan(t *testing.T, semantics *semanticProgram) *orchestrationPlan {
+	t.Helper()
+	plan, err := planOrchestration(semantics)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return plan
 }

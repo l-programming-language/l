@@ -16,10 +16,7 @@ func TestParagraphDescriptorTargetDeclarationIdentity(t *testing.T) {
 				"Use Widget as \"Handle\".\n" +
 				"\"Restricted\" is a New Adjective describing any Widget.\n" +
 				"It describes a Generic `main` " + target + " of any Process with No Inputs and No Outputs.\n"
-			compilation := compileMemberResolutionSource(t, source)
-			if compilation.Error != nil {
-				t.Fatal(compilation.Error)
-			}
+			compilation := executableTestResult(t, source).Compilation
 			restricted := compilation.Memory["Restricted"]
 			descriptor := compilation.Semantics.Descriptors[restricted]
 			if restricted == nil || descriptor == nil || len(descriptor.Rules) != 1 {
@@ -94,10 +91,7 @@ func TestParagraphDescriptorNominalConstructionIdentity(t *testing.T) {
 func TestParagraphDescriptorNativeTargetControl(t *testing.T) {
 	source := paragraphSource(t)
 	source.main = paragraphWitness
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	if len(compilation.Semantics.Constructions) != 1 || compilation.Semantics.Constructions[0].Root.Nominal != "app" {
 		t.Fatal("native App target did not retain its constructor")
 	}

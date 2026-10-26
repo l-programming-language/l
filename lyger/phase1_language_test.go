@@ -534,10 +534,7 @@ func phase1LanguageCase(t *testing.T, id string) {
 		t.Run("public-runtime-capture-escape", func(t *testing.T) {
 			source := "Use IO's Print from `io` as \"Print\".\n\"message\" is `private`.\n\n    Create \"Worker\" as a New Public Basic App.\nThe App Prints message.\nDefine \"privateText\" as Worker's Output.\nPublicly create \"Report|-s|-ed|-ing\" for Showing privateText and then Showing any Text.\n\nRun Worker.\nAwait Worker.\nReport `caller`.\n"
 			r := phase1Require(t, source, nil)
-			plan, err := planOrchestration(r.Compilation.Semantics)
-			if err != nil {
-				t.Fatal(err)
-			}
+			plan := requireOrchestrationPlan(t, r.Compilation.Semantics)
 			var binding, call *orchestrationInstruction
 			visitCapturePlan(plan.Root.Body, func(current *orchestrationInstruction) {
 				if current.Source.Callable != r.Compilation.Memory["Report"] {

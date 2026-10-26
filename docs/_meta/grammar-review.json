@@ -6,12 +6,12 @@
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/grammar_match.go": "bb6700a68686d2d88457df89053d38298c2230b3cc324c2f662e41665c2a5d53",
     "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
-    "lyger/instructions.go": "9584edc3e6b7183c2515b160f8be52b085b2cc35d1a209bb2863683024aa3846",
+    "lyger/instructions.go": "230b1a93cdf475156264b6531262072cc0a3f6599a2b26883c45f91355a7b3a6",
     "lyger/native_encoding.go": "19785ba3dd27e613fa7a35ec5a60fef78a087743b965124087d535416c7aaa0a",
-    "lyger/orchestration_functions.go": "0ce3ad3a82f1819b5aee521d55caeb8a9cbee895de80fb1f60e5059a35474a41",
+    "lyger/orchestration_functions.go": "f13b92c9caf1c1d3c77105c2a69785e55a16ba88e3ca73347fd925ede99041fc",
     "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
     "lyger/semantic_resolution.go": "a8e9eb4140547b6e488b5869ed73b7754181d3296918900c51c989d09df2e3f8",
-    "lyger/source_functions.go": "49702e185101ecddf7271effc1f373c439d62f93e8b429fabf5c7c6158e7cb86",
+    "lyger/source_functions.go": "aea627402c886b8289eda7da8318637c744f2f7029781106d419b5a7d9e9a8c1",
     "lyger/types.go": "ccefcec0547794da4a35f9f58ad00131b5dab02808d4dbb910eef39102f951eb"
   },
   "entries": {

@@ -161,10 +161,7 @@ func TestCoordinatedRegistrationAliasOutputAndShowInstructions(t *testing.T) {
 	source := paragraphSource(t)
 	source.main = paragraphGlobals + "Create \"Worker\" as a New Basic App.\nThe App Prints x1.\n" +
 		"Run Worker.\nUse Worker as \"Primary\" and define \"snapshot\" as Worker's Output.\nShow snapshot.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	worker, snapshot := compilation.Memory["Worker"], compilation.Memory["snapshot"]
 	canonical, err := canonicalRecord(compilation.Memory["Primary"], compilation.Semantics.Aliases)
 	if err != nil || canonical != worker || snapshot == nil || snapshot.Value.Runtime == nil || snapshot.Value.Runtime.Owner != worker {
@@ -359,10 +356,7 @@ func TestCoordinatedRegistrationImportedRetriesKeepOccurrenceIdentity(t *testing
 		main:    "\"origin\" is `outer`.\n\n    Use `local-words.l`.\nShow Copy.\nShow count.\n\n    Use `local-words.l`.\nShow Copy.\nShow count.\n",
 		library: declaration + ".\n\"origin\" is `left`.\n",
 	}
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	var copies, counts []paragraphBindingDeclaration
 	for _, statement := range compilation.Statements {
 		if filepath.Base(statement.source.Span.Path) != "local-words.l" {
@@ -418,10 +412,7 @@ func TestCoordinatedRegistrationTrailingDescriptorConstructs(t *testing.T) {
 		"\"count\" is 1 and \"Style\" is a New Adjective describing any App.\n" +
 		"It describes a Generic App with a New Main Service using any Process.\n" +
 		"Create \"Worker\" as a New Style App.\nThe App Prints x1.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	style := paragraphBindingDeclarations(t, compilation, "Style", 1)[0]
 	count := paragraphBindingDeclarations(t, compilation, "count", 1)[0]
 	descriptor := compilation.Semantics.Descriptors[style.record]

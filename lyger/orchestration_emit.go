@@ -426,11 +426,7 @@ func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([
 		if len(current.Arguments) != 0 {
 			bindings := []string{orchestrationStatement("{")}
 			for index, argument := range current.Arguments {
-				value, err := e.value(argument)
-				if err != nil {
-					return nil, err
-				}
-				text, err := runtimeCopyExpression(value, orchestrationAccessSnapshot)
+				text, err := e.transferRuntimeValue(argument, argument.RuntimeType)
 				if err != nil {
 					return nil, err
 				}

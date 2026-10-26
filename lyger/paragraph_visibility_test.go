@@ -68,10 +68,7 @@ func TestParagraphPublicDeclarationsRetainCanonicalIdentity(t *testing.T) {
 			source := paragraphSource(t)
 			source.main = paragraphWitness + "\n    " + tc.declaration + "\n" + tc.body + "\"UnpublishedSibling\" is `private`.\n" +
 				"\nUse " + tc.name + " as \"PublishedAlias\".\nUse PublishedAlias as \"PublishedAgain\".\n"
-			compilation := compileMemberResolutionSource(t, source)
-			if compilation.Error != nil {
-				t.Fatal(compilation.Error)
-			}
+			compilation := executableTestResult(t, source).Compilation
 			if compilation.Memory["UnpublishedSibling"] != nil {
 				t.Fatal("Public applied to the whole paragraph instead of its declaration")
 			}
@@ -115,10 +112,7 @@ func TestParagraphPublicDictionaryKeepsMemberNamespace(t *testing.T) {
 		"Create Shared's \"Speak|-s|-ed|-ing|-er\" for Processing a New Announcer.\n" +
 		"\nUse Shared as \"SharedAlias\".\nUse SharedAlias's Speak as \"Speak\".\n" +
 		"Create \"Reader\" as a New Basic App.\nThe App Speaks x2.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	owner, _ := paragraphDeclaration(t, compilation, "Shared")
 	member := compilation.Memory["Shared.Speak"]
 	alias := compilation.Memory["Speak"]

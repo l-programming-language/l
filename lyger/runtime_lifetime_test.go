@@ -71,7 +71,7 @@ async fn observe_lifetimes(runtime: &runtime::Runtime) -> runtime::Result<()> {
     let action_lifetime = Rc::downgrade(&action.values);
     let captures = LEnvironment::typed(vec![LType::Thing], vec![LValue::Environment(action.clone())])?;
     let capture_lifetime = Rc::downgrade(&captures.values);
-    let signature = LType::Function(vec![], vec![LType::Thing]);
+    let signature = LType::Function(1, vec![], vec![LType::Thing]);
     let callback = (captures, probe_value as Probe);
     let mut callbacks = LMap::new(signature.clone());
     callbacks.set(b"saved".to_vec(), LValue::function(callback, signature.clone()))?;
@@ -114,7 +114,7 @@ async fn observe_lifetimes(runtime: &runtime::Runtime) -> runtime::Result<()> {
     map.set(b"edge".to_vec(), LValue::Environment(environment.clone()))?;
     assert!(environment.set(0, LValue::Map(map)).is_err());
     let callback = (environment.clone(), probe_value as Probe);
-    assert!(environment.set(0, LValue::function(callback, LType::Function(vec![], vec![LType::Thing]))).is_err());
+    assert!(environment.set(0, LValue::function(callback, LType::Function(1, vec![], vec![LType::Thing]))).is_err());
     assert!(matches!(environment.get(0)?, LValue::Null));
     drop(environment);
     assert!(lifetime.upgrade().is_none());

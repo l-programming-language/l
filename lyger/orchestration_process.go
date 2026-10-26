@@ -84,11 +84,7 @@ func (e *orchestrationEmitter) processInstruction(current *orchestrationInstruct
 	if current.App != nil {
 		return e.canonicalProcess(current, e.processReceiver(current))
 	}
-	value, err := e.value(current.Target)
-	if err != nil {
-		return nil, err
-	}
-	selected, err := runtimeCopyExpression(value, orchestrationAccessSnapshot)
+	selected, err := e.transferRuntimeValue(current.Target, current.Target.RuntimeType)
 	if err != nil {
 		return nil, err
 	}

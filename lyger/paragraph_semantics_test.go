@@ -33,10 +33,7 @@ func TestParagraphsCoordinatedDeclarations(t *testing.T) {
 		t.Fatal("paragraph demo has no declaration sentence")
 	}
 	source.main = lines[0] + "\n" + lines[1] + "\nCreate \"First\" as a New Basic App.\nThe App Prints x1.\nCreate \"Second\" as a New Basic App.\nThe App Prints x2.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	if !bytes.Contains(compilation.ExpandedBytes, []byte(lines[1])) {
 		t.Error("coordinated declaration changed in the expanded-source view")
 	}
@@ -71,10 +68,7 @@ func TestParagraphsLocalBindings(t *testing.T) {
 				source.main = strings.Replace(source.main, "New Basic App", "New Deferred App", 1)
 				source.main += "\n\"Deferred\" describes a Generic App with a New Main Service using any Process.\n"
 			}
-			compilation := compileMemberResolutionSource(t, source)
-			if compilation.Error != nil {
-				t.Fatal(compilation.Error)
-			}
+			compilation := executableTestResult(t, source).Compilation
 			locals := map[int]*record{}
 			var declarations []*record
 			var owners []string
@@ -165,10 +159,7 @@ func TestParagraphsOrdinaryScopesRetainDistinctDeclarations(t *testing.T) {
 	source := paragraphSource(t)
 	source.main = "    \"value\" is `first`.\nShow value.\n" +
 		"\n    \"value\" is `second`.\nShow value.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	var declarations []*record
 	for _, statement := range compilation.Statements {
 		if filepath.Base(statement.source.Span.Path) != "main.l" {
@@ -208,10 +199,7 @@ func TestParagraphsCoordinatedDispatch(t *testing.T) {
 			// Public Apps escape their defining paragraphs; coordination retains
 			// the source-defined action and canonical targets, including aliases.
 			source.main = paragraphGlobals + "\n    Create \"First\" as a New Public Basic App.\nThe App Prints x1.\n\n    Create \"Second\" as a New Public Basic App.\nThe App Prints x2.\n\n" + tc.dispatch
-			compilation := compileMemberResolutionSource(t, source)
-			if compilation.Error != nil {
-				t.Fatal(compilation.Error)
-			}
+			compilation := executableTestResult(t, source).Compilation
 			var operations []string
 			var collect func([]*instruction)
 			collect = func(instructions []*instruction) {
@@ -243,10 +231,7 @@ func TestParagraphsMultipleSubjectsKeepExactMemberOwners(t *testing.T) {
 		"Create \"Second\" as a New Basic App.\nThe App Prints x2.\n" +
 		"If it has an Error, exit with it's Error, else define \"firstResult\" as First's Output.\n" +
 		"Define \"secondResult\" as Second's Output.\nShow firstResult.\nShow secondResult.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	first, _ := paragraphDeclaration(t, compilation, "First")
 	second, _ := paragraphDeclaration(t, compilation, "Second")
 	for _, tc := range []struct {
@@ -288,10 +273,7 @@ func TestParagraphsMultipleSubjectsKeepExactMemberOwners(t *testing.T) {
 
 func TestParagraphsDemoCompiles(t *testing.T) {
 	source := paragraphSource(t)
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	if compilation.Semantics == nil || compilation.Program == nil || len(compilation.ProcStatements) != 0 {
 		t.Fatal("paragraph demo did not complete semantic construction")
 	}

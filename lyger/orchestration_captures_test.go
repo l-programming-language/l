@@ -39,10 +39,7 @@ func TestCapturePlanSnapshotsAndAliasesRetainInstance(t *testing.T) {
 	first := &instruction{Kind: instructionBlock, Block: &scopedInstructions{Scope: scope, Body: []*instruction{captureTestSet(value, "first"), bind, captureTestSet(value, "changed"), captureTestCall(action, captureTestShow(value))}}}
 	second := &instruction{Kind: instructionBlock, Block: &scopedInstructions{Scope: scope, Body: []*instruction{captureTestSet(value, "second"), bind}}}
 	semantics.Instructions = []*instruction{first, {Kind: instructionAliasAction, Callable: alias, Target: &instructionValue{Kind: operandSymbol, Record: action}}, second, captureTestCall(alias, captureTestShow(value)), captureTestCall(action, captureTestShow(value))}
-	plan, err := planOrchestration(semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	plan := requireOrchestrationPlan(t, semantics)
 	a, b := plan.Root.Body[0].Block, plan.Root.Body[2].Block
 	if a.Body[1].CaptureValues[0].Storage == b.Body[1].CaptureValues[0].Storage {
 		t.Fatal("two activations share private source storage")
@@ -122,10 +119,7 @@ func TestCapturePlanWritesStayInEnvironmentAndNestedCallsKeepHandle(t *testing.T
 	bindOuter.CaptureCalls = []*record{inner}
 	semantics.Instructions = []*instruction{captureTestSet(value, "original"), captureTestBind(inner, value), bindOuter,
 		captureTestCall(outer, captureTestCall(inner, captureTestSet(value, "closure"), captureTestShow(value))), captureTestShow(value)}
-	plan, err := planOrchestration(semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	plan := requireOrchestrationPlan(t, semantics)
 	outerCall := plan.Root.Body[3]
 	innerCall := outerCall.Actions[0]
 	if innerCall.CaptureSource.Capture == nil || innerCall.CaptureSource.Slot != nil {

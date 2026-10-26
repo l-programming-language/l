@@ -83,10 +83,7 @@ func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {
 	} {
 		source.main += "\n    Define \"Pulse|-s|-d|-ing\" as `<DEF>" + body + "<DEF>`.\nUse Pulse as \"Stroke\".\n"
 	}
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	definitions := paragraphBindingDeclarations(t, compilation, "Pulse", 2)
 	aliases := paragraphBindingDeclarations(t, compilation, "Stroke", 2)
 	if definitions[0].record == definitions[1].record {
@@ -134,10 +131,7 @@ func TestParagraphBindingPrivateAppsKeepRunTargetsAndBodies(t *testing.T) {
 		source.main += "\n    \"message\" is `" + text + "`.\n" +
 			"Create \"Worker\" as a New Basic App.\nThe App Prints message.\nRun Worker.\n"
 	}
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	workers := paragraphBindingDeclarations(t, compilation, "Worker", 2)
 	if workers[0].record == workers[1].record || workers[0].record.Value.Applicative.App == workers[1].record.Value.Applicative.App {
 		t.Fatal("private Worker declarations share an App")
@@ -335,10 +329,7 @@ func TestParagraphBindingDelayedInflectionShadowsOuter(t *testing.T) {
 		"Create \"Reader\" as a New Basic App.\nThe App Launches x2.\n" +
 		"Define \"Whisper|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~::std::print!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n" +
 		"\nCreate \"OuterReader\" as a New Basic App.\nThe App Launches x1.\n"
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	definitions := paragraphBindingDeclarations(t, compilation, "Launch", 2)
 	outer, local := definitions[0].record, definitions[1].record
 	if outer == local {
@@ -364,10 +355,7 @@ func TestParagraphBindingSiblingDictionaryMembersKeepOwners(t *testing.T) {
 			"Use Tools's Speak as \"Display\".\n"+
 			"Create \"Reader%d\" as a New Basic App.\nThe App Displays %s.\n", index+1, text)
 	}
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	compilation := executableTestResult(t, source).Compilation
 	owners := paragraphBindingDeclarations(t, compilation, "Tools", 2)
 	members := paragraphBindingDeclarations(t, compilation, "Speak", 2)
 	aliases := paragraphBindingDeclarations(t, compilation, "Display", 2)

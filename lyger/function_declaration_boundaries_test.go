@@ -31,8 +31,8 @@ func TestFunctionDeclarationBoundariesNative(t *testing.T) {
 	source := "    If false, Publicly create \"Unused\" as a New Function with No Inputs and No Outputs and then Show `skipped|`.\nReturn.\n\n" +
 		strings.Replace(identityFunction, "and Outputs of Text.", "and Outputs of Text and then Show `header|`.", 1) +
 		"Define \"FirstCopy\" as Identity.\n\"SecondCopy\" is FirstCopy.\nSecondCopy `copy|` as \"Copied\".\nShow Copied.\n\n" +
-		"    Publicly create \"Apply\" as a New Function with Inputs of \"Callback\" as Identity and Outputs of Text.\nDefine \"Saved\" as Callback.\nSaved `parameter|` as \"Result\".\nReturn Result.\n\nApply Identity as \"Applied\".\nShow Applied.\n\n" +
-		"    Publicly create \"Select\" as a New Function with No Inputs and Outputs of Identity.\nReturn Identity.\n\nSelect as \"Returned\".\nDefine \"Saved\" as Returned.\nSaved `result` as \"Selected\".\nShow Selected.\n"
+		functionSource("Apply", "\"Callback\" as Identity", "Text", "Define \"Saved\" as Callback.\nSaved `parameter|` as \"Result\".\nReturn Result.") + "Apply Identity as \"Applied\".\nShow Applied.\n\n" +
+		functionSource("Select", "", "Identity", "Return Identity.") + "Select as \"Returned\".\nDefine \"Saved\" as Returned.\nSaved `result` as \"Selected\".\nShow Selected.\n"
 	c := compileMemberResolutionSource(t, memberResolutionSource{main: source + "\n" + functionHeaderCaptureSource})
 	captureNativeResult(t, c, "header|copy|parameter|resultsnapshotshareddone")
 }
@@ -45,20 +45,13 @@ func TestFunctionCopyRetainsSignature(t *testing.T) {
 		"Use Identity as \"Alias\".\nDefine \"Saved\" as Alias.",
 	} {
 		t.Run(declaration, func(t *testing.T) {
-			_, err := functionGenerated(t, identityFunction+declaration+"\nSaved `copy` as \"Result\".\nShow Result.\n")
-			if err != nil {
-				t.Fatal(err)
-			}
+			requireFunctionGenerated(t, identityFunction+declaration+"\nSaved `copy` as \"Result\".\nShow Result.\n")
 		})
 	}
-	const apply = "    Publicly create \"Apply\" as a New Function with Inputs of \"Callback\" as Identity and Outputs of Text.\nDefine \"Saved\" as Callback.\nSaved `parameter` as \"Result\".\nReturn Result.\n\nApply Identity as \"Result\".\nShow Result.\n"
-	if _, err := functionGenerated(t, identityFunction+apply); err != nil {
-		t.Fatal(err)
-	}
-	const selectCopy = "    Publicly create \"Select\" as a New Function with No Inputs and Outputs of Identity.\nReturn Identity.\n\nSelect as \"Returned\".\nDefine \"Saved\" as Returned.\nSaved `result` as \"Result\".\nShow Result.\n"
-	if _, err := functionGenerated(t, identityFunction+selectCopy); err != nil {
-		t.Fatal(err)
-	}
+	var apply = functionSource("Apply", "\"Callback\" as Identity", "Text", "Define \"Saved\" as Callback.\nSaved `parameter` as \"Result\".\nReturn Result.") + "Apply Identity as \"Result\".\nShow Result.\n"
+	requireFunctionGenerated(t, identityFunction+apply)
+	var selectCopy = functionSource("Select", "", "Identity", "Return Identity.") + "Select as \"Returned\".\nDefine \"Saved\" as Returned.\nSaved `result` as \"Result\".\nShow Result.\n"
+	requireFunctionGenerated(t, identityFunction+selectCopy)
 	for _, use := range []string{"Saved 7 as \"Result\".", "Saved `copy`."} {
 		if _, err := functionGenerated(t, identityFunction+"Define \"Saved\" as Identity.\n"+use+"\n"); err == nil {
 			t.Fatalf("copied Function accepted incompatible call: %s", use)
@@ -92,19 +85,14 @@ func TestFunctionModuleHeaderHasNoInitializationEffects(t *testing.T) {
 const functionHeaderCaptureSource = "Define \"Outer\" as a New Pointer of `first`.\n\n    Publicly Define \"Items\" as a New List of `snapshot` and then Define \"Handle\" as Outer and then Publicly create \"HeaderRead\" as a New Function with Inputs of \"Suffix\" as Text and Outputs of Text and then Put `shared` in Outer.\nDefine \"Local\" as a New Text from Items at 0.\nDefine \"Shared\" as a New Text from Handle.\nShow Local and Shared.\nReturn Suffix.\n\nPlace `changed` in Items at 0.\nHeaderRead `done` as \"Final\".\nShow Final.\n"
 
 func TestFunctionHeaderCapturesOnlyOuterValues(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: functionHeaderCaptureSource})
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := executableTestResult(t, memberResolutionSource{main: functionHeaderCaptureSource}).Compilation
 	for _, function := range c.Semantics.Functions {
 		if len(function.Captures) != 2 || function.Captures[0].Record.ID != "Items" || function.Captures[1].Record.ID != "Handle" || len(function.CaptureCalls) != 0 {
 			t.Fatalf("header captures included parameters/body locals or lost header siblings: %#v", function.Captures)
 		}
 	}
-	if _, err := functionGenerated(t, functionHeaderCaptureSource); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := functionGenerated(t, "    Publicly create \"Read\" as a New Function with No Inputs and Outputs of List of Text and then Define \"Items\" as a New List of `late`.\nReturn Items.\n\n"); err == nil || !strings.Contains(err.Error(), "not definitely assigned") {
+	requireFunctionGenerated(t, functionHeaderCaptureSource)
+	if _, err := functionGenerated(t, functionSource("Read", "", "List of Text and then Define \"Items\" as a New List of `late`", "Return Items.")); err == nil || !strings.Contains(err.Error(), "not definitely assigned") {
 		t.Fatalf("header capture read a value initialized after its binding: %v", err)
 	}
 }

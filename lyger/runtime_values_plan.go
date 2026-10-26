@@ -116,9 +116,9 @@ func (p *orchestrationPlanner) registerRuntimeType(typ runtimeTypeRef) {
 	if p.plan.Identities == nil {
 		p.plan.Identities = make(map[*record]uint64)
 	}
-	if typ.Identity != nil {
-		if _, ok := p.plan.Identities[typ.Identity]; !ok {
-			p.plan.Identities[typ.Identity] = uint64(len(p.plan.Identities) + 1)
+	for _, identity := range []*record{typ.Identity, typ.Definition} {
+		if identity != nil && p.plan.Identities[identity] == 0 {
+			p.plan.Identities[identity] = uint64(len(p.plan.Identities) + 1)
 		}
 	}
 	if typ.Element != nil {

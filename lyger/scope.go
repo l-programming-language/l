@@ -127,9 +127,7 @@ func (t *token) isFunctionReturn() bool {
 	}
 	for scope := t.scope; scope != nil; scope = scope.parent {
 		if scope.function != nil {
-			selected, err := canonicalRecord(scope.function.Return, scope.function.aliases)
-			bound, boundErr := canonicalRecord(t.binding.Record, scope.function.aliases)
-			return err == nil && boundErr == nil && selected != nil && selected == bound
+			return scope.function.bindsReturn(t)
 		}
 	}
 	return false

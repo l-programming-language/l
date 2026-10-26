@@ -24,7 +24,7 @@ type runtimeTypeRef struct {
 }
 
 func (a runtimeTypeRef) equal(b runtimeTypeRef) bool {
-	if a.Kind != b.Kind || a.Identity != b.Identity || (a.Element == nil) != (b.Element == nil) || len(a.Inputs) != len(b.Inputs) || len(a.Outputs) != len(b.Outputs) {
+	if a.Kind != b.Kind || a.Identity != b.Identity || a.Definition != b.Definition || (a.Element == nil) != (b.Element == nil) || len(a.Inputs) != len(b.Inputs) || len(a.Outputs) != len(b.Outputs) {
 		return false
 	}
 	if a.Element != nil && !a.Element.equal(*b.Element) {
@@ -91,10 +91,6 @@ var runtimeRepresentations = map[valueType][2]string{
 
 func runtimeTypeName(kind valueType) (string, bool) {
 	entry, ok := runtimeRepresentations[kind]
-	if kind == valueFunction {
-		name, err := nativeRuntimeType(runtimeTypeRef{Kind: kind})
-		return name, err == nil
-	}
 	return entry[0], ok
 }
 
@@ -190,6 +186,10 @@ func runtimeTypeExpression(t runtimeTypeRef, identities map[*record]uint64) (str
 		}
 		return fmt.Sprintf("LType::Instance(%d)", id), nil
 	case valueFunction:
+		id, ok := identities[t.Definition]
+		if !ok {
+			return "", lerrors.Internal.Errorf("Function has no canonical definition identity")
+		}
 		parts := make([]string, 2)
 		for i, types := range [][]runtimeTypeRef{t.Inputs, t.Outputs} {
 			values := make([]string, len(types))
@@ -202,7 +202,7 @@ func runtimeTypeExpression(t runtimeTypeRef, identities map[*record]uint64) (str
 			}
 			parts[i] = "vec![" + strings.Join(values, ",") + "]"
 		}
-		return "LType::Function(" + strings.Join(parts, ",") + ")", nil
+		return fmt.Sprintf("LType::Function(%d,%s)", id, strings.Join(parts, ",")), nil
 	}
 	return "LType::" + variant, nil
 }

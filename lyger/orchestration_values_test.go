@@ -35,10 +35,7 @@ func TestLoweredValueImportOrderAndOwnership(t *testing.T) {
 	operand := &instructionValue{Kind: operandLiteral, Type: valueText, Literal: original}
 	semantics := newSemanticProgram()
 	semantics.Instructions = []*instruction{{Kind: instructionShow, Value: operand}, {Kind: instructionShow, Value: operand}}
-	plan, err := planOrchestration(semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	plan := requireOrchestrationPlan(t, semantics)
 	first, second := plan.Root.Body[0].Value.Literal, plan.Root.Body[1].Value.Literal
 	if first == original || second == original || first == second || first.Text != original.Text || second.Text != original.Text {
 		t.Fatal("planned expression siblings share semantic literal storage")
@@ -70,10 +67,7 @@ func TestLoweredValueCheckedConversions(t *testing.T) {
 			operand := &instructionValue{Kind: operandLiteral, Type: tc.primitive.Type, Literal: tc.primitive}
 			semantics := newSemanticProgram()
 			semantics.Instructions = []*instruction{{Kind: instructionShow, Value: operand}}
-			plan, err := planOrchestration(semantics)
-			if err != nil {
-				t.Fatal(err)
-			}
+			plan := requireOrchestrationPlan(t, semantics)
 			emitter := orchestrationEmitter{plan: plan}
 			actual, err := emitter.instruction(plan.Root.Body[0])
 			if err != nil || !reflect.DeepEqual(actual, []string{tc.want}) || plan.Root.Body[0].Value.Type != tc.primitive.Type {
@@ -131,10 +125,7 @@ func TestLoweredValueCheckedConversions(t *testing.T) {
 		{Kind: instructionShow, Value: read},
 		{Kind: instructionExit, Value: &instructionValue{Kind: operandError, Type: valueError, Payload: read}},
 	}
-	plan, err := planOrchestration(semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	plan := requireOrchestrationPlan(t, semantics)
 	display, payload := plan.Root.Body[0].Value, plan.Root.Body[1].Value.Payload
 	if len(plan.Storage) != 1 || display.Storage != payload.Storage || display.Access != orchestrationAccessBorrow || payload.Access != orchestrationAccessBorrow || plan.Storage[0].Mutable {
 		t.Fatal("display and Error payload must borrow the same unchanged stored Text")
@@ -225,10 +216,7 @@ func TestLoweredValueInstructionDependenciesAndState(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			semantics := newSemanticProgram()
 			semantics.Instructions = []*instruction{tc.current}
-			plan, err := planOrchestration(semantics)
-			if err != nil {
-				t.Fatal(err)
-			}
+			plan := requireOrchestrationPlan(t, semantics)
 			planned := plan.Root.Body[0]
 			actual, err := (&orchestrationEmitter{plan: plan}).instruction(planned)
 			if err != nil || !reflect.DeepEqual(actual, tc.want) || planned.ReachesNext != tc.live {

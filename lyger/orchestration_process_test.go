@@ -69,15 +69,9 @@ func TestDynamicAppAwaitJoinsOnlyContinuingFacts(t *testing.T) {
 }
 
 func TestDynamicAppFunctionParameterUsesRuntimeStorage(t *testing.T) {
-	source := memberResolutionSource{main: "Create \"First\" as a New Basic App.\nCreate \"Second\" as a New Basic App.\n\n    Publicly create \"Join\" as a New Function with Inputs of \"Target\" as App and No Outputs.\nRun Target.\nAwait Target.\nIf Target has an Error, exit with Target's Error.\n\nJoin First.\n"}
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
-	plan, err := planOrchestration(compilation.Semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	source := memberResolutionSource{main: "Create \"First\" as a New Basic App.\nCreate \"Second\" as a New Basic App.\n\n" + functionSource("Join", "\"Target\" as App", "", "Run Target.\nAwait Target.\nIf Target has an Error, exit with Target's Error.") + "Join First.\n"}
+	compilation := executableTestResult(t, source).Compilation
+	plan := requireOrchestrationPlan(t, compilation.Semantics)
 	function := processTestFunction(plan.Root.Body)
 	if function == nil {
 		t.Fatal("Function binding missing")
@@ -102,21 +96,13 @@ func TestDynamicAppMemberConditionRetainsOwnerIdentity(t *testing.T) {
 		t.Fatalf("independent dynamic owners were conflated: %v", err)
 	}
 	condition.Right.Owner = condition.Left
-	if _, err := planOrchestration(semantics); err != nil {
-		t.Fatal(err)
-	}
+	requireOrchestrationPlan(t, semantics)
 }
 
 func TestFunctionAwaitUsesProgramRootsAndPreservesCallerSnapshot(t *testing.T) {
 	source := memberResolutionSource{main: functionAwaitRootsSource}
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
-	plan, err := planOrchestration(compilation.Semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	compilation := executableTestResult(t, source).Compilation
+	plan := requireOrchestrationPlan(t, compilation.Semantics)
 	if !plan.FunctionProgramState {
 		t.Fatal("Function continuation did not retain program state")
 	}
@@ -144,11 +130,8 @@ func TestFunctionAwaitUsesProgramRootsAndPreservesCallerSnapshot(t *testing.T) {
 }
 
 func TestFunctionInvocationDoesNotInventGlobalAssignmentFacts(t *testing.T) {
-	source := memberResolutionSource{main: "    Create \"Worker\" as a New Public Basic App.\nPublicly define \"Late\" as Worker's Output.\n\n    Publicly create \"Join\" as a New Function with Inputs of \"Target\" as App and No Outputs.\nAwait Target.\n\nRun Worker.\nJoin Worker.\nShow Late.\n"}
-	compilation := compileMemberResolutionSource(t, source)
-	if compilation.Error != nil {
-		t.Fatal(compilation.Error)
-	}
+	source := memberResolutionSource{main: "    Create \"Worker\" as a New Public Basic App.\nPublicly define \"Late\" as Worker's Output.\n\n" + functionSource("Join", "\"Target\" as App", "", "Await Target.") + "Run Worker.\nJoin Worker.\nShow Late.\n"}
+	compilation := executableTestResult(t, source).Compilation
 	if _, err := planOrchestration(compilation.Semantics); err == nil || !strings.Contains(err.Error(), "Late is not definitely assigned") {
 		t.Fatalf("Function invocation invented a caller initialization fact: %v", err)
 	}
@@ -168,4 +151,4 @@ func processTestFunction(body []*orchestrationInstruction) *orchestrationFunctio
 	return nil
 }
 
-const functionAwaitRootsSource = "Define \"Message\" as a New List of `before` and `before`.\nDefine \"Witness\" as a New Text from Message at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Witness and then Showing any Text.\n\n    Create \"Worker\" as a New Public Basic App.\nPlace `after` in Message at 0.\nDefine \"Observed\" as a New Text from Message at 0.\nShow Observed.\nReport `|`.\n\n    Publicly create \"Join\" as a New Function with Inputs of \"Target\" as App and Outputs of List of Text.\nAwait Target.\nReturn Message.\n\nRun Worker.\nJoin Worker as \"Snapshot\".\nDefine \"Copied\" as a New Text from Snapshot at 0.\nShow Copied.\nDefine \"Current\" as a New Text from Message at 0.\nShow Current.\n"
+var functionAwaitRootsSource = "Define \"Message\" as a New List of `before` and `before`.\nDefine \"Witness\" as a New Text from Message at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Witness and then Showing any Text.\n\n    Create \"Worker\" as a New Public Basic App.\nPlace `after` in Message at 0.\nDefine \"Observed\" as a New Text from Message at 0.\nShow Observed.\nReport `|`.\n\n" + functionSource("Join", "\"Target\" as App", "List of Text", "Await Target.\nReturn Message.") + "Run Worker.\nJoin Worker as \"Snapshot\".\nDefine \"Copied\" as a New Text from Snapshot at 0.\nShow Copied.\nDefine \"Current\" as a New Text from Message at 0.\nShow Current.\n"

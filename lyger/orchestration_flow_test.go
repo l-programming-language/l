@@ -32,10 +32,7 @@ func TestPlanLifecycleEffects(t *testing.T) {
 			if tc.registerContinuation {
 				semantics.Continuations = map[*App]*scopedInstructions{app: continuation}
 			}
-			plan, err := planOrchestration(semantics)
-			if err != nil {
-				t.Fatal(err)
-			}
+			plan := requireOrchestrationPlan(t, semantics)
 			if len(plan.Root.Body) != 1 || len(plan.Apps) != 1 || plan.Apps[0] != app {
 				t.Fatalf("lifecycle plan lost its instruction or application identity: %+v", plan)
 			}

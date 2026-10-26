@@ -27,6 +27,12 @@ type sourceFunction struct {
 	CaptureCalls   []*record
 }
 
+func (f *sourceFunction) bindsReturn(tok *token) bool {
+	selected, err := canonicalRecord(f.Return, f.aliases)
+	bound, boundErr := canonicalRecord(tok.binding.Record, f.aliases)
+	return err == nil && boundErr == nil && selected != nil && selected == bound
+}
+
 func (f *sourceFunction) signature() runtimeTypeRef {
 	result := runtimeTypeRef{Kind: valueFunction, Definition: f.Definition, Outputs: f.Outputs}
 	for _, parameter := range f.Inputs {
@@ -216,6 +222,9 @@ func (b *instructionBuilder) functionOperation(clause *clauseGram, ctx instructi
 		if ctx.function == nil {
 			return nil, lerrors.InvalidInput.Errorf("Return requires a Function activation")
 		}
+		if !ctx.function.bindsReturn(clause.verb) {
+			return nil, lerrors.TypeMismatch.Errorf("Return belongs to a different Function constructor contract")
+		}
 		current.Function = ctx.function
 		for _, value := range clause.values {
 			operand, err := b.nominalValue(value.noun, value.tokens, ctx)
@@ -288,6 +297,9 @@ func checkFunctionValues(operation string, types []runtimeTypeRef, values []*ins
 			actual = runtimeTypeRef{Kind: values[i].Type}
 		}
 		if !wanted.accepts(actual) {
+			if wanted.Kind == valueFunction && actual.Kind == valueFunction && wanted.Definition != actual.Definition {
+				return lerrors.TypeMismatch.Errorf("%s value %d has a different Function constructor contract", operation, i+1)
+			}
 			return lerrors.TypeMismatch.Errorf("%s value %d requires %s, got %s", operation, i+1, wanted.Kind, actual.Kind)
 		}
 	}

@@ -303,10 +303,7 @@ func TestParagraphActivationRetainsEscapingPublicRuntimeCapture(t *testing.T) {
 	}
 	source.main = makeSource("Witness's Output")
 	runtimeResult := executableTestResult(t, source)
-	plan, err := planOrchestration(runtimeResult.Compilation.Semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	plan := requireOrchestrationPlan(t, runtimeResult.Compilation.Semantics)
 	var boundInContinuation bool
 	var invocationPlan *orchestrationInstruction
 	visitCapturePlan(plan.Root.Body, func(current *orchestrationInstruction) {

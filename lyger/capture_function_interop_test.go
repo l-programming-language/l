@@ -8,17 +8,11 @@ import (
 	"testing"
 )
 
-const captureFunctionInteropSource = "Define \"Items\" as a New List of `kept` and `other`.\nDefine \"Payload\" as a New Text from Items at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Payload and then Showing any Text.\nUse Report as \"Saved\".\n\n    Publicly create \"Invoke\" as a New Function with Inputs of \"Suffix\" as Text and No Outputs.\nSaved Suffix.\n\nInvoke `one`.\nInvoke `two`.\n"
+var captureFunctionInteropSource = "Define \"Items\" as a New List of `kept` and `other`.\nDefine \"Payload\" as a New Text from Items at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Payload and then Showing any Text.\nUse Report as \"Saved\".\n\n" + functionSource("Invoke", "\"Suffix\" as Text", "", "Saved Suffix.") + "Invoke `one`.\nInvoke `two`.\n"
 
 func TestFunctionCapturesSourceActionEnvironment(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: captureFunctionInteropSource})
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
-	plan, err := planOrchestration(c.Semantics)
-	if err != nil {
-		t.Fatal(err)
-	}
+	c := executableTestResult(t, memberResolutionSource{main: captureFunctionInteropSource}).Compilation
+	plan := requireOrchestrationPlan(t, c.Semantics)
 	function := processTestFunction(plan.Root.Body)
 	if function == nil || len(function.CaptureHandles) != 1 || len(function.Captures) != 0 {
 		t.Fatal("Function did not retain exactly the selected action environment")
@@ -30,9 +24,7 @@ func TestFunctionCapturesSourceActionEnvironment(t *testing.T) {
 	if call.Actions[0].Value.Storage.Capture == nil || call.Actions[1].Value.Storage != function.Inputs[0] {
 		t.Fatal("action environment and Function parameter ownership were conflated")
 	}
-	if _, err := functionGenerated(t, captureFunctionInteropSource); err != nil {
-		t.Fatal(err)
-	}
+	requireFunctionGenerated(t, captureFunctionInteropSource)
 }
 
 func TestFunctionCapturesSourceActionNative(t *testing.T) {
@@ -79,11 +71,7 @@ func captureNativeResult(t *testing.T, c *Compilation, expected string) {
 		}
 		children[unit.ID] = buildActualBundle(t, bundle, unit.ID, false, "")
 	}
-	unit, err := result.OrchestratorUnit("entry", executableTestCompanions(result))
-	if err != nil {
-		t.Fatal(err)
-	}
-	bundle, err := service.Evaluate(unit.BackendAML, Logiceme.GenerationOptions{IncludeRuntime: true})
+	_, bundle, err := orchestratorTestBundle(canonicalTestOptions().Resources, result)
 	if err != nil {
 		t.Fatal(err)
 	}

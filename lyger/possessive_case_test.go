@@ -55,10 +55,7 @@ func TestPossessiveCaseImportOwners(t *testing.T) {
 				main:    "Use " + spelling + " Value from `local-words.l` as \"Alias\".\n",
 				library: "Create \"Tools\" as a Dictionary.\nCreate Tools's \"Value\" as a Dictionary.\n",
 			}
-			c := compileMemberResolutionSource(t, source)
-			if c.Error != nil {
-				t.Fatal(c.Error)
-			}
+			c := executableTestResult(t, source).Compilation
 			canonical, err := canonicalRecord(c.Memory["Alias"], c.Semantics.Aliases)
 			if err != nil || canonical == nil || canonical != c.Memory["Tools.Value"] {
 				t.Fatalf("import owner case lost its original member: %v", err)

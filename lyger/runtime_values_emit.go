@@ -7,6 +7,17 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
+func (e *orchestrationEmitter) transferRuntimeValue(value *orchestrationValue, target runtimeTypeRef) (string, error) {
+	expression, err := e.value(value)
+	if err != nil {
+		return "", err
+	}
+	if target.Kind == valueThing {
+		return boxRuntimeValue(expression)
+	}
+	return runtimeCopyExpression(expression, orchestrationAccessSnapshot)
+}
+
 func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result emittedExpression) (emittedExpression, error) {
 	if value.Source.Kind == operandRead {
 		owner, err := e.value(value.Owner)
@@ -48,11 +59,8 @@ func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result 
 	}
 	elements := make([]string, len(value.Elements))
 	for i, child := range value.Elements {
-		emitted, err := e.value(child)
-		if err != nil {
-			return result, err
-		}
-		elements[i], err = boxRuntimeValue(emitted)
+		var err error
+		elements[i], err = e.transferRuntimeValue(child, runtimeTypeRef{Kind: valueThing})
 		if err != nil {
 			return result, err
 		}
@@ -69,11 +77,9 @@ func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result 
 		}
 		result.text = "LPointer::typed(" + element + "," + elements[0] + ")?"
 	case valueBytes, valueText, valueError:
-		child, err := e.value(value.Elements[0])
-		if err != nil {
-			return result, err
-		}
-		result.text, err = runtimeCopyExpression(child, orchestrationAccessSnapshot)
+		child := value.Elements[0]
+		var err error
+		result.text, err = e.transferRuntimeValue(child, child.RuntimeType)
 		if value.Type == valueError {
 			result.text = "runtime::Error::from_bytes(" + result.text + ")"
 		}
@@ -111,7 +117,9 @@ func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result 
 }
 
 func (e *orchestrationEmitter) storeRuntimeValue(slot *orchestrationStorage, expression string) ([]string, error) {
-	if index, shared := e.programStorage[slot]; shared {
+	index, shared := e.programStorage[slot]
+	capture := slot.Capture
+	if shared || capture != nil {
 		typ, err := runtimeTypeExpression(slot.RuntimeType, e.plan.Identities)
 		if err != nil {
 			return nil, err
@@ -120,16 +128,8 @@ func (e *orchestrationEmitter) storeRuntimeValue(slot *orchestrationStorage, exp
 		if err != nil {
 			return nil, err
 		}
-		return []string{orchestrationStatement(fmt.Sprintf("lProgram.set(%d, %s)?;", index, boxed))}, nil
-	}
-	if capture := slot.Capture; capture != nil {
-		typ, err := runtimeTypeExpression(slot.RuntimeType, e.plan.Identities)
-		if err != nil {
-			return nil, err
-		}
-		boxed, err := boxRuntimeValue(emittedExpression{text: expression, kind: slot.Type, typeExpression: typ})
-		if err != nil {
-			return nil, err
+		if shared {
+			return []string{orchestrationStatement(fmt.Sprintf("lProgram.set(%d, %s)?;", index, boxed))}, nil
 		}
 		return []string{orchestrationStatement(fmt.Sprintf("{ let lCaptureValue = %s; %s.set(%d, lCaptureValue)?; }", boxed, capture.Name, capture.Index))}, nil
 	}
@@ -145,11 +145,7 @@ func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) 
 	if err != nil {
 		return nil, err
 	}
-	value, err := e.value(current.Value)
-	if err != nil {
-		return nil, err
-	}
-	boxed, err := boxRuntimeValue(value)
+	boxed, err := e.transferRuntimeValue(current.Value, runtimeTypeRef{Kind: valueThing})
 	if err != nil {
 		return nil, err
 	}
@@ -162,11 +158,7 @@ func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) 
 	}
 	key := ""
 	if current.Key != nil {
-		k, err := e.value(current.Key)
-		if err != nil {
-			return nil, err
-		}
-		key, err = runtimeCopyExpression(k, orchestrationAccessSnapshot)
+		key, err = e.transferRuntimeValue(current.Key, current.Key.RuntimeType)
 		if err != nil {
 			return nil, err
 		}

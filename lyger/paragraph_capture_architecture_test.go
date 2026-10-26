@@ -32,23 +32,13 @@ func paragraphCaptureCall(t *testing.T, compilation *Compilation, definitionFile
 		t.Fatal("private captured declaration is missing or leaked into global memory")
 	}
 	var calls []*instruction
-	var visit func([]*instruction)
-	visit = func(body []*instruction) {
-		for _, current := range body {
-			if current.Kind == instructionCall && current.Target != nil && current.Target.Record == definition {
-				calls = append(calls, current)
-			}
-			visit(current.Actions)
-			visit(current.Then)
-			visit(current.Else)
-			if current.Block != nil {
-				visit(current.Block.Body)
-			}
+	if err := compilation.Semantics.walkInstructions(func(current *instruction) error {
+		if current.Kind == instructionCall && current.Target != nil && current.Target.Record == definition {
+			calls = append(calls, current)
 		}
-	}
-	visit(compilation.Semantics.Instructions)
-	for _, body := range compilation.Semantics.Continuations {
-		visit(body.Body)
+		return nil
+	}); err != nil {
+		t.Fatal(err)
 	}
 	if len(calls) != 1 {
 		t.Fatalf("canonical Report expansions = %d; want one", len(calls))
@@ -160,10 +150,7 @@ func TestParagraphCaptureImportedRuntimeRequiresActiveStorage(t *testing.T) {
 			if captured.Value.Runtime == nil || captured.Value.Runtime.Owner != result.Compilation.Memory["Worker"] || !call.Actions[0].Value.Runtime {
 				t.Fatal("imported runtime capture lost its canonical Output storage")
 			}
-			plan, err := planOrchestration(result.Compilation.Semantics)
-			if err != nil {
-				t.Fatal(err)
-			}
+			plan := requireOrchestrationPlan(t, result.Compilation.Semantics)
 			var binding, invocationPlan *orchestrationInstruction
 			visitCapturePlan(plan.Root.Body, func(current *orchestrationInstruction) {
 				if current.Source.Kind == instructionBindAction && current.Source.Callable == result.Compilation.Memory["Report"] {
