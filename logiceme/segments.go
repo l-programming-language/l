@@ -445,46 +445,37 @@ func ParseMetaInserts(definition []byte) ([]byte, [][]string) {
 
 // ParseGlyphExpressions parses the glyph expressions wrapped in () and replaces with a uuid placeholder string
 func ParseGlyphExpressions(definition []byte) ([]byte, [][]string) {
-	var varManager [][]string
-	curExp := ""
-	curCount := 0
-	inExp := false
-	if bytes.Contains(definition, []byte("(")) && bytes.Contains(definition, []byte(")")) {
-		for _, d := range definition {
-			if string(d) == "(" {
-				if curCount == 0 {
-					inExp = true
-				}
-				curCount = curCount + 1
-				curExp = curExp + string(d)
-			} else if string(d) == ")" {
-				curCount = curCount - 1
-				curExp = curExp + string(d)
-				if curCount == 0 {
-					varUuid := GenerateUuid()
-					varUuid = strings.Replace(varUuid, "-", "", -1)
-					varUuidRP := "|" + varUuid + "|"
-					valEnt := curExp[1:]
-					valEnt = valEnt[:len(valEnt)-1]
-					curEnt := []string{varUuid, valEnt}
-					if bytes.Contains([]byte(valEnt), []byte("(")) && bytes.Contains([]byte(valEnt), []byte(")")) {
-						subDef, subVarManager := ParseGlyphExpressions([]byte(valEnt))
-						varManager = append(varManager, subVarManager...)
-						curEnt = []string{varUuid, string(subDef)}
-					}
-					varManager = append(varManager, curEnt)
-					definition = bytes.Replace(definition, []byte(curExp), []byte(varUuidRP), -1)
-					inExp = false
-					curExp = ""
-				}
-			} else {
-				if inExp {
-					curExp = curExp + string(d)
-				}
+	var groups [][]string
+	var result bytes.Buffer
+	depth, start, copied := 0, 0, 0
+	for index, symbol := range definition {
+		switch symbol {
+		case '(':
+			if depth == 0 {
+				start = index
 			}
+			depth++
+		case ')':
+			if depth == 0 {
+				continue
+			}
+			depth--
+			if depth != 0 {
+				continue
+			}
+			body, children := ParseGlyphExpressions(definition[start+1 : index])
+			id := strings.ReplaceAll(GenerateUuid(), "-", "")
+			groups = append(groups, children...)
+			groups = append(groups, []string{id, string(body)})
+			// Replace this occurrence only; an identical group may occur inside
+			// a later parent whose source has not been scanned yet.
+			result.Write(definition[copied:start])
+			result.WriteString("|" + id + "|")
+			copied = index + 1
 		}
 	}
-	return definition, varManager
+	result.Write(definition[copied:])
+	return result.Bytes(), groups
 }
 
 // InsertGlyphVals replaces the variable uuid placeholder with the original string value

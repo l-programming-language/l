@@ -1,0 +1,9 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~source~, Inputs: ~&[Prop{Key: events, Type: &std::cell::RefCell<Vec<u8>>}Prop]&~, Outputs: ~&[std::future::Ready<u8>]&~|}^(W^(BOD^(E{|Statement: ~events.borrow_mut().push(1);~|})*MOB{|Key: ~ready~|}^(KY{|Key: ~std::future::ready~, Inputs: ~&[7_u8]&~|})*BOD^(E{|Statement: ~return ready;~|})))`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^(W^(MOB{|Key: ~events~|}^(KY{|Key: ~std::cell::RefCell::new~, Inputs: ~&[Vec::<u8>::new()]&~|})*COB{|Key: ~pending~|}^(CV^(W^(BO{|Key: ~first~, Type: ~u8~|}*CO{|Key: ~first~|}^(DV^(KY{|Key: ~source~, Inputs: ~&[&events]&~|}))*MOB{|Key: ~ready~|}^(KY{|Key: ~std::future::ready~, Inputs: ~&[first + 1]&~|})*COB{|Key: ~second~|}^(DV{|Key: ~ready~|})*BOD^(E{|Statement: ~events.borrow_mut().push(second);~|})*BOD^(E{|Statement: ~return second;~|}))))*BOD^(E{|Statement: ~assert!(events.borrow().is_empty());~|})*MOB{|Key: ~mut pinned~|}^(KY{|Key: ~Box::pin~, Inputs: ~&[pending]&~|})*MOB{|Key: ~waker~|}^(KY{|Key: ~std::task::Waker::noop~|})*MOB{|Key: ~mut context~|}^(KY{|Key: ~std::task::Context::from_waker~, Inputs: ~&[waker]&~|})*MOB{|Key: ~handle~|}^(KY{|Key: ~std::pin::Pin::as_mut~, Inputs: ~&[&mut pinned]&~|})*MOB{|Key: ~observed~|}^(KY{|Key: ~std::future::Future::poll~, Inputs: ~&[handle, &mut context]&~|})*BOD^(E{|Statement: ~assert_eq!(observed, std::task::Poll::Ready(8_u8));~|})*MOB{|Key: ~_released~|}^(KY{|Key: ~drop~, Inputs: ~&[pinned]&~|})*BOD^(E{|Statement: ~assert_eq!(*events.borrow(), vec![1, 8]);~|})))`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

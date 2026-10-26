@@ -27,36 +27,47 @@ const semanticLink = (review) => {
 };
 export const referenceInputs = ['lexicon/eng/grammar.json', 'lexicon/eng/vocabulary.json', 'stdlib/index.json', 'cmd/l/command.go', 'lyger/value_kinds.go', 'logiceme/lucid_generation_test.go', 'logiceme/testdata/lucid/templates.sha256.json'];
 
-// Repeated attribution and explanations are stored once without losing per-entry
-// classification. Consumers expand through referenceEntries before validation.
+// Catalog repeated fields without changing the expanded review entries.
 const evidenceFields = ['sources', 'witnesses', 'evidence', 'checkedStages', 'executedStages'];
+const classificationFields = ['kind', 'role', 'support'];
+function referenceCatalog() {
+  const values = [], positions = new Map();
+  return { values, index(value) {
+    const key = JSON.stringify(value);
+    if (!positions.has(key)) { positions.set(key, values.length); values.push(value); }
+    return positions.get(key);
+  } };
+}
 function referenceSnapshot(document) {
-  const notes = [], evidenceSets = [], positions = new Map(), evidencePositions = new Map();
-  const entries = document.entries.map(({ notes: text, ...entry }) => {
+  const notes = referenceCatalog(), evidenceSets = referenceCatalog(), classifications = referenceCatalog();
+  const entries = document.entries.map(({ notes: text, kind, role, support, ...entry }) => {
     const evidence = {};
     for (const key of evidenceFields) if (Object.hasOwn(entry, key)) { evidence[key] = entry[key]; delete entry[key]; }
-    const fingerprint = JSON.stringify(evidence);
-    if (!evidencePositions.has(fingerprint)) { evidencePositions.set(fingerprint, evidenceSets.length); evidenceSets.push(evidence); }
-    entry.evidenceSet = evidencePositions.get(fingerprint);
+    entry.classification = classifications.index({ kind, role, support });
+    entry.evidenceSet = evidenceSets.index(evidence);
     if (text !== undefined) {
       if (typeof text !== 'string') throw new Error(`Invalid reference note: ${entry.id}`);
-      if (!positions.has(text)) { positions.set(text, notes.length); notes.push(text); }
-      entry.note = positions.get(text);
+      entry.note = notes.index(text);
     }
     return entry;
   });
-  return { ...document, schemaVersion: 2, notes, evidenceSets, entries };
+  return { ...document, schemaVersion: 3, notes: notes.values, evidenceSets: evidenceSets.values, classifications: classifications.values, entries };
 }
 
 export function referenceEntries(document) {
-  if (document.schemaVersion !== 2 || !Array.isArray(document.notes) || !Array.isArray(document.evidenceSets) || !Array.isArray(document.entries)) throw new Error('Invalid reference snapshot');
-  return document.entries.map(({ note, evidenceSet, ...entry }) => {
+  if (document.schemaVersion !== 3 || !['notes', 'evidenceSets', 'classifications', 'entries'].every((key) => Array.isArray(document[key]))) throw new Error('Invalid reference snapshot');
+  return document.entries.map(({ note, evidenceSet, classification, ...entry }) => {
     if (Object.hasOwn(entry, 'notes')) throw new Error(`Inline snapshot note is not allowed: ${entry.id}`);
-    if (evidenceFields.some((key) => Object.hasOwn(entry, key))) throw new Error(`Inline snapshot evidence is not allowed: ${entry.id}`);
-    const evidence = document.evidenceSets[evidenceSet];
-    if (!Number.isInteger(evidenceSet) || evidenceSet < 0 || !evidence || typeof evidence !== 'object' || Array.isArray(evidence) || Object.keys(evidence).some((key) => !evidenceFields.includes(key))) throw new Error(`Missing or invalid reference evidence: ${entry.id}`);
+    const record = (index, values, fields, label, required = false) => {
+      if (fields.some((key) => Object.hasOwn(entry, key))) throw new Error(`Inline snapshot ${label} is not allowed: ${entry.id}`);
+      const value = values[index];
+      if (!Number.isInteger(index) || index < 0 || !value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some((key) => !fields.includes(key)) || (required && fields.some((key) => typeof value[key] !== 'string' || !value[key].trim()))) throw new Error(`Missing or invalid reference ${label}: ${entry.id}`);
+      return value;
+    };
+    const category = record(classification, document.classifications, classificationFields, 'classification', true);
+    const evidence = record(evidenceSet, document.evidenceSets, evidenceFields, 'evidence');
     if (note !== undefined && (!Number.isInteger(note) || note < 0 || typeof document.notes[note] !== 'string')) throw new Error(`Missing reference note: ${entry.id}`);
-    return { ...entry, ...evidence, ...(note === undefined ? {} : { notes: document.notes[note] }) };
+    return { ...entry, ...category, ...evidence, ...(note === undefined ? {} : { notes: document.notes[note] }) };
   });
 }
 
@@ -151,7 +162,7 @@ export async function generateReferences(root) {
   const cases = [...block[1].matchAll(/\{name: "([^"]+)"([^}]*)\}/g)].map((m) => ({ name: m[1], expectedRustDiagnostic: m[2].match(/diagnostic: "([^"]+)"/)?.[1] ?? null }));
   const malformed = (await walk(root, 'logiceme/testdata/lucid')).filter((x) => x.split('/').some((part) => part.endsWith('-invalid')) && x.endsWith('.aml.txt'));
   for (const file of malformed) inputs[file] = sha256(await fs.readFile(path.join(root, file)));
-  let l = '# Lucid case inventory\n\nThese registered backend cases witness exact source generation. The native stage separately compiles both expected and generated bundles; it does not execute them. No stage was run for this website task. [Read the maintained suite contract](../../logiceme/testdata/lucid/README.md).\n\n| Case | Native expectation |\n| --- | --- |\n';
+  let l = '# Lucid case inventory\n\nRegistered cases compare exact source bundles and separately compile expected/generated Rust. Runtime execution is a separate witness. This inventory reports no validation run. [Read the maintained suite contract](../../logiceme/testdata/lucid/README.md).\n\n| Case | Native expectation |\n| --- | --- |\n';
   for (const c of cases) {
     const source = `logiceme/testdata/lucid/${c.name}.aml.txt`;
     const output = `logiceme/testdata/lucid/${c.name}.rs.txt`;
@@ -175,10 +186,11 @@ async function semanticReview(root) {
   const entries = [], sourceHashes = {};
   for (const name of ['semantics', 'logemes']) {
     const review = await json(path.join(root, `docs/_meta/${name}.json`));
-    if (review.schemaVersion !== 2 || !Array.isArray(review.entries) || !review.sourceHashes || typeof review.sourceHashes !== 'object' || Array.isArray(review.sourceHashes)) throw new Error(`Invalid semantic review manifest: ${name}`);
+    if (review.schemaVersion !== 3 || !Array.isArray(review.checkedStages) || !Array.isArray(review.executedStages) || ![...review.checkedStages, ...review.executedStages].every((stage) => typeof stage === 'string' && stage.trim()) || !Array.isArray(review.entries) || !review.sourceHashes || typeof review.sourceHashes !== 'object' || Array.isArray(review.sourceHashes)) throw new Error(`Invalid semantic review manifest: ${name}`);
     const used = new Set();
     for (const entry of review.entries) {
       if (Object.hasOwn(entry, 'sourceHashes')) throw new Error(`Entry-specific hashes are not allowed: ${entry.id}`);
+      if (Object.hasOwn(entry, 'checkedStages') || Object.hasOwn(entry, 'executedStages')) throw new Error(`Entry-specific stages are not allowed: ${entry.id}`);
       for (const source of entry.sources ?? []) {
         const hash = review.sourceHashes[source];
         if (!/^[a-f0-9]{64}$/.test(hash ?? '')) throw new Error(`Missing reviewed semantic hash: ${entry.id} -> ${source}`);
@@ -186,7 +198,7 @@ async function semanticReview(root) {
         sourceHashes[source] = hash;
         used.add(source);
       }
-      entries.push(entry);
+      entries.push({ ...entry, checkedStages: review.checkedStages, executedStages: review.executedStages });
     }
     for (const source of Object.keys(review.sourceHashes)) if (!used.has(source)) throw new Error(`Unused semantic review hash: ${name} -> ${source}`);
   }

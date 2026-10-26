@@ -172,7 +172,7 @@ func (sg *statementGram) walkRegistration(visit func(registrationSite, []*token,
 				supplemental = append(supplemental, registrationSite{subject: parameter, parameter: true})
 			}
 		}
-		if site.clause != nil && site.clause.gType == "clause.invocative.imperative" {
+		if site.clause != nil && site.clause.verb != nil && site.clause.verb.binding != nil && site.clause.verb.binding.Record.isFunction() {
 			for _, phrase := range site.clause.phrases {
 				if phrase.gType == "phrase.results" {
 					for _, result := range phrase.subjects {

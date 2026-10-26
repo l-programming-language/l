@@ -24,8 +24,8 @@ Apps run as separate OS processes while the orchestrator preserves ordered sourc
 | --- | --- |
 | `cmd/l` | CLI arguments, initialization, service coordination, tested result view, source validation, Cargo workspace planning, native Rust builds and generation publication |
 | `lexicon/eng` | Configured lexical roots, inflections, grammatical structures and cases |
-| `lyger` | Source preparation, imports, dynamic vocabulary, grammar, bindings, App construction, typed orchestration and AML emission |
-| `logiceme` | Tagged-document interpretation, glyph/template evaluation, Rust source assembly and linking |
+| `lyger` | Source preparation, vocabulary, grammar, bindings, types, ownership/activation analysis and AML composition |
+| `logiceme` | AML interpretation, glyph/template evaluation, callable declaration rendering, support assembly and linking |
 | `builtins/eng` and `stdlib/eng` | English L source definitions with native Rust bodies and source-defined construction descriptors |
 | `builtins/operations/rust` | Typed builtin process-operation compositions selected by the frontend |
 | `builtins/segments` and `builtins/templates` | Frozen Rust templates with reviewed composition amendments and retained Cargo/configuration/runtime support assets; the maintained Lucid suite defines verified scope |
@@ -176,7 +176,7 @@ The current CLI tests distinguish five views:
 
 The structural mapping is Program to books, App to Book, Service to Chapter, recursive Class to Text, and Object/source file to Sentence. [Construction nodes](../lyger/construction.go), [typed definition instantiation](../lyger/definition.go), and [lowering](../lyger/lowering.go) retain source-defined descriptors. [Source hierarchy lowering](../lyger/source_hierarchy.go) traverses each ordered Class/Object child exactly once; [program.go](../lyger/program.go) publishes the complete graph only after both AML views render. Populated Classes select StructureVersion 2 with direct child Dimensions and immediate Class Parent. Ordinary flat construction retains its source order; Rust workspace topology is a separate projection. Class membership never creates a lexical scope or runtime activation. Feature is not a built-in L value type or an AML hierarchy level.
 
-Application defaults are `rust`, version `0.0.0`, logical generation directory `/src`, and Host `http://127.0.0.1`. Source declarations determine application/component names and body content. Descriptor rules are selected by target type, expanded with cycle checks, and retain explicit parameter relationships. Function syntax is recognized from its embedded `Func` structure, so renaming the source-defined Function word does not change generation behavior.
+Application defaults are `rust`, version `0.0.0`, directory `/src`, and Host `http://127.0.0.1`. Source declarations determine names and bodies. Descriptors retain typed parameters and reject expansion cycles. A Function's embedded `Func` structure identifies its constructor; lowering must instantiate that selected definition. Renaming its source word must not select another implementation.
 
 Private application generation stages fresh metadata, settings, services, construction bodies, and books while resolving against original canonical App identities. It renders the complete staged program before publishing owned fields. Failure retains any prior completed graph; repeated success replaces generated services. Runtime/user fields and canonical pointers are preserved. Ordinary applications and the synthetic orchestrator share small fresh-map default constructors, with their caller-specific settings retained.
 
@@ -202,11 +202,13 @@ The checked grammar loader validates [configured rule references](../lyger/gramm
 
 `ApplicationUnits` and `OrchestratorUnit` expose App sources and ordered App process operations. Standalone Service declarations acquire no library, executable configuration, runtime members or continuation ownership. Raw AML continues to support explicit library and binary targets independently of L declarations.
 
-The [typed Rust plan](../lyger/orchestration_plan.go) checks canonical types, activation storage, captures and definite assignment before [Rust composition](../lyger/orchestration_emit.go). A shared [value model](../lyger/runtime_values.go) governs assignment, arguments, results and snapshots; it preserves explicit Pointer and callable identity. Ordinary Functions own separate bodies with fresh invocation locals and checked returns. Native leaves remain opaque. Paragraphs create no extra task and unassigned values acquire no hidden initial value.
+The [typed plan](../lyger/orchestration_plan.go) resolves types, activation storage, captures and definite assignment before AML composition. Functions bind invocation verbs and use canonical builtin/logeme definitions for construction, invocation and returns. Parameters/results become native signatures; approved AML lifetime/generic inputs carry explicit bindings. There is no separate `Call` primitive or runtime L-signature dispatcher. Captures snapshot ordinary values and retain explicit Pointer identity; paragraphs add neither tasks nor hidden initial values.
 
-The synthetic orchestrator uses the frozen function, definition, statement and conditional logemes. Its callable returns a Rust future through the existing signature interface and supplies an explicit async body. Compiler assembly owns module/visibility/safety boundaries and startup configuration; templates retain their native syntax contracts. Opt-in [Rust runtime support](../builtins/templates/runtime/runtime.lu) supplies actual Runtime/App/Invocation/Snapshot lifecycle objects, process-group supervision, raw capture and immutable completion. Each direct child has one Wait owner. Private test dependencies observe real operations and inject specified faults without replacing the runtime; callbacks do not hold lifecycle locks.
+A stored Function pairs its owned capture environment with a typed native function pointer. The pointer borrows one `(Runtime, LProgram)` context and returns a boxed future whose result carries a typed output tuple or program Exit. Lyger encodes this ABI as signature atoms; builtin words compose suspension, invocation, binding and result propagation. Function storage inside Thing or collections may erase that typed pair through `Any`, but checked extraction restores its concrete signature before invocation. There is no invocation on an erased value.
 
-The CLI materializes complete generated packages into one Cargo workspace, builds all native targets with Rust 1.98.1 and frozen offline dependencies, and verifies structured Cargo artifact identities. It snapshots the real binaries before publishing an immutable companion generation and replacing the orchestrator last. A relocated published program needs neither L nor Go/Cargo/rustc to run. App-constructed Service libraries retain their checked dependency relationships. A standalone Service declaration creates no package or runtime process.
+Lyger encodes resolved native type/name/value atoms in approved AML fields; Logiceme renders declarations and composes syntax from them, then assembles selected support resources. Function bodies remain composed: native-expression leaves cannot contain generated declarations, closures or dispatch machinery. Authored builtin native leaves remain opaque. Rust ownership helpers may implement resolved storage semantics, while [App runtime support](../builtins/templates/runtime/runtime.lu) owns process supervision, raw capture and immutable completion. Each direct child has one Wait owner; callbacks do not hold lifecycle locks.
+
+The CLI validates and materializes complete bundles into a Cargo workspace, builds all targets with Rust 1.98.1 and frozen offline dependencies, and verifies Cargo artifact identities. It snapshots binaries before publishing immutable companion generations and replacing the orchestrator last. Older generations remain runnable; relocated programs need no compiler toolchain. Version-1 manifests retain the `apps` inventory. Service libraries preserve their checked dependencies; standalone Services create no package or process. Generated deployment scripts are never executed. See [CLI publication](cli-build.md).
 
 [Scoped instructions](../lyger/paragraph_instructions.go) retain ordinary ordered
 blocks and per-target continuations for App-led paragraphs. A paragraph's original
@@ -217,17 +219,15 @@ following uses in the selected continuation; a conditional remains one atomic
 control-flow tree. Coordinated unary actions expand their whole resolved body once
 per operand. True multi-parameter arity remains checked.
 
-The [Rust emitter](../lyger/orchestration_emit.go) emits blocks inline in main.
-[Activation frames](../lyger/orchestration_scope.go) allocate fresh private runtime
-storage while published bindings and canonical process-target state persist. Await claims and
-executes the selected invocation's continuation once. Claims belong to invocations,
-so targets sharing a lexical paragraph retain distinct activations. Self-Await
-observes the cached result; nested Await can activate another App. The invocation
-slot stays occupied until its first continuation finishes, so a same-target Run
-during that continuation is rejected. Imported child blocks retain their enclosing activation. Executed callable declarations
-allocate typed capture environments; aliases retain the selected environment. Ordinary
-values snapshot and Pointer handles share targets. Missing initialization, invalid
-borrow overlap and ownership cycles reject. Static captures retain definition-site bindings.
+[Activation frames](../lyger/orchestration_scope.go) preserve fresh private storage,
+published bindings and canonical process identity. Await claims one invocation's
+continuation once; targets sharing a paragraph retain distinct activations.
+Self-Await observes the cached result; nested Await can activate another App.
+An invocation remains occupied until its continuation finishes, rejecting a
+same-target Run during that continuation. Imported blocks retain their enclosing
+activation. Callable aliases retain the selected capture environment. Missing
+initialization, invalid borrow overlap and ownership cycles reject; static
+captures retain definition-site bindings.
 
 Bare Exit still terminates main, including when expanded from a source action.
 Normal, error and signal exits clean owned processes without running unawaited
@@ -239,14 +239,9 @@ process groups and uncatchable termination remain documented limits. Phase 2
 in-code concurrency, runtime argument transport and nested layout syntax are
 outside the supported execution model.
 
-Programs with no Apps use the same pipeline with
-no companion binaries. Their synthetic orchestrator and empty generation manifest are real build
-artifacts; no placeholder user App or backend paragraph semantics are introduced.
-Paragraph scoping does not add a second backend.
+Programs without Apps produce an orchestrator and empty generation manifest through the same pipeline; paragraph scoping introduces no second backend.
 
-Expression lowering carries its emitted expression, concrete type, and ordered dependencies together. Display and Text-to-Error conversions preserve that information without mutating sibling values. Assignment, Show, Exit, and condition emission forward the dependencies; the lowerer does not rediscover imports from operand categories. Public definition argument strings are interpreted at their existing exact-construction or case-folded-rendering boundaries, and their raw ledger remains intact.
-
-[The build coordinator](../cmd/l/build.go) validates whole source bundles before materialization, retains logical directories and invokes the pinned Rust toolchain over a Cargo workspace. It uses bounded pinned or workspace-local dependencies and never executes generated scripts. Completed App binaries are published under immutable generation IDs; the adjacent executable is renamed last and embeds that generation's relative companion paths. Version-1 manifests retain the `apps` inventory. Old generations remain available to older running orchestrators. See [CLI build behavior](cli-build.md) for the complete layout and publication contract.
+Expression lowering retains concrete types and ordered dependencies through display, conversion, assignment and control flow. It does not rediscover imports from operand categories or mutate sibling values. Definition arguments retain their exact-construction/case-folded-rendering boundaries and raw ledger.
 
 `Lyger.NewLygerService(options)` takes `Lyger.Options` by value: `Language` (empty defaults to `eng`), `Resources` (nil selects embedded assets), and `AssetRoot` (physical provenance for diagnostics and overwrite protection, never provider selection). `Logiceme.NewLogicemeService(resources)` takes `fs.FS`, also defaulting nil to embedded assets. Pass the same explicit provider to both services; neither falls back to embedded files. See [developer overrides](development-harness.md#compiler-defaults). Host AML reads remain host-file operations; asset errors retain their phase, resource name and cause.
 
@@ -256,7 +251,7 @@ Expression lowering carries its emitted expression, concrete type, and ordered d
 
 `Evaluate` generates Rust and accepts only the `IncludeRuntime` option. L, Lyger and Logiceme remain Go implementations. This is an AML source-generation API; the frontend/CLI separately owns building and execution. The 18 Rust segments remain frozen after reviewed amendments; the [Rust reference](../builtins/README.md) distinguishes their implemented composition contracts from retained but incomplete integration.
 
-The Rust renderer separates initialization records from executable cases, dispatches parsed primitive calls, prepares existing Func/Prop/Op records and forwards ordered category collections through explicit aliases. A renders its package comment and collected `use` imports. Standalone EA retains exact file contents. The [Lucid suite](../logiceme/testdata/lucid/README.md) preserves exact composition scenarios covering scoped selection, iteration, declaration, invocation, callable, trait, empty-composition, keyed-pattern and generic/lifetime witnesses. It compares every returned artifact exactly and compiles both expected and actual projects; its [dated ledger](../logiceme/testdata/lucid/FAILURES.md) records counts and results separately from runtime claims. That backend corpus does not execute its applications; supervised frontend/runtime parity tests do. Generated deployment scripts remain unexecuted.
+The Rust renderer separates initialization records from executable cases, dispatches parsed primitive calls, prepares existing Func/Prop/Op records and forwards ordered category collections through explicit aliases. A renders its package comment and collected `use` imports. Standalone EA retains exact file contents. The [Lucid suite](../logiceme/testdata/lucid/README.md) preserves exact composition scenarios covering scoped selection, iteration, declaration, invocation, callable, trait, empty-composition, keyed-pattern and generic/lifetime witnesses. It compares every returned artifact exactly and compiles both expected and actual projects; its [dated ledger](../logiceme/testdata/lucid/FAILURES.md) records counts and results separately from runtime claims. Three future-composition cases also execute their generated programs; broader runtime behavior belongs to supervised frontend/runtime tests. Generated deployment scripts remain unexecuted.
 
 Rust supports optional glyph-local `Lifetimes` and `GenericTypes` String inputs through existing cases: FW/HY/MY declare parameters, while Y and named KY apply arguments. Templates own the conditional angle-bracket or turbofish punctuation. Callers supply native list interiors, and Rust checks their legality. These inputs are not inherited Class/Object defaults or fields inside Func/Prop/Op records; see the [input contract](../builtins/README.md#lifetime-and-generic-inputs).
 

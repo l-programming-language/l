@@ -203,6 +203,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
+| <code>callable</code> | <code>[VALUE]* &#124; [PHRASE.ARGUMENTS]* &#124; PHRASE.RESULTS*</code> | [Typed Function words](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 | <code>subjective</code> | <code>SUBJECT</code> | [Bound source-action arguments](../spec/definitions.md#source-actions) · partial |
 | <code>objective</code> | <code>[OBJECT]</code> | [Bound source-action arguments](../spec/definitions.md#source-actions) · partial |
 
@@ -212,7 +213,12 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>GENERIC.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.ACTIVE &#124; OBJECT</code> | partial | [Source actions](../spec/definitions.md#source-actions) | [Note 12](#grammar-note-12) |
+| <code>CLAUSE</code> | <code>GENERIC.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.ACTIVE &#124; CASE</code> | partial | [Source actions](../spec/definitions.md#source-actions) | [Note 12](#grammar-note-12) |
+
+| Named case | Sequence | Semantic context |
+| --- | --- | --- |
+| <code>callable</code> | <code>[VALUE]* &#124; [PHRASE.ARGUMENTS]* &#124; PHRASE.RESULTS*</code> | [Typed Function words](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>objective</code> | <code>OBJECT</code> | [Source actions](../spec/definitions.md#source-actions) · partial |
 
 ## clause.generic.passive
 
@@ -232,6 +238,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
+| <code>callable</code> | <code>[VALUE]* &#124; [PHRASE.ARGUMENTS]* &#124; PHRASE.RESULTS*</code> | [Typed Function words](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 | <code>subjective</code> | <code>SUBJECT</code> | [Bound source-action arguments](../spec/definitions.md#source-actions) · partial |
 | <code>objective</code> | <code>[OBJECT]</code> | [Bound source-action arguments](../spec/definitions.md#source-actions) · partial |
 
@@ -1034,8 +1041,6 @@ This mechanical reference preserves the configured English recognizers. It does 
 | <code>observative</code> | <code>CLAUSE.OBSERVATIVE.IMPERATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>terminative</code> | <code>CLAUSE.TERMINATIVE.IMPERATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>suspensive</code> | <code>CLAUSE.SUSPENSIVE.IMPERATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
-| <code>returning</code> | <code>CLAUSE.RETURNING.IMPERATIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
-| <code>invocative</code> | <code>CLAUSE.INVOCATIVE.IMPERATIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
 ## predicate.active
 
@@ -1163,8 +1168,6 @@ This mechanical reference preserves the configured English recognizers. It does 
 | <code>observative</code> | <code>PREDICATE.IMPERATIVE.OBSERVATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>terminative</code> | <code>PREDICATE.IMPERATIVE.TERMINATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>suspensive</code> | <code>PREDICATE.IMPERATIVE.SUSPENSIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
-| <code>returning</code> | <code>PREDICATE.IMPERATIVE.RETURNING</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
-| <code>invocative</code> | <code>PREDICATE.IMPERATIVE.INVOCATIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
 ## statement.objective.conditional
 
@@ -1258,7 +1261,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>PHRASE</code> | <code>ARGUMENTS</code> | <code>PREPOSITION.CONSIGNMENT.ASSOCIATIVE &#124; [VALUE]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 68](#grammar-note-68) |
+| <code>PHRASE</code> | <code>ARGUMENTS</code> | <code>PREPOSITION &#124; [VALUE]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 68](#grammar-note-68) |
 
 ## phrase.results
 
@@ -1267,22 +1270,6 @@ This mechanical reference preserves the configured English recognizers. It does 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
 | <code>PHRASE</code> | <code>RESULTS</code> | <code>PREPOSITION.DEFINEMENT.DECLARATIVE &#124; [SUBJECT.DECLARATION]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 69](#grammar-note-69) |
-
-## clause.invocative.imperative
-
-<a id="grammar-clause-invocative-imperative"></a>
-
-| Category | Class | Structure | Support | Semantic context | Notes |
-| --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>INVOCATIVE.IMPERATIVE</code> | <code>VERB.INVOCATIVE &#124; SUBJECT.DEFINITIVE &#124; PHRASE.ARGUMENTS* &#124; PHRASE.RESULTS*</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 70](#grammar-note-70) |
-
-## clause.returning.imperative
-
-<a id="grammar-clause-returning-imperative"></a>
-
-| Category | Class | Structure | Support | Semantic context | Notes |
-| --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>RETURNING.IMPERATIVE</code> | <code>VERB.RETURNING &#124; [VALUE]*</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 71](#grammar-note-71) |
 
 ## Support notes
 
@@ -1347,15 +1334,13 @@ This mechanical reference preserves the configured English recognizers. It does 
 | <a id="grammar-note-57"></a>57 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
 | <a id="grammar-note-58"></a>58 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
 | <a id="grammar-note-59"></a>59 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-60"></a>60 | Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-61"></a>61 | Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-62"></a>62 | Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-63"></a>63 | Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-60"></a>60 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-61"></a>61 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-62"></a>62 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-63"></a>63 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
 | <a id="grammar-note-64"></a>64 | Scalar conditions have specific type constraints. Joined conditions are rejected by outer lowering; no general short-circuit Boolean expression language is established. |
 | <a id="grammar-note-65"></a>65 | The parser recognizes this shape, but outer instruction lowering explicitly rejects while. Rust backend iteration cases do not establish source-language loop support. |
 | <a id="grammar-note-66"></a>66 | This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support. |
 | <a id="grammar-note-67"></a>67 | An ordinary Function signature declares ordered named inputs and ordered result types, or explicit No Inputs/No Outputs. Nested runtime and callable identities remain complete. |
-| <a id="grammar-note-68"></a>68 | Call supplies ordered existing values or literals. Construct complex argument values before the call; argument count and complete runtime types are checked. |
-| <a id="grammar-note-69"></a>69 | Call declares one ordered result name per output. Names receive checked returned values only after the invocation completes. |
-| <a id="grammar-note-70"></a>70 | Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process. |
-| <a id="grammar-note-71"></a>71 | Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return. |
+| <a id="grammar-note-68"></a>68 | Invocation words bind ordered values and prepositional arguments. Argument counts and complete types are checked. |
+| <a id="grammar-note-69"></a>69 | An invocation declares one result name per output, assigned only after the invocation completes. |

@@ -17,19 +17,17 @@ entries and unused template routes do not establish additional support.
 [templates.sha256.json](../logiceme/testdata/lucid/templates.sha256.json)
 freezes the current asset bytes. The
 [Lucid suite guide](../logiceme/testdata/lucid/README.md) owns the current
-case inventory, compilation obligations and commands. The
-[dated ledger](../logiceme/testdata/lucid/FAILURES.md) owns observed results
-and evidence for that compile-only corpus. The separate [frontend/runtime
-implementation record](../testdata/integration/IMPLEMENTATION.md) tracks
-actual native execution and runtime supervision. Deployment scripts remain
-unexecuted.
+case inventory and validation commands. Its future cases also execute generated
+programs; the [dated ledger](../logiceme/testdata/lucid/FAILURES.md) records results
+for its stated revision. The [frontend/runtime record](../testdata/integration/IMPLEMENTATION.md)
+tracks process supervision. Deployment scripts remain unexecuted.
 
 Calculation, Description and Iteration retain their frozen composition wrappers.
 Declaration renders the file header; Evaluation forwards BI's
 Definitions, Operations and Default; Definition forwards PO's Iteration directly;
 Execution excludes Deferred. Operation and Instantiation explicitly forward the
 two local generic/lifetime inputs through their approved cases. The
-[Declaration adapter witnesses](../logiceme/testdata/lucid/README.md#declaration-adapters)
+[Declaration composition witnesses](../logiceme/testdata/lucid/README.md#declaration-adapters)
 exercise the outer action selectors and singular child forwarding. Frozen assets
 and independent expectations require explicit authorization for changes.
 
@@ -50,7 +48,7 @@ IO and IO.Print retain their source-defined composition. Native leaves include:
 
 | Definition | Rust counterpart |
 | --- | --- |
-| Function.Return | Keeps BOD/E and the `Statement\|Text` slot and emits `return ...;`. |
+| Function.Return | Composes BOD/E around the bound return expression; source result types are checked before instantiation. |
 | Log | Keeps BOD/E and `Output\|Thing`. A block-local native dispatcher writes byte-capable Text directly, formats finite Number with L's binary64 contract, and uses a fixed-format Display fallback for other scalar values. IO.Print still composes Process with its dictionary-private Logger. |
 
 The source-defined IO body evaluates and borrows its operand once. Text output
@@ -183,20 +181,22 @@ combinations or codas are implied by a row.
 | W | Emit ordered Definitions. |
 | BW | Anonymous callable syntax using Func and ordered Operations. |
 | FW | Named function syntax using Func and ordered Operations; local Lifetimes/GenericTypes declare parameters. |
-| X | Iterator traversal, unconditional repetition, Calculation-controlled repetition, or OG/DOG-controlled repetition; one Operation body. I remains a Boolean condition adapter. |
+| X | Iterator traversal, unconditional repetition, Calculation-controlled repetition, or OG/DOG-controlled repetition; one Operation body. I remains a Boolean condition carrier. |
 | Y | Construct a named value from Props; an empty collection emits `Key {}`. Local Lifetimes/GenericTypes supply constructor arguments. |
 | KY | Invoke a named callable, an optional Receiver member, or a singular anonymous Operation, using Inputs. Only named calls accept local Lifetimes/GenericTypes arguments. |
 | MY | Receiverless required trait signatures from Funcs; an empty collection emits `trait Key {}`. Local Lifetimes/GenericTypes qualify the trait once. Omitted/empty method Outputs omit the return annotation. |
 | HY | Struct-shaped syntax from Props; an empty Record emits `struct Key {}`. Local Lifetimes/GenericTypes declare parameters. |
 | V | Schedule the invocation text in Key through `tokio::spawn`. |
 | MV | Schedule a singular Instantiation child through `tokio::spawn`. |
+| CV | Construct an unscheduled future from one W body; local Capture selects Infer or Move. |
+| DV | Await one native or composed future operand inside an asynchronous body. |
+| CO / COB | Assign / declare one binding from one CV or DV value. |
 
 The two local generic/lifetime inputs below qualify existing named declarations
 and applications without adding structural-parameter syllables or generic-path
-roles. Enum, general structural-pattern, capture, mutability, async-function,
-general future/await-adapter and implementation extensions remain outside these
-bounded contracts. OC/DOC future fragments and OG/DOG native-pattern fragments
-do not establish those broader interfaces.
+roles. CV/DV and CO/COB have the [future contract](#future-construction-awaiting-and-value-bindings) below. Enum, general structural-pattern,
+mutability and implementation extensions remain outside these contracts;
+OC/DOC and OG/DOG do not establish those interfaces.
 
 ## Lifetime and generic inputs
 
@@ -385,6 +385,34 @@ with no Outputs and must produce E0308. All six use complete AML and compare
 all five returned artifacts. Native compilation, not execution, verifies these
 witnesses. Receiver methods, FWC/KYC and general ownership analysis remain outside this
 contract. The supported output and indexed provenance fields are specified below.
+
+## Future construction, awaiting, and value bindings
+
+`CV` constructs an unscheduled future from exactly one `W` body. Its optional,
+glyph-local `Capture` is `Infer` (the default) or `Move`; these select Rust's
+inferred capture or ownership transfer. Neither form clones captures or starts a
+task. The body's final expression supplies the future's result.
+
+`DV` awaits one future within a `CV` body. Supply either a nonempty native `Key`
+or one `E`, `KY`, `CV`, or `DV` operand, never both. The operand is evaluated once.
+Rust checks its Future implementation and result type. Awaiting does not unwrap
+errors, select a result representation, or imply process supervision.
+
+`CO` assigns, and `COB` declares and initializes, one simple `Key` (or one-element
+`Keys`) from exactly one `CV` or `DV` child. Raw identifiers and `_` are accepted.
+Type, mutability, native Value fields, and scheduling statements are excluded.
+For mutation, declare the storage explicitly before assigning through `CO`.
+
+`FW`, `HY`, and `KY` retain definition, structural-data, and invocation ownership.
+Existing glyph-local `Lifetimes`/`GenericTypes` express signature relationships;
+CV does not infer `'static` or introduce lifetime metadata. Nested synchronous
+callables reset the await context. Existing V/MV scheduling and OC/DOC selection
+forms retain their separate contracts.
+
+The complete `future-*` AML/Rust pairs cover composed invocation and native
+operands, single evaluation, inferred and owned captures, borrowed signatures,
+and Rust rejection of escaping borrows and moved-value reuse. They add no L
+syntax or Function implementation.
 
 ## Native output-type provenance
 
@@ -664,7 +692,7 @@ follow-up work; this reference does not authorize repairs or interface changes.
 | Deferred | Absent from Execute/Execution inputs and forwarding; any supplied Deferred, including False, retains its existing compiler rejection. No deferred-execution operation is implemented. |
 | Selection | CI/BI supports the [bounded selection contract](#cibi-selection-contract). No fairness, cancellation, destructor timing or Rust runtime behavior is established by compilation. |
 | Three-part loops | Unsupported by X and rejected before rendering. Iterate has no three-part marker or compiler expansion. |
-| Other callable/asynchronous forms | Preparation entries do not supply missing template cases. Function receivers, explicit capture policy, async definitions and general future adapters remain outside the bounded witnesses. Named FW generic/lifetime parameters use the separate contract above. FWC/KYC remain outside the callable contract. |
+| Future composition | CV/DV construct and await futures; CO/COB bind their values under the [bounded contract](#future-construction-awaiting-and-value-bindings). FW remains synchronous and can return a future through its existing output signature. Function receivers, FWC/KYC and generic closures remain outside these contracts. |
 | Output-field provenance | Exact `Meta.Func.Outputs~` preserves supplied native types, including `Void`, for flat/record FW and BW. Empty-output behavior is preserved. Indexed Funcs Key and Outputs~ have the bounded MY contract above; other indexed fields are not broadened. |
 | MY trait signatures | Receiverless Funcs records and optional outputs are covered above. Empty traits have the bounded empty-composition contract; supplied Receiver metadata is rejected. Trait-level parameter lists use the local-input contract above. Composed methods, per-method parameters and implementations remain outside these contracts. |
 | Generics, enums and patterns | Local String parameters/arguments are supported only on FW/HY/MY/Y/named KY as described above. Const-generic, where-clause, per-method and implementation interfaces remain separate work. OG/DOG do not establish general compositional patterns or enums. |
@@ -695,7 +723,7 @@ IncludeRuntime and executable SETTINGS reject on that package; a library cannot
 be Primary. Mixed binary/library packages still require exactly one Primary
 binary and at most one library. An independent path-dependent binary checks
 public interfaces and shared nominal types in the library regression. This is
-separate from the unchanged 54-application/270-artifact Lucid inventory.
+separate from the [Lucid inventory](../logiceme/testdata/lucid/README.md#current-inventory).
 
 Raw AML library targets and explicit native consumers retain this library-only contract. App-constructed Service libraries preserve their current paths, public interfaces and dependency identities. Standalone L Services create no workspace targets; App publication retains its version-1 inventory. See [CLI semantics](../docs/cli-build.md).
 

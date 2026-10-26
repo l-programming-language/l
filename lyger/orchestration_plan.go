@@ -237,6 +237,15 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 	if value == nil {
 		return nil, lerrors.Internal.Errorf("missing instruction operand")
 	}
+	if value.Argument != nil {
+		for index := len(p.captureContexts) - 1; index >= 0; index-- {
+			if actual := p.captureContexts[index].arguments[value]; actual != nil {
+				bound := *actual
+				return &bound, nil
+			}
+		}
+		return nil, lerrors.Internal.Errorf("source action argument is outside its call")
+	}
 	result := &orchestrationValue{Source: value, Type: value.Type, RuntimeType: value.RuntimeType, Access: orchestrationAccessCopy}
 	if result.RuntimeType.Kind == valueInvalid {
 		result.RuntimeType.Kind = value.Type

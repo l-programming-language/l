@@ -36,11 +36,11 @@ Main constructs a Function inside an Object inside a Service; Basic supplies tha
 
 <!-- example:definitions-callable-core -->
 
-Process composes ordered Syllables through W. Function supplies FW/Func metadata: textual Name, typed property Inputs, native output Texts and an instantiated Process. Return emits a native `return …;` through BOD/E; its Text slot does not establish a universal L expression-return API.
+Process composes ordered Syllables through W. Function supplies FW/Func metadata: Name, typed Inputs, output types and an instantiated Process. Source Function declarations use this selected definition too; Function-local Return binds its builtin member after checking source results.
 
 <!-- example:main-descriptor -->
 
-Each `It describes` refines Main. App construction selects its Service rule, then Object and Function rules. This native Main signature has no inputs or outputs. Ordinary [typed Functions](applicational-types.md#functions-properties-and-operations) use their own L body and checked parameter/result bindings. A standalone Main Service remains structural; methods, overloads and variadic signatures are not introduced.
+Each `It describes` refines Main. App construction selects its Service, Object and Function rules. Main supplies no inputs or outputs; [ordinary Functions](applicational-types.md#functions-properties-and-operations) supply their declared signatures and bodies. A standalone Main Service remains structural; methods, overloads and variadic signatures are not introduced.
 
 ## Framing and escaping
 

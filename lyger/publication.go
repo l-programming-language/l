@@ -177,6 +177,7 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 	}
 	for _, function := range prepared.functions {
 		c.Semantics.Functions[function.Record] = function
+		function.Scope.function = function
 	}
 	return nil
 }

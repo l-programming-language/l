@@ -22,7 +22,7 @@ func TestRecordRuntimeTypeRejectsMalformedStorage(t *testing.T) {
 }
 
 const runtimeAppReadSource = "Create \"Worker\" as a New Basic App.\nThe App Prints `child`.\nDefine \"apps\" as a New List of App.\nPut Worker in apps.\nDefine \"selected\" as a New App from apps at 0.\nExecute selected.\nShow selected's Output.\n"
-const runtimeFunctionReadSource = "Define \"callbacks\" as a New List of Identity.\nDefine \"callback\" as a New Identity from callbacks at 0.\nCall callback with `value` as \"Result\".\nShow Result.\n"
+const runtimeFunctionReadSource = "Define \"callbacks\" as a New List of Identity.\nDefine \"callback\" as a New Identity from callbacks at 0.\ncallback `value` as \"Result\".\nShow Result.\n"
 
 func TestRuntimeHandleReads(t *testing.T) {
 	for _, tc := range []struct{ name, source, contains string }{

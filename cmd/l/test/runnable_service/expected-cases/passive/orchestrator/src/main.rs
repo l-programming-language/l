@@ -56,9 +56,8 @@ fn l_main( runtime: &runtime::Runtime) -> (impl std::future::Future<Output = run
     
         
 
+
 async move {
-
-
 
 let lApp0 = runtime.app("main.apps/generations/@@GENERATION@@/app-000");
 
@@ -122,8 +121,8 @@ Ok(())
 
 
 
-
 }
+
 
 
 

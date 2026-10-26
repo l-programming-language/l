@@ -8,9 +8,11 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
 
 ## Boundaries to preserve
 
-- `LogicemeService.Evaluate` accepts complete framed AML and returns an in-memory
-  source bundle. An Executable is not a built/running application. Keep scanning,
-  syllable composition, Lucid interpretation, linking and support assembly distinct.
+- `LogicemeService.Evaluate` consumes complete framed AML and returns a Rust source
+  bundle. Logiceme owns callable declarations, glyph punctuation and selected
+  support assets; Lyger may supply resolved native type/name/value atoms through
+  approved AML fields, without executable bodies or closures. It must not depend on Lyger types, Go-only plan pointers
+  or source-language parsing. Keep scanning, composition, interpretation and linking distinct.
 - Rust is the only generated language. Evaluate accepts at most one options value,
   containing only IncludeRuntime; no output-target selector remains.
   Natural-language selection belongs to Lyger. Process all books without
@@ -21,10 +23,13 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
 - Preserve original input, source order, scoped metadata, prior bundles, exact
   literal bytes, and error causes. Return classified errors and no partial bundle;
   do not panic, print compiler diagnostics to stdout, or substitute demo artifacts.
-- Keep metadata/signature/ownership preparation out of tiny segment templates.
-  Preserve Func/Prop/Op and terminology. Rust's template interfaces,
-  cases and forwarding are frozen; changing them or adding metadata requires an
-  explicitly reviewed task. Leftover preparation fields are not authoring contracts.
+- Compile typed Function definitions and invocations through canonical compositions.
+  Do not substitute erased argument/result vectors or runtime L-signature dispatch.
+  Native storage helpers may implement resolved ownership; they cannot interpret
+  L instructions or hide Function bodies in native strings. Keep preparation
+  outside small segments and preserve Func/Prop/Op.
+  Compose existing syllables and builtin definitions; unused fields grant no authority.
+  Template interfaces, cases and forwarding remain frozen pending explicit review.
 - Rust's [Lifetimes/GenericTypes inputs](../builtins/README.md#lifetime-and-generic-inputs)
   are local native String interiors on FW/HY/MY/Y/named KY. Preserve their bytes,
   declaration/application roles and explicit forwarding. Inherited file metadata
@@ -79,12 +84,8 @@ resources outside an explicit finite amendment. Generated install/start/stop
 scripts are artifacts, never local validation commands. Keep process supervision
 and raw stdout/continuation semantics in dedicated support, not glyphs.
 
-Follow the [validation policy](../docs/development-harness.md#temporary-validation-pause)
-for the local pause and authorized hosted runs. Run local bootstrap, full lint,
-full ordinary/native suites or `scripts/l-check` only on explicit user request.
-For explicitly requested full validation, run `scripts/l-check`, resolve every
-lint finding, and require workflow lint, ordinary unfiltered acceptance and the
-complete tagged native-compilation stage. Focused checks do not establish full
-validation. Check documentation links, consistency and diff scope, and state
-which validation was not run during the pause.
-Report proposed, implemented, generated, compiled and runtime-verified separately.
+Root [acceptance instructions](../AGENTS.md#current-contract) and the
+[validation policy](../docs/development-harness.md#temporary-validation-pause)
+govern local and hosted checks. Report proposed, implemented, generated, compiled
+and runtime-verified separately, including unrun stages. Focused checks do not
+establish full validation; documentation checks establish no native result.

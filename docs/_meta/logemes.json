@@ -1,27 +1,33 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
+  "checkedStages": [
+    "static-source-inspection"
+  ],
+  "executedStages": [],
   "sourceHashes": {
-    "builtins/README.md": "ed7f2ca89ef4c11d2cfc8606abb26d5001adda418ab120caab90db8814dc39f0",
+    "builtins/README.md": "84af82bef5776cc5240d452a88c7d5cce5e6af34ec08b17e61986fa7672d189e",
     "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
     "builtins/segments/consonants/define.lu": "d2b292d8fd284d677f7866cb7ae745adef00cb9ca6b3d92c92ec609e36de2899",
     "builtins/segments/consonants/describe.lu": "e9965c87b7913cd803e1df673b96db0886ea157ac51382004177070a5579d271",
     "builtins/segments/consonants/evaluate.lu": "560028f7aa15f57e57847f813cfee74fb32fac6b742a97fb414261aa897309f4",
-    "builtins/segments/consonants/execute.lu": "f57822337a0e98ee6fb1ec276faaa2a66bc9b6250f528c36a1ebdf32757a49b9",
+    "builtins/segments/consonants/execute.lu": "8f756c87b1b5290f61f43db52a140ac0aa0a89a77692a19ad67170aec89c5927",
     "builtins/segments/consonants/instantiate.lu": "864fa161e1edaefe8282fd5d916de7586cb2503680a0001c2f9b35321d95353f",
     "builtins/segments/consonants/iterate.lu": "b9d9e295e4587229dc72b12ea491abe27d79e38f19fc6af09347444236e2ec4f",
     "builtins/segments/consonants/operate.lu": "9685b54f1e5a28986a928d2f31fd7561ac80eb852225b76079a6988cfa05409a",
     "builtins/segments/vowels/calculation.lu": "18fa1ec1c7e13df95c5581646418aaa457f7779dac06fc44015ae20f1d4ebf86",
     "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",
-    "builtins/segments/vowels/definition.lu": "9f52aaa10f119947b1e1d28ad7da1af7d5abf6c9a5d7f7b2799f8f6b529cb22d",
+    "builtins/segments/vowels/definition.lu": "3fa695123d814616bfb8c225dc200da5f31d563b6f787c98b54975aa41b8a971",
     "builtins/segments/vowels/description.lu": "854c95540f06905bb5ee1f166399c4edd3c1381f7afd6c79e469c76dbb3853a1",
     "builtins/segments/vowels/evaluation.lu": "82253180544936ccbb5c0cbc7b8c48874bae363b50ab8593da994094461b9645",
-    "builtins/segments/vowels/execution.lu": "76de93f711d55645ddba15862b4d8bba6556afad0168602f1bef252c487e64f6",
+    "builtins/segments/vowels/execution.lu": "210f5f882123c4a64d33ebb539d2f3c61182dce55a2c862e9615e57a7871d5e8",
     "builtins/segments/vowels/instantiation.lu": "9a19335f7d45435346f3c7e065000e6e6e12ea22e0798ad14381084a5a7e9c8d",
     "builtins/segments/vowels/iteration.lu": "6321d1948be328cdcbe2a520bbf5263043f774eccb4759e7dfe930397ac06af4",
     "builtins/segments/vowels/operation.lu": "4b439302f6c59f3eea42df4be91e788b50739c19ad290d1448f493e591699824",
-    "logiceme/glyph_metadata_validation.go": "f81f1018787a0c32d9ff3296efc2d5ebd882124bcbf84b0da8270bdf7b6ade68",
-    "logiceme/glyph_roles.go": "ebc293803656702784d9380ab1c0dd5d0a29161d19898c9abd0f3138190dcdae"
+    "logiceme/glyph_metadata_validation.go": "7ad22b69af7b2b17f13285676fa0957ece073714dca1f3c6a5b12f9d44a0ae0c",
+    "logiceme/glyph_prepare.go": "092b15d38cce7b045c1a17c313e2a7256ad3400091f9d6d366151858d2e49021",
+    "logiceme/glyph_roles.go": "ebc293803656702784d9380ab1c0dd5d0a29161d19898c9abd0f3138190dcdae",
+    "logiceme/segments.go": "93432a8e201fa5ae444c06d4fbd533aec5264f2a9bf930a2f0e8c82c278733a7"
   },
   "entries": [
     {
@@ -39,12 +45,7 @@
         "logiceme/testdata/lucid/declaration-operation.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.A",
@@ -61,12 +62,7 @@
         "logiceme/testdata/lucid/declaration-operation.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.D",
@@ -83,12 +79,7 @@
         "logiceme/testdata/lucid/calculations.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.E",
@@ -105,12 +96,7 @@
         "logiceme/testdata/lucid/calculations.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.G",
@@ -127,12 +113,7 @@
         "logiceme/testdata/lucid/conditionals.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.I",
@@ -149,12 +130,7 @@
         "logiceme/testdata/lucid/conditionals.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.F",
@@ -171,12 +147,7 @@
         "logiceme/testdata/lucid/statements.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.O",
@@ -191,14 +162,11 @@
       ],
       "witnesses": [
         "logiceme/testdata/lucid/statements.aml.txt",
-        "logiceme/lucid_generation_test.go"
+        "logiceme/lucid_generation_test.go",
+        "logiceme/testdata/lucid/future-composed.aml.txt",
+        "logiceme/lucid_future_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.H",
@@ -215,12 +183,7 @@
         "logiceme/testdata/lucid/declaration-description.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.U",
@@ -237,12 +200,7 @@
         "logiceme/testdata/lucid/declaration-description.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.K",
@@ -259,12 +217,7 @@
         "logiceme/testdata/lucid/callable-typed-flat.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.W",
@@ -281,12 +234,7 @@
         "logiceme/testdata/lucid/callable-typed-flat.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.P",
@@ -303,12 +251,7 @@
         "logiceme/testdata/lucid/iteration-conditions.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.X",
@@ -325,12 +268,7 @@
         "logiceme/testdata/lucid/iteration-conditions.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.M",
@@ -347,12 +285,7 @@
         "logiceme/testdata/lucid/empty-instantiations.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.Y",
@@ -369,12 +302,7 @@
         "logiceme/testdata/lucid/empty-instantiations.aml.txt",
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.C",
@@ -389,14 +317,11 @@
       ],
       "witnesses": [
         "logiceme/testdata/lucid/schedule-direct.aml.txt",
-        "logiceme/lucid_generation_test.go"
+        "logiceme/lucid_generation_test.go",
+        "logiceme/testdata/lucid/future-composed.aml.txt",
+        "logiceme/lucid_future_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.segment.V",
@@ -411,14 +336,11 @@
       ],
       "witnesses": [
         "logiceme/testdata/lucid/schedule-direct.aml.txt",
-        "logiceme/lucid_generation_test.go"
+        "logiceme/lucid_generation_test.go",
+        "logiceme/testdata/lucid/future-composed.aml.txt",
+        "logiceme/lucid_future_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.declaration-adapters",
@@ -435,17 +357,12 @@
       "witnesses": [
         "logiceme/testdata/lucid/declaration-operation.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.definition-adapters",
       "kind": "logeme",
-      "name": "O/OB/FO/FOB/KO/KOB/DO/DOB/GO/GOB/MO/MOB/BO/BOD/BOK/BOH/BOG/BOM/BOP/BOC",
+      "name": "O/OB/FO/FOB/KO/KOB/DO/DOB/GO/GOB/MO/MOB/CO/COB/BO/BOD/BOK/BOH/BOG/BOM/BOP/BOC",
       "role": "implementation",
       "support": "supported",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
@@ -457,12 +374,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/calculations.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.literal-file",
@@ -479,12 +391,7 @@
       "witnesses": [
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.communication",
@@ -501,12 +408,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/communication.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.description",
@@ -523,12 +425,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/declaration-description.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.selection",
@@ -545,12 +442,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/keyed-conditionals.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.readiness",
@@ -567,12 +459,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/select-communication.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.callables",
@@ -589,12 +476,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/closure-inline.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.iteration",
@@ -611,12 +493,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/iteration-bindings.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.unsupported-loops",
@@ -633,12 +510,7 @@
       "witnesses": [
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.instantiation",
@@ -655,12 +527,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/empty-instantiations.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.traits",
@@ -677,12 +544,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/trait-signature-outputs.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.generics",
@@ -699,12 +561,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/generics-functions.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.scheduling",
@@ -721,12 +578,7 @@
       "witnesses": [
         "logiceme/testdata/lucid/schedule-composed.aml.txt"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "logeme.family.deferred",
@@ -743,12 +595,36 @@
       "witnesses": [
         "logiceme/lucid_generation_test.go"
       ],
-      "notes": "Source inspection and existing compile-only witnesses; no compiler execution in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
+      "evidence": "static-inspection; existing-witness-not-run"
+    },
+    {
+      "id": "logeme.family.futures",
+      "kind": "logeme-family",
+      "name": "CV/DV/CO/COB future composition",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
+      "sources": [
+        "builtins/segments/consonants/execute.lu",
+        "builtins/segments/vowels/execution.lu",
+        "builtins/segments/vowels/definition.lu",
+        "logiceme/glyph_prepare.go",
+        "logiceme/glyph_metadata_validation.go",
+        "builtins/README.md",
+        "logiceme/segments.go"
       ],
-      "executedStages": []
+      "witnesses": [
+        "logiceme/lucid_future_test.go",
+        "logiceme/lucid_future_native_test.go",
+        "logiceme/testdata/lucid/future-composed.aml.txt",
+        "logiceme/testdata/lucid/future-move.aml.txt",
+        "logiceme/testdata/lucid/future-infer.aml.txt",
+        "logiceme/testdata/lucid/future-borrow-escape.aml.txt",
+        "logiceme/testdata/lucid/future-move-reuse.aml.txt",
+        "logiceme/glyph_expression_occurrence_test.go"
+      ],
+      "notes": "CV constructs one unscheduled future; local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing; this adds no async-FW modifier or Function dispatcher.",
+      "evidence": "static-inspection; existing-witness-not-run"
     }
   ]
 }

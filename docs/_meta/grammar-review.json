@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
   "sourceHashes": {
-    "lexicon/eng/grammar.json": "5ae6d7ef177817197d7bffcf9388ac4934abf4c847c4cfed32336e0d3bd5f001",
-    "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
-    "lyger/grammar_match.go": "bb6700a68686d2d88457df89053d38298c2230b3cc324c2f662e41665c2a5d53",
-    "lyger/instructions.go": "47208f4e56296c5f184c985da9e50ef15b736d81bb9dfdb221757aad7c1a0f4e",
-    "lyger/grammar_extraction.go": "eb60db4d3d51e02e199cc9c0e2108e61c85cb09e24fc6971eca362d02cc9b6d3",
-    "lyger/types.go": "ccefcec0547794da4a35f9f58ad00131b5dab02808d4dbb910eef39102f951eb",
-    "lyger/native_encoding.go": "9a66aa3973ce53bf32ef36892835dfc4ae95ec50e49806332f618389ae400996",
+    "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
     "lyger/construction.go": "4462bf8ddcc940d085e92f11fa951371caff1720f6c0ee22d5f8f1e921b501b6",
-    "lyger/semantic_resolution.go": "9937eae863f737d2ae56ede2fc82afe70196b0e1a98969f7befe3eb3620cf00f",
-    "lyger/source_functions.go": "8d39cac20ae471811681c88e5b88d2ac486200556990d4dcee567d7a3ea5ff3e",
-    "lyger/orchestration_functions.go": "ed944a072ca752f5b098e3e5dc1de3d6af78155394a9346ad20cb32316baba22",
-    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716"
+    "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
+    "lyger/grammar_match.go": "bb6700a68686d2d88457df89053d38298c2230b3cc324c2f662e41665c2a5d53",
+    "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
+    "lyger/instructions.go": "9584edc3e6b7183c2515b160f8be52b085b2cc35d1a209bb2863683024aa3846",
+    "lyger/native_encoding.go": "19785ba3dd27e613fa7a35ec5a60fef78a087743b965124087d535416c7aaa0a",
+    "lyger/orchestration_functions.go": "0ce3ad3a82f1819b5aee521d55caeb8a9cbee895de80fb1f60e5059a35474a41",
+    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
+    "lyger/semantic_resolution.go": "a8e9eb4140547b6e488b5869ed73b7754181d3296918900c51c989d09df2e3f8",
+    "lyger/source_functions.go": "49702e185101ecddf7271effc1f373c439d62f93e8b429fabf5c7c6158e7cb86",
+    "lyger/types.go": "ccefcec0547794da4a35f9f58ad00131b5dab02808d4dbb910eef39102f951eb"
   },
   "entries": {
     "value": {
@@ -48,19 +48,16 @@
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Native type categories",
-          "support": "partial",
           "notes": "Matches the native type token category. Construction and usable values depend on the explicit source type whitelist, descriptor binding and selected category."
         },
         "list": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "List",
-          "support": "partial",
           "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API."
         },
         "dict": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
           "topic": "Dictionary",
-          "support": "partial",
           "notes": "Recognizes Dictionary type/storage structure. Namespace members and imports are demonstrated; arbitrary runtime map operations are not thereby supported."
         },
         "definitive": {
@@ -80,73 +77,60 @@
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Typed declarations",
-          "support": "partial",
           "notes": "A quoted declaration plus typed declarative phrase. Native whitelist and construction rules determine the represented category."
         },
         "list": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "List declarations",
-          "support": "partial",
           "notes": "A named List requires an explicit runtime constructor for initialization; typed elements and checked operations follow the List contract."
         },
         "dict": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
           "topic": "Dictionary declarations",
-          "support": "partial",
           "notes": "A quoted Dictionary declaration provides owned namespace/storage; generic runtime map operations remain outside the established surface."
         },
         "declarative": {
           "doc": "docs/spec/definitions.md#create-define-and-describe",
           "topic": "Declarations",
-          "support": "partial",
           "notes": "A quoted name and definitive declarative phrase participate in typed registration/construction."
         },
         "definitional": {
           "doc": "docs/spec/definitions.md#framing-and-escaping",
           "topic": "Native-backed definitions",
-          "support": "partial",
           "notes": "A quoted name with a definitional Text phrase must satisfy paired framing and typed definition parsing."
         },
         "value": {
           "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
           "topic": "Value declarations",
-          "support": "partial",
           "notes": "A quoted name and value phrase retain the concrete value category and assignment/definite-assignment boundaries."
         },
         "declaration": {
-          "doc": "docs/spec/names-and-scope.md#declarations-and-definitions",
           "topic": "Declaration sites",
-          "support": "partial",
           "notes": "A quoted name may carry an optional phrase. Registration ownership and context determine whether that site is a usable declaration."
         },
         "definitive": {
           "doc": "docs/spec/names-and-scope.md#possessives-and-member-lookup",
           "topic": "Bound subjects",
-          "support": "partial",
           "notes": "A resolved identifier preserves its selected owner and canonical declaration; it is not a fresh declaration."
         },
         "reference": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Native-category reference",
-          "support": "partial",
           "notes": "A #~# type token selects a native category rather than a quoted source identifier. Its supported role depends on the enclosing grammar."
         },
         "definition": {
           "doc": "docs/spec/definitions.md#composition-and-source-ownership",
           "topic": "Definition use with relations",
-          "support": "partial",
           "notes": "A resolved definition and generic phrase preserve source ownership, bound parameters and permitted composition."
         },
         "directive": {
           "doc": "docs/spec/definitions.md#source-actions",
           "topic": "Source action declaration",
-          "support": "partial",
           "notes": "A quoted action label followed by a for/directive body records ordered source actions and typed any-parameters."
         },
         "utilization": {
           "doc": "docs/spec/definitions.md#framing-and-escaping",
           "topic": "Native/source definition body",
-          "support": "partial",
           "notes": "A quoted label with a to/utilization phrase defines native text or a supported action relation; it is not an import provider phrase."
         },
         "callable": {
@@ -196,19 +180,16 @@
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Native type categories",
-          "support": "partial",
           "notes": "Matches the native type token category. Construction and usable values depend on the explicit source type whitelist, descriptor binding and selected category."
         },
         "list": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "List",
-          "support": "partial",
           "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API."
         },
         "dict": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
           "topic": "Dictionary",
-          "support": "partial",
           "notes": "Recognizes Dictionary type/storage structure. Namespace members and imports are demonstrated; arbitrary runtime map operations are not thereby supported."
         },
         "definitive": {
@@ -220,44 +201,38 @@
         "named": {
           "doc": "docs/spec/definitions.md#descriptors-and-constructors",
           "topic": "Named construction",
-          "support": "partial",
           "notes": "A Text name precedes a resolved nominal definition and optional relations. Naming alone does not establish a constructor for every internal value tag."
         },
         "named_type": {
           "doc": "docs/spec/definitions.md#descriptors-and-constructors",
           "topic": "Named native-category construction",
-          "support": "partial",
           "notes": "A Text name precedes a recognized native type and optional relations. The explicit native type and descriptor contracts determine supported construction."
         },
         "declarative": {
           "doc": "docs/spec/names-and-scope.md#declarations-and-definitions",
           "topic": "Declared object name",
-          "support": "partial",
           "notes": "A quoted identifier occurs as an owned declaration/reference role. It is not a Text literal or a universal executable scalar value."
         },
         "dependent": {
           "doc": "docs/spec/imports.md#explicit-source-file-imports",
           "topic": "Dependency-qualified reference",
-          "support": "partial",
           "notes": "A named reference carries a dependency phrase. Supported Use import scanning and source-provider ownership remain authoritative; arbitrary grammar placement does not imply import execution."
         },
         "argument": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "Bound update operands",
-          "support": "partial",
           "notes": "An atomic operand leaves its destination phrase for the enclosing update clause. Its resolved runtime type still governs use."
         },
         "type_argument": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "Atomic type operands",
-          "support": "partial",
           "notes": "An atomic operand leaves its destination phrase for the enclosing update clause. Its resolved runtime type still governs use."
         },
         "callable": {
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Functions",
           "support": "supported",
-          "notes": "A source Function name is paired with its explicit Inputs/Outputs signature; native descriptor Process metadata uses its separate form."
+          "notes": "A Function name carries its explicit Inputs/Outputs signature; descriptors supply the Process to the same canonical constructor."
         }
       }
     },
@@ -290,49 +265,41 @@
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
           "topic": "Native type categories",
-          "support": "partial",
           "notes": "Matches the native type token category. Construction and usable values depend on the explicit source type whitelist, descriptor binding and selected category."
         },
         "list": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "List",
-          "support": "partial",
           "notes": "Recognizes List type/storage structure. General runtime element construction, mutation, indexing, iteration and bounds behavior are not established."
         },
         "dict": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
           "topic": "Dictionary",
-          "support": "partial",
           "notes": "Recognizes Dictionary type/storage structure. Namespace members and imports are demonstrated; arbitrary runtime map operations are not thereby supported."
         },
         "declarative": {
           "doc": "docs/spec/names-and-scope.md#declarations-and-definitions",
           "topic": "Nested declaration role",
-          "support": "partial",
           "notes": "The phrase owns a declaration object whose scope and publication are resolved semantically."
         },
         "definitive": {
           "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
           "topic": "Assigned values",
-          "support": "partial",
           "notes": "The as phrase supplies a bound value; concrete type and runtime assignment requirements remain enforced."
         },
         "definitional": {
           "doc": "docs/spec/definitions.md#framing-and-escaping",
           "topic": "Native definition Text",
-          "support": "partial",
           "notes": "The body is a typed Text object with explicit framing/escaping at the definition boundary."
         },
         "value": {
           "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
           "topic": "Assigned values",
-          "support": "partial",
           "notes": "The as phrase supplies a bound value; concrete type and runtime assignment requirements remain enforced."
         },
         "alias": {
           "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
           "topic": "Aliases",
-          "support": "partial",
           "notes": "A declarative alias phrase must resolve its target and preserve canonical ownership; it does not copy an application or widen visibility."
         },
         "callable": {
@@ -368,21 +335,16 @@
       "notes": "Selects a typed update destination and optional index or field key; runtime mutation does not change vocabulary namespaces.",
       "cases": {
         "list": {
-          "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "Collection association",
-          "support": "partial",
           "notes": "Configured in/collection relation; the retained grammar does not establish general executable insertion, indexing, or dictionary mutation."
         },
         "dictionary": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
           "topic": "Collection association",
-          "support": "partial",
           "notes": "Configured in/collection relation; the retained grammar does not establish general executable insertion, indexing, or dictionary mutation."
         },
         "locative": {
-          "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "Collection association",
-          "support": "partial",
           "notes": "Consumes the destination and its complete Number/Text key phrase; an at keyword without a key is not an update."
         }
       }
@@ -408,11 +370,9 @@
         "definitive": {
           "doc": "docs/spec/definitions.md#source-actions",
           "topic": "Source action relation",
-          "support": "partial",
           "notes": "The to phrase contains an imperative clause; enclosing definition semantics determine how it is used, distinct from dependency imports."
         },
         "definitional": {
-          "doc": "docs/spec/definitions.md#framing-and-escaping",
           "topic": "Native-backed Text definition",
           "support": "supported",
           "notes": "The to phrase contains a Text object. Native definition framing and typed argument encoding, not an import path, determine its meaning."
@@ -438,16 +398,18 @@
       "notes": "Generic clauses call source-defined vocabulary with resolved typed arguments. Runtime captures use retained typed environments; asynchronous methods are not introduced. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.",
       "cases": {
         "subjective": {
-          "doc": "docs/spec/definitions.md#source-actions",
           "topic": "Bound source-action arguments",
-          "support": "partial",
           "notes": "The source-defined action signature and canonical binding determine the subject/object arguments and their order. Native definition slot kinds are a separate interface."
         },
         "objective": {
-          "doc": "docs/spec/definitions.md#source-actions",
           "topic": "Bound source-action arguments",
-          "support": "partial",
           "notes": "The source-defined action signature and canonical binding determine the subject/object arguments and their order. Native definition slot kinds are a separate interface."
+        },
+        "callable": {
+          "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
+          "topic": "Typed Function words",
+          "support": "supported",
+          "notes": "A Function declaration defines an ordinary invocation verb. Its sentence binds ordered typed arguments and explicit result names; member ownership selects the declaration."
         }
       }
     },
@@ -455,7 +417,15 @@
       "doc": "docs/spec/definitions.md#source-actions",
       "topic": "Source actions",
       "support": "partial",
-      "notes": "Generic clauses call source-defined vocabulary with resolved typed arguments. Runtime captures use retained typed environments; asynchronous methods are not introduced. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Generic clauses call source-defined vocabulary with resolved typed arguments. Runtime captures use retained typed environments; asynchronous methods are not introduced. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.",
+      "cases": {
+        "callable": {
+          "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
+          "topic": "Typed Function words",
+          "support": "supported",
+          "notes": "A Function declaration defines an ordinary invocation verb. Its sentence binds ordered typed arguments and explicit result names; member ownership selects the declaration."
+        }
+      }
     },
     "clause.generic.passive": {
       "doc": "docs/spec/definitions.md#source-actions",
@@ -470,16 +440,18 @@
       "notes": "Generic clauses call source-defined vocabulary with resolved typed arguments. Runtime captures use retained typed environments; asynchronous methods are not introduced. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.",
       "cases": {
         "subjective": {
-          "doc": "docs/spec/definitions.md#source-actions",
           "topic": "Bound source-action arguments",
-          "support": "partial",
           "notes": "The source-defined action signature and canonical binding determine the subject/object arguments and their order. Native definition slot kinds are a separate interface."
         },
         "objective": {
-          "doc": "docs/spec/definitions.md#source-actions",
           "topic": "Bound source-action arguments",
-          "support": "partial",
           "notes": "The source-defined action signature and canonical binding determine the subject/object arguments and their order. Native definition slot kinds are a separate interface."
+        },
+        "callable": {
+          "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
+          "topic": "Typed Function words",
+          "support": "supported",
+          "notes": "A Function declaration defines an ordinary invocation verb. Its sentence binds ordered typed arguments and explicit result names; member ownership selects the declaration."
         }
       }
     },
@@ -567,15 +539,13 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal.",
-      "cases": {}
+      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal."
     },
     "clause.expansive.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal.",
-      "cases": {}
+      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal."
     },
     "clause.expansive.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
@@ -587,22 +557,19 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal.",
-      "cases": {}
+      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal."
     },
     "clause.locative.imperative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal.",
-      "cases": {}
+      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal."
     },
     "clause.locative.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal.",
-      "cases": {}
+      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal."
     },
     "clause.locative.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
@@ -614,8 +581,7 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal.",
-      "cases": {}
+      "notes": "Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal."
     },
     "clause.receptive.imperative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
@@ -861,25 +827,25 @@
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.terminative.active": {
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.terminative.passive": {
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.terminative.applicative": {
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "condition": {
       "doc": "docs/spec/control-flow.md#comparisons",
@@ -890,55 +856,39 @@
         "truth": {
           "doc": "docs/spec/values.md#truth",
           "topic": "Truth condition",
-          "support": "partial",
           "notes": "A bare condition requires one Truth operand; optional negation belongs to this condition, with no scalar truthiness or joined-condition contract."
         },
         "has": {
           "doc": "docs/spec/execution.md#output-and-error",
           "topic": "Process Error condition",
-          "support": "partial",
           "notes": "Has is bounded to the selected App Error member and must retain matching target ownership."
         },
         "equals": {
-          "doc": "docs/spec/control-flow.md#comparisons",
           "topic": "Scalar comparison",
-          "support": "partial",
           "notes": "The exact configured phrase maps to a typed scalar operator. Equality requires matching scalar types; order requires Number. Native operator witnesses do not independently verify every source phrase."
         },
         "is": {
-          "doc": "docs/spec/control-flow.md#comparisons",
           "topic": "Scalar comparison",
-          "support": "partial",
           "notes": "The exact configured phrase maps to a typed scalar operator. Equality requires matching scalar types; order requires Number. Native operator witnesses do not independently verify every source phrase."
         },
         "isnt": {
-          "doc": "docs/spec/control-flow.md#comparisons",
           "topic": "Scalar comparison",
-          "support": "partial",
           "notes": "The exact configured phrase maps to a typed scalar operator. Equality requires matching scalar types; order requires Number. Native operator witnesses do not independently verify every source phrase."
         },
         "less": {
-          "doc": "docs/spec/control-flow.md#comparisons",
           "topic": "Scalar comparison",
-          "support": "partial",
           "notes": "The exact configured phrase maps to a typed scalar operator. Equality requires matching scalar types; order requires Number. Native operator witnesses do not independently verify every source phrase."
         },
         "greater": {
-          "doc": "docs/spec/control-flow.md#comparisons",
           "topic": "Scalar comparison",
-          "support": "partial",
           "notes": "The exact configured phrase maps to a typed scalar operator. Equality requires matching scalar types; order requires Number. Native operator witnesses do not independently verify every source phrase."
         },
         "less_equal": {
-          "doc": "docs/spec/control-flow.md#comparisons",
           "topic": "Scalar comparison",
-          "support": "partial",
           "notes": "The exact configured phrase maps to a typed scalar operator. Equality requires matching scalar types; order requires Number. Native operator witnesses do not independently verify every source phrase."
         },
         "greater_equal": {
-          "doc": "docs/spec/control-flow.md#comparisons",
           "topic": "Scalar comparison",
-          "support": "partial",
           "notes": "The exact configured phrase maps to a typed scalar operator. Equality requires matching scalar types; order requires Number. Native operator witnesses do not independently verify every source phrase."
         }
       }
@@ -971,21 +921,7 @@
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.",
-      "cases": {
-        "invocative": {
-          "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-          "topic": "Typed Functions",
-          "support": "supported",
-          "notes": "Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process."
-        },
-        "returning": {
-          "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-          "topic": "Typed Functions",
-          "support": "supported",
-          "notes": "Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return."
-        }
-      }
+      "notes": "This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support."
     },
     "predicate.active": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
@@ -1015,21 +951,7 @@
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.",
-      "cases": {
-        "invocative": {
-          "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-          "topic": "Typed Functions",
-          "support": "supported",
-          "notes": "Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process."
-        },
-        "returning": {
-          "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-          "topic": "Typed Functions",
-          "support": "supported",
-          "notes": "Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return."
-        }
-      }
+      "notes": "This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support."
     },
     "statement.objective.conditional": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
@@ -1059,25 +981,13 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "Typed Functions",
       "support": "supported",
-      "notes": "Call supplies ordered existing values or literals. Construct complex argument values before the call; argument count and complete runtime types are checked."
+      "notes": "Invocation words bind ordered values and prepositional arguments. Argument counts and complete types are checked."
     },
     "phrase.results": {
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "Typed Functions",
       "support": "supported",
-      "notes": "Call declares one ordered result name per output. Names receive checked returned values only after the invocation completes."
-    },
-    "clause.invocative.imperative": {
-      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "topic": "Typed Functions",
-      "support": "supported",
-      "notes": "Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process."
-    },
-    "clause.returning.imperative": {
-      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "topic": "Typed Functions",
-      "support": "supported",
-      "notes": "Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return."
+      "notes": "An invocation declares one result name per output, assigned only after the invocation completes."
     }
   }
 }

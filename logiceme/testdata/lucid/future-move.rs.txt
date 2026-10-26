@@ -1,0 +1,77 @@
+
+
+// package main
+
+
+
+
+fn owned<'call>( prefix: &'call str, payload: String) -> (impl std::future::Future<Output = (String, &'call str)> + 'call) {
+    
+        
+
+
+async move {
+
+
+return (payload, prefix);
+
+
+
+}
+
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let prefix = String::from("borrowed")
+;
+
+
+let payload = String::from("owned")
+;
+
+
+let pending = owned(prefix.as_str(), payload)
+;
+
+
+let mut pinned = Box::pin(pending)
+;
+
+
+let waker = std::task::Waker::noop()
+;
+
+
+let mut context = std::task::Context::from_waker(waker)
+;
+
+
+let handle = std::pin::Pin::as_mut(&mut pinned)
+;
+
+
+let observed = std::future::Future::poll(handle, &mut context)
+;
+
+
+
+assert_eq!(observed, std::task::Poll::Ready((String::from("owned"), "borrowed")));
+
+
+
+let _released = drop(pinned)
+;
+
+
+
+assert_eq!(prefix, "borrowed");
+
+
+
+    
+}

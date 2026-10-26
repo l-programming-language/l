@@ -1,0 +1,89 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+let owner = String::from("retained")
+;
+
+
+let pending = async {
+
+let length = (
+
+async {
+
+
+return owner.len();
+
+
+
+}
+
+).await
+
+;
+
+
+let ready = std::future::ready(length)
+;
+
+
+let answer = (
+ready
+).await
+
+;
+
+
+
+return answer;
+
+
+
+}
+
+;
+
+
+let mut pinned = Box::pin(pending)
+;
+
+
+let waker = std::task::Waker::noop()
+;
+
+
+let mut context = std::task::Context::from_waker(waker)
+;
+
+
+let handle = std::pin::Pin::as_mut(&mut pinned)
+;
+
+
+let observed = std::future::Future::poll(handle, &mut context)
+;
+
+
+
+assert_eq!(observed, std::task::Poll::Ready(8_usize));
+
+
+
+let _released = drop(pinned)
+;
+
+
+
+assert_eq!(owner, "retained");
+
+
+
+    
+}

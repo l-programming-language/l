@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceHashes": {
-    "lexicon/eng/vocabulary.json": "4c38dfa34c4df0a2dcecb167e76a91713e084f54742076c2b2c20306edce0f6e",
-    "lyger/instructions.go": "47208f4e56296c5f184c985da9e50ef15b736d81bb9dfdb221757aad7c1a0f4e",
-    "lyger/utilities.go": "2e9aa1197bb2a1f8569dc2e668b8a1219d4812384d5a8cb365d41a270fa280b0",
-    "lyger/source_functions.go": "8d39cac20ae471811681c88e5b88d2ac486200556990d4dcee567d7a3ea5ff3e",
-    "lyger/orchestration_functions.go": "ed944a072ca752f5b098e3e5dc1de3d6af78155394a9346ad20cb32316baba22",
-    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716"
+    "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
+    "lyger/instructions.go": "9584edc3e6b7183c2515b160f8be52b085b2cc35d1a209bb2863683024aa3846",
+    "lyger/orchestration_functions.go": "0ce3ad3a82f1819b5aee521d55caeb8a9cbee895de80fb1f60e5059a35474a41",
+    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
+    "lyger/source_functions.go": "49702e185101ecddf7271effc1f373c439d62f93e8b429fabf5c7c6158e7cb86",
+    "lyger/utilities.go": "2e9aa1197bb2a1f8569dc2e668b8a1219d4812384d5a8cb365d41a270fa280b0"
   },
   "entries": {
     "nouns.it": {
@@ -115,7 +115,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "func",
       "support": "partial",
-      "notes": "Function source vocabulary can describe native composition or an ordinary typed callable; private body scopes and argument/result contracts distinguish them."
+      "notes": "Function declarations retain typed signatures and use the canonical builtin definition. Their invocation verbs participate in ordinary sentences."
     },
     "nouns.definition": {
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
@@ -253,7 +253,7 @@
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion."
+      "notes": "Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs."
     },
     "verbs.appropriative": {
       "doc": "docs/spec/control-flow.md#comparisons",
@@ -440,18 +440,6 @@
       "topic": "Iteration",
       "support": "rejected",
       "notes": "While is recognized but explicitly rejected by outer lowering."
-    },
-    "verbs.invocative": {
-      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "topic": "Typed Functions",
-      "support": "supported",
-      "notes": "Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process."
-    },
-    "verbs.returning": {
-      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "topic": "Typed Functions",
-      "support": "supported",
-      "notes": "Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return."
     }
   }
 }

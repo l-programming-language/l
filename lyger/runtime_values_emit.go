@@ -7,8 +7,7 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue) (emittedExpression, error) {
-	result := emittedExpression{kind: value.Type}
+func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result emittedExpression) (emittedExpression, error) {
 	if value.Source.Kind == operandRead {
 		owner, err := e.value(value.Owner)
 		if err != nil {
@@ -44,7 +43,7 @@ func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue) (emitte
 			return result, err
 		}
 		result.text = "(" + result.text + ").expect_type(" + expected + ")?"
-		result.text, err = unboxRuntimeValue(result.text, value.Type)
+		result.text, err = unboxTypedRuntimeValue(result.text, value.RuntimeType)
 		return result, err
 	}
 	elements := make([]string, len(value.Elements))
@@ -113,14 +112,22 @@ func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue) (emitte
 
 func (e *orchestrationEmitter) storeRuntimeValue(slot *orchestrationStorage, expression string) ([]string, error) {
 	if index, shared := e.programStorage[slot]; shared {
-		boxed, err := boxRuntimeValue(emittedExpression{text: expression, kind: slot.Type})
+		typ, err := runtimeTypeExpression(slot.RuntimeType, e.plan.Identities)
+		if err != nil {
+			return nil, err
+		}
+		boxed, err := boxRuntimeValue(emittedExpression{text: expression, kind: slot.Type, typeExpression: typ})
 		if err != nil {
 			return nil, err
 		}
 		return []string{orchestrationStatement(fmt.Sprintf("lProgram.set(%d, %s)?;", index, boxed))}, nil
 	}
 	if capture := slot.Capture; capture != nil {
-		boxed, err := boxRuntimeValue(emittedExpression{text: expression, kind: slot.Type})
+		typ, err := runtimeTypeExpression(slot.RuntimeType, e.plan.Identities)
+		if err != nil {
+			return nil, err
+		}
+		boxed, err := boxRuntimeValue(emittedExpression{text: expression, kind: slot.Type, typeExpression: typ})
 		if err != nil {
 			return nil, err
 		}

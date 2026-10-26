@@ -392,32 +392,6 @@
       "value": "EQUAL(inputs[0])",
       "inputs": ["*.thing"],
       "outputs": ["value"]
-    },
-    "invocative": {
-      "root": "call",
-      "pos": "verb",
-      "type": "action.invocative",
-      "postfixes": {},
-      "value": "CALL(inputs)",
-      "inputs": [
-        "*.thing"
-      ],
-      "outputs": [
-        "value"
-      ]
-    },
-    "returning": {
-      "root": "return",
-      "pos": "verb",
-      "type": "action.returning",
-      "postfixes": {},
-      "value": "RETURN(inputs)",
-      "inputs": [
-        "*.thing"
-      ],
-      "outputs": [
-        "value"
-      ]
     }
   },
   "adjectives": {

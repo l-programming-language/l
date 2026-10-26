@@ -283,19 +283,6 @@
       "lang": "l"
     },
     {
-      "id": "builtin-core",
-      "source": "builtins/eng/core.l",
-      "classification": "fragment",
-      "description": "Implicit builtin definitions; reference fragment already loaded by the compiler.",
-      "sha256": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-      "validation": "existing-witness-not-run",
-      "witnesses": [
-        "lyger/builtin_operations_contract_test.go",
-        "docs/architecture.md"
-      ],
-      "lang": "l"
-    },
-    {
       "id": "aml-declaration-evaluation",
       "source": "logiceme/testdata/lucid/declaration-evaluation.aml.txt",
       "classification": "fragment",
@@ -370,10 +357,10 @@
         "lyger/construction_test.go"
       ],
       "lines": {
-        "start": 7,
-        "end": 10
+        "start": 12,
+        "end": 15
       },
-      "sha256": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
+      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
       "lang": "l"
     },
     {
@@ -527,7 +514,7 @@
         "lyger/builtin_operations_contract_test.go",
         "lyger/distribution_frontend_test.go"
       ],
-      "sha256": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
+      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
       "lang": "l",
       "lines": {
         "start": 1,
@@ -677,8 +664,8 @@
       "id": "definitions-callable-core",
       "source": "builtins/eng/core.l",
       "classification": "fragment",
-      "description": "Implicit Process, Function, and Function.Return definitions; native composition reference without a general source callable claim.",
-      "sha256": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
+      "description": "Canonical Process, Function and Function.Return definitions shared by source bodies and Object construction.",
+      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/definition_test.go",
@@ -696,7 +683,7 @@
       "source": "builtins/eng/core.l",
       "classification": "fragment",
       "description": "Implicit Objective descriptor uses a grouped native word; the nested array is not an L collection literal.",
-      "sha256": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
+      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/definition_test.go",
@@ -704,8 +691,8 @@
       ],
       "lang": "l",
       "lines": {
-        "start": 6,
-        "end": 6
+        "start": 11,
+        "end": 11
       }
     },
     {

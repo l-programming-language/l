@@ -224,11 +224,11 @@
     },
     {
       "path": "lexicon/eng/grammar.json",
-      "sha256": "5ae6d7ef177817197d7bffcf9388ac4934abf4c847c4cfed32336e0d3bd5f001"
+      "sha256": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b"
     },
     {
       "path": "lexicon/eng/vocabulary.json",
-      "sha256": "4c38dfa34c4df0a2dcecb167e76a91713e084f54742076c2b2c20306edce0f6e"
+      "sha256": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321"
     },
     {
       "path": "logiceme/feature_removal_test.go",
@@ -280,7 +280,7 @@
     },
     {
       "path": "lyger/ir_enums_test.go",
-      "sha256": "ee346bae3006152e7d32e40f92676336b61a1597e9115f03b6b782ba96eca2ad"
+      "sha256": "f555adf0ba63c77aab9f233f95f86e86e0e453505e71399da3c8d4ac4f0bc040"
     },
     {
       "path": "lyger/lexicon_test.go",
@@ -1084,7 +1084,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/alias/orchestrator/src/main.rs",
-      "sha256": "376808ae6a97804f1df1cfdc1685744176dddca50760271c126befdbf2a6d7e5"
+      "sha256": "4826b42446320b3d3fff03cb0ab29ca2937abc70cb6414f16e8f4f578f419605"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/basic/Cargo.toml",
@@ -1096,7 +1096,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/basic/orchestrator/src/main.rs",
-      "sha256": "98a93df0fe9f6eecb9fdb20516535e205ae03a660bc9db326bcf4ce2359482f2"
+      "sha256": "04abe3a00c9aed363d69731bcd9af5e52ae371e49864744752ae3b75f28e2468"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/build-only/Cargo.toml",
@@ -1108,7 +1108,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/build-only/orchestrator/src/main.rs",
-      "sha256": "6c42ac05e0511fd371d53ed57aeb83485dbc7efdf1d523593796b534da870719"
+      "sha256": "88b93d47d09cd30bef435dbb5c297ca58c9e25702b66940ad2bed53385a1b7ef"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/Cargo.toml",
@@ -1120,7 +1120,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/orchestrator/src/main.rs",
-      "sha256": "2ad366e5f92a46c89fab7ae1b490fcca76239d5637c1e39f2c00775c7d12eb76"
+      "sha256": "bcda2b8fb3deb3bdbfe33553ce92791dcc0b966872faee884b3156c81d3568e1"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/Cargo.toml",
@@ -1132,7 +1132,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/orchestrator/src/main.rs",
-      "sha256": "1dfb67cb0a63b19ff5747bd238b51931d4a73dd07e4bbdcd08469d71b7336461"
+      "sha256": "10594d43c58eb2eb9ecea8575e9de03cf96a7a050888176702c6a0859273c8c9"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/empty/Cargo.toml",
@@ -1144,7 +1144,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/empty/orchestrator/src/main.rs",
-      "sha256": "d01d1c28c842cbbde7eaf83eeb4d2a211606bf961104ad9eb424e1fcb23f9785"
+      "sha256": "353c70f5c6dba42a6f30e5b746bf7fd2c1dcb8d2bbd80b7fe6c3814f4bc22512"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/imported/Cargo.toml",
@@ -1156,7 +1156,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/imported/orchestrator/src/main.rs",
-      "sha256": "d01d1c28c842cbbde7eaf83eeb4d2a211606bf961104ad9eb424e1fcb23f9785"
+      "sha256": "353c70f5c6dba42a6f30e5b746bf7fd2c1dcb8d2bbd80b7fe6c3814f4bc22512"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/mixed/Cargo.toml",
@@ -1176,7 +1176,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/mixed/orchestrator/src/main.rs",
-      "sha256": "c8b775adc1047616e47507e3342fb2542a2cc229993a43f78e0412e8bf5e74ce"
+      "sha256": "c9779bf3a9804f5ca132d1b1fbdef1c73da54e62aeee74e68f8e598e04fcfb2a"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/multiple/Cargo.toml",
@@ -1188,7 +1188,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/multiple/orchestrator/src/main.rs",
-      "sha256": "145679c2ae9342763cde2cec8d9bb56f2161a5a96f1cc32bee9fe904935c5e48"
+      "sha256": "873078147c118995bd92dedcc37a3b4393734df407ff011493b3942e5f8c78b5"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/passive/Cargo.toml",
@@ -1200,7 +1200,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/passive/orchestrator/src/main.rs",
-      "sha256": "98a93df0fe9f6eecb9fdb20516535e205ae03a660bc9db326bcf4ce2359482f2"
+      "sha256": "04abe3a00c9aed363d69731bcd9af5e52ae371e49864744752ae3b75f28e2468"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/private/Cargo.toml",
@@ -1212,7 +1212,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/private/orchestrator/src/main.rs",
-      "sha256": "ca83db832cda4722f69eda7b56290357e870974b5812622d4de67281a3ec9766"
+      "sha256": "9d012e9ee078c40d0ede4bb8c371233e856a0667b5fb337b6162f5c571779567"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/snapshot/Cargo.toml",
@@ -1224,7 +1224,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/snapshot/orchestrator/src/main.rs",
-      "sha256": "02bbbe0469bf835340cbb598a5cf332549c4c84cf444e9492763df244d19412c"
+      "sha256": "3d2f32382a887e769a418227773dc05aa1ac4f2cefd1aa57d6b4430d8290aefc"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/stop/Cargo.toml",
@@ -1236,7 +1236,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/stop/orchestrator/src/main.rs",
-      "sha256": "f72951dbf2696dbad5951776e8b55d0e08959756dccefd28cd7cf49658793781"
+      "sha256": "c17f26ccb31b9162b0fbb5cb480f7fb97657ed3f9a706458f5dbbf14a4ddb885"
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/unicode/Cargo.toml",
@@ -1248,7 +1248,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/expected-cases/unicode/orchestrator/src/main.rs",
-      "sha256": "5bfe140ed0a4ce817aec742f022e528fb7fa08b31637ad048c0b74583bfb52fe"
+      "sha256": "a2dc0de4e9294dd2ac28b83660aa18722cb4e214bc0540a8433d1a00fc55cc5f"
     },
     {
       "path": "cmd/l/test/runnable_service/expected/config.rs",

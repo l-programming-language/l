@@ -23,7 +23,7 @@ func TestFunctionSignatureMalformedSourceRejects(t *testing.T) {
 		"    Publicly create \"Broken\" as a New Function with Inputs of \"Value\" as UnknownType and No Outputs.\nReturn.\n",
 		"    Publicly create \"Broken\" as a New Function with Inputs of \"Value\" and Outputs of Text.\nReturn Value.\n",
 		"Call `not a function` as \"Result\".\n",
-		identityFunction + "Call Identity with `value` as \"First\" and \"Second\".\n",
+		identityFunction + "Identity `value` as \"First\" and \"Second\".\n",
 		identityFunction + "Show Value.\n",
 	} {
 		t.Run(source, func(t *testing.T) {

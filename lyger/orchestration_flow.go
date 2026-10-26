@@ -103,7 +103,7 @@ func (p *orchestrationPlanner) instruction(current *instruction, flow orchestrat
 		}
 		result.Actions, flow, err = p.instructions(current.Actions, flow)
 		restore()
-		result.Effects = orchestrationInstructionsEffects(result.Actions)
+		result.Effects |= orchestrationInstructionsEffects(result.Actions)
 	case instructionBuild, instructionRun, instructionStop, instructionAwait:
 		return p.processInstruction(current, flow)
 	case instructionShow, instructionExit:

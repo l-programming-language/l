@@ -6,7 +6,7 @@ A opens an ordinarily composed source file. Its package metadata becomes a comme
 
 BA declares the supplied Keys and Type without an explicit value. The primitive does not invent `Default::default()`, zero initialization, `mut` or cloning. DA, KA, HA, GA, MA and PA forward one Calculation, Operation, Description, Evaluation, Instantiation or Iteration respectively through Declare. Their child retains its native expression/item/statement role.
 
-The [Declaration vowel](../../../builtins/segments/vowels/declaration.lu) and [Declare primitive](../../../builtins/segments/consonants/declare.lu) own punctuation and selectors. [Declaration adapter witnesses](../../../logiceme/testdata/lucid/declaration-operation.aml.txt) exercise composed source, not a textual replacement of a completed Rust file.
+The [Declaration vowel](../../../builtins/segments/vowels/declaration.lu) and [Declare primitive](../../../builtins/segments/consonants/declare.lu) own punctuation and selectors. [Declaration composition witnesses](../../../logiceme/testdata/lucid/declaration-operation.aml.txt) exercise composed source, not a textual replacement of a completed Rust file.
 
 ## O and F: definition
 
@@ -18,6 +18,7 @@ The [Declaration vowel](../../../builtins/segments/vowels/declaration.lu) and [D
 | DO, DOB | Exactly one Calculation | Assign/bind the calculated expression. |
 | GO, GOB | Exactly one Evaluation | Assign/bind a selection result. |
 | MO, MOB | Exactly one Instantiation | Assign/bind a constructed/invoked value. |
+| CO, COB | Exactly one CV or DV | Assign / declare one binding from a future or awaited result. |
 | BO | Keys and Type | Declaration without an initializer. |
 | BOD/BOK/BOH/BOG/BOM/BOP/BOC | One Calculation/Operation/Description/Evaluation/Instantiation/Iteration/Execution | Expose the child's logical role through Declare. |
 

@@ -142,8 +142,6 @@ const (
 	roleDeclare
 	rolePut
 	rolePlace
-	roleInvoke
-	roleReturn
 	nativeRoleCount
 )
 
@@ -163,7 +161,6 @@ var nativeRoles = [nativeRoleCount]struct {
 	roleInterrupt: {"action.interruptive", instructionStop, memberInvalid},
 	roleDeclare:   {"action.declarative", instructionAssign, memberInvalid},
 	rolePut:       {"action.expansive", instructionUpdate, memberInvalid}, rolePlace: {"action.locative", instructionUpdate, memberInvalid},
-	roleInvoke: {"action.invocative", instructionInvoke, memberInvalid}, roleReturn: {"action.returning", instructionReturn, memberInvalid},
 }
 
 func (r nativeRole) String() string {

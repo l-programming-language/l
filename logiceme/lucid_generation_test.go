@@ -25,6 +25,11 @@ type lucidCase struct {
 }
 
 var lucidCases = []lucidCase{
+	{name: "future-composed"},
+	{name: "future-move"},
+	{name: "future-infer"},
+	{name: "future-borrow-escape", diagnostic: "E0373"},
+	{name: "future-move-reuse", diagnostic: "E0382"},
 	{name: "generics-functions"},
 	{name: "generics-records"},
 	{name: "generics-traits"},

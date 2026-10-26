@@ -10,9 +10,9 @@ The current runner contains the following obligations:
 
 | Boundary | Required coverage |
 | --- | --- |
-| Complete AML generation | 54 applications, with all 270 returned artifacts compared exactly. |
+| Complete AML generation | 59 applications, with all 295 returned artifacts compared exactly. |
 | Malformed composition | 192 stored inputs: 62 callable, 35 selection, 50 iteration, five empty-composition, four Deferred, two invocation, 14 keyed-GI and 20 generic/lifetime cases. |
-| Native compilation | 54 Expected and 54 Generated contracts; each phase requires 42 successful builds and 12 specific intentional Rust errors. |
+| Native compilation | 59 Expected and 59 Generated contracts; each phase requires 45 successful builds and 14 specific intentional Rust errors. |
 | Frozen definitions | All 18 selected Rust segment assets match their recorded hashes. |
 | Focused generic/lifetime checks | 50 exact primitive profiles, plus lookup, preparation, placement and resource/isolation checks. |
 
@@ -82,6 +82,20 @@ Expected Rust sources and shared support artifacts are independently authored,
 checked-in oracles. Compare them using `bytes.Equal`; do not trim, format, reorder,
 normalize, regenerate from actual output, or replace actual files with expected
 ones. Common immutable support expectations are shared across case mappings.
+
+## Futures
+
+Five complete pairs use the existing plain manifest and lock. `future-composed`
+checks CV construction, CO assignment, COB binding, DV native/composed operands,
+and ordered single evaluation. `future-move` returns an owned non-Copy future
+with a borrowed parameter lifetime; `future-infer` covers nested construction
+and inferred capture. `future-borrow-escape` requires E0373, while
+`future-move-reuse` requires E0382. The three positive generated programs also
+have a bounded execution check of their assertions.
+
+`lucid_future_test.go` checks malformed compositions, source/resource isolation,
+and async-context boundaries. Existing complete pairs and their expected bytes
+are unchanged.
 
 ## Selection
 

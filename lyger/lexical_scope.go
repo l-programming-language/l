@@ -14,6 +14,7 @@ type lexicalScope struct {
 	kind         scopeKind
 	unit         *SourceUnit
 	parent       *lexicalScope
+	function     *sourceFunction
 	records      map[string]*record
 	declarations []*scopeDeclaration
 	source       SourceSpan

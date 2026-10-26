@@ -2,7 +2,7 @@
 
 ## W and K: ordered operations
 
-W emits ordered Definitions. FW defines a named function using Func metadata and ordered Operations; BW forms an anonymous synchronous closure. The templates own Rust function/closure punctuation, while preparation validates signature records and forwards explicit children. They add no async wrapper, implicit move, cloning or implementation block.
+W emits ordered Definitions. FW defines a named function using Func metadata and ordered Operations; BW forms an anonymous synchronous closure. The templates own Rust function/closure punctuation, while preparation validates signature records and forwards explicit children. They add no implicit move, cloning or implementation block. An FW may return a composed [CV future](../../../builtins/README.md#future-construction-awaiting-and-value-bindings) through its existing output signature.
 
 FW requires a nonempty name and named, typed input Props. BW requires typed input Props too; it does not expose general inferred-parameter syntax. Inputs permit Key/Type, not supplied Value, StructTags or unknown fields. Flat signature metadata and an explicit Func record are exclusive. Func has Key, Inputs, Outputs and Receiver, but a retained field does not mean every form consumes it.
 
@@ -16,7 +16,7 @@ The [typed flat](../../../logiceme/testdata/lucid/callable-typed-flat.aml.txt), 
 
 Named KY consumes its Key and Inputs, with no callable child. Absent Receiver emits `Key(Inputs)`; a supplied nonblank Receiver emits `Receiver.Key(Inputs)`. Empty/whitespace Receiver rejects. Native Key/Receiver named `Void` remain actual native data.
 
-Unnamed KY requires exactly one BW child and no Receiver. BW is allowed only directly under KY or KO/KOB, within enclosing callable scope. KO/KOB assign or bind the resulting closure. Native Rust infers captures; a Capture interface, receiver methods, FWC/KYC semantics and general ownership analysis are not established by these witnesses.
+Unnamed KY requires exactly one BW child and no Receiver. BW is allowed only directly under KY or KO/KOB, within enclosing callable scope. KO/KOB assign or bind the resulting closure. Rust infers BW captures; BW has no Capture input. CV has its own local capture policy. Receiver methods, FWC/KYC and general ownership analysis are outside these witnesses.
 
 The [inline closure](../../../logiceme/testdata/lucid/closure-inline.aml.txt), [stored borrowed capture](../../../logiceme/testdata/lucid/closure-stored-capture.aml.txt), [named invocation](../../../logiceme/testdata/lucid/invocation-named.aml.txt) and [Void invocation](../../../logiceme/testdata/lucid/invocation-void.aml.txt) are complete compile-only examples. Their canonical AML is not L source syntax.
 

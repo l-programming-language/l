@@ -229,14 +229,13 @@ func (sb *phraseGram) getValue(lexical bool) (*entry, string, error) {
 
 // getAction returns an entry containing active Lexeme for use in Directive Phrases initializing complex Lexemes
 func (sb *clauseGram) getAction() (*entry, error) {
-	if sb == nil || sb.verb == nil || sb.verb.mem == nil || sb.verb.mem.Type != storageLexeme || sb.verb.mem.Lexeme == nil {
+	if sb == nil || sb.verb == nil || sb.verb.mem == nil || sb.verb.lexeme() == nil {
 		return nil, lerrors.Internal.Errorf("directive action requires a bound lexeme")
 	}
 	if _, err := sb.verb.mem.value(); err != nil {
 		return nil, err
 	}
-	actEnt := &entry{}
-	actEnt.bindFrom(sb.verb.mem)
+	actEnt := &entry{Type: storageLexeme, Lexeme: sb.verb.lexeme().cloneUse()}
 	actEnt.Lexeme.Adverbs = append(actEnt.Lexeme.Adverbs, valueModifiers(sb.adverbs)...)
 	if sb.obj != nil {
 		if err := actEnt.Lexeme.bindArguments([]string{sb.obj.referenceID()}); err != nil {

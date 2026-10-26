@@ -149,6 +149,7 @@
   "clause.generic.imperative": {
     "structure": "[ADVERB]* | VERB | CASE",
     "cases": {
+      "callable": "[VALUE]* | [PHRASE.ARGUMENTS]* | PHRASE.RESULTS*",
       "subjective": "SUBJECT",
       "objective": "[OBJECT]"
     },
@@ -156,8 +157,11 @@
     "class": "GENERIC.IMPERATIVE"
   },
   "clause.generic.active": {
-    "structure": "[ADVERB]* | VERB.ACTIVE | OBJECT",
-    "cases": {},
+    "structure": "[ADVERB]* | VERB.ACTIVE | CASE",
+    "cases": {
+      "callable": "[VALUE]* | [PHRASE.ARGUMENTS]* | PHRASE.RESULTS*",
+      "objective": "OBJECT"
+    },
     "category": "CLAUSE",
     "class": "GENERIC.ACTIVE"
   },
@@ -170,6 +174,7 @@
   "clause.generic.applicative": {
     "structure": "[ADVERB]* | VERB.APPLICATIVE | CASE",
     "cases": {
+      "callable": "[VALUE]* | [PHRASE.ARGUMENTS]* | PHRASE.RESULTS*",
       "subjective": "SUBJECT",
       "objective": "[OBJECT]"
     },
@@ -757,9 +762,7 @@
       "deflective": "CLAUSE.DEFLECTIVE.IMPERATIVE",
       "observative": "CLAUSE.OBSERVATIVE.IMPERATIVE",
       "terminative": "CLAUSE.TERMINATIVE.IMPERATIVE",
-      "suspensive": "CLAUSE.SUSPENSIVE.IMPERATIVE",
-      "returning": "CLAUSE.RETURNING.IMPERATIVE",
-      "invocative": "CLAUSE.INVOCATIVE.IMPERATIVE"
+      "suspensive": "CLAUSE.SUSPENSIVE.IMPERATIVE"
     },
     "category": "PREDICATE",
     "class": "IMPERATIVE"
@@ -866,9 +869,7 @@
       "deflective": "PREDICATE.IMPERATIVE.DEFLECTIVE",
       "observative": "PREDICATE.IMPERATIVE.OBSERVATIVE",
       "terminative": "PREDICATE.IMPERATIVE.TERMINATIVE",
-      "suspensive": "PREDICATE.IMPERATIVE.SUSPENSIVE",
-      "returning": "PREDICATE.IMPERATIVE.RETURNING",
-      "invocative": "PREDICATE.IMPERATIVE.INVOCATIVE"
+      "suspensive": "PREDICATE.IMPERATIVE.SUSPENSIVE"
     },
     "category": "STATEMENT",
     "class": "OBJECTIVE.IMPERATIVE"
@@ -944,7 +945,7 @@
     "class": "SIGNATURE"
   },
   "phrase.arguments": {
-    "structure": "PREPOSITION.CONSIGNMENT.ASSOCIATIVE | [VALUE]",
+    "structure": "PREPOSITION | [VALUE]",
     "cases": {},
     "category": "PHRASE",
     "class": "ARGUMENTS"
@@ -954,17 +955,5 @@
     "cases": {},
     "category": "PHRASE",
     "class": "RESULTS"
-  },
-  "clause.invocative.imperative": {
-    "structure": "VERB.INVOCATIVE | SUBJECT.DEFINITIVE | PHRASE.ARGUMENTS* | PHRASE.RESULTS*",
-    "cases": {},
-    "category": "CLAUSE",
-    "class": "INVOCATIVE.IMPERATIVE"
-  },
-  "clause.returning.imperative": {
-    "structure": "VERB.RETURNING | [VALUE]*",
-    "cases": {},
-    "category": "CLAUSE",
-    "class": "RETURNING.IMPERATIVE"
   }
 }

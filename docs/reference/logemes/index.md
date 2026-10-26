@@ -4,7 +4,7 @@ A logeme is a small logical unit represented by a symbol and a native template. 
 
 ## Three contracts to keep separate
 
-The [alphabet](alphabet.md) is a target-independent design model. The [Rust asset reference](../../../builtins/README.md) defines the bounded operational surface. The [Lucid corpus](../../../logiceme/testdata/lucid/README.md) supplies exact-generation and separate compile-only witnesses. None implies that every possible syllable or every parser-recognized L phrase is executable.
+The [alphabet](alphabet.md) is a target-independent design model. The [Rust asset reference](../../../builtins/README.md) defines the bounded operational surface. The [Lucid corpus](../../../logiceme/testdata/lucid/README.md) supplies exact-generation, native compilation and focused future-execution witnesses. None implies that every possible syllable or every parser-recognized L phrase is executable.
 
 | Reference | Read it for |
 | --- | --- |

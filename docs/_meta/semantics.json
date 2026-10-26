@@ -1,45 +1,50 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
+  "checkedStages": [
+    "static-source-inspection"
+  ],
+  "executedStages": [],
   "sourceHashes": {
-    "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
+    "builtins/eng/core.l": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
     "docs/cli-build.md": "6f8e150591f7a1347cce5c5d1c4e1e810a2bbc71f67c007593d0ad9acfa558c8",
-    "lexicon/eng/grammar.json": "5ae6d7ef177817197d7bffcf9388ac4934abf4c847c4cfed32336e0d3bd5f001",
-    "lexicon/eng/vocabulary.json": "4c38dfa34c4df0a2dcecb167e76a91713e084f54742076c2b2c20306edce0f6e",
+    "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
+    "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
+    "lyger/binding.go": "d9cfe48702fa909c7f5a083a35e59417202c23bc41b408ac33028b879f24ba33",
     "lyger/builder.go": "5888114b3e4068d85014bd8b8c2b3bf0041f922fef7822c20f3797e079734554",
     "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
     "lyger/construction.go": "4462bf8ddcc940d085e92f11fa951371caff1720f6c0ee22d5f8f1e921b501b6",
     "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba",
-    "lyger/function_runtime.go": "3cc94c7a41535148e7510f71a1d808cc2ea4deb2b01b04b924b7f4060298d003",
     "lyger/grammar.go": "a6ec88acca64421c18f229395f39b4f9f5c5e03feca1c630fa64916a3f1e7f3b",
-    "lyger/grammar_extraction.go": "eb60db4d3d51e02e199cc9c0e2108e61c85cb09e24fc6971eca362d02cc9b6d3",
+    "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/grammar_match.go": "bb6700a68686d2d88457df89053d38298c2230b3cc324c2f662e41665c2a5d53",
     "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
-    "lyger/grammar_types.go": "2de640c48cb437c1a6aeddf50ee92adc42b18d40e4622ea4272d7cb03079506e",
-    "lyger/instruction_captures.go": "41d4f8ca2b44fd0d5ba8e85c5357118967cfb9c97eaca845eb95e79eb497a36e",
-    "lyger/instructions.go": "47208f4e56296c5f184c985da9e50ef15b736d81bb9dfdb221757aad7c1a0f4e",
-    "lyger/ir_kinds.go": "4ea9a6ba887c6af65e9bd6411b65d090c4c28c42e995aafd214718194584c9b9",
-    "lyger/lexical_scope.go": "4ac4f5b6006f656746bab17211a6d59fb6b22b28a343308c2bce7909e0c220b9",
+    "lyger/grammar_types.go": "0b5f68eee4eec3d5763a29479683ed258143ad241f389b08182449aa4370eb77",
+    "lyger/instruction_captures.go": "d0ff0ee3d439fb491dcb7b03e5455faf85d14a2f26a3b93e5f526f4b6c78925f",
+    "lyger/instructions.go": "9584edc3e6b7183c2515b160f8be52b085b2cc35d1a209bb2863683024aa3846",
+    "lyger/ir_kinds.go": "d552e2cd21079344f25317d13aec439bb665d269678a879169ac065b45058a79",
+    "lyger/lexical_scope.go": "5bad4be8d5dd5fba403b2b56ade33e1a3b74cefaef83a7fd2db67c9c03684c83",
     "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
     "lyger/lexicon.go": "f5e19a1e702b87ae564521b1389d0b647e9525d57a680f49419452aab6c83bd8",
-    "lyger/native_encoding.go": "9a66aa3973ce53bf32ef36892835dfc4ae95ec50e49806332f618389ae400996",
-    "lyger/orchestration_capture_emit.go": "927242b9ebb16a7046234ebec80d17a78fdcbe5b0cdbf5409f19164806fe97ec",
-    "lyger/orchestration_captures.go": "07cbc66d7cce21f535804c98182be49ff84092e6aee736a842f08aa38536b9bf",
-    "lyger/orchestration_emit.go": "bb35eae70bcd08e28e55787986985d9c1f43d1246e990d3c5db260a28a3d8d3f",
-    "lyger/orchestration_functions.go": "ed944a072ca752f5b098e3e5dc1de3d6af78155394a9346ad20cb32316baba22",
-    "lyger/orchestration_plan.go": "d2535b6378fc98844b1d0faaf1a7bbade4f907c9aaf65e4df98856ff70c26396",
-    "lyger/orchestration_program.go": "0a00568bdc6c9f627af5da05d101d605ac03a1365d0add4e5f7f599f19bb2561",
+    "lyger/native_encoding.go": "19785ba3dd27e613fa7a35ec5a60fef78a087743b965124087d535416c7aaa0a",
+    "lyger/orchestration_capture_emit.go": "6cda11bcccc686414ffffc1ccad50749b8cad92c6e30a68f7577adf25a08e347",
+    "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
+    "lyger/orchestration_emit.go": "e3527c5ab117e379c6679c66721177f5453a54f5419d9795f326432d9cfa1d03",
+    "lyger/orchestration_functions.go": "0ce3ad3a82f1819b5aee521d55caeb8a9cbee895de80fb1f60e5059a35474a41",
+    "lyger/orchestration_plan.go": "82887b2646fcc51bab55a97c6ccf6e504bd992ba9e21f06bc1fc8655be949a8d",
+    "lyger/orchestration_program.go": "2384e9b51b00d1abaff9c3f17a6be198c366fc0177efdd5bf0fe818903d5d5f0",
     "lyger/program_runtime.go": "a5459e008c9233e9786b44cc7475fc6a1e7479141c01849b240d33b774f0a5ed",
-    "lyger/publication.go": "5c6294431db9c71ee57cc210c7f115904a247a1b1f2971dee14406e8c0e16765",
-    "lyger/registration.go": "b583cbf3c760ac825c29ee3387ae75ccfcce952d5e5d40a2d1e4fbac0219fd2c",
-    "lyger/runtime_values.go": "aa8c69dba850455b46442e55a6c0dbf3e41c542dffbb1d727e684af9f22c7950",
-    "lyger/runtime_values.rs": "37ae43817c3c0b09463765a521d3b9f234551247f290cf8c225a858b4f46392c",
-    "lyger/runtime_values_emit.go": "a56ea7b9cef91a83330684415e57dcef5a4aae82e6f93d08be10fbd2fceb7f5c",
+    "lyger/publication.go": "6ecc4e84b0428d14aa5ea402d478ea1a7607c2f4fa19e123462251ed333dcc17",
+    "lyger/registration.go": "2ef2c5f1d08897b7754d16bf56b8a0ff069a17c2f6171985e6374150de8ca4d5",
+    "lyger/runtime_values.go": "9eef2fbee9898a64a071065dd986d027c40ac389cba258eb550fd86c932c4497",
+    "lyger/runtime_values.rs": "14ba31f5ba72f4495909fe6a831efebd3d21881c0539a8a669c926e3afe8a8ba",
+    "lyger/runtime_values_emit.go": "a60883022715f2f7cd95ae946430991e1f6fd761e4b053c844f515b64d40dc6d",
     "lyger/runtime_values_plan.go": "e9c680c516c38ae96e54998ac2b5dd422d068e567df07bd058b8b8c8884011a6",
     "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
-    "lyger/semantic_resolution.go": "9937eae863f737d2ae56ede2fc82afe70196b0e1a98969f7befe3eb3620cf00f",
-    "lyger/semantics.go": "1a24787c751a031902abcafc6973d846e29877d8db2e6c64274089f33d0b9d07",
-    "lyger/source_functions.go": "8d39cac20ae471811681c88e5b88d2ac486200556990d4dcee567d7a3ea5ff3e",
+    "lyger/scope.go": "ac346a44a27bbc58da78c0f502b2f82899ee982a5f0ac31beb79eae2807351cb",
+    "lyger/semantic_resolution.go": "a8e9eb4140547b6e488b5869ed73b7754181d3296918900c51c989d09df2e3f8",
+    "lyger/semantics.go": "5ddc61918206d280737b0998706eb8b4feb2c4b9180bd7a175b505825df77346",
+    "lyger/source_functions.go": "49702e185101ecddf7271effc1f373c439d62f93e8b429fabf5c7c6158e7cb86",
     "lyger/source_topology.go": "81c7cb6e966f8f859396c572e72ff124cf95c90244ad597cb44e6b52db5e8fdb",
     "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
     "lyger/types.go": "ccefcec0547794da4a35f9f58ad00131b5dab02808d4dbb910eef39102f951eb",
@@ -74,12 +79,7 @@
         "lyger/definition_text_encoding_test.go",
         "lyger/runtime_values_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:number",
@@ -104,12 +104,7 @@
         "lyger/io_numeric_test.go",
         "lyger/runtime_values_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:truth",
@@ -132,12 +127,7 @@
         "lyger/orchestrator_test.go",
         "lyger/runtime_values_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:thing",
@@ -160,11 +150,7 @@
         "lyger/runtime_type_boundaries_test.go"
       ],
       "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types, shape identities and callable signatures. No implicit coercion or dynamic arithmetic.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:byte",
@@ -185,12 +171,7 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:bytes",
@@ -212,11 +193,7 @@
         "lyger/runtime_transfer_test.go"
       ],
       "notes": "Owned byte sequences construct from Text, snapshot and support checked indexed reads as Number. Byte mutation and numeric-width families are not supplied.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:pointer",
@@ -236,14 +213,11 @@
       "witnesses": [
         "lyger/runtime_values_test.go",
         "lyger/runtime_transfer_test.go",
-        "lyger/runtime_type_boundaries_test.go"
+        "lyger/runtime_type_boundaries_test.go",
+        "lyger/runtime_lifetime_test.go"
       ],
       "notes": "Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:null",
@@ -264,12 +238,8 @@
         "lyger/runtime_values_test.go",
         "lyger/runtime_transfer_test.go"
       ],
-      "notes": "Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Null initializes an explicit absence value; typed reads preserve evaluation and type/index/key checks. Unassigned storage and the native-definition Null atom remain separate.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:list",
@@ -288,14 +258,11 @@
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
-        "lyger/runtime_type_boundaries_test.go"
+        "lyger/runtime_type_boundaries_test.go",
+        "lyger/source_action_arguments_test.go"
       ],
       "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:dictionary",
@@ -318,12 +285,7 @@
         "lyger/paragraph_visibility_test.go",
         "lyger/numeric_resolution_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:app",
@@ -343,12 +305,7 @@
         "lyger/application_units_test.go",
         "lyger/runtime_type_boundaries_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:service",
@@ -369,11 +326,7 @@
         "lyger/runnable_service_test.go"
       ],
       "notes": "Service declarations remain structural; standalone bodies, packages and native process operations are unsupported. App-constructed Service libraries retain their workspace topology. Static inspection; witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:class",
@@ -392,12 +345,7 @@
       "witnesses": [
         "lyger/recursive_classes_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:object",
@@ -416,12 +364,7 @@
       "witnesses": [
         "lyger/recursive_classes_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:attribute",
@@ -440,12 +383,7 @@
       "witnesses": [
         "lyger/stored_values_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:definition",
@@ -464,12 +402,7 @@
       "witnesses": [
         "lyger/definition_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:function",
@@ -479,25 +412,27 @@
       "support": "supported",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
+        "builtins/eng/core.l",
+        "lyger/definition.go",
         "lyger/source_functions.go",
         "lyger/orchestration_functions.go",
-        "lyger/function_runtime.go",
         "lyger/runtime_values.go",
         "lyger/orchestration_program.go",
-        "lyger/program_runtime.go"
+        "lyger/program_runtime.go",
+        "lyger/binding.go",
+        "lyger/scope.go"
       ],
       "witnesses": [
         "lyger/source_functions_test.go",
         "lyger/runtime_transfer_test.go",
         "lyger/runtime_type_boundaries_test.go",
-        "lyger/function_publication_test.go"
+        "lyger/function_publication_test.go",
+        "lyger/function_declaration_boundaries_test.go",
+        "lyger/function_invocation_words_test.go",
+        "lyger/function_composition_test.go"
       ],
-      "notes": "Ordinary Functions have typed inputs/results, private bodies, fresh invocation locals, retained captures and checked returns. Existing native Function composition is separate; opaque Rust receives no inferred lifetime/generic contract.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Function declarations bind invocation verbs, typed signatures and paragraph-local bodies. Lowering instantiates the selected builtin/logeme definitions for construction, invocation and returns; Rust checks generated ownership and native types.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:property",
@@ -517,12 +452,7 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:operation",
@@ -542,12 +472,7 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:noun",
@@ -566,12 +491,7 @@
       "witnesses": [
         "lyger/binding_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:verb",
@@ -590,12 +510,7 @@
       "witnesses": [
         "lyger/action_definition_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:adjective",
@@ -614,12 +529,7 @@
       "witnesses": [
         "lyger/paragraph_descriptor_identity_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:adverb",
@@ -638,12 +548,7 @@
       "witnesses": [
         "lyger/grammar_terms_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Thing",
@@ -664,11 +569,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Text",
@@ -685,12 +586,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Number",
@@ -707,12 +604,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Truth",
@@ -729,12 +622,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Bytes",
@@ -755,11 +644,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Pointer",
@@ -780,11 +665,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Lexeme",
@@ -801,12 +682,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:App",
@@ -823,12 +700,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Service",
@@ -845,12 +718,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Class",
@@ -867,12 +736,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Object",
@@ -889,12 +754,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Attribute",
@@ -911,12 +772,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Definition",
@@ -933,12 +790,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Function",
@@ -952,18 +805,13 @@
         "lyger/types.go",
         "lyger/source_functions.go",
         "lyger/orchestration_functions.go",
-        "lyger/function_runtime.go",
         "lyger/runtime_values.go"
       ],
       "witnesses": [
         "lyger/source_functions_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Property",
@@ -980,12 +828,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Operation",
@@ -1002,12 +846,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:List",
@@ -1028,11 +868,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Dictionary",
@@ -1049,12 +885,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Error",
@@ -1075,11 +907,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:ID",
@@ -1096,12 +924,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:None",
@@ -1118,12 +942,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Unknown",
@@ -1140,12 +960,8 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Internal tag; source construction and runtime support are documented separately.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Null",
@@ -1166,11 +982,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:start",
@@ -1186,12 +998,7 @@
       "witnesses": [
         "lyger/action_definition_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:execute",
@@ -1207,12 +1014,7 @@
       "witnesses": [
         "lyger/action_definition_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:build",
@@ -1229,12 +1031,8 @@
       "witnesses": [
         "lyger/builtin_operations_contract_test.go"
       ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:run",
@@ -1251,12 +1049,8 @@
       "witnesses": [
         "lyger/phase1_language_test.go"
       ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:stop",
@@ -1273,12 +1067,8 @@
       "witnesses": [
         "lyger/runnable_service_test.go"
       ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:await",
@@ -1295,12 +1085,8 @@
       "witnesses": [
         "lyger/phase1_nested_await_test.go"
       ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:show",
@@ -1316,12 +1102,7 @@
       "witnesses": [
         "lyger/orchestrator_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:exit",
@@ -1340,12 +1121,7 @@
         "lyger/phase1_shutdown_test.go",
         "lyger/source_functions_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:output",
@@ -1361,12 +1137,8 @@
       "witnesses": [
         "lyger/orchestrator_test.go"
       ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:error",
@@ -1382,12 +1154,8 @@
       "witnesses": [
         "lyger/phase1_language_test.go"
       ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:process",
@@ -1405,12 +1173,7 @@
         "lyger/definition_test.go",
         "lyger/construction_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:function",
@@ -1422,18 +1185,17 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go"
+        "lyger/definition.go",
+        "lyger/source_functions.go",
+        "lyger/orchestration_functions.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
-        "lyger/construction_test.go"
+        "lyger/construction_test.go",
+        "lyger/function_composition_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
       "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "The canonical Function definition supplies composed signatures and Process bodies for source declarations and constructed Objects."
     },
     {
       "id": "builtin:function.return",
@@ -1445,18 +1207,19 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go"
+        "lyger/definition.go",
+        "lyger/source_functions.go",
+        "lyger/orchestration_functions.go",
+        "lyger/binding.go",
+        "lyger/scope.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
-        "lyger/construction_test.go"
+        "lyger/construction_test.go",
+        "lyger/function_composition_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
       "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Return resolves as a Function member and uses its selected definition; source output counts and types remain checked."
     },
     {
       "id": "builtin:objective",
@@ -1474,12 +1237,7 @@
         "lyger/definition_test.go",
         "lyger/construction_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:main",
@@ -1497,12 +1255,8 @@
         "lyger/definition_test.go",
         "lyger/construction_test.go"
       ],
-      "notes": "Source-defined Service/Object/Function construction descriptor used by Apps; it grants no standalone Service process role. Static inspection; existing witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Source-defined Service/Object/Function construction descriptor used by Apps; it grants no standalone Service process role.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:basic",
@@ -1520,12 +1274,7 @@
         "lyger/definition_test.go",
         "lyger/construction_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:create",
@@ -1542,12 +1291,7 @@
       "witnesses": [
         "lyger/coordinated_registration_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:define",
@@ -1564,12 +1308,7 @@
       "witnesses": [
         "lyger/definition_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:describe",
@@ -1586,12 +1325,7 @@
       "witnesses": [
         "lyger/paragraph_descriptor_identity_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:use",
@@ -1608,12 +1342,7 @@
       "witnesses": [
         "lyger/configured_import_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:public",
@@ -1631,12 +1360,7 @@
         "lyger/paragraph_visibility_test.go",
         "lyger/function_publication_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:publicly",
@@ -1654,12 +1378,7 @@
         "lyger/paragraph_visibility_test.go",
         "lyger/function_publication_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:new",
@@ -1675,12 +1394,7 @@
       "witnesses": [
         "lyger/construction_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:generic",
@@ -1696,12 +1410,7 @@
       "witnesses": [
         "lyger/construction_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:input",
@@ -1718,12 +1427,7 @@
       "witnesses": [
         "lyger/construction_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:put",
@@ -1745,11 +1449,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Typed updates append/replace List elements, write Map/Instance fields or replace a Pointer target. Destination kind, keys, element/field types and managed ownership cycles are checked.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:place",
@@ -1771,11 +1471,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Typed updates append/replace List elements, write Map/Instance fields or replace a Pointer target. Destination kind, keys, element/field types and managed ownership cycles are checked.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "builtin:get",
@@ -1792,11 +1488,7 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; no-existing-witness-listed"
     },
     {
       "id": "builtin:take",
@@ -1813,11 +1505,7 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; no-existing-witness-listed"
     },
     {
       "id": "builtin:import",
@@ -1834,11 +1522,7 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; no-existing-witness-listed"
     },
     {
       "id": "builtin:export",
@@ -1855,11 +1539,7 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; no-existing-witness-listed"
     },
     {
       "id": "stdlib:eng:io",
@@ -1880,10 +1560,6 @@
       ],
       "notes": "Reviewed registered export namespace for dictionary language=eng key=io. Index-driven addition/rename/deletion must trigger new review.",
       "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": [],
       "dictionary": {
         "lexicon": "eng",
         "key": "io"
@@ -1910,10 +1586,6 @@
       ],
       "notes": "Reviewed sole public member of current eng/io dictionary. Forms Print/Prints/Printed/Printing/Printer. Log/Logger remain private dependencies; no regex-derived visibility.",
       "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": [],
       "dictionary": {
         "lexicon": "eng",
         "key": "io"
@@ -1949,10 +1621,6 @@
       ],
       "notes": "Private native-backed implementation required by IO.Print, not an importable public member.",
       "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": [],
       "dictionary": {
         "lexicon": "eng",
         "key": "io"
@@ -1975,12 +1643,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:phrases",
@@ -1998,12 +1662,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:declarations",
@@ -2021,12 +1681,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:definitions",
@@ -2044,12 +1700,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:descriptors",
@@ -2067,12 +1719,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:aliases-imports",
@@ -2090,12 +1738,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:process-lifecycle",
@@ -2113,12 +1757,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:collection-actions",
@@ -2140,11 +1780,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Put/Place lower to checked runtime updates. Typed constructor reads supply indexed access; Get/Take, iteration and general removal are not established.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:conditions",
@@ -2162,12 +1798,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:while",
@@ -2185,12 +1817,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:joined-conditions",
@@ -2208,12 +1836,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:predicates-statements",
@@ -2231,12 +1855,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:vocabulary",
@@ -2254,12 +1874,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:notation",
@@ -2277,12 +1893,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:matching",
@@ -2300,12 +1912,8 @@
         "lyger/grammar_terms_test.go",
         "lyger/grammar_consumption_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:invalid-zero",
@@ -2322,11 +1930,7 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "The unnamed zero value is a compiler sentinel; it is not one of the 23 named representation tags or a public source constructor. valueTypeCount is an enum bound, not a stored value. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:map",
@@ -2346,14 +1950,12 @@
       "witnesses": [
         "lyger/runtime_values_test.go",
         "lyger/runtime_transfer_test.go",
-        "lyger/function_publication_test.go"
+        "lyger/function_publication_test.go",
+        "lyger/runtime_lifetime_test.go",
+        "lyger/source_action_arguments_test.go"
       ],
       "notes": "Owned typed values keyed by Text bytes; insertion/replacement and checked reads preserve complete element types and deterministic byte ordering. Distinct from a vocabulary Dictionary.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Map",
@@ -2371,11 +1973,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Internal representation tag; executable source semantics are defined by the linked runtime type contract.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:instance",
@@ -2395,14 +1993,11 @@
       "witnesses": [
         "lyger/runtime_values_test.go",
         "lyger/runtime_transfer_test.go",
-        "lyger/runtime_type_boundaries_test.go"
+        "lyger/runtime_type_boundaries_test.go",
+        "lyger/runtime_lifetime_test.go"
       ],
       "notes": "A canonical descriptor fixes the runtime field schema and identity. Ordinary fields snapshot; Pointer targets remain shared. Unknown, absent and incorrectly typed fields reject.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "value-tag:Instance",
@@ -2420,11 +2015,7 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Internal representation tag; executable source semantics are defined by the linked runtime type contract.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "type:error",
@@ -2446,11 +2037,7 @@
         "lyger/runtime_transfer_test.go"
       ],
       "notes": "Error values can be constructed, stored, captured and placed in typed containers. App Error is optional until inspected; extracting an absent Error rejects. Direct Show remains unsupported.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "evidence": "static-inspection; existing-witness-not-run"
     },
     {
       "id": "grammar-group:runtime-captures",
@@ -2467,62 +2054,12 @@
       ],
       "witnesses": [
         "lyger/orchestration_captures_test.go",
-        "lyger/function_publication_test.go"
+        "lyger/function_publication_test.go",
+        "lyger/runtime_lifetime_test.go",
+        "lyger/source_action_arguments_test.go"
       ],
-      "notes": "Each declaration activation retains a typed environment. Ordinary values snapshot; aliases share callable state and explicit Pointer targets. Reads release borrows before calls/Await; writes reject ownership cycles. App-process capture transport is not inferred.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
-    },
-    {
-      "id": "builtin:call",
-      "kind": "builtin",
-      "name": "Call",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/source_functions.go",
-        "lyger/orchestration_functions.go",
-        "lyger/function_runtime.go"
-      ],
-      "witnesses": [
-        "lyger/source_functions_test.go"
-      ],
-      "notes": "Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
-    },
-    {
-      "id": "builtin:return",
-      "kind": "builtin",
-      "name": "Return",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/source_functions.go",
-        "lyger/orchestration_functions.go",
-        "lyger/function_runtime.go"
-      ],
-      "witnesses": [
-        "lyger/source_functions_test.go"
-      ],
-      "notes": "Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
+      "notes": "Activation-specific environments snapshot ordinary captures and retain shared Pointer targets. Actual arguments evaluate once in caller scope before callee entry; copies retain environments until last-owner release. App-process capture transport is not inferred.",
+      "evidence": "static-inspection; existing-witness-not-run"
     }
   ]
 }

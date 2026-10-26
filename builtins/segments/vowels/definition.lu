@@ -32,6 +32,10 @@
 {|/|-{tags: Meta.Tags}--{if Type == "Iterate"}--{
 [|Define("Iteration", Keys = Meta.Keys, Iteration = Conjoinments.Iteration)|]
 }-|/|}
+// CO/COB define an existing/new binding from an execution value.
+{|/|-{tags: Meta.Tags}--{if Type == "Execute"}--{
+[|Define([|"Consonant"|] Keys = Meta.Keys, Values = Conjoinments.Execution)|]
+}-|/|}
 // End Definition Glyph
 
 {|/|-{tags: ["Initialization"]}--{Inputs}--{[Keys: Array-Key, Key: String, Values: Array-Value, Value: String, Type: String]}-|/|}

@@ -1,0 +1,9 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~owned~, Inputs: ~&[Prop{Key: prefix, Type: &'call str}Prop, Prop{Key: payload, Type: String}Prop]&~, Outputs: ~&[impl std::future::Future<Output = (String, &'call str)> + 'call]&~, Lifetimes: ~'call~|}^(W^(BOC^(CV{|Capture: ~Move~|}^(W^(BOD^(E{|Statement: ~return (payload, prefix);~|}))))))`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^(W^(MOB{|Key: ~prefix~|}^(KY{|Key: ~String::from~, Inputs: ~&["borrowed"]&~|})*MOB{|Key: ~payload~|}^(KY{|Key: ~String::from~, Inputs: ~&["owned"]&~|})*MOB{|Key: ~pending~|}^(KY{|Key: ~owned~, Inputs: ~&[prefix.as_str(), payload]&~|})*MOB{|Key: ~mut pinned~|}^(KY{|Key: ~Box::pin~, Inputs: ~&[pending]&~|})*MOB{|Key: ~waker~|}^(KY{|Key: ~std::task::Waker::noop~|})*MOB{|Key: ~mut context~|}^(KY{|Key: ~std::task::Context::from_waker~, Inputs: ~&[waker]&~|})*MOB{|Key: ~handle~|}^(KY{|Key: ~std::pin::Pin::as_mut~, Inputs: ~&[&mut pinned]&~|})*MOB{|Key: ~observed~|}^(KY{|Key: ~std::future::Future::poll~, Inputs: ~&[handle, &mut context]&~|})*BOD^(E{|Statement: ~assert_eq!(observed, std::task::Poll::Ready((String::from("owned"), "borrowed")));~|})*MOB{|Key: ~_released~|}^(KY{|Key: ~drop~, Inputs: ~&[pinned]&~|})*BOD^(E{|Statement: ~assert_eq!(prefix, "borrowed");~|})))`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

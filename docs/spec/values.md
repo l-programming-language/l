@@ -97,11 +97,11 @@ Define "selected" as a New Text from handle.
 Show selected.
 ```
 
-The Pointer owns a copy of the initial value. Both handles share that target, so this prints `second`; `message` remains `first`. Target types are checked. Pointer and capture-environment writes reject ownership cycles. Reads release their checked borrow before a nested call or Await. There is no pointer arithmetic or user-managed deallocation.
+The Pointer owns a copy of the initial value. Both handles share that target, so this prints `second`; `message` remains `first`. Target types are checked. Pointer and capture-environment writes reject ownership cycles. Reads release their checked borrow before a nested call or Await. The last owner releases the target; there is no pointer arithmetic or user-managed deallocation.
 
 ## Null and internal states
 
-`Define "nothing" as Null.` initializes an absence value; Show writes `null`. Null is not a Rust pointer or a substitute for definite assignment. The separate explicit native-definition Null atom retains its `<nil>` display.
+`Define "nothing" as Null.` initializes an absence value; Show writes `null`. A typed Null read still evaluates its source and checks its type, index or key. Null does not replace definite assignment. The separate native-definition Null atom displays `<nil>`.
 
 Compiler labels are separate from public types: `ID`, `None`, and `Unknown` track resolution; `Lexeme` stores lexical definitions; invalid sentinels indicate compiler state. An Error value can be created from Text or read from a failed App, stored and passed like other values. Reading an absent App Error rejects; it does not fabricate an Error.
 

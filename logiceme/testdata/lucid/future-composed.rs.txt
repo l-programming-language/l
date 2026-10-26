@@ -1,0 +1,111 @@
+
+
+// package main
+
+
+
+
+fn source( events: &std::cell::RefCell<Vec<u8>>) -> (std::future::Ready<u8>) {
+    
+        
+
+events.borrow_mut().push(1);
+
+
+
+let ready = std::future::ready(7_u8)
+;
+
+
+
+return ready;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let events = std::cell::RefCell::new(Vec::<u8>::new())
+;
+
+
+let pending = async {
+
+let first: u8;
+
+
+first = (
+
+source(&events)
+).await
+
+;
+
+
+let ready = std::future::ready(first + 1)
+;
+
+
+let second = (ready).await
+
+;
+
+
+
+events.borrow_mut().push(second);
+
+
+
+
+return second;
+
+
+
+}
+
+;
+
+
+
+assert!(events.borrow().is_empty());
+
+
+
+let mut pinned = Box::pin(pending)
+;
+
+
+let waker = std::task::Waker::noop()
+;
+
+
+let mut context = std::task::Context::from_waker(waker)
+;
+
+
+let handle = std::pin::Pin::as_mut(&mut pinned)
+;
+
+
+let observed = std::future::Future::poll(handle, &mut context)
+;
+
+
+
+assert_eq!(observed, std::task::Poll::Ready(8_u8));
+
+
+
+let _released = drop(pinned)
+;
+
+
+
+assert_eq!(*events.borrow(), vec![1, 8]);
+
+
+
+    
+}

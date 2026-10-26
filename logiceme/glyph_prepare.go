@@ -42,7 +42,7 @@ func (n *generatedNames) fresh(base string) string {
 	}
 }
 
-var supportedGlyphForms = strings.Fields("A EA BA DA KA HA GA MA PA E DE GE CE ME I GI CI BI MI HI O OB OC OG FO FOB KO KOB BO BOD BOK BOH BOG BOM BOP BOC DO DOB DOC DOG GO GOB MO MOB HOB PO U MU FU BU W FW BW FWC HW DW X CX Y KY KYC MY HY FY DY V MV DV CV")
+var supportedGlyphForms = strings.Fields("A EA BA DA KA HA GA MA PA E DE GE CE ME I GI CI BI MI HI O OB OC OG CO COB FO FOB KO KOB BO BOD BOK BOH BOG BOM BOP BOC DO DOB DOC DOG GO GOB MO MOB HOB PO U MU FU BU W FW BW FWC HW DW X CX Y KY KYC MY HY FY DY V MV DV CV")
 var unsupportedGlyphForms = map[string]string{"FA": "BA Parameter: List", "DU": "BA or an explicit O default", "FI": "U Relation: Requirements", "DI": "U Relation: Bounds", "CY": "DY in an expression role", "BY": "MO associated equality", "GY": "HY Shape: Sum", "KU": "FU with a U payload", "HU": "FU with a U payload", "PI": "U Shape: Positional", "KI": "U Shape: Record", "GU": "U Shape: Field", "HO": "HOB", "CW": "FWC", "MW": "FW inside FY/MY"}
 
 func validateGlyphForm(g *Glyph) error {
@@ -400,6 +400,24 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 			use(0, "Values", "expression")
 			childctx.async = true
 		}
+	case "CO", "COB":
+		if !ctx.callable {
+			return invalidGlyph(g, "execution binding requires callable context")
+		}
+		bindings := inputKeys(m)
+		if len(bindings) != 1 || (!isNativeIdentifier(bindings[0]) && bindings[0] != "_") {
+			return invalidGlyph(g, "execution binding requires exactly one simple name")
+		}
+		if len(g.Conjoinments) != 1 {
+			return invalidGlyph(g, "execution binding requires exactly one CV or DV value")
+		}
+		switch glyphForm(&g.Conjoinments[0]) {
+		case "CV", "DV":
+			use(0, "Values", "expression")
+		default:
+			return invalidGlyph(g, "execution binding requires exactly one CV or DV value")
+		}
+		g.plan.statement = true
 	case "O", "OB", "FO", "FOB", "KO", "KOB", "DO", "DOB", "GO", "GOB", "MO", "MOB":
 		keys := inputKeys(m)
 		if len(keys) == 0 {
@@ -668,40 +686,65 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 			return e
 		}
 		roles[g.plan.slots["Tail"][0]] = "tail"
-	case "V", "MV", "DV", "CV":
+	case "CV":
 		if !ctx.callable {
 			return invalidGlyph(g, "execution is invalid at file scope; requires callable context")
 		}
-		if form == "DV" && !ctx.async {
+		if len(g.Conjoinments) != 1 || glyphForm(&g.Conjoinments[0]) != "W" {
+			return invalidGlyph(g, "future construction requires exactly one W body")
+		}
+		use(0, "Bodies", "body")
+		childctx.async, childctx.callable = true, true
+	case "DV":
+		if !ctx.callable {
+			return invalidGlyph(g, "execution is invalid at file scope; requires callable context")
+		}
+		if !ctx.async {
 			return invalidGlyph(g, "await requires async context")
 		}
-		if form == "CV" {
-			all("Operation", "Bodies", "body")
-			for _, i := range g.plan.slots["Bodies"] {
-				end := ""
-				if glyphForm(&g.Conjoinments[i]) == "DW" {
-					end = "\n"
-				}
-				g.appendNativeAtoms("BodyEnds", end)
+		// Local operand presence owns this projection; file metadata cannot
+		// add an extra operand beside a composed child.
+		g.setSourceMeta("FutureKey", m["Key"])
+		if key, supplied := m["Key"]; supplied {
+			if strings.TrimSpace(key) == "" {
+				return invalidGlyph(g, "future Key must be nonempty when supplied")
 			}
-			childctx.async = true
-			childctx.callable = true
+			if len(g.Conjoinments) != 0 {
+				return invalidGlyph(g, "native and composed future operands are exclusive")
+			}
+			g.appendNativeAtoms("Value", key)
 		} else {
-			sources := 0
-			if m["Key"] != "" {
-				g.appendNativeAtoms("Value", m["Key"])
+			if len(g.Conjoinments) != 1 {
+				return invalidGlyph(g, "await requires exactly one future operand")
+			}
+			switch glyphForm(&g.Conjoinments[0]) {
+			case "E", "KY", "CV", "DV":
+				use(0, "Value", "future")
+			default:
+				return invalidGlyph(g, "await requires a future expression, not a scheduling statement or item")
+			}
+		}
+	case "V", "MV":
+		if !ctx.callable {
+			return invalidGlyph(g, "execution is invalid at file scope; requires callable context")
+		}
+		sources := 0
+		if m["Key"] != "" {
+			g.appendNativeAtoms("Value", m["Key"])
+			sources++
+		}
+		for i := range g.Conjoinments {
+			c := &g.Conjoinments[i]
+			if child := glyphForm(c); child == "CV" || child == "DV" {
+				return invalidGlyph(g, "scheduling requires its native Key or invocation; direct CV/DV values are unsupported")
+			}
+			if c.Vowels[0].Symbol == "E" || c.Vowels[0].Symbol == "Y" || c.Vowels[0].Symbol == "V" {
+				use(i, "Value", "future")
 				sources++
 			}
-			for i := range g.Conjoinments {
-				c := &g.Conjoinments[i]
-				if c.Vowels[0].Symbol == "E" || c.Vowels[0].Symbol == "Y" || c.Vowels[0].Symbol == "V" {
-					use(i, "Value", "future")
-					sources++
-				}
-			}
-			if sources != 1 {
-				return invalidGlyph(g, "execution requires exactly one native or composed future")
-			}
+		}
+		if sources != 1 {
+			return invalidGlyph(g, "execution requires exactly one native or composed future")
 		}
 	case "Y", "HY", "MY", "FY", "DY", "KY", "KYC":
 		if e := prepareInstantiation(g, ctx, roles, headers); e != nil {

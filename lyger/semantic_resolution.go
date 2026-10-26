@@ -104,6 +104,12 @@ func (r semanticResolver) lookup(tok *token) (*tokenBinding, lookupState, error)
 		if err != nil || state != lookupAbsent {
 			return binding, state, err
 		}
+		if function := scope.function; function != nil && function.Return != nil {
+			prefix := function.Return.ID[:strings.LastIndex(function.Return.ID, ".")+1]
+			if binding, ok := function.Return.binding(newBindingQuery([]byte(prefix + string(tok.rawBytes)))); ok {
+				return binding, lookupFound, nil
+			}
+		}
 		// A local owner commits the remaining path to that namespace, even
 		// while the owner or one of its members is awaiting publication.
 		for dot := bytes.LastIndexByte(tok.rawBytes, '.'); dot > 0; dot = bytes.LastIndexByte(tok.rawBytes[:dot], '.') {

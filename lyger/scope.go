@@ -112,10 +112,27 @@ type scopedSubject struct {
 }
 
 func (t *token) lexeme() *lexeme {
+	if t != nil && t.binding != nil && t.binding.Record.isFunction() {
+		return t.binding.Record.bindingWord()
+	}
 	if t != nil && t.mem != nil {
 		return t.mem.Lexeme
 	}
 	return nil
+}
+
+func (t *token) isFunctionReturn() bool {
+	if t == nil || t.binding == nil {
+		return false
+	}
+	for scope := t.scope; scope != nil; scope = scope.parent {
+		if scope.function != nil {
+			selected, err := canonicalRecord(scope.function.Return, scope.function.aliases)
+			bound, boundErr := canonicalRecord(t.binding.Record, scope.function.aliases)
+			return err == nil && boundErr == nil && selected != nil && selected == bound
+		}
+	}
+	return false
 }
 
 func (t *token) hasRole(pos, role string) bool {
@@ -147,7 +164,7 @@ func scopeDeclarations(statement *lStatement, incoming scopedSubject) ([]scopeDe
 	pending, directive := false, -1
 	invocation := false
 	for index, current := range statement.tokens {
-		invocation = invocation || current.hasRole("verb", "action.invocative")
+		invocation = invocation || (current.hasRole("preposition", "definement.declarative") && len(declarations) == 0)
 		if current.hasRole("preposition", "conjoinment.directive") && len(declarations) > 0 {
 			directive = index
 			break

@@ -30,35 +30,44 @@ func (e *orchestrationEmitter) bindCapture(current *orchestrationInstruction) ([
 			return nil, err
 		}
 	} else {
-		var fields, types []string
-		for _, capture := range current.CaptureValues {
-			value, err := e.value(capture)
-			if err != nil {
-				return nil, err
-			}
-			field, err := boxRuntimeValue(value)
-			if err != nil {
-				return nil, err
-			}
-			fields = append(fields, field)
-			typeName, err := runtimeTypeExpression(capture.RuntimeType, e.plan.Identities)
-			if err != nil {
-				return nil, err
-			}
-			types = append(types, typeName)
+		types, fields, err := e.captureEnvironment(current.CaptureValues, current.CaptureHandles)
+		if err != nil {
+			return nil, err
 		}
-		for _, source := range current.CaptureHandles {
-			handle, err := e.captureReference(source)
-			if err != nil {
-				return nil, err
-			}
-			fields = append(fields, "LValue::Environment("+handle+")")
-			types = append(types, "LType::Thing")
-		}
-		value = "LEnvironment::typed(vec![" + strings.Join(types, ",") + "],vec![" + strings.Join(fields, ",") + "])?"
+		value = "LEnvironment::typed(" + types + ", " + fields + ")?"
 	}
 	if index, exists := e.programActions[current.Callable.Record]; exists {
 		return []string{orchestrationStatement(fmt.Sprintf("lProgram.bind_action(%d, %s)?;", index, value))}, nil
 	}
 	return []string{orchestrationAssignment(current.Callable.name(), "Some("+value+")")}, nil
+}
+
+// Capture order is shared by ordinary actions and native Function values.
+func (e *orchestrationEmitter) captureEnvironment(values []*orchestrationValue, handles []*orchestrationCallableReference) (string, string, error) {
+	var fields, types []string
+	for _, capture := range values {
+		value, err := e.value(capture)
+		if err != nil {
+			return "", "", err
+		}
+		field, err := boxRuntimeValue(value)
+		if err != nil {
+			return "", "", err
+		}
+		fields = append(fields, field)
+		typeName, err := runtimeTypeExpression(capture.RuntimeType, e.plan.Identities)
+		if err != nil {
+			return "", "", err
+		}
+		types = append(types, typeName)
+	}
+	for _, source := range handles {
+		handle, err := e.captureReference(source)
+		if err != nil {
+			return "", "", err
+		}
+		fields = append(fields, "LValue::Environment("+handle+")")
+		types = append(types, "LType::Thing")
+	}
+	return "vec![" + strings.Join(types, ",") + "]", "vec![" + strings.Join(fields, ",") + "]", nil
 }

@@ -29,8 +29,9 @@ type orchestrationCallableReference struct {
 	Layout  *orchestrationCaptureLayout
 }
 type orchestrationCaptureContext struct {
-	values map[*record]*orchestrationStorage
-	calls  map[*record]*orchestrationCallableReference
+	arguments map[*instructionValue]*orchestrationValue
+	values    map[*record]*orchestrationStorage
+	calls     map[*record]*orchestrationCallableReference
 }
 
 func (p *orchestrationPlanner) prepareCaptureLayouts() error {
@@ -134,31 +135,59 @@ func (p *orchestrationPlanner) bindCapture(current *instruction, flow orchestrat
 	return result, flow, nil
 }
 func (p *orchestrationPlanner) enterCaptureCall(current *instruction, result *orchestrationInstruction, flow orchestrationFlow) (func(), error) {
-	if current.Callable == nil {
-		return func() {}, nil
-	}
-	source, err := p.captureReference(current.Callable, flow)
-	if err != nil {
-		return nil, err
-	}
-	result.CaptureSource = source
-	result.CaptureName = fmt.Sprintf("lCaptureCall%d", p.nextCaptureCall)
-	p.nextCaptureCall++
-	context := orchestrationCaptureContext{values: make(map[*record]*orchestrationStorage), calls: make(map[*record]*orchestrationCallableReference)}
-	for index, value := range source.Layout.Values {
-		typ, err := recordRuntimeType(value.Record)
+	context := orchestrationCaptureContext{arguments: make(map[*instructionValue]*orchestrationValue), values: make(map[*record]*orchestrationStorage), calls: make(map[*record]*orchestrationCallableReference)}
+	// Resolve actuals before entering the callee's saved environment. Each formal
+	// has its own identity even when nested forwarding supplies the same operand.
+	for _, argument := range current.Arguments {
+		actual, err := p.value(argument.Argument, flow)
 		if err != nil {
 			return nil, err
 		}
-		context.values[value.Record] = &orchestrationStorage{Record: value.Record, Type: value.Type, RuntimeType: typ, Mutable: true, Capture: &orchestrationCaptureAccess{Name: result.CaptureName, Index: index}}
+		result.Effects |= orchestrationValueEffects(actual)
+		bound := actual
+		if actual.Literal == nil && actual.App == nil && !immutableParameter(actual) {
+			slot := &orchestrationStorage{ID: len(p.plan.Storage), Type: actual.Type, RuntimeType: actual.RuntimeType}
+			p.plan.Storage = append(p.plan.Storage, slot)
+			bound = &orchestrationValue{Source: &instructionValue{Kind: operandSymbol}, Type: actual.Type, RuntimeType: actual.RuntimeType, Storage: slot, Access: orchestrationAccessBorrow}
+			result.Arguments = append(result.Arguments, actual)
+			result.Results = append(result.Results, bound)
+		}
+		context.arguments[argument] = bound
 	}
-	for index, binding := range source.Layout.Calls {
-		canonical, err := canonicalRecord(binding, p.semantics.Aliases)
+	if current.Callable != nil {
+		source, err := p.captureReference(current.Callable, flow)
 		if err != nil {
 			return nil, err
 		}
-		context.calls[binding] = &orchestrationCallableReference{Layout: p.captureLayouts[canonical], Capture: &orchestrationCaptureAccess{Name: result.CaptureName, Index: len(source.Layout.Values) + index}}
+		result.CaptureSource = source
+		result.CaptureName = fmt.Sprintf("lCaptureCall%d", p.nextCaptureCall)
+		p.nextCaptureCall++
+		for index, value := range source.Layout.Values {
+			typ, err := recordRuntimeType(value.Record)
+			if err != nil {
+				return nil, err
+			}
+			context.values[value.Record] = &orchestrationStorage{Record: value.Record, Type: value.Type, RuntimeType: typ, Mutable: true, Capture: &orchestrationCaptureAccess{Name: result.CaptureName, Index: index}}
+		}
+		for index, binding := range source.Layout.Calls {
+			canonical, err := canonicalRecord(binding, p.semantics.Aliases)
+			if err != nil {
+				return nil, err
+			}
+			context.calls[binding] = &orchestrationCallableReference{Layout: p.captureLayouts[canonical], Capture: &orchestrationCaptureAccess{Name: result.CaptureName, Index: len(source.Layout.Values) + index}}
+		}
 	}
 	p.captureContexts = append(p.captureContexts, context)
 	return func() { p.captureContexts = p.captureContexts[:len(p.captureContexts)-1] }, nil
+}
+
+func immutableParameter(value *orchestrationValue) bool {
+	if value.Storage == nil || !value.Storage.Parameter {
+		return false
+	}
+	switch value.Type {
+	case valueText, valueBytes, valueNumber, valueTruth, valueNull:
+		return true
+	}
+	return false
 }

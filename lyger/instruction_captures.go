@@ -69,7 +69,8 @@ func (b *instructionBuilder) prepareCaptures() error {
 	return nil
 }
 
-func (b *instructionBuilder) captureDeclaration(site registrationSite, ctx instructionContext) (*instruction, error) {
+// declarationInstruction keeps Function and action bindings in ordinary control flow.
+func (b *instructionBuilder) declarationInstruction(site registrationSite, ctx instructionContext) (*instruction, error) {
 	target, err := site.target()
 	if err != nil {
 		return nil, err
@@ -80,6 +81,12 @@ func (b *instructionBuilder) captureDeclaration(site registrationSite, ctx instr
 	rec := b.semantics.Subjects[target]
 	if rec == nil {
 		return nil, nil
+	}
+	if function := b.semantics.Functions[rec]; function != nil && function.Header == ctx.statement {
+		current := ctx.newInstruction(instructionFunction)
+		current.Function = function
+		current.Target = &instructionValue{Kind: operandSymbol, Type: valueFunction, RuntimeType: function.signature(), Record: rec, ID: rec.ID, Runtime: true}
+		return current, nil
 	}
 	if site.isAlias() {
 		from, _, err := site.aliasOperands()

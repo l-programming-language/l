@@ -8,19 +8,23 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-// orchestrationEmitter consumes a complete, checked plan. It owns native
-// punctuation and runtime calls only; it does not rediscover bindings or source
-// control flow from rendered text.
+// orchestrationEmitter binds a checked plan to AML and typed runtime operands.
+// Function execution composes selected definitions; source bindings are resolved.
 type orchestrationEmitter struct {
-	plan             *orchestrationPlan
-	artifacts        map[*App]string
-	apps             map[*App]string
-	invocation       int
-	processSelection int
-	functionDepth    int
-	programStorage   map[*orchestrationStorage]int
-	programActions   map[*record]int
-	processes        *builtinProcessCatalog
+	plan              *orchestrationPlan
+	artifacts         map[*App]string
+	apps              map[*App]string
+	invocation        int
+	processSelection  int
+	functionDepth     int
+	functionWords     *sourceFunction
+	functionItems     []string
+	functionContracts map[*record]*sourceFunction
+	functionEmitted   map[int]bool
+	functionCall      int
+	programStorage    map[*orchestrationStorage]int
+	programActions    map[*record]int
+	processes         *builtinProcessCatalog
 }
 
 func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact) (BuildUnit, error) {
@@ -60,13 +64,16 @@ func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact
 	if err != nil {
 		return BuildUnit{}, err
 	}
+	emitter.functionContracts = make(map[*record]*sourceFunction)
+	emitter.functionEmitted = make(map[int]bool)
+	emitter.collectFunctionContracts(emitter.plan.Root.Body)
 	for index, app := range emitter.plan.Apps {
 		if emitter.artifacts[app] == "" {
 			return BuildUnit{}, lerrors.Internal.Errorf("application %s has no companion executable", app.ID)
 		}
 		emitter.apps[app] = fmt.Sprintf("lApp%d", index)
 	}
-	body := []string{orchestrationStatement("async move {")}
+	var body []string
 	for _, app := range emitter.plan.Apps {
 		body = append(body, orchestrationBinding(emitter.apps[app], "runtime.app("+quoteOrchestrationString(emitter.artifacts[app])+")"))
 	}
@@ -86,15 +93,19 @@ func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact
 		return BuildUnit{}, err
 	}
 	body = append(body, statements...)
-	body = append(body, orchestrationStatement("Ok(())"), orchestrationStatement("}"))
+	body = append(body, "BOD^E{|Statement: ~Ok(())~|}")
+	body = []string{"BOC^(CV{|Capture: ~Move~|}^(" + orchestrationOperation(body) + "))"}
 	function := "FW{|Key: ~l_main~, Inputs: ~&[Prop{Key: runtime, Type: &runtime::Runtime}Prop]&~, Outputs: ~&[impl std::future::Future<Output = runtime::Result<()>> + '_]&~|}^" + orchestrationOperation(body)
 	// This private observer seam invokes the same generated source; it is not
 	// an alternate entry implementation or a global runtime interception hook.
 	observer := "#[cfg(test)]\npub(crate) async fn l_entry_with_runtime(runtime: &runtime::Runtime) -> u8 {\n    runtime.run(l_main(runtime)).await\n}"
 	if emitter.plan.RuntimeValues || len(emitter.plan.Callables) > 0 {
-		observer = runtimeValueSupport + functionRuntimeSupport() + programRuntimeSupport() + observer
+		observer = runtimeValueSupport + programRuntimeSupport() + observer
 	}
 	syllables := []*s{{CompiledBytes: []byte("A")}, {CompiledBytes: []byte(function)}, {CompiledBytes: []byte("DA^" + orchestrationEvaluation(observer))}}
+	for _, item := range emitter.functionItems {
+		syllables = append(syllables, &s{CompiledBytes: []byte(item)})
+	}
 	mainObject, mainService := newRootObject("main"), newRootService("main")
 	mainService.Objects = []*object{mainObject}
 	app := &App{ID: id, Meta: appMetadata(id), Services: []*service{mainService}}
@@ -147,9 +158,9 @@ func (e *orchestrationEmitter) declarations(block *orchestrationBlock) ([]string
 }
 
 func orchestrationStorageDeclaration(slot *orchestrationStorage) (glyph, native string, err error) {
-	typeName, ok := nativeScalarName(slot.Type)
-	if !ok {
-		return "", "", lerrors.Internal.Errorf("planned storage has unsupported type %s", slot.Type)
+	typeName, err := nativeRuntimeType(slot.RuntimeType)
+	if err != nil {
+		return "", "", err
 	}
 	name := slot.name()
 	if slot.Published {
@@ -201,11 +212,13 @@ func (e *orchestrationEmitter) block(block *orchestrationBlock, scoped bool) ([]
 // emittedExpression retains how a Text is stored so read-only display and
 // comparison borrow it, while language assignments explicitly own snapshots.
 type emittedExpression struct {
-	optional bool
-	text     string
-	kind     valueType
-	arc      bool
-	borrow   bool
+	literal        bool
+	optional       bool
+	text           string
+	kind           valueType
+	typeExpression string
+	arc            bool
+	borrow         bool
 }
 
 func (value emittedExpression) textReference() string {
@@ -229,27 +242,33 @@ func (e *orchestrationEmitter) value(value *orchestrationValue) (emittedExpressi
 	if value == nil {
 		return emittedExpression{}, lerrors.Internal.Errorf("planned value is missing")
 	}
-	if value.Source != nil && (value.Source.Kind == operandConstruct || value.Source.Kind == operandRead) {
-		return e.runtimeOperand(value)
-	}
 	result := emittedExpression{kind: value.Type}
 	var err error
+	if value.Type == valueFunction {
+		result.typeExpression, err = runtimeTypeExpression(value.RuntimeType, e.plan.Identities)
+		if err != nil {
+			return result, err
+		}
+	}
+	if value.Source != nil && (value.Source.Kind == operandConstruct || value.Source.Kind == operandRead) {
+		return e.runtimeOperand(value, result)
+	}
 	if value.Literal != nil {
 		text, _, err := nativePrimitiveExpression(value.Literal)
 		if err != nil {
 			return result, err
 		}
-		result.text = text
+		result.text, result.literal = text, true
 		return result, nil
 	}
 	if value.Storage != nil {
 		if index, shared := e.programStorage[value.Storage]; shared {
-			text, err := unboxRuntimeValue(fmt.Sprintf("lProgram.get(%d)?", index), value.Type)
+			text, err := unboxTypedRuntimeValue(fmt.Sprintf("lProgram.get(%d)?", index), value.RuntimeType)
 			result.text = text
 			return result, err
 		}
 		if capture := value.Storage.Capture; capture != nil {
-			result.text, err = unboxRuntimeValue(fmt.Sprintf("%s.get(%d)?", capture.Name, capture.Index), value.Type)
+			result.text, err = unboxTypedRuntimeValue(fmt.Sprintf("%s.get(%d)?", capture.Name, capture.Index), value.RuntimeType)
 			return result, err
 		}
 		result.text = value.Storage.name()
@@ -330,7 +349,7 @@ func (e *orchestrationEmitter) condition(condition *orchestrationCondition) (str
 }
 
 func (e *orchestrationEmitter) attribution(current *orchestrationInstruction) []string {
-	if current.Source.Kind == instructionCall || current.Source.Kind == instructionBlock {
+	if current.Source.Kind == instructionCall && len(current.Arguments) == 0 || current.Source.Kind == instructionBlock {
 		return nil
 	}
 	span := current.Source.Source
@@ -354,9 +373,16 @@ func (e *orchestrationEmitter) attribution(current *orchestrationInstruction) []
 		}
 		visit(value.Owner)
 		visit(value.Payload)
+		visit(value.Key)
+		for _, element := range value.Elements {
+			visit(element)
+		}
 	}
 	visit(current.Target)
 	visit(current.Value)
+	for _, argument := range current.Arguments {
+		visit(argument)
+	}
 	if current.Condition != nil {
 		visit(current.Condition.Left)
 		visit(current.Condition.Right)
@@ -397,6 +423,30 @@ func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([
 			}
 			body = append([]string{orchestrationBinding(current.CaptureName, source)}, body...)
 		}
+		if len(current.Arguments) != 0 {
+			bindings := []string{orchestrationStatement("{")}
+			for index, argument := range current.Arguments {
+				value, err := e.value(argument)
+				if err != nil {
+					return nil, err
+				}
+				text, err := runtimeCopyExpression(value, orchestrationAccessSnapshot)
+				if err != nil {
+					return nil, err
+				}
+				slot := current.Results[index].Storage
+				typ, err := nativeRuntimeType(slot.RuntimeType)
+				if err != nil {
+					return nil, err
+				}
+				pattern := slot.name() + ": " + typ
+				if slot.Mutable {
+					pattern = "mut " + pattern
+				}
+				bindings = append(bindings, orchestrationBinding(pattern, text))
+			}
+			body = append(append(bindings, body...), orchestrationStatement("}"))
+		}
 		return body, nil
 	case instructionBuild, instructionRun, instructionStop, instructionAwait:
 		return e.processInstruction(current)
@@ -435,7 +485,7 @@ func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([
 	case instructionExit:
 		if current.Value == nil {
 			if e.functionDepth > 0 {
-				return []string{orchestrationStatement("return Ok(LFunctionOutcome::Exit);")}, nil
+				return instantiateFunctionWord(e.functionWords, "Exit", map[string]string{"Value": "std::ops::ControlFlow::Break(())"})
 			}
 			return []string{orchestrationStatement("return Ok(());")}, nil
 		}

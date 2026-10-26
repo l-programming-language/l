@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strings"
 	"testing"
-
-	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 )
 
 var runtimeTransferCases = []struct{ name, signature, setup, body, observe, output string }{
@@ -21,7 +19,7 @@ var runtimeTransferCases = []struct{ name, signature, setup, body, observe, outp
 const transferShape = "\"Person\" is a New Adjective describing any Instance.\nIt describes a Generic Instance with a `name` Text.\n\n"
 
 func runtimeTransferSource(name, signature, setup, body, observe string) string {
-	return fmt.Sprintf("    Publicly create \"Keep%s\" as a New Function with Inputs of \"Value\" as %s and Outputs of %s.\n%s\n\n%s\nCall Keep%s with Input%s as \"Result%s\".\n%s\n\n", name, signature, signature, body, setup, name, name, name, observe)
+	return fmt.Sprintf("    Publicly create \"Keep%s\" as a New Function with Inputs of \"Value\" as %s and Outputs of %s.\n%s\n\n%s\nKeep%s Input%s as \"Result%s\".\n%s\n\n", name, signature, signature, body, setup, name, name, name, observe)
 }
 
 func TestRuntimeTransfersThroughFunctions(t *testing.T) {
@@ -42,11 +40,5 @@ func TestRuntimeTransfersNative(t *testing.T) {
 		source.WriteString(runtimeTransferSource(tc.name, tc.signature, tc.setup, tc.body, tc.observe))
 		output.WriteString(tc.output)
 	}
-	bundle := runtimeValuesBundle(t, source.String())
-	recordBundle(t, bundle)
-	binary := buildActualBundle(t, bundle, "entry", true, "")
-	stdout, stderr, err := nativetest.RuntimeExecution.Run(t, binary, "", nil)
-	if err != nil || len(stderr) != 0 || string(stdout) != output.String() {
-		t.Fatalf("typed transfers stdout=%q stderr=%q error=%v; want %q", stdout, stderr, err, output.String())
-	}
+	runtimeBundleResult(t, runtimeValuesBundle(t, source.String()), output.String(), "")
 }

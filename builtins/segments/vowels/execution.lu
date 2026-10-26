@@ -10,6 +10,15 @@
 {|/|-{tags: Meta.Tags}--{if Type == "Instantiate"}--{
 [|Execute("Instantiation", Instantiation = Conjoinments.Instantiation)|]
 }-|/|}
+// CV constructs a future from one composed body; it does not schedule it.
+{|/|-{tags: Meta.Tags}--{if Type == "Execute"}--{
+[|Execute("Execution", Operation = Conjoinments.Operation, CaptureKeyword = Meta.CaptureKeyword)|]
+}-|/|}
+
+// DV obtains the result of one future in the enclosing asynchronous body.
+{|/|-{tags: Meta.Tags}--{if Type == "Calculate"}--{
+[|Execute("Calculation", Key = Meta.FutureKey, Calculation = Conjoinments.Calculation, Instantiation = Conjoinments.Instantiation, Execution = Conjoinments.Execution)|]
+}-|/|}
 // End Execution Glyph
 
-{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String]}-|/|}
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String, Capture: String]}-|/|}

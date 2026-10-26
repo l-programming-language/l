@@ -271,8 +271,15 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 		if err != nil {
 			return statementRegistration{}, err
 		}
-		if runtime := declaration.Record.Value.Runtime; runtime != nil && runtimeReadPhrase(runtime.Expression) != nil {
-			typ, typeErr := sourceTypeFromObject(runtime.Expression)
+		value := declaration.Record.Value
+		var typed *objectGram
+		if runtime := value.Runtime; runtime != nil && runtimeReadPhrase(runtime.Expression) != nil {
+			typed = runtime.Expression
+		} else if value.Applicative != nil && value.Applicative.Function != nil {
+			typed = site.valueObject()
+		}
+		if typed != nil {
+			typ, typeErr := sourceTypeFromObject(typed)
 			if typeErr == nil {
 				typ, typeErr = canonicalRuntimeType(typ, c.Semantics.Aliases)
 			}

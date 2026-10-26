@@ -27,5 +27,5 @@ func (e *orchestrationEmitter) programContext(actions []*record) ([]string, erro
 	for _, app := range e.plan.Apps {
 		apps = append(apps, e.apps[app]+".clone()")
 	}
-	return []string{orchestrationStatement(fmt.Sprintf("let lProgram = &LProgram::new(vec![%s], vec![%s], %d);", strings.Join(apps, ", "), strings.Join(types, ", "), len(e.programActions)))}, nil
+	return []string{orchestrationStatement(fmt.Sprintf("let lContext = (runtime.clone(), LProgram::new(vec![%s], vec![%s], %d)); let lProgram = &lContext.1;", strings.Join(apps, ", "), strings.Join(types, ", "), len(e.programActions)))}, nil
 }

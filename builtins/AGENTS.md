@@ -11,14 +11,17 @@ The repository root instructions remain applicable.
   `eng/core.l` contains L-level source definitions; the matching dictionaries
   live under `../stdlib/eng`. Keep source libraries distinct from native
   backend assets. Rust is the sole generated language.
-- Preserve the Rust L-source vocabulary,
-  typed placeholders, declaration order and logeme composition. The bounded
-  [Rust source differences](README.md#l-source-library-counterparts) do not
-  authorize additional vocabulary or library behavior. The current Rust frontend
-  handles native literal/type encoding and selects these resources explicitly.
-- L, Lyger, and Logiceme remain Go implementations. Rust generation preserves
-  L's value/type semantics. The typed frontend Rust plan owns
-  storage, effect and activation analysis; templates do not infer ownership.
+- Source definitions own vocabulary, typed placeholders, declaration order and
+  composition. Functions use this same path, including typed inputs/results and
+  capture/lifetime bindings supplied through approved AML. A separate frontend
+  implementation or a native-expression wrapper around one is prohibited.
+  Follow Print: definitions own behavior, words own invocation, and sentences
+  bind their arguments. Compose bodies; never package them as one Statement/EA.
+- Lyger resolves types, effects, activation and ownership; Logiceme renders Rust
+  from AML and selected assets. Authored native leaves and storage helpers may
+  preserve resolved semantics, but cannot interpret non-App L behavior. Templates
+  infer no ownership. Prefer existing syllables and builtin-definition changes;
+  do not expand frozen logeme interfaces to conceal a frontend boundary violation.
 - Letters own abstract logic. F/O defines; B/A declares; D/E calculates;
   G/I selects alternatives; C/V handles asynchrony. Target syntax cannot reassign
   those owners. Preserve focused template granularity.
@@ -51,12 +54,10 @@ are artifacts, not commands to run while working on templates.
 
 ## Verification
 
-Follow the [validation policy](../docs/development-harness.md#temporary-validation-pause)
-for the local pause and authorized hosted runs. Run local bootstrap, full lint,
-full ordinary/native suites or `scripts/l-check` only on explicit user request.
-For requested full validation, follow [acceptance](../docs/development-harness.md),
-resolve every lint finding, and require unfiltered acceptance and complete tagged
-native compilation.
+Follow root [acceptance instructions](../AGENTS.md#current-contract) and the
+[validation policy](../docs/development-harness.md#temporary-validation-pause).
+Expensive local checks require explicit authorization; focused checks establish
+no full-acceptance result.
 
 Use complete AML through Evaluate and compare every artifact's exact bytes,
 ordered paths and dependencies. Preserve scenario identities, independent
@@ -91,7 +92,8 @@ code and broad test matrices do not certify other forms.
   local String list interiors on FW/HY/MY declarations and Y/named KY applications.
   Missing inputs emit nothing; supplied blanks reject; native `Void` stays text.
   These are not record fields or inherited Class/Object/file defaults. Further
-  interfaces, including mutability/capture policy, require separate review.
+  interfaces require separate review. CV alone accepts its reviewed local
+  Capture policy; it does not widen FW/BW or lifetime/generic metadata.
 - Declare currently renders typed `let` through `Meta.Keys` and `Meta.Type`, with
   no initializer or automatic `mut`. Definitions own their supplied values.
   Missing lifetime/capture data is not permission to clone, move, or invent one.
@@ -109,8 +111,9 @@ code and broad test matrices do not certify other forms.
   [keyed GI](README.md#keyed-gi-pattern-selection) contracts. OC/DOC own selection
   assignments, OG/DOG own conditional binding, and PO labels its Iteration
   directly. BI Default orders branches only; three-part X rejects.
-  Native patterns and caller-supplied async scaffolding do not establish general
-  structural-pattern, enum or async-function interfaces.
+  CV constructs a future, DV awaits it, and CO/COB bind its value under the
+  [future contract](README.md#future-construction-awaiting-and-value-bindings).
+  They add no async-FW modifier or general structural-pattern/enum interface.
 - Tokio supplies Rust runtime process supervision. Execute/Execution have
   no Deferred input, forwarding or branch. Supplied Deferred remains a classified
   rejection, including False. Follow the [execution contract](README.md#execution-without-deferred);

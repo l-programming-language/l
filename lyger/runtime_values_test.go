@@ -1,6 +1,8 @@
 package Lyger
 
 import (
+	"errors"
+	"os/exec"
 	"strings"
 	"testing"
 
@@ -68,26 +70,67 @@ func runtimeValuesBundle(t *testing.T, source string) Logiceme.Executable {
 	return bundle
 }
 
+var nullRuntimeCases = []struct{ name, source, stdout, diagnostic string }{
+	{"null-cast", "Define \"boxed\" as a New Thing of 7.\nShow a New Null from boxed.\n", "", "runtime value type mismatch"},
+	{"null-list-bound", "Define \"items\" as a New List of Null.\nShow a New Null from items at 0.\n", "", "List index out of bounds"},
+	{"null-map-key", "Define \"items\" as a New Map of Null.\nShow a New Null from items at `missing`.\n", "", "Map key is absent"},
+	{"null-container-cast", "Define \"boxed\" as a New Thing of 7.\nDefine \"items\" as a New List of a New Null from boxed.\nShow items.\n", "", "runtime value type mismatch"},
+	{"null-shared-results", "    Publicly create \"Publish\" as a New Function with Inputs of \"Value\" as Text and No Outputs.\nPublicly define \"dummy\" as Value.\n\n    Publicly create \"Pair\" as a New Function with No Inputs and Outputs of Null and Text.\nReturn Null and `text`.\n\nPair as \"Nothing\" and \"Message\".\nShow Nothing and Message.\n", "nulltext", ""},
+}
+
+func TestNullBoxingPreservesReads(t *testing.T) {
+	for _, tc := range nullRuntimeCases {
+		t.Run(tc.name, func(t *testing.T) {
+			source, err := functionGenerated(t, tc.source)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if tc.diagnostic != "" && strings.Count(source, ".expect_type(LType::Null)") != 1 {
+				t.Fatal("Null boxing lost or duplicated the checked read")
+			}
+			if tc.diagnostic == "" {
+				for _, field := range []string{"lCalled0Result.0", "lCalled0Result.1"} {
+					if strings.Count(source, field) != 1 {
+						t.Fatalf("typed Null/Text result field %s must be consumed once", field)
+					}
+				}
+				if strings.Contains(source, "lResults.next()") {
+					t.Fatal("typed results must not use an erased value iterator")
+				}
+			}
+		})
+	}
+}
+
 func TestRuntimeValuesNative(t *testing.T) {
 	var source strings.Builder
 	for _, tc := range runtimeValueSources {
 		source.WriteString("\n    " + tc.source)
 	}
-	for _, tc := range []struct{ name, source, stdout, diagnostic string }{
+	cases := append([]struct{ name, source, stdout, diagnostic string }{
 		{"snapshot-and-sharing", source.String(), "1valuesecondraw97nullAdafirst[[1], [x]][1]", ""},
 		{"nested-type-mismatch", "Define \"items\" as a New List of 1.\nDefine \"boxed\" as a New Thing of items.\nDefine \"copied\" as a New List of Text from boxed.\n", "", "runtime value type mismatch"},
 		{"cycle-through-function", "Define \"boxed\" as a New Thing of Null.\nDefine \"link\" as a New Pointer of boxed.\n\n    Publicly create \"ReadShared\" as a New Function with No Inputs and Outputs of Thing.\nDefine \"snapshot\" as a New Thing from link.\nReturn snapshot.\n\nPut ReadShared in link.\n", "", "Pointer write would create an ownership cycle"},
 		{"cycle-through-container", "Define \"boxed\" as a New Thing of Null.\nDefine \"handle\" as a New Pointer of boxed.\nDefine \"links\" as a New List of handle.\nPut links in handle.\n", "", "Pointer write would create an ownership cycle"},
-	} {
+	}, nullRuntimeCases...)
+	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			bundle := runtimeValuesBundle(t, tc.source)
-			recordBundle(t, bundle)
-			binary := buildActualBundle(t, bundle, "entry", true, "")
-			stdout, stderr, err := nativetest.RuntimeExecution.Run(t, binary, "", nil)
-			if string(stdout) != tc.stdout || (err == nil) != (tc.diagnostic == "") || tc.diagnostic == "" && len(stderr) > 0 || tc.diagnostic != "" && !strings.Contains(string(stderr), tc.diagnostic) {
-				t.Fatalf("runtime values: stdout=%q stderr=%q error=%v", stdout, stderr, err)
-			}
+			runtimeBundleResult(t, runtimeValuesBundle(t, tc.source), tc.stdout, tc.diagnostic)
 		})
+	}
+}
+
+func runtimeBundleResult(t *testing.T, bundle Logiceme.Executable, expected, diagnostic string) {
+	t.Helper()
+	recordBundle(t, bundle)
+	binary := buildActualBundle(t, bundle, "entry", true, "")
+	stdout, stderr, err := nativetest.RuntimeExecution.Run(t, binary, "", nil)
+	var exit *exec.ExitError
+	if diagnostic != "" && (!errors.As(err, &exit) || exit.ExitCode() != 1) {
+		t.Fatalf("runtime diagnostic requires exit 1, got %v", err)
+	}
+	if string(stdout) != expected || (err == nil) != (diagnostic == "") || diagnostic == "" && len(stderr) > 0 || diagnostic != "" && !strings.Contains(string(stderr), diagnostic) {
+		t.Fatalf("runtime values: stdout=%q stderr=%q error=%v; expected %q", stdout, stderr, err, expected)
 	}
 }
 

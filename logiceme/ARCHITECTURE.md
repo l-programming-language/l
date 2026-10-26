@@ -93,18 +93,21 @@ workspace. All generated entries and companion applications are native Rust.
 
 ## Frontend lowering boundary
 
-Lyger's typed Rust plan operates on resolved semantic instructions before AML
-emission. It records activation-local storage, definite assignment, mutation,
-effects and value provenance. Repeated paragraph activations preserve separate
-private slots; canonical App aliases and published snapshots keep their identity.
-Runtime-dependent presence uses explicit bookkeeping rather than a fabricated L
-value. Native leaves remain opaque; the plan adds no new generic/mutability Meta
-fields, sections, per-paragraph tasks or general ownership inference.
+Lyger resolves bindings, types, activation, definite assignment, mutation and
+capture transfers, then instantiates canonical definitions into AML. Each Function
+declaration binds its invocation verb; no additional `Call` primitive is needed.
+Functions, invocations and returns use the same composition path for typed
+parameters/results and retained captures. Native strings must not conceal generated Function declarations, closures or
+dispatch machinery.
 
-The emitter composes existing FW/W/GI and declaration/definition forms, with
-native atoms for supported runtime calls and explicit typed storage punctuation.
-It preserves raw bytes and finite scalar formatting at the typed boundary.
-Source topology and compiler support remain separate from that execution plan.
+Lyger may encode resolved native type/name/value atoms in approved AML fields.
+Those atoms contain no executable Function body or closure. Logiceme renders
+callable declarations and composes syntax from them. Complete AML must suffice;
+no Lyger object or Go-only plan may cross this boundary. Use existing syllables
+and approved `Lifetimes`/`GenericTypes` inputs before changing templates. Authored
+builtin native leaves remain opaque. Native helpers may implement resolved
+ownership and App supervision, but cannot interpret L instructions or replace
+typed Functions with erased argument/result vectors and runtime signatures.
 
 ## Layer contracts
 
@@ -224,11 +227,10 @@ executes the composed future through Runtime supervision. Plain composed entries
 with SETTINGS receive a prepared initialization operation before user effects.
 EA remains an opaque whole-file path with its distinct support handling.
 
-The unchanged Lucid cases use `IncludeRuntime: false` and compile without running.
-Separate frontend, topology, library and runtime regressions compile and exercise
-actual outputs; their [implementation evidence](../testdata/integration/IMPLEMENTATION.md)
-must be consulted independently of the Lucid ledger. These focused checks do not
-establish a new full-acceptance result.
+Lucid cases use `IncludeRuntime: false`; three future cases also execute generated
+programs. Frontend, topology and runtime regressions separately exercise native
+outputs. Consult their [implementation evidence](../testdata/integration/IMPLEMENTATION.md)
+independently of the Lucid ledger; focused checks establish no full-acceptance result.
 
 ## Cross-cutting invariants
 
@@ -276,22 +278,12 @@ The [current ledger](testdata/lucid/FAILURES.md) records dated exact-generation,
 validation, native-compilation and acceptance evidence. The 18 template hashes
 remain frozen after finite reviewed amendments, linked from the
 [Rust reference](../builtins/README.md). Those records authorize no future
-interface expansion. That corpus remains compile-only. The separate runtime
-regressions exercise generated native applications and topology; deployment
-scripts remain unexecuted. Report each evidence layer and any outstanding
-acceptance failures separately.
+interface expansion. Three future cases execute generated programs; broader
+runtime regressions cover native applications and topology. Deployment scripts
+remain unexecuted. Report evidence layers and outstanding failures separately.
 
 ## Documentation design and provenance
 
-The disclosure's stages (technical pages 27-46, summarized in LOGEMES) motivate
-the separation of structure, composition, interpretation and source assembly.
-Its example deployment scripts and alphabet do not override current
-contracts. Keep this map about responsibilities and stable entry points, not
-temporary failures or a full list of functions.
-
-The documentation layout follows the emphasis on concise, scoped agent guidance
-in [AGENTS.md](https://agents.md/) and
-[OpenAI's guidance](https://learn.chatgpt.com/docs/agent-configuration/agents-md),
-with component/data-flow navigation informed by
-[ARCHITECTURE.md](https://architecture.md/). Long semantic references live in
-linked documents rather than being duplicated in every AGENTS.md.
+Keep this map about responsibilities and stable entry points. Historical design
+examples do not override current contracts; detailed semantics belong in the
+linked references rather than repeated agent guidance.

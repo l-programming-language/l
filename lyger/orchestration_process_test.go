@@ -69,7 +69,7 @@ func TestDynamicAppAwaitJoinsOnlyContinuingFacts(t *testing.T) {
 }
 
 func TestDynamicAppFunctionParameterUsesRuntimeStorage(t *testing.T) {
-	source := memberResolutionSource{main: "Create \"First\" as a New Basic App.\nCreate \"Second\" as a New Basic App.\n\n    Publicly create \"Join\" as a New Function with Inputs of \"Target\" as App and No Outputs.\nRun Target.\nAwait Target.\nIf Target has an Error, exit with Target's Error.\n\nCall Join with First.\n"}
+	source := memberResolutionSource{main: "Create \"First\" as a New Basic App.\nCreate \"Second\" as a New Basic App.\n\n    Publicly create \"Join\" as a New Function with Inputs of \"Target\" as App and No Outputs.\nRun Target.\nAwait Target.\nIf Target has an Error, exit with Target's Error.\n\nJoin First.\n"}
 	compilation := compileMemberResolutionSource(t, source)
 	if compilation.Error != nil {
 		t.Fatal(compilation.Error)
@@ -144,7 +144,7 @@ func TestFunctionAwaitUsesProgramRootsAndPreservesCallerSnapshot(t *testing.T) {
 }
 
 func TestFunctionInvocationDoesNotInventGlobalAssignmentFacts(t *testing.T) {
-	source := memberResolutionSource{main: "    Create \"Worker\" as a New Public Basic App.\nPublicly define \"Late\" as Worker's Output.\n\n    Publicly create \"Join\" as a New Function with Inputs of \"Target\" as App and No Outputs.\nAwait Target.\n\nRun Worker.\nCall Join with Worker.\nShow Late.\n"}
+	source := memberResolutionSource{main: "    Create \"Worker\" as a New Public Basic App.\nPublicly define \"Late\" as Worker's Output.\n\n    Publicly create \"Join\" as a New Function with Inputs of \"Target\" as App and No Outputs.\nAwait Target.\n\nRun Worker.\nJoin Worker.\nShow Late.\n"}
 	compilation := compileMemberResolutionSource(t, source)
 	if compilation.Error != nil {
 		t.Fatal(compilation.Error)
@@ -168,4 +168,4 @@ func processTestFunction(body []*orchestrationInstruction) *orchestrationFunctio
 	return nil
 }
 
-const functionAwaitRootsSource = "Define \"Message\" as a New List of `before` and `before`.\nDefine \"Witness\" as a New Text from Message at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Witness and then Showing any Text.\n\n    Create \"Worker\" as a New Public Basic App.\nPlace `after` in Message at 0.\nDefine \"Observed\" as a New Text from Message at 0.\nShow Observed.\nReport `|`.\n\n    Publicly create \"Join\" as a New Function with Inputs of \"Target\" as App and Outputs of List of Text.\nAwait Target.\nReturn Message.\n\nRun Worker.\nCall Join with Worker as \"Snapshot\".\nDefine \"Copied\" as a New Text from Snapshot at 0.\nShow Copied.\nDefine \"Current\" as a New Text from Message at 0.\nShow Current.\n"
+const functionAwaitRootsSource = "Define \"Message\" as a New List of `before` and `before`.\nDefine \"Witness\" as a New Text from Message at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Witness and then Showing any Text.\n\n    Create \"Worker\" as a New Public Basic App.\nPlace `after` in Message at 0.\nDefine \"Observed\" as a New Text from Message at 0.\nShow Observed.\nReport `|`.\n\n    Publicly create \"Join\" as a New Function with Inputs of \"Target\" as App and Outputs of List of Text.\nAwait Target.\nReturn Message.\n\nRun Worker.\nJoin Worker as \"Snapshot\".\nDefine \"Copied\" as a New Text from Snapshot at 0.\nShow Copied.\nDefine \"Current\" as a New Text from Message at 0.\nShow Current.\n"

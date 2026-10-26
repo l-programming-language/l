@@ -1,9 +1,14 @@
 # Lucid case inventory
 
-These registered backend cases witness exact source generation. The native stage separately compiles both expected and generated bundles; it does not execute them. No stage was run for this website task. [Read the maintained suite contract](../../logiceme/testdata/lucid/README.md).
+Registered cases compare exact source bundles and separately compile expected/generated Rust. Runtime execution is a separate witness. This inventory reports no validation run. [Read the maintained suite contract](../../logiceme/testdata/lucid/README.md).
 
 | Case | Native expectation |
 | --- | --- |
+| <a id="lucid-future-composed"></a>[future-composed](../../logiceme/testdata/lucid/future-composed.aml.txt) | Compile-only positive |
+| <a id="lucid-future-move"></a>[future-move](../../logiceme/testdata/lucid/future-move.aml.txt) | Compile-only positive |
+| <a id="lucid-future-infer"></a>[future-infer](../../logiceme/testdata/lucid/future-infer.aml.txt) | Compile-only positive |
+| <a id="lucid-future-borrow-escape"></a>[future-borrow-escape](../../logiceme/testdata/lucid/future-borrow-escape.aml.txt) | Intentional rejection: E0373 |
+| <a id="lucid-future-move-reuse"></a>[future-move-reuse](../../logiceme/testdata/lucid/future-move-reuse.aml.txt) | Intentional rejection: E0382 |
 | <a id="lucid-generics-functions"></a>[generics-functions](../../logiceme/testdata/lucid/generics-functions.aml.txt) | Compile-only positive |
 | <a id="lucid-generics-records"></a>[generics-records](../../logiceme/testdata/lucid/generics-records.aml.txt) | Compile-only positive |
 | <a id="lucid-generics-traits"></a>[generics-traits](../../logiceme/testdata/lucid/generics-traits.aml.txt) | Compile-only positive |

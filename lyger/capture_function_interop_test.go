@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-const captureFunctionInteropSource = "Define \"Items\" as a New List of `kept` and `other`.\nDefine \"Payload\" as a New Text from Items at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Payload and then Showing any Text.\nUse Report as \"Saved\".\n\n    Publicly create \"Invoke\" as a New Function with Inputs of \"Suffix\" as Text and No Outputs.\nSaved Suffix.\n\nCall Invoke with `one`.\nCall Invoke with `two`.\n"
+const captureFunctionInteropSource = "Define \"Items\" as a New List of `kept` and `other`.\nDefine \"Payload\" as a New Text from Items at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Payload and then Showing any Text.\nUse Report as \"Saved\".\n\n    Publicly create \"Invoke\" as a New Function with Inputs of \"Suffix\" as Text and No Outputs.\nSaved Suffix.\n\nInvoke `one`.\nInvoke `two`.\n"
 
 func TestFunctionCapturesSourceActionEnvironment(t *testing.T) {
 	c := compileMemberResolutionSource(t, memberResolutionSource{main: captureFunctionInteropSource})

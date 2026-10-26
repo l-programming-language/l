@@ -19,6 +19,7 @@ type runtimeTypeRef struct {
 	Kind            valueType
 	Element         *runtimeTypeRef
 	Identity        *record
+	Definition      *record
 	Inputs, Outputs []runtimeTypeRef
 }
 
@@ -44,6 +45,12 @@ func (a runtimeTypeRef) equal(b runtimeTypeRef) bool {
 
 func canonicalRuntimeType(ref runtimeTypeRef, aliases map[*record]*record) (runtimeTypeRef, error) {
 	var err error
+	if ref.Definition != nil {
+		ref.Definition, err = canonicalRecord(ref.Definition, aliases)
+		if err != nil {
+			return ref, err
+		}
+	}
 	if ref.Identity != nil {
 		ref.Identity, err = canonicalRecord(ref.Identity, aliases)
 		if err != nil {
@@ -79,11 +86,15 @@ var runtimeRepresentations = map[valueType][2]string{
 	valueBytes: {"Vec<u8>", "Bytes"}, valueNull: {"()", "Null"}, valueThing: {"LValue", ""},
 	valueList: {"LList", "List"}, valueMap: {"LMap", "Map"}, valueInstance: {"LInstance", "Instance"},
 	valuePointer: {"LPointer", "Pointer"}, valueError: {"runtime::Error", "Error"},
-	valueApp: {"std::sync::Arc<runtime::App>", "App"}, valueFunction: {"LCallable", "Function"},
+	valueApp: {"std::sync::Arc<runtime::App>", "App"}, valueFunction: {"", "Function"},
 }
 
 func runtimeTypeName(kind valueType) (string, bool) {
 	entry, ok := runtimeRepresentations[kind]
+	if kind == valueFunction {
+		name, err := nativeRuntimeType(runtimeTypeRef{Kind: kind})
+		return name, err == nil
+	}
 	return entry[0], ok
 }
 
@@ -118,8 +129,17 @@ func boxRuntimeValue(value emittedExpression) (string, error) {
 	if value.kind == valueThing {
 		return text, nil
 	}
+	if value.kind == valueFunction {
+		if value.typeExpression == "" {
+			return "", lerrors.Internal.Errorf("Function storage requires its planned type")
+		}
+		return "LValue::function(" + text + ", " + value.typeExpression + ")", nil
+	}
 	if value.kind == valueNull {
-		return "LValue::Null", nil
+		if value.literal {
+			return "LValue::Null", nil
+		}
+		return "{ let () = " + text + "; LValue::Null }", nil
 	}
 	return "LValue::" + runtimeRepresentations[value.kind][1] + "(" + text + ")", nil
 }
@@ -132,6 +152,17 @@ func unboxRuntimeValue(expression string, kind valueType) (string, error) {
 		return expression, nil
 	}
 	return "(" + expression + ").into_" + strings.ToLower(runtimeRepresentations[kind][1]) + "()?", nil
+}
+
+func unboxTypedRuntimeValue(expression string, typ runtimeTypeRef) (string, error) {
+	if typ.Kind != valueFunction {
+		return unboxRuntimeValue(expression, typ.Kind)
+	}
+	native, err := nativeRuntimeType(typ)
+	if err != nil {
+		return "", err
+	}
+	return "(" + expression + ").into_function::<" + native + ">()?", nil
 }
 
 func runtimeTypeExpression(t runtimeTypeRef, identities map[*record]uint64) (string, error) {
@@ -228,6 +259,9 @@ func sourceTypeFromObject(object *objectGram) (runtimeTypeRef, error) {
 		return runtimeTypeRef{}, lerrors.TypeMismatch.Errorf("%s is a source structure, not a runtime type", name)
 	}
 	result := runtimeTypeRef{Kind: kind}
+	if kind == valueFunction && object.noun.binding != nil {
+		result.Definition = object.noun.binding.Record
+	}
 	if kind == valueList || kind == valueMap || kind == valuePointer {
 		result.Element = &runtimeTypeRef{Kind: valueThing}
 		if object.phrase != nil && object.phrase.obj != nil && runtimeReadPhrase(object) != object.phrase {

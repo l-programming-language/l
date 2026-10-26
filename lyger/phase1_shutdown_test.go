@@ -45,7 +45,7 @@ Show ` + "`root|`" + `.
 			if completion == "bare-exit" {
 				input += "Exit.\n"
 			} else if completion == "function-exit" {
-				input += "\n    Publicly create \"Finish\" as a New Function with No Inputs and No Outputs.\nExit.\n\n    Publicly create \"Relay\" as a New Function with No Inputs and No Outputs.\nCall Finish.\nShow `unexpected-function|`.\n\nCall Relay.\nShow `unexpected-root|`.\n"
+				input += "\n    Publicly create \"Finish\" as a New Function with No Inputs and No Outputs.\nExit.\n\n    Publicly create \"Relay\" as a New Function with No Inputs and No Outputs.\nFinish.\nShow `unexpected-function|`.\n\nRelay.\nShow `unexpected-root|`.\n"
 			}
 			result := phase1Require(t, input, nil)
 			// Only the runtime mode changes below. Compile the actual generated

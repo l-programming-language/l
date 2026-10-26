@@ -16,15 +16,15 @@ A Process collects existing instantiated definition expressions. It is not an OS
 
 Function has forms Function, Functions, Functional, and Functioning. It supplies an FW native definition with Func metadata. Name is Text, Inputs is Props, Outputs is Texts, and Process is an already instantiated definition reference.
 
-Inputs and Outputs preserve their typed cardinality. Main supplies explicit No Inputs and No Outputs. Nonempty source signatures need explicit property values; the construction pass rejects an unbound nonempty signature. The native definition facility supports concrete typed metadata, not automatic inference of Rust types from arbitrary source text.
+Inputs and Outputs preserve their typed cardinality. Main supplies No Inputs and No Outputs; ordinary Function declarations bind their checked signatures and paragraph bodies to the same selected definition. The constructor is not a marker for a second emitter.
 
-Native named functions and callable fragments have separately bounded Rust target support. The native Function template does not infer receiver methods or native generic arguments; ordinary L Function captures and typed calls are checked by the frontend. See the [specification's definition boundary](../../spec/definitions.md#process-function-and-return).
+Invocation words use normal grammatical binding, as Print does. Captures, snapshots and Pointer sharing follow [scope rules](../../spec/names-and-scope.md#runtime-storage-and-definite-assignment). Native signature/lifetime metadata remains bounded by the [definition contract](../../spec/definitions.md#process-function-and-return).
 
 ## Function.Return
 
-Return, Returns, Returned, Returning, and Returner are members of any Function in the builtin definition. The native template composes BOD/E with `return` and a typed Text Statement slot. The slot is encoded at the definition boundary; it is not unrestricted source injection.
+Return, Returns, Returned, Returning, and Returner are Function members. A Function body resolves Return to its selected member definition and checks the declared result types and counts. Native composition determines the return context.
 
-The function composition determines its valid native return context and declared outputs. No generic cross-process return transport follows from this word. Use Exit for whole-program termination only when that behavior is intended; Exit is not an alias of Return.
+Return completes that invocation; Exit terminates the enclosing program. Neither transports runtime captures into an App process.
 
 ## Objective
 
@@ -56,7 +56,7 @@ Basic is implicit; copying its declaration into a project bootstrap is unnecessa
 
 Descriptor target mismatch, a missing constructor rule, recursive descriptor expansion, malformed slots, unsupported signatures, and inaccessible captures reject at their respective semantic boundaries. Aliases preserve canonical descriptor identity. Public/Publicly controls publication independently of New/Generic construction.
 
-A source-defined definition can refer to static values in its original environment without adopting a caller's shadowed value. A public runtime-dependent definition cannot escape private activation storage. These rules prevent superficially similar names from silently changing the generated program.
+Static references retain definition-site bindings. Runtime captures retain their declaration activation: ordinary values snapshot and explicit Pointer targets share. Caller shadowing does not select another environment.
 
 ## Sources and witnesses
 

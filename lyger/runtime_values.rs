@@ -60,10 +60,22 @@ enum LValue {
     Pointer(LPointer),
     Error(runtime::Error),
     App(std::sync::Arc<runtime::App>),
-    Function(LCallable),
+    Function(std::rc::Rc<dyn std::any::Any>, LEnvironment, LType),
     Environment(LEnvironment),
 }
 impl LValue {
+    // Storage erasure has no invocation operation: typed extraction restores the
+    // native callable pair before ordinary Rust invocation.
+    fn function<T: Clone + 'static>(value: (LEnvironment, T), signature: LType) -> Self {
+        let captures = value.0.clone();
+        Self::Function(std::rc::Rc::new(value), captures, signature)
+    }
+    fn into_function<T: Clone + 'static>(self) -> runtime::Result<T> {
+        if let Self::Function(value, _, _) = self {
+            value.downcast_ref::<T>().cloned().ok_or_else(|| runtime::Error::new("Function type mismatch"))
+        } else { Err(runtime::Error::new("expected Function")) }
+    }
+
     fn expect_type(self, expected: LType) -> runtime::Result<Self> {
         if expected.accepts(&self.ty()) {
             Ok(self)
@@ -84,7 +96,7 @@ impl LValue {
             Self::Pointer(v) => LType::Pointer(Box::new(v.element.clone())),
             Self::Error(_) => LType::Error,
             Self::App(_) => LType::App,
-            Self::Function(v) => v.signature.clone(),
+            Self::Function(_, _, signature) => signature.clone(),
             Self::Environment(_) => LType::Thing,
         }
     }
@@ -108,7 +120,7 @@ impl LValue {
                     .reaches(target, seen)
             }
             Self::Environment(v) => v.reaches(target, seen),
-            Self::Function(v) => v.captures.reaches(target, seen),
+            Self::Function(_, captures, _) => captures.reaches(target, seen),
             Self::List(v) => {
                 for child in &v.values {
                     if child.reaches(target, seen)? {
@@ -163,7 +175,7 @@ l_project!(into_instance, Instance, LInstance);
 l_project!(into_pointer, Pointer, LPointer);
 l_project!(into_error, Error, runtime::Error);
 l_project!(into_app, App, std::sync::Arc<runtime::App>);
-l_project!(into_function, Function, LCallable);
+
 l_project!(into_environment, Environment, LEnvironment);
 impl LValue {
     fn into_null(self) -> runtime::Result<()> {
@@ -372,7 +384,7 @@ impl LValue {
             Self::Null => b"null".to_vec(),
             Self::Error(v) => v.to_string().into_bytes(),
             Self::App(_) => b"App".to_vec(),
-            Self::Function(_) => b"Function".to_vec(),
+            Self::Function(_, _, _) => b"Function".to_vec(),
             Self::Environment(_) => {
                 return Err(runtime::Error::new("capture environment is not an L value"))
             }

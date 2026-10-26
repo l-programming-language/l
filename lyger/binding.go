@@ -78,13 +78,38 @@ func newBindingQuery(contents []byte) bindingQuery {
 	return bindingQuery{word: strings.ToLower(word), possessive: possessive}
 }
 
+// A Function's invocation word and value share one record. Lexical morphology
+// does not change the value's Function storage or its complete signature.
+func (r *record) bindingWord() *lexeme {
+	if r == nil || r.Value == nil {
+		return nil
+	}
+	if r.Value.Type == storageLexeme {
+		return r.Value.Lexeme
+	}
+	if !r.isFunction() {
+		return nil
+	}
+	word := newLexeme("verb")
+	if source := r.Value.Applicative.Function.Source; source != nil && source.Word != nil {
+		word = source.Word.cloneUse()
+	}
+	name := r.ID[strings.LastIndex(r.ID, ".")+1:]
+	word.Root = strings.ToLower(name)
+	return word
+}
+
+func (r *record) isFunction() bool {
+	return r != nil && r.Value != nil && r.Value.Type == storageApplicative && r.Value.Applicative != nil && r.Value.Applicative.Function != nil
+}
+
 func (r *record) binding(query bindingQuery) (*tokenBinding, bool) {
 	if r == nil || r.Value == nil {
 		return nil, false
 	}
 	word := query.word
 	b := &tokenBinding{Record: r, Root: strings.ToLower(r.ID), Form: "root", Possessive: query.possessive}
-	if r.Value.Type == storageLexeme && r.Value.Lexeme != nil {
+	if lexical := r.bindingWord(); lexical != nil {
 		// A member is visible through its qualified name until an import creates
 		// an unqualified alias. Suffix matching must not leak dictionary members.
 		prefix := ""
@@ -94,11 +119,11 @@ func (r *record) binding(query bindingQuery) (*tokenBinding, bool) {
 		if !strings.HasPrefix(word, prefix) {
 			return nil, false
 		}
-		matched, form := r.Value.Lexeme.match([]byte(strings.TrimPrefix(word, prefix)))
+		matched, form := lexical.match([]byte(strings.TrimPrefix(word, prefix)))
 		if !matched {
 			return nil, false
 		}
-		b.Root, b.POS, b.Form = r.Value.Lexeme.Root, r.Value.Lexeme.POS, form
+		b.Root, b.POS, b.Form = lexical.Root, lexical.POS, form
 		return b, true
 	}
 	return b, word == strings.ToLower(r.ID)
@@ -222,6 +247,30 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 		member.mem = resolved.Value
 		member.binding, member.tType, member.defined = resolved.Binding, resolved.Type, resolved.Binding != nil
 		member.bindingError = nil
+	}
+	// A grammatical subject selects its action namespace just as a possessive
+	// selects a member. Keep the subject; it is not an invented argument.
+	for index, subject := range statement.tokens {
+		if subject.getPOS(true) == "article" || subject.getPOS(true) == "adjective" {
+			continue
+		}
+		if subject.isDeclare() || subject.binding == nil || subject.getPOS(true) == "verb" || index+1 >= len(statement.tokens) {
+			break
+		}
+		action := statement.tokens[index+1]
+		if action.getPOS(true) == "preposition" {
+			break
+		}
+		member, _, err := r.lookupMember(subject.binding.Record, action.rawBytes)
+		if err != nil {
+			return false, err
+		}
+		if member != nil {
+			action.binding, action.tType, action.defined = member, member.lexicalType(), true
+			action.mem = &entry{}
+			action.mem.bindFrom(member.Record.Value)
+		}
+		break
 	}
 	return ready, nil
 }

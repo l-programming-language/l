@@ -10,18 +10,25 @@ type functionParameter struct {
 	Type   runtimeTypeRef
 }
 type sourceFunction struct {
-	Record       *record
-	Header       *lStatement
-	Scope        *lexicalScope
-	Inputs       []functionParameter
-	Outputs      []runtimeTypeRef
-	Body         []*instruction
-	Captures     []*instructionValue
-	CaptureCalls []*record
+	aliases        map[*record]*record
+	Definition     *record
+	Template       *DefinitionTemplate
+	Return         *record
+	ReturnTemplate *DefinitionTemplate
+	Members        map[string]*DefinitionTemplate
+	Word           *lexeme
+	Record         *record
+	Header         *lStatement
+	Scope          *lexicalScope
+	Inputs         []functionParameter
+	Outputs        []runtimeTypeRef
+	Body           []*instruction
+	Captures       []*instructionValue
+	CaptureCalls   []*record
 }
 
 func (f *sourceFunction) signature() runtimeTypeRef {
-	result := runtimeTypeRef{Kind: valueFunction, Outputs: f.Outputs}
+	result := runtimeTypeRef{Kind: valueFunction, Definition: f.Definition, Outputs: f.Outputs}
 	for _, parameter := range f.Inputs {
 		result.Inputs = append(result.Inputs, parameter.Type)
 	}
@@ -66,19 +73,19 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 	}
 	if site.resultOf != nil {
 		call := site.resultOf
-		rec, err := c.resolver().reference(call.subject.noun)
+		rec, err := c.resolver().reference(call.verb)
 		if err != nil {
 			return true, err
 		}
 		if rec == nil {
-			return true, lerrors.TypeMismatch.Errorf("Call requires a source Function")
+			return true, lerrors.TypeMismatch.Errorf("invocation requires a source Function")
 		}
 		signature, err := recordRuntimeType(rec)
 		if err != nil {
 			return true, err
 		}
 		if signature.Kind != valueFunction {
-			return true, lerrors.TypeMismatch.Errorf("Call requires a source Function")
+			return true, lerrors.TypeMismatch.Errorf("invocation requires a source Function")
 		}
 		var labels []*subjectGram
 		for _, phrase := range call.phrases {
@@ -117,6 +124,9 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 	if !scope.isParagraph() || statement.source.Span.Start != scope.source.Start {
 		return true, lerrors.Syntax.Errorf("Function declaration must open an encapsulated paragraph")
 	}
+	if len(prepared.functions) != 0 {
+		return true, lerrors.Syntax.Errorf("a paragraph has only one Function body")
+	}
 	if object.noun.binding == nil {
 		return true, lerrors.TypeMismatch.Errorf("Function constructor requires a bound callable definition")
 	}
@@ -127,11 +137,35 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 	if template == nil || !template.IsFunction() {
 		return true, lerrors.TypeMismatch.Errorf("signature requires a Function constructor")
 	}
-	function := &sourceFunction{Header: statement, Scope: scope}
+	word := newLexeme("verb")
+	if err := word.reLabel(string(target.rawBytes)); err != nil {
+		return true, err
+	}
+	definition, err := canonicalRecord(object.noun.binding.Record, c.Semantics.Aliases)
+	if err != nil {
+		return true, err
+	}
+	function := &sourceFunction{aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition, Template: template, Word: word, Members: make(map[string]*DefinitionTemplate)}
+	for _, name := range []string{"Return", "Suspend", "Invoke", "Yield", "Bind", "Exit"} {
+		binding, _, err := c.resolver().lookupMember(function.Definition, []byte(name))
+		if err != nil {
+			return true, err
+		}
+		if binding == nil {
+			continue
+		}
+		function.Members[name], err = c.recordTemplate(binding.Record)
+		if err != nil {
+			return true, err
+		}
+		if name == "Return" {
+			function.Return, function.ReturnTemplate = binding.Record, function.Members[name]
+		}
+	}
 	value := initEntry("Function", storageApplicative)
 	value.Applicative.Function.Source = function
 	value.Runtime = &runtimeReference{Source: statement}
-	rec := &record{ID: strings.Trim(string(target.rawBytes), `"`), Type: "applicative.function", Value: value}
+	rec := &record{ID: strings.SplitN(strings.Trim(string(target.rawBytes), `"`), "|", 2)[0], Type: "applicative.function", Value: value}
 	function.Record = rec
 	prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: target, Record: rec})
 	seen := make(map[string]bool)
@@ -194,10 +228,7 @@ func (b *instructionBuilder) functionOperation(clause *clauseGram, ctx instructi
 			return nil, err
 		}
 	} else {
-		if clause.subject == nil {
-			return nil, lerrors.InvalidInput.Errorf("Call requires a Function")
-		}
-		target, err := b.tokenValue(clause.subject.noun, ctx)
+		target, err := b.tokenValue(clause.verb, ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -210,7 +241,14 @@ func (b *instructionBuilder) functionOperation(clause *clauseGram, ctx instructi
 			}
 		}
 		if signature.Kind != valueFunction {
-			return nil, lerrors.TypeMismatch.Errorf("Call requires Function, got %s", signature.Kind)
+			return nil, lerrors.TypeMismatch.Errorf("invocation requires Function, got %s", signature.Kind)
+		}
+		for _, value := range clause.values {
+			operand, err := b.nominalValue(value.noun, value.tokens, ctx)
+			if err != nil {
+				return nil, err
+			}
+			current.Arguments = append(current.Arguments, operand)
 		}
 		for _, phrase := range clause.phrases {
 			for _, value := range phrase.values {
@@ -230,11 +268,11 @@ func (b *instructionBuilder) functionOperation(clause *clauseGram, ctx instructi
 				}
 			}
 		}
-		if err := checkFunctionValues("Call", signature.Inputs, current.Arguments); err != nil {
+		if err := checkFunctionValues("invocation", signature.Inputs, current.Arguments); err != nil {
 			return nil, err
 		}
 		if len(current.Results) != len(signature.Outputs) {
-			return nil, lerrors.TypeMismatch.Errorf("Call requires %d result names, got %d", len(signature.Outputs), len(current.Results))
+			return nil, lerrors.TypeMismatch.Errorf("invocation requires %d result names, got %d", len(signature.Outputs), len(current.Results))
 		}
 	}
 	return []*instruction{current}, nil
@@ -264,9 +302,17 @@ func (b *instructionBuilder) functionCaptures(function *sourceFunction) ([]*inst
 		if rec == nil || rec == function.Record {
 			return false
 		}
-		// Public changes storage destination, not the declaration's activation.
+		for _, input := range function.Inputs {
+			if rec == input.Record {
+				return false
+			}
+		}
+		// Header siblings execute outside the body; Public only changes storage.
 		scope := rec.storageScope
 		if declaration := b.semantics.Declarations[rec]; declaration != nil {
+			if declaration == function.Header {
+				return true
+			}
 			scope = b.scopes.environment(declaration.source)
 		}
 		for ; scope != nil; scope = scope.parent {

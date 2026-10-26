@@ -82,11 +82,11 @@ async function fixture(t) {
     sources: [source],
     witnesses: ['lyger/scanner_test.go'], evidence: 'static-inspection; existing-witness-not-run',
   });
-  await write(root, 'docs/_meta/semantics.json', jsonText({ schemaVersion: 2, sourceHashes: { 'lyger/value_kinds.go': sha256(files['lyger/value_kinds.go']), 'stdlib/eng/io/dictionary.l': sha256(files['stdlib/eng/io/dictionary.l']) }, entries: [
+  await write(root, 'docs/_meta/semantics.json', jsonText({ schemaVersion: 3, checkedStages: ['static-source-inspection'], executedStages: [], sourceHashes: { 'lyger/value_kinds.go': sha256(files['lyger/value_kinds.go']), 'stdlib/eng/io/dictionary.l': sha256(files['stdlib/eng/io/dictionary.l']) }, entries: [
     semantic('value:Text', 'value-tag', 'Text', 'lyger/value_kinds.go', 'docs/spec/values.md#text'),
     semantic('stdlib:IO.Print', 'stdlib-export', 'IO.Print', 'stdlib/eng/io/dictionary.l', 'docs/stdlib/io.md#print'),
   ] }));
-  await write(root, 'docs/_meta/logemes.json', jsonText({ schemaVersion: 2, sourceHashes: { [segment]: sha256(files[segment]) }, entries: [
+  await write(root, 'docs/_meta/logemes.json', jsonText({ schemaVersion: 3, checkedStages: ['static-source-inspection'], executedStages: [], sourceHashes: { [segment]: sha256(files[segment]) }, entries: [
     semantic('logeme:A', 'logeme', 'A', segment, 'docs/reference/logemes/index.md#segment-a'),
   ] }));
   const pages = [
@@ -115,12 +115,12 @@ test('mechanical reference inventory is deterministic and preserves evidence-sta
   assert.deepEqual(first.inventory.valueNames, ['Text']);
   assert.equal(first.inventory.lucidCases.length, 2);
   assert.deepEqual(first.inventory.malformedInputs, ['logiceme/testdata/lucid/forms-invalid/bad.aml.txt']);
-  assert.equal(first.inventory.entries.find((entry) => entry.id === 'cli:-os').support, 'rejected');
+  assert.equal(referenceEntries(first.inventory).find((entry) => entry.id === 'cli:-os').support, 'rejected');
   assert.equal(first.inventory.entries.find((entry) => entry.id === 'lucid:rejected').expectedRustDiagnostic, 'E0603');
   assert.match(first.files['docs/_generated/grammar.md'], /&lt;subject&gt; &#124; predicate/);
   assert.match(first.files['docs/_generated/cli-help.md'], /source-derived.*, not runtime-captured/);
   assert.ok(first.files['docs/_generated/cli-help.md'].includes('l build [SOURCE]\nOptions: --help\n'));
-  assert.match(first.files['docs/_generated/lucid.md'], /does not execute them/);
+  assert.match(first.files['docs/_generated/lucid.md'], /Runtime execution is a separate witness\. This inventory reports no validation run/);
   assert.match(first.files['docs/_generated/lucid.md'], /Intentional rejection: E0603/);
   assert.ok(Object.values(first.inventory.inputs).every((hash) => /^[a-f0-9]{64}$/.test(hash)));
 });
@@ -288,6 +288,9 @@ test('semantic review manifests reject missing, competing, and unreferenced hash
   for (const [name, mutate, expected] of [
     ['missing', (v) => { delete v.sourceHashes['lyger/value_kinds.go']; }, /Missing reviewed semantic hash/],
     ['entry override', (v) => { v.entries[0].sourceHashes = {}; }, /Entry-specific hashes are not allowed/],
+    ['missing stages', (v) => { delete v.checkedStages; }, /Invalid semantic review manifest/],
+    ['invalid stages', (v) => { v.executedStages = [false]; }, /Invalid semantic review manifest/],
+    ['stage override', (v) => { v.entries[0].executedStages = ['native']; }, /Entry-specific stages are not allowed/],
     ['unused', (v) => { v.sourceHashes['unused.go'] = '0'.repeat(64); }, /Unused semantic review hash/],
     ['wrong schema', (v) => { v.schemaVersion = 1; }, /Invalid semantic review manifest/],
   ]) await t.test(name, async (subtest) => {
@@ -315,6 +318,10 @@ test('snapshot note catalog preserves every reviewed explanation and rejects dan
   assert.equal(rule.notes, 'Recognition is separate from supported lowering.');
   assert.equal(new Set(inventory.notes).size, inventory.notes.length);
   const coverage = await checkCoverage(root, pages, inventory);
+  for (const entry of referenceEntries(coverage).filter((entry) => entry.checkedStages)) {
+    assert.deepEqual(entry.checkedStages, ['static-source-inspection']);
+    assert.deepEqual(entry.executedStages, []);
+  }
   for (const entry of referenceEntries(inventory)) assert.deepEqual(referenceEntries(coverage).find((item) => item.id === entry.id), entry);
   const broken = structuredClone(inventory);
   broken.entries[0].note = broken.notes.length;
@@ -398,4 +405,45 @@ test('shared snapshot evidence preserves attribution and rejects overrides', asy
   const invalid = structuredClone(inventory);
   invalid.evidenceSets[0].id = 'override';
   assert.throws(() => referenceEntries(invalid), /Missing or invalid reference evidence/);
+});
+
+
+test('snapshot classifications preserve review fields and reject invalid references or overrides', async (t) => {
+  const { root, pages } = await fixture(t);
+  const inventory = await references({ root, write: true });
+  const coverage = await checkCoverage(root, pages, inventory);
+  assert.equal(inventory.schemaVersion, 3);
+  assert.ok(inventory.classifications.length < inventory.entries.length);
+  assert.equal(new Set(inventory.classifications.map((value) => JSON.stringify(value))).size, inventory.classifications.length);
+  const expanded = referenceEntries(inventory);
+  for (const entry of expanded) {
+    assert.deepEqual(referenceEntries(coverage).find((value) => value.id === entry.id), entry);
+    assert.equal(typeof entry.kind, 'string');
+    assert.ok(['implementation', 'normative'].includes(entry.role));
+    assert.ok(['supported', 'partial', 'rejected'].includes(entry.support));
+  }
+  const category = (id) => { const { kind, role, support } = expanded.find((entry) => entry.id === id); return { kind, role, support }; };
+  assert.deepEqual(category('grammar:statement'), { kind: 'grammar', role: 'implementation', support: 'partial' });
+  assert.deepEqual(category('cli:-os'), { kind: 'cli', role: 'normative', support: 'rejected' });
+  for (const index of [-1, 0.5, null, '0', inventory.classifications.length]) {
+    const invalid = structuredClone(inventory);
+    invalid.entries[0].classification = index;
+    assert.throws(() => referenceEntries(invalid), /Missing or invalid reference classification/);
+  }
+  for (const key of ['kind', 'role', 'support']) {
+    const invalid = structuredClone(inventory);
+    invalid.entries[0][key] = 'override';
+    assert.throws(() => referenceEntries(invalid), /Inline snapshot classification/);
+    delete invalid.entries[0][key];
+    invalid.classifications[invalid.entries[0].classification][key] = '';
+    assert.throws(() => referenceEntries(invalid), /Missing or invalid reference classification/);
+  }
+  for (const value of [null, [], { kind: 'grammar', role: 'implementation' }, { kind: 'grammar', role: 'implementation', support: 'partial', id: 'override' }]) {
+    const invalid = structuredClone(inventory);
+    invalid.classifications[invalid.entries[0].classification] = value;
+    assert.throws(() => referenceEntries(invalid), /Missing or invalid reference classification/);
+  }
+  const wrongSchema = structuredClone(inventory);
+  wrongSchema.schemaVersion = 2;
+  assert.throws(() => referenceEntries(wrongSchema), /Invalid reference snapshot/);
 });

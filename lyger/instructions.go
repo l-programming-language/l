@@ -53,6 +53,7 @@ type instructionValue struct {
 	Payload     *instructionValue
 	Token       *token
 	Runtime     bool
+	Argument    *instructionValue
 }
 
 type instructionCondition struct {
@@ -124,20 +125,27 @@ func (b *instructionBuilder) symbolValue(tok *token) (*instructionValue, error) 
 	return &instructionValue{Kind: operandSymbol, Type: kind, RuntimeType: typ, ID: found.ID, Record: found, Token: tok, Runtime: runtime}, nil
 }
 
+func (b *instructionBuilder) argumentValue(tok *token, ctx instructionContext) (*instructionValue, error) {
+	if actual := ctx.arguments[tok]; actual != nil {
+		return actual, nil
+	}
+	if binding, ok := b.scopes.Pronouns[tok]; ok && binding.Kind == scopeActionArgument {
+		if actual := ctx.arguments[binding.TargetToken]; actual != nil {
+			return actual, nil
+		}
+		return nil, lerrors.UnresolvedReference.Errorf("unbound action argument %s", binding.SubjectID)
+	}
+	return nil, nil
+}
+
 func (b *instructionBuilder) tokenValue(tok *token, ctx instructionContext) (*instructionValue, error) {
 	if tok == nil {
 		return nil, lerrors.Internal.Errorf("instruction operand has no noun token")
 	}
-	if actual := ctx.arguments[tok]; actual != nil {
-		return actual, nil
+	if actual, err := b.argumentValue(tok, ctx); actual != nil || err != nil {
+		return actual, err
 	}
-	if binding, ok := b.scopes.Pronouns[tok]; ok {
-		if binding.Kind == scopeActionArgument {
-			if actual := ctx.arguments[binding.TargetToken]; actual != nil {
-				return actual, nil
-			}
-			return nil, lerrors.UnresolvedReference.Errorf("unbound action argument %s", binding.SubjectID)
-		}
+	if _, ok := b.scopes.Pronouns[tok]; ok {
 		return b.symbolValue(tok)
 	}
 	if tok.binding != nil {
@@ -206,6 +214,9 @@ func (b *instructionBuilder) nominalValue(noun *token, tokens []*token, ctx inst
 func (b *instructionBuilder) objectValue(object *objectGram, ctx instructionContext) (*instructionValue, error) {
 	if object == nil {
 		return nil, lerrors.Internal.Errorf("instruction operand has no object grammar")
+	}
+	if actual, err := b.argumentValue(object.noun, ctx); actual != nil || err != nil {
+		return actual, err
 	}
 	if role, native := object.noun.nativeRole(); native && role == roleError && object.phrase != nil && runtimeReadPhrase(object) == nil {
 		payload, err := b.phraseValue(object.phrase, ctx)
@@ -299,7 +310,7 @@ func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) 
 	if clause.predicate != nil && clause.subject != nil {
 		return b.passiveDeclaration(clause.subject, clause.predicate, ctx)
 	}
-	if event, err := b.captureDeclaration(site, ctx); err != nil || event != nil {
+	if event, err := b.declarationInstruction(site, ctx); err != nil || event != nil {
 		if err != nil {
 			return nil, err
 		}
@@ -319,6 +330,12 @@ func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) 
 	}
 	if clause.verb == nil {
 		return nil, lerrors.Internal.Errorf("instruction clause %s has no verb", clause.sType)
+	}
+	if clause.verb.isFunctionReturn() {
+		return b.functionOperation(clause, ctx, instructionReturn)
+	}
+	if clause.verb.binding != nil && clause.verb.binding.Record.isFunction() {
+		return b.functionOperation(clause, ctx, instructionInvoke)
 	}
 	lex := clause.verb.lexeme()
 	if lex == nil {
@@ -351,8 +368,6 @@ func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) 
 	current.SourceToken = clause.verb
 	var err error
 	switch kind {
-	case instructionInvoke, instructionReturn:
-		return b.functionOperation(clause, ctx, kind)
 	case instructionUpdate:
 		if clause.phrase == nil || clause.phrase.subject == nil {
 			return nil, lerrors.InvalidInput.Errorf("update requires a destination")
@@ -527,8 +542,10 @@ func (b *instructionBuilder) customCall(clause *clauseGram, ctx instructionConte
 			if actual.Type != valueInvalid && !strings.EqualFold(actual.Type.String(), wanted) {
 				return nil, lerrors.TypeMismatch.Errorf("action %s argument %d requires %s, got %s", callee.ID, index+1, wanted, actual.Type)
 			}
-			arguments[parameters[index].Token] = actual
-			argumentValues = append(argumentValues, actual)
+			bound := *actual
+			bound.Argument = actual
+			arguments[parameters[index].Token] = &bound
+			argumentValues = append(argumentValues, &bound)
 		}
 		call := ctx.newInstruction(instructionCall)
 		call.SourceToken = clause.verb
@@ -704,6 +721,10 @@ func (b *instructionBuilder) statement(statement *lStatement, ctx instructionCon
 			following, err := b.clauses(statement.sGram.clauses, ctx)
 			return append(instructions, following...), false, err
 		}
+		if len(predicate.clauses) > 0 && predicate.clauses[0].verb != nil && predicate.clauses[0].verb.binding != nil && predicate.clauses[0].verb.binding.Record.isFunction() {
+			instructions, err := b.clauses(predicate.clauses, ctx)
+			return instructions, false, err
+		}
 		if subject.noun != nil && subject.noun.isDeclare() {
 			return nil, false, nil
 		}
@@ -833,14 +854,9 @@ func buildInstructions(statements []*lStatement, scopes *scopePlan, semantics *s
 		}
 		function := functions[ordered.Scope]
 		ctx := instructionContext{statement: statement, order: ordered.Order, function: function}
-		if function != nil && statement == function.Header {
-			declaration := ctx.newInstruction(instructionFunction)
-			declaration.Function = function
-			declaration.Target = &instructionValue{Kind: operandSymbol, Type: valueFunction, RuntimeType: function.signature(), Record: function.Record, ID: function.Record.ID, Runtime: true}
-			result = append(result, declaration)
-			previous = nil
-			previousStatement = nil
-			continue
+		header := function != nil && statement == function.Header
+		if header {
+			ctx.function = nil
 		}
 		if ordered.IncomingSubjectToken != nil {
 			var err error
@@ -853,7 +869,7 @@ func buildInstructions(statements []*lStatement, scopes *scopePlan, semantics *s
 		if err != nil {
 			return nil, ordered.Source.wrapError(err)
 		}
-		if unit := statement.source.Unit; function == nil && unit != nil && unit.Kind != SourceProgram {
+		if unit := statement.source.Unit; ctx.function == nil && unit != nil && unit.Kind != SourceProgram {
 			forbidden := len(instructions) > 0 || otherwise
 			for _, rec := range statement.records {
 				kind, err := instructionType(rec)
@@ -875,13 +891,15 @@ func buildInstructions(statements []*lStatement, scopes *scopePlan, semantics *s
 			previous, previousStatement = nil, nil
 			continue
 		}
-		if function != nil {
+		if function != nil && !header {
 			function.Body = append(function.Body, instructions...)
 		} else {
 			result = append(result, instructions...)
 		}
 		previous, previousStatement = nil, statement
-		if len(instructions) > 0 {
+		if header {
+			previousStatement = nil
+		} else if len(instructions) > 0 {
 			previous = instructions[len(instructions)-1]
 		}
 	}
@@ -904,7 +922,7 @@ func (ctx instructionContext) invocationSite() *lStatement {
 
 func (b *instructionBuilder) passiveDeclaration(subject *subjectGram, predicate *predicateGram, ctx instructionContext) ([]*instruction, error) {
 	var instructions []*instruction
-	if event, err := b.captureDeclaration(registrationSite{subject: subject, predicate: predicate}, ctx); err != nil || event != nil {
+	if event, err := b.declarationInstruction(registrationSite{subject: subject, predicate: predicate}, ctx); err != nil || event != nil {
 		if err != nil {
 			return nil, err
 		}

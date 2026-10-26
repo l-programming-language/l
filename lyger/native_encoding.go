@@ -73,8 +73,6 @@ func nativeTextBytes(value string) string {
 	return "vec![" + strings.Join(parts, ", ") + "]"
 }
 
-func nativeScalarName(kind valueType) (string, bool) { return runtimeTypeName(kind) }
-
 func nativeNumberLiteral(number float64) (string, bool) {
 	if math.IsNaN(number) || math.IsInf(number, 0) {
 		return "", false

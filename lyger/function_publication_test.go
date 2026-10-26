@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-const functionPublicationSource = "    Publicly create \"Publish\" as a New Function with Inputs of \"Value\" as Text and Outputs of Text.\nPublicly define \"Message\" as Value.\nPublicly create \"Report|-s|-ed|-ing\" for Showing Message and then Showing any Text.\nReport `|`.\nReturn Message.\n\nCall Publish with `first` as \"First\".\nCall Publish with `second` as \"Second\".\nShow First and Second.\n"
+const functionPublicationSource = "    Publicly create \"Publish\" as a New Function with Inputs of \"Value\" as Text and Outputs of Text.\nPublicly define \"Message\" as Value.\nPublicly create \"Report|-s|-ed|-ing\" for Showing Message and then Showing any Text.\nReport `|`.\nReturn Message.\n\nPublish `first` as \"First\".\nPublish `second` as \"Second\".\nShow First and Second.\n"
 
 func TestFunctionBodyPublication(t *testing.T) {
 	c := compileMemberResolutionSource(t, memberResolutionSource{main: functionPublicationSource})
@@ -50,7 +50,7 @@ func TestFunctionBodyPublicationNative(t *testing.T) {
 	captureNativeResult(t, c, "first|second|firstsecond")
 }
 
-const functionMapSource = "Define \"callbacks\" as a New Map of Identity.\nPut Identity in callbacks as `key`.\nDefine \"callback\" as a New Identity from callbacks at `key`.\nCall callback with `mapped` as \"Result\".\nShow Result.\n"
+const functionMapSource = "Define \"callbacks\" as a New Map of Identity.\nPut Identity in callbacks as `key`.\nDefine \"callback\" as a New Identity from callbacks at `key`.\ncallback `mapped` as \"Result\".\nShow Result.\n"
 
 func TestFunctionSignatureMap(t *testing.T) {
 	_, err := functionGenerated(t, identityFunction+functionMapSource)

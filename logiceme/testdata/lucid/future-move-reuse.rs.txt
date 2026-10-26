@@ -1,0 +1,37 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+let owner = String::from("moved")
+;
+
+
+let pending = async move {
+
+
+return owner;
+
+
+
+}
+
+;
+
+
+
+assert_eq!(owner, "moved");
+
+
+
+let _released = drop(pending)
+;
+
+
+    
+}

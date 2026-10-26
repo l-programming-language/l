@@ -18,7 +18,7 @@ func TestIREnumNamesAndInvalidValues(t *testing.T) {
 		{"operandKind", int(operandKindCount), []string{"", "symbol", "literal", "member", "error", "construct", "read"}, func(n uint8) fmt.Stringer { return operandKind(n) }},
 		{"nativeMember", int(nativeMemberCount), []string{"", "output", "error"}, func(n uint8) fmt.Stringer { return nativeMember(n) }},
 		{"pronounScopeKind", int(pronounScopeKindCount), []string{"", "paragraph", "action-argument"}, func(n uint8) fmt.Stringer { return pronounScopeKind(n) }},
-		{"nativeRole", int(nativeRoleCount), []string{"", "action.generative", "action.executive", "action.observative", "action.terminative", "action.definitive", "functional.deflective", "functional.error", "action.suspensive", "action.interruptive", "action.declarative", "action.expansive", "action.locative", "action.invocative", "action.returning"}, func(n uint8) fmt.Stringer { return nativeRole(n) }},
+		{"nativeRole", int(nativeRoleCount), []string{"", "action.generative", "action.executive", "action.observative", "action.terminative", "action.definitive", "functional.deflective", "functional.error", "action.suspensive", "action.interruptive", "action.declarative", "action.expansive", "action.locative"}, func(n uint8) fmt.Stringer { return nativeRole(n) }},
 		{"valueType", int(valueTypeCount), []string{"", "Thing", "Text", "Number", "Truth", "Bytes", "Pointer", "Lexeme", "App", "Service", "Class", "Object", "Attribute", "Definition", "Function", "Property", "Operation", "List", "Dictionary", "Error", "ID", "None", "Unknown", "Null", "Map", "Instance"}, func(n uint8) fmt.Stringer { return valueType(n) }},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -57,8 +57,6 @@ func TestNativeRoleRelationships(t *testing.T) {
 		{"action.declarative", "assign", "", ""},
 		{"action.expansive", "update", "", ""},
 		{"action.locative", "update", "", ""},
-		{"action.invocative", "invoke", "", ""},
-		{"action.returning", "return", "", ""},
 		{"functional.deflective", "", "output", "Text"},
 		{"functional.error", "", "error", "Error"},
 	} {

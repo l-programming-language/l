@@ -20,6 +20,7 @@ var nativeSourceInputs = map[string]string{
 	"I": "", "GI": "Key", "CI": "", "BI": "Default", "MI": "Key", "HI": "",
 	"O": "Key Keys Value Values Type", "OB": "Key Keys Value Values Type Mutable Parameter",
 	"OC": "Key Keys Value Values", "DOC": "Key Keys",
+	"CO": "Key Keys", "COB": "Key Keys",
 	"OG": "Key Keys Value Values", "DOG": "Key Keys", "PO": "Key Keys",
 	"FO": "Key Keys Type", "FOB": "Key Keys Type Mutable",
 	"KO": "Key Keys Type", "KOB": "Key Keys Type Mutable",
