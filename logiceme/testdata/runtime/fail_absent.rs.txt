@@ -1,0 +1,11 @@
+// Isolated absent-error interface obligation. Option is a candidate Rust
+// representation of the original nil input, not an implemented production API.
+// Do not manufacture the fallback diagnostic in the observer.
+mod runtime;
+#[path = "process_unix.rs"] mod process;
+#[tokio::main]
+async fn main() -> std::process::ExitCode {
+    let runtime = runtime::Runtime::new().unwrap();
+    let result = Err(runtime.fail(None));
+    std::process::ExitCode::from(runtime.finish(result).await)
+}

@@ -1,0 +1,21 @@
+{
+  "id": "F04",
+  "title": "alias-and-repeat-await",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Only one canonical lApp and one child launch/reap. Both Await operations address that invocation.",
+    "The second Await neither runs the child nor resets Error/Output."
+  ],
+  "expected_runtime": {
+    "stdout": "A\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l"
+  ]
+}

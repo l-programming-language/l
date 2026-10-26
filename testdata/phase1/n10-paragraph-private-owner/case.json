@@ -1,0 +1,18 @@
+{
+  "id": "N10",
+  "title": "paragraph-private-owner",
+  "profile": "print",
+  "apps": [],
+  "setup": [],
+  "assertions": [
+    "Await cannot bypass paragraph-private visibility."
+  ],
+  "expected_compile_error": {
+    "category": "unresolved/private reference",
+    "span": "offending source statement",
+    "publication": "none; preserve any previously published program"
+  },
+  "files": [
+    "main.l"
+  ]
+}

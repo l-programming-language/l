@@ -1,0 +1,47 @@
+{
+  "name": "l-documentation",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.21.0",
+    "npm": ">=11.19.0"
+  },
+  "packageManager": "npm@11.19.0",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "prepare:content": "node scripts/prepare.mjs",
+    "check": "node scripts/check.mjs && node scripts/astro.mjs check",
+    "build": "node scripts/prepare.mjs && node scripts/astro.mjs build && node scripts/check-dist.mjs",
+    "preview": "node scripts/astro.mjs preview --ignore-lock --host 127.0.0.1 --port 4321",
+    "test": "node --test tests/*.test.mjs",
+    "test:archive": "node scripts/archive-smoke.mjs",
+    "test:e2e": "node scripts/browser.mjs test",
+    "test:browsers:install": "node scripts/browser.mjs install chromium",
+    "references:check": "node scripts/references.mjs --check",
+    "references:generate": "node scripts/references.mjs --write",
+    "examples:verify": "node scripts/examples.mjs",
+    "ci:verify-disabled": "node scripts/verify-disabled.mjs",
+    "verify:website": "node scripts/verify.mjs"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "7.3.2",
+    "@astrojs/starlight": "0.42.6",
+    "astro": "7.3.8",
+    "astro-expressive-code": "0.44.2",
+    "chokidar": "4.0.3",
+    "github-slugger": "2.0.0",
+    "parse5": "7.3.0",
+    "remark-gfm": "4.0.1",
+    "remark-mdx": "3.1.1",
+    "remark-parse": "11.0.0",
+    "unified": "11.0.5",
+    "unist-util-visit": "5.1.0",
+    "yaml": "2.8.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.64.0",
+    "typescript": "6.0.3"
+  }
+}

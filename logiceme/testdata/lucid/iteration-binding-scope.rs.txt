@@ -1,0 +1,41 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+
+while let Some(number) = Some(1_i32) {
+    
+
+print!("inside {}", number);
+
+
+
+
+break;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+print!("{}", number);
+
+
+
+    
+}

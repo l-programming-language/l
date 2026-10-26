@@ -1,0 +1,19 @@
+#![forbid(unsafe_code)]
+mod config;
+
+
+// package main
+
+
+
+
+pub(crate) fn main( ) {
+    
+        
+
+service::worker::main();
+
+
+
+    
+}

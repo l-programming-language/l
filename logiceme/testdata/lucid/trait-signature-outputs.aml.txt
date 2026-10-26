@@ -1,0 +1,10 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`DA^E{|Statement: ~type Void = u8;~|}`</S|>
+<|S|>`MY{|Key: ~Contract~, Funcs: ~&[Func{Key: missing}Func, Func{Key: empty, Inputs: &[]&, Outputs: &[]&}Func, Func{Key: unit, Outputs: &[()]&}Func, Func{Key: scalar, Inputs: &[Prop{Key: value, Type: u8}Prop]&, Outputs: &[u8]&}Func, Func{Key: multiple, Outputs: &[u8, bool]&}Func, Func{Key: tuple, Outputs: &[(i32, i32)]&}Func, Func{Key: nested, Inputs: &[Prop{Key: pair, Type: (i32, i32)}Prop, Prop{Key: values, Type: Result<Vec<(i32, i32)>, ()>}Prop, Prop{Key: map, Type: fn(i32, i32) -> (i32, i32)}Prop]&, Outputs: &[(i32, i32), u8]&}Func, Func{Key: Void, Outputs: &[Void]&}Func]&~|}`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^BOD^E{|Statement: ~return;~|}`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

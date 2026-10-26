@@ -1,0 +1,11 @@
+
+
+while let Some(value) = source {
+    body();
+}
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+#![forbid(unsafe_code)]
+
+
+// package main
+
+
+
+
+fn main( ) {
+    
+        
+
+std::io::Write::write_all(&mut std::io::stdout(), ("work completed\n").as_bytes()).unwrap();
+
+
+
+    
+}

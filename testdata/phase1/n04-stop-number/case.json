@@ -1,0 +1,18 @@
+{
+  "id": "N04",
+  "title": "stop-number",
+  "profile": "print",
+  "apps": [],
+  "setup": [],
+  "assertions": [
+    "Reject Number operand at the source Stop statement with a TypeMismatch requiring App, without publishing an executable."
+  ],
+  "expected_compile_error": {
+    "category": "TypeMismatch",
+    "span": "offending source statement",
+    "publication": "none; preserve any previously published program"
+  },
+  "files": [
+    "main.l"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "F20",
+  "title": "signal-during-await",
+  "profile": "gate",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [
+    "Create a fresh short Unix socket path and an empty lifetime-lock directory in test-owned temporary storage; set L_PHASE1_SOCKET and L_PHASE1_DIRECTORY for the orchestrator. Start the controller before the program.",
+    "Each child has its own connection. Parse a complete ready <label> <pid> line and reject duplicate/unexpected labels. Record direct PIDs separately from controller and orchestrator.",
+    "Controller commands are exactly release followed by LF; readiness does not release a child. Test deadlines bound failures only.",
+    "Keep every controller connection open until runtime shutdown has been observed. Require spontaneous child disconnection and lifetime-lock release before controller closure or fallback signals; record cleanup failures before fallback. Lock release alone does not prove direct-child reaping.",
+    "Run separate SIGINT and SIGTERM subcases. Wait for ready A, never release it, then signal the orchestrator PID only. Await may be pending or about to enter; no sleep-based claim of exact instruction position is needed."
+  ],
+  "assertions": [
+    "Orchestrator terminates and its owned process group is cleaned. It does not forward child output or execute post-signal source continuation.",
+    "SIGINT exits 130; SIGTERM exits 143. Both abort source execution and clean owned groups without forwarding child streams or activating continuations."
+  ],
+  "expected_runtime": {
+    "stdout": "",
+    "stderr": "",
+    "exit_status": {
+      "SIGINT": 130,
+      "SIGTERM": 143
+    }
+  },
+  "files": [
+    "main.l",
+    "../companions/gate.l",
+    "../companions/actions.l"
+  ]
+}

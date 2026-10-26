@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(BOP^X^W^(BOD^E{|Statement: ~print!("unconditional once");~|}*BOD^E{|Statement: ~break;~|})*BOD^E{|Statement: ~let mut countdown = 2;~|}*BOP^X^(E{|Statement: ~countdown > 0~|}*W^(BOD^E{|Statement: ~print!("{}", countdown);~|}*BOD^E{|Statement: ~countdown = countdown - 1;~|}))*BOD^E{|Statement: ~let ready = true;~|}*BOD^E{|Statement: ~let mut remaining = 2;~|}*BOP^X^(I^(E{|Statement: ~ready~|}*E{|Statement: ~&& remaining > 0~|})*W^(BOD^E{|Statement: ~print!("adapter {}", remaining);~|}*BOD^E{|Statement: ~remaining = remaining - 1;~|}))*BOD^E{|Statement: ~print!("after conditions");~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" fill="none" role="img" aria-labelledby="l-mark-for-dark-backgrounds-title l-mark-for-dark-backgrounds-desc">
+<title id="l-mark-for-dark-backgrounds-title">L mark for dark backgrounds</title>
+<desc id="l-mark-for-dark-backgrounds-desc">Transparent vector mark derived from the supplied L logo. A rounded geometric L and upright terminal cursor; no background.</desc>
+
+
+<defs><linearGradient id="brand-dark-cursor" x1="376" y1="314" x2="400" y2="386" gradientUnits="userSpaceOnUse"><stop stop-color="#73F5DD"/><stop offset="1" stop-color="#21CDBD"/></linearGradient></defs><g transform="translate(0 0) scale(1) translate(-118 -93)"><path d="M177 121H217C229 121 238 130 238 142V314H337C349 314 358 323 358 335V365C358 377 349 386 337 386H177C165 386 156 377 156 365V142C156 130 165 121 177 121Z" fill="#F8FAFF" /><rect x="376" y="314" width="24" height="72" rx="11" fill="url(#brand-dark-cursor)"/></g>
+</svg>

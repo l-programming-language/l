@@ -1,0 +1,919 @@
+// Generated as runtime.rs. Support logic belongs here, not in segment glyphs.
+use std::collections::{BTreeMap, HashSet};
+use std::fmt;
+use std::io::{self, Write};
+use std::pin::Pin;
+use std::process::ExitStatus;
+use std::future::{poll_fn, Future};
+use std::panic::{catch_unwind, resume_unwind, AssertUnwindSafe};
+use std::path::{Component, PathBuf};
+use std::process::Stdio;
+use std::sync::{Arc, Mutex, MutexGuard, Weak};
+use std::task::Poll;
+
+use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};
+use tokio::process::{Child, Command};
+use tokio::sync::{mpsc, oneshot, watch, Mutex as AsyncMutex};
+use tokio::task::JoinHandle;
+use tokio::time::{sleep_until, Duration, Instant};
+
+use crate::process;
+
+pub type Result<T> = std::result::Result<T, Error>;
+const DRAIN_BOUND: Duration = Duration::from_secs(2);
+
+// L retains its shortest binary64 display contract across native targets.
+// Rust provides the shortest significant digits; L owns notation selection and
+// the sign/two-digit minimum of the decimal exponent.
+pub fn format_number(value: f64) -> Vec<u8> {
+    if value == 0.0 {
+        return value.to_string().into_bytes();
+    }
+    let scientific = format!("{value:e}");
+    let Some((native_digits, exponent)) = scientific.split_once('e') else {
+        return scientific.into_bytes();
+    };
+    let exponent: i32 = exponent.parse().expect("native finite float exponent");
+    let magnitude = native_digits.trim_start_matches('-');
+    let places = magnitude.split_once('.').map_or(0, |(_, fraction)| fraction.len()) as i32;
+    let mut decimal_exponent = exponent - places;
+    let mut coefficient: u128 = magnitude.replace('.', "").parse().expect("native finite float digits");
+
+    // Both decimal neighbors can be shortest round-trip spellings. Rust picks
+    // the upper magnitude on an exact midpoint; Go's contract picks the even
+    // coefficient. Compare the midpoint to the binary64 value exactly, using
+    // integer factors of two and five, never a rounded float round-trip.
+    let exact_lower_midpoint = |coefficient: u128, decimal_exponent: i32| {
+        let bits = value.abs().to_bits();
+        let binary_exponent = ((bits >> 52) & 0x7ff) as i32;
+        let mut significand = bits & ((1_u64 << 52) - 1);
+        let mut power = if binary_exponent == 0 { -1074 } else {
+            significand |= 1_u64 << 52;
+            binary_exponent - 1023 - 52
+        };
+        let zeros = significand.trailing_zeros();
+        significand >>= zeros;
+        power += zeros as i32;
+        // (coefficient - 1/2) * 10^decimal_exponent. The numerator is
+        // odd, so only powers of five remain after normalizing powers of two.
+        let mut midpoint = 2 * coefficient - 1;
+        if decimal_exponent >= 0 {
+            for _ in 0..decimal_exponent {
+                let Some(product) = midpoint.checked_mul(5) else { return false; };
+                midpoint = product;
+            }
+        } else {
+            for _ in 0..-decimal_exponent {
+                if midpoint % 5 != 0 { return false; }
+                midpoint /= 5;
+            }
+        }
+        midpoint == u128::from(significand) && decimal_exponent - 1 == power
+    };
+    if coefficient % 2 == 1 && exact_lower_midpoint(coefficient, decimal_exponent) {
+        coefficient -= 1;
+    }
+    while coefficient % 10 == 0 {
+        coefficient /= 10;
+        decimal_exponent += 1;
+    }
+    let mut digits = coefficient.to_string();
+    let mut result = if value.abs() >= 0.0001 && value.abs() < 1_000_000.0 {
+        let point = digits.len() as i32 + decimal_exponent;
+        if point <= 0 {
+            format!("0.{}{digits}", "0".repeat((-point) as usize))
+        } else if point >= digits.len() as i32 {
+            format!("{digits}{}", "0".repeat((point - digits.len() as i32) as usize))
+        } else {
+            digits.insert(point as usize, '.');
+            digits
+        }
+    } else {
+        let exponent = decimal_exponent + digits.len() as i32 - 1;
+        if digits.len() > 1 { digits.insert(1, '.'); }
+        format!("{digits}e{exponent:+03}")
+    };
+    if value.is_sign_negative() { result.insert(0, '-'); }
+    result.into_bytes()
+}
+
+// Clones preserve cause identity so shutdown diagnostics can omit a cleanup
+// cause already contained in the primary error. Raw stderr remains bytes.
+#[derive(Clone, Debug)]
+pub struct Error(Arc<ErrorData>);
+
+#[derive(Debug)]
+struct ErrorData {
+    message: Vec<u8>,
+    causes: Vec<Error>,
+    cancelled: bool,
+    native: Option<Arc<dyn std::error::Error + Send + Sync>>,
+}
+
+impl Error {
+    pub fn new(message: impl Into<String>) -> Self {
+        Self::from_bytes(message.into().into_bytes())
+    }
+
+    pub fn from_bytes(message: impl Into<Vec<u8>>) -> Self {
+        Self(Arc::new(ErrorData {
+            message: message.into(), causes: Vec::new(), cancelled: false, native: None,
+        }))
+    }
+
+    // Rust's source() is a single chain. Joined failures retain their complete
+    // read-only tree here so every native cause remains individually inspectable.
+    pub fn causes(&self) -> &[Error] { &self.0.causes }
+
+    fn cancelled() -> Self {
+        Self(Arc::new(ErrorData {
+            message: b"source execution stopped".to_vec(), causes: Vec::new(), cancelled: true, native: None,
+        }))
+    }
+
+    fn context(message: &str, error: impl std::error::Error + Send + Sync + 'static) -> Self {
+        Self(Arc::new(ErrorData {
+            message: format!("{message}: {error}").into_bytes(),
+            causes: Vec::new(), cancelled: false, native: Some(Arc::new(error)),
+        }))
+    }
+
+    fn native_cause(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        if let Some(cause) = &self.0.native { return Some(cause.as_ref()); }
+        self.0.causes.iter().find_map(Error::native_cause)
+    }
+
+    fn join(causes: Vec<Error>) -> Option<Self> {
+        match causes.len() {
+            0 => None,
+            1 => causes.into_iter().next(),
+            _ => Some(Self(Arc::new(ErrorData {
+                message: Vec::new(), causes, cancelled: false, native: None,
+            }))),
+        }
+    }
+
+    fn with_stderr(self, bytes: &[u8]) -> Self {
+        if bytes.is_empty() { return self; }
+        let mut message = self.to_string().into_bytes();
+        message.extend_from_slice(b": ");
+        message.extend_from_slice(bytes);
+        Self(Arc::new(ErrorData {
+            message, causes: vec![self], cancelled: false, native: None,
+        }))
+    }
+
+    fn mark_seen(&self, seen: &mut HashSet<usize>) {
+        seen.insert(Arc::as_ptr(&self.0) as usize);
+        for cause in &self.0.causes { cause.mark_seen(seen); }
+    }
+
+    fn append(&self, output: &mut Vec<u8>, seen: &mut HashSet<usize>, written: &mut bool) {
+        if !seen.insert(Arc::as_ptr(&self.0) as usize) { return; }
+        if self.0.message.is_empty() && !self.0.causes.is_empty() {
+            for cause in &self.0.causes { cause.append(output, seen, written); }
+            return;
+        }
+        for cause in &self.0.causes { cause.mark_seen(seen); }
+        // An empty leaf is still a supplied Error. Track message presence
+        // independently of bytes so joining/printing retains its blank line.
+        if *written { output.push(b'\n'); }
+        output.extend_from_slice(&self.0.message);
+        *written = true;
+    }
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut bytes = Vec::new();
+        self.append(&mut bytes, &mut HashSet::new(), &mut false);
+        write!(formatter, "{}", String::from_utf8_lossy(&bytes))
+    }
+}
+impl std::error::Error for Error {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> { self.native_cause() }
+}
+impl From<std::io::Error> for Error {
+    fn from(error: std::io::Error) -> Self {
+        Self(Arc::new(ErrorData { message: error.to_string().into_bytes(), causes: Vec::new(), cancelled: false, native: Some(Arc::new(error)) }))
+    }
+}
+
+fn lock<T>(mutex: &Mutex<T>) -> MutexGuard<'_, T> {
+    // Checkpoint callbacks run outside these locks. Retain ownership information
+    // after poisoning so a cleanup path can still settle already-created children.
+    mutex.lock().unwrap_or_else(std::sync::PoisonError::into_inner)
+}
+
+#[derive(Clone)]
+pub struct Runtime(Arc<RuntimeInner>);
+
+struct RuntimeInner {
+    companion_directory: Result<PathBuf>,
+    state: Mutex<RuntimeState>,
+    cancelled: watch::Sender<bool>,
+    shutdown_done: watch::Sender<Option<Result<()>>>,
+    signals: Mutex<Option<JoinHandle<()>>>,
+    stdout: AsyncMutex<Output>,
+    stderr: AsyncMutex<Output>,
+    dependencies: Arc<dyn Dependencies>,
+    finish_gate: AsyncMutex<()>,
+}
+
+struct RuntimeState {
+    owned: BTreeMap<u64, Arc<Invocation>>,
+    cleanup_errors: BTreeMap<u64, Error>,
+    next: u64,
+    stopping: bool,
+    terminal: Option<Terminal>,
+    finalized: bool,
+    final_status: Option<u8>,
+}
+
+#[derive(Clone)]
+struct Terminal { status: u8, error: Option<Error> }
+
+// Generated bindings create one Arc<App> per canonical App and clone that Arc
+// for aliases. A path is not an App identity: two Apps can use the same program.
+pub struct App {
+    runtime: Weak<RuntimeInner>,
+    path: PathBuf,
+    state: Mutex<AppState>,
+}
+
+struct AppState {
+    source: String,
+    invocation: Option<Arc<Invocation>>,
+    outstanding: bool,
+    selected: Option<Arc<Invocation>>,
+    operation_error: Option<Error>,
+}
+
+#[derive(Clone, Debug)]
+pub struct Snapshot {
+    pub stdout: Arc<[u8]>,
+    pub stderr: Arc<[u8]>,
+    pub error: Option<Error>,
+    pub status: Option<i32>,
+}
+
+pub struct Invocation {
+    app: Weak<App>,
+    runtime: Weak<RuntimeInner>,
+    sequence: u64,
+    dependencies: Arc<dyn Dependencies>,
+    wait_delay: Duration,
+    state: Mutex<InvocationState>,
+    done: watch::Sender<bool>,
+    group: AsyncMutex<GroupState>,
+    drain_deadline: watch::Sender<Option<Instant>>,
+    leader_requests: mpsc::UnboundedSender<oneshot::Sender<Result<()>>>,
+}
+
+struct InvocationState { snapshot: Option<Snapshot>, claim: u8 }
+struct GroupState { pid: Option<u32>, cleaned: bool, termination_deadline: Option<Instant> }
+
+impl Runtime {
+    // Call inside an entered Tokio runtime. Installing all subscriptions is
+    // fallible and happens before the first generated source instruction.
+    pub fn new() -> Result<Self> {
+        Self::with_dependencies(Arc::new(NativeDependencies), Box::pin(tokio::io::stdout()), Box::pin(tokio::io::stderr()))
+    }
+
+    fn with_dependencies(dependencies: Arc<dyn Dependencies>, stdout: Output, stderr: Output) -> Result<Self> {
+        let mut signals = process::Signals::new()
+            .map_err(|error| Error::context("install application signal subscriptions", error))?;
+        // Publication can replace this executable while its original generation
+        // is still running. Resolve its directory once, before source execution;
+        // retain lookup errors for Build/Run rather than failing initialization.
+        let companion_directory = std::env::current_exe()
+            .and_then(std::fs::canonicalize)
+            .map_err(|error| Error::context("locate orchestrator", error))
+            .and_then(|executable| executable.parent().map(|parent| parent.to_path_buf())
+                .ok_or_else(|| Error::new("orchestrator has no parent directory")));
+        let (cancelled, _) = watch::channel(false);
+        let (shutdown_done, _) = watch::channel(None);
+        let runtime = Self(Arc::new(RuntimeInner {
+            companion_directory,
+            state: Mutex::new(RuntimeState {
+                owned: BTreeMap::new(), cleanup_errors: BTreeMap::new(), next: 0,
+                stopping: false, terminal: None, finalized: false, final_status: None,
+            }),
+            cancelled, shutdown_done, signals: Mutex::new(None),
+            stdout: AsyncMutex::new(stdout), stderr: AsyncMutex::new(stderr), dependencies, finish_gate: AsyncMutex::new(()),
+        }));
+        let weak = Arc::downgrade(&runtime.0);
+        let task = tokio::spawn(async move {
+            let event = signals.recv().await;
+            if let Some(inner) = weak.upgrade() {
+                let runtime = Runtime(inner);
+                match event {
+                    Ok(status) => {
+                        let error = (status == 1).then(|| Error::new("application output pipe closed"));
+                        runtime.0.dependencies.terminal_entered(TerminalRequest::Signal(status));
+                        runtime.request_exit(status, error);
+                    }
+                    Err(error) => runtime.request_exit(1, Some(Error::context("receive application signal", error))),
+                }
+            }
+        });
+        *lock(&runtime.0.signals) = Some(task);
+        Ok(runtime)
+    }
+
+    pub fn app(&self, path: impl Into<PathBuf>) -> Arc<App> {
+        Arc::new(App {
+            runtime: Arc::downgrade(&self.0), path: path.into(),
+            state: Mutex::new(AppState {
+                source: String::new(), invocation: None, outstanding: false,
+                selected: None, operation_error: None,
+            }),
+        })
+    }
+
+    // Lowering must propagate this result, including checkpoints in generated
+    // CPU loops. Tokio cancellation cannot interrupt an arbitrary blocking poll.
+    pub fn check_source(&self) -> Result<()> {
+        let state = lock(&self.0.state);
+        if state.stopping || state.terminal.is_some() || state.finalized {
+            Err(Error::cancelled())
+        } else { Ok(()) }
+    }
+
+    pub fn fail(&self, error: impl Into<Option<Error>>) -> Error {
+        let error = error.into().unwrap_or_else(|| Error::new("cannot exit with an absent Error"));
+        self.0.dependencies.terminal_entered(TerminalRequest::Failure);
+        self.request_exit(1, Some(error.clone()));
+        error
+    }
+
+    // Generated bare Exit is `return Err(runtime.exit())`; returning only from
+    // an expanded action would not implement the enclosing-program semantics.
+    pub fn exit(&self) -> Error {
+        self.0.dependencies.terminal_entered(TerminalRequest::Exit);
+        self.request_exit(0, None);
+        Error::cancelled()
+    }
+
+    fn request_exit(&self, status: u8, error: Option<Error>) {
+        {
+            let mut state = lock(&self.0.state);
+            if state.finalized || state.terminal.is_some() { return; }
+            state.terminal = Some(Terminal { status, error });
+            self.0.cancelled.send_replace(true);
+        }
+        self.begin_shutdown();
+    }
+
+    pub async fn run<F>(&self, source: F) -> u8
+    where F: Future<Output = Result<()>> {
+        // Drop source and all private activation locals before run awaits cleanup.
+        let result = {
+            let mut cancellation = self.0.cancelled.subscribe();
+            tokio::pin!(source);
+            tokio::select! {
+                biased;
+                _ = wait_true(&mut cancellation) => Ok(Err(Error::cancelled())),
+                result = poll_fn(|context| {
+                    match catch_unwind(AssertUnwindSafe(|| source.as_mut().poll(context))) {
+                        Ok(Poll::Pending) => Poll::Pending,
+                        Ok(Poll::Ready(result)) => Poll::Ready(Ok(result)),
+                        Err(panic) => Poll::Ready(Err(panic)),
+                    }
+                }) => result,
+            }
+        };
+        match result {
+            Ok(result) => self.finish(result).await,
+            Err(panic) => {
+                // Preserve a native Rust panic after settling process ownership.
+                // An already-selected L terminal request still owns its status.
+                let status = self.finish(Ok(())).await;
+                if lock(&self.0.state).terminal.is_some() || status != 0 { return status; }
+                resume_unwind(panic)
+            }
+        }
+    }
+
+    pub async fn show(&self, bytes: &[u8]) -> Result<()> {
+        self.check_source()?;
+        let mut output = self.0.stdout.lock().await;
+        self.check_source()?;
+        if let Err(error) = output.write_all(bytes).await {
+            return Err(self.fail(Error::context("write application stdout", error)));
+        }
+        if let Err(error) = output.flush().await {
+            return Err(self.fail(Error::context("flush application stdout", error)));
+        }
+        Ok(())
+    }
+
+    fn begin_shutdown(&self) {
+        let owned = {
+            let mut state = lock(&self.0.state);
+            if state.stopping { return; }
+            state.stopping = true;
+            self.0.cancelled.send_replace(true);
+            state.owned.values().cloned().collect::<Vec<_>>()
+        };
+        let runtime = self.clone();
+        // Cleanup does not depend on keeping a caller's future alive. Supervisors
+        // retain the only Child handles and only wait/reap operations.
+        tokio::spawn(async move {
+            for invocation in &owned {
+                if let Err(error) = invocation.terminate(false).await {
+                    let mut failures = vec![error];
+                    if let Err(error) = invocation.kill_leader().await { failures.push(error); }
+                    if let Some(error) = Error::join(failures) { invocation.record_cleanup(error); }
+                }
+            }
+            for invocation in owned { invocation.completed().await; }
+            let result = {
+                let state = lock(&runtime.0.state);
+                Error::join(state.cleanup_errors.values().cloned().collect())
+                    .map_or(Ok(()), Err)
+            };
+            let signal_task = { lock(&runtime.0.signals).take() };
+            if let Some(task) = signal_task { task.abort(); let _ = task.await; }
+            runtime.0.shutdown_done.send_replace(Some(result));
+        });
+    }
+
+    // Idempotent nonterminal cleanup. Source execution is cancelled, but this
+    // method does not itself choose an exit status or write diagnostics.
+    pub async fn shutdown(&self) -> Result<()> {
+        self.begin_shutdown();
+        let mut done = self.0.shutdown_done.subscribe();
+        loop {
+            let result = done.borrow().clone();
+            if let Some(result) = result { return result; }
+            if done.changed().await.is_err() {
+                return Err(Error::new("runtime shutdown notification closed"));
+            }
+        }
+    }
+
+    pub async fn finish(&self, result: Result<()>) -> u8 {
+        let _finish = self.0.finish_gate.lock().await;
+        if let Some(status) = lock(&self.0.state).final_status { return status; }
+        if let Err(error) = result {
+            if !error.0.cancelled { self.request_exit(1, Some(error)); }
+        }
+        let cleanup = self.shutdown().await.err();
+        let terminal = {
+            let mut state = lock(&self.0.state);
+            state.finalized = true;
+            state.terminal.clone().unwrap_or(Terminal { status: 0, error: None })
+        };
+        let mut status = terminal.status;
+        if cleanup.is_some() && status == 0 { status = 1; }
+        let signal_task = { lock(&self.0.signals).take() };
+        if let Some(task) = signal_task {
+            task.abort();
+            let _ = task.await;
+        }
+        // Dropping subscriptions ends this task, not Tokio's OS signal handlers.
+        let mut bytes = Vec::new();
+        let mut seen = HashSet::new();
+        let mut written = false;
+        if let Some(error) = terminal.error { error.append(&mut bytes, &mut seen, &mut written); }
+        if let Some(error) = cleanup { error.append(&mut bytes, &mut seen, &mut written); }
+        if written {
+            bytes.push(b'\n');
+            let mut stderr = self.0.stderr.lock().await;
+            if stderr.write_all(&bytes).await.is_err() || stderr.flush().await.is_err() {
+                // Never recursively retry a failed diagnostic writer.
+                status = 1;
+            }
+        }
+        lock(&self.0.state).final_status = Some(status);
+        status
+    }
+}
+
+impl App {
+    fn owner(&self) -> Result<Runtime> {
+        let inner = self.runtime.upgrade().ok_or_else(|| Error::new("App runtime is unavailable"))?;
+        let runtime = Runtime(inner);
+        runtime.check_source()?;
+        Ok(runtime)
+    }
+
+    pub fn set_source(&self, source: impl Into<String>) { lock(&self.state).source = source.into(); }
+
+    fn misuse(&self, runtime: &Runtime, message: &str) -> Error {
+        let source = lock(&self.state).source.clone();
+        let message = if source.is_empty() { message.to_owned() } else { format!("{source}: {message}") };
+        runtime.fail(Error::new(message))
+    }
+
+    fn companion(&self, runtime: &Runtime) -> Result<PathBuf> {
+        if self.path.as_os_str().is_empty() || self.path.components().any(|part| {
+            !matches!(part, Component::Normal(_) | Component::CurDir)
+        }) {
+            return Err(Error::new(format!("invalid application companion path {:?}", self.path)));
+        }
+        let parent = runtime.0.companion_directory.as_ref().map_err(|error| error.clone())?;
+        let path = parent.join(&self.path);
+        process::validate_executable(&path)
+            .map_err(|error| Error::context(&format!("application companion {}", self.path.display()), error))?;
+        Ok(path)
+    }
+
+    pub fn build(&self) -> Result<()> {
+        let runtime = self.owner()?;
+        let mut state = lock(&self.state);
+        if state.outstanding {
+            drop(state);
+            return Err(self.misuse(&runtime, "Build conflicts with an outstanding invocation"));
+        }
+        state.operation_error = self.companion(&runtime).err();
+        state.selected = None;
+        Ok(())
+    }
+
+    // A failed OS start is a completed, awaitable invocation. Only source misuse
+    // and global cancellation return Err here. No synthesized args or CWD change.
+    pub fn run(self: &Arc<Self>) -> Result<Arc<Invocation>> {
+        let runtime = Runtime(self.runtime.upgrade().ok_or_else(|| Error::new("App runtime is unavailable"))?);
+        let mut app = lock(&self.state);
+        if app.outstanding {
+            drop(app);
+            return Err(self.misuse(&runtime, "Run conflicts with an outstanding invocation"));
+        }
+        let sequence = { let mut state = lock(&runtime.0.state); state.next += 1; state.next };
+        let (invocation, receiver) = Invocation::allocated(
+            Arc::downgrade(self), Arc::downgrade(&runtime.0), sequence,
+            runtime.0.dependencies.clone(), DRAIN_BOUND, None,
+        );
+        app.invocation = Some(invocation.clone());
+        app.selected = Some(invocation.clone());
+        app.outstanding = true;
+        app.operation_error = None;
+        drop(app);
+        runtime.0.dependencies.checkpoint(Checkpoint::PreStart, invocation.clone());
+        // Admission owns the transfer from successful OS start to supervision.
+        // Checkpoint callbacks run before/after this critical section.
+        let mut admission = lock(&runtime.0.state);
+        if admission.stopping || admission.terminal.is_some() || admission.finalized {
+            drop(admission);
+            invocation.publish(Snapshot { stdout: Arc::from([]), stderr: Arc::from([]), error: Some(Error::cancelled()), status: None });
+            return Err(Error::cancelled());
+        }
+        let launched = self.companion(&runtime).and_then(|path| {
+            process::validate_launch_format(&path).map_err(|error| Error::context("start application", error))?;
+            let mut command = Command::new(path);
+            command.stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
+            process::configure(&mut command).map_err(Error::from)?;
+            runtime.0.dependencies.start(&mut command)
+                .map_err(|error| Error::context(&format!("start application {}", self.path.display()), error))
+        });
+        match launched {
+            Ok(child) => {
+                invocation.group.try_lock().expect("unstarted invocation group lock").pid = child.id();
+                admission.owned.insert(sequence, invocation.clone());
+                let supervisor = invocation.clone();
+                let owner = runtime.clone();
+                tokio::spawn(async move { supervisor.supervise(child, receiver, owner).await; });
+                drop(admission);
+                runtime.0.dependencies.checkpoint(Checkpoint::SuccessfulStart, invocation.clone());
+            }
+            Err(error) => {
+                drop(admission);
+                drop(receiver);
+                invocation.publish(Snapshot { stdout: Arc::from([]), stderr: Arc::from([]), error: Some(error), status: None });
+            }
+        }
+        runtime.check_source()?;
+        Ok(invocation)
+    }
+
+    pub async fn stop(&self) -> Result<()> {
+        let runtime = self.owner()?;
+        let invocation = { lock(&self.state).invocation.clone() };
+        let Some(invocation) = invocation else {
+            return Err(self.misuse(&runtime, "Stop requires an invocation"));
+        };
+        runtime.0.dependencies.checkpoint(Checkpoint::CapturedStopTarget, invocation.clone());
+        // This captured Arc cannot become a later replacement invocation.
+        if let Err(error) = invocation.terminate(false).await {
+            let mut state = lock(&self.state);
+            if state.invocation.as_ref().is_some_and(|current| Arc::ptr_eq(current, &invocation)) {
+                state.operation_error = Some(error);
+                state.selected = None;
+            }
+        }
+        runtime.check_source()
+    }
+
+    pub async fn wait(&self) -> Result<Arc<Invocation>> {
+        let runtime = self.owner()?;
+        let invocation = { lock(&self.state).invocation.clone() };
+        let Some(invocation) = invocation else {
+            return Err(self.misuse(&runtime, "Await requires an invocation"));
+        };
+        let mut cancellation = runtime.0.cancelled.subscribe();
+        tokio::select! {
+            biased;
+            _ = wait_true(&mut cancellation) => return Err(Error::cancelled()),
+            _ = invocation.completed() => {}
+        }
+        runtime.check_source()?;
+        let mut state = lock(&self.state);
+        if state.invocation.as_ref().is_some_and(|current| Arc::ptr_eq(current, &invocation)) {
+            state.selected = Some(invocation.clone());
+        }
+        Ok(invocation)
+    }
+
+    pub fn output(&self) -> Result<Arc<[u8]>> {
+        let runtime = Runtime(self.runtime.upgrade().ok_or_else(|| Error::new("App runtime is unavailable"))?);
+        let invocation = { lock(&self.state).invocation.clone() };
+        if let Some(snapshot) = invocation.and_then(|invocation| invocation.snapshot()) {
+            return Ok(snapshot.stdout);
+        }
+        Err(self.misuse(&runtime, "Output is unavailable before completed invocation capture"))
+    }
+
+    pub fn error(&self) -> Result<Option<Error>> {
+        let (selected, error) = {
+            let state = lock(&self.state);
+            (state.selected.clone(), state.operation_error.clone())
+        };
+        Ok(match selected {
+            Some(invocation) => invocation.snapshot().and_then(|snapshot| snapshot.error),
+            None => error,
+        })
+    }
+}
+
+impl Invocation {
+    fn allocated(app: Weak<App>, runtime: Weak<RuntimeInner>, sequence: u64, dependencies: Arc<dyn Dependencies>, wait_delay: Duration, pid: Option<u32>) -> (Arc<Self>, mpsc::UnboundedReceiver<oneshot::Sender<Result<()>>>) {
+        let (done, _) = watch::channel(false);
+        let (drain_deadline, _) = watch::channel(None);
+        let (leader_requests, receiver) = mpsc::unbounded_channel();
+        (Arc::new(Self { app, runtime, sequence, dependencies, wait_delay,
+            state: Mutex::new(InvocationState { snapshot: None, claim: 0 }), done,
+            group: AsyncMutex::new(GroupState { pid, cleaned: false, termination_deadline: None }),
+            drain_deadline, leader_requests,
+        }), receiver)
+    }
+    pub fn snapshot(&self) -> Option<Snapshot> { lock(&self.state).snapshot.clone() }
+
+    pub fn claim_continuation(&self) -> Result<bool> {
+        let runtime = self.runtime.upgrade().ok_or_else(|| Error::new("invocation runtime is unavailable"))?;
+        let admission = lock(&runtime.state);
+        if admission.stopping || admission.terminal.is_some() || admission.finalized {
+            return Err(Error::cancelled());
+        }
+        let mut state = lock(&self.state);
+        if state.snapshot.is_none() || state.claim != 0 { return Ok(false); }
+        state.claim = 1;
+        Ok(true)
+    }
+
+    pub fn finish_continuation(self: &Arc<Self>) {
+        {
+            let mut state = lock(&self.state);
+            if state.claim != 1 { return; }
+            state.claim = 2;
+        }
+        if let Some(app) = self.app.upgrade() {
+            let mut state = lock(&app.state);
+            if state.invocation.as_ref().is_some_and(|current| Arc::ptr_eq(current, self)) {
+                state.outstanding = false;
+            }
+        }
+    }
+
+    async fn completed(&self) {
+        let mut done = self.done.subscribe();
+        wait_true(&mut done).await;
+    }
+
+    fn publish(self: &Arc<Self>, snapshot: Snapshot) {
+        self.dependencies.checkpoint(Checkpoint::PrePublication, self.clone());
+        lock(&self.state).snapshot = Some(snapshot);
+        self.done.send_replace(true);
+    }
+
+    fn bound_capture(&self, deadline: Instant) {
+        self.drain_deadline.send_modify(|current| {
+            *current = Some(current.map_or(deadline, |old| old.min(deadline)));
+        });
+    }
+
+    async fn terminate(&self, final_attempt: bool) -> Result<()> {
+        self.terminate_native(final_attempt).await.map_err(|error| Error::context("terminate application process group", error))
+    }
+
+    async fn terminate_native(&self, final_attempt: bool) -> io::Result<()> {
+        let mut group = self.group.lock().await;
+        if group.cleaned || self.snapshot().is_some() { return Ok(()); }
+        let Some(pid) = group.pid else { return Ok(()) };
+        let attempted = Instant::now();
+        let result = self.dependencies.signal(SignalTarget::Group(pid), nix::sys::signal::Signal::SIGKILL);
+        let result = match result { Err(e) if e.raw_os_error() == Some(nix::libc::ESRCH) => Ok(()), result => result };
+        if !final_attempt && result.is_ok() && group.termination_deadline.is_none() {
+            let deadline = attempted + self.wait_delay;
+            group.termination_deadline = Some(deadline);
+            self.bound_capture(deadline);
+        }
+        let result = if final_attempt {
+            process::final_group_result(pid, result, group.termination_deadline).await
+        } else { result };
+        if final_attempt { group.cleaned = true; }
+        result
+    }
+
+    async fn kill_leader(&self) -> Result<()> {
+        let (reply, receive) = oneshot::channel();
+        // A closed receiver means the supervisor has already completed its wait.
+        if self.leader_requests.send(reply).is_err() { return Ok(()); }
+        receive.await.unwrap_or(Ok(()))
+    }
+
+    fn record_cleanup(&self, error: Error) {
+        if let Some(runtime) = self.runtime.upgrade() {
+            lock(&runtime.state).cleanup_errors.entry(self.sequence).or_insert(error);
+        }
+    }
+
+    async fn supervise(
+        self: Arc<Self>,
+        mut child: Child,
+        mut leader_requests: mpsc::UnboundedReceiver<oneshot::Sender<Result<()>>>,
+        owner: Runtime,
+    ) {
+        let stdout = child.stdout.take();
+        let stderr = child.stderr.take();
+        let out_deadline = self.drain_deadline.subscribe();
+        let err_deadline = self.drain_deadline.subscribe();
+        let out_dependencies = self.dependencies.clone();
+        let err_dependencies = self.dependencies.clone();
+        let out = tokio::spawn(async move { capture(stdout, out_deadline, out_dependencies, Stream::Stdout).await });
+        let err = tokio::spawn(async move { capture(stderr, err_deadline, err_dependencies, Stream::Stderr).await });
+        let pid = child.id();
+        let wait = self.dependencies.wait(&mut child);
+        tokio::pin!(wait);
+        let waited = loop {
+            tokio::select! {
+                biased;
+                result = &mut wait => break result,
+                Some(reply) = leader_requests.recv() => {
+                    let result = match pid {
+                        Some(pid) => process::terminate_leader(pid).map_err(|error| Error::context("terminate application leader", error)),
+                        None => Ok(()),
+                    };
+                    let _ = reply.send(result);
+                }
+            }
+        };
+        // Closing replies after wait prevents later fallback from signaling a
+        // recycled leader PID. Only this supervisor can call start_kill or wait.
+        leader_requests.close();
+        while let Ok(reply) = leader_requests.try_recv() { let _ = reply.send(Ok(())); }
+        self.bound_capture(Instant::now() + DRAIN_BOUND);
+        let (out, err) = tokio::join!(out, err);
+        let (stdout, out_error) = captured(out, "stdout");
+        let (stderr, err_error) = captured(err, "stderr");
+        // Even descendants that closed both pipes still receive group cleanup.
+        let cleanup = self.terminate(true).await.err();
+        if let Some(error) = &cleanup { self.record_cleanup(error.clone()); }
+        let mut failures = Vec::new();
+        let status = match waited {
+            Ok(status) => {
+                if !status.success() { failures.push(Error::new(format!("application {status}"))); }
+                process::status_code(status)
+            }
+            Err(error) => { failures.push(Error::context("wait for application", error)); None }
+        };
+        failures.extend(out_error);
+        failures.extend(err_error);
+        failures.extend(cleanup);
+        let error = Error::join(failures).map(|error| error.with_stderr(&stderr));
+        self.publish(Snapshot { stdout, stderr, error, status });
+        lock(&owner.0.state).owned.remove(&self.sequence);
+    }
+}
+
+async fn wait_true(receiver: &mut watch::Receiver<bool>) {
+    loop {
+        if *receiver.borrow() { return; }
+        if receiver.changed().await.is_err() { return; }
+    }
+}
+
+struct Capture { bytes: Vec<u8>, error: Option<Error> }
+
+async fn capture<R>(reader: Option<R>, mut deadline: watch::Receiver<Option<Instant>>, dependencies: Arc<dyn Dependencies>, stream: Stream) -> Capture
+where R: AsyncRead + Unpin {
+    let Some(mut reader) = reader else {
+        return Capture { bytes: Vec::new(), error: Some(Error::new("application capture pipe is unavailable")) };
+    };
+    let mut bytes = Vec::new();
+    let error = {
+        let mut destination = dependencies.capture(stream, Box::new(&mut bytes));
+        let mut buffer = [0; 8192];
+        loop {
+            let until = *deadline.borrow();
+            let read = match until {
+                Some(until) => tokio::select! {
+                    biased;
+                    _ = sleep_until(until) => break Some(Error::new("application output pipe remained open beyond cleanup deadline")),
+                    changed = deadline.changed() => {
+                        if changed.is_err() { break Some(Error::new("capture deadline notification closed")); }
+                        continue;
+                    }
+                    read = reader.read(&mut buffer) => read,
+                },
+                None => tokio::select! {
+                    biased;
+                    changed = deadline.changed() => {
+                        if changed.is_err() { break Some(Error::new("capture deadline notification closed")); }
+                        continue;
+                    }
+                    read = reader.read(&mut buffer) => read,
+                },
+            };
+            match read {
+                Ok(0) => break None,
+                Ok(count) => if let Err(error) = destination.write_all(&buffer[..count]) {
+                    break Some(Error::context("capture application stream", error));
+                },
+                Err(error) => break Some(Error::context("capture application stream", error)),
+            }
+        }
+    };
+    Capture { bytes, error }
+}
+
+fn captured(
+    result: std::result::Result<Capture, tokio::task::JoinError>,
+    stream: &str,
+) -> (Arc<[u8]>, Option<Error>) {
+    match result {
+        Ok(capture) => (Arc::from(capture.bytes), capture.error),
+        Err(error) => (Arc::from([]), Some(Error::new(format!("capture application {stream} task: {error}")))),
+    }
+}
+
+// Process and stream effects are owned by the runtime. The production defaults
+// below always use the native OS; cfg(test) exposes observation/injection only.
+pub(crate) type Wait<'a> = Pin<Box<dyn Future<Output = io::Result<ExitStatus>> + Send + 'a>>;
+pub(crate) type Output = Pin<Box<dyn AsyncWrite + Send>>;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Stream { Stdout, Stderr }
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Checkpoint { PreStart, SuccessfulStart, CapturedStopTarget, PrePublication }
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum SignalTarget { Group(u32), Leader(u32) }
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum TerminalRequest { Exit, Failure, Signal(u8) }
+pub(crate) trait Dependencies: Send + Sync {
+    fn start(&self, command: &mut Command) -> io::Result<Child> { command.spawn() }
+    fn wait<'a>(&'a self, child: &'a mut Child) -> Wait<'a> { Box::pin(child.wait()) }
+    fn signal(&self, target: SignalTarget, _signal: nix::sys::signal::Signal) -> io::Result<()> {
+        match target { SignalTarget::Group(pid) => process::terminate_group(pid), SignalTarget::Leader(pid) => process::terminate_leader(pid) }
+    }
+    fn capture<'a>(&self, _stream: Stream, destination: Box<dyn Write + Send + 'a>) -> Box<dyn Write + Send + 'a> { destination }
+    fn checkpoint(&self, _event: Checkpoint, _invocation: Arc<Invocation>) {}
+    fn terminal_entered(&self, _request: TerminalRequest) {}
+}
+struct NativeDependencies;
+impl Dependencies for NativeDependencies {}
+
+#[cfg(test)]
+pub(crate) mod test_support {
+    use super::*;
+    pub(crate) use super::{Checkpoint, Dependencies, Output, SignalTarget, Stream, TerminalRequest, Wait};
+    pub(crate) fn new_observed(dependencies: Arc<dyn Dependencies>, stdout: Output, stderr: Output) -> Result<Runtime> {
+        Runtime::with_dependencies(dependencies, stdout, stderr)
+    }
+    pub(crate) fn latest_invocation(app: &Arc<App>) -> Option<Arc<Invocation>> { lock(&app.state).invocation.clone() }
+    pub(crate) fn terminal_status(runtime: &Runtime) -> Option<u8> {
+        let state = lock(&runtime.0.state);
+        state.final_status.or_else(|| state.terminal.as_ref().map(|t| t.status))
+    }
+    pub(crate) struct ObservedInvocation {
+        invocation: Arc<Invocation>, child: AsyncMutex<Option<Child>>,
+        result: tokio::sync::OnceCell<std::result::Result<ExitStatus, Arc<io::Error>>>, pid: u32,
+    }
+    pub(crate) fn observe_invocation(child: Child, dependencies: Arc<dyn Dependencies>, wait_delay: Duration) -> ObservedInvocation {
+        let pid = child.id().expect("observed live child");
+        let (invocation, _) = Invocation::allocated(Weak::new(), Weak::new(), 0, dependencies, wait_delay, Some(pid));
+        ObservedInvocation { invocation, child: AsyncMutex::new(Some(child)), result: tokio::sync::OnceCell::new(), pid }
+    }
+    impl ObservedInvocation {
+        pub(crate) async fn terminate(&self, final_signal: bool) -> io::Result<()> { self.invocation.terminate_native(final_signal).await }
+        pub(crate) async fn wait(&self) -> io::Result<ExitStatus> {
+            let result = self.result.get_or_init(|| async {
+                let mut child = self.child.lock().await.take().expect("single observed Wait owner");
+                self.invocation.dependencies.wait(&mut child).await.map_err(Arc::new)
+            }).await;
+            match result { Ok(status) => Ok(*status), Err(error) => Err(io::Error::new(error.kind(), error.clone())) }
+        }
+        pub(crate) fn deadline(&self) -> Option<Instant> { self.invocation.group.try_lock().expect("idle observed signal").termination_deadline }
+        pub(crate) fn pid(&self) -> u32 { self.pid }
+    }
+}

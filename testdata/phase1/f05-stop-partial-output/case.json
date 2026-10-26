@@ -1,0 +1,32 @@
+{
+  "id": "F05",
+  "title": "stop-partial-output",
+  "profile": "stop_gate",
+  "apps": [
+    "Worker",
+    "Other",
+    "Gate"
+  ],
+  "setup": [
+    "Create a fresh short Unix socket path and an empty lifetime-lock directory in test-owned temporary storage; set L_PHASE1_SOCKET and L_PHASE1_DIRECTORY for the orchestrator. Start the controller before the program.",
+    "Each child has its own connection. Parse a complete ready <label> <pid> line and reject duplicate/unexpected labels. Record direct PIDs separately from controller and orchestrator.",
+    "Controller commands are exactly release followed by LF; readiness does not release a child. Test deadlines bound failures only.",
+    "Keep every controller connection open until runtime shutdown has been observed. Require spontaneous child disconnection and lifetime-lock release before controller closure or fallback signals; record cleanup failures before fallback. Lock release alone does not prove direct-child reaping.",
+    "Require ready worker, ready other, and ready gate. Release only gate. After orchestrator stdout includes worker-stopped|, release other. Never release worker."
+  ],
+  "assertions": [
+    "Other remains gated and alive while Worker is stopped. A global-cancellation implementation would lose other LF and fail.",
+    "Worker writes partial LF before readiness; Await preserves it and joins exactly once.",
+    "The stop result remains an Error; successful Await does not clear it. Exact internal cancellation cause belongs to the native runtime companion assertions."
+  ],
+  "expected_runtime": {
+    "stdout": "partial\nstopped|worker-stopped|other\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l",
+    "../companions/stop_gate.l",
+    "../companions/actions.l"
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "l Logeme Handoff"
+  short_description: "Inspect lyger markup and logeme source output"
+  default_prompt: "Use $l-logeme-handoff to diagnose the required frontend markup against the logeme source-generation boundary."

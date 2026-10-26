@@ -1,0 +1,12 @@
+[package]
+name = "Host"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "Host"
+path = "src/main.rs"
+
+[dependencies]
+

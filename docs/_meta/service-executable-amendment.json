@@ -1,0 +1,954 @@
+{
+  "status": "implemented-canonical-validation-passed",
+  "approval": "User explicitly requested implementation of the complete plan and its exact finite inventory on October 14, 2026. Expensive local validation was separately authorized on October 15, 2026.",
+  "baselineRevision": "de4378d831d3ba36eb7342ff394e9d49e5ffb059",
+  "behavioralReference": "8bf33aceb25652fa2e4a6a81e3d4f25efc29b374",
+  "baselineContractSha256": "110cb14305c20d7034e228d2aba5fa99855f7039e094e9606d38fc1d374fb212",
+  "scopeComplete": true,
+  "reason": "Remove standalone L Service compilation and process adaptation while preserving structural Service declarations, App-owned Service targets and typed process operations.",
+  "protectedFiles": [
+    {
+      "path": "cmd/l/runnable_service_lifecycle_test.go",
+      "currentSha256": "d10c3724e86ad155e4b72917374392f7f6ad9b2daa5b25fd973b8cdd48df051c",
+      "action": "modify",
+      "retainedCoverage": "App source/runtime/publication observers retain literal streams, protocols, watchdogs and Cargo provenance; independent consumer moves to actual App-owned library.",
+      "reviewedSha256": "dbcc9bd59b3950d3a207507a221903f2b8f2bee5410e4b8e22217321bb686e74"
+    },
+    {
+      "path": "cmd/l/runnable_service_native_test.go",
+      "currentSha256": "5eedd9cb087741f379b14fb28bc19eebe80f90018158310a3dc86116727fbf00",
+      "followUpBaselineSha256": "9fdec565f978bea3933d360c5e70dd997aea5311424c2125a70dd26805c0354c",
+      "followUpScope": "Author-approved October 15, 2026: replace the specialized helper's historical-generation sweep with Workspace and explicit orchestrator native-format checks; delete the redundant fresh-artifact helper. Retain private per-build evidence, exact package/target/byte identity, new-generation hashes and all historical-generation snapshot, runtime and cleanup assertions; leave the shared recorder and test bodies unchanged.",
+      "action": "modify",
+      "retainedCoverage": "App source/runtime/publication observers retain literal streams, protocols, watchdogs and Cargo provenance; independent consumer moves to actual App-owned library.",
+      "reviewedSha256": "0e3db190d7dff16d14375fc8ae0863080cef92db7b393e9fbce22d8938ad94df"
+    },
+    {
+      "path": "cmd/l/runnable_service_stop_test.go",
+      "currentSha256": "892dff9e8bf0514931f6ab5d92e09e9f4d35423bf3b710e5d69482329b51412d",
+      "action": "modify",
+      "retainedCoverage": "App source/runtime/publication observers retain literal streams, protocols, watchdogs and Cargo provenance; independent consumer moves to actual App-owned library.",
+      "reviewedSha256": "d2e046dfc6aaaec35a1dd7541ae906d15151977b9b0785abc3b45738624db525"
+    },
+    {
+      "path": "cmd/l/runnable_service_test.go",
+      "currentSha256": "700faa6effa82f898c935f1ee506866d0363a66ad7eda5a1e839d83925586036",
+      "action": "modify",
+      "retainedCoverage": "App source/runtime/publication observers retain literal streams, protocols, watchdogs and Cargo provenance; independent consumer moves to actual App-owned library.",
+      "reviewedSha256": "264749d32bda53ff93164c06eb62be603a14f892db58d2cb0f6d18a7e1ba525c"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/README.md",
+      "currentSha256": "67fea44fa0931124a5f04694b93beb4f89ed517f90286ff02a54bccc72388e3b",
+      "action": "modify",
+      "retainedCoverage": "Document migrated App observers and retained library/rejection coverage.",
+      "reviewedSha256": "e5be1d5e73868905a61e53c8d941a9f7db8fd4871a6a808c398a4c1b061cb694"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/alias.l",
+      "currentSha256": "3e145c36b57a9f9b60d91ac64905fa090d58216a5228b2f26473891c32c88a12",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "d001b0daa0754690c7e9918b019b178c2fb36fd974c40d165fc9aedb2a722831"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/await-before-run.l",
+      "currentSha256": "9cfe97fde6925f6d64b94ec546a8ccfe8c357a0321f3524ae5d8069006daa1e6",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "9cdc5cbebca73a8ff96c123a3686f6cbc650591ef5e186a8a7d206c5106654a4"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/basic.l",
+      "currentSha256": "f0bb145abe2884978ca74e4083c6f87c2ead57fbd88d42453092826f3c65f3bc",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "d5f7458b98b50106a02c00a70e5c43486c7f6cab2a52c06589c7aec2c5efa5b2"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/build-only.l",
+      "currentSha256": "10171c7ccc4e11567ad91b068ece98e986acff67d1361bf0b736588aca30ccb2",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "9900bc225398c553a220a0c834d23a912c7e23850fe55c719ba50fec667f15be"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/canonical-io.l",
+      "currentSha256": "69d25118d63e444d82d0ddb2bdf8020b7b89f9ff3fb8eaf5516c9a6c2fb26bab",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "9d37f9bb2379046dead50f3c6cddff8322aa4744c125cec5d08a0cd489e39c1c"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/conditional-exit.l",
+      "currentSha256": "9f7dd7635b3e54ecc3b56977470e0e2015989c44b668592647b96acfbecc201e",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "dfd7fefbc8e52a8064d19d4b685d22416be6987b81d682d349e8fb58337e0817"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/empty.l",
+      "currentSha256": "ceecae7255b4c60a126d2fa19a29fbad7475b3f7b17c85e464311bdcf077da29",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "398a80e839cbae5e9edba65733f13726d717b7ca8eafd7147bf122191ffb17af"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/alias/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/alias/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/alias/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/alias/orchestrator/src/main.rs",
+      "currentSha256": "a9f60645d89aadbcb8bfbf0a88fe0de9fed5f0d78daa4cb7a781ad1a1f51c62e",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "376808ae6a97804f1df1cfdc1685744176dddca50760271c126befdbf2a6d7e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/alias/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/alias/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/basic/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/basic/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/basic/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/basic/orchestrator/src/main.rs",
+      "currentSha256": "c4c49853a7ba16045190ffc39c01c35b9cd8b53b94d29493b327b63cf5dfedb7",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "98a93df0fe9f6eecb9fdb20516535e205ae03a660bc9db326bcf4ce2359482f2"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/basic/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/basic/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/build-only/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/build-only/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/build-only/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/build-only/orchestrator/src/main.rs",
+      "currentSha256": "2c77269b807ce3d4295b704e560fbf87a90c8f1f9cd45d9a4d6ec14e72bbe7c0",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "6c42ac05e0511fd371d53ed57aeb83485dbc7efdf1d523593796b534da870719"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/build-only/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/build-only/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/orchestrator/src/main.rs",
+      "currentSha256": "b680c290f4f02903da90e219eac4f79a8463084ba3cef4f229c7f5042a9cb3d0",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "2ad366e5f92a46c89fab7ae1b490fcca76239d5637c1e39f2c00775c7d12eb76"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/services/service-000/src/main.rs",
+      "currentSha256": "7fa0a6d3bf414fc4c8234c0db40f2e5a359c5c94236a45ab0cce53cfac00b894",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/orchestrator/src/main.rs",
+      "currentSha256": "332b5b664e9dca8ff7d8b187d9aae2c68e5e5babd55bd3e38b10670fd3c7b727",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "1dfb67cb0a63b19ff5747bd238b51931d4a73dd07e4bbdcd08469d71b7336461"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/empty/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/empty/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/empty/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/empty/orchestrator/src/main.rs",
+      "currentSha256": "715cd527c0cadd79c178384ddf9c3f7b4bea8bf21bbc51db80c149684d534e36",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "d01d1c28c842cbbde7eaf83eeb4d2a211606bf961104ad9eb424e1fcb23f9785"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/empty/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/empty/services/service-000/src/main.rs",
+      "currentSha256": "15bc0cc2dc26f43c5f7a6e62a82bfa60c5f9622041d5313ec39eaf089cdfb956",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/imported/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/imported/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/imported/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/imported/orchestrator/src/main.rs",
+      "currentSha256": "715cd527c0cadd79c178384ddf9c3f7b4bea8bf21bbc51db80c149684d534e36",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "d01d1c28c842cbbde7eaf83eeb4d2a211606bf961104ad9eb424e1fcb23f9785"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/imported/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/imported/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/mixed/Cargo.toml",
+      "currentSha256": "47797c540e0ee31cc9ce0321870d1f1e7818117aa7c8125fa38e3963b6ce823e",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "242485e99f4b5c017c4fd82ced11349ad9b11f9cf228d81879133566aa3fce1b"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/mixed/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/mixed/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/mixed/orchestrator/src/main.rs",
+      "currentSha256": "bddb7d56e2efff1fc86f1a52aa7265a1993fd13d4977b1ff85814bc22f759811",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "c8b775adc1047616e47507e3342fb2542a2cc229993a43f78e0412e8bf5e74ce"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/mixed/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/mixed/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/Cargo.toml",
+      "currentSha256": "c8bfdabcbc0dc516183ad48ee88731901851688fd61e306c531af53ed7f831ff",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "242485e99f4b5c017c4fd82ced11349ad9b11f9cf228d81879133566aa3fce1b"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/adapters/service-000/Cargo.toml",
+      "currentSha256": "1ec6ab9988532368ce9fd25ab82fdb6e962fbed05ff84fee6626b87267e47af8",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/adapters/service-001/Cargo.toml",
+      "currentSha256": "25070b407665108dfee7f277ac9b53ec2e7250553825811a69af3fbebbeafe2d",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/adapters/service-001/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/orchestrator/src/main.rs",
+      "currentSha256": "33120e5340bad1825ffdf57e38fb1a9d2eea2ae061461cea79494f22767867bc",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "145679c2ae9342763cde2cec8d9bb56f2161a5a96f1cc32bee9fe904935c5e48"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/services/service-000/Cargo.toml",
+      "currentSha256": "64a96e04a8c2b7004a0e6386f8c4a74750a4fec5e640bd525572a5366ede08d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/services/service-000/src/main.rs",
+      "currentSha256": "d55bda45f3394af0ebcc9186217d4472eb5c38d8b6f728e32f9559e637246ba8",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/services/service-001/Cargo.toml",
+      "currentSha256": "1c0686d83c3bf0ffcfbd36740297161ba60f65979a8a485acffde7620ed6de75",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/services/service-001/src/main.rs",
+      "currentSha256": "2526c7801177b52754b5109d38a7ffc4738c840b4f55a130b56b9c8af2fe52a5",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/passive/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/passive/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/passive/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/passive/orchestrator/src/main.rs",
+      "currentSha256": "c4c49853a7ba16045190ffc39c01c35b9cd8b53b94d29493b327b63cf5dfedb7",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "98a93df0fe9f6eecb9fdb20516535e205ae03a660bc9db326bcf4ce2359482f2"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/passive/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/passive/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/private/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/private/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/private/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/private/orchestrator/src/main.rs",
+      "currentSha256": "0390d005ad96ffb999dc7f28dea04d89f92398be3f91e1eb131b73c9b8c90230",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "ca83db832cda4722f69eda7b56290357e870974b5812622d4de67281a3ec9766"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/private/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/private/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/snapshot/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/snapshot/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/snapshot/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/snapshot/orchestrator/src/main.rs",
+      "currentSha256": "bceff996951edc2d7ed31eab285736572050f7bafd90af755ffb59e8d866be22",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "02bbbe0469bf835340cbb598a5cf332549c4c84cf444e9492763df244d19412c"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/snapshot/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/snapshot/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/stop/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/stop/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/stop/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/stop/orchestrator/src/main.rs",
+      "currentSha256": "c7c68ea6a2d2be5f7bd21bf47c2950ac55ca035e1dd31bcf8e939f8df235046b",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "f72951dbf2696dbad5951776e8b55d0e08959756dccefd28cd7cf49658793781"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/stop/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/stop/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/unicode/Cargo.toml",
+      "currentSha256": "a03225509206706178769075541eb79e4d5198f87fd48d5b135e5e588952aade",
+      "action": "modify",
+      "retainedCoverage": "Exact ordered App workspace inventory and retained runtime-support member.",
+      "reviewedSha256": "1e1a73ca52b5e275434eedfb08e3bf9cf29f47971ebc6c3cd374d36f0f6afa37"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/unicode/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/unicode/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/unicode/orchestrator/src/main.rs",
+      "currentSha256": "e27756a5f5b171ea93920e87a4e76ea51563ff63724c056665be59ca0248addf",
+      "action": "modify",
+      "retainedCoverage": "Independent stored App composition, source order and lifecycle bytes; expected and generated compilation remain separate.",
+      "reviewedSha256": "5bfe140ed0a4ce817aec742f022e528fb7fa08b31637ad048c0b74583bfb52fe"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/unicode/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/unicode/services/service-000/src/main.rs",
+      "currentSha256": "8561b20e91ed0649aa11ae860582ae2d3662aeef4ee4db5b00829e8cf150a414",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter contract; source bodies and process behavior migrate to independent App expectations."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected/adapters/service-000/Cargo.toml",
+      "currentSha256": "4fbd61b6fbc3d0acfc608fe6e5a3b202af9ee3fbda6eb173bfe0fe613721653e",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter or redundant base oracle; per-case App/orchestrator and backend library observers remain."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected/adapters/service-000/src/main.rs",
+      "currentSha256": "db585331ffaf24e7a59240420f1ed9be8849f52b818d7d657ea490525746e590",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter or redundant base oracle; per-case App/orchestrator and backend library observers remain."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected/orchestrator/Cargo.toml",
+      "currentSha256": "d995241c0d18ac2316f48c8c613a1253e86f7ba37cef44d531615e277c9ed1d7",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter or redundant base oracle; per-case App/orchestrator and backend library observers remain."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected/orchestrator/src/main.rs",
+      "currentSha256": "c4c49853a7ba16045190ffc39c01c35b9cd8b53b94d29493b327b63cf5dfedb7",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter or redundant base oracle; per-case App/orchestrator and backend library observers remain."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected/services/service-000/Cargo.toml",
+      "currentSha256": "67c628839caaa2593c13f5eff7af872ff7ba65e423689dfba3e85c039b7cb0d2",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter or redundant base oracle; per-case App/orchestrator and backend library observers remain."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected/services/service-000/src/main.rs",
+      "currentSha256": "143e477867f7ffa69212707f14c9949c8b2fe0b7a4a0a22a0cb317dc7a22a019",
+      "action": "delete",
+      "retainedCoverage": "Retire standalone library/adapter or redundant base oracle; per-case App/orchestrator and backend library observers remain."
+    },
+    {
+      "path": "cmd/l/test/runnable_service/mixed.l",
+      "currentSha256": "e0a5cbe01152292e9a0e245a45b3f73f82eaaba3dcfd25119afe30b11e6361f3",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "1a7b545affcccfa31362a180ef72efe748744d37b4048dc3c6310a5684bb4b14"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/multiple.l",
+      "currentSha256": "26e01f634fef1ba32ef0ef8d97566e45e5fce541d100cd599e8e72449be41006",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "6cff9e8aa2718144bc5cdcc5a2a5cbf92ce0ce6eec951127e7d290be94bf9866"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/output-before-run.l",
+      "currentSha256": "f53b52679fa85dc45abe6ba7315346e340fe5ad3fb2335686369f97f9a69a06b",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "dd4dc19fb78909cb82717426326f3e273e83a6420677bb2cc0deafbd8720975c"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/passive.l",
+      "currentSha256": "6a59858330b41d886673f8ed28c44eb15142792b9be6d0ab6a404a49b69b52ef",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "4c20e65f9d264102c7a41754b78b31983b656bf76ad4c2c6b627fc6f9d930c1e"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/private.l",
+      "currentSha256": "3af420fb54c0e1d10ad8107779d7dd30363921d68b46ea3053edebf5c7414390",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "a54406ed6687642307a16ef9b56c8e356b72e0da6fed126525829e57fad7c9de"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/run-twice.l",
+      "currentSha256": "3bf19340e31927b4e28be28d614cabf1afa3d6ee2947f0a78b46a157b99f28b8",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "0a6e304aec552c39f4bdcf3d9b826d7f98a8dd0a15214fb484253e3fe5bb78f6"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/snapshot.l",
+      "currentSha256": "5ebf1ad485bdaab2854e0fd6ce44cc5dded0cc5ca0083819cf07782342d49917",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "48d13b71ae573193dc4966d27badefba7817f3c69e82242f5fcb3c4b629d696b"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/stop.l",
+      "currentSha256": "5f2b8adbe302c55650c1d6f8834d480afc3bcf79fbcbd86ecf7d4f339dcd0036",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "9624421d20c19075e22abd1b74a49bf449cef23cd877ea69d1a774d29953aa6a"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/unicode.l",
+      "currentSha256": "f09c66f74b7c4dd60fc93a0510ad19ee4c69cc305b61530fb5c781ba0f75906c",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "4b856b91fb33a40f4d98e327d1884c346de28765514e5a49b7002091cfb1bb41"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/worker.l",
+      "currentSha256": "fb2fbcf468c011f5f9a138d56770d51ae3991890e3466d98ff0a1865a932ffe3",
+      "action": "modify",
+      "retainedCoverage": "Use explicit Apps; preserve literals, paragraph visibility, import routing and lifecycle sequence.",
+      "reviewedSha256": "1e621bd23bb28ee57f6cb08e08fa06aae9c9e626875f98cb3f589b312796f184"
+    },
+    {
+      "path": "logiceme/testdata/runnable_service/README.md",
+      "currentSha256": "6f6ea3e55229bea213648bd88c6f99ac535ea2f786cd095627d05aa05bbd86ee",
+      "action": "modify",
+      "retainedCoverage": "Clarify unchanged raw AML library and explicit native-consumer controls.",
+      "reviewedSha256": "f9205f4f650ade97aa19ca5c4da9f0b7f609aa8a042beac1576a081c35a9021d"
+    },
+    {
+      "path": "lyger/builtin_operations_contract_test.go",
+      "currentSha256": "1a93653219fb86f80ba815e299d7126d524dc22f8509803ccb43cc81b0f0f10b",
+      "action": "modify",
+      "retainedCoverage": "Selected typed process definitions, provenance, isolation, fresh instantiation and renamed-descriptor App construction; entry-role contract retires.",
+      "reviewedSha256": "2ee668737d7ecb4184525e483d9796099962a064ae3ca3c2c638fcedc01f46a2"
+    },
+    {
+      "path": "lyger/runnable_service_test.go",
+      "currentSha256": "517c8f03ce336a6e6f125e482d1a81fdc9a7f226e958a360f94405828ee2c89c",
+      "action": "modify",
+      "retainedCoverage": "App lifecycle, assignment and paragraph controls; structural Service no-emission and contextual body/member/lifecycle rejection.",
+      "reviewedSha256": "6a2ab8099a78927866b8e80725f419c733a11530cc1362f53483bccd7ca859b8"
+    },
+    {
+      "path": "lyger/test/runnable_service/native-body.function.rs.txt",
+      "currentSha256": "8ae0b2e316d49b05cf6358c171c5daf6d1c27eb0e41e33d94c38b6228a1b227a",
+      "action": "delete",
+      "retainedCoverage": "Standalone exported-main oracle retires; retain L body-rejection inputs, App-owned body composition and raw backend library consumers."
+    }
+  ],
+  "newProtectedFiles": [
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/alias/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/alias/apps/app-000/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/basic/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/basic/apps/app-000/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/build-only/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/build-only/apps/app-000/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/canonical-io/apps/app-000/src/main.rs",
+      "reviewedSha256": "f3498c9e06b785b5e550f3a6171c5e7c6f1c555797ae4ec4fc0e5cfd6e4138aa"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/conditional-exit/apps/app-000/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/empty/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/empty/apps/app-000/src/main.rs",
+      "reviewedSha256": "d4ad4d077bb2a7806c4f987667a42fee56007f334fdd936a97e1e02f68444e43"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/imported/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/imported/apps/app-000/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/mixed/apps/app-001/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/mixed/apps/app-001/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/apps/app-000/Cargo.toml",
+      "reviewedSha256": "2cfe5cb040cd0d6f0881899166d01fee0cf590f3d05df03bcd346a914d966f6a"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/apps/app-000/src/main.rs",
+      "reviewedSha256": "153c3acc2d072daeffa51a7fad8448003772e2827b3202aeaa0fcaf3e3a10b21"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/apps/app-001/Cargo.toml",
+      "reviewedSha256": "093060434ba3ada58dbd76bea10d1dac2f9e2c24bf4e37992ebb4136649b781d"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/multiple/apps/app-001/src/main.rs",
+      "reviewedSha256": "70b892629bd48556204e66115d78335a099b4721c540a2d587d8da777f4b70aa"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/passive/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/passive/apps/app-000/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/private/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/private/apps/app-000/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/snapshot/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/snapshot/apps/app-000/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/stop/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/stop/apps/app-000/src/main.rs",
+      "reviewedSha256": "f261ff1195c7ab52053b43d6d49596178da605e1431bf2250e48d5752401d6e5"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/unicode/apps/app-000/Cargo.toml",
+      "reviewedSha256": "d289675fef1bff49bcc5ff370eea467eb739a45334ae0d7e81f7df039baa2dba"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected-cases/unicode/apps/app-000/src/main.rs",
+      "reviewedSha256": "076c01aa2d10aeb5b96e6057694b8fd08a0af0f4aacc03d15fb747e359a6c4df"
+    },
+    {
+      "path": "cmd/l/test/runnable_service/expected/app-config.rs",
+      "reviewedSha256": "7b025b1b74d6457ed34428d5c84ef5203f6f3975b74bb756b8af05c8d8c5ec73"
+    }
+  ],
+  "distributionChanges": [
+    {
+      "path": "builtins/eng/execution-roles.json",
+      "currentSha256": "abd39303552e686ed04e93bf93a9ba008ffdf1739926d30df2c829f5b8c70240",
+      "action": "delete",
+      "scope": "Retire only the entry-role resource, embed and inventory entry; resource count 37 becomes 36."
+    },
+    {
+      "path": "distribution.go",
+      "currentSha256": "4549e2092ffde2c105cdf6706ac7a33dd352cb0bc690d4d78a4b040d75b004ed",
+      "action": "modify",
+      "scope": "Retire only the entry-role resource, embed and inventory entry; resource count 37 becomes 36.",
+      "reviewedSha256": "f3e57749e5cb4647d8ff1d2fe3ecccddc55d77286ea211c7b54c37cdf69f72d9"
+    },
+    {
+      "path": "testdata/distribution/resources.json",
+      "currentSha256": "22ac4c111a99e596e59167c69d813e8d23390f53dab4ceb45dbcb112d92473e8",
+      "action": "modify",
+      "scope": "Retire only the entry-role resource, embed and inventory entry; resource count 37 becomes 36.",
+      "reviewedSha256": "4b2c392de570c77860bfbe1166f22b3ec9d6be450bb8babf40510d5e6e665db4"
+    },
+    {
+      "path": "internal/testsupport/distribution/resources_test.go",
+      "currentSha256": "1b5d207c0e66c29308bad873764490fbd30ea6c5358da5d914633aa60b811f6d",
+      "action": "modify",
+      "scope": "Retire only the entry-role resource, embed and inventory entry; resource count 37 becomes 36.",
+      "reviewedSha256": "7d1580a01abeacf4feab8241cdac96b96c69290d74a6362b943df2606160627a"
+    }
+  ],
+  "preserved": [
+    "302 unrelated protected records",
+    "all 16 required original outcomes and existing absent paths",
+    "Main/Basic and canonical core.l",
+    "App-owned Service package identities, dependencies and recursive Class topology",
+    "raw backend AML library/native-consumer fixtures",
+    "all retained locks, frozen glyphs, runtime assets, tool pins, budgets and concurrency"
+  ],
+  "validation": "October 15, 2026 macOS ARM64: bootstrap and scripts/l-check passed, with 4383 named outcomes, both publication regressions, all 16 original outcomes and 508 integrity checks before/after (386 protected hashes and 11 absent paths). Workflow lint, both Go lint profiles and tagged native compilation passed. Reports under .harness/runs/: ci-bootstrap-4236559208/stage.json, ci-lint-3784724979/stage.json, ci-acceptance-1667428328/verify.report.json and ci-native-477355706/stage.json. Source identity 38096646d1a9cc5a68ea92ba2ea34d4997b526332e1cf0b1085a53911d8b44f5; dirty revision de4378d831d3ba36eb7342ff394e9d49e5ffb059. See testdata/service-execution/validation-2026-10-15.md for phase boundaries. This documentation update did not rerun language validation.",
+  "resultingProtectedFiles": 386,
+  "followUpBaselineContractSha256": "f747e9f68ef81f837d8ef6a34a184f4c4da5585c51edaa5dca2e43c86db556e8",
+  "reviewedContractSha256": "92793328908347f59bb9362930f7f010fe2e827fe0f1d4f00c69b284ce80dd09",
+  "assertionMigration": "service-executable-correction.md#assertion-migration"
+}

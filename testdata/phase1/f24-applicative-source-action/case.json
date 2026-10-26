@@ -1,0 +1,21 @@
+{
+  "id": "F24",
+  "title": "applicative-source-action",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Valid applicative host/control for N12. A source-defined Join action substitutes its App argument and awaits it.",
+    "No hardcoded Join or Execute recognition is allowed."
+  ],
+  "expected_runtime": {
+    "stdout": "A\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l"
+  ]
+}

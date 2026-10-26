@@ -1,0 +1,17 @@
+[package]
+name = "l-runtime-parity-driver"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+tokio.workspace = true
+nix.workspace = true
+
+[lib]
+path = "driver.rs"
+
+[[bin]]
+name = "runtime-fault"
+path = "fault.rs"
+test = false

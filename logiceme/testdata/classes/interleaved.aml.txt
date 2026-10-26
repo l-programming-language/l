@@ -1,0 +1,50 @@
+<PROGRAM>
+<STRUCTURE>
+<BOOK "Interleaved">
+<OUTLINE>
+<JSON>{"AppMeta":{"AppName":"Interleaved","AppLang":"go","AppVersion":"0.0.0","AppGenDir":"/","StructureVersion":"2"}}</JSON>
+<JSON>{"Integrations":[]}</JSON>
+<JSON>{"Resources":[]}</JSON>
+<JSON>{"Datasources":[]}</JSON>
+<JSON>{"Services":[{"Name":"main","Type":"root","Package":"main","Location":"/","Parent":"","GenericObjects":["main"],"Dimensions":["branch"]}]}</JSON>
+<JSON>{"Classes":[{"Name":"branch","Type":"root","Location":"/","GenericObjects":["first","last"],"Dimensions":["leaf"],"Meta":{"Package":"main"}},{"Name":"leaf","Type":"root","Location":"/","Parent":"branch","GenericObjects":["deep"],"Dimensions":[],"Meta":{"Package":"main"}}]}</JSON>
+<JSON>{"Objects": [{"Name":"first","Type":"root"},{"Name":"deep","Type":"root"},{"Name":"last","Type":"root"},{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE>
+<SETTINGS>
+<JSON>{"key":"Host","value":"http://127.0.0.1","type":"String"}</JSON>
+</SETTINGS>
+<CONTENT>
+<CHAPTER "main">
+<TEXT "branch">
+<SENTENCE "first">
+<|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~first~|}^W`</S|>
+</W|>
+</SENTENCE>
+<TEXT "leaf">
+<SENTENCE "deep">
+<|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~deep~|}^W`</S|>
+</W|>
+</SENTENCE>
+</TEXT>
+<SENTENCE "last">
+<|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~last~|}^W`</S|>
+</W|>
+</SENTENCE>
+</TEXT>
+<SENTENCE "main">
+<|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~|}^W`</S|>
+</W|>
+</SENTENCE>
+</CHAPTER>
+</CONTENT>
+</BOOK>
+</STRUCTURE>
+</PROGRAM>

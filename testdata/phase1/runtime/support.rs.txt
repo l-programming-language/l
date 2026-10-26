@@ -1,0 +1,515 @@
+use crate::{ownership, runtime};
+use nix::{
+    libc,
+    sys::signal::{Signal, kill},
+    unistd::Pid,
+};
+use runtime::test_support::{
+    self as hooks, Checkpoint, Dependencies, SignalTarget, Stream, TerminalRequest,
+};
+use runtime::{App, Invocation, Runtime, Snapshot};
+use std::fs::{File, OpenOptions};
+use std::io::{self, BufRead, BufReader, Read, Write};
+use std::os::unix::net::{UnixListener, UnixStream};
+use std::path::{Path, PathBuf};
+use std::pin::Pin;
+use std::sync::{
+    Arc, Condvar, Mutex,
+    atomic::{AtomicBool, AtomicUsize, Ordering},
+    mpsc,
+};
+use std::task::{Context, Poll};
+use std::time::{Duration, Instant};
+use tokio::process::{Child, Command};
+
+pub fn env(k: &str, v: impl AsRef<std::ffi::OsStr>) {
+    unsafe { std::env::set_var(k, v) }
+}
+pub fn hex(b: &[u8]) -> String {
+    b.iter().map(|v| format!("{v:02x}")).collect()
+}
+pub fn child(label: &str, mode: &str, out: &[u8], err: &[u8], code: i32) {
+    for (k, v) in [
+        ("P1_LABEL", label.to_owned()),
+        ("P1_MODE", mode.to_owned()),
+        ("P1_PREFIX_HEX", String::new()),
+        ("P1_PAYLOAD_HEX", hex(out)),
+        ("P1_STDERR_HEX", hex(err)),
+        ("P1_EXIT", code.to_string()),
+        ("P1_READYFILE", String::new()),
+    ] {
+        env(k, v)
+    }
+}
+#[derive(Default)]
+pub struct Gate {
+    entered: Mutex<usize>,
+    cv: Condvar,
+    released: AtomicBool,
+}
+impl Gate {
+    pub fn hit(&self) {
+        let mut n = self.entered.lock().unwrap();
+        *n += 1;
+        self.cv.notify_all();
+        while !self.released.load(Ordering::SeqCst) {
+            n = self.cv.wait(n).unwrap()
+        }
+    }
+    pub fn observe(&self) {
+        let n = self.entered.lock().unwrap();
+        let (n, t) = self
+            .cv
+            .wait_timeout_while(n, Duration::from_secs(4), |n| *n == 0)
+            .unwrap();
+        assert!(*n > 0 && !t.timed_out(), "barrier not entered")
+    }
+    pub fn release(&self) {
+        self.released.store(true, Ordering::SeqCst);
+        self.cv.notify_all()
+    }
+}
+#[derive(Clone, Default)]
+pub struct Bytes(pub Arc<Mutex<Vec<u8>>>);
+impl Bytes {
+    pub fn get(&self) -> Vec<u8> {
+        self.0.lock().unwrap().clone()
+    }
+}
+impl tokio::io::AsyncWrite for Bytes {
+    fn poll_write(self: Pin<&mut Self>, _: &mut Context<'_>, b: &[u8]) -> Poll<io::Result<usize>> {
+        self.0.lock().unwrap().extend_from_slice(b);
+        Poll::Ready(Ok(b.len()))
+    }
+    fn poll_flush(self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<io::Result<()>> {
+        Poll::Ready(Ok(()))
+    }
+    fn poll_shutdown(self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<io::Result<()>> {
+        Poll::Ready(Ok(()))
+    }
+}
+#[derive(Debug)]
+pub struct Fault(pub &'static str);
+impl std::fmt::Display for Fault {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.0)
+    }
+}
+impl std::error::Error for Fault {}
+pub fn cause(error: &runtime::Error, token: &str) -> bool {
+    let mut e: Option<&(dyn std::error::Error + 'static)> = Some(error);
+    while let Some(cur) = e {
+        if let Some(io) = cur.downcast_ref::<io::Error>() {
+            if io
+                .get_ref()
+                .and_then(|e| e.downcast_ref::<Fault>())
+                .is_some_and(|f| f.0 == token)
+            {
+                return true;
+            }
+        }
+        if cur.downcast_ref::<Fault>().is_some_and(|f| f.0 == token) {
+            return true;
+        }
+        e = cur.source()
+    }
+    false
+}
+pub fn errno(error: &runtime::Error, code: i32) -> bool {
+    let mut e: Option<&(dyn std::error::Error + 'static)> = Some(error);
+    while let Some(cur) = e {
+        if cur
+            .downcast_ref::<io::Error>()
+            .is_some_and(|e| e.raw_os_error() == Some(code))
+        {
+            return true;
+        }
+        e = cur.source()
+    }
+    false
+}
+pub type StartHook = Arc<dyn Fn(&mut Command) -> io::Result<Child> + Send + Sync>;
+pub type SignalHook = Arc<dyn Fn(SignalTarget, Signal) -> io::Result<()> + Send + Sync>;
+pub type CheckHook = Arc<dyn Fn(Checkpoint, Arc<Invocation>) + Send + Sync>;
+#[derive(Default)]
+pub struct Probe {
+    pub starts: AtomicUsize,
+    pub pids: Mutex<Vec<u32>>,
+    pub waits: AtomicUsize,
+    pub reaped: AtomicUsize,
+    pub signals: Mutex<Vec<(SignalTarget, Signal)>>,
+    pub invocations: Mutex<Vec<Arc<Invocation>>>,
+    pub start_fault: Mutex<Option<i32>>,
+    pub start_hook: Mutex<Option<StartHook>>,
+    pub remove_before_start: Mutex<Option<PathBuf>>,
+    pub signal_hook: Mutex<Option<SignalHook>>,
+    pub checkpoint_hook: Mutex<Option<CheckHook>>,
+    pub capture_gate: Mutex<Option<Arc<Gate>>>,
+    pub capture_fault: AtomicBool,
+    pub terminal: Mutex<Vec<TerminalRequest>>,
+    pub terminal_cv: Condvar,
+}
+pub fn signal_os(target: SignalTarget, s: Signal) -> io::Result<()> {
+    let pid = match target {
+        SignalTarget::Group(p) => -(p as i32),
+        SignalTarget::Leader(p) => p as i32,
+    };
+    match kill(Pid::from_raw(pid), s) {
+        Ok(()) => Ok(()),
+        Err(nix::errno::Errno::ESRCH) => Ok(()),
+        Err(e) => Err(io::Error::from_raw_os_error(e as i32)),
+    }
+}
+struct CaptureWriter<'a> {
+    destination: Box<dyn Write + Send + 'a>,
+    gate: Option<Arc<Gate>>,
+    fault: bool,
+    written: usize,
+}
+impl Write for CaptureWriter<'_> {
+    fn write(&mut self, b: &[u8]) -> io::Result<usize> {
+        if let Some(g) = self.gate.take() {
+            g.hit()
+        }
+        if self.fault {
+            if self.written >= 3 {
+                return Err(io::Error::other(Fault("injected-capture-error")));
+            }
+            let n = (3 - self.written).min(b.len());
+            let w = self.destination.write(&b[..n])?;
+            self.written += w;
+            Ok(w)
+        } else {
+            self.destination.write(b)
+        }
+    }
+    fn flush(&mut self) -> io::Result<()> {
+        self.destination.flush()
+    }
+}
+impl Dependencies for Probe {
+    fn start(&self, c: &mut Command) -> io::Result<Child> {
+        self.starts.fetch_add(1, Ordering::SeqCst);
+        let hook = self.start_hook.lock().unwrap().clone();
+        if let Some(hook) = hook {
+            return hook(c);
+        }
+        if let Some(path) = self.remove_before_start.lock().unwrap().take() {
+            std::fs::remove_file(path)?
+        }
+        if let Some(e) = *self.start_fault.lock().unwrap() {
+            return Err(io::Error::from_raw_os_error(e));
+        }
+        let child = c.spawn()?;
+        self.pids.lock().unwrap().push(child.id().unwrap());
+        Ok(child)
+    }
+    fn wait<'a>(&'a self, c: &'a mut Child) -> hooks::Wait<'a> {
+        self.waits.fetch_add(1, Ordering::SeqCst);
+        let pid = c.id();
+        Box::pin(async move {
+            let result = c.wait().await;
+            self.reaped.fetch_add(1, Ordering::SeqCst);
+            if let Ok(path) = std::env::var("P1_WAITLOG") {
+                let record = format!("{}\n", pid.unwrap());
+                OpenOptions::new().create(true).append(true).open(path).unwrap()
+                    .write_all(record.as_bytes()).unwrap();
+            }
+            result
+        })
+    }
+    fn signal(&self, target: SignalTarget, s: Signal) -> io::Result<()> {
+        self.signals.lock().unwrap().push((target, s));
+        let hook = self.signal_hook.lock().unwrap().clone();
+        match hook {
+            Some(h) => h(target, s),
+            None => signal_os(target, s),
+        }
+    }
+    fn capture<'a>(&self, s: Stream, w: Box<dyn Write + Send + 'a>) -> Box<dyn Write + Send + 'a> {
+        if s == Stream::Stdout {
+            Box::new(CaptureWriter {
+                destination: w,
+                gate: self.capture_gate.lock().unwrap().clone(),
+                fault: self.capture_fault.load(Ordering::SeqCst),
+                written: 0,
+            })
+        } else {
+            w
+        }
+    }
+    fn checkpoint(&self, e: Checkpoint, i: Arc<Invocation>) {
+        if e == Checkpoint::PreStart {
+            self.invocations.lock().unwrap().push(i.clone())
+        }
+        let hook = self.checkpoint_hook.lock().unwrap().clone();
+        if let Some(h) = hook {
+            h(e, i)
+        }
+    }
+    fn terminal_entered(&self, r: TerminalRequest) {
+        self.terminal.lock().unwrap().push(r);
+        self.terminal_cv.notify_all()
+    }
+}
+impl Probe {
+    pub fn at(&self, n: usize) -> Arc<Invocation> {
+        self.invocations.lock().unwrap()[n].clone()
+    }
+    pub fn last(&self) -> Arc<Invocation> {
+        self.invocations
+            .lock()
+            .unwrap()
+            .last()
+            .expect("pre-start invocation")
+            .clone()
+    }
+    pub fn once(&self, n: usize) {
+        assert_eq!(self.starts.load(Ordering::SeqCst), n, "start count");
+        assert_eq!(self.waits.load(Ordering::SeqCst), n, "single Wait owner");
+        assert_eq!(
+            self.reaped.load(Ordering::SeqCst),
+            n,
+            "direct child reaping"
+        );
+        assert!(
+            self.signals
+                .lock()
+                .unwrap()
+                .iter()
+                .all(|(_, s)| *s == Signal::SIGKILL)
+        )
+    }
+}
+pub fn runtime(p: Arc<Probe>) -> (Runtime, Bytes, Bytes) {
+    let o = Bytes::default();
+    let e = Bytes::default();
+    let r = hooks::new_observed(p, Box::pin(o.clone()), Box::pin(e.clone())).unwrap();
+    (r, o, e)
+}
+pub fn app(r: &Runtime) -> Arc<App> {
+    r.app("companion/helper")
+}
+pub async fn finalized(i: &Invocation) {
+    tokio::time::timeout(Duration::from_secs(4), async {
+        while i.snapshot().is_none() {
+            tokio::task::yield_now().await
+        }
+    })
+    .await
+    .expect("completion watchdog")
+}
+pub async fn join(a: &App) -> Arc<Invocation> {
+    let i = a.wait().await.unwrap();
+    assert!(i.snapshot().is_some(), "Await before final publication");
+    assert_eq!(&*i.snapshot().unwrap().stdout, &*a.output().unwrap());
+    if i.claim_continuation().unwrap() {
+        i.finish_continuation()
+    }
+    i
+}
+pub fn result(i: &Arc<Invocation>, out: &[u8], err: &[u8], code: i32) {
+    let s = i.snapshot().expect("final snapshot");
+    assert_eq!(&*s.stdout, out);
+    assert_eq!(&*s.stderr, err);
+    if code == 0 {
+        assert!(s.error.is_none(), "unexpected error {:?}", s.error);
+        assert_eq!(s.status, Some(0))
+    } else if code > 0 {
+        assert!(s.error.is_some());
+        assert_eq!(s.status, Some(code))
+    } else {
+        assert!(s.error.is_some())
+    }
+}
+fn field(s: &str, key: &str) -> String {
+    let mark = format!("\"{key}\":");
+    let rest = s.split_once(&mark).unwrap().1.trim_start();
+    if let Some(rest) = rest.strip_prefix('"') {
+        rest.split('"').next().unwrap().to_owned()
+    } else {
+        rest.split([',', '}']).next().unwrap().trim().to_owned()
+    }
+}
+pub struct Peer {
+    pub label: String,
+    pub record: String,
+    pub pid: i32,
+    pub ppid: i32,
+    pub pgid: i32,
+    pub socket: Mutex<Option<UnixStream>>,
+    pub done: AtomicBool,
+}
+pub struct Controller {
+    pub dir: PathBuf,
+    rx: mpsc::Receiver<Arc<Peer>>,
+    all: Arc<Mutex<Vec<Arc<Peer>>>>,
+    closed: Arc<AtomicBool>,
+}
+impl Controller {
+    pub fn new() -> Self {
+        static NEXT: AtomicUsize = AtomicUsize::new(0);
+        let dir = std::env::temp_dir().join(format!(
+            "p1rust-{}-{}",
+            std::process::id(),
+            NEXT.fetch_add(1, Ordering::SeqCst)
+        ));
+        std::fs::create_dir(&dir).unwrap();
+        let listener = UnixListener::bind(dir.join("c")).unwrap();
+        listener.set_nonblocking(true).unwrap();
+        let (tx, rx) = mpsc::channel();
+        let all = Arc::new(Mutex::new(Vec::new()));
+        let closed = Arc::new(AtomicBool::new(false));
+        let stop = closed.clone();
+        let peers = all.clone();
+        std::thread::spawn(move || {
+            while !stop.load(Ordering::SeqCst) {
+                match listener.accept() {
+                    Ok((conn, _)) => {
+                        conn.set_nonblocking(false).unwrap();
+                        let tx = tx.clone();
+                        let peers = peers.clone();
+                        std::thread::spawn(move || {
+                            let mut reader = BufReader::new(conn.try_clone().unwrap());
+                            let mut line = String::new();
+                            reader.read_line(&mut line).unwrap();
+                            let p = Arc::new(Peer {
+                                label: field(&line, "Label"),
+                                record: field(&line, "Record"),
+                                pid: field(&line, "PID").parse().unwrap(),
+                                ppid: field(&line, "PPID").parse().unwrap(),
+                                pgid: field(&line, "PGID").parse().unwrap(),
+                                socket: Mutex::new(Some(conn)),
+                                done: AtomicBool::new(false),
+                            });
+                            peers.lock().unwrap().push(p.clone());
+                            tx.send(p.clone()).unwrap();
+                            // A stopped peer can reset the socket with an unread
+                            // release message. Both EOF and reset disconnect it;
+                            // stopped() still requires the lifetime lock released.
+                            match io::copy(&mut reader, &mut io::sink()) {
+                                Ok(_) => {}
+                                Err(error) if error.kind() == io::ErrorKind::ConnectionReset => {}
+                                Err(error) => panic!("controller disconnect: {error}"),
+                            }
+                            p.socket.lock().unwrap().take();
+                            p.done.store(true, Ordering::SeqCst);
+                        });
+                    }
+                    Err(e) if e.kind() == io::ErrorKind::WouldBlock => {
+                        std::thread::sleep(Duration::from_millis(1))
+                    }
+                    Err(e) => panic!("controller accept: {e}"),
+                }
+            }
+        });
+        env("P1_SOCKET", dir.join("c"));
+        Self {
+            dir,
+            rx,
+            all,
+            closed,
+        }
+    }
+    pub fn ready(&self, labels: &[&str]) -> Vec<Arc<Peer>> {
+        let mut got = std::collections::BTreeMap::new();
+        for _ in labels {
+            let p = self
+                .rx
+                .recv_timeout(Duration::from_secs(4))
+                .expect("readiness watchdog");
+            assert!(
+                labels.contains(&p.label.as_str()),
+                "unexpected ready {}",
+                p.label
+            );
+            assert!(got.insert(p.label.clone(), p).is_none(), "duplicate ready")
+        }
+        labels.iter().map(|l| got.remove(*l).unwrap()).collect()
+    }
+    pub fn release(&self, p: &Peer) {
+        let result = {
+            let mut socket = p.socket.lock().unwrap();
+            socket.as_mut().map(|socket| socket.write_all(b"release\n"))
+        };
+        // Stop can win before this release write. A closed socket is accepted
+        // only after both disconnection and lifetime release are observed; a
+        // live peer still fails the existing stopped() watchdog. Drop the socket
+        // guard first so its reader can publish disconnection without deadlock.
+        match result {
+            Some(Ok(())) => {}
+            None => self.stopped(p),
+            Some(Err(error)) if matches!(error.kind(), io::ErrorKind::BrokenPipe | io::ErrorKind::ConnectionReset) => self.stopped(p),
+            Some(Err(error)) => panic!("release {}: {error}", p.label),
+        }
+    }
+    pub fn alive(&self, p: &Peer) {
+        assert!(!p.done.load(Ordering::SeqCst), "{} disconnected", p.label);
+        assert!(
+            ownership::held(
+                &PathBuf::from(std::env::var_os("P1_OWNERSHIP").unwrap()).join(&p.record)
+            )
+            .unwrap(),
+            "{} lifetime released",
+            p.label
+        )
+    }
+    pub fn stopped(&self, p: &Peer) {
+        let end = Instant::now() + Duration::from_secs(2);
+        loop {
+            if p.done.load(Ordering::SeqCst)
+                && !ownership::held(
+                    &PathBuf::from(std::env::var_os("P1_OWNERSHIP").unwrap()).join(&p.record),
+                )
+                .unwrap()
+            {
+                return;
+            }
+            assert!(Instant::now() < end, "{} live before fallback", p.label);
+            std::thread::sleep(Duration::from_millis(1))
+        }
+    }
+}
+impl Drop for Controller {
+    fn drop(&mut self) {
+        self.closed.store(true, Ordering::SeqCst);
+        let mut leaks = Vec::new();
+        for p in self.all.lock().unwrap().iter() {
+            let held = ownership::held(
+                &PathBuf::from(std::env::var_os("P1_OWNERSHIP").unwrap()).join(&p.record),
+            )
+            .unwrap_or(false);
+            if held {
+                leaks.push(p.label.clone());
+                eprintln!(
+                    "runtime leak before harness fallback: {} pid={} pgid={}",
+                    p.label, p.pid, p.pgid
+                );
+                let _ = kill(Pid::from_raw(p.pid), Signal::SIGKILL);
+            }
+            if let Some(socket) = p.socket.lock().unwrap().take() {
+                let _ = socket.shutdown(std::net::Shutdown::Both);
+            }
+        }
+        let _ = std::fs::remove_dir_all(&self.dir);
+        if !leaks.is_empty() && !std::thread::panicking() {
+            panic!("live runtime resources before fallback: {leaks:?}")
+        }
+    }
+}
+pub fn private_companion() -> (String, PathBuf) {
+    static NEXT: AtomicUsize = AtomicUsize::new(0);
+    let root = std::env::current_exe()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let name = format!(
+        "companion/case-{}-{}",
+        std::process::id(),
+        NEXT.fetch_add(1, Ordering::SeqCst)
+    );
+    let path = root.join(&name);
+    std::fs::copy(root.join("companion/helper"), &path).unwrap();
+    (name, path)
+}

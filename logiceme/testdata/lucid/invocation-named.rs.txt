@@ -1,0 +1,70 @@
+
+
+// package main
+
+
+
+
+fn helper( ) -> (()) {
+    
+        
+
+print!("helper");
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let _unit = helper()
+;
+
+
+let highest = std::cmp::max(2, 3)
+;
+
+
+
+let text = String::from("rust");
+
+
+
+let length = text.len()
+
+;
+
+
+
+assert_eq!(highest, 3); assert_eq!(length, 4);
+
+
+
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+
+tokio::spawn(
+
+std::future::ready(())
+);
+
+
+
+
+
+});
+
+
+
+    
+}

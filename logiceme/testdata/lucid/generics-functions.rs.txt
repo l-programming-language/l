@@ -1,0 +1,109 @@
+
+
+// package main
+
+
+
+
+fn identity<T>( value: T) -> (T) {
+    
+        
+
+return value;
+
+
+
+    
+}
+fn borrow<'a>( value: &'a u8) -> (&'a u8) {
+    
+        
+
+return value;
+
+
+
+    
+}
+fn clone_value<'a, T: Clone + 'a>( value: &'a T) -> (T) {
+    
+        
+
+return value.clone();
+
+
+
+    
+}
+fn through_closure<T>( value: T) -> (T) {
+    
+        
+let pass = |item: T| -> (T) {
+  
+    
+
+return item;
+
+
+
+  
+}
+;
+
+
+let result = pass(value)
+;
+
+
+
+return result;
+
+
+
+    
+}
+fn plain( ) -> (u8) {
+    
+        
+
+return 9u8;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+
+let owner = 7u8;
+
+
+
+let first = identity::<u8>(owner)
+;
+
+
+let second = borrow(&owner)
+;
+
+
+let third = clone_value::<u8>(&owner)
+;
+
+
+let fourth = through_closure::<u16>(11u16)
+;
+
+
+let fifth = plain()
+;
+
+
+
+let _: u8 = first; let _: &u8 = second; let _: u8 = third; let _: u16 = fourth; let _: u8 = fifth; assert_eq!(owner, 7);
+
+
+
+    
+}

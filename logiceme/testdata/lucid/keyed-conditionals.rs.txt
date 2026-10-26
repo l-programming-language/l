@@ -1,0 +1,569 @@
+
+
+// package main
+
+
+
+
+
+
+enum Choice { Void, Other }
+const Void: i32 = 3;
+
+fn main( ) -> (()) {
+    
+        
+
+
+
+
+match 7_i32 {
+
+
+    single => {
+        
+
+let _: i32 = single;
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+
+
+
+match true {
+
+
+    false => {
+        
+
+let _ = "bool false";
+
+
+
+    },
+
+
+
+
+    true => {
+        
+
+let _ = "bool true";
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+
+
+
+match 8_i32 {
+
+
+    0 => {
+        
+
+let _ = "literal zero";
+
+
+
+    },
+
+
+
+
+    other => {
+        
+
+let _: i32 = other;
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+
+
+
+match (1_i32, 2_i32) {
+
+
+    (0, _) => {
+        
+
+let _ = "tuple zero";
+
+
+
+    },
+
+
+
+
+    (left, right) => {
+        
+
+let _: i32 = left + right;
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+
+
+
+match Some(3_i32) {
+
+
+    Some(inner) => {
+        
+
+let _: i32 = inner;
+
+
+
+    },
+
+
+
+
+    None => {
+        
+
+let _ = "constructor none";
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+
+
+
+match 4_u8 {
+
+
+    0..=5 => {
+        
+
+let _ = "range";
+
+
+
+    },
+
+
+
+
+
+    _ => {
+        
+
+let _ = "range fallback";
+
+
+
+    },
+
+
+}
+
+
+
+
+
+
+
+
+
+match 5_i32 {
+
+
+    0 => {
+        
+
+let _ = "direct first";
+
+
+
+    },
+
+
+
+
+
+    _ => {
+        
+
+let _ = "direct fallback";
+
+
+
+    },
+
+
+}
+
+
+
+
+
+
+
+
+
+match 10_i32 {
+
+
+    1 => {
+        
+
+let _ = "composed first";
+
+
+
+    },
+
+
+
+
+
+    _ => {
+        
+
+let _ = "composed fallback";
+
+
+
+    },
+
+
+}
+
+
+
+
+
+
+
+
+
+match () {
+
+
+
+    _ => {
+        
+
+let _ = "fallback only";
+
+
+
+    },
+
+
+}
+
+
+
+
+
+
+
+
+
+match 23_i32 {
+
+
+    _ => {
+        
+
+let _ = "caller wildcard";
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+
+
+
+match "Void" {
+
+
+    "Void" => {
+        
+
+let _ = "quoted Void";
+
+
+
+    },
+
+
+
+
+
+    _ => {
+        
+
+let _ = "text fallback";
+
+
+
+    },
+
+
+}
+
+
+
+
+
+
+
+
+
+match Choice::Void {
+
+
+    Choice::Void => {
+        
+
+let _ = "qualified Void";
+
+
+
+    },
+
+
+
+
+    Choice::Other => {
+        
+
+let _ = "qualified other";
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+
+
+
+match Void {
+
+
+    (Void) => {
+        
+
+let _ = "parenthesized native Void";
+
+
+
+    },
+
+
+
+
+    _ => {
+        
+
+let _ = "constant fallback";
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+
+
+
+match true {
+
+
+    false => {
+        
+
+let _ = "outer false";
+
+
+
+    },
+
+
+
+
+    true => {
+        
+
+
+
+
+match Some(6_i32) {
+
+
+    Some(nested) => {
+        
+
+let _: i32 = nested;
+
+
+
+    },
+
+
+
+
+    None => {
+        
+
+let _ = "nested none";
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+let _ = "outer body once";
+
+
+
+    },
+
+
+
+}
+
+
+
+
+
+
+
+
+
+match 2_i32 {
+
+
+    1 => {
+        
+
+let _ = "grouped one";
+
+
+
+    },
+
+
+
+
+    2 => {
+        
+
+let _ = "grouped two";
+
+
+
+    },
+
+
+
+
+
+    _ => {
+        
+
+let _ = "grouped fallback";
+
+
+
+    },
+
+
+}
+
+
+
+
+
+    
+}

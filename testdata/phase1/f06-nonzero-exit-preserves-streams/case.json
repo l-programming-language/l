@@ -1,0 +1,24 @@
+{
+  "id": "F06",
+  "title": "nonzero-exit-preserves-streams",
+  "profile": "failure",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Child exit status is 7, its stderr is problem LF, and stdout is partial SPACE LF.",
+    "Execute/Await do not implicitly exit the orchestrator; the program exits 0 after handling Error.",
+    "Child stderr is not automatically forwarded to orchestrator stderr."
+  ],
+  "expected_runtime": {
+    "stdout": "failed|partial \n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l",
+    "../companions/failure.l",
+    "../companions/actions.l"
+  ]
+}

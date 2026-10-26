@@ -1,0 +1,66 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+let (tx, mut rx) = tokio::sync::mpsc::channel::<String>(1);
+
+
+
+
+tx.send(String::from("message")).await.unwrap();
+
+
+
+
+drop(tx);
+
+
+
+
+
+while let Some(text) = (rx).recv().await {
+    
+
+print!("received {}", text);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+print!("after closure");
+
+
+
+
+});
+
+
+
+    
+}

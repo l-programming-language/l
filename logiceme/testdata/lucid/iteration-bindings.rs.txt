@@ -1,0 +1,172 @@
+
+
+// package main
+
+
+use std::ops::ControlFlow;
+
+
+fn main( ) -> (()) {
+    
+        
+
+let mut numbers = vec![1, 2].into_iter();
+
+
+
+
+
+while let Some(number) = numbers.next() {
+    
+
+print!("number {}", number);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+let mut pairs = vec![(3, 4)].into_iter();
+
+
+
+
+
+while let Some((left, right)) = pairs.next() {
+    
+
+print!("pair {} {}", left, right);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+struct Pair { name: String, coordinates: (i32, i32) }
+
+
+
+
+
+while let Some(Pair { name, coordinates: (x, y) }) = Some(Pair { name: String::from("record"), coordinates: (5, 6) }) {
+    
+
+print!("record {} {} {}", name, x, y);
+
+
+
+
+break;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+let borrowed = Some(String::from("retained"));
+
+
+
+
+
+while let Some(text) = &borrowed {
+    
+
+print!("borrowed {}", text);
+
+
+
+
+break;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+while let Some(ref text) = borrowed {
+    
+
+print!("explicit modifier {}", text);
+
+
+
+
+break;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+print!("owner {}", borrowed.as_ref().unwrap());
+
+
+
+
+
+while let ControlFlow::Continue((first, second)) = ControlFlow::<(), (i32, i32)>::Continue((7, 8)) {
+    
+
+print!("import {} {}", first, second);
+
+
+
+
+break;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+    
+}

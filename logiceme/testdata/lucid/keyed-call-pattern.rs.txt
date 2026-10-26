@@ -1,0 +1,48 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+
+
+
+match String::from("ready") {
+
+
+    String::new() => {
+        
+
+let _ = "invalid call pattern";
+
+
+
+    },
+
+
+
+
+
+    _ => {
+        
+
+let _ = "call fallback";
+
+
+
+    },
+
+
+}
+
+
+
+
+
+    
+}

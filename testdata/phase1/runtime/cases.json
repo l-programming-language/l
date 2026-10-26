@@ -1,0 +1,492 @@
+[
+  {
+    "id": "P1-RUN-01",
+    "scenario": "A is gated. Run A, then execute an orchestrator checkpoint that releases A; Await A.",
+    "assertions": "The release checkpoint is reached while A is alive. Exactly one A launch occurs. Await settles A, then final Output equals its configured payload. A blocking Run deadlocks this causal arrangement and fails the watchdog."
+  },
+  {
+    "id": "P1-RUN-02",
+    "scenario": "A and B use the two-party rendezvous. Run A; Run B; Await A; Await B.",
+    "assertions": "Both ready records exist before either release. PIDs differ from each other and from the orchestrator. Both payloads are correct; no timing threshold is used to claim overlap."
+  },
+  {
+    "id": "P1-RUN-03",
+    "scenario": "Same rendezvous; release B first. Await A before B; Show A Output followed by B Output.",
+    "assertions": "B can finish while Await A is pending. After A release, visible stdout is exactly `A\\nB\\n` regardless of finish order. Neither child's captured output is forwarded early."
+  },
+  {
+    "id": "P1-RUN-04",
+    "scenario": "Run A and B; release A first; Await B before A.",
+    "assertions": "Await observes its named canonical App. A's completion cannot unblock Await B. Final Show B; Show A yields `B\\nA\\n`."
+  },
+  {
+    "id": "P1-RUN-05",
+    "scenario": "A creates a ready record only after a gate released by a separate later action. Run A; perform that release; Await A.",
+    "assertions": "Run returns without waiting for application readiness. The later release makes A ready and permits normal completion."
+  },
+  {
+    "id": "P1-RUN-06",
+    "scenario": "A's generated main records PID/PPID and a unique launch marker. Invoke Run A.",
+    "assertions": "Generated orchestration calls the process runtime. A is a companion OS process; no generated `go A()` or in-orchestrator App main execution substitutes for the launch. Runtime I/O/supervision goroutines are permitted."
+  },
+  {
+    "id": "P1-RUN-07",
+    "scenario": "A validates caller CWD, one sentinel environment variable, stdin EOF, and zero synthesized user arguments; launch the orchestrator from another directory.",
+    "assertions": "All four existing inheritance conventions hold. Companion location is resolved from the executable, not caller CWD. Stdout is exactly the fixture's success token."
+  },
+  {
+    "id": "P1-RUN-08",
+    "scenario": "Run A with no preceding explicit Build; Await A.",
+    "assertions": "Run validates/revalidates its own companion, launches once, and produces the same result as Build; Run; Await."
+  },
+  {
+    "id": "P1-RUN-09",
+    "scenario": "Build A, then perform a controller checkpoint and exit without Run/Start/Execute.",
+    "assertions": "No App process launches; no continuation executes. Runtime Build does not invoke Go. Compiler `l build` likewise does not execute App behavior."
+  },
+  {
+    "id": "P1-RUN-10",
+    "scenario": "Start A, perform the gate release checkpoint, Await A.",
+    "assertions": "Start expands Build then Run; it returns before process completion and has the same one-launch result as explicit Build; Run."
+  },
+  {
+    "id": "P1-RUN-11",
+    "scenario": "Execute A; Show A Output. A's helper exits after a controller release.",
+    "assertions": "Execute expands Start then Await; it returns only after settled output and the once-only continuation. Stdout contains the payload exactly once."
+  },
+  {
+    "id": "P1-RUN-14",
+    "scenario": "Keep A running across multiple controller barriers and unrelated B invocations, then release A.",
+    "assertions": "A is not canceled by an incidental runtime timeout. Test deadlines remain external watchdogs."
+  },
+  {
+    "id": "P1-AWAIT-01",
+    "scenario": "A is gated with no final payload yet. Await A through the real pending-state branch; release A.",
+    "assertions": "Await returns only after final payload capture and child reaping. Its following Show prints the entire configured payload."
+  },
+  {
+    "id": "P1-AWAIT-02",
+    "scenario": "A exits successfully before Await is reached; then Await A.",
+    "assertions": "Cached completion is joined without a second OS Wait, extra process, or missing continuation."
+  },
+  {
+    "id": "P1-AWAIT-03",
+    "scenario": "Run A; Await A; Await A; Show A Output twice.",
+    "assertions": "One launch, one OS Wait, one continuation execution. The two explicit Shows print the same cached bytes twice; Await itself prints nothing."
+  },
+  {
+    "id": "P1-AWAIT-04",
+    "scenario": "A exits 7 with stdout `partial\\n` and stderr `details\\n`; Await A twice.",
+    "assertions": "Both observations retain failure category, exit status 7, stdout and stderr. Repetition cannot clear the failure or append duplicate error details."
+  },
+  {
+    "id": "P1-AWAIT-05",
+    "scenario": "Call Await on a declared App with no Run or Start attempt.",
+    "assertions": "Defined no-invocation error; no blocking, process launch, or continuation. Exact public diagnostic text is fixed only after the error model is accepted."
+  },
+  {
+    "id": "P1-AWAIT-06",
+    "scenario": "Build A successfully without launching; Await A.",
+    "assertions": "Same no-invocation result as P1-AWAIT-05. Build is not an execution attempt."
+  },
+  {
+    "id": "P1-AWAIT-07",
+    "scenario": "Run A fails before process creation; Await A twice.",
+    "assertions": "Immediate cached failed-attempt outcome; empty captured streams, no OS Wait on an unstarted command, continuation at most once."
+  },
+  {
+    "id": "P1-AWAIT-08",
+    "scenario": "Alias Primary refers to A. Run Primary; Await A; Await Primary; Show both Outputs.",
+    "assertions": "One canonical invocation and one continuation. Both names observe the same output/outcome, including identity and joined state."
+  },
+  {
+    "id": "P1-AWAIT-09",
+    "scenario": "Alias chain Primary → Secondary → A. Run through the deepest alias; Stop another alias; Await A.",
+    "assertions": "Every operation targets the same invocation. No copied `lApp` value creates a second mutable state record."
+  },
+  {
+    "id": "P1-AWAIT-10",
+    "scenario": "A and B use the same source behavior/literal but are separate App declarations. Run both.",
+    "assertions": "Separate canonical identities, process slots, outputs and outcomes. Structural equality of code/text does not alias execution state."
+  },
+  {
+    "id": "P1-AWAIT-11",
+    "scenario": "Run A while its first attempt is gated; issue a second Run A, including alias spelling.",
+    "assertions": "Reject the second launch with a fatal outstanding-invocation error. Mandatory cleanup still owns the first invocation; its buffers/identity are not cleared before cleanup can stop/reap it. Runtime inspection verifies that preservation; source instructions after the misuse do not execute."
+  },
+  {
+    "id": "P1-AWAIT-12",
+    "scenario": "A's first child has exited, but no Await has occurred; issue Run A again.",
+    "assertions": "Same rejection as P1-AWAIT-11. Completion alone does not release the observation slot."
+  },
+  {
+    "id": "P1-AWAIT-13",
+    "scenario": "Run A; Await A; alter helper payload for the next allowed run; Run A; Await A.",
+    "assertions": "Two distinct logical attempt IDs and two launches. Latest Output becomes exactly the second payload; it is not concatenated with old bytes."
+  },
+  {
+    "id": "P1-AWAIT-14",
+    "scenario": "First run fails; Await it; second succeeds; Await it. Repeat in reverse order.",
+    "assertions": "Each new accepted run obtains fresh buffers/error state; prior success or failure cannot contaminate the new outcome. Saved source scalar Output values remain unchanged."
+  },
+  {
+    "id": "P1-AWAIT-15",
+    "scenario": "Delay a finalization/cancellation callback belonging to settled attempt 1 until attempt 2 is running, using an observation/fault seam around the real state transition.",
+    "assertions": "The late event can mutate only attempt 1 or be ignored. It cannot mark attempt 2 complete, overwrite its output/error, or signal its process. The scenario does not depend on forcing OS PID reuse."
+  },
+  {
+    "id": "P1-AWAIT-16",
+    "scenario": "Attempt 1's continuation runs Run A before returning.",
+    "assertions": "Reject Run during the active continuation; attempt 1 remains coherent and no second process launches."
+  },
+  {
+    "id": "P1-AWAIT-17",
+    "scenario": "Attempt 1's continuation contains Await A.",
+    "assertions": "Cached same-invocation observation returns without acquiring the continuation again. No recursion, second continuation, or deadlock; the outer continuation retains its active ownership until it returns."
+  },
+  {
+    "id": "P1-AWAIT-18",
+    "scenario": "Multiple internal awaiters observe one invocation while the public L orchestrator remains synchronous.",
+    "assertions": "If the runtime API permits this, all receive the same immutable result and only one Wait/continuation claim succeeds. If not permitted, enforce/document rejection. This is internal hardening, not Phase 2 concurrency syntax."
+  },
+  {
+    "id": "P1-STOP-01",
+    "scenario": "A sends ready and holds a lock indefinitely. Stop A; Await A.",
+    "assertions": "A is terminated, its direct child is reaped, lock is released, final outcome is requested termination, and no user cleanup inside the child is promised."
+  },
+  {
+    "id": "P1-STOP-02",
+    "scenario": "A and B are independently gated. Stop A; Await A; release and Await B.",
+    "assertions": "Only A's owned group is targeted. B completes successfully with unchanged bytes."
+  },
+  {
+    "id": "P1-STOP-03",
+    "scenario": "Stop A twice before Await, then again after Await.",
+    "assertions": "Request is idempotent. One final result, no second Wait, no spurious failure because the process is already gone, and no replacement process is launched."
+  },
+  {
+    "id": "P1-STOP-04",
+    "scenario": "Stop A before any accepted execution attempt.",
+    "assertions": "Stop without an accepted execution attempt is fatal lifecycle misuse; no process or continuation launches."
+  },
+  {
+    "id": "P1-STOP-05",
+    "scenario": "A already finished successfully and its completion is recorded; Stop A; Await A.",
+    "assertions": "Result remains successful. Stop does not fabricate cancellation after observed completion."
+  },
+  {
+    "id": "P1-STOP-06",
+    "scenario": "A exited 7 and completion is recorded; Stop A; Await A.",
+    "assertions": "Exit status 7 and partial streams remain the recorded outcome."
+  },
+  {
+    "id": "P1-STOP-07",
+    "scenario": "Hold the real completion-publication boundary after observing natural success but before a concurrently pending Stop path checks state. Release in each prescribed ordering.",
+    "assertions": "Completion-winning ordering preserves success. Stop-winning ordering records the accepted request, but final classification follows the actual defined termination/exit result; it must not claim the child was killed if it had already exited successfully. Each ordering settles once."
+  },
+  {
+    "id": "P1-STOP-08",
+    "scenario": "Exercise a simultaneous release-to-exit and Stop request repeatedly, without claiming a deterministic winner.",
+    "assertions": "Accepted results are only the documented natural-completion or requested-termination alternatives. For every repetition: one terminal result, one Wait, no hang, no signal to another attempt, intact output prefixes. Repetition supplements the deterministic P1-STOP-07 cases."
+  },
+  {
+    "id": "P1-STOP-09",
+    "scenario": "A writes acknowledged stdout `first\\n\\n雪\\t` and stderr `warn\\n`, then waits. Stop and Await A.",
+    "assertions": "Final stdout is exactly the acknowledged bytes, stderr is exactly `warn\\n`, and a termination cause remains. No assumed bytes from writes never acknowledged before termination."
+  },
+  {
+    "id": "P1-STOP-10",
+    "scenario": "A starts a gated descendant in its process group; both acknowledge locks. Stop A; Await A.",
+    "assertions": "Both locks release and control connections close; the direct A child is reaped once. Do not assert the orchestrator directly reaps a grandchild."
+  },
+  {
+    "id": "P1-STOP-11",
+    "scenario": "Same as P1-STOP-10, but descendant inherits neither captured pipe.",
+    "assertions": "Group termination still occurs; absence of pipe blockage is not treated as evidence that descendants are gone."
+  },
+  {
+    "id": "P1-STOP-12",
+    "scenario": "A's leader exits while a same-group descendant holds a pipe and lock. Await A.",
+    "assertions": "Required group cleanup settles the descendant and capture. Preserve all acknowledged bytes; apply the approved pipe-drain-error policy if the bound expires. Await cannot hang indefinitely on inherited descriptors."
+  },
+  {
+    "id": "P1-STOP-13",
+    "scenario": "Inject signal-delivery failure while a gated App remains alive, then let the App finish and Await it.",
+    "assertions": "Stop returns normally and exposes the delivery error through App.Error without destroying the invocation. Await reselects the finalized execution result, preserving streams and one Wait owner."
+  },
+  {
+    "id": "P1-STOP-14",
+    "scenario": "The OS reports the target group/process no longer exists when Stop attempts to signal a just-completed invocation.",
+    "assertions": "Treat the gone-process result as completion/no-op where appropriate; do not overwrite an available natural exit cause or leak resources."
+  },
+  {
+    "id": "P1-STOP-15",
+    "scenario": "Stop A; Await A; rerun A and let it succeed.",
+    "assertions": "Cancellation state is scoped to the prior invocation. A fresh run succeeds; Stop did not cancel a reusable global runtime context."
+  },
+  {
+    "id": "P1-STOP-16",
+    "scenario": "Alias Primary names A; Stop Primary while another alias awaits A.",
+    "assertions": "Same group, same identity, same recorded termination. Name spelling cannot create a second cancellation owner."
+  },
+  {
+    "id": "P1-RESULT-01",
+    "scenario": "A emits stdout `first\\n\\nlast\\t雪` and stderr `notice\\n`, exits 0; Await and Show Output.",
+    "assertions": "Exact stdout `first\\n\\nlast\\t雪`; no automatic stderr forwarding and no Error solely because stderr is nonempty."
+  },
+  {
+    "id": "P1-RESULT-02",
+    "scenario": "A emits no bytes and exits 0; Await A.",
+    "assertions": "Present successful completion with Output `\"\"`, distinguishable from output-unavailable state."
+  },
+  {
+    "id": "P1-RESULT-03",
+    "scenario": "A emits byte payload containing NUL, invalid UTF-8, CRLF, quotes and trailing spaces; Await; retrieve/show it through runtime Text transport.",
+    "assertions": "Exact byte equality, no Unicode replacement or newline conversion. A separate G/I case must prove source literal encoding only for bytes the L literal grammar supports."
+  },
+  {
+    "id": "P1-RESULT-04",
+    "scenario": "A writes stdout and stderr blocks independently, each larger than a normal pipe buffer, then exits.",
+    "assertions": "Both complete without pipe deadlock, mixing or truncation. Hashes/byte lengths validate large payloads; a small prefix/suffix case additionally uses literal expected bytes."
+  },
+  {
+    "id": "P1-RESULT-05",
+    "scenario": "Delay the actual output writer's final write completion after the direct process exit is observed; Await A.",
+    "assertions": "Await cannot publish final Output or invoke continuation before capture finishes. Use a synchronized writer/test seam on the actual capture path, not a sleep."
+  },
+  {
+    "id": "P1-RESULT-06",
+    "scenario": "A emits `partial\\n`, stderr `details\\n`, exits 7; Await; Show Output; Exit with Error.",
+    "assertions": "Before Exit, stdout is exactly `partial\\n`. Error preserves exit cause/status 7 and stderr detail; language Exit Error returns 1 with its defined diagnostic formatting. Application status and orchestrator status are distinct."
+  },
+  {
+    "id": "P1-RESULT-07",
+    "scenario": "A succeeds with nonempty stderr; B fails with empty stderr.",
+    "assertions": "A's Error is absent and B's Error remains present with its exit cause. Error is not inferred merely from presence/absence of stderr."
+  },
+  {
+    "id": "P1-RESULT-08",
+    "scenario": "Read Output before any Run, including an unused source assignment of Output.",
+    "assertions": "Defined output-unavailable failure at evaluation, no launch, stdout empty, diagnostics only on stderr, and all other running Apps cleaned up. An unused variable does not suppress the read's effect."
+  },
+  {
+    "id": "P1-RESULT-09",
+    "scenario": "A is known gated/running; read Output before Await.",
+    "assertions": "Defined output-unavailable failure. It must not return a mutable partial snapshot or implicitly Await."
+  },
+  {
+    "id": "P1-RESULT-10",
+    "scenario": "A completed and capture is final, but no Await occurred; read Output. A runtime completion observer/test helper barrier establishes this state without invoking the public Await.",
+    "assertions": "Exact final Output is readable, but the continuation remains unactivated and rerun is still rejected. The test must not replace completion proof with a sleep."
+  },
+  {
+    "id": "P1-RESULT-11",
+    "scenario": "Save A Output after joined attempt 1 in scalar x; rerun A with another output; Show x and latest Output.",
+    "assertions": "x retains its first bytes; latest Output contains only the second attempt. Neither variable aliases a mutable capture buffer."
+  },
+  {
+    "id": "P1-RESULT-12",
+    "scenario": "Run fails because companion is missing; Await.",
+    "assertions": "No process, empty streams, launch/readiness cause preserved through Await, and the failed continuation is eligible exactly once."
+  },
+  {
+    "id": "P1-RESULT-13",
+    "scenario": "Validate then replace/remove companion before Start's actual exec using a controlled launch-boundary seam.",
+    "assertions": "Launch failure records the actual filesystem/exec cause; stale Build readiness cannot fabricate success. No wait on an unstarted command."
+  },
+  {
+    "id": "P1-RESULT-14",
+    "scenario": "Companion path is outside relative bundle, directory, nonexecutable regular file, or symlink where existing validation rejects it.",
+    "assertions": "Defined validation failure with source/phase context. No application behavior or shell fallback runs. Each case is independent."
+  },
+  {
+    "id": "P1-RESULT-15",
+    "scenario": "Executable-looking regular companion is malformed or wrong native format.",
+    "assertions": "Exec-format failure, no successful invocation result, no fallback shell interpretation. Await resolves the failed attempt."
+  },
+  {
+    "id": "P1-RESULT-16",
+    "scenario": "Companion remains missing/invalid throughout Start A's Build and Run, then Execute reaches Await.",
+    "assertions": "Build then Run both execute according to source composition. Run revalidates and records a terminal failed attempt with the actual readiness/launch cause; Await observes it. No child launches and no generic no-invocation error replaces the failed attempt."
+  },
+  {
+    "id": "P1-RESULT-17",
+    "scenario": "Standalone Build fails after a prior joined successful invocation; repeat cached Await.",
+    "assertions": "Build exposes its operation failure without mutating the retained invocation or output. Cached Await reselects the immutable prior execution result through App.Error."
+  },
+  {
+    "id": "P1-RESULT-18",
+    "scenario": "Run A is outstanding; attempt Build or Start A.",
+    "assertions": "Fatal rejection before mutation. Active process identity, buffers, path and invocation result remain intact for mandatory cleanup. Start cannot evade duplicate-Run protection."
+  },
+  {
+    "id": "P1-RESULT-19",
+    "scenario": "Runtime context is already shutting down before Run.",
+    "assertions": "No child launched; a canceled/refused-launch attempt is recorded and Await is immediately resolvable."
+  },
+  {
+    "id": "P1-RESULT-20",
+    "scenario": "Capture fails through a deliberately failing writer or closed capture resource.",
+    "assertions": "Final outcome contains capture failure; partial successfully captured bytes remain available after settlement. A zero child exit status does not hide capture failure."
+  },
+  {
+    "id": "P1-RESULT-22",
+    "scenario": "A test seam repairs a transient companion-validation problem between Start's Build and Run.",
+    "assertions": "Start is unconditional source composition: Run revalidates after Build, including a failed Build, and may succeed when the companion becomes available."
+  },
+  {
+    "id": "P1-CONT-01",
+    "scenario": "A's paragraph continuation shows `C:A\\|`. Run A; Show `between\\|`; Await A; Show `after\\|`.",
+    "assertions": "Exact visible marker order is `between\\|C:A\\|after\\|`. Run and background completion cannot execute `C:A\\|`."
+  },
+  {
+    "id": "P1-CONT-02",
+    "scenario": "Same continuation; Run A; Await A; Await A.",
+    "assertions": "`C:A\\|` appears exactly once for that invocation."
+  },
+  {
+    "id": "P1-CONT-03",
+    "scenario": "Run A; let it complete; do unrelated source work before Await.",
+    "assertions": "Continuation occurs at first explicit join position, not at nondeterministic child finish time."
+  },
+  {
+    "id": "P1-CONT-04",
+    "scenario": "Run A and B; B finishes first; Await A then B.",
+    "assertions": "Continuation markers appear `C:A\\|C:B\\|` in join order, after their respective result finalization."
+  },
+  {
+    "id": "P1-CONT-05",
+    "scenario": "A launch fails, exits 7, or is stopped; continuation branches on its Error and prints `failed\\|`.",
+    "assertions": "Each of the three failure modes invokes the continuation once at first Await; it can read the correct error and any partial Output. No unconditional success marker is printed."
+  },
+  {
+    "id": "P1-CONT-06",
+    "scenario": "A's continuation contains bare Exit; B is already running and gated. Await A.",
+    "assertions": "Orchestrator shuts down with the selected bare-exit status, B is terminated/reaped, and instructions after Await are unreachable."
+  },
+  {
+    "id": "P1-CONT-07",
+    "scenario": "A's continuation exits with Error while B is running.",
+    "assertions": "Preserve A's explicit diagnostic/status; cleanup B; do not run B's unawaited continuation or post-Await source."
+  },
+  {
+    "id": "P1-CONT-08",
+    "scenario": "A's continuation starts and awaits distinct B, then shows `A:end\\|`.",
+    "assertions": "B's continuation occurs inline before `A:end\\|`; both processes have single join ownership. Distinct-App nesting is supported without requiring a language goroutine."
+  },
+  {
+    "id": "P1-CONT-09",
+    "scenario": "Run A but never Await; ordinary program end.",
+    "assertions": "A is cleaned up as owned work; its user continuation is not executed by shutdown."
+  },
+  {
+    "id": "P1-CONT-10",
+    "scenario": "Execute A activates A's continuation; caller also contains Await A afterward.",
+    "assertions": "The added Await is a cached observation; Execute does not cause double activation."
+  },
+  {
+    "id": "P1-CONT-11",
+    "scenario": "Rerun A only after its first Await/continuation returns, then Await again.",
+    "assertions": "Continuation runs once per accepted invocation, twice total. Its per-activation local values are initialized according to existing paragraph semantics."
+  },
+  {
+    "id": "P1-EXIT-01",
+    "scenario": "Reach normal top-level fallthrough while children are outstanding.",
+    "assertions": "Cleanup completes, program exits 0 if cleanup succeeds, and child stdout is not implicitly shown."
+  },
+  {
+    "id": "P1-EXIT-02",
+    "scenario": "Execute a top-level bare Exit while children are outstanding.",
+    "assertions": "Same cleanup guarantees as fallthrough; later source instructions do not execute; status 0."
+  },
+  {
+    "id": "P1-EXIT-03",
+    "scenario": "Execute Exit with a known Error `requested failure`.",
+    "assertions": "Exact language-owned stderr `requested failure\\n`, status 1, children cleaned up. Existing diagnostic newline rules remain explicit."
+  },
+  {
+    "id": "P1-EXIT-04",
+    "scenario": "Trigger Output-unavailable runtime failure while children are outstanding.",
+    "assertions": "Defined misuse diagnostic, status 1, complete cleanup. This specifically exercises paths currently implemented with direct `os.Exit`."
+  },
+  {
+    "id": "P1-EXIT-05",
+    "scenario": "Break orchestrator stdout and stderr in separate subprocess cases while owned children are outstanding.",
+    "assertions": "Broken stdout or stderr triggers cleanup and exit 1, including descriptor-1/2 SIGPIPE handling. Failed error reporting must not recursively retry the broken diagnostic writer."
+  },
+  {
+    "id": "P1-EXIT-06",
+    "scenario": "Send SIGINT after owned helpers acknowledge readiness while Await is pending or about to enter.",
+    "assertions": "Clean all owned groups and direct children, abort source flow without any unawaited continuation, and exit 130."
+  },
+  {
+    "id": "P1-EXIT-07",
+    "scenario": "Send SIGTERM after owned helpers acknowledge readiness while Await is pending or about to enter.",
+    "assertions": "Clean all owned groups and direct children, abort source flow without any unawaited continuation, and exit 143."
+  },
+  {
+    "id": "P1-EXIT-08",
+    "scenario": "Deliver SIGINT and SIGTERM in independent cases after Run returned and before an explicit Await.",
+    "assertions": "Supervision cleans every owned child even without public Await pending, aborts source execution, and exits 130 for SIGINT or 143 for SIGTERM."
+  },
+  {
+    "id": "P1-EXIT-09",
+    "scenario": "Race a shutdown request with a launch at controlled pre- and post-Start boundaries.",
+    "assertions": "Before-Start ordering launches nothing. Successful-Start ordering immediately transfers the new child to cleanup ownership and reaps it. No gap permits an unregistered child."
+  },
+  {
+    "id": "P1-EXIT-10",
+    "scenario": "Trigger shutdown while one child already completed unawaited and another is running.",
+    "assertions": "Completed child is reaped/finalized exactly once; running child is canceled/reaped; no duplicate Wait errors."
+  },
+  {
+    "id": "P1-EXIT-11",
+    "scenario": "Trigger two cleanup requests, such as signal plus runtime error, in both controlled orderings.",
+    "assertions": "Repeated cleanup remains idempotent. With cleanup held after the first exit decision, deliver the competing fatal/signal request and observe it inside the real runtime before cleanup release. The first accepted request selects status and primary diagnostic; both orderings preserve once-only Wait and cleanup, for SIGINT and SIGTERM."
+  },
+  {
+    "id": "P1-EXIT-12",
+    "scenario": "Inject cleanup failure during explicit Exit Error.",
+    "assertions": "Keep the explicit language error primary and retain each additional cleanup cause once in deterministic launch order; status 1."
+  },
+  {
+    "id": "P1-EXIT-13",
+    "scenario": "Inject cleanup failure during normal fallthrough or bare Exit.",
+    "assertions": "Report cleanup failure and exit 1; do not report successful settlement. The test records unsettled resources before fallback cleanup."
+  },
+  {
+    "id": "P1-EXIT-14",
+    "scenario": "A's continuation starts B and then immediately exits or errors.",
+    "assertions": "B is registered as owned before the source can take the exit path; B is cleaned up just like a top-level child."
+  },
+  {
+    "id": "P1-EXIT-15",
+    "scenario": "Inspect generated exit plumbing and exercise the actual error-exit implementation.",
+    "assertions": "All language-owned exit routes reach cleanup explicitly; reliance only on a deferred function is rejected when an `os.Exit` route bypasses it."
+  },
+  {
+    "id": "P1-RESOURCE-01",
+    "scenario": "Run/Await the same App 64 times with distinct payload tokens; repeat after stopped and failed attempts.",
+    "assertions": "All logical identities differ, outputs match per attempt, no outstanding direct child remains, and internal handles/readers/writers are released once. Fixed iteration count is test workload, not product capacity."
+  },
+  {
+    "id": "P1-RESOURCE-02",
+    "scenario": "Launch a modest fixed set, e.g. eight distinct Apps, into one rendezvous; release/join in reverse order.",
+    "assertions": "All launch before release, all settle, each result stays associated with its App. No new arbitrary App-count cap is inferred."
+  },
+  {
+    "id": "P1-RESOURCE-03",
+    "scenario": "Compare runtime-owned descriptors/handles before and after repeated completed attempts using platform-supported inspection, excluding known test infrastructure.",
+    "assertions": "No monotonically retained descriptors or zombie direct children. Avoid an exact process-wide goroutine count as the sole oracle."
+  },
+  {
+    "id": "P1-RESOURCE-04",
+    "scenario": "Cause a launch-resource error through a controlled OS seam; optionally confirm with a low descriptor limit inside one disposable process. Existing A remains live.",
+    "assertions": "Failed B attempt is awaitable with the original launch cause; A is unchanged; partial B allocations are released. No host-wide resource exhaustion."
+  },
+  {
+    "id": "P1-RESOURCE-05",
+    "scenario": "Remove the controlled launch-resource failure, then retry only after the failed attempt is joined.",
+    "assertions": "Fresh run succeeds; failure did not poison global state or consume a permanent invocation slot."
+  }
+]

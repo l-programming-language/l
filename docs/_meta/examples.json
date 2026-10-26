@@ -1,0 +1,973 @@
+{
+  "schemaVersion": 1,
+  "examples": [
+    {
+      "id": "basic",
+      "source": "demo/basic/main.l",
+      "classification": "runnable",
+      "description": "Canonical Hello World App with explicit IO.Print import and finalized output.",
+      "sha256": "20ec30ca4fe054c11a28ce96c35e6e960f6af48921f1da1041e29fe9d88ae741",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go"
+      ],
+      "expectedStdoutBase64": "SGVsbG8gV29ybGQhCg==",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "two-apps",
+      "source": "demo/phase1/main.l",
+      "classification": "runnable",
+      "description": "Launch two Apps, join in reverse order, show output in explicit source order.",
+      "sha256": "4d8aac2bf95ca98aac182220cf64de89805358a24bfc808a7c50d940b7b22f2a",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go"
+      ],
+      "expectedStdoutBase64": "Rmlyc3QKU2Vjb25kCg==",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "public-values",
+      "source": "demo/paragraphs/public-values.l",
+      "classification": "runnable",
+      "description": "Public paragraph scalars and project-owned vocabulary Dictionary.",
+      "sha256": "41b11a3bfa7e5b4a5b2f800976015b04e17f661cfd13d2a1606f4da7cd560162",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "expectedStdoutBase64": "cHVibGljN3RydWU=",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "guide-text-value",
+      "source": "demo/basic/main.l",
+      "classification": "fragment",
+      "description": "Text declaration from the complete Hello World program.",
+      "sha256": "20ec30ca4fe054c11a28ce96c35e6e960f6af48921f1da1041e29fe9d88ae741",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 3,
+        "end": 3
+      }
+    },
+    {
+      "id": "guide-number-value",
+      "source": "demo/paragraphs/public-values.l",
+      "classification": "fragment",
+      "description": "Number declaration from the complete public-values example.",
+      "sha256": "41b11a3bfa7e5b4a5b2f800976015b04e17f661cfd13d2a1606f4da7cd560162",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 2,
+        "end": 2
+      }
+    },
+    {
+      "id": "local-shadowing",
+      "source": "demo/paragraphs/local-shadowing.l",
+      "classification": "runnable",
+      "description": "Sibling and enclosing source scopes preserve independent bindings.",
+      "sha256": "de3246cb93f6e8fc07c83d3ae53d48e459a82edddf99dcbb8ea23bad116f56f2",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "expectedStdoutBase64": "aW5uZXI3dHJ1ZXNlY29uZG91dGVy",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "paragraph-fallthrough",
+      "source": "demo/paragraphs/fallthrough.l",
+      "classification": "runnable",
+      "description": "Sequential Execute actions activate local continuations.",
+      "sha256": "e587526755675440098bd016b69bf6220dc0668ff4ac3e84406649b1d460ece3",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "expectedStdoutBase64": "Rmlyc3QKU2Vjb25kCmRvbmU=",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "local-definitions",
+      "source": "demo/paragraphs/local-definitions.l",
+      "classification": "runnable",
+      "description": "Scoped action and descriptor definitions reuse source vocabulary.",
+      "sha256": "e8e0b3b83cf5a8987424d68ffd2c049962782dbcc59fdaf28e625cefde55cb09",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "expectedStdoutBase64": "Rmlyc3QgbG9jYWwKU2Vjb25kIGxvY2FsCmRvbmU=",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "paragraph-error-exit",
+      "source": "demo/paragraphs/exit-error.l",
+      "classification": "runnable",
+      "description": "Intentional runtime error Exit stops later continuation and program actions.",
+      "sha256": "ffb75f61efe4ced970c1fcc9f7e4de60e3c1b2123acdf74f454929eb0153d34f",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "expectedStdoutBase64": "Rmlyc3QK",
+      "expectedStderrBase64": "cGFyYWdyYXBoIHN0b3BwZWQK",
+      "expectedExit": 1,
+      "lang": "l"
+    },
+    {
+      "id": "repeated-activation",
+      "source": "demo/paragraphs/repeated-activation.l",
+      "classification": "runnable",
+      "description": "Later invocation and retained scalar/output snapshots.",
+      "sha256": "e3c577d72e25430a0c8e91e98823c669fe6305b8ed4ec7b41762dd475a2ba266",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "expectedStdoutBase64": "UmVwZWF0ClJlcGVhdApSZXBlYXQKUmVwZWF0ClJlcGVhdApSZXBlYXQK",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "nested-continuation",
+      "source": "demo/paragraphs/run-within-paragraph.l",
+      "classification": "runnable",
+      "description": "Continuation launches and awaits another App.",
+      "sha256": "d68dc193e8bf7370792775e42f88edb5de946b04bd2903a89498d9c357f4b5d1",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "expectedStdoutBase64": "T3RoZXIKSW5uZXIKZmluaXNoZWRkb25l",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "paragraph-newline-mismatch",
+      "source": "demo/paragraphs/main.l",
+      "classification": "runnable",
+      "description": "Intentional runtime failure: raw stdout contains the newline added by Print.",
+      "sha256": "ddf985105e35aff994bbc2f6c13a5b055781b7ee404a463353333cfe1569f27d",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "expectedStdoutBase64": "",
+      "expectedStderrBase64": "dGV4dCB2YWx1ZXMgb2YgYm90aCB4MSAmIHkgc2hvdWxkIGJlIEhlbGxvIFdvcmxkCg==",
+      "expectedExit": 1,
+      "lang": "l"
+    },
+    {
+      "id": "file-import",
+      "source": "demo/dictionaries/file-import/main.l",
+      "classification": "runnable",
+      "description": "Project-owned member imports resolved relative to the importing file.",
+      "sha256": "77a5e625260e8f8a7a1f97c1125d79db29039f949cc844e84dd20d2bc1735fb7",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go"
+      ],
+      "expectedStdoutBase64": "bG9jYWwgaGVsbG98",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "file-import-helper",
+      "source": "demo/dictionaries/file-import/helpers.l",
+      "classification": "fragment",
+      "description": "Companion vocabulary source for file-import; displayed as a source unit, not independently run.",
+      "sha256": "24b37679bbb93dc66de113c9ad42dc0904cf62d4ed2b95e4131e8efb07d50725",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go"
+      ],
+      "lang": "l"
+    },
+    {
+      "id": "runnable-app",
+      "source": "cmd/l/test/runnable_service/canonical-io.l",
+      "classification": "runnable",
+      "description": "Basic App with canonical IO.Print and explicit Run/Await/Output.",
+      "sha256": "9d37f9bb2379046dead50f3c6cddff8322aa4744c125cec5d08a0cd489e39c1c",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/runnable_service_test.go",
+        "cmd/l/runnable_service_native_test.go",
+        "testdata/service-execution/coverage.md"
+      ],
+      "expectedStdoutBase64": "d29yayBjb21wbGV0ZWQK",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l"
+    },
+    {
+      "id": "invalid-await-text",
+      "source": "testdata/phase1/n01-await-text/main.l",
+      "classification": "invalid",
+      "description": "Compiler rejects Text as the operand of Await.",
+      "sha256": "00df0eaf118fb3c4984ce6986ad0587700139965cc706004cd0db19c649cc3e0",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "testdata/phase1/n01-await-text/case.json",
+        "acceptance/phase1/language/language_test.go",
+        "internal/testsupport/phase1/native_build_unix.go"
+      ],
+      "expectedExit": 1,
+      "diagnosticIncludes": [
+        "await",
+        "app"
+      ],
+      "lang": "l"
+    },
+    {
+      "id": "invalid-await-unresolved",
+      "source": "testdata/phase1/n02-await-unresolved/main.l",
+      "classification": "invalid",
+      "description": "Compiler rejects an unresolved Await operand.",
+      "sha256": "2dc0da96e71e776f776ba7da4601fd84fa929dd9b0a53523fe78d34d2d8524b0",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "testdata/phase1/n02-await-unresolved/case.json",
+        "acceptance/phase1/language/language_test.go",
+        "internal/testsupport/phase1/native_build_unix.go"
+      ],
+      "expectedExit": 1,
+      "diagnosticIncludes": [
+        "missing",
+        "unresolved"
+      ],
+      "lang": "l"
+    },
+    {
+      "id": "aml-declaration-evaluation",
+      "source": "logiceme/testdata/lucid/declaration-evaluation.aml.txt",
+      "classification": "fragment",
+      "description": "Canonical backend AML input for the declaration/evaluation Lucid witness; no L execution claim.",
+      "sha256": "8998333ae8cbd043ca66bf742186c8341c65d6f7c1aede4024d11fca606f01e5",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "logiceme/lucid_generation_test.go",
+        "logiceme/testdata/lucid/README.md"
+      ],
+      "lang": "text"
+    },
+    {
+      "id": "aml-statements",
+      "source": "logiceme/testdata/lucid/statements.aml.txt",
+      "classification": "fragment",
+      "description": "Canonical complete backend AML statement witness, displayed without XML normalization.",
+      "sha256": "e546146fadad91e2828950ba0332f42f8b93e3d2ae64bc26d6022df983aa96cf",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "logiceme/lucid_generation_test.go",
+        "logiceme/testdata/lucid/README.md"
+      ],
+      "lang": "text"
+    },
+    {
+      "id": "stdlib-index",
+      "source": "stdlib/index.json",
+      "classification": "fragment",
+      "description": "Exact structured registry for source lexicons and dictionary entries; this is resource configuration, not L source.",
+      "sha256": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1",
+      "validation": "static-inspection",
+      "witnesses": [
+        "lyger/dictionary_index_test.go"
+      ],
+      "lang": "json"
+    },
+    {
+      "id": "list-declaration",
+      "source": "docs/examples/list-declaration.l",
+      "classification": "fragment",
+      "description": "Documentation-only declaration shape; grammar and storage inspection, no compilation or runtime witness.",
+      "validation": "static-inspection",
+      "witnesses": [
+        "lexicon/eng/grammar.json",
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/types.go"
+      ],
+      "sha256": "ed319a1d005e1f9bd1f1d25dffa3fbefc8f74a86f5baa869ffc4d107cb765b66",
+      "lang": "l"
+    },
+    {
+      "id": "recursive-classes",
+      "source": "lyger/test/classes/recursive.l",
+      "classification": "compile-only",
+      "description": "Complete nested Class and Object construction. TestFrontendRecursiveClassSource checks generated structure and native compilation, not execution.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/recursive_classes_test.go"
+      ],
+      "sha256": "8aef20ecbec69e3257a0701e7a9154aca98311f2d66d69a1b0e197ff34ed09fc",
+      "lang": "l"
+    },
+    {
+      "id": "main-descriptor",
+      "source": "builtins/eng/core.l",
+      "classification": "fragment",
+      "description": "Implicit Main adjective and its Function, Object, and Service construction rules; already loaded by the compiler.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/distribution_frontend_test.go",
+        "lyger/construction_test.go"
+      ],
+      "lines": {
+        "start": 12,
+        "end": 15
+      },
+      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
+      "lang": "l"
+    },
+    {
+      "id": "native-dictionary-definition",
+      "source": "cmd/l/test/runnable_service/probe.l",
+      "classification": "fragment",
+      "description": "Native-backed ProbeIO dictionary operation used by App bodies; this vocabulary fragment is not independently executable.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/runnable_service_test.go",
+        "cmd/l/runnable_service_native_test.go"
+      ],
+      "sha256": "0832483a3cb3fcdd0a004682770c38f6b0416941345558d07f3d825197a5fcaa",
+      "lang": "l",
+      "lines": {
+        "start": 1,
+        "end": 3
+      }
+    },
+    {
+      "id": "function-object-descriptor",
+      "source": "lyger/test/classes/interleaved.l",
+      "classification": "fragment",
+      "description": "First descriptor from the complete interleaved-Class compilation witness; excerpt is not independently executable.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/recursive_classes_test.go"
+      ],
+      "lines": {
+        "start": 1,
+        "end": 3
+      },
+      "sha256": "7af773c6f2993d71df8d1f26d9dcb32d98fea8f4df249b7c3b2f969ec9ded40a",
+      "lang": "l"
+    },
+    {
+      "id": "service-output-member",
+      "source": "cmd/l/test/runnable_service/canonical-io.l",
+      "classification": "fragment",
+      "description": "App lifecycle and Output member access from the Worker example; requires its preceding declaration.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/runnable_service_test.go",
+        "cmd/l/runnable_service_native_test.go"
+      ],
+      "lines": {
+        "start": 4,
+        "end": 6
+      },
+      "sha256": "9d37f9bb2379046dead50f3c6cddff8322aa4744c125cec5d08a0cd489e39c1c",
+      "lang": "l"
+    },
+    {
+      "id": "local-launch",
+      "source": "demo/paragraphs/local-definitions.l",
+      "classification": "fragment",
+      "description": "First local paragraph from the complete local-definitions runtime witness, with import and enclosing value; remaining paragraphs omitted.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "lines": {
+        "start": 1,
+        "end": 11
+      },
+      "sha256": "e8e0b3b83cf5a8987424d68ffd2c049962782dbcc59fdaf28e625cefde55cb09",
+      "lang": "l"
+    },
+    {
+      "id": "lexical-sentence-boundaries",
+      "source": "docs/examples/lexical-sentence-boundaries.l",
+      "classification": "fragment",
+      "description": "Documentation-only combination of source-preparation shapes; sentence/paragraph explanation, not a compiled or executed program.",
+      "validation": "static-inspection",
+      "witnesses": [
+        "lyger/paragraph_source_test.go",
+        "lyger/source.go"
+      ],
+      "sha256": "0f471462b668fceee41fd1fde2a179f7ad2c2f82480e37541c6ee14de5dacc43",
+      "lang": "l"
+    },
+    {
+      "id": "lexical-comments",
+      "source": "docs/examples/lexical-comments.l",
+      "classification": "fragment",
+      "description": "Documentation-only comment and literal example based on source scanning; not compiled or executed.",
+      "validation": "static-inspection",
+      "witnesses": [
+        "lyger/source_test.go",
+        "lyger/source.go"
+      ],
+      "sha256": "bc9ed39785adeda731e5aa0b3554c2ba7fef1dfdc691a4755ecbe3b74c231037",
+      "lang": "l"
+    },
+    {
+      "id": "lexical-declared-name",
+      "source": "demo/basic/main.l",
+      "classification": "fragment",
+      "description": "Name declaration and App-body use from the complete basic demo; requires its preceding IO import and later lifecycle instructions.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go"
+      ],
+      "sha256": "20ec30ca4fe054c11a28ce96c35e6e960f6af48921f1da1041e29fe9d88ae741",
+      "lang": "l",
+      "lines": {
+        "start": 3,
+        "end": 5
+      }
+    },
+    {
+      "id": "lexical-text-escapes",
+      "source": "docs/examples/lexical-text-escapes.l",
+      "classification": "fragment",
+      "description": "Documentation-only Text operands illustrating escaped backticks, literal backslash-n, Unicode, braces and interior markup; static inspection, not execution.",
+      "validation": "static-inspection",
+      "witnesses": [
+        "lyger/grammar.go",
+        "lyger/source_test.go",
+        "lyger/literal_framing_regression_test.go",
+        "lyger/orchestration_values_test.go"
+      ],
+      "sha256": "909214e00186b0698b4ef07801ea44271b3c570f2bcba453962fccf5247a41a7",
+      "lang": "l"
+    },
+    {
+      "id": "lexical-possessive-output",
+      "source": "demo/basic/main.l",
+      "classification": "fragment",
+      "description": "Execution and explicit Output member read; requires the basic demo declarations omitted from this excerpt.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go"
+      ],
+      "sha256": "20ec30ca4fe054c11a28ce96c35e6e960f6af48921f1da1041e29fe9d88ae741",
+      "lang": "l",
+      "lines": {
+        "start": 6,
+        "end": 7
+      }
+    },
+    {
+      "id": "lexical-action-inflections",
+      "source": "builtins/eng/core.l",
+      "classification": "fragment",
+      "description": "Implicit Start/Execute source definitions and their declared verb inflections; already loaded by the compiler, not user redeclarations.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/builtin_operations_contract_test.go",
+        "lyger/distribution_frontend_test.go"
+      ],
+      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
+      "lang": "l",
+      "lines": {
+        "start": 1,
+        "end": 2
+      }
+    },
+    {
+      "id": "lexical-numeric-name",
+      "source": "testdata/distribution/observers/numeric-declared-name.l",
+      "classification": "fragment",
+      "description": "Canonical observer showing a numeric-looking declaration resolved as a Text binding. Numeric-resolution witnesses check the same source shape; not run here.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/numeric_resolution_test.go"
+      ],
+      "sha256": "76213b6c0f682c70bcbe36d3013d4407a5a1fb1b93a7119e5108d60c9d171c0d",
+      "lang": "l"
+    },
+    {
+      "id": "values-number-printing",
+      "source": "docs/examples/values-number-printing.l",
+      "classification": "fragment",
+      "description": "Documentation-only App-body fragment drawn from the source-number parity witness; no lifecycle instructions or execution of this fragment.",
+      "validation": "static-inspection",
+      "witnesses": [
+        "lyger/io_numeric_test.go",
+        "stdlib/eng/io/dictionary.l"
+      ],
+      "sha256": "9ee6e02bd395bbd0aace1a74a443ff6b8b5ef8254415756c5be6192278844877",
+      "lang": "l"
+    },
+    {
+      "id": "values-truth-condition",
+      "source": "testdata/phase1/language/lang-13.l",
+      "classification": "runnable",
+      "description": "Complete LANG-13 program: Truth equality chooses Await and then reads finalized App output. Existing native witness, not run here.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/phase1/language/language_test.go",
+        "internal/testsupport/phase1/native_build_unix.go"
+      ],
+      "sha256": "435fe891215cc0f338fb499499e192d1ea05a0919bbad294ebb405f34168d344",
+      "lang": "l",
+      "expectedStdoutBase64": "Y29uZGl0aW9uCg==",
+      "expectedStderrBase64": "",
+      "expectedExit": 0
+    },
+    {
+      "id": "values-thing-printing",
+      "source": "docs/examples/values-thing-printing.l",
+      "classification": "fragment",
+      "description": "Documentation-only public Print calls supplying Text, Number and Truth to the private native Thing parameter; static composition, no execution claim.",
+      "validation": "static-inspection",
+      "witnesses": [
+        "stdlib/eng/io/dictionary.l",
+        "lyger/raw_text_test.go",
+        "lyger/io_numeric_test.go"
+      ],
+      "sha256": "fcb4b999609f3387ebacda40ef857d2f22792b51d2fb72851d50af54c5f7e794",
+      "lang": "l"
+    },
+    {
+      "id": "values-output-snapshot",
+      "source": "demo/paragraphs/repeated-activation.l",
+      "classification": "fragment",
+      "description": "App alias and scalar Output snapshot excerpt; requires earlier App declaration and continuation. Full demo has existing native witnesses.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "lyger/orchestrator_test.go"
+      ],
+      "sha256": "e3c577d72e25430a0c8e91e98823c669fe6305b8ed4ec7b41762dd475a2ba266",
+      "lang": "l",
+      "lines": {
+        "start": 10,
+        "end": 17
+      }
+    },
+    {
+      "id": "binding-forward-member",
+      "source": "docs/examples/binding-forward-member.l",
+      "classification": "fragment",
+      "description": "Documentation excerpt reproducing TestParagraphBindingNativeTypeForwardMemberShadowsOuter source; binding/source-location evidence only, no runtime-before-assignment claim.",
+      "sha256": "208359c5a2bb80fa5b7c7bdb4a5c02bfa5a97d559bf09b500389299e618c34ad",
+      "validation": "static-inspection",
+      "witnesses": [
+        "lyger/paragraph_binding_architecture_test.go",
+        "lyger/semantic_resolution.go",
+        "lyger/orchestration_flow.go"
+      ],
+      "lang": "l"
+    },
+    {
+      "id": "binding-public-scalars",
+      "source": "demo/paragraphs/public-values.l",
+      "classification": "fragment",
+      "description": "First three declarations from the complete public-values runtime witness; following Dictionary and Show statements omitted.",
+      "sha256": "41b11a3bfa7e5b4a5b2f800976015b04e17f661cfd13d2a1606f4da7cd560162",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 1,
+        "end": 3
+      }
+    },
+    {
+      "id": "binding-pronoun-alias",
+      "source": "testdata/phase1/language/lang-06.l",
+      "classification": "runnable",
+      "description": "Canonical LANG-06 pronoun, alias, repeated Await, and possessive Output program; frontend identity checks and native expected bytes are retained witnesses.",
+      "sha256": "d6ee0e87af64864c8b1173b792f70cc6f07b1d01222cb39d8d86f4482e628844",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/phase1_language_test.go",
+        "acceptance/phase1/language/language_test.go"
+      ],
+      "lang": "l",
+      "expectedStdoutBase64": "Y2Fub25pY2FsCg==",
+      "expectedStderrBase64": "",
+      "expectedExit": 0
+    },
+    {
+      "id": "binding-pronoun-boundary",
+      "source": "testdata/phase1/n11-pronoun-crosses-paragraph/main.l",
+      "classification": "invalid",
+      "description": "Intentionally invalid N11 fixture: the new paragraph has no preceding pronoun subject; compile rejection before publication.",
+      "sha256": "684eb1b93ce5e4554319668dea3eb30c98b6c2cd77b09033c3f6f58e69186ed9",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "testdata/phase1/n11-pronoun-crosses-paragraph/case.json",
+        "acceptance/phase1/composition/cli_test.go",
+        "lyger/scope.go"
+      ],
+      "lang": "l",
+      "expectedExit": 1,
+      "diagnosticIncludes": [
+        "no preceding subject"
+      ]
+    },
+    {
+      "id": "definitions-callable-core",
+      "source": "builtins/eng/core.l",
+      "classification": "fragment",
+      "description": "Canonical Process, Function and Function.Return definitions shared by source bodies and Object construction.",
+      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/definition_test.go",
+        "lyger/distribution_frontend_test.go",
+        "lyger/construction_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 3,
+        "end": 5
+      }
+    },
+    {
+      "id": "definitions-objective",
+      "source": "builtins/eng/core.l",
+      "classification": "fragment",
+      "description": "Implicit Objective descriptor uses a grouped native word; the nested array is not an L collection literal.",
+      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/definition_test.go",
+        "lyger/distribution_frontend_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 11,
+        "end": 11
+      }
+    },
+    {
+      "id": "imports-indexed-member",
+      "source": "demo/basic/main.l",
+      "classification": "fragment",
+      "description": "Canonical IO.Print import line; the rest of the runnable basic program is omitted.",
+      "sha256": "20ec30ca4fe054c11a28ce96c35e6e960f6af48921f1da1041e29fe9d88ae741",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go",
+        "lyger/distribution_frontend_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 1,
+        "end": 1
+      }
+    },
+    {
+      "id": "imports-continuation",
+      "source": "testdata/phase1/language/lang-14.l",
+      "classification": "runnable",
+      "description": "Complete LANG-14 caller includes its sibling continuation.l; existing frontend and native witnesses preserve include order and caller-local snapshot ownership.",
+      "sha256": "666230cbd38fefd6c4a70547a1f48aee6e9c71a721e0951f753143d7d5dd139e",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/phase1_language_test.go",
+        "acceptance/phase1/language/language_test.go",
+        "testdata/phase1/language/continuation.l"
+      ],
+      "lang": "l",
+      "expectedStdoutBase64": "YmVmb3JlLWF3YWl0fGltcG9ydGVkCmZyb20taW1wb3J0fGltcG9ydGVkCmFmdGVyLWF3YWl0fA==",
+      "expectedStderrBase64": "",
+      "expectedExit": 0
+    },
+    {
+      "id": "imports-continuation-body",
+      "source": "testdata/phase1/language/continuation.l",
+      "classification": "fragment",
+      "description": "Companion source included by LANG-14; snapshot belongs to the caller and this file is not independently executable.",
+      "sha256": "a20baa4077375536bc2dab010862d512fc1f835e59d22fea02b10144f90c9ea5",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "testdata/phase1/language/lang-14.l",
+        "lyger/phase1_language_test.go",
+        "acceptance/phase1/language/language_test.go"
+      ],
+      "lang": "l"
+    },
+    {
+      "id": "imports-private-helper",
+      "source": "docs/examples/imports-private-helper.l",
+      "classification": "fragment",
+      "description": "Intentionally invalid explanatory fragment shortened from the IO02 private-helper regression; Log is unresolved. Static review only, not independently compiled.",
+      "sha256": "759a4737ea6324faafdc9fdb205c6ddb784a0427fd374eb2bf30d7bc4762e695",
+      "validation": "static-inspection",
+      "witnesses": [
+        "lyger/distribution_frontend_test.go",
+        "stdlib/eng/io/dictionary.l"
+      ],
+      "lang": "l"
+    },
+    {
+      "id": "control-ordered-apps",
+      "source": "demo/phase1/main.l",
+      "classification": "fragment",
+      "description": "Ordered lifecycle and display excerpt from the complete two-App CLI witness; requires preceding First and Second declarations.",
+      "sha256": "4d8aac2bf95ca98aac182220cf64de89805358a24bfc808a7c50d940b7b22f2a",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "acceptance/distribution/cli/cli_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 8,
+        "end": 11
+      }
+    },
+    {
+      "id": "control-output-snapshot",
+      "source": "testdata/phase1/language/lang-11.l",
+      "classification": "fragment",
+      "description": "Snapshot and rerun excerpt from LANG-11; requires the preceding Worker declaration and IO import.",
+      "sha256": "943214829cf7d4b872fa8ae948438e0a208a171039451db01ef99ad6f667ba08",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/phase1_language_test.go",
+        "acceptance/phase1/language/language_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 5,
+        "end": 11
+      }
+    },
+    {
+      "id": "control-otherwise",
+      "source": "lyger/test/member-resolution.l",
+      "classification": "fragment",
+      "description": "Conditional ownership excerpt from the member-resolution frontend witness; preceding App, x, and execution omitted. No successful runtime claim.",
+      "sha256": "8ff7716561b96300f7f1c690300b12fe9abb19ddd63c5d03289a2ce4c13f9767",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/member_resolution_regression_test.go",
+        "lyger/instructions_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 7,
+        "end": 9
+      }
+    },
+    {
+      "id": "control-while-unsupported",
+      "source": "docs/examples/control-while-unsupported.l",
+      "classification": "fragment",
+      "description": "Documentation-only unsupported While illustration derived from configured grammar and the explicit outer-instruction rejection; not parsed or run.",
+      "sha256": "f073d9bb8eb54424a05d8b5756e804d705ad8dcdc97f8e075749967206973427",
+      "validation": "static-inspection",
+      "witnesses": [
+        "lexicon/eng/grammar.json",
+        "lyger/instructions.go"
+      ],
+      "lang": "l"
+    },
+    {
+      "id": "control-bare-exit",
+      "source": "demo/paragraphs/exit-program.l",
+      "classification": "runnable",
+      "description": "Bare Exit from an App continuation terminates later paragraph and program actions; complete maintained runtime witness.",
+      "sha256": "0be2faa5132a6de9bcf3bb7036618f0c61f5619906ec6cf1a8b350aaa8987cd8",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/paragraph_integration_test.go",
+        "cmd/l/paragraph_native_integration_test.go",
+        "demo/paragraphs/README.md"
+      ],
+      "lang": "l",
+      "expectedStdoutBase64": "Rmlyc3QK",
+      "expectedStderrBase64": "",
+      "expectedExit": 0
+    },
+    {
+      "id": "runtime-build-run",
+      "source": "cmd/l/test/runnable_service/basic.l",
+      "classification": "fragment",
+      "description": "Primitive Build/Run/Await/Show excerpt from the App lifecycle witness; omits the declaration and test-owned ProbeIO setup.",
+      "sha256": "d5f7458b98b50106a02c00a70e5c43486c7f6cab2a52c06589c7aec2c5efa5b2",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/runnable_service_test.go",
+        "cmd/l/runnable_service_native_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 5,
+        "end": 8
+      }
+    },
+    {
+      "id": "runtime-stop-await",
+      "source": "testdata/phase1/language/lang-10.l",
+      "classification": "fragment",
+      "description": "Stop/Await ordering excerpt; Worker and its Error-checking continuation are declared earlier. Existing native witness permits termination or normal-completion race outcomes.",
+      "sha256": "54df4df07f5ac526cc453b993fe01d3a09fd80a9afd52f00a3d78c5b6553b211",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/phase1_language_test.go",
+        "acceptance/phase1/language/language_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 9,
+        "end": 14
+      }
+    },
+    {
+      "id": "runtime-continuation-once",
+      "source": "testdata/phase1/language/lang-01.l",
+      "classification": "runnable",
+      "description": "Complete LANG-01 witness: Run launches, first Await activates the continuation inline, and cached Await does not repeat its effects.",
+      "sha256": "7a7e0038ac5d94686f74ae1f5f9449ef0e537fd3872bc45c6aff81cb555b03de",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/phase1_language_test.go",
+        "acceptance/phase1/language/language_test.go"
+      ],
+      "lang": "l",
+      "expectedStdoutBase64": "bGF1bmNoZWR8Y29udGludWVkfGNoaWxkCmpvaW5lZHxhZ2Fpbnw=",
+      "expectedStderrBase64": "",
+      "expectedExit": 0
+    },
+    {
+      "id": "runtime-build-without-run",
+      "source": "testdata/phase1/n07-build-is-not-run/main.l",
+      "classification": "fragment",
+      "description": "Complete N07 runtime-negative source displayed as an explanatory fragment: Build creates no invocation, so Await fails at runtime; excluded from automatic example execution.",
+      "sha256": "20c14100932ef5253c079410a46cd01f27a7c802e380af44035d008051799694",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "testdata/phase1/n07-build-is-not-run/case.json",
+        "acceptance/phase1/lifecycle/cli_test.go",
+        "internal/testsupport/phase1/native_unix.go"
+      ],
+      "lang": "l"
+    },
+    {
+      "id": "grammar-passive-await",
+      "source": "testdata/phase1/language/lang-02.l",
+      "classification": "runnable",
+      "description": "Canonical LANG-02 outer passive Await; the existing native witness expects passive followed by LF.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/phase1_language_test.go",
+        "acceptance/phase1/language/language_test.go"
+      ],
+      "expectedStdoutBase64": "cGFzc2l2ZQo=",
+      "expectedStderrBase64": "",
+      "expectedExit": 0,
+      "lang": "l",
+      "sha256": "20411451e70d27c33fa34ec0f3ba41771cd3548c12fbb663e208497fad7903a0"
+    },
+    {
+      "id": "grammar-active-await-rejected",
+      "source": "testdata/phase1/n09-active-await-in-app-body/main.l",
+      "classification": "invalid",
+      "description": "Canonical N09 rejection: active Await inside an App body is recognized but unsupported at executable-body lowering.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "testdata/phase1/n09-active-await-in-app-body/case.json",
+        "internal/testsupport/phase1/native_build_unix.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "expectedExit": 1,
+      "diagnosticIncludes": [
+        "unsupported",
+        "app"
+      ],
+      "lang": "l",
+      "sha256": "e25ec0d5689457b789b00f440f16fee9e0bc0d7661b3384593d27386ceee44f3"
+    },
+    {
+      "id": "constructed-service-composition",
+      "source": "lyger/test/workspace/services.l",
+      "classification": "fragment",
+      "description": "Left/Right Service descriptors and a Grouped App construction from the maintained workspace fixture; requires the preceding IO.Print import and omits the second App.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/service_workspace_test.go",
+        "lyger/service_review_regression_test.go"
+      ],
+      "sha256": "1f58d1f9cb54a0ad5ea75c624a72b2927605f2f4b20ec3672fc6277d1de4a49f",
+      "lang": "l",
+      "lines": {
+        "start": 2,
+        "end": 12
+      }
+    },
+    {
+      "id": "native-dictionary-use",
+      "source": "cmd/l/test/runnable_service/basic.l",
+      "classification": "fragment",
+      "description": "ProbeIO caller import and App-body use; requires sibling probe.l and omits the later Build/Run/Await/Show instructions. The Text includes an explicit newline.",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "cmd/l/runnable_service_test.go",
+        "cmd/l/runnable_service_native_test.go"
+      ],
+      "sha256": "d5f7458b98b50106a02c00a70e5c43486c7f6cab2a52c06589c7aec2c5efa5b2",
+      "lang": "l",
+      "lines": {
+        "start": 1,
+        "end": 4
+      }
+    }
+  ]
+}

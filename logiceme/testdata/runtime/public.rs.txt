@@ -1,0 +1,107 @@
+// Test-owned driver; both support modules are copied from selected production
+// resources without rewriting. This is runtime-asset coverage, not L lowering.
+mod runtime;
+#[path = "process_unix.rs"] mod process;
+mod ownership;
+use runtime::{App, Runtime};
+use std::sync::Arc;
+use std::time::Duration;
+async fn join(app: &Arc<App>) -> runtime::Snapshot {
+    let invocation = app.wait().await.unwrap();
+    assert!(invocation.claim_continuation().unwrap());
+    invocation.finish_continuation();
+    assert!(!invocation.claim_continuation().unwrap(), "continuation claimed twice");
+    invocation.snapshot().expect("capture not published")
+}
+async fn readiness() {
+    let runtime = Runtime::new().unwrap();
+    let app = runtime.app("companion/helper");
+    assert!(app.error().unwrap().is_none());
+    app.build().unwrap(); assert!(app.error().unwrap().is_none());
+    app.run().unwrap();
+    let snapshot = join(&app).await;
+    assert_eq!(&*snapshot.stdout, b"first\n\nlast\t");
+    assert_eq!(&*snapshot.stderr, b"notice\n"); assert_eq!(snapshot.status, Some(0));
+    assert!(app.error().unwrap().is_none());
+    // A fresh helper executable selects its mode from a file, rather than
+    // mutating process-wide environment concurrently with Tokio worker threads.
+    let mode_file=std::env::var("L_RUNTIME_CASE_FILE").unwrap();
+    std::fs::write(&mode_file,"failure").unwrap();
+    let failure = app.clone(); failure.run().unwrap();
+    let snapshot = join(&failure).await;
+    assert_eq!(&*snapshot.stdout, b"partial\n"); assert_eq!(&*snapshot.stderr, b"failure details\n");
+    assert_eq!(snapshot.status, Some(7));
+    assert!(failure.error().unwrap().unwrap().to_string().contains("failure details"));
+    std::fs::write(&mode_file,"").unwrap();
+    app.run().unwrap(); let snapshot = join(&app).await;
+    assert!(snapshot.error.is_none()); assert_eq!(&*snapshot.stdout,b"first\n\nlast\t");
+    let unbuilt = runtime.app("companion/helper"); unbuilt.run().unwrap();
+    assert!(join(&unbuilt).await.error.is_none());
+    let missing = runtime.app("companion/absent"); missing.run().unwrap();
+    let snapshot=join(&missing).await;
+    assert!(snapshot.error.is_some()); assert!(snapshot.stdout.is_empty() && snapshot.stderr.is_empty());
+    for path in ["../outside", "/absolute", "companion"] {
+        let bad = runtime.app(path); bad.build().unwrap(); assert!(bad.error().unwrap().is_some(), "invalid path accepted {path}");
+    }
+    runtime.shutdown().await.unwrap();
+}
+async fn descendant() {
+    let runtime=Runtime::new().unwrap(); let app=runtime.app("companion/helper");
+    let started=std::time::Instant::now(); app.run().unwrap(); let snapshot=join(&app).await;
+    assert!(started.elapsed()<Duration::from_secs(8));
+    assert_eq!(&*snapshot.stdout,b"partial descendant output\n\n");
+    assert_eq!(&*snapshot.stderr,b"descendant error details\n");
+    let mode=std::env::var("L_RUNTIME_CASE").unwrap();
+    match mode.as_str() {
+        "descendant" => assert!(snapshot.error.as_ref().unwrap().to_string().contains("pipe remained open")),
+        "closed descendant" => assert!(snapshot.error.is_none()),
+        _ => { assert_eq!(snapshot.status,Some(7));assert!(snapshot.error.as_ref().unwrap().to_string().contains("descendant error details\n")); }
+    }
+    let lock_path=std::path::PathBuf::from(format!("{}.lock",std::env::var("L_RUNTIME_PID").unwrap()));
+    let until=std::time::Instant::now()+Duration::from_secs(3);
+    while ownership::held(&lock_path).unwrap() && std::time::Instant::now()<until { tokio::time::sleep(Duration::from_millis(10)).await; }
+    assert!(!ownership::held(&lock_path).unwrap(),"descendant survived cleanup");
+    runtime.shutdown().await.unwrap();
+}
+async fn cancelled() {
+    let runtime=Runtime::new().unwrap();runtime.shutdown().await.unwrap();
+    let app=runtime.app("companion/helper");assert!(app.run().is_err());
+    assert!(app.wait().await.is_err(),"public Await after shutdown must remain cancellation");
+    assert!(!std::path::Path::new(&std::env::var("L_RUNTIME_PID").unwrap()).exists(),"cancelled Run launched a child");
+}
+async fn api(mode:&str)->u8 {
+    let runtime=Runtime::new().unwrap();
+    let result=match mode {
+        "show" => runtime.show("line\n\n雪\t".as_bytes()).await,
+        "fail" => Err(runtime.fail(runtime::Error::new("failure text"))),
+        "fail newline" => Err(runtime.fail(runtime::Error::new("failure text\n"))),
+        "fail multiline" => Err(runtime.fail(runtime::Error::new("first\nsecond\n"))),
+        "output" => runtime.app("companion/helper").output().map(|_|()),
+        _=>panic!("unknown API profile {mode}")
+    };
+    runtime.finish(result).await
+}
+async fn signal()->u8 {
+    let runtime=Runtime::new().unwrap();
+    runtime.run(async {
+        let app=runtime.app("companion/helper");app.run()?;app.wait().await?;
+        panic!("source continued after signal shutdown");
+        #[allow(unreachable_code)] Ok(())
+    }).await
+}
+fn main()->std::process::ExitCode {
+    let args:Vec<_>=std::env::args().collect();
+    if let Ok(path)=std::env::var("L_RUNTIME_DRIVER_PID") { std::fs::write(path,std::process::id().to_string()).unwrap(); }
+    let executor=tokio::runtime::Builder::new_multi_thread().enable_all().build().unwrap();
+    let status=executor.block_on(async {
+        match args.get(1).map(String::as_str).unwrap_or("") {
+            "readiness"=>{readiness().await;0},
+            "descendant"=>{descendant().await;0},
+            "cancelled"=>{cancelled().await;0},
+            "api"=>api(&args[2]).await,
+            "signal"=>signal().await,
+            _=>panic!("unknown runtime profile")
+        }
+    });
+    executor.shutdown_background();std::process::ExitCode::from(status)
+}

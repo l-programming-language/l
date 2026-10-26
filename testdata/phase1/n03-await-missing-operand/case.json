@@ -1,0 +1,18 @@
+{
+  "id": "N03",
+  "title": "await-missing-operand",
+  "profile": "print",
+  "apps": [],
+  "setup": [],
+  "assertions": [
+    "Reject Await without an operand at that source statement; do not accept an empty or partially consumed clause, publish, or execute."
+  ],
+  "expected_compile_error": {
+    "category": "Syntax",
+    "span": "offending source statement",
+    "publication": "none; preserve any previously published program"
+  },
+  "files": [
+    "main.l"
+  ]
+}

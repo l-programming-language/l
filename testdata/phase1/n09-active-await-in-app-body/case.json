@@ -1,0 +1,21 @@
+{
+  "id": "N09",
+  "title": "active-await-in-app-body",
+  "profile": "print",
+  "apps": [
+    "Controller",
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "D08 is explicit: lexical classification succeeds but executable child-body process supervision is rejected, never dropped or moved to main silently."
+  ],
+  "expected_compile_error": {
+    "category": "Unsupported process supervision in App body",
+    "span": "offending source statement",
+    "publication": "none; preserve any previously published program"
+  },
+  "files": [
+    "main.l"
+  ]
+}

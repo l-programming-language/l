@@ -1,0 +1,12 @@
+[package]
+name = "FragmentApp"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "FragmentApp"
+path = "src/main.rs"
+
+[dependencies]
+

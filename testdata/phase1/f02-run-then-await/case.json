@@ -1,0 +1,29 @@
+{
+  "id": "F02",
+  "title": "run-then-await",
+  "profile": "gate",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [
+    "Create a fresh short Unix socket path and an empty lifetime-lock directory in test-owned temporary storage; set L_PHASE1_SOCKET and L_PHASE1_DIRECTORY for the orchestrator. Start the controller before the program.",
+    "Each child has its own connection. Parse a complete ready <label> <pid> line and reject duplicate/unexpected labels. Record direct PIDs separately from controller and orchestrator.",
+    "Controller commands are exactly release followed by LF; readiness does not release a child. Test deadlines bound failures only.",
+    "Keep every controller connection open until runtime shutdown has been observed. Require spontaneous child disconnection and lifetime-lock release before controller closure or fallback signals; record cleanup failures before fallback. Lock release alone does not prove direct-child reaping.",
+    "Do not release A until both its ready event and orchestrator stdout prefix launched| have arrived. Then send release and collect completion."
+  ],
+  "assertions": [
+    "A synchronous Run cannot pass the handshake: it cannot print launched| before the controller releases A.",
+    "No elapsed-time threshold is used to infer overlap or promptness."
+  ],
+  "expected_runtime": {
+    "stdout": "launched|A\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l",
+    "../companions/gate.l",
+    "../companions/actions.l"
+  ]
+}

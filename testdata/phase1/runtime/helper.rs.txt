@@ -1,0 +1,96 @@
+#[path = "ownership.rs"]
+mod ownership;
+use nix::libc;
+use std::io::{BufRead, BufReader, Read, Write};
+use std::os::unix::net::UnixStream;
+use std::process::{Command, Stdio};
+use std::time::Duration;
+fn value(name: &str) -> Vec<u8> {
+    let s = std::env::var(name).unwrap_or_default();
+    assert!(s.len() % 2 == 0);
+    (0..s.len())
+        .step_by(2)
+        .map(|n| u8::from_str_radix(&s[n..n + 2], 16).unwrap())
+        .collect()
+}
+fn main() {
+    let label = std::env::var("P1_LABEL").unwrap_or_default();
+    let Some((_held, lifetime)) = ownership::register(&label).unwrap() else {
+        return;
+    };
+    let mode = std::env::var("P1_MODE").unwrap_or_default();
+    if mode == "inherit" {
+        let mut input = Vec::new();
+        std::io::stdin().read_to_end(&mut input).unwrap();
+        assert_eq!(
+            std::env::current_dir().unwrap(),
+            std::path::PathBuf::from(std::env::var_os("P1_EXPECT_CWD").unwrap())
+        );
+        assert_eq!(std::env::var("P1_SENTINEL").unwrap(), "sentinel-雪");
+        assert_eq!(std::env::args_os().count(), 1);
+        assert!(input.is_empty())
+    }
+    if let Ok(path) = std::env::var("P1_READYFILE") {
+        if !path.is_empty() {
+            while !std::path::Path::new(&path).exists() {
+                std::thread::sleep(Duration::from_millis(1))
+            }
+        }
+    }
+    if mode == "large" {
+        std::io::stdout()
+            .write_all(&b"out\0".repeat(65536))
+            .unwrap();
+        std::io::stderr()
+            .write_all(&b"err\n".repeat(65536))
+            .unwrap()
+    }
+    std::io::stdout()
+        .write_all(&value("P1_PREFIX_HEX"))
+        .unwrap();
+    std::io::stdout().flush().unwrap();
+    std::io::stderr()
+        .write_all(&value("P1_STDERR_HEX"))
+        .unwrap();
+    std::io::stderr().flush().unwrap();
+    if mode.starts_with("descendant") {
+        let mut child = Command::new(std::env::current_exe().unwrap());
+        child
+            .env("P1_MODE", "gate")
+            .env("P1_LABEL", format!("{label}.child"))
+            .env("P1_PREFIX_HEX", "")
+            .env("P1_STDERR_HEX", "")
+            .env("P1_PAYLOAD_HEX", "");
+        if mode.contains("closed") {
+            child.stdout(Stdio::null()).stderr(Stdio::null());
+        }
+        child.spawn().unwrap();
+    }
+    let mut connection = UnixStream::connect(std::env::var_os("P1_SOCKET").unwrap()).unwrap();
+    writeln!(
+        connection,
+        "{{\"Label\":{},\"Record\":{},\"PID\":{},\"PPID\":{},\"PGID\":{}}}",
+        ownership::quote(&label),
+        ownership::quote(&lifetime.record),
+        std::process::id(),
+        unsafe { libc::getppid() },
+        unsafe { libc::getpgrp() }
+    )
+    .unwrap();
+    if mode != "exit" && mode != "large" && mode != "inherit" && !mode.contains("-exit") {
+        let mut command = String::new();
+        BufReader::new(&connection).read_line(&mut command).unwrap();
+        assert_eq!(command, "release\n")
+    }
+    std::io::stdout()
+        .write_all(&value("P1_PAYLOAD_HEX"))
+        .unwrap();
+    std::io::stdout().flush().unwrap();
+    let code = std::env::var("P1_EXIT")
+        .unwrap_or_default()
+        .parse::<i32>()
+        .unwrap_or(0);
+    if code != 0 {
+        std::process::exit(code)
+    }
+}

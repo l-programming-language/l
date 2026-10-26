@@ -1,0 +1,7 @@
+[workspace]
+resolver = "3"
+members = ["helper", "observer"]
+default-members = ["helper"]
+[workspace.dependencies]
+nix = { version = "=0.31.3", features = ["signal", "process", "fs"] }
+tokio = { version = "=1.53.1", features = ["rt", "rt-multi-thread", "macros", "process", "io-util", "io-std", "signal", "sync", "time"] }

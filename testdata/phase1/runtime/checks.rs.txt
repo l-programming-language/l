@@ -1,0 +1,1547 @@
+use crate::{runtime, support::*};
+use nix::{
+    libc,
+    sys::signal::{Signal, kill},
+    unistd::Pid,
+};
+use runtime::test_support::{self as hooks, Checkpoint, SignalTarget, TerminalRequest};
+use runtime::{App, Invocation};
+use std::{
+    io::{self, Write},
+    path::PathBuf,
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicUsize, Ordering},
+    },
+    time::Duration,
+};
+
+async fn launch(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    child("A", "gate", b"A\n", b"", 0);
+    if id == "P1-RUN-07" {
+        child("A", "inherit", b"inherit-ok", b"", 0);
+        env("P1_EXPECT_CWD", std::env::current_dir().unwrap());
+        env("P1_SENTINEL", "sentinel-雪")
+    }
+    if id == "P1-RUN-05" {
+        env("P1_READYFILE", c.dir.join("later-action"))
+    }
+    if id == "P1-RUN-09" {
+        a.build().unwrap();
+        assert!(a.error().unwrap().is_none());
+        assert!(p.invocations.lock().unwrap().is_empty());
+        p.once(0);
+        r.shutdown().await.unwrap();
+        return;
+    }
+    if id == "P1-RUN-10" || id == "P1-RUN-11" {
+        a.build().unwrap()
+    }
+    a.run().unwrap();
+    if id == "P1-RUN-05" {
+        std::fs::write(c.dir.join("later-action"), b"").unwrap()
+    }
+    let peer = c.ready(&["A"]).remove(0);
+    assert_ne!(peer.pid, std::process::id() as i32);
+    assert_eq!(peer.ppid, std::process::id() as i32);
+    if id == "P1-RUN-14" {
+        for n in 0..4 {
+            child("B", "exit", n.to_string().as_bytes(), b"", 0);
+            let b = app(&r);
+            b.run().unwrap();
+            c.ready(&["B"]);
+            join(&b).await;
+            c.alive(&peer)
+        }
+    }
+    if id != "P1-RUN-07" {
+        c.alive(&peer);
+        c.release(&peer)
+    }
+    let i = join(&a).await;
+    result(
+        &i,
+        if id == "P1-RUN-07" {
+            b"inherit-ok"
+        } else {
+            b"A\n"
+        },
+        b"",
+        0,
+    );
+    c.stopped(&peer);
+    p.once(if id == "P1-RUN-14" { 5 } else { 1 });
+    r.shutdown().await.unwrap();
+}
+async fn overlap(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, out, _) = runtime(p.clone());
+    let a = app(&r);
+    let b = app(&r);
+    assert!(!Arc::ptr_eq(&a, &b));
+    child("A", "gate", b"A\n", b"", 0);
+    a.run().unwrap();
+    child("B", "gate", b"B\n", b"", 0);
+    b.run().unwrap();
+    let peers = c.ready(&["A", "B"]);
+    assert_ne!(peers[0].pid, peers[1].pid);
+    for v in &peers {
+        c.alive(v)
+    }
+    let reverse = id == "P1-RUN-04";
+    let (first, last) = if reverse { (0, 1) } else { (1, 0) };
+    c.release(&peers[first]);
+    finalized(&p.at(first)).await;
+    assert!(p.at(last).snapshot().is_none());
+    assert!(out.get().is_empty(), "captured output leaked before Show");
+    c.release(&peers[last]);
+    for a in if reverse { [b, a] } else { [a, b] } {
+        join(&a).await;
+        r.show(&a.output().unwrap()).await.unwrap()
+    }
+    assert_eq!(out.get(), if reverse { b"B\nA\n" } else { b"A\nB\n" });
+    p.once(2);
+    r.shutdown().await.unwrap();
+}
+async fn pending() {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    child("A", "gate", b"complete-payload", b"", 0);
+    a.run().unwrap();
+    let peer = c.ready(&["A"]).remove(0);
+    let observer = a.clone();
+    let task = tokio::spawn(async move { observer.wait().await.unwrap() });
+    assert!(p.last().snapshot().is_none());
+    c.release(&peer);
+    let i = task.await.unwrap();
+    result(&i, b"complete-payload", b"", 0);
+    assert!(i.claim_continuation().unwrap());
+    i.finish_continuation();
+    c.stopped(&peer);
+    p.once(1);
+    r.shutdown().await.unwrap();
+}
+async fn cached(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    let code = if id == "P1-AWAIT-04" { 7 } else { 0 };
+    let err = if code == 7 {
+        b"details\n".as_slice()
+    } else {
+        b""
+    };
+    child("A", "exit", b"partial\n", err, code);
+    a.run().unwrap();
+    c.ready(&["A"]);
+    if id == "P1-AWAIT-02" || id == "P1-RESULT-10" {
+        finalized(&p.last()).await;
+        assert_eq!(&*a.output().unwrap(), b"partial\n")
+    }
+    let first = a.wait().await.unwrap();
+    assert!(first.claim_continuation().unwrap());
+    if id == "P1-AWAIT-17" {
+        let again = a.wait().await.unwrap();
+        assert!(Arc::ptr_eq(&first, &again));
+        assert!(!again.claim_continuation().unwrap())
+    }
+    first.finish_continuation();
+    let alias = a.clone();
+    let second = alias.wait().await.unwrap();
+    assert!(Arc::ptr_eq(&first, &second));
+    assert!(!second.claim_continuation().unwrap());
+    result(&first, b"partial\n", err, code);
+    p.once(1);
+    r.shutdown().await.unwrap();
+}
+async fn failed_launch(id: &str) {
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = r.app("companion/absent");
+    if id == "P1-RESULT-16" {
+        a.build().unwrap();
+        assert!(a.error().unwrap().is_some())
+    }
+    a.run().unwrap();
+    let i = join(&a).await;
+    result(&i, b"", b"", -1);
+    assert!(
+        errno(&a.error().unwrap().unwrap(), libc::ENOENT),
+        "missing path cause lost"
+    );
+    assert!(Arc::ptr_eq(&a.wait().await.unwrap(), &i));
+    assert!(!i.claim_continuation().unwrap());
+    p.once(0);
+    r.shutdown().await.unwrap();
+}
+async fn rerun(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    let mut previous: Option<Arc<Invocation>> = None;
+    let mut saved = None;
+    for n in 0..3 {
+        let code = if (id == "P1-AWAIT-14" || id == "P1-RESULT-11") && n != 1 {
+            7
+        } else {
+            0
+        };
+        let out = format!("attempt:{n}\0");
+        let err = format!("stderr:{n}\n");
+        child("A", "exit", out.as_bytes(), err.as_bytes(), code);
+        a.run().unwrap();
+        c.ready(&["A"]);
+        let i = join(&a).await;
+        result(&i, out.as_bytes(), err.as_bytes(), code);
+        if let (Some(old), Some(s)) = (&previous, &saved) {
+            assert!(!Arc::ptr_eq(old, &i));
+            let old_s: runtime::Snapshot = old.snapshot().unwrap();
+            let s: &runtime::Snapshot = s;
+            assert!(Arc::ptr_eq(&old_s.stdout, &s.stdout));
+            assert!(Arc::ptr_eq(&old_s.stderr, &s.stderr));
+            assert_eq!(old_s.status, s.status);
+            assert_eq!(
+                old_s.error.as_ref().map(ToString::to_string),
+                s.error.as_ref().map(ToString::to_string)
+            )
+        }
+        saved = i.snapshot();
+        previous = Some(i)
+    }
+    p.once(3);
+    r.shutdown().await.unwrap();
+}
+async fn concurrent() {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    child("A", "gate", b"shared-result", b"", 0);
+    a.run().unwrap();
+    let v = c.ready(&["A"]).remove(0);
+    let mut tasks = Vec::new();
+    for _ in 0..16 {
+        let a = a.clone();
+        tasks.push(tokio::spawn(async move {
+            let i = a.wait().await.unwrap();
+            let claim = i.claim_continuation().unwrap();
+            if claim {
+                i.finish_continuation()
+            }
+            (i, claim)
+        }))
+    }
+    c.release(&v);
+    let mut claims = 0;
+    for task in tasks {
+        let (i, claim) = task.await.unwrap();
+        claims += usize::from(claim);
+        assert!(Arc::ptr_eq(&i, &p.last()));
+        result(&i, b"shared-result", b"", 0)
+    }
+    assert_eq!(claims, 1);
+    p.once(1);
+    r.shutdown().await.unwrap();
+}
+async fn stopped(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    let mode = match id {
+        "P1-STOP-10" => "descendant",
+        "P1-STOP-11" => "descendant-closed",
+        "P1-STOP-12" => "descendant-exit",
+        _ => "gate",
+    };
+    let prefix = "first\n\n雪\t".as_bytes();
+    child("A", mode, b"", b"warn\n", 0);
+    env("P1_PREFIX_HEX", hex(prefix));
+    a.run().unwrap();
+    let labels = if mode.starts_with("descendant") {
+        vec!["A", "A.child"]
+    } else {
+        vec!["A"]
+    };
+    let peers = c.ready(&labels);
+    let mut other = None;
+    if id == "P1-STOP-02" {
+        child("B", "gate", b"B untouched", b"", 0);
+        let b = app(&r);
+        b.run().unwrap();
+        other = Some((b, c.ready(&["B"]).remove(0)))
+    }
+    if id == "P1-STOP-13" {
+        *p.signal_hook.lock().unwrap() = Some(Arc::new(|_, _| {
+            Err(io::Error::from_raw_os_error(libc::EACCES))
+        }))
+    }
+    let waiter = if id == "P1-STOP-16" {
+        let alias = a.clone();
+        Some(tokio::spawn(async move { alias.wait().await.unwrap() }))
+    } else {
+        None
+    };
+    if id != "P1-STOP-12" {
+        let alias = a.clone();
+        alias.stop().await.unwrap()
+    }
+    if id == "P1-STOP-03" {
+        a.stop().await.unwrap()
+    }
+    if id == "P1-STOP-13" {
+        assert!(errno(&a.error().unwrap().unwrap(), libc::EACCES));
+        assert!(p.last().snapshot().is_none());
+        c.alive(&peers[0]);
+        *p.signal_hook.lock().unwrap() = None;
+        c.release(&peers[0])
+    }
+    let i = join(&a).await;
+    if let Some(task) = waiter {
+        assert!(Arc::ptr_eq(&i, &task.await.unwrap()))
+    }
+    let s = i.snapshot().unwrap();
+    assert_eq!(&*s.stdout, prefix);
+    assert_eq!(&*s.stderr, b"warn\n");
+    if id == "P1-STOP-13" {
+        assert!(s.error.is_none());
+        assert!(a.error().unwrap().is_none())
+    } else if id != "P1-STOP-12" {
+        assert!(s.error.is_some());
+        assert_eq!(s.status, Some(128 + libc::SIGKILL))
+    } else {
+        assert_eq!(s.status, Some(0));
+        if let Some(e) = s.error {
+            assert!(
+                e.to_string().contains("pipe"),
+                "unexpected natural-exit error {e}"
+            )
+        }
+    }
+    for peer in &peers {
+        c.stopped(peer)
+    }
+    if id == "P1-STOP-03" {
+        a.stop().await.unwrap();
+        assert!(Arc::ptr_eq(&a.wait().await.unwrap(), &i));
+        assert_eq!(&*i.snapshot().unwrap().stdout, prefix)
+    }
+    let mut n = 1;
+    if let Some((b, v)) = other {
+        c.alive(&v);
+        c.release(&v);
+        result(&join(&b).await, b"B untouched", b"", 0);
+        n += 1
+    }
+    if id == "P1-STOP-15" {
+        child("A2", "exit", b"fresh", b"", 0);
+        a.run().unwrap();
+        c.ready(&["A2"]);
+        let next = join(&a).await;
+        assert!(!Arc::ptr_eq(&i, &next));
+        result(&next, b"fresh", b"", 0);
+        n += 1
+    }
+    p.once(n);
+    r.shutdown().await.unwrap();
+}
+async fn stop_completed(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    let code = if id == "P1-STOP-06" { 7 } else { 0 };
+    child("A", "exit", b"saved", b"details", code);
+    a.run().unwrap();
+    c.ready(&["A"]);
+    let old = p.last();
+    finalized(&old).await;
+    let saved = old.snapshot().unwrap();
+    a.stop().await.unwrap();
+    let i = join(&a).await;
+    assert!(Arc::ptr_eq(&old, &i));
+    assert!(Arc::ptr_eq(&saved.stdout, &i.snapshot().unwrap().stdout));
+    result(&i, b"saved", b"details", code);
+    p.once(1);
+    r.shutdown().await.unwrap();
+}
+async fn publication(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let gate = Arc::new(Gate::default());
+    let hold = gate.clone();
+    *p.checkpoint_hook.lock().unwrap() = Some(Arc::new(move |e, _| {
+        if e == Checkpoint::PrePublication {
+            hold.hit()
+        }
+    }));
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    child("A", "exit", b"natural", b"", 0);
+    a.run().unwrap();
+    c.ready(&["A"]);
+    gate.observe();
+    assert!(p.last().snapshot().is_none());
+    if id == "P1-STOP-14" {
+        *p.signal_hook.lock().unwrap() = Some(Arc::new(|_, _| {
+            Err(io::Error::from_raw_os_error(libc::ESRCH))
+        }))
+    }
+    a.stop().await.unwrap();
+    gate.release();
+    result(&join(&a).await, b"natural", b"", 0);
+    p.once(1);
+    r.shutdown().await.unwrap();
+}
+async fn stale_stop() {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let gate = Arc::new(Gate::default());
+    let hold = gate.clone();
+    *p.checkpoint_hook.lock().unwrap() = Some(Arc::new(move |e, _| {
+        if e == Checkpoint::CapturedStopTarget {
+            hold.hit()
+        }
+    }));
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    child("old", "gate", b"old", b"", 0);
+    a.run().unwrap();
+    let old = p.last();
+    let peer = c.ready(&["old"]).remove(0);
+    let alias = a.clone();
+    let stopping = tokio::spawn(async move { alias.stop().await.unwrap() });
+    gate.observe();
+    c.release(&peer);
+    join(&a).await;
+    child("new", "gate", b"new", b"", 0);
+    a.run().unwrap();
+    let new = p.last();
+    let peer = c.ready(&["new"]).remove(0);
+    assert!(!Arc::ptr_eq(&old, &new));
+    gate.release();
+    stopping.await.unwrap();
+    c.alive(&peer);
+    assert!(new.snapshot().is_none());
+    c.release(&peer);
+    result(&join(&a).await, b"new", b"", 0);
+    result(&old, b"old", b"", 0);
+    p.once(2);
+    r.shutdown().await.unwrap();
+}
+async fn stop_stress() {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    for n in 0..32 {
+        child("A", "gate", b"tail", b"", 0);
+        env("P1_PREFIX_HEX", hex(b"prefix"));
+        a.run().unwrap();
+        let peer = c.ready(&["A"]).remove(0);
+        let alias = a.clone();
+        let stopping = tokio::spawn(async move { alias.stop().await.unwrap() });
+        c.release(&peer);
+        stopping.await.unwrap();
+        let i = join(&a).await;
+        let s = i.snapshot().unwrap();
+        assert!(&*s.stdout == b"prefix" || &*s.stdout == b"prefixtail");
+        assert!(
+            s.status == Some(0) || s.status == Some(137),
+            "undefined outcome {}: {:?}",
+            n,
+            s
+        );
+        c.stopped(&peer)
+    }
+    p.once(32);
+    r.shutdown().await.unwrap();
+}
+async fn capture(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let gate = Arc::new(Gate::default());
+    if id == "P1-RESULT-05" {
+        *p.capture_gate.lock().unwrap() = Some(gate.clone())
+    } else {
+        p.capture_fault.store(true, Ordering::SeqCst)
+    }
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    child("A", "exit", b"abcdef", b"", 0);
+    a.run().unwrap();
+    c.ready(&["A"]);
+    if id == "P1-RESULT-05" {
+        gate.observe();
+        assert!(p.last().snapshot().is_none());
+        gate.release();
+        result(&join(&a).await, b"abcdef", b"", 0)
+    } else {
+        let i = join(&a).await;
+        let s = i.snapshot().unwrap();
+        assert_eq!(&*s.stdout, b"abc");
+        assert!(cause(&s.error.unwrap(), "injected-capture-error"))
+    }
+    p.once(1);
+    r.shutdown().await.unwrap();
+}
+async fn raw_result(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, out, _) = runtime(p.clone());
+    let a = app(&r);
+    let (payload, err, mode) = match id {
+        "P1-RESULT-02" => (Vec::new(), Vec::new(), "exit"),
+        "P1-RESULT-03" => (b"\0\xff\xfe\r\n\"tail  ".to_vec(), Vec::new(), "exit"),
+        "P1-RESULT-04" => (b"out\0".repeat(65536), b"err\n".repeat(65536), "large"),
+        _ => (
+            "first\n\nlast\t雪".as_bytes().to_vec(),
+            b"notice\n".to_vec(),
+            "exit",
+        ),
+    };
+    if mode == "large" {
+        child("A", mode, b"", b"", 0)
+    } else {
+        child("A", mode, &payload, &err, 0)
+    }
+    a.run().unwrap();
+    c.ready(&["A"]);
+    result(&join(&a).await, &payload, &err, 0);
+    assert!(a.error().unwrap().is_none());
+    r.show(&a.output().unwrap()).await.unwrap();
+    assert_eq!(out.get(), payload);
+    if id == "P1-RESULT-07" {
+        child("B", "exit", b"", b"", 7);
+        let b = app(&r);
+        b.run().unwrap();
+        c.ready(&["B"]);
+        result(&join(&b).await, b"", b"", 7);
+        assert!(b.error().unwrap().is_some());
+        p.once(2)
+    } else {
+        p.once(1)
+    }
+    r.shutdown().await.unwrap();
+}
+async fn readiness(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let (name, path) = private_companion();
+    let original = std::fs::read(&path).unwrap();
+    let a = r.app(name);
+    match id {
+        "P1-RESULT-13" => {
+            a.build().unwrap();
+            *p.remove_before_start.lock().unwrap() = Some(path.clone());
+            a.run().unwrap();
+            let i = join(&a).await;
+            result(&i, b"", b"", -1);
+            assert!(errno(&i.snapshot().unwrap().error.unwrap(), libc::ENOENT));
+            assert_eq!(p.starts.load(Ordering::SeqCst), 1);
+            assert_eq!(p.waits.load(Ordering::SeqCst), 0)
+        }
+        "P1-RESULT-15" => {
+            std::fs::write(&path, b"not a native executable").unwrap();
+            a.run().unwrap();
+            let i = join(&a).await;
+            result(&i, b"", b"", -1);
+            assert!(errno(&i.snapshot().unwrap().error.unwrap(), libc::ENOEXEC));
+            assert_eq!(p.waits.load(Ordering::SeqCst), 0)
+        }
+        "P1-RESULT-22" => {
+            std::fs::remove_file(&path).unwrap();
+            a.build().unwrap();
+            assert!(a.error().unwrap().is_some());
+            std::fs::write(&path, &original).unwrap();
+            use std::os::unix::fs::PermissionsExt;
+            std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o700)).unwrap();
+            child("A", "exit", b"revalidated", b"", 0);
+            a.run().unwrap();
+            c.ready(&["A"]);
+            result(&join(&a).await, b"revalidated", b"", 0);
+            p.once(1)
+        }
+        "P1-RESULT-17" => {
+            child("A", "exit", b"retained", b"", 0);
+            a.run().unwrap();
+            c.ready(&["A"]);
+            let i = join(&a).await;
+            std::fs::remove_file(&path).unwrap();
+            a.build().unwrap();
+            assert!(a.error().unwrap().is_some());
+            result(&i, b"retained", b"", 0);
+            assert!(Arc::ptr_eq(&a.wait().await.unwrap(), &i));
+            assert!(a.error().unwrap().is_none());
+            p.once(1)
+        }
+        _ => panic!("unexpected readiness case {id}"),
+    };
+    r.shutdown().await.unwrap();
+    let _ = std::fs::remove_file(path);
+}
+async fn invalid_companion() {
+    use std::os::unix::fs::{PermissionsExt, symlink};
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let (name, path) = private_companion();
+    let root = path.parent().unwrap();
+    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o600)).unwrap();
+    let link = root.join(format!("link-{}", std::process::id()));
+    symlink(&path, &link).unwrap();
+    for name in [
+        "../escape".to_owned(),
+        "/absolute".to_owned(),
+        "companion".to_owned(),
+        name,
+        format!("companion/{}", link.file_name().unwrap().to_str().unwrap()),
+    ] {
+        let a = r.app(name);
+        a.run().unwrap();
+        result(&join(&a).await, b"", b"", -1)
+    }
+    p.once(0);
+    r.shutdown().await.unwrap();
+    std::fs::remove_file(link).unwrap();
+    std::fs::remove_file(path).unwrap();
+}
+async fn continuations(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, out, _) = runtime(p.clone());
+    let a = app(&r);
+    child("A", "exit", b"value", b"", 0);
+    a.run().unwrap();
+    c.ready(&["A"]);
+    finalized(&p.last()).await;
+    r.show(b"between|").await.unwrap();
+    if id == "P1-CONT-09" {
+        r.shutdown().await.unwrap();
+        assert_eq!(out.get(), b"between|");
+        p.once(1);
+        return;
+    }
+    let first = a.wait().await.unwrap();
+    assert!(first.claim_continuation().unwrap());
+    if id == "P1-CONT-08" {
+        let b = app(&r);
+        child("B", "exit", b"B", b"", 0);
+        b.run().unwrap();
+        c.ready(&["B"]);
+        let j = b.wait().await.unwrap();
+        assert!(j.claim_continuation().unwrap());
+        r.show(b"C:B|").await.unwrap();
+        j.finish_continuation();
+        r.show(b"A:end|").await.unwrap();
+        first.finish_continuation();
+        assert_eq!(out.get(), b"between|C:B|A:end|");
+        p.once(2)
+    } else {
+        r.show(b"C:A|").await.unwrap();
+        first.finish_continuation();
+        let again = a.wait().await.unwrap();
+        assert!(Arc::ptr_eq(&first, &again));
+        assert!(!again.claim_continuation().unwrap());
+        r.show(b"after|").await.unwrap();
+        assert_eq!(out.get(), b"between|C:A|after|");
+        if id == "P1-CONT-11" {
+            child("A2", "exit", b"next", b"", 0);
+            a.run().unwrap();
+            c.ready(&["A2"]);
+            let next = a.wait().await.unwrap();
+            assert!(!Arc::ptr_eq(&first, &next));
+            assert!(next.claim_continuation().unwrap());
+            r.show(b"C:A|").await.unwrap();
+            next.finish_continuation();
+            assert_eq!(out.get(), b"between|C:A|after|C:A|");
+            p.once(2)
+        } else {
+            p.once(1)
+        }
+    }
+    r.shutdown().await.unwrap();
+}
+async fn continuation_order() {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, out, _) = runtime(p.clone());
+    let a = app(&r);
+    let b = app(&r);
+    child("A", "gate", b"A", b"", 0);
+    a.run().unwrap();
+    child("B", "gate", b"B", b"", 0);
+    b.run().unwrap();
+    let peers = c.ready(&["A", "B"]);
+    c.release(&peers[1]);
+    finalized(&p.last()).await;
+    assert!(out.get().is_empty());
+    c.release(&peers[0]);
+    for (a, marker) in [(&a, b"C:A|"), (&b, b"C:B|")] {
+        let i = a.wait().await.unwrap();
+        assert!(i.claim_continuation().unwrap());
+        r.show(marker).await.unwrap();
+        i.finish_continuation()
+    }
+    assert_eq!(out.get(), b"C:A|C:B|");
+    p.once(2);
+    r.shutdown().await.unwrap();
+}
+async fn failure_continuations() {
+    for mode in ["launch", "exit", "stop"] {
+        let c = Controller::new();
+        let p = Arc::new(Probe::default());
+        let (r, out, _) = runtime(p.clone());
+        let a = if mode == "launch" {
+            r.app("companion/missing")
+        } else {
+            app(&r)
+        };
+        child(
+            "A",
+            if mode == "stop" { "gate" } else { "exit" },
+            b"partial",
+            b"detail",
+            7,
+        );
+        a.run().unwrap();
+        if mode != "launch" {
+            let v = c.ready(&["A"]).remove(0);
+            if mode == "stop" {
+                a.stop().await.unwrap();
+                c.stopped(&v)
+            }
+        }
+        let i = a.wait().await.unwrap();
+        assert!(a.error().unwrap().is_some());
+        assert!(i.claim_continuation().unwrap());
+        r.show(b"failed|").await.unwrap();
+        i.finish_continuation();
+        assert!(!a.wait().await.unwrap().claim_continuation().unwrap());
+        assert_eq!(out.get(), b"failed|");
+        r.shutdown().await.unwrap();
+    }
+}
+async fn shutdown_case(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    let a = app(&r);
+    child("A", "exit", b"finished", b"", 0);
+    a.run().unwrap();
+    c.ready(&["A"]);
+    let old = p.last();
+    finalized(&old).await;
+    let b = app(&r);
+    child("B", "gate", b"", b"", 0);
+    b.run().unwrap();
+    let peer = c.ready(&["B"]).remove(0);
+    r.shutdown().await.unwrap();
+    r.shutdown().await.unwrap();
+    c.stopped(&peer);
+    result(&old, b"finished", b"", 0);
+    p.once(2);
+    if id == "P1-RESULT-19" {
+        let _ = app(&r).run();
+        let refused = p.last();
+        assert!(!Arc::ptr_eq(&old, &refused));
+        finalized(&refused).await;
+        assert!(refused.snapshot().unwrap().error.is_some());
+        p.once(2)
+    }
+}
+async fn launch_shutdown() {
+    for boundary in [Checkpoint::PreStart, Checkpoint::SuccessfulStart] {
+        let c = Controller::new();
+        let p = Arc::new(Probe::default());
+        let gate = Arc::new(Gate::default());
+        let hold = gate.clone();
+        *p.checkpoint_hook.lock().unwrap() = Some(Arc::new(move |e, _| {
+            if e == boundary {
+                hold.hit()
+            }
+        }));
+        let (r, _, _) = runtime(p.clone());
+        child("A", "gate", b"", b"", 0);
+        let a = app(&r);
+        let task = tokio::task::spawn_blocking(move || a.run());
+        gate.observe();
+        // Ownership/readiness is observed before shutdown may kill the child.
+        let started_peer = if boundary == Checkpoint::SuccessfulStart {
+            Some(c.ready(&["A"]).remove(0))
+        } else {
+            None
+        };
+        tokio::time::timeout(Duration::from_secs(3), r.shutdown())
+            .await
+            .expect("shutdown while launch barrier held")
+            .unwrap();
+        gate.release();
+        let _ = task.await.unwrap();
+        if boundary == Checkpoint::PreStart {
+            p.once(0)
+        } else {
+            c.stopped(started_peer.as_ref().unwrap());
+            p.once(1)
+        }
+        finalized(&p.last()).await;
+        assert!(p.last().snapshot().unwrap().error.is_some())
+    }
+}
+async fn resources(id: &str) {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, _, _) = runtime(p.clone());
+    if id == "P1-RESOURCE-02" {
+        let mut apps = Vec::new();
+        let labels: Vec<_> = (0..8).map(|n| n.to_string()).collect();
+        for l in &labels {
+            child(l, "gate", l.as_bytes(), b"", 0);
+            let a = app(&r);
+            a.run().unwrap();
+            apps.push(a)
+        }
+        let peers = c.ready(&labels.iter().map(String::as_str).collect::<Vec<_>>());
+        for n in (0..8).rev() {
+            c.alive(&peers[n]);
+            c.release(&peers[n]);
+            result(&join(&apps[n]).await, labels[n].as_bytes(), b"", 0)
+        }
+        p.once(8)
+    } else if id == "P1-RESOURCE-04" || id == "P1-RESOURCE-05" {
+        child("A", "gate", b"A", b"", 0);
+        let a = app(&r);
+        a.run().unwrap();
+        let peer = c.ready(&["A"]).remove(0);
+        *p.start_fault.lock().unwrap() = Some(libc::EMFILE);
+        let b = app(&r);
+        b.run().unwrap();
+        let failed = join(&b).await;
+        assert!(errno(
+            &failed.snapshot().unwrap().error.unwrap(),
+            libc::EMFILE
+        ));
+        c.alive(&peer);
+        *p.start_fault.lock().unwrap() = None;
+        child("B", "exit", b"recovered", b"", 0);
+        b.run().unwrap();
+        c.ready(&["B"]);
+        result(&join(&b).await, b"recovered", b"", 0);
+        c.release(&peer);
+        join(&a).await;
+        assert_eq!(p.starts.load(Ordering::SeqCst), 3);
+        assert_eq!(p.waits.load(Ordering::SeqCst), 2);
+        assert_eq!(p.reaped.load(Ordering::SeqCst), 2)
+    } else {
+        let a = app(&r);
+        let mut identities = Vec::new();
+        let mut extra = 0;
+        if id == "P1-RESOURCE-01" {
+            child("stopped", "gate", b"", b"", 0);
+            a.run().unwrap();
+            let peer = c.ready(&["stopped"]).remove(0);
+            a.stop().await.unwrap();
+            identities.push(join(&a).await);
+            c.stopped(&peer);
+            extra = 1;
+            let failed = r.app("companion/absent");
+            failed.run().unwrap();
+            identities.push(join(&failed).await)
+        }
+        let fd = || {
+            std::fs::read_dir(if cfg!(target_os = "linux") {
+                "/proc/self/fd"
+            } else {
+                "/dev/fd"
+            })
+            .unwrap()
+            .count()
+        };
+        let initial = fd();
+        for n in 0..64 {
+            let payload = format!("token-{n}");
+            child("A", "exit", payload.as_bytes(), b"", 0);
+            a.run().unwrap();
+            c.ready(&["A"]);
+            let i = join(&a).await;
+            assert!(identities.iter().all(|old| !Arc::ptr_eq(old, &i)));
+            result(&i, payload.as_bytes(), b"", 0);
+            identities.push(i)
+        }
+        p.once(64 + extra);
+        if id == "P1-RESOURCE-03" {
+            assert!(fd() <= initial + 3, "monotonically retained descriptors")
+        }
+    }
+    r.shutdown().await.unwrap();
+}
+fn checkpoint(label: &str) {
+    use std::io::{BufRead, BufReader};
+    use std::os::unix::net::UnixStream;
+    let mut s = UnixStream::connect(std::env::var_os("P1_SOCKET").unwrap()).unwrap();
+    writeln!(
+        s,
+        "{{\"Label\":{},\"Record\":\"\",\"PID\":{},\"PPID\":{},\"PGID\":{}}}",
+        crate::ownership::quote(label),
+        std::process::id(),
+        unsafe { libc::getppid() },
+        unsafe { libc::getpgrp() }
+    )
+    .unwrap();
+    let mut line = String::new();
+    BufReader::new(s).read_line(&mut line).unwrap();
+    assert_eq!(line, "release\n")
+}
+struct BrokenDiagnostic;
+impl tokio::io::AsyncWrite for BrokenDiagnostic {
+    fn poll_write(
+        self: std::pin::Pin<&mut Self>,
+        _: &mut std::task::Context<'_>,
+        _: &[u8],
+    ) -> std::task::Poll<io::Result<usize>> {
+        writeln!(
+            std::fs::OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(std::env::var_os("P1_DIAGNOSTIC_LOG").unwrap())
+                .unwrap(),
+            "write"
+        )
+        .unwrap();
+        std::task::Poll::Ready(Err(io::Error::from_raw_os_error(libc::EPIPE)))
+    }
+    fn poll_flush(
+        self: std::pin::Pin<&mut Self>,
+        _: &mut std::task::Context<'_>,
+    ) -> std::task::Poll<io::Result<()>> {
+        std::task::Poll::Ready(Ok(()))
+    }
+    fn poll_shutdown(
+        self: std::pin::Pin<&mut Self>,
+        _: &mut std::task::Context<'_>,
+    ) -> std::task::Poll<io::Result<()>> {
+        std::task::Poll::Ready(Ok(()))
+    }
+}
+pub fn fault_main() {
+    if let Ok(mode) = std::env::var("P1_SUPERVISION_FAULT") {
+        supervision_main(&mode);
+        return;
+    }
+    let executor = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(4)
+        .enable_all()
+        .build()
+        .unwrap();
+    let code = executor.block_on(fault_source());
+    std::process::exit(code as i32)
+}
+async fn fault_source() -> u8 {
+    let mode = std::env::var("P1_FATAL_MODE").unwrap();
+    let p = Arc::new(Probe::default());
+    let stderr: hooks::Output = if mode == "count-broken-err" {
+        Box::pin(BrokenDiagnostic)
+    } else {
+        Box::pin(tokio::io::stderr())
+    };
+    let r = hooks::new_observed(p.clone(), Box::pin(tokio::io::stdout()), stderr).unwrap();
+    let a = app(&r);
+    let b = app(&r);
+    if mode == "cleanup-priority" || mode == "cleanup-failure" {
+        let probe = p.clone();
+        *p.signal_hook.lock().unwrap() = Some(Arc::new(move |target, s| {
+            signal_os(target, s)?;
+            let pid = match target {
+                SignalTarget::Group(p) | SignalTarget::Leader(p) => p,
+            };
+            let n = probe
+                .pids
+                .lock()
+                .unwrap()
+                .iter()
+                .position(|p| *p == pid)
+                .unwrap();
+            let text = Box::leak(format!("cleanup child {n}: permission denied").into_boxed_str());
+            Err(io::Error::other(Fault(text)))
+        }))
+    }
+    if mode.starts_with("compete-") {
+        let seen = Arc::new(AtomicUsize::new(0));
+        let once = seen.clone();
+        let probe = p.clone();
+        let fatal_first = mode == "compete-fatal-first";
+        *p.signal_hook.lock().unwrap() = Some(Arc::new(move |target, s| {
+            if once.fetch_add(1, Ordering::SeqCst) == 0 {
+                // This observer deliberately blocks cleanup while an independent
+                // runtime task observes the competing request. Hand the worker
+                // back to Tokio so the observer cannot starve that task.
+                tokio::task::block_in_place(|| {
+                    checkpoint("orchestrator-first-decision");
+                    let events = probe.terminal.lock().unwrap();
+                    let (events, timeout) = probe
+                        .terminal_cv
+                        .wait_timeout_while(events, Duration::from_secs(4), |events| {
+                            !events.iter().any(|e| {
+                                if fatal_first {
+                                    matches!(e, TerminalRequest::Signal(130 | 143))
+                                } else {
+                                    matches!(e, TerminalRequest::Failure)
+                                }
+                            })
+                        })
+                        .unwrap();
+                    assert!(
+                        !timeout.timed_out(),
+                        "competing request never entered actual runtime: {events:?}"
+                    );
+                    drop(events);
+                    checkpoint("orchestrator-competing-observed")
+                });
+            }
+            signal_os(target, s)
+        }));
+        if !fatal_first {
+            let rt = r.clone();
+            tokio::spawn(async move {
+                while seen.load(Ordering::SeqCst) == 0 {
+                    tokio::task::yield_now().await
+                }
+                let _ = rt.fail(runtime::Error::new("requested failure"));
+            });
+        }
+    }
+    child("A", "gate", b"payload", b"", 0);
+    a.run().unwrap();
+    child("B", "descendant", b"payload", b"", 0);
+    b.run().unwrap();
+    checkpoint("orchestrator");
+    if mode == "wait-watchdog" || mode == "wait-early" {
+        r.shutdown().await.unwrap();
+        checkpoint("orchestrator-wait-cleanup");
+        panic!("fatal wait cleanup checkpoint unexpectedly released");
+    }
+    r.run(async {
+        if mode == "completed-duplicate" || mode.starts_with("continuation-") {
+            a.stop().await?;
+            let i = a.wait().await?;
+            if mode.starts_with("continuation-") {
+                assert!(i.claim_continuation()?)
+            } else {
+                finalized(&i).await
+            }
+        }
+        match mode.as_str() {
+            "normal" | "cleanup-failure" => Ok(()),
+            "bare" | "continuation-bare" => Err(r.exit()),
+            "fail"
+            | "continuation-fail"
+            | "cleanup-priority"
+            | "count-broken-err"
+            | "compete-fatal-first" => Err(r.fail(runtime::Error::new("requested failure"))),
+            "await-none" => {
+                app(&r).wait().await?;
+                panic!("source after no-invocation misuse")
+            }
+            "build-await" => {
+                let unused = app(&r);
+                unused.build()?;
+                unused.wait().await?;
+                panic!("source after Build/Await misuse")
+            }
+            "duplicate" | "completed-duplicate" | "continuation-rerun" => {
+                a.run()?;
+                panic!("source after duplicate Run")
+            }
+            "build-outstanding" => {
+                a.build()?;
+                panic!("source after outstanding Build")
+            }
+            "stop-none" => {
+                app(&r).stop().await?;
+                panic!("source after Stop misuse")
+            }
+            "output-none" => {
+                app(&r).output()?;
+                panic!("source after unavailable Output")
+            }
+            "output-running" => {
+                a.output()?;
+                panic!("source after running Output")
+            }
+            "broken-out" => {
+                r.show(b"broken pipe").await?;
+                panic!("broken stdout succeeded")
+            }
+            "broken-err" => Err(r.fail(runtime::Error::new("requested failure"))),
+            "signal-await" | "compete-signal-first" => {
+                a.wait().await?;
+                panic!("unawaited continuation after signal")
+            }
+            "signal-before-await" => loop {
+                r.check_source()?;
+                tokio::task::yield_now().await
+            },
+            "nested-exit" => {
+                a.stop().await?;
+                let i = a.wait().await?;
+                assert!(i.claim_continuation()?);
+                child("C", "gate", b"", b"", 0);
+                let c = app(&r);
+                c.run()?;
+                checkpoint("orchestrator-nested");
+                Err(r.exit())
+            }
+            "panic" => panic!("intentional Rust source panic"),
+            _ => panic!("unregistered fatal mode {mode}"),
+        }
+    })
+    .await
+}
+async fn fatal(mode: &str, signal: Option<Signal>) {
+    use std::io::Read;
+    use std::process::{Command, Stdio};
+    let c = Controller::new();
+    let root = std::env::current_exe()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let log = c.dir.join("waits");
+    let diaglog = c.dir.join("diagnostics");
+    let mut cmd = Command::new(root.join("runtime-fault"));
+    cmd.env("P1_FATAL_MODE", mode)
+        .env("P1_WAITLOG", &log)
+        .env("P1_DIAGNOSTIC_LOG", &diaglog)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+    let mut owner = FatalWaitOwner {
+        child: cmd.spawn().unwrap(),
+        reaped: false,
+    };
+    let mut stdout = owner.child.stdout.take();
+    let mut stderr = owner.child.stderr.take();
+    if mode == "broken-out" {
+        drop(stdout.take())
+    }
+    if mode == "broken-err" {
+        drop(stderr.take())
+    }
+    let out = std::thread::spawn(move || {
+        let mut b = Vec::new();
+        if let Some(mut pipe) = stdout {
+            pipe.read_to_end(&mut b).unwrap();
+        }
+        b
+    });
+    let err = std::thread::spawn(move || {
+        let mut b = Vec::new();
+        if let Some(mut pipe) = stderr {
+            pipe.read_to_end(&mut b).unwrap();
+        }
+        b
+    });
+    let peers = c.ready(&["A", "B", "B.child", "orchestrator"]);
+    for p in &peers[..3] {
+        c.alive(p)
+    }
+    if let Ok(pid_path) = std::env::var("P1_FATAL_CONTROLLER_FAULT") {
+        // Isolate direct-child ownership from application cleanup. Every App
+        // helper's recorded lifetime has ended before this injected panic.
+        for p in &peers[..3] {
+            c.release(p);
+        }
+        for p in &peers[..3] {
+            c.stopped(p);
+        }
+        std::fs::write(pid_path, owner.child.id().to_string()).unwrap();
+        panic!("intentional fatal controller failure before checkpoint release");
+    }
+    if mode == "signal-before-await" || mode == "signal-await" || mode == "compete-signal-first" {
+        kill(Pid::from_raw(owner.child.id() as i32), signal.unwrap()).unwrap()
+    }
+    c.release(&peers[3]);
+    if mode.starts_with("compete-") {
+        let first = c.ready(&["orchestrator-first-decision"]).remove(0);
+        if mode == "compete-fatal-first" {
+            kill(Pid::from_raw(owner.child.id() as i32), signal.unwrap()).unwrap()
+        }
+        c.release(&first);
+        let observed = c.ready(&["orchestrator-competing-observed"]).remove(0);
+        c.release(&observed)
+    }
+    let mut nested = None;
+    if mode == "nested-exit" {
+        let values = c.ready(&["C", "orchestrator-nested"]);
+        c.release(&values[1]);
+        nested = Some(values[0].clone())
+    }
+    let end = std::time::Instant::now() + Duration::from_secs(6);
+    let status = loop {
+        if let Some(s) = owner.child.try_wait().unwrap() {
+            owner.reaped = true;
+            break s;
+        }
+        if std::time::Instant::now() > end {
+            panic!("fatal runtime subprocess watchdog")
+        }
+        std::thread::sleep(Duration::from_millis(1))
+    };
+    let output = out.join().unwrap();
+    let diagnostics = err.join().unwrap();
+    assert!(
+        output.is_empty(),
+        "unexpected source/harness stdout {output:?}"
+    );
+    let expected = if mode == "panic" {
+        101
+    } else if mode == "compete-fatal-first" {
+        1
+    } else if mode.starts_with("signal-") || mode == "compete-signal-first" {
+        match signal.unwrap() {
+            Signal::SIGINT => 130,
+            Signal::SIGTERM => 143,
+            _ => unreachable!(),
+        }
+    } else if ["normal", "bare", "continuation-bare", "nested-exit"].contains(&mode) {
+        0
+    } else {
+        1
+    };
+    assert_eq!(
+        status.code(),
+        Some(expected),
+        "mode {mode}, stderr {}",
+        String::from_utf8_lossy(&diagnostics)
+    );
+    for p in &peers[..3] {
+        c.stopped(p)
+    }
+    if let Some(p) = nested {
+        c.stopped(&p)
+    }
+    let waits = std::fs::read_to_string(log).unwrap();
+    let ids: Vec<_> = waits.lines().collect();
+    assert_eq!(ids.len(), if mode == "nested-exit" { 3 } else { 2 });
+    let unique: std::collections::BTreeSet<_> = ids.iter().collect();
+    assert_eq!(unique.len(), ids.len(), "duplicate direct-child Wait");
+    for p in &peers[..2] {
+        assert!(ids.contains(&p.pid.to_string().as_str()))
+    }
+    if ["fail", "continuation-fail", "compete-fatal-first"].contains(&mode) {
+        assert_eq!(diagnostics, b"requested failure\n")
+    }
+    if mode == "count-broken-err" {
+        assert_eq!(std::fs::read(diaglog).unwrap(), b"write\n");
+        assert!(diagnostics.is_empty())
+    }
+    if mode == "cleanup-priority" {
+        assert_eq!(diagnostics,b"requested failure\nterminate application process group: cleanup child 0: permission denied\nterminate application process group: cleanup child 1: permission denied\n")
+    }
+    if mode == "cleanup-failure" {
+        let text = String::from_utf8(diagnostics.clone()).unwrap();
+        let a = text.find("cleanup child 0").unwrap();
+        let b = text.find("cleanup child 1").unwrap();
+        assert!(a < b);
+        assert_eq!(text.matches("cleanup child 0").count(), 1);
+        assert_eq!(text.matches("cleanup child 1").count(), 1)
+    }
+    if mode == "panic" {
+        assert!(String::from_utf8_lossy(&diagnostics).contains("intentional Rust source panic"))
+    }
+    if ["output-none", "output-running"].contains(&mode) {
+        assert!(String::from_utf8_lossy(&diagnostics).contains("Output is unavailable"))
+    } else if [
+        "await-none",
+        "build-await",
+        "duplicate",
+        "completed-duplicate",
+        "continuation-rerun",
+        "build-outstanding",
+        "stop-none",
+    ]
+    .contains(&mode)
+    {
+        assert!(String::from_utf8_lossy(&diagnostics).contains("invocation"))
+    }
+}
+async fn failed_exit() {
+    let c = Controller::new();
+    let p = Arc::new(Probe::default());
+    let (r, out, err) = runtime(p.clone());
+    let a = app(&r);
+    child("A", "exit", b"partial\n", b"details\n", 7);
+    a.run().unwrap();
+    c.ready(&["A"]);
+    let i = join(&a).await;
+    result(&i, b"partial\n", b"details\n", 7);
+    r.show(&a.output().unwrap()).await.unwrap();
+    let status = r.finish(Err(a.error().unwrap().unwrap())).await;
+    assert_eq!(status, 1);
+    assert_eq!(out.get(), b"partial\n");
+    assert!(String::from_utf8_lossy(&err.get()).contains("details"));
+    p.once(1)
+}
+async fn dispatch(id: &str) {
+    match id {
+        "P1-RUN-01" | "P1-RUN-05" | "P1-RUN-06" | "P1-RUN-07" | "P1-RUN-08" | "P1-RUN-09"
+        | "P1-RUN-10" | "P1-RUN-11" | "P1-RUN-14" => launch(id).await,
+        "P1-RUN-02" | "P1-RUN-03" | "P1-RUN-04" | "P1-AWAIT-10" => overlap(id).await,
+        "P1-AWAIT-01" => pending().await,
+        "P1-AWAIT-02" | "P1-AWAIT-03" | "P1-AWAIT-04" | "P1-AWAIT-08" | "P1-AWAIT-17"
+        | "P1-RESULT-10" => cached(id).await,
+        "P1-AWAIT-05" => fatal("await-none", None).await,
+        "P1-AWAIT-06" => fatal("build-await", None).await,
+        "P1-AWAIT-07" | "P1-RESULT-12" | "P1-RESULT-16" => failed_launch(id).await,
+        "P1-AWAIT-09" | "P1-STOP-01" | "P1-STOP-02" | "P1-STOP-03" | "P1-STOP-09"
+        | "P1-STOP-10" | "P1-STOP-11" | "P1-STOP-12" | "P1-STOP-13" | "P1-STOP-15"
+        | "P1-STOP-16" => stopped(id).await,
+        "P1-AWAIT-11" => fatal("duplicate", None).await,
+        "P1-AWAIT-12" => fatal("completed-duplicate", None).await,
+        "P1-AWAIT-13" | "P1-AWAIT-14" | "P1-RESULT-11" => rerun(id).await,
+        "P1-AWAIT-15" => stale_stop().await,
+        "P1-AWAIT-16" => fatal("continuation-rerun", None).await,
+        "P1-AWAIT-18" => concurrent().await,
+        "P1-STOP-04" => fatal("stop-none", None).await,
+        "P1-STOP-05" | "P1-STOP-06" => stop_completed(id).await,
+        "P1-STOP-07" | "P1-STOP-14" => publication(id).await,
+        "P1-STOP-08" => stop_stress().await,
+        "P1-RESULT-01" | "P1-RESULT-02" | "P1-RESULT-03" | "P1-RESULT-04" | "P1-RESULT-07" => {
+            raw_result(id).await
+        }
+        "P1-RESULT-05" | "P1-RESULT-20" => capture(id).await,
+        "P1-RESULT-06" => failed_exit().await,
+        "P1-RESULT-08" => fatal("output-none", None).await,
+        "P1-RESULT-09" => fatal("output-running", None).await,
+        "P1-RESULT-13" | "P1-RESULT-15" | "P1-RESULT-17" | "P1-RESULT-22" => readiness(id).await,
+        "P1-RESULT-14" => invalid_companion().await,
+        "P1-RESULT-18" => fatal("build-outstanding", None).await,
+        "P1-RESULT-19" => shutdown_case(id).await,
+        "P1-CONT-01" | "P1-CONT-02" | "P1-CONT-03" | "P1-CONT-08" | "P1-CONT-09" | "P1-CONT-10"
+        | "P1-CONT-11" => continuations(id).await,
+        "P1-CONT-04" => continuation_order().await,
+        "P1-CONT-05" => failure_continuations().await,
+        "P1-CONT-06" => fatal("continuation-bare", None).await,
+        "P1-CONT-07" => fatal("continuation-fail", None).await,
+        "P1-EXIT-01" => fatal("normal", None).await,
+        "P1-EXIT-02" => fatal("bare", None).await,
+        "P1-EXIT-03" | "P1-EXIT-15" => fatal("fail", None).await,
+        "P1-EXIT-04" => fatal("output-none", None).await,
+        "P1-EXIT-05" => {
+            for mode in ["broken-out", "broken-err", "count-broken-err"] {
+                fatal(mode, None).await
+            }
+        }
+        "P1-EXIT-06" => fatal("signal-await", Some(Signal::SIGINT)).await,
+        "P1-EXIT-07" => fatal("signal-await", Some(Signal::SIGTERM)).await,
+        "P1-EXIT-08" => {
+            for s in [Signal::SIGINT, Signal::SIGTERM] {
+                fatal("signal-before-await", Some(s)).await
+            }
+        }
+        "P1-EXIT-09" => launch_shutdown().await,
+        "P1-EXIT-10" => shutdown_case(id).await,
+        "P1-EXIT-11" => {
+            for s in [Signal::SIGINT, Signal::SIGTERM] {
+                for mode in ["compete-signal-first", "compete-fatal-first"] {
+                    fatal(mode, Some(s)).await
+                }
+            }
+        }
+        "P1-EXIT-12" => fatal("cleanup-priority", None).await,
+        "P1-EXIT-13" => fatal("cleanup-failure", None).await,
+        "P1-EXIT-14" => fatal("nested-exit", None).await,
+        "P1-RESOURCE-01" | "P1-RESOURCE-02" | "P1-RESOURCE-03" | "P1-RESOURCE-04"
+        | "P1-RESOURCE-05" => resources(id).await,
+        _ => panic!("unregistered Rust runtime ID {id}"),
+    }
+}
+#[test]
+fn driver() {
+    let id = std::env::var("P1_CASE").expect("outer case registry ID");
+    let executor = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(4)
+        .enable_all()
+        .build()
+        .unwrap();
+    executor.block_on(dispatch(&id));
+    println!("RUST-PARITY-PASS {id}")
+}
+
+fn registered(count: usize) {
+    let until = std::time::Instant::now() + Duration::from_secs(4);
+    loop {
+        let count_now = std::fs::read_dir(std::env::var_os("P1_OWNERSHIP").unwrap())
+            .unwrap()
+            .filter_map(Result::ok)
+            .filter(|e| e.file_name().to_string_lossy().starts_with("alive-"))
+            .filter(|e| std::fs::read_to_string(e.path()).is_ok_and(|s| s.contains("\"PID\":")))
+            .count();
+        if count_now == count {
+            return;
+        }
+        assert!(
+            std::time::Instant::now() < until,
+            "ownership registration missing: {count_now}/{count}"
+        );
+        std::thread::sleep(Duration::from_millis(1))
+    }
+}
+fn armed() {
+    std::io::stdout().write_all(b"out\0\n").unwrap();
+    std::io::stdout().flush().unwrap();
+    std::io::stderr().write_all(b"err\0\n").unwrap();
+    std::io::stderr().flush().unwrap();
+    std::fs::write(std::env::var_os("P1_SUPERVISION_ARMED").unwrap(), b"").unwrap()
+}
+fn supervision_main(mode: &str) {
+    if mode == "nested" {
+        let mut child = std::process::Command::new(std::env::current_exe().unwrap());
+        child
+            .env("P1_SUPERVISION_FAULT", "nested-child")
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null());
+        child.spawn().unwrap();
+        registered(3);
+        armed();
+        std::process::exit(23)
+    }
+    let executor = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(4)
+        .enable_all()
+        .build()
+        .unwrap();
+    executor.block_on(async {
+        if mode == "nested-child" {
+            let Some((_held, _)) = crate::ownership::register("nested-driver").unwrap() else {
+                return;
+            };
+            let _c = Controller::new();
+            let p = Arc::new(Probe::default());
+            let (r, _, _) = runtime(p);
+            child("A", "descendant", b"", b"", 0);
+            app(&r).run().unwrap();
+            loop {
+                std::thread::park()
+            }
+        }
+        let p = Arc::new(Probe::default());
+        let owned = mode.to_owned();
+        let ready = PathBuf::from(std::env::var_os("P1_SUPERVISION_ARMED").unwrap())
+            .with_extension("never-ready");
+        let gate = ready.clone();
+        *p.start_hook.lock().unwrap() = Some(Arc::new(move |cmd| {
+            let child = cmd.spawn()?;
+            registered(1);
+            assert!(!gate.exists());
+            armed();
+            match owned.as_str() {
+                "rust-panic" => panic!("intentional Rust supervision panic"),
+                "abrupt-start" => std::process::exit(23),
+                "outer-timeout" => loop {
+                    std::thread::park()
+                },
+                _ => panic!("unknown supervision mode"),
+            };
+            #[allow(unreachable_code)]
+            Ok(child)
+        }));
+        let (r, _, _) = runtime(p);
+        child("A", "gate", b"", b"", 0);
+        env("P1_READYFILE", ready);
+        app(&r).run().unwrap();
+        panic!("blocked Start unexpectedly returned")
+    });
+}
+struct FatalWaitOwner {
+    child: std::process::Child,
+    reaped: bool,
+}
+impl Drop for FatalWaitOwner {
+    fn drop(&mut self) {
+        if !self.reaped {
+            let _ = self.child.kill();
+            let _ = self.child.wait();
+            self.reaped = true;
+            println!("fatal child cleanup reaped once");
+        }
+    }
+}
+#[test]
+fn fatal_controller_cleanup() {
+    use nix::errno::Errno;
+    use nix::sys::wait::{WaitPidFlag, WaitStatus, waitpid};
+    let pid_path = std::env::var("P1_FATAL_CONTROLLER_FAULT").unwrap();
+    let executor = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(4)
+        .enable_all()
+        .build()
+        .unwrap();
+    let failure = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        executor.block_on(fatal("normal", None));
+    }));
+    assert!(failure.is_err(), "injected controller failure disappeared");
+    let pid = Pid::from_raw(std::fs::read_to_string(pid_path).unwrap().parse().unwrap());
+    // Only the controller's successful OS Wait can make its known direct child
+    // unavailable here. A completed-but-unreaped child is also a regression.
+    let already_reaped = match waitpid(pid, Some(WaitPidFlag::WNOHANG)) {
+        Err(Errno::ECHILD) => true,
+        Ok(WaitStatus::StillAlive) => {
+            kill(pid, Signal::SIGKILL).unwrap();
+            waitpid(pid, None).unwrap();
+            false
+        }
+        Ok(_) => false,
+        Err(error) => panic!("inspect direct child ownership: {error}"),
+    };
+    assert!(already_reaped, "fatal controller did not reap its direct child on unwind");
+    println!("fatal controller direct child already reaped after failure");
+}
+#[test]
+fn fatal_wait_fault() {
+    let mode = std::env::var("P1_FATAL_WAIT_FAULT").unwrap();
+    assert!(mode == "wait-watchdog" || mode == "wait-early");
+    let c = Controller::new();
+    let exe = std::env::current_exe()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .join("runtime-fault");
+    let proc = std::process::Command::new(exe)
+        .env("P1_FATAL_MODE", &mode)
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .spawn()
+        .unwrap();
+    let mut owner = FatalWaitOwner {
+        child: proc,
+        reaped: false,
+    };
+    let peers = c.ready(&["A", "B", "B.child", "orchestrator"]);
+    c.release(&peers[3]);
+    let _held = c.ready(&["orchestrator-wait-cleanup"]);
+    for p in &peers[..3] {
+        c.stopped(p)
+    }
+    println!("fatal wait fault armed: {mode}");
+    if mode == "wait-early" {
+        panic!("intentional failure before fatal wait selection")
+    };
+    let until = std::time::Instant::now() + Duration::from_millis(150);
+    while std::time::Instant::now() < until {
+        assert!(
+            owner.child.try_wait().unwrap().is_none(),
+            "fatal child exited before fault watchdog"
+        );
+        std::thread::sleep(Duration::from_millis(1))
+    }
+    panic!("fatal-path watchdog: orchestrator did not exit")
+}

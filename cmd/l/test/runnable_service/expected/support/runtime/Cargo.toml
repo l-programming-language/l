@@ -1,0 +1,22 @@
+[package]
+name = "l_runtime_support"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+autobins = false
+autolib = false
+autoexamples = false
+autotests = false
+autobenches = false
+
+[lib]
+name = "l_runtime_support"
+path = "src/lib.rs"
+
+[dependencies]
+
+tokio = { version = "=1.53.1", features = ["rt-multi-thread", "macros", "process", "io-util", "io-std", "signal", "sync", "time"] }
+
+nix = { version = "=0.31.3", features = ["signal", "process"] }
+

@@ -1,0 +1,48 @@
+
+
+// package main
+
+
+
+
+
+
+#[allow(non_snake_case)]
+fn Void() -> i32 { 7 }
+struct Fixture;
+impl Fixture { #[allow(non_snake_case)] fn Void(&self) -> i32 { 8 } }
+
+fn main( ) -> (()) {
+    
+        
+let plain = Void()
+;
+
+
+
+let fixture = Fixture;
+
+
+
+let method = fixture.Void()
+
+;
+
+
+
+let Void = String::from("value");
+
+
+
+let length = Void.len()
+
+;
+
+
+
+assert_eq!(plain, 7); assert_eq!(method, 8); assert_eq!(length, 5);
+
+
+
+    
+}

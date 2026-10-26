@@ -1,0 +1,14 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Describe Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{(/={tags: Meta.Tags}=={for Operation in Conjoinments.Operations}=={
+[|Operation|]
+}=/)}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiation"}--{(/={tags: Meta.Tags}=={for Prop in Meta.Props}=={
+  [|Prop.Key|] = [|Prop.Value|];
+}=/)
+}-|/|}
+// End Describe Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Props: Array-Prop]}-|/|}

@@ -1,0 +1,9 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Func: ~#[Func{Key: Void, Inputs: &[Prop{Key: pair, Type: (i32, i32)}Prop, Prop{Key: r#type, Type: i32}Prop]&, Outputs: &[i32]&}Func]#~|}^W^BOD^E{|Statement: ~return black_box(pair.0 + pair.1 + r#type);~, Imports: ~&[std::hint::black_box]&~|}`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(MOB{|Key: ~total~|}^KY{|Key: ~Void~, Inputs: ~&[(2, 3), 4]&~|}*BOD^E{|Statement: ~assert_eq!(total, 9);~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

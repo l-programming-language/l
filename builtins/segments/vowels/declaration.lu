@@ -1,0 +1,46 @@
+// Start Declaration Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+
+// package [|Meta.Package|]
+
+
+(/={tags: ["Initialization"]}=={for Header in Headers}=={use |Header|;
+}=/)
+
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "E"}--{
+[|Meta.Contents|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Declare"}--{
+[|Declare(Keys = Meta.Keys, Type = Meta.Type)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Calculate"}--{
+[|Declare("Calculation", Calculation = Conjoinments.Calculation)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Operate"}--{
+[|Declare("Operation", Operation = Conjoinments.Operation)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Describe"}--{
+[|Declare("Description", Description = Conjoinments.Description)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Evaluate"}--{
+[|Declare("Evaluation", Evaluation = Conjoinments.Evaluation)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiate"}--{
+[|Declare("Instantiation", Instantiation = Conjoinments.Instantiation)|]
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Iterate"}--{
+[|Declare("Iteration", Iteration = Conjoinments.Iteration)|]
+}-|/|}
+
+// End Declaration Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Keys: Array-Key, Key: String, Type: String, Contents: String]}-|/|}

@@ -1,0 +1,94 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let mut rounds = 0;
+
+
+
+'outer: 
+
+
+
+
+loop {
+    
+
+let body_local = rounds;
+
+
+
+
+rounds = rounds + 1;
+
+
+
+'inner: 
+
+
+
+for item in 0..3 {
+    
+
+let nested_local = item;
+
+
+
+
+if nested_local == 0 { continue 'inner; }
+
+
+
+
+if body_local == 0 { continue 'outer; }
+
+
+
+
+print!("nested body once {}", nested_local);
+
+
+
+
+break 'outer;
+
+
+
+}
+
+
+
+
+
+
+
+break 'outer;
+
+
+
+}
+
+
+
+
+
+
+
+let body_local = "outside";
+
+
+
+
+print!("after {}", body_local);
+
+
+
+    
+}

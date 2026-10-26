@@ -1,0 +1,15 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src","StructureVersion":"2"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"],"Dimensions":["branch"],"Target":{"Kind":"bin","Name":"lucid_nested_rust","Root":"main","Primary":true}}]}</JSON>
+<JSON>{"Classes":[{"Name":"branch","Location":"/src/","GenericObjects":["helper"],"Dimensions":[],"Root":"helper","Module":{"Name":"branch"},"Meta":{"Lifetimes":"'a"}}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"},{"Name":"helper","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main">
+<SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W`</S|>
+</W|></SENTENCE>
+<TEXT "branch"><SENTENCE "helper"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~helper~, Outputs: ~&[()]&~|}^W`</S|>
+</W|></SENTENCE></TEXT>
+</CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

@@ -1,0 +1,8 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Description Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{[|Describe(Operations = Conjoinments.Operations)|]}-|/|}
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiate"}--{[|Describe("Instantiation", Props = Meta.Props)|]}-|/|}
+// End Description Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Props: Array-Prop, Prop: Prop]}-|/|}

@@ -1,0 +1,23 @@
+{
+  "id": "N07",
+  "title": "build-is-not-run",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Build does not allocate an execution or start a child."
+  ],
+  "expected_runtime": {
+    "stdout": "",
+    "exit_status": 1,
+    "stderr_contains": [
+      "Await",
+      "invocation"
+    ]
+  },
+  "files": [
+    "main.l"
+  ]
+}

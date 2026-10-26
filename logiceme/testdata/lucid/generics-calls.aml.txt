@@ -1,0 +1,13 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`DA^E{|Statement: ~type Void = u8;~|}`</S|>
+<|S|>`FW{|Key: ~early~, Inputs: ~&[]&~, Outputs: ~&[u8]&~, Lifetimes: ~'a: 'a~|}^W^(BOD^E{|Statement: ~return 7u8;~|})`</S|>
+<|S|>`FW{|Key: ~identity~, Inputs: ~&[Prop{Key: value, Type: T}Prop]&~, Outputs: ~&[T]&~, GenericTypes: ~T~|}^W^(BOD^E{|Statement: ~return value;~|})`</S|>
+<|S|>`FW{|Key: ~pair~, Inputs: ~&[Prop{Key: first, Type: A}Prop, Prop{Key: second, Type: B}Prop]&~, Outputs: ~&[(A, B)]&~, GenericTypes: ~A, B~|}^W^(BOD^E{|Statement: ~return (first, second);~|})`</S|>
+<|S|>`FW{|Key: ~plain~, Inputs: ~&[]&~, Outputs: ~&[u8]&~|}^W^(BOD^E{|Statement: ~return 5u8;~|})`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(BOD^E{|Statement: ~let text = "12"; let callbacks: Option<fn(u8, u16) -> (u8, u16)> = None; let pairs = vec![(1u8, 2u16)];~|}*MOB{|Key: ~first~|}^KY{|Key: ~early~, Lifetimes: ~'static~|}*MOB{|Key: ~second~|}^KY{|Key: ~identity~, Inputs: ~&[8u8]&~, GenericTypes: ~Void~|}*MOB{|Key: ~nested~|}^KY{|Key: ~pair~, Inputs: ~&[callbacks, pairs]&~, GenericTypes: ~Option<fn(u8, u16) -> (u8, u16)>, Vec<(u8, u16)>~|}*MOB{|Key: ~parsed~|}^KY{|Key: ~parse~, Receiver: ~text~, GenericTypes: ~u16~|}*MOB{|Key: ~empty~|}^KY{|Key: ~std::iter::empty~, GenericTypes: ~u8~|}*MOB{|Key: ~native_path~|}^KY{|Key: ~Vec::<u8>::new~|}*MOB{|Key: ~neighbor~|}^KY{|Key: ~plain~|}*BOD^E{|Statement: ~let _: u8 = first; let _: Void = second; let _: (Option<fn(u8, u16) -> (u8, u16)>, Vec<(u8, u16)>) = nested; let _: Result<u16, _> = parsed; let _: std::iter::Empty<u8> = empty; let _: Vec<u8> = native_path; let _: u8 = neighbor;~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

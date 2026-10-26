@@ -1,0 +1,44 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Instantiate Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{(/={tags: Meta.Tags}=={if Length(Meta.Props) == 0}=={[|Meta.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={::<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/) {}}=/)(/={tags: Meta.Tags}=={for Count in Count(Meta.Props)}=={(/={tags: Meta.Tags}=={if Count == 1 && if Count == Length(Meta.Props)}=={[|Meta.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={::<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/){[|Meta.Props[0].Key|]: [|Meta.Props[0].Value|]} }=/)(/={tags: Meta.Tags}=={if Count == 1 && if Count != Length(Meta.Props)}=={[|Meta.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={::<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/){[|Meta.Props[0].Key|]: [|Meta.Props[0].Value|]}=/)(/={tags: Meta.Tags}=={if Count > 1 && if Count < Length(Meta.Props)}=={, [|Meta.Props[Add(Count, -1)].Key|]: [|Meta.Props[Add(Count, -1)].Value|]}=/)(/={tags: Meta.Tags}=={if Count != 1 && if Count == Length(Meta.Props)}=={, [|Meta.Props[Add(Count, -1)].Key|]: [|Meta.Props[Add(Count, -1)].Value|]} }=/)}=/)
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Operation"}--{
+(/={tags: Meta.Tags}=={if Meta.Key != Void && if Meta.Receiver != Void}=={[|Meta.Receiver|].[|Meta.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={::<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/)([|Meta.Inputs~|])}=/)
+(/={tags: Meta.Tags}=={if Meta.Key != Void && if Meta.Receiver == Void}=={[|Meta.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={::<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/)([|Meta.Inputs~|])}=/)(/={tags: Meta.Tags}=={if Meta.Key == Void}=={([|Conjoinments.Operation|])([|Meta.Inputs~|])}=/)
+}-|/|}
+// KY with no Key invokes exactly one callable Operation, such as BW.
+// A named call excludes an Operation child. An arbitrary W body is not callable.
+
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiation"}--{
+(/={tags: Meta.Tags}=={if Length(Meta.Funcs) == 0}=={trait [|Meta.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/) {}}=/)(/={tags: Meta.Tags}=={for Count in Count(Meta.Funcs)}=={
+(/={tags: Meta.Tags}=={if Count == 1}=={
+trait [|Meta.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/) {
+}=/)
+(/={tags: Meta.Tags}=={if Count <= Length(Meta.Funcs)}=={
+fn [|Meta.Funcs[Add(Count, -1)].Key|]([|Meta.Funcs[Add(Count, -1)].Inputs~|])(/={tags: Meta.Tags}=={if Meta.Funcs[Add(Count, -1)].Outputs != Void}=={ -> [|(Meta.Funcs[Add(Count, -1)].Outputs~)|]}=/);
+}=/)
+(/={tags: Meta.Tags}=={if Count == Length(Meta.Funcs)}=={
+}
+}=/)
+}=/)
+}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Description"}--{
+(/={tags: Meta.Tags}=={if Length(Meta.Props) == 0}=={struct [|Meta.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/) {}}=/)(/={tags: Meta.Tags}=={for Count in Count(Meta.Props)}=={
+(/={tags: Meta.Tags}=={if Count == 1}=={
+struct [|Meta.Key|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void || if Meta.GenericTypes != Void}=={<[|Meta.Lifetimes|](/={tags: Meta.Tags}=={if Meta.Lifetimes != Void && if Meta.GenericTypes != Void}=={, }=/)[|Meta.GenericTypes|]>}=/) {
+
+}=/)
+(/={tags: Meta.Tags}=={if Count <= Length(Meta.Props)}=={
+    [|Meta.Props[Add(Count, -1)].Key|]: [|Meta.Props[Add(Count, -1)].Type|], // [|Meta.Props[Add(Count, -1)].StructTags|]
+}=/)
+(/={tags: Meta.Tags}=={if Count == Length(Meta.Props)}=={
+}
+}=/)
+}=/)
+}-|/|}
+// End Instantiate Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String, Receiver: String, Inputs: Array-String, Funcs: Array-Func, Props: Array-Prop, Func: Func, Lifetimes: String, GenericTypes: String]}-|/|}

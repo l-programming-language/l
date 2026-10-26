@@ -1,0 +1,101 @@
+package Lyger
+
+// This diagnostic is injected into lyger with a temporary Go overlay.
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+	"reflect"
+	"runtime/debug"
+	"testing"
+)
+
+func TestHarnessImportProbe(t *testing.T) {
+	dir := os.Getenv("L_HARNESS_ARTIFACT_DIR")
+	if dir == "" {
+		t.Fatal("L_HARNESS_ARTIFACT_DIR is required")
+	}
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		t.Fatal(err)
+	}
+	report := map[string]interface{}{"probe": "imports", "diagnostic_only": true}
+	if cwd, err := os.Getwd(); err == nil {
+		report["working_directory"] = cwd
+	}
+	write := func(name string, data []byte) {
+		if err := os.WriteFile(filepath.Join(dir, name), data, 0600); err != nil {
+			t.Errorf("write %s: %v", name, err)
+		}
+	}
+	write("input.raw.l", []byte(TEST_MAIN_BYTES))
+	var actual []*importStatement
+	expected := getWantedImportStatements("basic")
+	var scanErr error
+	normalReturn := false
+	defer func() {
+		r := recover()
+		if !normalReturn {
+			report["panic"] = fmt.Sprint(r)
+			write("panic-stack.txt", debug.Stack())
+			t.Errorf("import probe panicked: %v", r)
+		}
+		for _, group := range []struct {
+			name       string
+			statements []*importStatement
+		}{{"actual", actual}, {"expected", expected}} {
+			items := make([]interface{}, 0, len(group.statements))
+			for i, stmt := range group.statements {
+				if stmt == nil {
+					items = append(items, nil)
+					continue
+				}
+				name := fmt.Sprintf("%s-statement-%04d.raw", group.name, i)
+				write(name, stmt.statementBytes)
+				items = append(items, map[string]interface{}{
+					"module": stmt.module, "keyword": stmt.keyWord, "path": stmt.filePath, "alias": stmt.alias,
+					"statement": string(stmt.statementBytes), "statement_file": name,
+					"statement_length": len(stmt.statementBytes), "statement_nil": stmt.statementBytes == nil,
+				})
+			}
+			report[group.name] = items
+			report[group.name+"_nil"] = group.statements == nil
+			report[group.name+"_count"] = len(group.statements)
+		}
+		report["scan_error"] = fmt.Sprint(scanErr)
+		report["equal"] = reflect.DeepEqual(actual, expected)
+		report["probe_failed"] = t.Failed()
+		data, err := json.MarshalIndent(report, "", "  ")
+		if err != nil {
+			t.Errorf("encode report: %v", err)
+			return
+		}
+		write("report.json", append(data, '\n'))
+	}()
+	config := canonicalTestOptions()
+	gram, scanErr := loadGrammar(config)
+	if scanErr == nil {
+		var prepared *PreparedSource
+		prepared, scanErr = PrepareSource("import-probe.l", []byte(TEST_MAIN_BYTES))
+		if scanErr == nil {
+			for _, statement := range prepared.Statements {
+				var isImport bool
+				var imported *importStatement
+				isImport, imported, scanErr = gram.isImportStatement(statement.Raw)
+				if scanErr != nil {
+					break
+				}
+				if isImport {
+					actual = append(actual, imported)
+				}
+			}
+		}
+	}
+	if scanErr != nil {
+		t.Errorf("scan imports: %v", scanErr)
+	}
+	if !reflect.DeepEqual(actual, expected) {
+		t.Error("import records differ from current acceptance expectation")
+	}
+	normalReturn = true
+}

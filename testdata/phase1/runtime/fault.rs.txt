@@ -1,0 +1,9 @@
+// Cargo rustc --bin runtime-fault -- --cfg test: native main, no harness.
+mod checks;
+mod ownership;
+mod process;
+mod runtime;
+mod support;
+fn main() {
+    checks::fault_main();
+}

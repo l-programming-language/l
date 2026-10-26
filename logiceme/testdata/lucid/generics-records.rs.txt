@@ -1,0 +1,93 @@
+
+
+// package main
+
+
+
+
+
+
+
+
+struct Borrowed<'a, T: 'a> {
+
+
+
+    value: &'a T, // 
+
+
+}
+
+
+
+
+
+
+
+struct Pair<'a, 'b, T: 'a, U: 'b> {
+
+
+
+    first: &'a T, // 
+
+
+
+
+
+    second: &'b U, // 
+
+
+}
+
+
+
+
+
+
+
+struct Plain {
+
+
+
+    value: u8, // 
+
+
+}
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let owner = String::from("borrowed"); let count = 3u8;
+
+
+
+let explicit = Borrowed::<'_, String>{value: &owner} 
+
+;
+
+
+let inferred = Borrowed{value: &owner} 
+
+;
+
+
+let pair = Pair::<'_, '_, String, u8>{first: &owner, second: &count} 
+
+;
+
+
+let plain = Plain{value: count} 
+
+;
+
+
+
+let _: Borrowed<'_, String> = explicit; let _: Borrowed<'_, String> = inferred; let _: Pair<'_, '_, String, u8> = pair; let _: u8 = plain.value; assert_eq!(owner, "borrowed"); assert_eq!(count, 3);
+
+
+
+    
+}

@@ -1,0 +1,21 @@
+{
+  "id": "F23",
+  "title": "repeat-stop-after-completion",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Stopping the completed invocation is a no-op, never a new signal to a potentially reused PID.",
+    "Repeated Await returns the original success without running a continuation again."
+  ],
+  "expected_runtime": {
+    "stdout": "A\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l"
+  ]
+}

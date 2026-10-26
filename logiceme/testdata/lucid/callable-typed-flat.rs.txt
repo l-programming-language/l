@@ -1,0 +1,45 @@
+
+
+// package main
+
+
+
+
+fn identity( value: i32) -> (i32) {
+    
+        
+
+return value;
+
+
+
+    
+}
+fn add( left: i32, right: i32) -> (i32) {
+    
+        
+
+return left + right;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let first = identity(7)
+;
+
+
+let total = add(first, 5)
+;
+
+
+
+assert_eq!(total, 12);
+
+
+
+    
+}

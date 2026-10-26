@@ -1,0 +1,43 @@
+
+
+// package main
+
+
+use std::future::IntoFuture;
+
+
+fn main( ) -> (()) {
+    
+        
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+let ready = std::future::ready(());
+
+
+
+
+
+tokio::spawn(
+ready.into_future()
+
+);
+
+
+
+
+
+});
+
+
+
+    
+}

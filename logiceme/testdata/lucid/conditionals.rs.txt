@@ -1,0 +1,43 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+
+
+if false {
+    
+
+print!("first");
+
+
+
+} else if true {
+    
+
+print!("second");
+
+
+
+} else {
+    
+
+print!("fallback");
+
+
+
+}
+
+
+
+
+
+
+    
+}

@@ -1,0 +1,83 @@
+
+
+// package main
+
+
+
+
+
+
+type Void = u8;
+
+fn make_flat( ) -> (Void) {
+    
+        
+
+return 1u8;
+
+
+
+    
+}
+fn make_record( ) -> (Void) {
+    
+        
+
+return 2u8;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let flat = make_flat()
+;
+
+
+let record = make_record()
+;
+
+
+let closure_flat = || -> (Void) {
+  
+    
+
+return 3u8;
+
+
+
+  
+}
+;
+
+
+let closure_record = || -> (Void) {
+  
+    
+
+return 4u8;
+
+
+
+  
+}
+;
+
+
+let third = closure_flat()
+;
+
+
+let fourth = closure_record()
+;
+
+
+
+let _: Void = flat; let _: Void = record; let _: Void = third; let _: Void = fourth; assert_eq!((flat, record, third, fourth), (1, 2, 3, 4));
+
+
+
+    
+}

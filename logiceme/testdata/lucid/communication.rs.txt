@@ -1,0 +1,52 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+let (tx, mut rx) = tokio::sync::mpsc::channel::<i32>(1);
+
+
+
+let sent = (tx).send(5).await
+
+;
+
+
+
+sent.unwrap();
+
+
+
+let value = (rx).recv().await
+
+;
+
+
+
+print!("{}", value.unwrap());
+
+
+
+
+});
+
+
+
+    
+}

@@ -1,0 +1,48 @@
+name: L documentation checks
+# INACTIVE: no setup/build command copies this file into .github/workflows.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+concurrency:
+  group: docs-check-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  website:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: website
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, existing repository pin
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4, verified remote ref
+        with:
+          node-version-file: website/.node-version
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+      - run: npm run test:browsers:install
+      # On activation replace this delivered-state aggregate with the same steps
+      # excluding ci:verify-disabled; never weaken content/build/browser checks.
+      - name: Verify the complete website
+        run: |
+          npm run references:check
+          npm run check
+          npm test
+          npm run build
+          npm run test:e2e
+      - name: Retain website evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2, existing repository pin
+        with:
+          name: docs-check-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            website/reports/
+            website/test-results/
+          if-no-files-found: warn
+          retention-days: 7

@@ -1,0 +1,75 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();
+
+
+
+
+rt.block_on(async {
+
+
+
+
+let (tx, mut rx) = tokio::sync::mpsc::channel::<String>(1);
+
+
+
+
+
+tokio::select! {
+biased;
+
+    
+
+
+_ = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+},
+
+
+
+    
+
+
+_ = async {
+    (rx).recv().await
+
+
+}
+ => {
+
+},
+
+
+
+}
+
+
+
+
+
+drop(tx);
+
+
+
+
+});
+
+
+
+    
+}

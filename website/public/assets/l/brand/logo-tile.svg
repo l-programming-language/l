@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">L programming language logo</title>
+  <desc id="logo-desc">A bold white geometric letter L and turquoise cursor on a rounded midnight-indigo square.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#23254D"/>
+      <stop offset="0.55" stop-color="#181C3C"/>
+      <stop offset="1" stop-color="#10192E"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(403 404) rotate(180) scale(333 333)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#31E3D1" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#31E3D1" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cursor" x1="371" y1="316" x2="399" y2="386" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#73F5DD"/>
+      <stop offset="1" stop-color="#21CDBD"/>
+    </linearGradient>
+  </defs>
+  <!-- Background tile -->
+  <rect width="512" height="512" rx="112" fill="url(#background)"/>
+  <rect width="512" height="512" rx="112" fill="url(#glow)"/>
+  <rect x="9" y="9" width="494" height="494" rx="104" fill="none" stroke="#FFFFFF" stroke-opacity="0.09" stroke-width="2"/>
+  <!-- Custom monogram; every contour is vector geometry rather than a font. -->
+  <path d="M177 121H217C229 121 238 130 238 142V314H337C349 314 358 323 358 335V365C358 377 349 386 337 386H177C165 386 156 377 156 365V142C156 130 165 121 177 121Z" fill="#F8FAFF"/>
+  <!-- Terminal cursor: a nod to writing and executing code. -->
+  <rect x="376" y="314" width="24" height="72" rx="11" fill="url(#cursor)"/>
+</svg>

@@ -1,0 +1,34 @@
+
+
+// package main
+
+
+use std::hint::black_box;
+
+
+
+
+fn helper( ) -> (()) {
+    
+        
+
+print!("{}", black_box("description-helper"));
+
+
+
+    
+}
+
+
+fn main( ) -> (()) {
+    
+        
+
+helper();
+
+
+
+    
+}
+
+

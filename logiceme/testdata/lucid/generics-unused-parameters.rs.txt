@@ -1,0 +1,26 @@
+
+
+// package main
+
+
+
+
+
+
+struct Empty<T> {}
+
+fn main( ) -> (()) {
+    
+        
+let value = Empty::<u8> {}
+
+;
+
+
+
+let _: Empty<u8> = value;
+
+
+
+    
+}

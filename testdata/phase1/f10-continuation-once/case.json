@@ -1,0 +1,29 @@
+{
+  "id": "F10",
+  "title": "continuation-once",
+  "profile": "gate",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [
+    "Create a fresh short Unix socket path and an empty lifetime-lock directory in test-owned temporary storage; set L_PHASE1_SOCKET and L_PHASE1_DIRECTORY for the orchestrator. Start the controller before the program.",
+    "Each child has its own connection. Parse a complete ready <label> <pid> line and reject duplicate/unexpected labels. Record direct PIDs separately from controller and orchestrator.",
+    "Controller commands are exactly release followed by LF; readiness does not release a child. Test deadlines bound failures only.",
+    "Keep every controller connection open until runtime shutdown has been observed. Require spontaneous child disconnection and lifetime-lock release before controller closure or fallback signals; record cleanup failures before fallback. Lock release alone does not prove direct-child reaping.",
+    "Require ready A and launched| before release."
+  ],
+  "assertions": [
+    "Run/Start does not execute the paragraph body; first Await prints A LF once; repeated Await cannot print again.",
+    "Generated continuation is an inline block, preserving main-owned control flow."
+  ],
+  "expected_runtime": {
+    "stdout": "launched|A\ndone",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l",
+    "../companions/gate.l",
+    "../companions/actions.l"
+  ]
+}

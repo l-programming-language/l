@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+caller_dir=$(pwd)
+script_dir=$(CDPATH= cd -P "$(dirname "$0")" && pwd)
+repo_root=$(CDPATH= cd -P "$script_dir/.." && pwd)
+cd "$repo_root"
+# Capture effective flags, including `go env -w`, before isolating compilation.
+original_goflags=$(GOTOOLCHAIN=local GOWORK=off go env GOFLAGS)
+mkdir -p "$repo_root/.harness/bin" "$repo_root/.harness/cache/go-build"
+
+# Build only the checks tool; GOFLAGS must not change its sources or execution.
+GOFLAGS= GOENV=off GOWORK=off GOTOOLCHAIN=local GOCACHE="$repo_root/.harness/cache/go-build" \
+  go build -mod=readonly -buildvcs=false -o "$repo_root/.harness/bin/l-harness" ./tools/harness
+
+L_HARNESS_ROOT="$repo_root" L_HARNESS_CALLER_DIR="$caller_dir" \
+L_HARNESS_ORIGINAL_GOFLAGS="$original_goflags" \
+  exec "$repo_root/.harness/bin/l-harness" "$@"

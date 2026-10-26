@@ -1,0 +1,15 @@
+<PROGRAM><STRUCTURE><BOOK "library_fixture"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src","StructureVersion":"2"}}</JSON>
+<JSON>{"Services":[{"Name":"library","Location":"/src/","GenericObjects":["lib","detail","private"],"Target":{"Kind":"lib","Name":"library_fixture","Root":"lib","Primary":false}}]}</JSON>
+<JSON>{"Objects":[{"Name":"lib","Type":"root"},{"Name":"detail","Module":{"Name":"detail","Visibility":"public"}},{"Name":"private","Private":true,"Module":{"Name":"private","Visibility":"private"}}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "library">
+<SENTENCE "lib">
+<|W|><|S|>`A`</S|></W|>
+<|W|><|S|>`HY{|Key: ~Shared~, Props: ~&[]&~|}`</S|></W|>
+<|W|><|S|>`MY{|Key: ~Marker~, Funcs: ~&[]&~|}`</S|></W|>
+<|W|><|S|>`FW{|Key: ~identity~, Inputs: ~&[Prop{Key: value, Type: u8}Prop]&~, Outputs: ~&[u8]&~|}^W^BOD^E{|Statement: ~return value;~|}`</S|></W|>
+<|W|><|S|>`FW{|Key: ~make~, Outputs: ~&[Shared]&~|}^W^BOD^E{|Statement: ~return Shared {};~|}`</S|></W|>
+</SENTENCE>
+<SENTENCE "detail"><|W|><|S|>`A`</S|></W|><|W|><|S|>`FW{|Key: ~preserve~, Inputs: ~&[Prop{Key: value, Type: crate::Shared}Prop]&~, Outputs: ~&[crate::Shared]&~|}^W^BOD^E{|Statement: ~return value;~|}`</S|></W|></SENTENCE>
+<SENTENCE "private"><|W|><|S|>`A`</S|></W|><|W|><|S|>`FW{|Key: ~hidden~, Outputs: ~&[()]&~|}^W`</S|></W|></SENTENCE>
+</CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

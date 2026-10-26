@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src","Deps":"[\"tokio = { version = \\\"=1.53.1\\\", features = [\\\"rt\\\", \\\"sync\\\", \\\"macros\\\"] }\"]"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(BOD^E{|Statement: ~let rt = tokio::runtime::Builder::new_current_thread().build().unwrap();~|}*BOD^E{|Statement: ~rt.block_on(async {~|}*BOD^E{|Statement: ~let (tx, mut rx) = tokio::sync::mpsc::channel::<String>(1);~|}*BOD^E{|Statement: ~drop(tx);~|}*BOG^CI^(BI^(DOC{|Keys: ~&[closed]&~|}^CE{|Ops: ~&[Op{Type: Calculate, Operator: <-, Operands: &[rx]&}Op]&~|}*W^BOD^E{|Statement: ~match closed { Some(text) => print!("{}", text), None => print!("closed"), }~|})*BI{|Default: ~True~|}^(OC{|Key: ~_~, Value: ~()~|}*W^BOD^E{|Statement: ~print!("not ready");~|}))*BOD^E{|Statement: ~print!("after closed receive");~|}*BOD^E{|Statement: ~});~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

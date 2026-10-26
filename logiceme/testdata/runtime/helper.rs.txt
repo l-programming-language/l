@@ -1,0 +1,40 @@
+mod ownership;
+use std::io::{self, Write};
+use std::os::unix::fs::OpenOptionsExt;
+use std::process::{Command, Stdio};
+use std::time::{Duration, Instant};
+fn main() {
+    let Some(_lifetime) = ownership::register("runtime-template-helper").unwrap() else { return };
+    let mode = std::env::var("L_RUNTIME_CASE_FILE").ok().and_then(|path| std::fs::read_to_string(path).ok()).unwrap_or_else(|| std::env::var("L_RUNTIME_CASE").unwrap_or_default());
+    match mode.as_str() {
+        "failure" => { print!("partial\n"); eprint!("failure details\n"); std::process::exit(7); }
+        "descendant" | "failed descendant" | "closed descendant" | "failed closed descendant" => {
+            let mut cmd = Command::new(std::env::current_exe().unwrap());
+            cmd.env("L_RUNTIME_CASE", "hold");
+            if mode.contains("closed") { cmd.stdout(Stdio::null()).stderr(Stdio::null()); }
+            let child = cmd.spawn().unwrap();
+            let until = Instant::now() + Duration::from_secs(3);
+            while Instant::now() < until {
+                if std::fs::read_to_string(std::env::var("L_RUNTIME_PID").unwrap()).ok() == Some(child.id().to_string()) {
+                    print!("partial descendant output\n\n"); eprint!("descendant error details\n");
+                    if mode.starts_with("failed") { std::process::exit(7); }
+                    return;
+                }
+                std::thread::sleep(Duration::from_millis(10));
+            }
+            panic!("descendant did not start");
+        }
+        "hold" => {
+            let path = std::env::var("L_RUNTIME_PID").unwrap();
+            let lock = std::fs::OpenOptions::new().create(true).read(true).write(true).mode(0o600).open(format!("{path}.lock")).unwrap();
+            ownership::lock(&lock, nix::libc::LOCK_EX).unwrap();
+            let mut file = std::fs::OpenOptions::new().create(true).truncate(true).write(true).mode(0o600).open(path).unwrap();
+            write!(file, "{}", std::process::id()).unwrap();
+            file.flush().unwrap();
+            std::thread::sleep(Duration::from_secs(30));
+            drop(lock);
+        }
+        "group-observation" => { io::copy(&mut io::stdin(), &mut io::sink()).unwrap(); }
+        _ => { print!("first\n\nlast\t"); eprint!("notice\n"); }
+    }
+}

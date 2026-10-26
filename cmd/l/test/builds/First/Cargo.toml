@@ -1,0 +1,12 @@
+[package]
+name = "First"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "First"
+path = "src/main.rs"
+
+[dependencies]
+

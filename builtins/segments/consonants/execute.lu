@@ -1,0 +1,27 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Execute Glyph
+// These scheduling cases launch the supplied future.
+// They add no function, invocation, future construction, or task group.
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{
+tokio::spawn([|Meta.Key|]);
+}-|/|}
+
+// Exactly one Instantiation child whose output role is an invocation.
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiation"}--{
+tokio::spawn([|Conjoinments.Instantiation|]);
+}-|/|}
+// Construct an unscheduled future. Capture policy is prepared from local input.
+{|/|-{tags: Meta.Tags}--{if Type == "Execution"}--{
+async [|Meta.CaptureKeyword|]{
+[|Conjoinments.Operation|]
+}
+}-|/|}
+
+// Await one supplied expression; binding and error handling remain composed.
+{|/|-{tags: Meta.Tags}--{if Type == "Calculation"}--{
+([|Meta.Key|][|Conjoinments.Calculation|][|Conjoinments.Instantiation|][|Conjoinments.Execution|]).await
+}-|/|}
+// End Execute Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String, Capture: String]}-|/|}

@@ -1,0 +1,95 @@
+
+
+// package main
+
+
+
+
+
+
+type Void = u8;
+
+fn early<'a: 'a>( ) -> (u8) {
+    
+        
+
+return 7u8;
+
+
+
+    
+}
+fn identity<T>( value: T) -> (T) {
+    
+        
+
+return value;
+
+
+
+    
+}
+fn pair<A, B>( first: A, second: B) -> ((A, B)) {
+    
+        
+
+return (first, second);
+
+
+
+    
+}
+fn plain( ) -> (u8) {
+    
+        
+
+return 5u8;
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+
+let text = "12"; let callbacks: Option<fn(u8, u16) -> (u8, u16)> = None; let pairs = vec![(1u8, 2u16)];
+
+
+
+let first = early::<'static>()
+;
+
+
+let second = identity::<Void>(8u8)
+;
+
+
+let nested = pair::<Option<fn(u8, u16) -> (u8, u16)>, Vec<(u8, u16)>>(callbacks, pairs)
+;
+
+
+let parsed = text.parse::<u16>()
+
+;
+
+
+let empty = std::iter::empty::<u8>()
+;
+
+
+let native_path = Vec::<u8>::new()
+;
+
+
+let neighbor = plain()
+;
+
+
+
+let _: u8 = first; let _: Void = second; let _: (Option<fn(u8, u16) -> (u8, u16)>, Vec<(u8, u16)>) = nested; let _: Result<u16, _> = parsed; let _: std::iter::Empty<u8> = empty; let _: Vec<u8> = native_path; let _: u8 = neighbor;
+
+
+
+    
+}

@@ -1,0 +1,12 @@
+[package]
+name = "l-lyger-generated-observer"
+version = "0.0.0"
+edition = "2024"
+publish = false
+[dependencies]
+nix.workspace = true
+tokio.workspace = true
+[[test]]
+name = "generated_shutdown"
+path = "main.rs"
+harness = false

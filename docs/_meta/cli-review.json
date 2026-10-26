@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "reviewPolicy": "Manually reviewed command/option surface from the current parser. A changed parser hash requires review of its behavior and documentation before this manifest is edited. references:generate never updates this approval hash. Aliases and flag-parser spelling variants are grouped with the corresponding option.",
+  "sourceHashes": {
+    "cmd/l/command.go": "c6b04031528b51d3474fafa701093ecc5e7010359f4408eac767e1b88d94102f"
+  },
+  "entries": [
+    {
+      "id": "cli:build",
+      "kind": "cli",
+      "name": "build",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/cli/build.md#command-syntax",
+      "sources": [
+        "cmd/l/command.go"
+      ],
+      "witnesses": [
+        "cmd/l/command_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "The only command; optional one source defaults to main.l."
+    },
+    {
+      "id": "cli:--assets",
+      "kind": "cli",
+      "name": "--assets",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/development-harness.md#compiler-defaults",
+      "sources": [
+        "cmd/l/command.go"
+      ],
+      "witnesses": [
+        "cmd/l/command_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Complete replacement filesystem; FlagSet also accepts single-hyphen and equals-value spellings."
+    },
+    {
+      "id": "cli:--output-dir",
+      "kind": "cli",
+      "name": "--output-dir",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/cli/build.md#options",
+      "sources": [
+        "cmd/l/command.go"
+      ],
+      "witnesses": [
+        "cmd/l/command_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Publish executable and companion output together; relative to caller CWD."
+    },
+    {
+      "id": "cli:--language",
+      "kind": "cli",
+      "name": "--language",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/development-harness.md#compiler-defaults",
+      "sources": [
+        "cmd/l/command.go"
+      ],
+      "witnesses": [
+        "cmd/l/command_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Select source lexicon; bundled default eng. Explicit empty values fail."
+    },
+    {
+      "id": "cli:--version",
+      "kind": "cli",
+      "name": "--version",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/cli/build.md#version",
+      "sources": [
+        "cmd/l/command.go",
+        "version.go",
+        "VERSION"
+      ],
+      "witnesses": [
+        "cmd/l/command_version_test.go",
+        "cmd/l/command_test.go",
+        "version_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Standalone --version/-v prints the embedded version and newline without compiler initialization."
+    },
+    {
+      "id": "cli:--help",
+      "kind": "cli",
+      "name": "--help",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/cli/build.md#help",
+      "sources": [
+        "cmd/l/command.go"
+      ],
+      "witnesses": [
+        "cmd/l/command_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Sole top-level help or command help before the source filename."
+    },
+    {
+      "id": "cli:-h",
+      "kind": "cli",
+      "name": "-h",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/cli/build.md#help",
+      "sources": [
+        "cmd/l/command.go"
+      ],
+      "witnesses": [
+        "cmd/l/command_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Supported help alias."
+    },
+    {
+      "id": "cli:-help",
+      "kind": "cli",
+      "name": "-help",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/cli/build.md#help",
+      "sources": [
+        "cmd/l/command.go"
+      ],
+      "witnesses": [
+        "cmd/l/command_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Supported help alias."
+    },
+    {
+      "id": "cli:--",
+      "kind": "cli",
+      "name": "--",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/cli/build.md#command-syntax",
+      "sources": [
+        "cmd/l/command.go"
+      ],
+      "witnesses": [
+        "cmd/l/command_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "End flag parsing, including before a filename beginning with a dash."
+    },
+    {
+      "id": "cli:-os",
+      "kind": "cli",
+      "name": "-os",
+      "role": "normative",
+      "support": "rejected",
+      "doc": "docs/cli/build.md#target-os",
+      "sources": [
+        "cmd/l/command.go"
+      ],
+      "witnesses": [
+        "cmd/l/command_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "OS targeting follows v0.0.1; currently rejected."
+    }
+  ]
+}

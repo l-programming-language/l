@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "repository": "l-programming-language/l",
+  "productionBranch": "main",
+  "origin": "https://ldocs.org",
+  "nativePublisher": null,
+  "activationPrerequisite": "A reviewed native release workflow must publish actual native assets plus canonical scripts/l-check evidence and register its numeric workflowId and exact workflowPath here. No native publisher currently exists."
+}

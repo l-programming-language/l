@@ -1,0 +1,16 @@
+{
+  "name": "l",
+  "displayName": "L",
+  "scopeName": "source.l",
+  "patterns": [
+    { "name": "comment.block.l", "begin": "\\*\\*\\*", "end": "\\*\\*\\*" },
+    { "name": "string.quoted.other.l", "begin": "`", "end": "`", "patterns": [{ "name": "constant.character.escape.l", "match": "\\\\." }] },
+    { "name": "entity.name.variable.l", "begin": "\"", "end": "\"", "patterns": [{ "name": "constant.character.escape.l", "match": "\\\\." }] },
+    { "name": "constant.numeric.l", "match": "(?i)(?<![\\w])[-+]?(?:0x[0-9a-f_]+(?:\\.[0-9a-f_]*)?[p][-+]?[0-9_]+|[0-9][0-9_]*(?:\\.[0-9_]*)?(?:e[-+]?[0-9_]+)?)(?![\\w])" },
+    { "name": "constant.language.l", "match": "(?i)\\b(?:true|false|null)\\b" },
+    { "name": "storage.type.l", "match": "(?i)\\b(?:Thing|Text|Number|Truth|Bytes?|Pointer|List|Dictionary|App|Service|Class|Object|Attribute|Definition|Function|Property|Operation)\\b" },
+    { "name": "keyword.control.l", "match": "(?i)\\b(?:create|define|describe|use|build|run|stop|await|show|exit|start|execute|if|else|otherwise|while|public|publicly|new|as|is|are|from|with|to|of|the|a|an|any|its|it|this|that)\\b" },
+    { "name": "punctuation.terminator.l", "match": "\\.(?=\\s|$)" },
+    { "name": "keyword.operator.possessive.l", "match": "'s\\b" }
+  ]
+}

@@ -1,0 +1,9 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~escaping~, Inputs: ~&[]&~, Outputs: ~&[impl std::future::Future<Output = usize>]&~|}^(W^(MOB{|Key: ~owner~|}^(KY{|Key: ~String::from~, Inputs: ~&["borrowed"]&~|})*BOC^(CV{|Capture: ~Infer~|}^(W^(BOD^(E{|Statement: ~return owner.len();~|}))))))`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^(W^(MOB{|Key: ~pending~|}^(KY{|Key: ~escaping~|})*MOB{|Key: ~_released~|}^(KY{|Key: ~drop~, Inputs: ~&[pending]&~|})))`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

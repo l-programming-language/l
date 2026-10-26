@@ -1,0 +1,9 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Operation Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{[|Operate(Definitions = Conjoinments.Definitions)|]}-|/|}
+{|/|-{tags: Meta.Tags}--{if Type == "Declare"}--{[|Operate("Declaration", Func = Meta.Func, Operations = Conjoinments.Operations)|]}-|/|}
+{|/|-{tags: Meta.Tags}--{if Type == "Define"}--{[|Operate("Definition", Func = Meta.Func, Operations = Conjoinments.Operations, Lifetimes = Meta.Lifetimes, GenericTypes = Meta.GenericTypes)|]}-|/|}
+// End Operation Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Func: Func, Lifetimes: String, GenericTypes: String]}-|/|}

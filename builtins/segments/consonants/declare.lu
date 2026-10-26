@@ -1,0 +1,21 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Declare Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{let [|Meta.Keys~|]: [|Meta.Type|];}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Calculation"}--{[|Conjoinments.Calculation|]}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Operation"}--{[|Conjoinments.Operation|]}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Description"}--{[|Conjoinments.Description|]}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Evaluation"}--{[|Conjoinments.Evaluation|]}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Instantiation"}--{[|Conjoinments.Instantiation|]}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Iteration"}--{[|Conjoinments.Iteration|]}-|/|}
+
+{|/|-{tags: Meta.Tags}--{if Type == "Execution"}--{[|Conjoinments.Execution|]}-|/|}
+// End Declare Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Keys: Array-Key, Key: String, Type: String, Contents: String]}-|/|}

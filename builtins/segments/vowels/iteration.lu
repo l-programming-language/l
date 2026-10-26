@@ -1,0 +1,7 @@
+{|/|-{tags: ["Initialization"]}--{Headers}--{Meta.Imports}-|/|}
+
+// Start Iteration Glyph
+{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{[|Iterate(Iterable = Meta.Iterable, Key = Meta.Key, Index = Meta.Index, RangeArity = Meta.RangeArity, Definition = Conjoinments.Definition, Evaluation = Conjoinments.Evaluation, Calculation = Conjoinments.Calculation, Operation = Conjoinments.Operation)|]}-|/|}
+// End Iteration Glyph
+
+{|/|-{tags: ["Initialization"]}--{Inputs}--{[Key: String, Value: String, Iterable: String, Index: String, RangeArity: String]}-|/|}

@@ -1,0 +1,12 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~omitted~, Inputs: ~&[]&~|}^W^BOD^E{|Statement: ~let _omitted = 1;~|}`</S|>
+<|S|>`FW{|Key: ~empty~, Inputs: ~&[]&~, Outputs: ~&[]&~|}^W^BOD^E{|Statement: ~let _empty = 2;~|}`</S|>
+<|S|>`FW{|Key: ~unit~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^BOD^E{|Statement: ~return ();~|}`</S|>
+<|S|>`FW{|Key: ~number~, Inputs: ~&[]&~, Outputs: ~&[i32]&~|}^W^BOD^E{|Statement: ~return 4;~|}`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(MOB{|Key: ~_a~|}^KY{|Key: ~omitted~|}*MOB{|Key: ~_b~|}^KY{|Key: ~empty~|}*MOB{|Key: ~_c~|}^KY{|Key: ~unit~|}*MOB{|Key: ~number~|}^KY{|Key: ~number~|}*BOD^E{|Statement: ~assert_eq!(number, 4);~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

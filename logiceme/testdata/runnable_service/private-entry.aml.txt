@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "Worker"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src","StructureVersion":"2"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"],"Target":{"Kind":"lib","Name":"Worker","Root":"main","Primary":false}}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root","Private":true}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main">
+<|W|><|S|>`A`</S|></W|>
+<|W|><|S|>`FW{|Func: ~Func{Key: main}Func~|}^W^BOD^E{|Statement: ~std::io::Write::write_all(&mut std::io::stdout(), ("work completed\n").as_bytes()).unwrap();~|}`</S|></W|>
+</SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

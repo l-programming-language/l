@@ -1,0 +1,23 @@
+
+
+// package main
+
+
+
+
+fn main( ) -> (()) {
+    
+        
+let result = 2 * ( 1 + 2  ) 
+
+
+;
+
+
+
+print!("{}", result);
+
+
+
+    
+}

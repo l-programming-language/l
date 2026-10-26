@@ -1,0 +1,21 @@
+{
+  "id": "F15",
+  "title": "passive-await",
+  "profile": "print",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Proposed executable passive mapping uses the statement subject as awaited target.",
+    "The passive effect must not be silently dropped or interpreted as a completed-state predicate."
+  ],
+  "expected_runtime": {
+    "stdout": "A\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l"
+  ]
+}

@@ -1,0 +1,43 @@
+
+
+// package main
+
+
+
+
+fn escaping( ) -> (impl std::future::Future<Output = usize>) {
+    
+        
+let owner = String::from("borrowed")
+;
+
+
+
+
+async {
+
+
+return owner.len();
+
+
+
+}
+
+
+
+
+    
+}
+fn main( ) -> (()) {
+    
+        
+let pending = escaping()
+;
+
+
+let _released = drop(pending)
+;
+
+
+    
+}

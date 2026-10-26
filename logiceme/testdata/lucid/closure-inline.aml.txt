@@ -1,0 +1,8 @@
+<PROGRAM><STRUCTURE><BOOK "lucid_nested_rust"><OUTLINE>
+<JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON>
+<JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON>
+<JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON>
+</OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|>
+<|S|>`A`</S|>
+<|S|>`FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[()]&~|}^W^(MOB{|Key: ~inferred~|}^KY{|Inputs: ~&[3]&~|}^BW{|Inputs: ~&[Prop{Key: value, Type: i32}Prop]&~|}^W^BOD^E{|Statement: ~return value + 1;~|}*MOB{|Key: ~empty~|}^KY{|Inputs: ~&[5]&~|}^BW{|Inputs: ~&[Prop{Key: value, Type: i32}Prop]&~, Outputs: ~&[]&~|}^W^BOD^E{|Statement: ~return value + 2;~|}*MOB{|Key: ~explicit~|}^KY{|Inputs: ~&[6, 7]&~|}^BW{|Inputs: ~&[Prop{Key: left, Type: i32}Prop, Prop{Key: right, Type: i32}Prop]&~, Outputs: ~&[i32]&~|}^W^BOD^E{|Statement: ~return left + right;~|}*MOB{|Key: ~record~|}^KY^BW{|Func: ~#[Func{Inputs: &[]&}Func]#~|}^W^BOD^E{|Statement: ~return 42;~|}*BOD^E{|Statement: ~assert_eq!((inferred, empty, explicit, record), (4, 7, 13, 42));~|})`</S|>
+</W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>

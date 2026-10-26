@@ -1,0 +1,55 @@
+
+
+// package main
+
+
+
+
+
+
+trait Empty<'a, T> {}
+
+
+
+
+
+trait Reader<'a, T: Clone + 'a> {
+
+
+fn read(value: &'a T) -> (&'a T);
+
+
+
+
+
+fn clone_value(value: &'a T) -> (T);
+
+
+}
+
+
+
+
+
+
+
+trait Plain {
+
+
+fn value() -> (u8);
+
+
+}
+
+
+
+fn main( ) -> (()) {
+    
+        
+
+let _: Option<&dyn Empty<'static, u8>> = None;
+
+
+
+    
+}

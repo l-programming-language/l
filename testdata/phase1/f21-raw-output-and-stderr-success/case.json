@@ -1,0 +1,23 @@
+{
+  "id": "F21",
+  "title": "raw-output-and-stderr-success",
+  "profile": "raw",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [],
+  "assertions": [
+    "Compare stdout as bytes including embedded NUL, two interior spaces, trailing space and two LF bytes.",
+    "Integration proves no child-stderr forwarding and absent Error on child exit 0. Exact retained stderr diagnostic only LF is asserted separately against the actual runtime, since L exposes no stderr member."
+  ],
+  "expected_runtime": {
+    "stdout": "left  世界 \u0000\n\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  "files": [
+    "main.l",
+    "../companions/raw.l",
+    "../companions/actions.l"
+  ]
+}

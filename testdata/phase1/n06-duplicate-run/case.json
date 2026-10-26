@@ -1,0 +1,31 @@
+{
+  "id": "N06",
+  "title": "duplicate-run",
+  "profile": "gate",
+  "apps": [
+    "Worker"
+  ],
+  "setup": [
+    "Create a fresh short Unix socket path and an empty lifetime-lock directory in test-owned temporary storage; set L_PHASE1_SOCKET and L_PHASE1_DIRECTORY for the orchestrator. Start the controller before the program.",
+    "Each child has its own connection. Parse a complete ready <label> <pid> line and reject duplicate/unexpected labels. Record direct PIDs separately from controller and orchestrator.",
+    "Controller commands are exactly release followed by LF; readiness does not release a child. Test deadlines bound failures only.",
+    "Keep every controller connection open until runtime shutdown has been observed. Require spontaneous child disconnection and lifetime-lock release before controller closure or fallback signals; record cleanup failures before fallback. Lock release alone does not prove direct-child reaping.",
+    "Never release the first invocation."
+  ],
+  "assertions": [
+    "At most one child launch. Second Run preserves first invocation and fatal cleanup terminates it."
+  ],
+  "expected_runtime": {
+    "stdout": "",
+    "exit_status": 1,
+    "stderr_contains": [
+      "Run",
+      "outstanding"
+    ]
+  },
+  "files": [
+    "main.l",
+    "../companions/gate.l",
+    "../companions/actions.l"
+  ]
+}

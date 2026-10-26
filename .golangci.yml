@@ -1,0 +1,43 @@
+version: "2"
+run:
+  timeout: 8m
+  modules-download-mode: readonly
+  tests: true
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - nolintlint
+    - staticcheck
+    - unused
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    govet:
+      disable:
+        - inline
+    nolintlint:
+      allow-unused: false
+      require-explanation: true
+      require-specific: true
+    staticcheck:
+      checks:
+        - "SA*"
+        - "S*"
+  exclusions:
+    generated: disable
+    presets: []
+    paths: []
+    warn-unused: true
+formatters:
+  enable:
+    - gofmt
+  settings:
+    gofmt:
+      simplify: false
+  exclusions:
+    generated: disable
+    paths: []
