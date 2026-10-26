@@ -181,7 +181,7 @@ When fatal and signal requests compete, the first accepted terminal request sele
 
 Keep the existing two-second post-exit/cancellation pipe-drain bound. There is no normal process-duration timeout, no process-count cap, and no capture-size cap. Fixed stress counts are test workload only. Every launched direct child has exactly one Wait owner. Same-group descendants must terminate even if they close inherited pipes. Escaped process groups and uncatchable orchestrator termination (SIGKILL, host/power loss) are documented limits, not skipped required feature tests.
 
-Children inherit environment and caller CWD, receive EOF on stdin and receive no synthesized arguments. Runtime Build checks the prebuilt executable; it invokes no build tool. Show writes Text exactly and formats Number/Truth values without adding a newline or replaying unrelated captured output.
+Children inherit environment and caller CWD, receive EOF on stdin and receive no synthesized arguments. Runtime Build checks the prebuilt executable; it invokes no build tool. Show writes Text exactly and formats supported runtime values without adding a newline or replaying unrelated captured output. Direct App and Error display rejects.
 
 The lowerer checks scalar/operator types and definite assignment across continuing branches. Exit removes a branch from that intersection; Output availability remains a runtime check. Diagnostics retain source attribution. Maintained programs import the `IO.Print` member from the `io` dictionary and use implicit Basic, Start and Execute definitions. Direct Run requires an explicit Await wherever subsequent source needs completion or continuation effects.
 

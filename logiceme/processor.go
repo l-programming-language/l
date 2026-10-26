@@ -1,16 +1,7 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 10/15/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
-// Segmental
 type Segmental struct {
 	Uuid        string
 	Symbol      string
@@ -26,7 +17,6 @@ type Segmental struct {
 	Polarity    bool
 }
 
-// Process
 type Process struct {
 	Uuid         string
 	Operands     []string
@@ -40,7 +30,6 @@ type Process struct {
 	Polarity     bool
 }
 
-// Processor
 type Processor struct {
 	Uuid       string
 	Name       string

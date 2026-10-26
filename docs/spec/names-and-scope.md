@@ -78,9 +78,9 @@ Alias cycles and unresolved targets reject. Private dictionaries cannot capture 
 
 The typed Rust plan separates a symbol's declaration from its runtime producer. Assignment writes stable storage at the source instruction position. A runtime symbol may be read only when every path that continues to the read has assigned it. Exiting branches are excluded from that intersection, because they cannot reach the read.
 
-A conditional assignment is not a promise of a hidden initial value. Text storage is owned when language assignment requires a snapshot; comparisons and observation may borrow it. This implementation does not expose a new public ownership or mutability annotation syntax.
+A conditional assignment supplies no hidden initial value. Assignment, arguments, returns and captures copy ordinary values and retain explicit Pointer identity; short reads may borrow storage. [Pointer](values.md#pointer) makes sharing explicit without Rust lifetime annotations.
 
-Runtime captures must be reachable from the active owning paragraph. Publishing a runtime-dependent definition cannot make private inactive storage available outside its activation. Static definitions and literal captures preserve their original bindings even when the caller shadows the same name.
+An executed action or Function declaration retains its captured values in an environment specific to that activation. Ordinary values snapshot; Pointer targets remain shared. Captured assignments update the environment, not the original variable. A callable alias retains the selected environment even if a later activation rebinds the original name. Every capture must be assigned when the declaration executes. Static definitions retain definition-site bindings.
 
 ## Output snapshots
 

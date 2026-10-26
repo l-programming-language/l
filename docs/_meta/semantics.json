@@ -1,5 +1,55 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
+  "sourceHashes": {
+    "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
+    "docs/cli-build.md": "6f8e150591f7a1347cce5c5d1c4e1e810a2bbc71f67c007593d0ad9acfa558c8",
+    "lexicon/eng/grammar.json": "5ae6d7ef177817197d7bffcf9388ac4934abf4c847c4cfed32336e0d3bd5f001",
+    "lexicon/eng/vocabulary.json": "4c38dfa34c4df0a2dcecb167e76a91713e084f54742076c2b2c20306edce0f6e",
+    "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
+    "lyger/builder.go": "5888114b3e4068d85014bd8b8c2b3bf0041f922fef7822c20f3797e079734554",
+    "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
+    "lyger/construction.go": "4462bf8ddcc940d085e92f11fa951371caff1720f6c0ee22d5f8f1e921b501b6",
+    "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba",
+    "lyger/function_runtime.go": "3cc94c7a41535148e7510f71a1d808cc2ea4deb2b01b04b924b7f4060298d003",
+    "lyger/grammar.go": "a6ec88acca64421c18f229395f39b4f9f5c5e03feca1c630fa64916a3f1e7f3b",
+    "lyger/grammar_extraction.go": "eb60db4d3d51e02e199cc9c0e2108e61c85cb09e24fc6971eca362d02cc9b6d3",
+    "lyger/grammar_match.go": "bb6700a68686d2d88457df89053d38298c2230b3cc324c2f662e41665c2a5d53",
+    "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
+    "lyger/grammar_types.go": "2de640c48cb437c1a6aeddf50ee92adc42b18d40e4622ea4272d7cb03079506e",
+    "lyger/instruction_captures.go": "41d4f8ca2b44fd0d5ba8e85c5357118967cfb9c97eaca845eb95e79eb497a36e",
+    "lyger/instructions.go": "47208f4e56296c5f184c985da9e50ef15b736d81bb9dfdb221757aad7c1a0f4e",
+    "lyger/ir_kinds.go": "4ea9a6ba887c6af65e9bd6411b65d090c4c28c42e995aafd214718194584c9b9",
+    "lyger/lexical_scope.go": "4ac4f5b6006f656746bab17211a6d59fb6b22b28a343308c2bce7909e0c220b9",
+    "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
+    "lyger/lexicon.go": "f5e19a1e702b87ae564521b1389d0b647e9525d57a680f49419452aab6c83bd8",
+    "lyger/native_encoding.go": "9a66aa3973ce53bf32ef36892835dfc4ae95ec50e49806332f618389ae400996",
+    "lyger/orchestration_capture_emit.go": "927242b9ebb16a7046234ebec80d17a78fdcbe5b0cdbf5409f19164806fe97ec",
+    "lyger/orchestration_captures.go": "07cbc66d7cce21f535804c98182be49ff84092e6aee736a842f08aa38536b9bf",
+    "lyger/orchestration_emit.go": "bb35eae70bcd08e28e55787986985d9c1f43d1246e990d3c5db260a28a3d8d3f",
+    "lyger/orchestration_functions.go": "ed944a072ca752f5b098e3e5dc1de3d6af78155394a9346ad20cb32316baba22",
+    "lyger/orchestration_plan.go": "d2535b6378fc98844b1d0faaf1a7bbade4f907c9aaf65e4df98856ff70c26396",
+    "lyger/orchestration_program.go": "0a00568bdc6c9f627af5da05d101d605ac03a1365d0add4e5f7f599f19bb2561",
+    "lyger/program_runtime.go": "a5459e008c9233e9786b44cc7475fc6a1e7479141c01849b240d33b774f0a5ed",
+    "lyger/publication.go": "5c6294431db9c71ee57cc210c7f115904a247a1b1f2971dee14406e8c0e16765",
+    "lyger/registration.go": "b583cbf3c760ac825c29ee3387ae75ccfcce952d5e5d40a2d1e4fbac0219fd2c",
+    "lyger/runtime_values.go": "aa8c69dba850455b46442e55a6c0dbf3e41c542dffbb1d727e684af9f22c7950",
+    "lyger/runtime_values.rs": "37ae43817c3c0b09463765a521d3b9f234551247f290cf8c225a858b4f46392c",
+    "lyger/runtime_values_emit.go": "a56ea7b9cef91a83330684415e57dcef5a4aae82e6f93d08be10fbd2fceb7f5c",
+    "lyger/runtime_values_plan.go": "e9c680c516c38ae96e54998ac2b5dd422d068e567df07bd058b8b8c8884011a6",
+    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
+    "lyger/semantic_resolution.go": "9937eae863f737d2ae56ede2fc82afe70196b0e1a98969f7befe3eb3620cf00f",
+    "lyger/semantics.go": "1a24787c751a031902abcafc6973d846e29877d8db2e6c64274089f33d0b9d07",
+    "lyger/source_functions.go": "8d39cac20ae471811681c88e5b88d2ac486200556990d4dcee567d7a3ea5ff3e",
+    "lyger/source_topology.go": "81c7cb6e966f8f859396c572e72ff124cf95c90244ad597cb44e6b52db5e8fdb",
+    "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
+    "lyger/types.go": "ccefcec0547794da4a35f9f58ad00131b5dab02808d4dbb910eef39102f951eb",
+    "lyger/utilities.go": "2e9aa1197bb2a1f8569dc2e668b8a1219d4812384d5a8cb365d41a270fa280b0",
+    "lyger/value_kinds.go": "c58424bedff22327c0557efd0e4b4b3cc0ff2ba4a6ab4f642e0f2177025ed8aa",
+    "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
+    "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
+    "stdlib/eng/io/dictionary.l": "40f07155226ddb60830dc847829f071d2e26c5fed240210ded1a80ee6c269e1f",
+    "stdlib/index.json": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1"
+  },
   "entries": [
     {
       "id": "type:text",
@@ -15,22 +65,16 @@
         "lexicon/eng/vocabulary.json",
         "lyger/native_encoding.go",
         "lyger/definition.go",
-        "lyger/grammar.go"
+        "lyger/grammar.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
         "lyger/raw_text_test.go",
-        "lyger/definition_text_encoding_test.go"
+        "lyger/definition_text_encoding_test.go",
+        "lyger/runtime_values_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/native_encoding.go": "8371d3898997dd4b9b25bd59b00d8e2327269c7453b90f2d214efbeb3d4423c5",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba",
-        "lyger/grammar.go": "a6ec88acca64421c18f229395f39b4f9f5c5e03feca1c630fa64916a3f1e7f3b"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -50,22 +94,17 @@
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
         "lyger/native_encoding.go",
-        "lyger/definition.go"
+        "lyger/definition.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
         "lyger/definition_number_test.go",
         "lyger/numeric_resolution_test.go",
-        "lyger/io_numeric_test.go"
+        "lyger/io_numeric_test.go",
+        "lyger/runtime_values_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/native_encoding.go": "8371d3898997dd4b9b25bd59b00d8e2327269c7453b90f2d214efbeb3d4423c5",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -85,20 +124,15 @@
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
         "lyger/native_encoding.go",
-        "lyger/definition.go"
+        "lyger/definition.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
-        "lyger/orchestrator_test.go"
+        "lyger/orchestrator_test.go",
+        "lyger/runtime_values_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/native_encoding.go": "8371d3898997dd4b9b25bd59b00d8e2327269c7453b90f2d214efbeb3d4423c5",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -110,28 +144,22 @@
       "kind": "type",
       "name": "Thing",
       "role": "explanatory",
-      "support": "partial",
+      "support": "supported",
       "doc": "docs/spec/values.md#thing",
       "sources": [
-        "lyger/types.go",
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go"
+        "lyger/runtime_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
-        "lyger/raw_text_test.go"
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go",
+        "lyger/runtime_type_boundaries_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/native_encoding.go": "8371d3898997dd4b9b25bd59b00d8e2327269c7453b90f2d214efbeb3d4423c5",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
+      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types, shape identities and callable signatures. No implicit coercion or dynamic arithmetic.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -158,14 +186,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/native_encoding.go": "8371d3898997dd4b9b25bd59b00d8e2327269c7453b90f2d214efbeb3d4423c5",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -180,26 +200,18 @@
       "support": "partial",
       "doc": "docs/spec/values.md#byte-and-bytes",
       "sources": [
-        "lyger/types.go",
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go"
+        "lyger/runtime_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/native_encoding.go": "8371d3898997dd4b9b25bd59b00d8e2327269c7453b90f2d214efbeb3d4423c5",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
+      "notes": "Owned byte sequences construct from Text, snapshot and support checked indexed reads as Number. Byte mutation and numeric-width families are not supplied.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -211,29 +223,22 @@
       "kind": "type",
       "name": "Pointer",
       "role": "explanatory",
-      "support": "unresolved",
+      "support": "supported",
       "doc": "docs/spec/values.md#pointer",
       "sources": [
-        "lyger/types.go",
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go"
+        "lyger/runtime_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go",
+        "lyger/runtime_type_boundaries_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/native_encoding.go": "8371d3898997dd4b9b25bd59b00d8e2327269c7453b90f2d214efbeb3d4423c5",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
+      "notes": "Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -245,29 +250,21 @@
       "kind": "type",
       "name": "Null",
       "role": "explanatory",
-      "support": "partial",
+      "support": "supported",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
-        "lyger/types.go",
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go"
+        "lyger/runtime_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
-        "lyger/definition_framing_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/native_encoding.go": "8371d3898997dd4b9b25bd59b00d8e2327269c7453b90f2d214efbeb3d4423c5",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
+      "notes": "Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -282,25 +279,18 @@
       "support": "partial",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "sources": [
-        "lyger/types.go",
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/instructions.go",
-        "lyger/grammar_extraction.go"
+        "lyger/runtime_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
-        "lyger/stored_values_test.go"
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_type_boundaries_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "lyger/grammar_extraction.go": "48f798dcd08f8d6b0e1aa06fcefd422d2957daf147f2464f266fc8f895937fe9"
-      },
+      "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -329,15 +319,6 @@
         "lyger/numeric_resolution_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
-        "lyger/semantic_resolution.go": "9937eae863f737d2ae56ede2fc82afe70196b0e1a98969f7befe3eb3620cf00f",
-        "lyger/grammar_extraction.go": "48f798dcd08f8d6b0e1aa06fcefd422d2957daf147f2464f266fc8f895937fe9"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -359,16 +340,10 @@
         "lyger/application_units.go"
       ],
       "witnesses": [
-        "lyger/application_units_test.go"
+        "lyger/application_units_test.go",
+        "lyger/runtime_type_boundaries_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -394,14 +369,6 @@
         "lyger/runnable_service_test.go"
       ],
       "notes": "Service declarations remain structural; standalone bodies, packages and native process operations are unsupported. App-constructed Service libraries retain their workspace topology. Static inspection; witnesses not run.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -426,13 +393,6 @@
         "lyger/recursive_classes_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/source_topology.go": "81c7cb6e966f8f859396c572e72ff124cf95c90244ad597cb44e6b52db5e8fdb"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -457,13 +417,6 @@
         "lyger/recursive_classes_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/source_topology.go": "81c7cb6e966f8f859396c572e72ff124cf95c90244ad597cb44e6b52db5e8fdb"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -488,13 +441,6 @@
         "lyger/stored_values_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -519,13 +465,6 @@
         "lyger/definition_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -537,29 +476,23 @@
       "kind": "type",
       "name": "Function",
       "role": "explanatory",
-      "support": "partial",
+      "support": "supported",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "builtins/eng/core.l",
-        "lyger/construction.go"
+        "lyger/source_functions.go",
+        "lyger/orchestration_functions.go",
+        "lyger/function_runtime.go",
+        "lyger/runtime_values.go",
+        "lyger/orchestration_program.go",
+        "lyger/program_runtime.go"
       ],
       "witnesses": [
-        "lyger/definition_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/source_functions_test.go",
+        "lyger/runtime_transfer_test.go",
+        "lyger/runtime_type_boundaries_test.go",
+        "lyger/function_publication_test.go"
       ],
-      "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532"
-      },
+      "notes": "Ordinary Functions have typed inputs/results, private bodies, fresh invocation locals, retained captures and checked returns. Existing native Function composition is separate; opaque Rust receives no inferred lifetime/generic contract.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -585,13 +518,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -617,13 +543,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -648,13 +567,6 @@
         "lyger/binding_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -679,13 +591,6 @@
         "lyger/action_definition_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -710,13 +615,6 @@
         "lyger/paragraph_descriptor_identity_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/semantics.go": "ce33748b3822c30bce65f2eefaa4d9e5b53a81ecb5b34eb657a4101ed84d8d0a"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -741,13 +639,6 @@
         "lyger/grammar_terms_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021",
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -763,17 +654,16 @@
       "doc": "docs/spec/values.md#thing",
       "sources": [
         "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/types.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
+      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -796,10 +686,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -822,10 +708,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -848,10 +730,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -867,17 +745,16 @@
       "doc": "docs/spec/values.md#byte-and-bytes",
       "sources": [
         "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/types.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
+      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -893,17 +770,16 @@
       "doc": "docs/spec/values.md#pointer",
       "sources": [
         "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/types.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
+      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -926,10 +802,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -952,10 +824,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -978,10 +846,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1004,10 +868,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1030,10 +890,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1056,10 +912,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1082,10 +934,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1101,17 +949,16 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/types.go",
+        "lyger/source_functions.go",
+        "lyger/orchestration_functions.go",
+        "lyger/function_runtime.go",
+        "lyger/runtime_values.go"
       ],
       "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/source_functions_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1134,10 +981,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1160,10 +1003,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1179,17 +1018,16 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "sources": [
         "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/types.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
+      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1212,10 +1050,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1231,17 +1065,16 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
         "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/types.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
+      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1264,10 +1097,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1290,10 +1119,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1316,10 +1141,6 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1335,17 +1156,16 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
         "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/types.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values.rs"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
       ],
-      "notes": "Internal storage/representation tag; does not independently establish constructible public source type. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
+      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1367,10 +1187,6 @@
         "lyger/action_definition_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1392,10 +1208,6 @@
         "lyger/action_definition_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1418,11 +1230,6 @@
         "lyger/builtin_operations_contract_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "sourceHashes": {
-        "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1445,11 +1252,6 @@
         "lyger/phase1_language_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "sourceHashes": {
-        "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1472,11 +1274,6 @@
         "lyger/runnable_service_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "sourceHashes": {
-        "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1499,11 +1296,6 @@
         "lyger/phase1_nested_await_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "sourceHashes": {
-        "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1525,10 +1317,6 @@
         "lyger/orchestrator_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/orchestration_emit.go": "6d180dfddce5c33579cb6e3f999fb211d829a3dda90f59d2cc301dbb4a18d3a2",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1548,14 +1336,11 @@
         "docs/cli-build.md"
       ],
       "witnesses": [
-        "lyger/phase1_language_test.go"
+        "lyger/phase1_language_test.go",
+        "lyger/phase1_shutdown_test.go",
+        "lyger/source_functions_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lyger/orchestration_emit.go": "6d180dfddce5c33579cb6e3f999fb211d829a3dda90f59d2cc301dbb4a18d3a2",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1577,10 +1362,6 @@
         "lyger/orchestrator_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "sourceHashes": {
-        "lyger/orchestration_plan.go": "df6f86ea9897332d3100e74d6314075c7a755875a62e2051a4003febff4c7c6b",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1602,10 +1383,6 @@
         "lyger/phase1_language_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "sourceHashes": {
-        "lyger/orchestration_plan.go": "df6f86ea9897332d3100e74d6314075c7a755875a62e2051a4003febff4c7c6b",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1629,11 +1406,6 @@
         "lyger/construction_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1657,11 +1429,6 @@
         "lyger/construction_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1685,11 +1452,6 @@
         "lyger/construction_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1713,11 +1475,6 @@
         "lyger/construction_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1741,11 +1498,6 @@
         "lyger/construction_test.go"
       ],
       "notes": "Source-defined Service/Object/Function construction descriptor used by Apps; it grants no standalone Service process role. Static inspection; existing witnesses not run.",
-      "sourceHashes": {
-        "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1769,11 +1521,6 @@
         "lyger/construction_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "builtins/eng/core.l": "0826e9c4b25b9011e1011dcd7723bede9445a880d4ef160dfe60b6ff3d14358e",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1796,11 +1543,6 @@
         "lyger/coordinated_registration_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/semantics.go": "ce33748b3822c30bce65f2eefaa4d9e5b53a81ecb5b34eb657a4101ed84d8d0a",
-        "lyger/registration.go": "358c34a0351dd2e8cac4f1c520b7507f52280ccfe87a9d8dfc66d0e824ecfc1a"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1823,11 +1565,6 @@
         "lyger/definition_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/semantics.go": "ce33748b3822c30bce65f2eefaa4d9e5b53a81ecb5b34eb657a4101ed84d8d0a",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1850,11 +1587,6 @@
         "lyger/paragraph_descriptor_identity_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/semantics.go": "ce33748b3822c30bce65f2eefaa4d9e5b53a81ecb5b34eb657a4101ed84d8d0a",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1877,11 +1609,6 @@
         "lyger/configured_import_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/builder.go": "5888114b3e4068d85014bd8b8c2b3bf0041f922fef7822c20f3797e079734554",
-        "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1901,14 +1628,10 @@
         "lyger/publication.go"
       ],
       "witnesses": [
-        "lyger/paragraph_visibility_test.go"
+        "lyger/paragraph_visibility_test.go",
+        "lyger/function_publication_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
-        "lyger/publication.go": "e60b4d7c125b96630417d0b20c76d95094874b8789fca07741f064e89926296e"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1928,14 +1651,10 @@
         "lyger/publication.go"
       ],
       "witnesses": [
-        "lyger/paragraph_visibility_test.go"
+        "lyger/paragraph_visibility_test.go",
+        "lyger/function_publication_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
-        "lyger/publication.go": "e60b4d7c125b96630417d0b20c76d95094874b8789fca07741f064e89926296e"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1957,10 +1676,6 @@
         "lyger/construction_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -1982,10 +1697,6 @@
         "lyger/construction_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2008,11 +1719,6 @@
         "lyger/construction_test.go"
       ],
       "notes": "Static inspection and existing witnesses; not executed in this documentation pass.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532",
-        "docs/cli-build.md": "2c007bc517b54ffbe07be1143a71f8860839faec5d05e097bd589c11d1f583ce"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2024,23 +1730,22 @@
       "kind": "builtin",
       "name": "Put",
       "role": "explanatory",
-      "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "support": "supported",
+      "doc": "docs/spec/collections-and-categories.md#lists",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lexicon/eng/grammar.json",
         "lyger/ir_kinds.go",
-        "lyger/instructions.go"
+        "lyger/instructions.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values_emit.go",
+        "lyger/runtime_values.rs"
       ],
-      "witnesses": [],
-      "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lyger/ir_kinds.go": "c680d05ac16f5ee52c3132a61b6252bc6c4c40b2fbfe99477a0d7bbaf7e0aa7a",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
-      "evidence": "static-inspection; no-existing-witness-listed",
+      "witnesses": [
+        "lyger/runtime_values_test.go"
+      ],
+      "notes": "Typed updates append/replace List elements, write Map/Instance fields or replace a Pointer target. Destination kind, keys, element/field types and managed ownership cycles are checked.",
+      "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
       ],
@@ -2051,23 +1756,22 @@
       "kind": "builtin",
       "name": "Place",
       "role": "explanatory",
-      "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "support": "supported",
+      "doc": "docs/spec/collections-and-categories.md#lists",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lexicon/eng/grammar.json",
         "lyger/ir_kinds.go",
-        "lyger/instructions.go"
+        "lyger/instructions.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values_emit.go",
+        "lyger/runtime_values.rs"
       ],
-      "witnesses": [],
-      "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lyger/ir_kinds.go": "c680d05ac16f5ee52c3132a61b6252bc6c4c40b2fbfe99477a0d7bbaf7e0aa7a",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
-      "evidence": "static-inspection; no-existing-witness-listed",
+      "witnesses": [
+        "lyger/runtime_values_test.go"
+      ],
+      "notes": "Typed updates append/replace List elements, write Map/Instance fields or replace a Pointer target. Destination kind, keys, element/field types and managed ownership cycles are checked.",
+      "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
       ],
@@ -2088,12 +1792,6 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lyger/ir_kinds.go": "c680d05ac16f5ee52c3132a61b6252bc6c4c40b2fbfe99477a0d7bbaf7e0aa7a",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
       "evidence": "static-inspection; no-existing-witness-listed",
       "checkedStages": [
         "static-source-inspection"
@@ -2115,12 +1813,6 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lyger/ir_kinds.go": "c680d05ac16f5ee52c3132a61b6252bc6c4c40b2fbfe99477a0d7bbaf7e0aa7a",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
       "evidence": "static-inspection; no-existing-witness-listed",
       "checkedStages": [
         "static-source-inspection"
@@ -2142,12 +1834,6 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lyger/ir_kinds.go": "c680d05ac16f5ee52c3132a61b6252bc6c4c40b2fbfe99477a0d7bbaf7e0aa7a",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
       "evidence": "static-inspection; no-existing-witness-listed",
       "checkedStages": [
         "static-source-inspection"
@@ -2169,12 +1855,6 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "sourceHashes": {
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lyger/ir_kinds.go": "c680d05ac16f5ee52c3132a61b6252bc6c4c40b2fbfe99477a0d7bbaf7e0aa7a",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
       "evidence": "static-inspection; no-existing-witness-listed",
       "checkedStages": [
         "static-source-inspection"
@@ -2199,12 +1879,6 @@
         "lyger/dictionary_ownership_test.go"
       ],
       "notes": "Reviewed registered export namespace for dictionary language=eng key=io. Index-driven addition/rename/deletion must trigger new review.",
-      "sourceHashes": {
-        "stdlib/index.json": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1",
-        "stdlib/eng/io/dictionary.l": "40f07155226ddb60830dc847829f071d2e26c5fed240210ded1a80ee6c269e1f",
-        "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
-        "lyger/lexical_scope.go": "4ac4f5b6006f656746bab17211a6d59fb6b22b28a343308c2bce7909e0c220b9"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2235,12 +1909,6 @@
         "lyger/io_numeric_test.go"
       ],
       "notes": "Reviewed sole public member of current eng/io dictionary. Forms Print/Prints/Printed/Printing/Printer. Log/Logger remain private dependencies; no regex-derived visibility.",
-      "sourceHashes": {
-        "stdlib/index.json": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1",
-        "stdlib/eng/io/dictionary.l": "40f07155226ddb60830dc847829f071d2e26c5fed240210ded1a80ee6c269e1f",
-        "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2280,11 +1948,6 @@
         "lyger/dictionary_dependency_capture_test.go"
       ],
       "notes": "Private native-backed implementation required by IO.Print, not an importable public member.",
-      "sourceHashes": {
-        "stdlib/eng/io/dictionary.l": "40f07155226ddb60830dc847829f071d2e26c5fed240210ded1a80ee6c269e1f",
-        "lyger/lexical_scope.go": "4ac4f5b6006f656746bab17211a6d59fb6b22b28a343308c2bce7909e0c220b9",
-        "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2313,11 +1976,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2341,11 +1999,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/grammar_types.go": "0da3486923277e10d908eb0caf400fabf6934c1353e28835c178eb5b22c17005"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2369,11 +2022,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/registration.go": "358c34a0351dd2e8cac4f1c520b7507f52280ccfe87a9d8dfc66d0e824ecfc1a"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2397,11 +2045,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2425,11 +2068,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/construction.go": "5412f7ef5b79e1ba764249a0febb240ef7a3232ea76817ffbc530993ecdeb532"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2453,11 +2091,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/builder.go": "5888114b3e4068d85014bd8b8c2b3bf0041f922fef7822c20f3797e079734554"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2481,11 +2114,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence. Static inspection; existing witnesses not run.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2497,25 +2125,21 @@
       "kind": "grammar-group",
       "name": "collection-actions",
       "role": "explanatory",
-      "support": "unresolved",
+      "support": "partial",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "sources": [
         "lexicon/eng/grammar.json",
         "lexicon/eng/vocabulary.json",
         "lyger/ir_kinds.go",
-        "lyger/instructions.go"
+        "lyger/instructions.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values_emit.go"
       ],
       "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
+        "lyger/runtime_values_test.go"
       ],
-      "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/ir_kinds.go": "c680d05ac16f5ee52c3132a61b6252bc6c4c40b2fbfe99477a0d7bbaf7e0aa7a",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
+      "notes": "Put/Place lower to checked runtime updates. Typed constructor reads supply indexed access; Get/Take, iteration and general removal are not established.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2539,11 +2163,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/orchestration_plan.go": "df6f86ea9897332d3100e74d6314075c7a755875a62e2051a4003febff4c7c6b"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2567,11 +2186,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2595,11 +2209,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2623,11 +2232,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2651,11 +2255,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/lexicon.go": "f5e19a1e702b87ae564521b1389d0b647e9525d57a680f49419452aab6c83bd8"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2679,11 +2278,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2707,11 +2301,6 @@
         "lyger/grammar_consumption_test.go"
       ],
       "notes": "Semantic group for exact mechanically inventoried grammar/vocabulary entries. Support is bounded by prose and specific implementation; grammar tables alone are not execution evidence.",
-      "sourceHashes": {
-        "lexicon/eng/grammar.json": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18",
-        "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-        "lyger/grammar_match.go": "c85bbc1393d4ac032c45a581f9a994b9fb22ff88c939f3159beb04b3a5b0410f"
-      },
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"
@@ -2733,10 +2322,202 @@
         "lyger/refactor_value_characterization_test.go"
       ],
       "notes": "The unnamed zero value is a compiler sentinel; it is not one of the 23 named representation tags or a public source constructor. valueTypeCount is an enum bound, not a stored value. Static inspection only.",
-      "sourceHashes": {
-        "lyger/value_kinds.go": "4e02dab3743e7d7b552d2286485bffbd27749cd08bc1beba8ffac2fec3fcbd1b",
-        "lyger/types.go": "8b8bd68ace7bb2a6de36d2efc9a267a7dc82c1fb209cb143be7cba40f6d87021"
-      },
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "id": "type:map",
+      "kind": "type",
+      "name": "Map",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/spec/collections-and-categories.md#maps",
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/utilities.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values.rs"
+      ],
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go",
+        "lyger/function_publication_test.go"
+      ],
+      "notes": "Owned typed values keyed by Text bytes; insertion/replacement and checked reads preserve complete element types and deterministic byte ordering. Distinct from a vocabulary Dictionary.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "id": "value-tag:Map",
+      "kind": "value-tag",
+      "name": "Map",
+      "role": "implementation",
+      "support": "internal",
+      "doc": "docs/spec/collections-and-categories.md#maps",
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/types.go",
+        "lyger/runtime_values.go"
+      ],
+      "witnesses": [
+        "lyger/runtime_values_test.go"
+      ],
+      "notes": "Internal representation tag; executable source semantics are defined by the linked runtime type contract.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "id": "type:instance",
+      "kind": "type",
+      "name": "Instance",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/spec/applicational-types.md#instances",
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/utilities.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values.rs"
+      ],
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go",
+        "lyger/runtime_type_boundaries_test.go"
+      ],
+      "notes": "A canonical descriptor fixes the runtime field schema and identity. Ordinary fields snapshot; Pointer targets remain shared. Unknown, absent and incorrectly typed fields reject.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "id": "value-tag:Instance",
+      "kind": "value-tag",
+      "name": "Instance",
+      "role": "implementation",
+      "support": "internal",
+      "doc": "docs/spec/applicational-types.md#instances",
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/types.go",
+        "lyger/runtime_values.go"
+      ],
+      "witnesses": [
+        "lyger/runtime_values_test.go"
+      ],
+      "notes": "Internal representation tag; executable source semantics are defined by the linked runtime type contract.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "id": "type:error",
+      "kind": "type",
+      "name": "Error",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/spec/execution.md#output-and-error",
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/utilities.go",
+        "lyger/runtime_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "lyger/runtime_values.rs"
+      ],
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
+      ],
+      "notes": "Error values can be constructed, stored, captured and placed in typed containers. App Error is optional until inspected; extracting an absent Error rejects. Direct Show remains unsupported.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "id": "grammar-group:runtime-captures",
+      "kind": "grammar-group",
+      "name": "runtime-captures",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/spec/names-and-scope.md#runtime-storage-and-definite-assignment",
+      "sources": [
+        "lyger/instruction_captures.go",
+        "lyger/orchestration_captures.go",
+        "lyger/orchestration_capture_emit.go",
+        "lyger/runtime_values.rs"
+      ],
+      "witnesses": [
+        "lyger/orchestration_captures_test.go",
+        "lyger/function_publication_test.go"
+      ],
+      "notes": "Each declaration activation retains a typed environment. Ordinary values snapshot; aliases share callable state and explicit Pointer targets. Reads release borrows before calls/Await; writes reject ownership cycles. App-process capture transport is not inferred.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "id": "builtin:call",
+      "kind": "builtin",
+      "name": "Call",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
+      "sources": [
+        "lexicon/eng/grammar.json",
+        "lexicon/eng/vocabulary.json",
+        "lyger/source_functions.go",
+        "lyger/orchestration_functions.go",
+        "lyger/function_runtime.go"
+      ],
+      "witnesses": [
+        "lyger/source_functions_test.go"
+      ],
+      "notes": "Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "id": "builtin:return",
+      "kind": "builtin",
+      "name": "Return",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
+      "sources": [
+        "lexicon/eng/grammar.json",
+        "lexicon/eng/vocabulary.json",
+        "lyger/source_functions.go",
+        "lyger/orchestration_functions.go",
+        "lyger/function_runtime.go"
+      ],
+      "witnesses": [
+        "lyger/source_functions_test.go"
+      ],
+      "notes": "Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return.",
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
         "static-source-inspection"

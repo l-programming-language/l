@@ -62,9 +62,9 @@ func TestStorageEnumNamesAndValueMappings(t *testing.T) {
 		}
 	}
 	want := map[valueType]string{
-		valueThing: "Primitive", valueText: "Primitive", valueNumber: "Primitive", valueTruth: "Primitive", valueBytes: "Primitive", valuePointer: "Primitive",
-		valueLexeme: "Lexeme", valueApp: "Applicative", valueService: "Applicative", valueClass: "Applicative", valueObject: "Applicative", valueAttribute: "Applicative", valueDefinition: "Applicative", valueFunction: "Applicative", valueProperty: "Applicative", valueOperation: "Applicative",
-		valueList: "Iterative", valueDictionary: "Iterative",
+		valueThing: "Primitive", valueText: "Primitive", valueNumber: "Primitive", valueTruth: "Primitive", valueBytes: "Primitive", valuePointer: "Primitive", valueNull: "Primitive", valueError: "Primitive",
+		valueLexeme: "Lexeme", valueApp: "Applicative", valueService: "Applicative", valueClass: "Applicative", valueObject: "Applicative", valueAttribute: "Applicative", valueDefinition: "Applicative", valueFunction: "Applicative", valueProperty: "Applicative", valueOperation: "Applicative", valueInstance: "Applicative",
+		valueList: "Iterative", valueDictionary: "Iterative", valueMap: "Iterative",
 	}
 	for kind := valueInvalid; kind <= valueTypeCount; kind++ {
 		storage, ok := kind.StorageKind()

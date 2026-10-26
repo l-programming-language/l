@@ -136,7 +136,7 @@ Source order is retained after expansion. A sequence of native unary lifecycle o
 
 ## Vocabulary reference
 
-Nouns include pronouns, Input/Output/Error, List/Dictionary, Null/Thing/Text/Number/Byte/Truth/Pointer, native Func/Prop/Op concepts, Definition/Attribute, and Object/Class/Service/App. The adjective entries are Public, New, and Generic. Adverbs are Publicly, Not, Less, Greater, and Then. Prepositions are as/of/at/with/in/out/by/from/to/than/for. Articles are any/no/a/the, conjunctions and/or, and evaluations if/else/otherwise/while.
+Nouns include pronouns, Input/Output/Error, List/Map/Dictionary, Instance, Null/Thing/Text/Number/Byte/Truth/Pointer, native Func/Prop/Op concepts, Definition/Attribute, and Object/Class/Service/App. The adjective entries are Public, New, and Generic. Adverbs are Publicly, Not, Less, Greater, and Then. Prepositions are as/of/at/with/in/out/by/from/to/than/for. Articles are any/no/a/the, conjunctions and/or, and evaluations if/else/otherwise/while.
 
 Builtin source adds Start, Execute, Process, Function, Return, Objective, Main, and Basic. Standard-library words such as Print require import. Adding a word to vocabulary is not equivalent to implementing a new primitive instruction, and source-defined extensibility is not unrestricted natural-language interpretation.
 

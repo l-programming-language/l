@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 11/01/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
@@ -18,12 +10,6 @@ import (
 
 	"github.com/l-programming-language/l/lerrors"
 )
-
-/*
-==========================
-LUCID TAG STRUCTURES
-==========================
-*/
 
 // TagMeta ...
 type TagMeta struct {
@@ -40,23 +26,19 @@ type SubTag struct {
 	TagMeta       *TagMeta
 }
 
-// NewSubTag
 func NewSubTag(replaceString string, tagString string, tagType string, expressions []*TagExpression, tagMeta *TagMeta) *SubTag {
 	return &(SubTag{replaceString, tagString, tagType, expressions, tagMeta})
 }
 
-// InterpretedSubTag
 type InterpretedSubTag struct {
 	ReplaceString     string
 	InterpretedString string
 }
 
-// NewInterpretedSubTag
 func NewInterpretedSubTag(replaceString string, interpretedString string) *InterpretedSubTag {
 	return &(InterpretedSubTag{replaceString, interpretedString})
 }
 
-// TagExpression
 type TagExpression struct {
 	ReplaceString     string
 	ExpressionString  string
@@ -66,7 +48,6 @@ type TagExpression struct {
 	TagMeta           *TagMeta
 }
 
-// NewTagExpression
 func NewTagExpression(replaceString string, expressionString string, expressionType string, expressionOutput string, subTags []*SubTag, tagMeta *TagMeta) *TagExpression {
 	return &(TagExpression{replaceString, expressionString, expressionType, expressionOutput, subTags, tagMeta})
 }
@@ -81,13 +62,11 @@ type LucidTag struct {
 	TagMeta       *TagMeta
 }
 
-// GetTemplate
 func (lt *LucidTag) GetTemplate() []byte {
 	exp := *lt.Expressions[2]
 	return []byte(exp.ExpressionString)
 }
 
-// GetSubTags
 func (lt *LucidTag) GetSubTags() []*SubTag {
 	var reTags []*SubTag
 	for _, te := range lt.Expressions {
@@ -96,7 +75,6 @@ func (lt *LucidTag) GetSubTags() []*SubTag {
 	return reTags
 }
 
-// InterpretSubTags
 func (lt *LucidTag) InterpretSubTags(compilation DataCompilation) []byte {
 	li := LucidInterpreter{
 		lt.GetTemplate(),
@@ -112,7 +90,6 @@ func (lt *LucidTag) InterpretSubTags(compilation DataCompilation) []byte {
 	return li.InterpretedContent
 }
 
-// scopedMetaInjection
 func scopedMetaInjection(content []byte, meta MetaDict) []byte {
 	intStr := string(content)
 	condVars := lucidParser(intStr, "ExpressionVar")
@@ -169,16 +146,9 @@ func (lt *LucidTag) Interpret(compilation DataCompilation) []byte {
 	return template
 }
 
-// NewLucidTag
 func NewLucidTag(replaceString string, tagString string, tagType string, expressions []*TagExpression, tagMeta *TagMeta) *LucidTag {
 	return &(LucidTag{replaceString, tagString, tagType, expressions, tagMeta})
 }
-
-/*
-==========================
-LUCID PARSER FUNCTIONS
-==========================
-*/
 
 // lucidSourceSpan identifies original bytes, including the enclosing delimiters.
 type lucidSourceSpan struct {
@@ -330,7 +300,6 @@ func lucidParser(textString string, parseType string) []string {
 	return rawParsedTags
 }
 
-// parseMainTags
 func parseMainTags(content []byte) [][]byte {
 	reBytes := [][]byte{}
 	segmentStrs := lucidParser(string(content), "MainTag")
@@ -377,7 +346,6 @@ func RecursiveSubTagParser(tagExpressionStr string, tagMeta *TagMeta) []*SubTag 
 	return subTags
 }
 
-// injectMetaConjoinments
 func injectMetaConjoinments(tag *LucidTag, m MetaDict) *LucidTag {
 	curExpStr := tag.Expressions[2].ExpressionString
 	for _, mo := range m.GetMetaData() {
@@ -453,12 +421,6 @@ func ParseSegmentTags(tags []*LucidTag, m MetaDict, segType string, headers bool
 	}
 	return reTags
 }
-
-/*
-==========================
-LUCID COMPILER FUNCTIONS
-==========================
-*/
 
 // CompileMainTags - compiles the root level tags for a given logiceme
 func CompileMainTags(content []byte) []*LucidTag {

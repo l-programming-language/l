@@ -76,12 +76,23 @@ func definitionArguments(template *DefinitionTemplate, args []DefinitionArgument
 }
 
 func (c *Compilation) instantiateCall(rec *record, args []DefinitionArgument, active map[*record]bool) (DefinitionInstance, error) {
+	dynamic, err := c.Semantics.runtimeRecords()
+	if err != nil {
+		return DefinitionInstance{}, err
+	}
+	return c.instantiateStaticCall(rec, args, active, dynamic)
+}
+
+func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionInstance, error) {
 	rec, err := canonicalRecord(rec, c.Semantics.Aliases)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
 	if rec == nil {
 		return DefinitionInstance{}, lerrors.Internal.Errorf("definition invocation has no record")
+	}
+	if dynamic[rec] || (rec.Value != nil && rec.Value.Runtime != nil) {
+		return DefinitionInstance{}, lerrors.Unsupported.Errorf("runtime value %s cannot be captured by an App body", rec.ID)
 	}
 	if active[rec] {
 		return DefinitionInstance{}, lerrors.Cycle.Errorf("recursive definition invocation: %s", rec.ID)
@@ -122,13 +133,13 @@ func (c *Compilation) instantiateCall(rec *record, args []DefinitionArgument, ac
 			if obj.noun == nil || obj.noun.binding == nil {
 				return DefinitionInstance{}, lerrors.UnresolvedReference.Errorf("action operand in %s has no bound definition", rec.ID)
 			}
-			child, err := c.instantiateCall(obj.noun.binding.Record, args, active)
+			child, err := c.instantiateStaticCall(obj.noun.binding.Record, args, active, dynamic)
 			if err != nil {
 				return DefinitionInstance{}, err
 			}
 			actionArgs = append(actionArgs, DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &child})
 		}
-		instance, err := c.instantiateCall(action.verb.binding.Record, actionArgs, active)
+		instance, err := c.instantiateStaticCall(action.verb.binding.Record, actionArgs, active, dynamic)
 		if err != nil {
 			return DefinitionInstance{}, err
 		}
@@ -228,6 +239,10 @@ func (c *Compilation) statementApp(stmt *lStatement) (*App, error) {
 }
 
 func (c *Compilation) lowerAppBody(app *App) ([]DefinitionInstance, error) {
+	dynamic, err := c.Semantics.runtimeRecords()
+	if err != nil {
+		return nil, err
+	}
 	var body []DefinitionInstance
 	for _, stmt := range c.Statements {
 		if stmt.passiveLifecycle() {
@@ -253,13 +268,22 @@ func (c *Compilation) lowerAppBody(app *App) ([]DefinitionInstance, error) {
 			}
 			var args []DefinitionArgument
 			for _, obj := range action.orderedObjects() {
+				if obj.noun.binding != nil || obj.noun.isPronoun() {
+					rec, err := c.resolver().reference(obj.noun)
+					if err != nil {
+						return nil, err
+					}
+					if dynamic[rec] || (rec.Value != nil && rec.Value.Runtime != nil) {
+						return nil, stmt.source.Span.wrapError(lerrors.Unsupported.Errorf("runtime value %s cannot be captured by an App body", rec.ID))
+					}
+				}
 				argument, err := argumentFromToken(obj.noun)
 				if err != nil {
 					return nil, err
 				}
 				args = append(args, argument)
 			}
-			instance, err := c.instantiateCall(action.verb.binding.Record, args, make(map[*record]bool))
+			instance, err := c.instantiateStaticCall(action.verb.binding.Record, args, make(map[*record]bool), dynamic)
 			if err != nil {
 				return nil, err
 			}

@@ -175,6 +175,9 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 	for _, descriptor := range prepared.descriptors {
 		c.Semantics.Descriptors[descriptor.Record] = descriptor
 	}
+	for _, function := range prepared.functions {
+		c.Semantics.Functions[function.Record] = function
+	}
 	return nil
 }
 
@@ -205,7 +208,7 @@ func (p declarationPublication) commit(c *Compilation, stmt *lStatement) {
 	p.reservation.Record = rec
 	c.Semantics.Subjects[p.declaration.Token], c.Semantics.Declarations[rec] = rec, stmt
 	stmt.records = append(stmt.records, rec)
-	if p.value.Type == valueApp && c.Semantics.Aliases[rec] == nil {
+	if p.value.Type == valueApp && c.Semantics.Aliases[rec] == nil && rec.Value.Runtime == nil {
 		app := p.value.Data.(*App) //nolint:errcheck // Declaration preparation validates the tagged payload before this atomic commit.
 		app.ID = id
 		c.Semantics.Apps = append(c.Semantics.Apps, app)

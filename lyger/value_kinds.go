@@ -7,7 +7,7 @@ import (
 )
 
 // A value tag identifies a representation, not the set of accepted source type
-// names. ID/None/Unknown/Null can describe states without a readable payload.
+// names. ID/None/Unknown describe states; Null is an explicit runtime value.
 type valueType uint8
 
 const (
@@ -35,6 +35,8 @@ const (
 	valueNone
 	valueUnknown
 	valueNull
+	valueMap
+	valueInstance
 	valueTypeCount
 )
 
@@ -44,7 +46,7 @@ var valueTypeNames = [valueTypeCount]string{
 	valueService: "Service", valueClass: "Class", valueObject: "Object",
 	valueAttribute: "Attribute", valueDefinition: "Definition", valueFunction: "Function",
 	valueProperty: "Property", valueOperation: "Operation", valueList: "List", valueDictionary: "Dictionary",
-	valueError: "Error", valueID: "ID", valueNone: "None", valueUnknown: "Unknown", valueNull: "Null",
+	valueMap: "Map", valueInstance: "Instance", valueError: "Error", valueID: "ID", valueNone: "None", valueUnknown: "Unknown", valueNull: "Null",
 }
 
 func (k valueType) String() string {
@@ -104,14 +106,14 @@ func (k storageKind) MarshalText() ([]byte, error) {
 
 func (k valueType) StorageKind() (storageKind, bool) {
 	switch k {
-	case valueThing, valueText, valueNumber, valueTruth, valueBytes, valuePointer:
+	case valueThing, valueText, valueNumber, valueTruth, valueBytes, valuePointer, valueNull, valueError:
 		return storagePrimitive, true
 	case valueLexeme:
 		return storageLexeme, true
-	case valueApp, valueService, valueClass, valueObject, valueAttribute,
+	case valueApp, valueInstance, valueService, valueClass, valueObject, valueAttribute,
 		valueDefinition, valueFunction, valueProperty, valueOperation:
 		return storageApplicative, true
-	case valueList, valueDictionary:
+	case valueList, valueMap, valueDictionary:
 		return storageIterative, true
 	default:
 		return storageInvalid, false

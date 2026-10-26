@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 10/15/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 

@@ -66,7 +66,7 @@ The grammar can parse multiple conditions, but outer lowering explicitly rejects
 
 ## Iteration and collection operations
 
-The grammar contains While and collection operations Put, Place, Get, and Take. The typed outer instruction builder currently rejects While as an unsupported conditional and has no general collection mutation/lookup instruction implementation. There is no supported source three-part for-loop syntax to teach.
+While and three-part source loops remain unsupported. [Collections](collections-and-categories.md) support Put, Place and typed reads; configured Get/Take words do not introduce further operations.
 
 **Unsupported outer loop — explanatory source fragment, static inspection only.** This illustrates the configured While shape; it is deliberately not a runnable loop recipe:
 
@@ -84,7 +84,7 @@ D/E calculates native expressions; G/I selects branches. A source-defined native
 
 ## Show and output
 
-Show is an outer observation instruction. It writes Text bytes unchanged and formats Number/Truth without adding a newline. It does not implicitly join a process, replay unrelated captured output, or turn child stderr into stdout. Use explicit Await before Output when completion is required.
+Show is an outer observation instruction. It writes Text bytes unchanged and formats supported runtime values without adding a newline. Direct App and Error display rejects. It does not implicitly join a process, replay unrelated captured output, or turn child stderr into stdout. Use explicit Await before Output when completion is required.
 
 IO.Print is an imported application/native action that adds one newline. See [IO](../stdlib/eng/io.md#output-and-newlines) for raw-byte and numeric behavior. Mixing Print and Show without accounting for that newline is a real source-program error, not a reason to trim runtime output.
 

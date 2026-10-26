@@ -534,9 +534,34 @@ func phase1LanguageCase(t *testing.T, id string) {
 		t.Run("public-runtime-capture-escape", func(t *testing.T) {
 			source := "Use IO's Print from `io` as \"Print\".\n\"message\" is `private`.\n\n    Create \"Worker\" as a New Public Basic App.\nThe App Prints message.\nDefine \"privateText\" as Worker's Output.\nPublicly create \"Report|-s|-ed|-ing\" for Showing privateText and then Showing any Text.\n\nRun Worker.\nAwait Worker.\nReport `caller`.\n"
 			r := phase1Require(t, source, nil)
-			_, err := r.OrchestratorUnit("entry", executableTestCompanions(r))
-			if err == nil || !strings.Contains(err.Error(), "private runtime capture privateText") || (!strings.Contains(err.Error(), "main.l:7:") && !strings.Contains(err.Error(), "main.l:11:")) {
-				t.Fatalf("escaping public capture lacked cause, name, and source: %v", err)
+			plan, err := planOrchestration(r.Compilation.Semantics)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var binding, call *orchestrationInstruction
+			visitCapturePlan(plan.Root.Body, func(current *orchestrationInstruction) {
+				if current.Source.Callable != r.Compilation.Memory["Report"] {
+					return
+				}
+				switch current.Source.Kind {
+				case instructionBindAction:
+					binding = current
+				case instructionCall:
+					call = current
+				}
+			})
+			if binding == nil || len(binding.CaptureValues) != 1 || binding.CaptureValues[0].Access != orchestrationAccessSnapshot || binding.Source.Source.Start.Line != 7 {
+				t.Fatal("published capture lost its snapshot or definition source")
+			}
+			if call == nil || call.Source.Source.Start.Line != 11 || call.CaptureSource == nil || call.CaptureSource.Slot != binding.Callable || len(call.Actions) != 2 {
+				t.Fatal("escaped call lost its bound environment, source or ordered actions")
+			}
+			value := call.Actions[0].Value
+			if value.Storage == nil || value.Storage.Capture == nil || value.Storage.Record != binding.CaptureValues[0].Record || value.Storage.Record.ID != "privateText" || r.Compilation.Memory["privateText"] != nil {
+				t.Fatal("retained capture rebound or published the private value")
+			}
+			if _, err := r.OrchestratorUnit("entry", executableTestCompanions(r)); err != nil {
+				t.Fatalf("retained public capture generation: %v", err)
 			}
 		})
 	case "PAR-17":

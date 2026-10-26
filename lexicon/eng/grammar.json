@@ -28,7 +28,9 @@
       "reference": "#~#",
       "definition":  "ID | PHRASE.GENERIC",
       "directive":  "\"ID\" | PHRASE.DIRECTIVE",
-      "utilization":  "\"ID\" | PHRASE.UTILIZATION"
+      "utilization":  "\"ID\" | PHRASE.UTILIZATION",
+      "callable": "\"ID\" | PHRASE.DECLARATIVE.CALLABLE",
+      "signature": "\"ID\" | PHRASE.DECLARATIVE.SIGNATURE"
     },
     "category": "NOUN",
     "class": "SUBJECT"
@@ -47,7 +49,10 @@
       "null": "!~!",
       "type": "#~# | PHRASE* | CLAUSE*",
       "list": "&~& | PHRASE* | CLAUSE*",
-      "dict": "{~} | PHRASE* | CLAUSE*"
+      "dict": "{~} | PHRASE* | CLAUSE*",
+      "argument": "ID",
+      "type_argument": "#~#",
+      "callable": "ID | PHRASE.SIGNATURE"
     },
     "category": "NOUN",
     "class": "OBJECT"
@@ -76,19 +81,21 @@
       "definitive": "OBJECT.DEFINITIVE",
       "definitional": "OBJECT.TEXT",
       "value": "OBJECT",
-      "alias": "SUBJECT.DECLARATION"
+      "alias": "SUBJECT.DECLARATION",
+      "callable": "OBJECT.CALLABLE",
+      "signature": "OBJECT"
     },
     "category": "PHRASE",
     "class": "DECLARATIVE"
   },
   "phrase.locative": {
-    "structure": "PREPOSITION.DEFINEMENT.LOCATIVE | OBJECT.NUMBER",
+    "structure": "PREPOSITION.DEFINEMENT.LOCATIVE | OBJECT",
     "cases": {},
     "category": "PHRASE",
     "class": "LOCATIVE"
   },
   "phrase.objective": {
-    "structure": "PREPOSITION.CONJOINMENT.OBJECTIVE | SUBJECT.DEFINITIVE | PHRASE.DECLARATIVE.DECLARATIVE*",
+    "structure": "PREPOSITION.CONJOINMENT.OBJECTIVE | SUBJECT.DEFINITIVE | PHRASE.LOCATIVE* | PHRASE.DECLARATIVE.DECLARATIVE*",
     "cases": {},
     "category": "PHRASE",
     "class": "OBJECTIVE"
@@ -98,7 +105,7 @@
     "cases": {
       "list": "SUBJECT.DEFINITIVE",
       "dictionary": "SUBJECT.DEFINITIVE | PHRASE.DECLARATIVE.DEFINITIONAL",
-      "locative": "SUBJECT.DEFINITIVE | PREPOSITION.DEFINEMENT.LOCATIVE"
+      "locative": "SUBJECT.DEFINITIVE | PHRASE.LOCATIVE"
     },
     "category": "PHRASE",
     "class": "INFLECTIVE"
@@ -176,7 +183,8 @@
       "verb": "SUBJECT.DIRECTIVE",
       "type": "SUBJECT.TYPE",
       "list": "SUBJECT.LIST",
-      "dict": "SUBJECT.DICT"
+      "dict": "SUBJECT.DICT",
+      "callable": "SUBJECT.CALLABLE"
     },
     "category": "CLAUSE",
     "class": "DECLARATIVE.IMPERATIVE"
@@ -289,19 +297,27 @@
     "class": "DESCRIPTIVE.APPLICATIVE"
   },
   "clause.expansive.imperative": {
-    "structure": "[ADVERB]* | VERB.EXPANSIVE | OBJECT | CASE",
+    "structure": "[ADVERB]* | VERB.EXPANSIVE | CASE",
     "cases": {
-      "list": "PHRASE.INFLECTIVE.LIST",
-      "dictionary": "PHRASE.INFLECTIVE.DICTIONARY"
+      "reference": "OBJECT.ARGUMENT | PHRASE.INFLECTIVE",
+      "type": "OBJECT.TYPE_ARGUMENT | PHRASE.INFLECTIVE",
+      "text": "OBJECT.TEXT | PHRASE.INFLECTIVE",
+      "number": "OBJECT.NUMBER | PHRASE.INFLECTIVE",
+      "truth": "OBJECT.TRUTH | PHRASE.INFLECTIVE",
+      "null": "OBJECT.NULL | PHRASE.INFLECTIVE"
     },
     "category": "CLAUSE",
     "class": "EXPANSIVE.IMPERATIVE"
   },
   "clause.expansive.active": {
-    "structure": "[ADVERB]* | VERB.EXPANSIVE.ACTIVE | OBJECT | CASE",
+    "structure": "[ADVERB]* | VERB.EXPANSIVE.ACTIVE | CASE",
     "cases": {
-      "list": "PHRASE.INFLECTIVE.LIST",
-      "dictionary": "PHRASE.INFLECTIVE.DICTIONARY"
+      "reference": "OBJECT.ARGUMENT | PHRASE.INFLECTIVE",
+      "type": "OBJECT.TYPE_ARGUMENT | PHRASE.INFLECTIVE",
+      "text": "OBJECT.TEXT | PHRASE.INFLECTIVE",
+      "number": "OBJECT.NUMBER | PHRASE.INFLECTIVE",
+      "truth": "OBJECT.TRUTH | PHRASE.INFLECTIVE",
+      "null": "OBJECT.NULL | PHRASE.INFLECTIVE"
     },
     "category": "CLAUSE",
     "class": "EXPANSIVE.ACTIVE"
@@ -316,28 +332,40 @@
     "class": "EXPANSIVE.PASSIVE"
   },
   "clause.expansive.applicative": {
-    "structure": "[ADVERB]* | VERB.EXPANSIVE.APPLICATIVE | OBJECT | CASE",
+    "structure": "[ADVERB]* | VERB.EXPANSIVE.APPLICATIVE | CASE",
     "cases": {
-      "list": "PHRASE.INFLECTIVE.LIST",
-      "dictionary": "PHRASE.INFLECTIVE.DICTIONARY"
+      "reference": "OBJECT.ARGUMENT | PHRASE.INFLECTIVE",
+      "type": "OBJECT.TYPE_ARGUMENT | PHRASE.INFLECTIVE",
+      "text": "OBJECT.TEXT | PHRASE.INFLECTIVE",
+      "number": "OBJECT.NUMBER | PHRASE.INFLECTIVE",
+      "truth": "OBJECT.TRUTH | PHRASE.INFLECTIVE",
+      "null": "OBJECT.NULL | PHRASE.INFLECTIVE"
     },
     "category": "CLAUSE",
     "class": "EXPANSIVE.APPLICATIVE"
   },
   "clause.locative.imperative": {
-    "structure": "[ADVERB]* | VERB.LOCATIVE | OBJECT | CASE",
+    "structure": "[ADVERB]* | VERB.LOCATIVE | CASE",
     "cases": {
-      "list": "PHRASE.INFLECTIVE.LOCATIVE",
-      "dictionary": "PHRASE.INFLECTIVE.DICTIONARY"
+      "reference": "OBJECT.ARGUMENT | PHRASE.INFLECTIVE",
+      "type": "OBJECT.TYPE_ARGUMENT | PHRASE.INFLECTIVE",
+      "text": "OBJECT.TEXT | PHRASE.INFLECTIVE",
+      "number": "OBJECT.NUMBER | PHRASE.INFLECTIVE",
+      "truth": "OBJECT.TRUTH | PHRASE.INFLECTIVE",
+      "null": "OBJECT.NULL | PHRASE.INFLECTIVE"
     },
     "category": "CLAUSE",
     "class": "LOCATIVE.IMPERATIVE"
   },
   "clause.locative.active": {
-    "structure": "[ADVERB]* | VERB.LOCATIVE.ACTIVE | OBJECT | CASE",
+    "structure": "[ADVERB]* | VERB.LOCATIVE.ACTIVE | CASE",
     "cases": {
-      "list": "PHRASE.INFLECTIVE.LOCATIVE",
-      "dictionary": "PHRASE.INFLECTIVE.DICTIONARY"
+      "reference": "OBJECT.ARGUMENT | PHRASE.INFLECTIVE",
+      "type": "OBJECT.TYPE_ARGUMENT | PHRASE.INFLECTIVE",
+      "text": "OBJECT.TEXT | PHRASE.INFLECTIVE",
+      "number": "OBJECT.NUMBER | PHRASE.INFLECTIVE",
+      "truth": "OBJECT.TRUTH | PHRASE.INFLECTIVE",
+      "null": "OBJECT.NULL | PHRASE.INFLECTIVE"
     },
     "category": "CLAUSE",
     "class": "LOCATIVE.ACTIVE"
@@ -352,10 +380,14 @@
     "class": "LOCATIVE.PASSIVE"
   },
   "clause.locative.applicative": {
-    "structure": "[ADVERB]* | VERB.LOCATIVE.APPLICATIVE | OBJECT | CASE",
+    "structure": "[ADVERB]* | VERB.LOCATIVE.APPLICATIVE | CASE",
     "cases": {
-      "list": "PHRASE.INFLECTIVE.LOCATIVE",
-      "dictionary": "PHRASE.INFLECTIVE.DICTIONARY"
+      "reference": "OBJECT.ARGUMENT | PHRASE.INFLECTIVE",
+      "type": "OBJECT.TYPE_ARGUMENT | PHRASE.INFLECTIVE",
+      "text": "OBJECT.TEXT | PHRASE.INFLECTIVE",
+      "number": "OBJECT.NUMBER | PHRASE.INFLECTIVE",
+      "truth": "OBJECT.TRUTH | PHRASE.INFLECTIVE",
+      "null": "OBJECT.NULL | PHRASE.INFLECTIVE"
     },
     "category": "CLAUSE",
     "class": "LOCATIVE.APPLICATIVE"
@@ -725,7 +757,9 @@
       "deflective": "CLAUSE.DEFLECTIVE.IMPERATIVE",
       "observative": "CLAUSE.OBSERVATIVE.IMPERATIVE",
       "terminative": "CLAUSE.TERMINATIVE.IMPERATIVE",
-      "suspensive": "CLAUSE.SUSPENSIVE.IMPERATIVE"
+      "suspensive": "CLAUSE.SUSPENSIVE.IMPERATIVE",
+      "returning": "CLAUSE.RETURNING.IMPERATIVE",
+      "invocative": "CLAUSE.INVOCATIVE.IMPERATIVE"
     },
     "category": "PREDICATE",
     "class": "IMPERATIVE"
@@ -832,7 +866,9 @@
       "deflective": "PREDICATE.IMPERATIVE.DEFLECTIVE",
       "observative": "PREDICATE.IMPERATIVE.OBSERVATIVE",
       "terminative": "PREDICATE.IMPERATIVE.TERMINATIVE",
-      "suspensive": "PREDICATE.IMPERATIVE.SUSPENSIVE"
+      "suspensive": "PREDICATE.IMPERATIVE.SUSPENSIVE",
+      "returning": "PREDICATE.IMPERATIVE.RETURNING",
+      "invocative": "PREDICATE.IMPERATIVE.INVOCATIVE"
     },
     "category": "STATEMENT",
     "class": "OBJECTIVE.IMPERATIVE"
@@ -895,5 +931,40 @@
     },
     "category": "STATEMENT",
     "class": "SUBJECTIVE.PASSIVE"
+  },
+  "phrase.signature": {
+    "structure": "PREPOSITION.CONSIGNMENT.ASSOCIATIVE | CASE",
+    "cases": {
+      "both": "NOUN.FUNCTIONAL.INFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [SUBJECT.SIGNATURE] | CONJUNCTION.MUTUAL | NOUN.FUNCTIONAL.DEFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [OBJECT]",
+      "inputs": "NOUN.FUNCTIONAL.INFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [SUBJECT.SIGNATURE] | CONJUNCTION.MUTUAL | ARTICLE.NONE | NOUN.FUNCTIONAL.DEFLECTIVE",
+      "outputs": "ARTICLE.NONE | NOUN.FUNCTIONAL.INFLECTIVE | CONJUNCTION.MUTUAL | NOUN.FUNCTIONAL.DEFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [OBJECT]",
+      "empty": "ARTICLE.NONE | NOUN.FUNCTIONAL.INFLECTIVE | CONJUNCTION.MUTUAL | ARTICLE.NONE | NOUN.FUNCTIONAL.DEFLECTIVE"
+    },
+    "category": "PHRASE",
+    "class": "SIGNATURE"
+  },
+  "phrase.arguments": {
+    "structure": "PREPOSITION.CONSIGNMENT.ASSOCIATIVE | [VALUE]",
+    "cases": {},
+    "category": "PHRASE",
+    "class": "ARGUMENTS"
+  },
+  "phrase.results": {
+    "structure": "PREPOSITION.DEFINEMENT.DECLARATIVE | [SUBJECT.DECLARATION]",
+    "cases": {},
+    "category": "PHRASE",
+    "class": "RESULTS"
+  },
+  "clause.invocative.imperative": {
+    "structure": "VERB.INVOCATIVE | SUBJECT.DEFINITIVE | PHRASE.ARGUMENTS* | PHRASE.RESULTS*",
+    "cases": {},
+    "category": "CLAUSE",
+    "class": "INVOCATIVE.IMPERATIVE"
+  },
+  "clause.returning.imperative": {
+    "structure": "VERB.RETURNING | [VALUE]*",
+    "cases": {},
+    "category": "CLAUSE",
+    "class": "RETURNING.IMPERATIVE"
   }
 }

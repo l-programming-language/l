@@ -1,21 +1,14 @@
 # Grammar rule inventory
 
-This mechanical reference preserves the configured English recognizers. It does not claim all recognized forms can be lowered or executed. Read [grammar notation](../spec/grammar.md) before interpreting these tables: ` | ` is sequencing, not an alternative operator. Support notes are separately reviewed.
+This mechanical reference preserves the configured English recognizers. It does not claim all recognized forms can be lowered or executed. Read [grammar notation](../spec/grammar.md) before interpreting these tables: ` | ` is sequencing, not an alternative operator. Support notes are separately reviewed. Rules without named cases use their structure directly.
 
 ## value
 
 <a id="grammar-value"></a>
 
-The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.
-
-Semantic context: [Values and operands](../spec/values.md#declarations-assignment-and-reading-values).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>NOUN</code> |
-| Class | <code>VALUE</code> |
-| Structure | <code>CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>NOUN</code> | <code>VALUE</code> | <code>CASE</code> | partial | [Values and operands](../spec/values.md#declarations-assignment-and-reading-values) | [Note 1](#grammar-note-1) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -23,7 +16,7 @@ Semantic context: [Values and operands](../spec/values.md#declarations-assignmen
 | <code>text</code> | <code>`~`</code> | [Text](../spec/values.md#text) · supported |
 | <code>number</code> | <code>%~%</code> | [Number](../spec/values.md#number) · supported |
 | <code>truth</code> | <code>?~?</code> | [Truth](../spec/values.md#truth) · supported |
-| <code>null</code> | <code>!~!</code> | [Null](../spec/values.md#null-and-internal-states) · partial |
+| <code>null</code> | <code>!~!</code> | [Null](../spec/values.md#null-and-internal-states) · supported |
 | <code>type</code> | <code>ARTICLE* &#124; #~#</code> | [Native type categories](../spec/lexical-types.md#attributes-definitions-and-lexical-categories) · partial |
 | <code>list</code> | <code>&amp;~&amp;</code> | [List](../spec/collections-and-categories.md#lists) · partial |
 | <code>dict</code> | <code>{~}</code> | [Dictionary](../spec/collections-and-categories.md#dictionaries) · partial |
@@ -32,16 +25,9 @@ Semantic context: [Values and operands](../spec/values.md#declarations-assignmen
 
 <a id="grammar-subject"></a>
 
-A subject participates in declaration/binding and paragraph antecedent selection. Its cases distinguish declared names, resolved references and definitions.
-
-Semantic context: [Subjects and declarations](../spec/names-and-scope.md#declarations-and-definitions).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>NOUN</code> |
-| Class | <code>SUBJECT</code> |
-| Structure | <code>ARTICLE* &#124; [ADJECTIVE]* &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>NOUN</code> | <code>SUBJECT</code> | <code>ARTICLE* &#124; [ADJECTIVE]* &#124; CASE</code> | partial | [Subjects and declarations](../spec/names-and-scope.md#declarations-and-definitions) | [Note 2](#grammar-note-2) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -57,21 +43,16 @@ Semantic context: [Subjects and declarations](../spec/names-and-scope.md#declara
 | <code>definition</code> | <code>ID &#124; PHRASE.GENERIC</code> | [Definition use with relations](../spec/definitions.md#composition-and-source-ownership) · partial |
 | <code>directive</code> | <code>"ID" &#124; PHRASE.DIRECTIVE</code> | [Source action declaration](../spec/definitions.md#source-actions) · partial |
 | <code>utilization</code> | <code>"ID" &#124; PHRASE.UTILIZATION</code> | [Native/source definition body](../spec/definitions.md#framing-and-escaping) · partial |
+| <code>callable</code> | <code>"ID" &#124; PHRASE.DECLARATIVE.CALLABLE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>signature</code> | <code>"ID" &#124; PHRASE.DECLARATIVE.SIGNATURE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
 ## object
 
 <a id="grammar-object"></a>
 
-The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.
-
-Semantic context: [Values and operands](../spec/values.md#declarations-assignment-and-reading-values).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>NOUN</code> |
-| Class | <code>OBJECT</code> |
-| Structure | <code>ARTICLE* &#124; [ADJECTIVE]* &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>NOUN</code> | <code>OBJECT</code> | <code>ARTICLE* &#124; [ADJECTIVE]* &#124; CASE</code> | partial | [Values and operands](../spec/values.md#declarations-assignment-and-reading-values) | [Note 1](#grammar-note-1) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -83,42 +64,29 @@ Semantic context: [Values and operands](../spec/values.md#declarations-assignmen
 | <code>text</code> | <code>`~`</code> | [Text](../spec/values.md#text) · supported |
 | <code>number</code> | <code>%~%</code> | [Number](../spec/values.md#number) · supported |
 | <code>truth</code> | <code>?~?</code> | [Truth](../spec/values.md#truth) · supported |
-| <code>null</code> | <code>!~!</code> | [Null](../spec/values.md#null-and-internal-states) · partial |
+| <code>null</code> | <code>!~!</code> | [Null](../spec/values.md#null-and-internal-states) · supported |
 | <code>type</code> | <code>#~# &#124; PHRASE* &#124; CLAUSE*</code> | [Native type categories](../spec/lexical-types.md#attributes-definitions-and-lexical-categories) · partial |
 | <code>list</code> | <code>&amp;~&amp; &#124; PHRASE* &#124; CLAUSE*</code> | [List](../spec/collections-and-categories.md#lists) · partial |
 | <code>dict</code> | <code>{~} &#124; PHRASE* &#124; CLAUSE*</code> | [Dictionary](../spec/collections-and-categories.md#dictionaries) · partial |
+| <code>argument</code> | <code>ID</code> | [Bound update operands](../spec/collections-and-categories.md#lists) · partial |
+| <code>type_argument</code> | <code>#~#</code> | [Atomic type operands](../spec/collections-and-categories.md#lists) · partial |
+| <code>callable</code> | <code>ID &#124; PHRASE.SIGNATURE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
 ## phrase.generic
 
 <a id="grammar-phrase-generic"></a>
 
-This phrase associates grammatical objects, prepositions or clauses as given by its sequence. Its location and optional/repeated terms are defined by the configured matcher, not conventional EBNF.
-
-Semantic context: [Phrase association](../spec/grammar.md#phrases).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>GENERIC</code> |
-| Structure | <code>[PREPOSITION] &#124; [OBJECT] &#124; CLAUSE* &#124; PHRASE*</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>GENERIC</code> | <code>[PREPOSITION] &#124; [OBJECT] &#124; CLAUSE* &#124; PHRASE*</code> | partial | [Phrase association](../spec/grammar.md#phrases) | [Note 3](#grammar-note-3) |
 
 ## phrase.directive
 
 <a id="grammar-phrase-directive"></a>
 
-This phrase participates in construction or argument attachment. Native placeholders have explicit type and encoding contracts; do not infer arbitrary coercions.
-
-Semantic context: [Construction and typed arguments](../spec/definitions.md#typed-slots).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>DIRECTIVE</code> |
-| Structure | <code>PREPOSITION.CONJOINMENT.DIRECTIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>DIRECTIVE</code> | <code>PREPOSITION.CONJOINMENT.DIRECTIVE &#124; CASE</code> | partial | [Construction and typed arguments](../spec/definitions.md#typed-slots) | [Note 4](#grammar-note-4) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -128,16 +96,9 @@ Semantic context: [Construction and typed arguments](../spec/definitions.md#type
 
 <a id="grammar-phrase-declarative"></a>
 
-This phrase participates in construction or argument attachment. Native placeholders have explicit type and encoding contracts; do not infer arbitrary coercions.
-
-Semantic context: [Construction and typed arguments](../spec/definitions.md#typed-slots).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>DECLARATIVE</code> |
-| Structure | <code>PREPOSITION.DEFINEMENT.DECLARATIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>DECLARATIVE</code> | <code>PREPOSITION.DEFINEMENT.DECLARATIVE &#124; CASE</code> | partial | [Construction and typed arguments](../spec/definitions.md#typed-slots) | [Note 4](#grammar-note-4) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -149,76 +110,46 @@ Semantic context: [Construction and typed arguments](../spec/definitions.md#type
 | <code>definitional</code> | <code>OBJECT.TEXT</code> | [Native definition Text](../spec/definitions.md#framing-and-escaping) · partial |
 | <code>value</code> | <code>OBJECT</code> | [Assigned values](../spec/values.md#declarations-assignment-and-reading-values) · partial |
 | <code>alias</code> | <code>SUBJECT.DECLARATION</code> | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) · partial |
+| <code>callable</code> | <code>OBJECT.CALLABLE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>signature</code> | <code>OBJECT</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
 ## phrase.locative
 
 <a id="grammar-phrase-locative"></a>
 
-This phrase associates grammatical objects, prepositions or clauses as given by its sequence. Its location and optional/repeated terms are defined by the configured matcher, not conventional EBNF.
-
-Semantic context: [Phrase association](../spec/grammar.md#phrases).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>LOCATIVE</code> |
-| Structure | <code>PREPOSITION.DEFINEMENT.LOCATIVE &#124; OBJECT.NUMBER</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>LOCATIVE</code> | <code>PREPOSITION.DEFINEMENT.LOCATIVE &#124; OBJECT</code> | partial | [Typed runtime access](../spec/collections-and-categories.md#lists) | [Note 5](#grammar-note-5) |
 
 ## phrase.objective
 
 <a id="grammar-phrase-objective"></a>
 
-This phrase associates grammatical objects, prepositions or clauses as given by its sequence. Its location and optional/repeated terms are defined by the configured matcher, not conventional EBNF.
-
-Semantic context: [Phrase association](../spec/grammar.md#phrases).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>OBJECTIVE</code> |
-| Structure | <code>PREPOSITION.CONJOINMENT.OBJECTIVE &#124; SUBJECT.DEFINITIVE &#124; PHRASE.DECLARATIVE.DECLARATIVE*</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>OBJECTIVE</code> | <code>PREPOSITION.CONJOINMENT.OBJECTIVE &#124; SUBJECT.DEFINITIVE &#124; PHRASE.LOCATIVE* &#124; PHRASE.DECLARATIVE.DECLARATIVE*</code> | partial | [Typed runtime access](../spec/collections-and-categories.md#lists) | [Note 6](#grammar-note-6) |
 
 ## phrase.inflective
 
 <a id="grammar-phrase-inflective"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>INFLECTIVE</code> |
-| Structure | <code>PREPOSITION.CONSIGNMENT.INFLECTIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>INFLECTIVE</code> | <code>PREPOSITION.CONSIGNMENT.INFLECTIVE &#124; CASE</code> | partial | [Typed runtime access](../spec/collections-and-categories.md#lists) | [Note 7](#grammar-note-7) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
 | <code>list</code> | <code>SUBJECT.DEFINITIVE</code> | [Collection association](../spec/collections-and-categories.md#lists) · partial |
 | <code>dictionary</code> | <code>SUBJECT.DEFINITIVE &#124; PHRASE.DECLARATIVE.DEFINITIONAL</code> | [Collection association](../spec/collections-and-categories.md#dictionaries) · partial |
-| <code>locative</code> | <code>SUBJECT.DEFINITIVE &#124; PREPOSITION.DEFINEMENT.LOCATIVE</code> | [Collection association](../spec/collections-and-categories.md#lists) · partial |
+| <code>locative</code> | <code>SUBJECT.DEFINITIVE &#124; PHRASE.LOCATIVE</code> | [Collection association](../spec/collections-and-categories.md#lists) · partial |
 
 ## phrase.associative
 
 <a id="grammar-phrase-associative"></a>
 
-This phrase associates grammatical objects, prepositions or clauses as given by its sequence. Its location and optional/repeated terms are defined by the configured matcher, not conventional EBNF.
-
-Semantic context: [Phrase association](../spec/grammar.md#phrases).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>ASSOCIATIVE</code> |
-| Structure | <code>PREPOSITION.CONSIGNMENT.ASSOCIATIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>ASSOCIATIVE</code> | <code>PREPOSITION.CONSIGNMENT.ASSOCIATIVE &#124; CASE</code> | partial | [Phrase association](../spec/grammar.md#phrases) | [Note 3](#grammar-note-3) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -229,33 +160,17 @@ Semantic context: [Phrase association](../spec/grammar.md#phrases).
 
 <a id="grammar-phrase-indicative"></a>
 
-This phrase associates grammatical objects, prepositions or clauses as given by its sequence. Its location and optional/repeated terms are defined by the configured matcher, not conventional EBNF.
-
-Semantic context: [Phrase association](../spec/grammar.md#phrases).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>INDICATIVE</code> |
-| Structure | <code>PREPOSITION.CONSIGNMENT.INDICATIVE &#124; OBJECT.DEFINITIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>INDICATIVE</code> | <code>PREPOSITION.CONSIGNMENT.INDICATIVE &#124; OBJECT.DEFINITIVE</code> | partial | [Phrase association](../spec/grammar.md#phrases) | [Note 3](#grammar-note-3) |
 
 ## phrase.utilization
 
 <a id="grammar-phrase-utilization"></a>
 
-The to phrase supplies an imperative source clause or Text body to a definition. It is distinct from Use/import dependency resolution.
-
-Semantic context: [Definition framing](../spec/definitions.md#framing-and-escaping).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>UTILIZATION</code> |
-| Structure | <code>PREPOSITION.CONJOINMENT.SUBJECTIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>UTILIZATION</code> | <code>PREPOSITION.CONJOINMENT.SUBJECTIVE &#124; CASE</code> | partial | [Definition framing](../spec/definitions.md#framing-and-escaping) | [Note 8](#grammar-note-8) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -266,50 +181,25 @@ Semantic context: [Definition framing](../spec/definitions.md#framing-and-escapi
 
 <a id="grammar-phrase-dependency"></a>
 
-Source-provider ownership governs relative imports and expanded declarations. Grammatical dependency attachment does not override those ownership rules.
-
-Semantic context: [Imports and dependencies](../spec/imports.md#explicit-source-file-imports).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PHRASE</code> |
-| Class | <code>DEPENDENCY</code> |
-| Structure | <code>PREPOSITION.CONJOINMENT.OBJECTIVE &#124; `~`</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>DEPENDENCY</code> | <code>PREPOSITION.CONJOINMENT.OBJECTIVE &#124; `~`</code> | partial | [Imports and dependencies](../spec/imports.md#explicit-source-file-imports) | [Note 9](#grammar-note-9) |
 
 ## clause.assign.passive
 
 <a id="grammar-clause-assign-passive"></a>
 
-Assignment follows resolved scalar/storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Assignment](../spec/control-flow.md#assignment).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>ASSIGN.PASSIVE</code> |
-| Structure | <code>SUBJECT.DECLARATION &#124; PREDICATE.PASSIVE.ASSIGN</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>ASSIGN.PASSIVE</code> | <code>SUBJECT.DECLARATION &#124; PREDICATE.PASSIVE.ASSIGN</code> | partial | [Assignment](../spec/control-flow.md#assignment) | [Note 10](#grammar-note-10) |
 
 ## clause.generic.imperative
 
 <a id="grammar-clause-generic-imperative"></a>
 
-Generic clauses call source-defined vocabulary with resolved typed arguments. There is no general closure or async-method guarantee. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Source actions](../spec/definitions.md#source-actions).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>GENERIC.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>GENERIC.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB &#124; CASE</code> | partial | [Source actions](../spec/definitions.md#source-actions) | [Note 11](#grammar-note-11) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -320,50 +210,25 @@ Semantic context: [Source actions](../spec/definitions.md#source-actions).
 
 <a id="grammar-clause-generic-active"></a>
 
-Generic clauses call source-defined vocabulary with resolved typed arguments. There is no general closure or async-method guarantee. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Source actions](../spec/definitions.md#source-actions).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>GENERIC.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.ACTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>GENERIC.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.ACTIVE &#124; OBJECT</code> | partial | [Source actions](../spec/definitions.md#source-actions) | [Note 12](#grammar-note-12) |
 
 ## clause.generic.passive
 
 <a id="grammar-clause-generic-passive"></a>
 
-Generic clauses call source-defined vocabulary with resolved typed arguments. There is no general closure or async-method guarantee. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Source actions](../spec/definitions.md#source-actions).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>GENERIC.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.PASSIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>GENERIC.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.PASSIVE &#124; OBJECT</code> | partial | [Source actions](../spec/definitions.md#source-actions) | [Note 13](#grammar-note-13) |
 
 ## clause.generic.applicative
 
 <a id="grammar-clause-generic-applicative"></a>
 
-Generic clauses call source-defined vocabulary with resolved typed arguments. There is no general closure or async-method guarantee. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Source actions](../spec/definitions.md#source-actions).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>GENERIC.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.APPLICATIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>GENERIC.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.APPLICATIVE &#124; CASE</code> | partial | [Source actions](../spec/definitions.md#source-actions) | [Note 14](#grammar-note-14) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -374,16 +239,9 @@ Semantic context: [Source actions](../spec/definitions.md#source-actions).
 
 <a id="grammar-clause-declarative-imperative"></a>
 
-A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Declarations](../spec/definitions.md#create-define-and-describe).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DECLARATIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DECLARATIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DECLARATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.DECLARATIVE &#124; CASE</code> | partial | [Declarations](../spec/definitions.md#create-define-and-describe) | [Note 15](#grammar-note-15) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -392,21 +250,15 @@ Semantic context: [Declarations](../spec/definitions.md#create-define-and-descri
 | <code>type</code> | <code>SUBJECT.TYPE</code> | [Declarations](../spec/definitions.md#create-define-and-describe) · partial |
 | <code>list</code> | <code>SUBJECT.LIST</code> | [Declarations](../spec/definitions.md#create-define-and-describe) · partial |
 | <code>dict</code> | <code>SUBJECT.DICT</code> | [Declarations](../spec/definitions.md#create-define-and-describe) · partial |
+| <code>callable</code> | <code>SUBJECT.CALLABLE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
 ## clause.declarative.active
 
 <a id="grammar-clause-declarative-active"></a>
 
-A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Declarations](../spec/definitions.md#create-define-and-describe).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DECLARATIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DECLARATIVE.ACTIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DECLARATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.DECLARATIVE.ACTIVE &#124; CASE</code> | partial | [Declarations](../spec/definitions.md#create-define-and-describe) | [Note 16](#grammar-note-16) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -420,16 +272,9 @@ Semantic context: [Declarations](../spec/definitions.md#create-define-and-descri
 
 <a id="grammar-clause-declarative-passive"></a>
 
-A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Declarations](../spec/definitions.md#create-define-and-describe).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DECLARATIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DECLARATIVE.PASSIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DECLARATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.DECLARATIVE.PASSIVE &#124; CASE</code> | partial | [Declarations](../spec/definitions.md#create-define-and-describe) | [Note 17](#grammar-note-17) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -440,16 +285,9 @@ Semantic context: [Declarations](../spec/definitions.md#create-define-and-descri
 
 <a id="grammar-clause-declarative-applicative"></a>
 
-A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Declarations](../spec/definitions.md#create-define-and-describe).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DECLARATIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DECLARATIVE.APPLICATIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DECLARATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.DECLARATIVE.APPLICATIVE &#124; CASE</code> | partial | [Declarations](../spec/definitions.md#create-define-and-describe) | [Note 18](#grammar-note-18) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -463,16 +301,9 @@ Semantic context: [Declarations](../spec/definitions.md#create-define-and-descri
 
 <a id="grammar-clause-definitive-imperative"></a>
 
-Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Definitions](../spec/definitions.md#create-define-and-describe).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DEFINITIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DEFINITIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DEFINITIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.DEFINITIVE &#124; CASE</code> | partial | [Definitions](../spec/definitions.md#create-define-and-describe) | [Note 19](#grammar-note-19) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -485,16 +316,9 @@ Semantic context: [Definitions](../spec/definitions.md#create-define-and-describ
 
 <a id="grammar-clause-definitive-active"></a>
 
-Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Definitions](../spec/definitions.md#create-define-and-describe).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DEFINITIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DEFINITIVE.ACTIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DEFINITIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.DEFINITIVE.ACTIVE &#124; CASE</code> | partial | [Definitions](../spec/definitions.md#create-define-and-describe) | [Note 20](#grammar-note-20) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -505,16 +329,9 @@ Semantic context: [Definitions](../spec/definitions.md#create-define-and-describ
 
 <a id="grammar-clause-definitive-passive"></a>
 
-Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Definitions](../spec/definitions.md#create-define-and-describe).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DEFINITIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DEFINITIVE.PASSIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DEFINITIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.DEFINITIVE.PASSIVE &#124; CASE</code> | partial | [Definitions](../spec/definitions.md#create-define-and-describe) | [Note 21](#grammar-note-21) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -525,16 +342,9 @@ Semantic context: [Definitions](../spec/definitions.md#create-define-and-describ
 
 <a id="grammar-clause-definitive-applicative"></a>
 
-Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Definitions](../spec/definitions.md#create-define-and-describe).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DEFINITIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DEFINITIVE.APPLICATIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DEFINITIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.DEFINITIVE.APPLICATIVE &#124; CASE</code> | partial | [Definitions](../spec/definitions.md#create-define-and-describe) | [Note 22](#grammar-note-22) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -545,16 +355,9 @@ Semantic context: [Definitions](../spec/definitions.md#create-define-and-describ
 
 <a id="grammar-clause-descriptive-imperative"></a>
 
-Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-constructors).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DESCRIPTIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DESCRIPTIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DESCRIPTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.DESCRIPTIVE &#124; CASE</code> | partial | [Descriptors](../spec/definitions.md#descriptors-and-constructors) | [Note 23](#grammar-note-23) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -565,16 +368,9 @@ Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-construct
 
 <a id="grammar-clause-descriptive-active"></a>
 
-Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-constructors).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DESCRIPTIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DESCRIPTIVE.ACTIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DESCRIPTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.DESCRIPTIVE.ACTIVE &#124; CASE</code> | partial | [Descriptors](../spec/definitions.md#descriptors-and-constructors) | [Note 24](#grammar-note-24) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -585,16 +381,9 @@ Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-construct
 
 <a id="grammar-clause-descriptive-passive"></a>
 
-Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-constructors).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DESCRIPTIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DESCRIPTIVE.PASSIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DESCRIPTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.DESCRIPTIVE.PASSIVE &#124; CASE</code> | partial | [Descriptors](../spec/definitions.md#descriptors-and-constructors) | [Note 25](#grammar-note-25) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -605,16 +394,9 @@ Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-construct
 
 <a id="grammar-clause-descriptive-applicative"></a>
 
-Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-constructors).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DESCRIPTIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DESCRIPTIVE.APPLICATIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DESCRIPTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.DESCRIPTIVE.APPLICATIVE &#124; CASE</code> | partial | [Descriptors](../spec/definitions.md#descriptors-and-constructors) | [Note 26](#grammar-note-26) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -625,56 +407,43 @@ Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-construct
 
 <a id="grammar-clause-expansive-imperative"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>EXPANSIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.EXPANSIVE &#124; OBJECT &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>EXPANSIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.EXPANSIVE &#124; CASE</code> | partial | [Typed updates](../spec/collections-and-categories.md#lists) | [Note 27](#grammar-note-27) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
-| <code>list</code> | <code>PHRASE.INFLECTIVE.LIST</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
-| <code>dictionary</code> | <code>PHRASE.INFLECTIVE.DICTIONARY</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
+| <code>reference</code> | <code>OBJECT.ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>type</code> | <code>OBJECT.TYPE_ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>text</code> | <code>OBJECT.TEXT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>number</code> | <code>OBJECT.NUMBER &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>truth</code> | <code>OBJECT.TRUTH &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>null</code> | <code>OBJECT.NULL &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
 
 ## clause.expansive.active
 
 <a id="grammar-clause-expansive-active"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>EXPANSIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.EXPANSIVE.ACTIVE &#124; OBJECT &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>EXPANSIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.EXPANSIVE.ACTIVE &#124; CASE</code> | partial | [Typed updates](../spec/collections-and-categories.md#lists) | [Note 27](#grammar-note-27) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
-| <code>list</code> | <code>PHRASE.INFLECTIVE.LIST</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
-| <code>dictionary</code> | <code>PHRASE.INFLECTIVE.DICTIONARY</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
+| <code>reference</code> | <code>OBJECT.ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>type</code> | <code>OBJECT.TYPE_ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>text</code> | <code>OBJECT.TEXT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>number</code> | <code>OBJECT.NUMBER &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>truth</code> | <code>OBJECT.TRUTH &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>null</code> | <code>OBJECT.NULL &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
 
 ## clause.expansive.passive
 
 <a id="grammar-clause-expansive-passive"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>EXPANSIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.EXPANSIVE.PASSIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>EXPANSIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.EXPANSIVE.PASSIVE &#124; CASE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -685,76 +454,60 @@ Semantic context: [Collections](../spec/collections-and-categories.md#lists).
 
 <a id="grammar-clause-expansive-applicative"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>EXPANSIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.EXPANSIVE.APPLICATIVE &#124; OBJECT &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>EXPANSIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.EXPANSIVE.APPLICATIVE &#124; CASE</code> | partial | [Typed updates](../spec/collections-and-categories.md#lists) | [Note 27](#grammar-note-27) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
-| <code>list</code> | <code>PHRASE.INFLECTIVE.LIST</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
-| <code>dictionary</code> | <code>PHRASE.INFLECTIVE.DICTIONARY</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
+| <code>reference</code> | <code>OBJECT.ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>type</code> | <code>OBJECT.TYPE_ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>text</code> | <code>OBJECT.TEXT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>number</code> | <code>OBJECT.NUMBER &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>truth</code> | <code>OBJECT.TRUTH &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>null</code> | <code>OBJECT.NULL &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
 
 ## clause.locative.imperative
 
 <a id="grammar-clause-locative-imperative"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>LOCATIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.LOCATIVE &#124; OBJECT &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>LOCATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.LOCATIVE &#124; CASE</code> | partial | [Typed updates](../spec/collections-and-categories.md#lists) | [Note 27](#grammar-note-27) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
-| <code>list</code> | <code>PHRASE.INFLECTIVE.LOCATIVE</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
-| <code>dictionary</code> | <code>PHRASE.INFLECTIVE.DICTIONARY</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
+| <code>reference</code> | <code>OBJECT.ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>type</code> | <code>OBJECT.TYPE_ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>text</code> | <code>OBJECT.TEXT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>number</code> | <code>OBJECT.NUMBER &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>truth</code> | <code>OBJECT.TRUTH &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>null</code> | <code>OBJECT.NULL &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
 
 ## clause.locative.active
 
 <a id="grammar-clause-locative-active"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>LOCATIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.LOCATIVE.ACTIVE &#124; OBJECT &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>LOCATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.LOCATIVE.ACTIVE &#124; CASE</code> | partial | [Typed updates](../spec/collections-and-categories.md#lists) | [Note 27](#grammar-note-27) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
-| <code>list</code> | <code>PHRASE.INFLECTIVE.LOCATIVE</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
-| <code>dictionary</code> | <code>PHRASE.INFLECTIVE.DICTIONARY</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
+| <code>reference</code> | <code>OBJECT.ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>type</code> | <code>OBJECT.TYPE_ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>text</code> | <code>OBJECT.TEXT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>number</code> | <code>OBJECT.NUMBER &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>truth</code> | <code>OBJECT.TRUTH &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>null</code> | <code>OBJECT.NULL &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
 
 ## clause.locative.passive
 
 <a id="grammar-clause-locative-passive"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>LOCATIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.LOCATIVE.PASSIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>LOCATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.LOCATIVE.PASSIVE &#124; CASE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -765,36 +518,26 @@ Semantic context: [Collections](../spec/collections-and-categories.md#lists).
 
 <a id="grammar-clause-locative-applicative"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>LOCATIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.LOCATIVE.APPLICATIVE &#124; OBJECT &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>LOCATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.LOCATIVE.APPLICATIVE &#124; CASE</code> | partial | [Typed updates](../spec/collections-and-categories.md#lists) | [Note 27](#grammar-note-27) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
-| <code>list</code> | <code>PHRASE.INFLECTIVE.LOCATIVE</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
-| <code>dictionary</code> | <code>PHRASE.INFLECTIVE.DICTIONARY</code> | [Collections](../spec/collections-and-categories.md#lists) · partial |
+| <code>reference</code> | <code>OBJECT.ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>type</code> | <code>OBJECT.TYPE_ARGUMENT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>text</code> | <code>OBJECT.TEXT &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>number</code> | <code>OBJECT.NUMBER &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>truth</code> | <code>OBJECT.TRUTH &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
+| <code>null</code> | <code>OBJECT.NULL &#124; PHRASE.INFLECTIVE</code> | [Typed updates](../spec/collections-and-categories.md#lists) · partial |
 
 ## clause.receptive.imperative
 
 <a id="grammar-clause-receptive-imperative"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>RECEPTIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.RECEPTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>RECEPTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 29](#grammar-note-29) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -805,16 +548,9 @@ Semantic context: [Collections](../spec/collections-and-categories.md#lists).
 
 <a id="grammar-clause-receptive-active"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>RECEPTIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.RECEPTIVE.ACTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>RECEPTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.ACTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 30](#grammar-note-30) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -825,33 +561,17 @@ Semantic context: [Collections](../spec/collections-and-categories.md#lists).
 
 <a id="grammar-clause-receptive-passive"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>RECEPTIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.RECEPTIVE.PASSIVE &#124; PHRASE.OBJECTIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>RECEPTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.PASSIVE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 ## clause.receptive.applicative
 
 <a id="grammar-clause-receptive-applicative"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>RECEPTIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.RECEPTIVE.APPLICATIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>RECEPTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.APPLICATIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 31](#grammar-note-31) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -862,16 +582,9 @@ Semantic context: [Collections](../spec/collections-and-categories.md#lists).
 
 <a id="grammar-clause-reductive-imperative"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>REDUCTIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.RECEPTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>REDUCTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 29](#grammar-note-29) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -882,16 +595,9 @@ Semantic context: [Collections](../spec/collections-and-categories.md#lists).
 
 <a id="grammar-clause-reductive-active"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>REDUCTIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.RECEPTIVE.ACTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>REDUCTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.ACTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 30](#grammar-note-30) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -902,33 +608,17 @@ Semantic context: [Collections](../spec/collections-and-categories.md#lists).
 
 <a id="grammar-clause-reductive-passive"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>REDUCTIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.RECEPTIVE.PASSIVE &#124; PHRASE.OBJECTIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>REDUCTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.PASSIVE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 ## clause.reductive.applicative
 
 <a id="grammar-clause-reductive-applicative"></a>
 
-These configured collection forms do not establish a supported general insertion, indexing, removal or iteration API. Storage representations and dictionary member namespaces have narrower observed contracts. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Collections](../spec/collections-and-categories.md#lists).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>REDUCTIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.RECEPTIVE.APPLICATIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>REDUCTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.APPLICATIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 31](#grammar-note-31) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -939,16 +629,9 @@ Semantic context: [Collections](../spec/collections-and-categories.md#lists).
 
 <a id="grammar-clause-associative-imperative"></a>
 
-Association names an existing canonical value or definition. It does not create an independent runtime copy. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>ASSOCIATIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE &#124; SUBJECT.DEFINITIVE &#124; CASE*</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>ASSOCIATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE &#124; SUBJECT.DEFINITIVE &#124; CASE*</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 32](#grammar-note-32) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -958,16 +641,9 @@ Semantic context: [Aliases](../spec/names-and-scope.md#aliases-and-canonical-ide
 
 <a id="grammar-clause-associative-active"></a>
 
-Association names an existing canonical value or definition. It does not create an independent runtime copy. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>ASSOCIATIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.ACTIVE &#124; SUBJECT.DEFINITIVE &#124; CASE*</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>ASSOCIATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.ACTIVE &#124; SUBJECT.DEFINITIVE &#124; CASE*</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 33](#grammar-note-33) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -977,16 +653,9 @@ Semantic context: [Aliases](../spec/names-and-scope.md#aliases-and-canonical-ide
 
 <a id="grammar-clause-associative-passive"></a>
 
-Association names an existing canonical value or definition. It does not create an independent runtime copy. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>ASSOCIATIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.PASSIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>ASSOCIATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.PASSIVE &#124; CASE</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 34](#grammar-note-34) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -997,16 +666,9 @@ Semantic context: [Aliases](../spec/names-and-scope.md#aliases-and-canonical-ide
 
 <a id="grammar-clause-associative-applicative"></a>
 
-Association names an existing canonical value or definition. It does not create an independent runtime copy. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>ASSOCIATIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.APPLICATIVE &#124; OBJECT &#124; CASE*</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>ASSOCIATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.APPLICATIVE &#124; OBJECT &#124; CASE*</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 35](#grammar-note-35) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1016,492 +678,233 @@ Semantic context: [Aliases](../spec/names-and-scope.md#aliases-and-canonical-ide
 
 <a id="grammar-clause-generative-imperative"></a>
 
-Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Build](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>GENERATIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.GENERATIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>GENERATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE &#124; OBJECT</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 36](#grammar-note-36) |
 
 ## clause.generative.active
 
 <a id="grammar-clause-generative-active"></a>
 
-Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Build](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>GENERATIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.GENERATIVE.ACTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>GENERATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE.ACTIVE &#124; OBJECT</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 37](#grammar-note-37) |
 
 ## clause.generative.passive
 
 <a id="grammar-clause-generative-passive"></a>
 
-Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Build](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>GENERATIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.GENERATIVE.PASSIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>GENERATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE.PASSIVE</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 38](#grammar-note-38) |
 
 ## clause.generative.applicative
 
 <a id="grammar-clause-generative-applicative"></a>
 
-Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Build](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>GENERATIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.GENERATIVE.APPLICATIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>GENERATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 39](#grammar-note-39) |
 
 ## clause.executive.imperative
 
 <a id="grammar-clause-executive-imperative"></a>
 
-Run launches the selected process. The grammar does not imply that every applicative category is runnable. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Run](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>EXECUTIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.EXECUTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>EXECUTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE &#124; OBJECT</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 40](#grammar-note-40) |
 
 ## clause.executive.active
 
 <a id="grammar-clause-executive-active"></a>
 
-Run launches the selected process. The grammar does not imply that every applicative category is runnable. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Run](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>EXECUTIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.EXECUTIVE.ACTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>EXECUTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE.ACTIVE &#124; OBJECT</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 41](#grammar-note-41) |
 
 ## clause.executive.passive
 
 <a id="grammar-clause-executive-passive"></a>
 
-Run launches the selected process. The grammar does not imply that every applicative category is runnable. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Run](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>EXECUTIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.EXECUTIVE.PASSIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>EXECUTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE.PASSIVE</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 42](#grammar-note-42) |
 
 ## clause.executive.applicative
 
 <a id="grammar-clause-executive-applicative"></a>
 
-Run launches the selected process. The grammar does not imply that every applicative category is runnable. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Run](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>EXECUTIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.EXECUTIVE.APPLICATIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>EXECUTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 43](#grammar-note-43) |
 
 ## clause.suspensive.imperative
 
 <a id="grammar-clause-suspensive-imperative"></a>
 
-Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Await](../spec/execution.md#continuations-and-activation).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>SUSPENSIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.SUSPENSIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>SUSPENSIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE &#124; OBJECT</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 44](#grammar-note-44) |
 
 ## clause.suspensive.active
 
 <a id="grammar-clause-suspensive-active"></a>
 
-Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Await](../spec/execution.md#continuations-and-activation).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>SUSPENSIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.ACTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>SUSPENSIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.ACTIVE &#124; OBJECT</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 45](#grammar-note-45) |
 
 ## clause.suspensive.passive
 
 <a id="grammar-clause-suspensive-passive"></a>
 
-Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Await](../spec/execution.md#continuations-and-activation).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>SUSPENSIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.PASSIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>SUSPENSIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.PASSIVE</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 46](#grammar-note-46) |
 
 ## clause.suspensive.applicative
 
 <a id="grammar-clause-suspensive-applicative"></a>
 
-Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Await](../spec/execution.md#continuations-and-activation).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>SUSPENSIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.APPLICATIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>SUSPENSIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 47](#grammar-note-47) |
 
 ## clause.interruptive.imperative
 
 <a id="grammar-clause-interruptive-imperative"></a>
 
-Stop requests termination without joining. Final output still requires the Await contract. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Stop](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>INTERRUPTIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>INTERRUPTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE &#124; OBJECT</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 48](#grammar-note-48) |
 
 ## clause.interruptive.active
 
 <a id="grammar-clause-interruptive-active"></a>
 
-Stop requests termination without joining. Final output still requires the Await contract. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Stop](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>INTERRUPTIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.ACTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>INTERRUPTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.ACTIVE &#124; OBJECT</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 49](#grammar-note-49) |
 
 ## clause.interruptive.passive
 
 <a id="grammar-clause-interruptive-passive"></a>
 
-Stop requests termination without joining. Final output still requires the Await contract. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Stop](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>INTERRUPTIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.PASSIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>INTERRUPTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.PASSIVE</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 50](#grammar-note-50) |
 
 ## clause.interruptive.applicative
 
 <a id="grammar-clause-interruptive-applicative"></a>
 
-Stop requests termination without joining. Final output still requires the Await contract. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Stop](../spec/execution.md#build-run-stop-and-await).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>INTERRUPTIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.APPLICATIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>INTERRUPTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 51](#grammar-note-51) |
 
 ## clause.inflective.imperative
 
 <a id="grammar-clause-inflective-imperative"></a>
 
-Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Import and export vocabulary](../spec/imports.md#indexed-dictionaries).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>INFLECTIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.INFLECTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>INFLECTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 52](#grammar-note-52) |
 
 ## clause.inflective.active
 
 <a id="grammar-clause-inflective-active"></a>
 
-Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Import and export vocabulary](../spec/imports.md#indexed-dictionaries).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>INFLECTIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.INFLECTIVE.ACTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>INFLECTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE.ACTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 53](#grammar-note-53) |
 
 ## clause.inflective.passive
 
 <a id="grammar-clause-inflective-passive"></a>
 
-Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Import and export vocabulary](../spec/imports.md#indexed-dictionaries).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>INFLECTIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.INFLECTIVE.PASSIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>INFLECTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE.PASSIVE</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 54](#grammar-note-54) |
 
 ## clause.inflective.applicative
 
 <a id="grammar-clause-inflective-applicative"></a>
 
-Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Import and export vocabulary](../spec/imports.md#indexed-dictionaries).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>INFLECTIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.INFLECTIVE.APPLICATIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>INFLECTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 55](#grammar-note-55) |
 
 ## clause.deflective.imperative
 
 <a id="grammar-clause-deflective-imperative"></a>
 
-Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Import and export vocabulary](../spec/imports.md#indexed-dictionaries).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DEFLECTIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DEFLECTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DEFLECTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 52](#grammar-note-52) |
 
 ## clause.deflective.active
 
 <a id="grammar-clause-deflective-active"></a>
 
-Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Import and export vocabulary](../spec/imports.md#indexed-dictionaries).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DEFLECTIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.ACTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DEFLECTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.ACTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 53](#grammar-note-53) |
 
 ## clause.deflective.passive
 
 <a id="grammar-clause-deflective-passive"></a>
 
-Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Import and export vocabulary](../spec/imports.md#indexed-dictionaries).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DEFLECTIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.PASSIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DEFLECTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.PASSIVE</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 54](#grammar-note-54) |
 
 ## clause.deflective.applicative
 
 <a id="grammar-clause-deflective-applicative"></a>
 
-Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Import and export vocabulary](../spec/imports.md#indexed-dictionaries).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>DEFLECTIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.APPLICATIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>DEFLECTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 55](#grammar-note-55) |
 
 ## clause.observative.imperative
 
 <a id="grammar-clause-observative-imperative"></a>
 
-Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Show](../spec/control-flow.md#show-and-output).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>OBSERVATIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.OBSERVATIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>OBSERVATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE &#124; OBJECT</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 56](#grammar-note-56) |
 
 ## clause.observative.active
 
 <a id="grammar-clause-observative-active"></a>
 
-Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Show](../spec/control-flow.md#show-and-output).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>OBSERVATIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.ACTIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>OBSERVATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.ACTIVE &#124; OBJECT</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 57](#grammar-note-57) |
 
 ## clause.observative.passive
 
 <a id="grammar-clause-observative-passive"></a>
 
-Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Show](../spec/control-flow.md#show-and-output).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>OBSERVATIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.PASSIVE</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>OBSERVATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.PASSIVE</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 58](#grammar-note-58) |
 
 ## clause.observative.applicative
 
 <a id="grammar-clause-observative-applicative"></a>
 
-Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Show](../spec/control-flow.md#show-and-output).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>OBSERVATIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.APPLICATIVE &#124; OBJECT</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>OBSERVATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 59](#grammar-note-59) |
 
 ## clause.terminative.imperative
 
 <a id="grammar-clause-terminative-imperative"></a>
 
-Exit ends the compiled program; source Function.Return is a separate builtin expansion. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Exit](../spec/control-flow.md#exit-and-return).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>TERMINATIVE.IMPERATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.TERMINATIVE &#124; CASE*</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>TERMINATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE &#124; CASE*</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 60](#grammar-note-60) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1512,16 +915,9 @@ Semantic context: [Exit](../spec/control-flow.md#exit-and-return).
 
 <a id="grammar-clause-terminative-active"></a>
 
-Exit ends the compiled program; source Function.Return is a separate builtin expansion. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Exit](../spec/control-flow.md#exit-and-return).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>TERMINATIVE.ACTIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.TERMINATIVE.ACTIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>TERMINATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE.ACTIVE &#124; CASE</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 61](#grammar-note-61) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1532,16 +928,9 @@ Semantic context: [Exit](../spec/control-flow.md#exit-and-return).
 
 <a id="grammar-clause-terminative-passive"></a>
 
-Exit ends the compiled program; source Function.Return is a separate builtin expansion. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Exit](../spec/control-flow.md#exit-and-return).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>TERMINATIVE.PASSIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.TERMINATIVE.PASSIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>TERMINATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE.PASSIVE &#124; CASE</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 62](#grammar-note-62) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1552,16 +941,9 @@ Semantic context: [Exit](../spec/control-flow.md#exit-and-return).
 
 <a id="grammar-clause-terminative-applicative"></a>
 
-Exit ends the compiled program; source Function.Return is a separate builtin expansion. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries.
-
-Semantic context: [Exit](../spec/control-flow.md#exit-and-return).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CLAUSE</code> |
-| Class | <code>TERMINATIVE.APPLICATIVE</code> |
-| Structure | <code>[ADVERB]* &#124; VERB.TERMINATIVE.APPLICATIVE &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>TERMINATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE.APPLICATIVE &#124; CASE</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1572,16 +954,9 @@ Semantic context: [Exit](../spec/control-flow.md#exit-and-return).
 
 <a id="grammar-condition"></a>
 
-Scalar conditions have specific type constraints. Joined conditions are rejected by outer lowering; no general short-circuit Boolean expression language is established.
-
-Semantic context: [Conditions](../spec/control-flow.md#comparisons).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CONDITION</code> |
-| Class | <code>CONDITION</code> |
-| Structure | <code>CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CONDITION</code> | <code>CONDITION</code> | <code>CASE</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 64](#grammar-note-64) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1599,33 +974,17 @@ Semantic context: [Conditions](../spec/control-flow.md#comparisons).
 
 <a id="grammar-conditional-if"></a>
 
-Scalar conditions have specific type constraints. Joined conditions are rejected by outer lowering; no general short-circuit Boolean expression language is established.
-
-Semantic context: [Conditions](../spec/control-flow.md#comparisons).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CONDITIONAL</code> |
-| Class | <code>IF</code> |
-| Structure | <code>EVALUATION.CONDITIONAL &#124; [CONDITION] &#124; [CLAUSE.IMPERATIVE]</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CONDITIONAL</code> | <code>IF</code> | <code>EVALUATION.CONDITIONAL &#124; [CONDITION] &#124; [CLAUSE.IMPERATIVE]</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 64](#grammar-note-64) |
 
 ## conditional.else
 
 <a id="grammar-conditional-else"></a>
 
-Scalar conditions have specific type constraints. Joined conditions are rejected by outer lowering; no general short-circuit Boolean expression language is established.
-
-Semantic context: [Conditions](../spec/control-flow.md#comparisons).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CONDITIONAL</code> |
-| Class | <code>ELSE</code> |
-| Structure | <code>EVALUATION.EXCEPTIONAL &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CONDITIONAL</code> | <code>ELSE</code> | <code>EVALUATION.EXCEPTIONAL &#124; CASE</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 64](#grammar-note-64) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1636,50 +995,25 @@ Semantic context: [Conditions](../spec/control-flow.md#comparisons).
 
 <a id="grammar-conditional-while"></a>
 
-The parser recognizes this shape, but outer instruction lowering explicitly rejects while. Rust backend iteration cases do not establish source-language loop support.
-
-Semantic context: [Iteration rejection](../spec/control-flow.md#iteration-and-collection-operations).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CONDITIONAL</code> |
-| Class | <code>WHILE</code> |
-| Structure | <code>EVALUATION.ITERATIVE &#124; [CONDITION] &#124; CLAUSE.IMPERATIVE</code> |
-| Support | rejected |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CONDITIONAL</code> | <code>WHILE</code> | <code>EVALUATION.ITERATIVE &#124; [CONDITION] &#124; CLAUSE.IMPERATIVE</code> | rejected | [Iteration rejection](../spec/control-flow.md#iteration-and-collection-operations) | [Note 65](#grammar-note-65) |
 
 ## conditional.other
 
 <a id="grammar-conditional-other"></a>
 
-Scalar conditions have specific type constraints. Joined conditions are rejected by outer lowering; no general short-circuit Boolean expression language is established.
-
-Semantic context: [Conditions](../spec/control-flow.md#comparisons).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>CONDITIONAL</code> |
-| Class | <code>OTHER</code> |
-| Structure | <code>EVALUATION.ALTERNATIVE &#124; [CLAUSE.IMPERATIVE]</code> |
-| Support | partial |
-
-This rule has no named case alternatives; its structure is used directly.
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CONDITIONAL</code> | <code>OTHER</code> | <code>EVALUATION.ALTERNATIVE &#124; [CLAUSE.IMPERATIVE]</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 64](#grammar-note-64) |
 
 ## predicate.imperative
 
 <a id="grammar-predicate-imperative"></a>
 
-This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.
-
-Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-statements).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PREDICATE</code> |
-| Class | <code>IMPERATIVE</code> |
-| Structure | <code>CASE &#124; [CLAUSE]*</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PREDICATE</code> | <code>IMPERATIVE</code> | <code>CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1700,21 +1034,16 @@ Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-
 | <code>observative</code> | <code>CLAUSE.OBSERVATIVE.IMPERATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>terminative</code> | <code>CLAUSE.TERMINATIVE.IMPERATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>suspensive</code> | <code>CLAUSE.SUSPENSIVE.IMPERATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
+| <code>returning</code> | <code>CLAUSE.RETURNING.IMPERATIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>invocative</code> | <code>CLAUSE.INVOCATIVE.IMPERATIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
 ## predicate.active
 
 <a id="grammar-predicate-active"></a>
 
-This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.
-
-Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-statements).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PREDICATE</code> |
-| Class | <code>ACTIVE</code> |
-| Structure | <code>CASE &#124; [CLAUSE]*</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PREDICATE</code> | <code>ACTIVE</code> | <code>CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1740,16 +1069,9 @@ Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-
 
 <a id="grammar-predicate-passive"></a>
 
-This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.
-
-Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-statements).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PREDICATE</code> |
-| Class | <code>PASSIVE</code> |
-| Structure | <code>VERB.PASSIVE &#124; CASE &#124; [CLAUSE]*</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PREDICATE</code> | <code>PASSIVE</code> | <code>VERB.PASSIVE &#124; CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1776,16 +1098,9 @@ Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-
 
 <a id="grammar-predicate-applicative"></a>
 
-This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.
-
-Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-statements).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PREDICATE</code> |
-| Class | <code>APPLICATIVE</code> |
-| Structure | <code>CASE &#124; [CLAUSE]*</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PREDICATE</code> | <code>APPLICATIVE</code> | <code>CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1811,16 +1126,9 @@ Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-
 
 <a id="grammar-predicate-conditional"></a>
 
-This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.
-
-Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-statements).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>PREDICATE</code> |
-| Class | <code>CONDITIONAL</code> |
-| Structure | <code>CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PREDICATE</code> | <code>CONDITIONAL</code> | <code>CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1832,16 +1140,9 @@ Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-
 
 <a id="grammar-statement-objective-imperative"></a>
 
-This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.
-
-Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-statements).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>STATEMENT</code> |
-| Class | <code>OBJECTIVE.IMPERATIVE</code> |
-| Structure | <code>CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>STATEMENT</code> | <code>OBJECTIVE.IMPERATIVE</code> | <code>CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1862,21 +1163,16 @@ Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-
 | <code>observative</code> | <code>PREDICATE.IMPERATIVE.OBSERVATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>terminative</code> | <code>PREDICATE.IMPERATIVE.TERMINATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>suspensive</code> | <code>PREDICATE.IMPERATIVE.SUSPENSIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
+| <code>returning</code> | <code>PREDICATE.IMPERATIVE.RETURNING</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>invocative</code> | <code>PREDICATE.IMPERATIVE.INVOCATIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
 ## statement.objective.conditional
 
 <a id="grammar-statement-objective-conditional"></a>
 
-This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.
-
-Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-statements).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>STATEMENT</code> |
-| Class | <code>OBJECTIVE.CONDITIONAL</code> |
-| Structure | <code>CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>STATEMENT</code> | <code>OBJECTIVE.CONDITIONAL</code> | <code>CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1888,16 +1184,9 @@ Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-
 
 <a id="grammar-statement-subjective-active"></a>
 
-This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.
-
-Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-statements).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>STATEMENT</code> |
-| Class | <code>SUBJECTIVE.ACTIVE</code> |
-| Structure | <code>SUBJECT &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>STATEMENT</code> | <code>SUBJECTIVE.ACTIVE</code> | <code>SUBJECT &#124; CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1923,16 +1212,9 @@ Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-
 
 <a id="grammar-statement-subjective-passive"></a>
 
-This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.
-
-Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-statements).
-
-| Property | Configured value |
-| --- | --- |
-| Category | <code>STATEMENT</code> |
-| Class | <code>SUBJECTIVE.PASSIVE</code> |
-| Structure | <code>SUBJECT &#124; CASE</code> |
-| Support | partial |
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>STATEMENT</code> | <code>SUBJECTIVE.PASSIVE</code> | <code>SUBJECT &#124; CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1954,3 +1236,126 @@ Semantic context: [Predicates and statements](../spec/grammar.md#predicates-and-
 | <code>observative</code> | <code>PREDICATE.PASSIVE.OBSERVATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>terminative</code> | <code>PREDICATE.PASSIVE.TERMINATIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
 | <code>suspensive</code> | <code>PREDICATE.PASSIVE.SUSPENSIVE</code> | [Predicates and statements](../spec/grammar.md#predicates-and-statements) · partial |
+
+## phrase.signature
+
+<a id="grammar-phrase-signature"></a>
+
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>SIGNATURE</code> | <code>PREPOSITION.CONSIGNMENT.ASSOCIATIVE &#124; CASE</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 67](#grammar-note-67) |
+
+| Named case | Sequence | Semantic context |
+| --- | --- | --- |
+| <code>both</code> | <code>NOUN.FUNCTIONAL.INFLECTIVE &#124; PREPOSITION.DEFINEMENT.DEFINITIVE &#124; [SUBJECT.SIGNATURE] &#124; CONJUNCTION.MUTUAL &#124; NOUN.FUNCTIONAL.DEFLECTIVE &#124; PREPOSITION.DEFINEMENT.DEFINITIVE &#124; [OBJECT]</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>inputs</code> | <code>NOUN.FUNCTIONAL.INFLECTIVE &#124; PREPOSITION.DEFINEMENT.DEFINITIVE &#124; [SUBJECT.SIGNATURE] &#124; CONJUNCTION.MUTUAL &#124; ARTICLE.NONE &#124; NOUN.FUNCTIONAL.DEFLECTIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>outputs</code> | <code>ARTICLE.NONE &#124; NOUN.FUNCTIONAL.INFLECTIVE &#124; CONJUNCTION.MUTUAL &#124; NOUN.FUNCTIONAL.DEFLECTIVE &#124; PREPOSITION.DEFINEMENT.DEFINITIVE &#124; [OBJECT]</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>empty</code> | <code>ARTICLE.NONE &#124; NOUN.FUNCTIONAL.INFLECTIVE &#124; CONJUNCTION.MUTUAL &#124; ARTICLE.NONE &#124; NOUN.FUNCTIONAL.DEFLECTIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+
+## phrase.arguments
+
+<a id="grammar-phrase-arguments"></a>
+
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>ARGUMENTS</code> | <code>PREPOSITION.CONSIGNMENT.ASSOCIATIVE &#124; [VALUE]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 68](#grammar-note-68) |
+
+## phrase.results
+
+<a id="grammar-phrase-results"></a>
+
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>PHRASE</code> | <code>RESULTS</code> | <code>PREPOSITION.DEFINEMENT.DECLARATIVE &#124; [SUBJECT.DECLARATION]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 69](#grammar-note-69) |
+
+## clause.invocative.imperative
+
+<a id="grammar-clause-invocative-imperative"></a>
+
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>INVOCATIVE.IMPERATIVE</code> | <code>VERB.INVOCATIVE &#124; SUBJECT.DEFINITIVE &#124; PHRASE.ARGUMENTS* &#124; PHRASE.RESULTS*</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 70](#grammar-note-70) |
+
+## clause.returning.imperative
+
+<a id="grammar-clause-returning-imperative"></a>
+
+| Category | Class | Structure | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <code>CLAUSE</code> | <code>RETURNING.IMPERATIVE</code> | <code>VERB.RETURNING &#124; [VALUE]*</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 71](#grammar-note-71) |
+
+## Support notes
+
+| Note | Reviewed explanation |
+| --- | --- |
+| <a id="grammar-note-1"></a>1 | The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern. |
+| <a id="grammar-note-2"></a>2 | A subject participates in declaration/binding and paragraph antecedent selection. Its cases distinguish declared names, resolved references and definitions. |
+| <a id="grammar-note-3"></a>3 | This phrase associates grammatical objects, prepositions or clauses as given by its sequence. Its location and optional/repeated terms are defined by the configured matcher, not conventional EBNF. |
+| <a id="grammar-note-4"></a>4 | This phrase participates in construction or argument attachment. Native placeholders have explicit type and encoding contracts; do not infer arbitrary coercions. |
+| <a id="grammar-note-5"></a>5 | Supplies a Number index for Lists/Bytes or a Text key for Map/Instance reads and writes. Runtime checks reject invalid keys and bounds. |
+| <a id="grammar-note-6"></a>6 | Selects the source of a typed read, with an optional indexed key. Complete requested runtime type identities are checked before extraction. |
+| <a id="grammar-note-7"></a>7 | Selects a typed update destination and optional index or field key; runtime mutation does not change vocabulary namespaces. |
+| <a id="grammar-note-8"></a>8 | The to phrase supplies an imperative source clause or Text body to a definition. It is distinct from Use/import dependency resolution. |
+| <a id="grammar-note-9"></a>9 | Source-provider ownership governs relative imports and expanded declarations. Grammatical dependency attachment does not override those ownership rules. |
+| <a id="grammar-note-10"></a>10 | Assignment follows resolved typed-storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-11"></a>11 | Generic clauses call source-defined vocabulary with resolved typed arguments. Runtime captures use retained typed environments; asynchronous methods are not introduced. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-12"></a>12 | Generic clauses call source-defined vocabulary with resolved typed arguments. Runtime captures use retained typed environments; asynchronous methods are not introduced. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-13"></a>13 | Generic clauses call source-defined vocabulary with resolved typed arguments. Runtime captures use retained typed environments; asynchronous methods are not introduced. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-14"></a>14 | Generic clauses call source-defined vocabulary with resolved typed arguments. Runtime captures use retained typed environments; asynchronous methods are not introduced. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-15"></a>15 | A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-16"></a>16 | A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-17"></a>17 | A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-18"></a>18 | A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-19"></a>19 | Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-20"></a>20 | Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-21"></a>21 | Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-22"></a>22 | Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-23"></a>23 | Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-24"></a>24 | Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-25"></a>25 | Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-26"></a>26 | Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-27"></a>27 | Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal. |
+| <a id="grammar-note-28"></a>28 | This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-29"></a>29 | This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-30"></a>30 | This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-31"></a>31 | This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-32"></a>32 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-33"></a>33 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-34"></a>34 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-35"></a>35 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-36"></a>36 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-37"></a>37 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-38"></a>38 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-39"></a>39 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-40"></a>40 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-41"></a>41 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-42"></a>42 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-43"></a>43 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-44"></a>44 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-45"></a>45 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-46"></a>46 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-47"></a>47 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-48"></a>48 | Stop requests termination without joining. Final output still requires the Await contract. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-49"></a>49 | Stop requests termination without joining. Final output still requires the Await contract. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-50"></a>50 | Stop requests termination without joining. Final output still requires the Await contract. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-51"></a>51 | Stop requests termination without joining. Final output still requires the Await contract. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-52"></a>52 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-53"></a>53 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-54"></a>54 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-55"></a>55 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-56"></a>56 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-57"></a>57 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-58"></a>58 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-59"></a>59 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-60"></a>60 | Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-61"></a>61 | Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-62"></a>62 | Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-63"></a>63 | Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-64"></a>64 | Scalar conditions have specific type constraints. Joined conditions are rejected by outer lowering; no general short-circuit Boolean expression language is established. |
+| <a id="grammar-note-65"></a>65 | The parser recognizes this shape, but outer instruction lowering explicitly rejects while. Rust backend iteration cases do not establish source-language loop support. |
+| <a id="grammar-note-66"></a>66 | This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support. |
+| <a id="grammar-note-67"></a>67 | An ordinary Function signature declares ordered named inputs and ordered result types, or explicit No Inputs/No Outputs. Nested runtime and callable identities remain complete. |
+| <a id="grammar-note-68"></a>68 | Call supplies ordered existing values or literals. Construct complex argument values before the call; argument count and complete runtime types are checked. |
+| <a id="grammar-note-69"></a>69 | Call declares one ordered result name per output. Names receive checked returned values only after the invocation completes. |
+| <a id="grammar-note-70"></a>70 | Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process. |
+| <a id="grammar-note-71"></a>71 | Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return. |

@@ -28,6 +28,6 @@ The [declaration/evaluation witness](../../logiceme/testdata/lucid/declaration-e
 
 ## Stay inside the approved surface
 
-The eighteen Rust segments are frozen. Lifetime/generic inputs are glyph-local native interiors, not L generics, Func/Prop/Op fields or inherited defaults. Rust rejects Deferred metadata; scheduling supplies no automatic deferred cleanup. Unsupported closures or asynchronous compositions remain unsupported.
+The eighteen Rust segments are frozen. Lifetime/generic inputs are glyph-local native interiors, not L generics, Func/Prop/Op fields or inherited defaults. Rust rejects Deferred metadata; scheduling supplies no automatic deferred cleanup.
 
 Before extending a template, read [definitions](../spec/definitions.md), [builtin contracts](../../builtins/CONTRACTS.md), [Rust forms](../../builtins/README.md) and [AML](../../logiceme/AML.md).

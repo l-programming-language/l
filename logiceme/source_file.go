@@ -141,7 +141,6 @@ func (obj *Object) Compile() {
 	obj.Sentence.Compile()
 }
 
-// BuildObjects
 func BuildObjects(sentences []Sentence) []Object {
 	reObjs := []Object{}
 	for _, sentence := range sentences {

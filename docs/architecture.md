@@ -202,7 +202,7 @@ The checked grammar loader validates [configured rule references](../lyger/gramm
 
 `ApplicationUnits` and `OrchestratorUnit` expose App sources and ordered App process operations. Standalone Service declarations acquire no library, executable configuration, runtime members or continuation ownership. Raw AML continues to support explicit library and binary targets independently of L declarations.
 
-The [typed Rust plan](../lyger/orchestration_plan.go) analyzes canonical records, ordered instructions, lexical blocks and effects before [Rust composition](../lyger/orchestration_emit.go). Storage planning records mutability and captures; continuing control-flow paths determine definite assignment. Exit removes a path from that intersection. Runtime Output availability remains checked at the actual read. Saved Output uses immutable byte snapshots rather than rereading a target after rerun. No task is generated per paragraph, no blanket cloning or implicit L value initialization is introduced, and native leaves remain opaque.
+The [typed Rust plan](../lyger/orchestration_plan.go) checks canonical types, activation storage, captures and definite assignment before [Rust composition](../lyger/orchestration_emit.go). A shared [value model](../lyger/runtime_values.go) governs assignment, arguments, results and snapshots; it preserves explicit Pointer and callable identity. Ordinary Functions own separate bodies with fresh invocation locals and checked returns. Native leaves remain opaque. Paragraphs create no extra task and unassigned values acquire no hidden initial value.
 
 The synthetic orchestrator uses the frozen function, definition, statement and conditional logemes. Its callable returns a Rust future through the existing signature interface and supplies an explicit async body. Compiler assembly owns module/visibility/safety boundaries and startup configuration; templates retain their native syntax contracts. Opt-in [Rust runtime support](../builtins/templates/runtime/runtime.lu) supplies actual Runtime/App/Invocation/Snapshot lifecycle objects, process-group supervision, raw capture and immutable completion. Each direct child has one Wait owner. Private test dependencies observe real operations and inject specified faults without replacing the runtime; callbacks do not hold lifecycle locks.
 
@@ -218,15 +218,16 @@ control-flow tree. Coordinated unary actions expand their whole resolved body on
 per operand. True multi-parameter arity remains checked.
 
 The [Rust emitter](../lyger/orchestration_emit.go) emits blocks inline in main.
-[Activation frames](../lyger/orchestration_scope.go) allocate fresh private scalar
-storage while global scalars and canonical process-target state persist. Await claims and
+[Activation frames](../lyger/orchestration_scope.go) allocate fresh private runtime
+storage while published bindings and canonical process-target state persist. Await claims and
 executes the selected invocation's continuation once. Claims belong to invocations,
 so targets sharing a lexical paragraph retain distinct activations. Self-Await
 observes the cached result; nested Await can activate another App. The invocation
 slot stays occupied until its first continuation finishes, so a same-target Run
-during that continuation is rejected. Ordinary imported child blocks retain the
-enclosing activation. Private runtime captures outside their activation are
-rejected; compile-time captures retain their defining bindings.
+during that continuation is rejected. Imported child blocks retain their enclosing activation. Executed callable declarations
+allocate typed capture environments; aliases retain the selected environment. Ordinary
+values snapshot and Pointer handles share targets. Missing initialization, invalid
+borrow overlap and ownership cycles reject. Static captures retain definition-site bindings.
 
 Bare Exit still terminates main, including when expanded from a source action.
 Normal, error and signal exits clean owned processes without running unawaited

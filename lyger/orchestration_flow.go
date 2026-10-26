@@ -8,15 +8,19 @@ type orchestrationFlow struct {
 	assigned map[*orchestrationStorage]bool
 	written  map[*orchestrationStorage]bool
 	live     bool
+	bound    map[*orchestrationCallable]bool
 }
 
 func newOrchestrationFlow() orchestrationFlow {
-	return orchestrationFlow{assigned: make(map[*orchestrationStorage]bool), written: make(map[*orchestrationStorage]bool), live: true}
+	return orchestrationFlow{assigned: make(map[*orchestrationStorage]bool), written: make(map[*orchestrationStorage]bool), live: true, bound: make(map[*orchestrationCallable]bool)}
 }
 
 func (flow orchestrationFlow) clone() orchestrationFlow {
 	cloned := newOrchestrationFlow()
 	cloned.live = flow.live
+	for slot, bound := range flow.bound {
+		cloned.bound[slot] = bound
+	}
 	for slot, assigned := range flow.assigned {
 		cloned.assigned[slot] = assigned
 	}
@@ -34,6 +38,9 @@ func joinOrchestrationFlow(left, right orchestrationFlow) orchestrationFlow {
 		return left
 	}
 	joined := left.clone()
+	for slot := range joined.bound {
+		joined.bound[slot] = right.bound[slot]
+	}
 	for slot := range joined.assigned {
 		joined.assigned[slot] = right.assigned[slot]
 	}
@@ -74,11 +81,15 @@ func (p *orchestrationPlanner) instruction(current *instruction, flow orchestrat
 	result := &orchestrationInstruction{Source: current}
 	var err error
 	switch current.Kind {
+	case instructionFunction, instructionInvoke, instructionReturn:
+		return p.functionInstruction(current, flow)
 	case instructionBlock:
 		result.Block, flow, err = p.scoped(current.Block, flow)
 		if err == nil {
 			result.Effects = orchestrationInstructionsEffects(result.Block.Body)
 		}
+	case instructionBindAction, instructionAliasAction:
+		return p.bindCapture(current, flow)
 	case instructionCall:
 		if !current.Synchronous {
 			return nil, flow, lerrors.Unsupported.Errorf("source action requires synchronous expanded instructions")
@@ -86,35 +97,15 @@ func (p *orchestrationPlanner) instruction(current *instruction, flow orchestrat
 		if len(current.Actions) == 0 {
 			return nil, flow, lerrors.Internal.Errorf("source action requires synchronous expanded instructions")
 		}
+		restore, captureErr := p.enterCaptureCall(current, result, flow)
+		if captureErr != nil {
+			return nil, flow, captureErr
+		}
 		result.Actions, flow, err = p.instructions(current.Actions, flow)
+		restore()
 		result.Effects = orchestrationInstructionsEffects(result.Actions)
 	case instructionBuild, instructionRun, instructionStop, instructionAwait:
-		result.Target, err = p.value(current.Target, flow)
-		if err != nil {
-			break
-		}
-		if result.Target.Type != valueApp || result.Target.App == nil {
-			return nil, flow, lerrors.TypeMismatch.Errorf("Build/Run or member access requires an application, got %s", result.Target.Type)
-		}
-		result.App = result.Target.App
-		switch {
-		case current.Kind == instructionBuild:
-			result.Effects = orchestrationEffectBuild
-		case current.Kind == instructionRun:
-			result.Effects = orchestrationEffectRun
-		case current.Kind == instructionStop:
-			result.Effects = orchestrationEffectStop
-		case current.Kind == instructionAwait:
-			result.Effects = orchestrationEffectAwait
-			if continuation := p.semantics.Continuations[result.App]; continuation != nil && !p.active[result.App] {
-				p.active[result.App] = true
-				result.Continuation, flow, err = p.scoped(continuation, flow)
-				delete(p.active, result.App)
-				if err == nil {
-					result.Effects |= orchestrationInstructionsEffects(result.Continuation.Body)
-				}
-			}
-		}
+		return p.processInstruction(current, flow)
 	case instructionShow, instructionExit:
 		if current.Kind == instructionExit {
 			result.Effects = orchestrationEffectExit
@@ -131,7 +122,7 @@ func (p *orchestrationPlanner) instruction(current *instruction, flow orchestrat
 		}
 		if current.Kind == instructionShow {
 			kind := result.Value.Type
-			if kind != valueText && kind != valueNumber && kind != valueTruth {
+			if _, ok := runtimeTypeName(kind); !ok || kind == valueApp || kind == valueError {
 				return nil, flow, lerrors.TypeMismatch.Errorf("Show requires a scalar value, got %s", kind)
 			}
 		} else {
@@ -141,6 +132,8 @@ func (p *orchestrationPlanner) instruction(current *instruction, flow orchestrat
 			flow.live = false
 		}
 		result.Effects |= orchestrationValueEffects(result.Value)
+	case instructionUpdate:
+		result, err = p.runtimeUpdate(current, flow)
 	case instructionAssign:
 		rec, kind, resolveErr := p.record(current.Target)
 		if resolveErr != nil {
@@ -157,8 +150,11 @@ func (p *orchestrationPlanner) instruction(current *instruction, flow orchestrat
 		if result.Value.Type != kind {
 			return nil, flow, lerrors.TypeMismatch.Errorf("assignment to %s requires %s, got %s", rec.ID, kind, result.Value.Type)
 		}
-		result.Target = &orchestrationValue{Source: current.Target, Type: kind, Record: rec, Storage: slot}
-		if result.Value.Type == valueText && result.Value.Access == orchestrationAccessBorrow {
+		if !slot.RuntimeType.accepts(result.Value.RuntimeType) {
+			return nil, flow, lerrors.TypeMismatch.Errorf("assignment to %s has incompatible runtime type", rec.ID)
+		}
+		result.Target = &orchestrationValue{Source: current.Target, Type: kind, RuntimeType: slot.RuntimeType, Record: rec, Storage: slot}
+		if result.Value.Access == orchestrationAccessBorrow {
 			result.Value.Access = orchestrationAccessSnapshot
 		}
 		slot.Mutable = slot.Mutable || slot.Initial != nil || flow.written[slot]

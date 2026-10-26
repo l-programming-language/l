@@ -21,6 +21,12 @@ const (
 	instructionBlock
 	instructionAwait
 	instructionStop
+	instructionBindAction
+	instructionAliasAction
+	instructionFunction
+	instructionInvoke
+	instructionReturn
+	instructionUpdate
 	instructionKindCount
 )
 
@@ -28,6 +34,9 @@ var instructionKindNames = [instructionKindCount]string{
 	instructionAssign: "assign", instructionCall: "call", instructionBuild: "build",
 	instructionRun: "run", instructionShow: "show", instructionExit: "exit", instructionIf: "if", instructionBlock: "block",
 	instructionAwait: "await", instructionStop: "stop",
+	instructionBindAction: "bind-action", instructionAliasAction: "alias-action",
+	instructionUpdate:   "update",
+	instructionFunction: "function", instructionInvoke: "invoke", instructionReturn: "return",
 }
 
 func (k instructionKind) Valid() bool { return k > instructionInvalid && k < instructionKindCount }
@@ -54,11 +63,13 @@ const (
 	operandLiteral
 	operandMember
 	operandError
+	operandConstruct
+	operandRead
 	operandKindCount
 )
 
 var operandKindNames = [operandKindCount]string{
-	operandSymbol: "symbol", operandLiteral: "literal", operandMember: "member", operandError: "error",
+	operandSymbol: "symbol", operandLiteral: "literal", operandMember: "member", operandError: "error", operandConstruct: "construct", operandRead: "read",
 }
 
 func (k operandKind) String() string {
@@ -128,6 +139,11 @@ const (
 	roleError
 	roleSuspend
 	roleInterrupt
+	roleDeclare
+	rolePut
+	rolePlace
+	roleInvoke
+	roleReturn
 	nativeRoleCount
 )
 
@@ -145,6 +161,9 @@ var nativeRoles = [nativeRoleCount]struct {
 	roleError:     {"functional.error", instructionInvalid, memberError},
 	roleSuspend:   {"action.suspensive", instructionAwait, memberInvalid},
 	roleInterrupt: {"action.interruptive", instructionStop, memberInvalid},
+	roleDeclare:   {"action.declarative", instructionAssign, memberInvalid},
+	rolePut:       {"action.expansive", instructionUpdate, memberInvalid}, rolePlace: {"action.locative", instructionUpdate, memberInvalid},
+	roleInvoke: {"action.invocative", instructionInvoke, memberInvalid}, roleReturn: {"action.returning", instructionReturn, memberInvalid},
 }
 
 func (r nativeRole) String() string {

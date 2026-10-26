@@ -28,7 +28,9 @@ func TestRefactorSourceTypeWhitelist(t *testing.T) {
 		{"Adjective", "Adjective", "Lexeme"},
 		{"tExT", "Text", "Primitive"},
 		{"dIcTiOnArY", "Dictionary", "Iterative"},
-		{"Pointer", "Unknown", "Unknown"},
+		{"Pointer", "Pointer", "Primitive"},
+		{"Map", "Map", "Iterative"},
+		{"Instance", "Instance", "Applicative"},
 		{"Function", "Unknown", "Unknown"},
 		{"Property", "Unknown", "Unknown"},
 		{"Operation", "Unknown", "Unknown"},
@@ -55,7 +57,7 @@ func TestRefactorTransientStorageTags(t *testing.T) {
 	if zero.Type.String() != "" || zero.Primitive != nil || zero.Lexeme != nil || zero.Applicative != nil || zero.Iterative != nil || zero.Runtime != nil {
 		t.Fatal("zero entry must remain an uninitialized state")
 	}
-	for _, name := range []string{"", "Unknown", "None", "ID", "Null"} {
+	for _, name := range []string{"", "Unknown", "None", "ID"} {
 		kind, ok := parseValueType(name)
 		if !ok {
 			t.Fatalf("unknown characterization type %q", name)
@@ -63,6 +65,11 @@ func TestRefactorTransientStorageTags(t *testing.T) {
 		if got := newPrimitive(kind); got.Type.String() != "Unknown" {
 			t.Errorf("newPrimitive(%q).Type = %q, want Unknown", name, got.Type)
 		}
+	}
+	null := newPrimitive(valueNull)
+	value, err := null.value()
+	if err != nil || null.Type != valueNull || value.Type != valueNull || value.Data != nil {
+		t.Fatalf("explicit Null must be a readable initialized value: %+v, %v", value, err)
 	}
 	declared, err := loadPrimitive([]byte(`"Subject"`))
 	if err != nil || declared.Type.String() != "ID" || declared.ID != `"subject"` {

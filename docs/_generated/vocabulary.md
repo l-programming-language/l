@@ -4,1306 +4,288 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 
 ## nouns
 
-### it
-
-<a id="vocabulary-nouns-it"></a>
-
-Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.
-
-Semantic context: [Pronouns](../spec/names-and-scope.md#pronouns).
-
-| Field | Value |
-| --- | --- |
-| root | <code>it</code> |
-| pos | <code>noun</code> |
-| type | <code>pronoun.definitive</code> |
-| postfixes | <code>{"---they":"plural"}</code> |
-| value | <code>IT(inputs[0])</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
-
-### that
-
-<a id="vocabulary-nouns-that"></a>
-
-Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.
-
-Semantic context: [Pronouns](../spec/names-and-scope.md#pronouns).
-
-| Field | Value |
-| --- | --- |
-| root | <code>that</code> |
-| pos | <code>noun</code> |
-| type | <code>pronoun.objective</code> |
-| postfixes | <code>{"---ose":"plural"}</code> |
-| value | <code>THAT(inputs[0])</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
-
-### this
-
-<a id="vocabulary-nouns-this"></a>
-
-Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.
-
-Semantic context: [Pronouns](../spec/names-and-scope.md#pronouns).
-
-| Field | Value |
-| --- | --- |
-| root | <code>this</code> |
-| pos | <code>noun</code> |
-| type | <code>pronoun.subjective</code> |
-| postfixes | <code>{"---ese":"plural"}</code> |
-| value | <code>THIS(inputs[0])</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
-
-### input
-
-<a id="vocabulary-nouns-input"></a>
-
-Input participates in callable signature metadata; the current process member implementation supports Output/Error. Runtime argument transport is outside the supported contract.
-
-Semantic context: [Input metadata and runtime boundary](../reference/builtins/index.md#runtime-members).
-
-| Field | Value |
-| --- | --- |
-| root | <code>input</code> |
-| pos | <code>noun</code> |
-| type | <code>functional.inflective</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>INPUT(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### output
-
-<a id="vocabulary-nouns-output"></a>
-
-Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries.
-
-Semantic context: [Process members](../spec/execution.md#output-and-error).
-
-| Field | Value |
-| --- | --- |
-| root | <code>output</code> |
-| pos | <code>noun</code> |
-| type | <code>functional.deflective</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>OUTPUT(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### error
-
-<a id="vocabulary-nouns-error"></a>
-
-Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries.
-
-Semantic context: [Process members](../spec/execution.md#output-and-error).
-
-| Field | Value |
-| --- | --- |
-| root | <code>error</code> |
-| pos | <code>noun</code> |
-| type | <code>functional.error</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>ERROR(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### list
-
-<a id="vocabulary-nouns-list"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [list](../spec/collections-and-categories.md#lists).
-
-| Field | Value |
-| --- | --- |
-| root | <code>list</code> |
-| pos | <code>noun</code> |
-| type | <code>iterative.list</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>LIST(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### dictionary
-
-<a id="vocabulary-nouns-dictionary"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [dictionary](../spec/collections-and-categories.md#dictionaries).
-
-| Field | Value |
-| --- | --- |
-| root | <code>dictionary</code> |
-| pos | <code>noun</code> |
-| type | <code>iterative.dictionary</code> |
-| postfixes | <code>{"--ies":"plural"}</code> |
-| value | <code>DICTIONARY(inputs[0], inputs[1])</code> |
-| inputs | <code>["text","*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### null
-
-<a id="vocabulary-nouns-null"></a>
-
-The configured null root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.
-
-Semantic context: [null](../spec/values.md#null-and-internal-states).
-
-| Field | Value |
-| --- | --- |
-| root | <code>null</code> |
-| pos | <code>noun</code> |
-| type | <code>primitive.null</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>NULL(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### thing
-
-<a id="vocabulary-nouns-thing"></a>
-
-The configured thing root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.
-
-Semantic context: [thing](../spec/values.md#thing).
-
-| Field | Value |
-| --- | --- |
-| root | <code>thing</code> |
-| pos | <code>noun</code> |
-| type | <code>primitive.thing</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>THING(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### text
-
-<a id="vocabulary-nouns-text"></a>
-
-The configured text root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.
-
-Semantic context: [text](../spec/values.md#text).
-
-| Field | Value |
-| --- | --- |
-| root | <code>text</code> |
-| pos | <code>noun</code> |
-| type | <code>primitive.text</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>TEXT(inputs[0])</code> |
-| inputs | <code>["*.text"]</code> |
-| outputs | <code>["value"]</code> |
-
-### number
-
-<a id="vocabulary-nouns-number"></a>
-
-The configured number root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.
-
-Semantic context: [number](../spec/values.md#number).
-
-| Field | Value |
-| --- | --- |
-| root | <code>number</code> |
-| pos | <code>noun</code> |
-| type | <code>primitive.number</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>NUMBER(inputs[0])</code> |
-| inputs | <code>["*.number"]</code> |
-| outputs | <code>["value"]</code> |
-
-### byte
-
-<a id="vocabulary-nouns-byte"></a>
-
-The configured byte root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.
-
-Semantic context: [byte](../spec/values.md#byte-and-bytes).
-
-| Field | Value |
-| --- | --- |
-| root | <code>byte</code> |
-| pos | <code>noun</code> |
-| type | <code>primitive.byte</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>BYTES(inputs[0])</code> |
-| inputs | <code>["*.byte"]</code> |
-| outputs | <code>["value"]</code> |
-
-### truth
-
-<a id="vocabulary-nouns-truth"></a>
-
-The configured truth root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.
-
-Semantic context: [truth](../spec/values.md#truth).
-
-| Field | Value |
-| --- | --- |
-| root | <code>truth</code> |
-| pos | <code>noun</code> |
-| type | <code>primitive.truth</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>TRUTH(inputs[0])</code> |
-| inputs | <code>["*.truth"]</code> |
-| outputs | <code>["value"]</code> |
-
-### pointer
-
-<a id="vocabulary-nouns-pointer"></a>
-
-The configured pointer root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.
-
-Semantic context: [pointer](../spec/values.md#pointer).
-
-| Field | Value |
-| --- | --- |
-| root | <code>pointer</code> |
-| pos | <code>noun</code> |
-| type | <code>primitive.pointer</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>POINTER(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### op
-
-<a id="vocabulary-nouns-op"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [op](../spec/applicational-types.md#functions-properties-and-operations).
-
-| Field | Value |
-| --- | --- |
-| root | <code>op</code> |
-| pos | <code>noun</code> |
-| type | <code>applicative.operation</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>OP(inputs[0], inputs[1], inputs[2], inputs[3])</code> |
-| inputs | <code>["text","numbers","text","text"]</code> |
-| outputs | <code>["value"]</code> |
-
-### prop
-
-<a id="vocabulary-nouns-prop"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [prop](../spec/applicational-types.md#functions-properties-and-operations).
-
-| Field | Value |
-| --- | --- |
-| root | <code>prop</code> |
-| pos | <code>noun</code> |
-| type | <code>applicative.property</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>PROP(inputs[0], inputs[1], inputs[2])</code> |
-| inputs | <code>["text","text","thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### func
-
-<a id="vocabulary-nouns-func"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [func](../spec/applicational-types.md#functions-properties-and-operations).
-
-| Field | Value |
-| --- | --- |
-| root | <code>func</code> |
-| pos | <code>noun</code> |
-| type | <code>applicative.function</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>FUNC(inputs[0], inputs[1], inputs[2], inputs[3])</code> |
-| inputs | <code>["text","props","texts","prop"]</code> |
-| outputs | <code>["value"]</code> |
-
-### definition
-
-<a id="vocabulary-nouns-definition"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [definition](../spec/applicational-types.md#attributes-and-definitions).
-
-| Field | Value |
-| --- | --- |
-| root | <code>definition</code> |
-| pos | <code>noun</code> |
-| type | <code>applicative.definition</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>DEF(inputs[0])</code> |
-| inputs | <code>["text"]</code> |
-| outputs | <code>["value"]</code> |
-
-### attribute
-
-<a id="vocabulary-nouns-attribute"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [attribute](../spec/applicational-types.md#attributes-and-definitions).
-
-| Field | Value |
-| --- | --- |
-| root | <code>attribute</code> |
-| pos | <code>noun</code> |
-| type | <code>applicative.attribute</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>ATTRIBUTE(inputs[0], inputs[1])</code> |
-| inputs | <code>["definition","attributes"]</code> |
-| outputs | <code>["value"]</code> |
-
-### object
-
-<a id="vocabulary-nouns-object"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [object](../spec/applicational-types.md#classes-and-objects).
-
-| Field | Value |
-| --- | --- |
-| root | <code>object</code> |
-| pos | <code>noun</code> |
-| type | <code>applicative.object</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>OBJECT(inputs[0], inputs[1])</code> |
-| inputs | <code>["definition","attributes"]</code> |
-| outputs | <code>["value"]</code> |
-
-### class
-
-<a id="vocabulary-nouns-class"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [class](../spec/applicational-types.md#classes-and-objects).
-
-| Field | Value |
-| --- | --- |
-| root | <code>class</code> |
-| pos | <code>noun</code> |
-| type | <code>applicative.class</code> |
-| postfixes | <code>{"-es":"plural"}</code> |
-| value | <code>CLASS(inputs[0], inputs[1])</code> |
-| inputs | <code>["objects","classes"]</code> |
-| outputs | <code>["value"]</code> |
-
-### service
-
-<a id="vocabulary-nouns-service"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [service](../spec/applicational-types.md#services).
-
-| Field | Value |
-| --- | --- |
-| root | <code>service</code> |
-| pos | <code>noun</code> |
-| type | <code>applicative.service</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>SERVICE(inputs[0], inputs[1], inputs[2])</code> |
-| inputs | <code>["objects","classes","services"]</code> |
-| outputs | <code>["value"]</code> |
-
-### app
-
-<a id="vocabulary-nouns-app"></a>
-
-This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.
-
-Semantic context: [app](../spec/applicational-types.md#apps).
-
-| Field | Value |
-| --- | --- |
-| root | <code>app</code> |
-| pos | <code>noun</code> |
-| type | <code>applicative.app</code> |
-| postfixes | <code>{"-s":"plural"}</code> |
-| value | <code>APP(inputs[0], inputs[1], inputs[2])</code> |
-| inputs | <code>["objects","services","dictionary"]</code> |
-| outputs | <code>["value"]</code> |
+**Word forms**
+
+| Word | root | pos | type | postfixes |
+| --- | --- | --- | --- | --- |
+| <a id="it"></a><a id="vocabulary-nouns-it"></a>it | <code>it</code> | <code>noun</code> | <code>pronoun.definitive</code> | <code>{"---they":"plural"}</code> |
+| <a id="that"></a><a id="vocabulary-nouns-that"></a>that | <code>that</code> | <code>noun</code> | <code>pronoun.objective</code> | <code>{"---ose":"plural"}</code> |
+| <a id="this"></a><a id="vocabulary-nouns-this"></a>this | <code>this</code> | <code>noun</code> | <code>pronoun.subjective</code> | <code>{"---ese":"plural"}</code> |
+| <a id="input"></a><a id="vocabulary-nouns-input"></a>input | <code>input</code> | <code>noun</code> | <code>functional.inflective</code> | <code>{"-s":"plural"}</code> |
+| <a id="output"></a><a id="vocabulary-nouns-output"></a>output | <code>output</code> | <code>noun</code> | <code>functional.deflective</code> | <code>{"-s":"plural"}</code> |
+| <a id="error"></a><a id="vocabulary-nouns-error"></a>error | <code>error</code> | <code>noun</code> | <code>functional.error</code> | <code>{"-s":"plural"}</code> |
+| <a id="list"></a><a id="vocabulary-nouns-list"></a>list | <code>list</code> | <code>noun</code> | <code>iterative.list</code> | <code>{"-s":"plural"}</code> |
+| <a id="dictionary"></a><a id="vocabulary-nouns-dictionary"></a>dictionary | <code>dictionary</code> | <code>noun</code> | <code>iterative.dictionary</code> | <code>{"--ies":"plural"}</code> |
+| <a id="null"></a><a id="vocabulary-nouns-null"></a>null | <code>null</code> | <code>noun</code> | <code>primitive.null</code> | <code>{"-s":"plural"}</code> |
+| <a id="thing"></a><a id="vocabulary-nouns-thing"></a>thing | <code>thing</code> | <code>noun</code> | <code>primitive.thing</code> | <code>{"-s":"plural"}</code> |
+| <a id="text"></a><a id="vocabulary-nouns-text"></a>text | <code>text</code> | <code>noun</code> | <code>primitive.text</code> | <code>{"-s":"plural"}</code> |
+| <a id="number"></a><a id="vocabulary-nouns-number"></a>number | <code>number</code> | <code>noun</code> | <code>primitive.number</code> | <code>{"-s":"plural"}</code> |
+| <a id="byte"></a><a id="vocabulary-nouns-byte"></a>byte | <code>byte</code> | <code>noun</code> | <code>primitive.byte</code> | <code>{"-s":"plural"}</code> |
+| <a id="truth"></a><a id="vocabulary-nouns-truth"></a>truth | <code>truth</code> | <code>noun</code> | <code>primitive.truth</code> | <code>{"-s":"plural"}</code> |
+| <a id="pointer"></a><a id="vocabulary-nouns-pointer"></a>pointer | <code>pointer</code> | <code>noun</code> | <code>primitive.pointer</code> | <code>{"-s":"plural"}</code> |
+| <a id="op"></a><a id="vocabulary-nouns-op"></a>op | <code>op</code> | <code>noun</code> | <code>applicative.operation</code> | <code>{"-s":"plural"}</code> |
+| <a id="prop"></a><a id="vocabulary-nouns-prop"></a>prop | <code>prop</code> | <code>noun</code> | <code>applicative.property</code> | <code>{"-s":"plural"}</code> |
+| <a id="func"></a><a id="vocabulary-nouns-func"></a>func | <code>func</code> | <code>noun</code> | <code>applicative.function</code> | <code>{"-s":"plural"}</code> |
+| <a id="definition"></a><a id="vocabulary-nouns-definition"></a>definition | <code>definition</code> | <code>noun</code> | <code>applicative.definition</code> | <code>{"-s":"plural"}</code> |
+| <a id="attribute"></a><a id="vocabulary-nouns-attribute"></a>attribute | <code>attribute</code> | <code>noun</code> | <code>applicative.attribute</code> | <code>{"-s":"plural"}</code> |
+| <a id="object"></a><a id="vocabulary-nouns-object"></a>object | <code>object</code> | <code>noun</code> | <code>applicative.object</code> | <code>{"-s":"plural"}</code> |
+| <a id="class"></a><a id="vocabulary-nouns-class"></a>class | <code>class</code> | <code>noun</code> | <code>applicative.class</code> | <code>{"-es":"plural"}</code> |
+| <a id="service"></a><a id="vocabulary-nouns-service"></a>service | <code>service</code> | <code>noun</code> | <code>applicative.service</code> | <code>{"-s":"plural"}</code> |
+| <a id="app"></a><a id="vocabulary-nouns-app"></a>app | <code>app</code> | <code>noun</code> | <code>applicative.app</code> | <code>{"-s":"plural"}</code> |
+
+**Handlers and support**
+
+| Word | value | inputs | outputs | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| [it](#vocabulary-nouns-it) | <code>IT(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Pronouns](../spec/names-and-scope.md#pronouns) | [Note 1](#vocabulary-note-1) |
+| [that](#vocabulary-nouns-that) | <code>THAT(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Pronouns](../spec/names-and-scope.md#pronouns) | [Note 1](#vocabulary-note-1) |
+| [this](#vocabulary-nouns-this) | <code>THIS(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Pronouns](../spec/names-and-scope.md#pronouns) | [Note 1](#vocabulary-note-1) |
+| [input](#vocabulary-nouns-input) | <code>INPUT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Input metadata and runtime boundary](../reference/builtins/index.md#runtime-members) | [Note 2](#vocabulary-note-2) |
+| [output](#vocabulary-nouns-output) | <code>OUTPUT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Process members](../spec/execution.md#output-and-error) | [Note 3](#vocabulary-note-3) |
+| [error](#vocabulary-nouns-error) | <code>ERROR(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Process members](../spec/execution.md#output-and-error) | [Note 3](#vocabulary-note-3) |
+| [list](#vocabulary-nouns-list) | <code>LIST(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [list](../spec/collections-and-categories.md#lists) | [Note 4](#vocabulary-note-4) |
+| [dictionary](#vocabulary-nouns-dictionary) | <code>DICTIONARY(inputs[0], inputs[1])</code> | <code>["text","*.thing"]</code> | <code>["value"]</code> | partial | [dictionary](../spec/collections-and-categories.md#dictionaries) | [Note 5](#vocabulary-note-5) |
+| [null](#vocabulary-nouns-null) | <code>NULL(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [null](../spec/values.md#null-and-internal-states) | [Note 6](#vocabulary-note-6) |
+| [thing](#vocabulary-nouns-thing) | <code>THING(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [thing](../spec/values.md#thing) | [Note 7](#vocabulary-note-7) |
+| [text](#vocabulary-nouns-text) | <code>TEXT(inputs[0])</code> | <code>["*.text"]</code> | <code>["value"]</code> | partial | [text](../spec/values.md#text) | [Note 8](#vocabulary-note-8) |
+| [number](#vocabulary-nouns-number) | <code>NUMBER(inputs[0])</code> | <code>["*.number"]</code> | <code>["value"]</code> | partial | [number](../spec/values.md#number) | [Note 9](#vocabulary-note-9) |
+| [byte](#vocabulary-nouns-byte) | <code>BYTES(inputs[0])</code> | <code>["*.byte"]</code> | <code>["value"]</code> | partial | [byte](../spec/values.md#byte-and-bytes) | [Note 10](#vocabulary-note-10) |
+| [truth](#vocabulary-nouns-truth) | <code>TRUTH(inputs[0])</code> | <code>["*.truth"]</code> | <code>["value"]</code> | partial | [truth](../spec/values.md#truth) | [Note 11](#vocabulary-note-11) |
+| [pointer](#vocabulary-nouns-pointer) | <code>POINTER(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [pointer](../spec/values.md#pointer) | [Note 12](#vocabulary-note-12) |
+| [op](#vocabulary-nouns-op) | <code>OP(inputs[0], inputs[1], inputs[2], inputs[3])</code> | <code>["text","numbers","text","text"]</code> | <code>["value"]</code> | partial | [op](../spec/applicational-types.md#functions-properties-and-operations) | [Note 5](#vocabulary-note-5) |
+| [prop](#vocabulary-nouns-prop) | <code>PROP(inputs[0], inputs[1], inputs[2])</code> | <code>["text","text","thing"]</code> | <code>["value"]</code> | partial | [prop](../spec/applicational-types.md#functions-properties-and-operations) | [Note 5](#vocabulary-note-5) |
+| [func](#vocabulary-nouns-func) | <code>FUNC(inputs[0], inputs[1], inputs[2], inputs[3])</code> | <code>["text","props","texts","prop"]</code> | <code>["value"]</code> | partial | [func](../spec/applicational-types.md#functions-properties-and-operations) | [Note 13](#vocabulary-note-13) |
+| [definition](#vocabulary-nouns-definition) | <code>DEF(inputs[0])</code> | <code>["text"]</code> | <code>["value"]</code> | partial | [definition](../spec/applicational-types.md#attributes-and-definitions) | [Note 5](#vocabulary-note-5) |
+| [attribute](#vocabulary-nouns-attribute) | <code>ATTRIBUTE(inputs[0], inputs[1])</code> | <code>["definition","attributes"]</code> | <code>["value"]</code> | partial | [attribute](../spec/applicational-types.md#attributes-and-definitions) | [Note 5](#vocabulary-note-5) |
+| [object](#vocabulary-nouns-object) | <code>OBJECT(inputs[0], inputs[1])</code> | <code>["definition","attributes"]</code> | <code>["value"]</code> | partial | [object](../spec/applicational-types.md#classes-and-objects) | [Note 5](#vocabulary-note-5) |
+| [class](#vocabulary-nouns-class) | <code>CLASS(inputs[0], inputs[1])</code> | <code>["objects","classes"]</code> | <code>["value"]</code> | partial | [class](../spec/applicational-types.md#classes-and-objects) | [Note 5](#vocabulary-note-5) |
+| [service](#vocabulary-nouns-service) | <code>SERVICE(inputs[0], inputs[1], inputs[2])</code> | <code>["objects","classes","services"]</code> | <code>["value"]</code> | partial | [service](../spec/applicational-types.md#services) | [Note 5](#vocabulary-note-5) |
+| [app](#vocabulary-nouns-app) | <code>APP(inputs[0], inputs[1], inputs[2])</code> | <code>["objects","services","dictionary"]</code> | <code>["value"]</code> | partial | [app](../spec/applicational-types.md#apps) | [Note 5](#vocabulary-note-5) |
 
 ## verbs
 
-### passive
-
-<a id="vocabulary-verbs-passive"></a>
-
-Assignment follows resolved scalar/storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order.
-
-Semantic context: [Assignment](../spec/control-flow.md#assignment).
-
-| Field | Value |
-| --- | --- |
-| root | <code>is</code> |
-| pos | <code>verb</code> |
-| type | <code>action.passive</code> |
-| postfixes | <code>{"-nt":"null"}</code> |
-| value | <code>IS(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### associative
-
-<a id="vocabulary-verbs-associative"></a>
-
-Association names an existing canonical value or definition. It does not create an independent runtime copy.
-
-Semantic context: [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity).
-
-| Field | Value |
-| --- | --- |
-| root | <code>use</code> |
-| pos | <code>verb</code> |
-| type | <code>action.associative</code> |
-| postfixes | <code>{"-s":"active","-d":"passive","--ing":"applicative","-r":"objective"}</code> |
-| value | <code>USE(inputs[0])</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
-
-### declarative
-
-<a id="vocabulary-verbs-declarative"></a>
-
-A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior.
-
-Semantic context: [Declarations](../spec/definitions.md#create-define-and-describe).
-
-| Field | Value |
-| --- | --- |
-| root | <code>create</code> |
-| pos | <code>verb</code> |
-| type | <code>action.declarative</code> |
-| postfixes | <code>{"-s":"active","-d":"passive","--ing":"applicative","--or":"objective"}</code> |
-| value | <code>DECLARE(inputs[0])</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
-
-### definitive
-
-<a id="vocabulary-verbs-definitive"></a>
-
-Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion.
-
-Semantic context: [Definitions](../spec/definitions.md#create-define-and-describe).
-
-| Field | Value |
-| --- | --- |
-| root | <code>define</code> |
-| pos | <code>verb</code> |
-| type | <code>action.definitive</code> |
-| postfixes | <code>{"-s":"active","-d":"passive","--ing":"applicative","-r":"objective"}</code> |
-| value | <code>DEFINE(inputs[0])</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
-
-### descriptive
-
-<a id="vocabulary-verbs-descriptive"></a>
-
-Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership.
-
-Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-constructors).
-
-| Field | Value |
-| --- | --- |
-| root | <code>describe</code> |
-| pos | <code>verb</code> |
-| type | <code>action.descriptive</code> |
-| postfixes | <code>{"-s":"active","-d":"passive","--ing":"applicative","-r":"objective"}</code> |
-| value | <code>DESCRIBE(inputs[0])</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
-
-### expansive
-
-<a id="vocabulary-verbs-expansive"></a>
-
-The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API.
-
-Semantic context: [Collection operations](../spec/control-flow.md#iteration-and-collection-operations).
-
-| Field | Value |
-| --- | --- |
-| root | <code>put</code> |
-| pos | <code>verb</code> |
-| type | <code>action.expansive</code> |
-| postfixes | <code>{"-s":"active","-":"passive","-ting":"applicative","-er":"objective"}</code> |
-| value | <code>PUT(inputs[0], inputs[1], inputs[2])</code> |
-| inputs | <code>["*.thing","*.noun.iterative","text"]</code> |
-| outputs | <code>["value"]</code> |
-
-### locative
-
-<a id="vocabulary-verbs-locative"></a>
-
-The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API.
-
-Semantic context: [Collection operations](../spec/control-flow.md#iteration-and-collection-operations).
-
-| Field | Value |
-| --- | --- |
-| root | <code>place</code> |
-| pos | <code>verb</code> |
-| type | <code>action.locative</code> |
-| postfixes | <code>{"-s":"active","-d":"passive","--ing":"applicative","-r":"objective"}</code> |
-| value | <code>PLACE(inputs[0], inputs[1], inputs[2])</code> |
-| inputs | <code>["*.thing","*.noun.iterative","text"]</code> |
-| outputs | <code>["value"]</code> |
-
-### receptive
-
-<a id="vocabulary-verbs-receptive"></a>
-
-The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API.
-
-Semantic context: [Collection operations](../spec/control-flow.md#iteration-and-collection-operations).
-
-| Field | Value |
-| --- | --- |
-| root | <code>get</code> |
-| pos | <code>verb</code> |
-| type | <code>action.receptive</code> |
-| postfixes | <code>{"-s":"active","---otten":"passive","-ting":"applicative","-ter":"objective"}</code> |
-| value | <code>GET(inputs[0], inputs[1])</code> |
-| inputs | <code>["text","*.noun.iterative"]</code> |
-| outputs | <code>["value"]</code> |
-
-### reductive
-
-<a id="vocabulary-verbs-reductive"></a>
-
-The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API.
-
-Semantic context: [Collection operations](../spec/control-flow.md#iteration-and-collection-operations).
-
-| Field | Value |
-| --- | --- |
-| root | <code>take</code> |
-| pos | <code>verb</code> |
-| type | <code>action.reductive</code> |
-| postfixes | <code>{"-s":"active","-n":"passive","--ing":"applicative","-r":"objective"}</code> |
-| value | <code>TAKE(inputs[0], inputs[1])</code> |
-| inputs | <code>["text","*.noun.iterative"]</code> |
-| outputs | <code>["value"]</code> |
-
-### generative
-
-<a id="vocabulary-verbs-generative"></a>
-
-Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output.
-
-Semantic context: [Build](../spec/execution.md#build-run-stop-and-await).
-
-| Field | Value |
-| --- | --- |
-| root | <code>build</code> |
-| pos | <code>verb</code> |
-| type | <code>action.generative</code> |
-| postfixes | <code>{"-s":"active","--t":"passive","-ing":"applicative","-er":"objective"}</code> |
-| value | <code>BUILD(inputs[0])</code> |
-| inputs | <code>["*.noun.app"]</code> |
-| outputs | <code>["value"]</code> |
-
-### executive
-
-<a id="vocabulary-verbs-executive"></a>
-
-Run launches the selected process. The grammar does not imply that every applicative category is runnable.
-
-Semantic context: [Run](../spec/execution.md#build-run-stop-and-await).
-
-| Field | Value |
-| --- | --- |
-| root | <code>run</code> |
-| pos | <code>verb</code> |
-| type | <code>action.executive</code> |
-| postfixes | <code>{"-s":"active","--an":"passive","-ning":"applicative","-ner":"objective"}</code> |
-| value | <code>RUN(inputs[0])</code> |
-| inputs | <code>["*.noun.app"]</code> |
-| outputs | <code>["value"]</code> |
-
-### suspensive
-
-<a id="vocabulary-verbs-suspensive"></a>
-
-Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement.
-
-Semantic context: [Await](../spec/execution.md#continuations-and-activation).
-
-| Field | Value |
-| --- | --- |
-| root | <code>await</code> |
-| pos | <code>verb</code> |
-| type | <code>action.suspensive</code> |
-| postfixes | <code>{"-s":"active","-ed":"passive","-ing":"applicative"}</code> |
-| value | <code>AWAIT(inputs[0])</code> |
-| inputs | <code>["*.noun.app"]</code> |
-| outputs | <code>["value"]</code> |
-
-### interruptive
-
-<a id="vocabulary-verbs-interruptive"></a>
-
-Stop requests termination without joining. Final output still requires the Await contract.
-
-Semantic context: [Stop](../spec/execution.md#build-run-stop-and-await).
-
-| Field | Value |
-| --- | --- |
-| root | <code>stop</code> |
-| pos | <code>verb</code> |
-| type | <code>action.interruptive</code> |
-| postfixes | <code>{"-s":"active","-ped":"passive","-ping":"applicative","-pper":"objective"}</code> |
-| value | <code>STOP(inputs[0])</code> |
-| inputs | <code>["*.noun.app"]</code> |
-| outputs | <code>["value"]</code> |
-
-### inflective
-
-<a id="vocabulary-verbs-inflective"></a>
-
-Configured Import/Export handlers do not replace the supported Use import syntax and are absent from native outer instruction dispatch.
-
-Semantic context: [Import/export distinction](../spec/imports.md#indexed-dictionaries).
-
-| Field | Value |
-| --- | --- |
-| root | <code>import</code> |
-| pos | <code>verb</code> |
-| type | <code>action.inflective</code> |
-| postfixes | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
-| value | <code>IMPORT(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### deflective
-
-<a id="vocabulary-verbs-deflective"></a>
-
-Configured Import/Export handlers do not replace the supported Use import syntax and are absent from native outer instruction dispatch.
-
-Semantic context: [Import/export distinction](../spec/imports.md#indexed-dictionaries).
-
-| Field | Value |
-| --- | --- |
-| root | <code>export</code> |
-| pos | <code>verb</code> |
-| type | <code>action.deflective</code> |
-| postfixes | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
-| value | <code>EXPORT(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### observative
-
-<a id="vocabulary-verbs-observative"></a>
-
-Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization.
-
-Semantic context: [Show](../spec/control-flow.md#show-and-output).
-
-| Field | Value |
-| --- | --- |
-| root | <code>show</code> |
-| pos | <code>verb</code> |
-| type | <code>action.observative</code> |
-| postfixes | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
-| value | <code>SHOW(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### terminative
-
-<a id="vocabulary-verbs-terminative"></a>
-
-Exit ends the compiled program; source Function.Return is a separate builtin expansion.
-
-Semantic context: [Exit](../spec/control-flow.md#exit-and-return).
-
-| Field | Value |
-| --- | --- |
-| root | <code>exit</code> |
-| pos | <code>verb</code> |
-| type | <code>action.terminative</code> |
-| postfixes | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
-| value | <code>EXIT(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### appropriative
-
-<a id="vocabulary-verbs-appropriative"></a>
-
-The configured comparison/appropriation root is used in bounded condition forms. Operand types and Error-member restrictions are enforced by native lowering.
-
-Semantic context: [Comparisons](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>have</code> |
-| pos | <code>verb</code> |
-| type | <code>operation.appropriative</code> |
-| postfixes | <code>{"---s":"active","---d":"passive","--ing":"applicative","-r":"objective"}</code> |
-| value | <code>HAVE(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### comparative
-
-<a id="vocabulary-verbs-comparative"></a>
-
-The configured comparison/appropriation root is used in bounded condition forms. Operand types and Error-member restrictions are enforced by native lowering.
-
-Semantic context: [Comparisons](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>equal</code> |
-| pos | <code>verb</code> |
-| type | <code>operation.comparative</code> |
-| postfixes | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
-| value | <code>EQUAL(inputs[0])</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
+**Word forms**
+
+| Word | root | pos | type | postfixes |
+| --- | --- | --- | --- | --- |
+| <a id="passive"></a><a id="vocabulary-verbs-passive"></a>passive | <code>is</code> | <code>verb</code> | <code>action.passive</code> | <code>{"-nt":"null"}</code> |
+| <a id="associative"></a><a id="vocabulary-verbs-associative"></a>associative | <code>use</code> | <code>verb</code> | <code>action.associative</code> | <code>{"-s":"active","-d":"passive","--ing":"applicative","-r":"objective"}</code> |
+| <a id="declarative"></a><a id="vocabulary-verbs-declarative"></a>declarative | <code>create</code> | <code>verb</code> | <code>action.declarative</code> | <code>{"-s":"active","-d":"passive","--ing":"applicative","--or":"objective"}</code> |
+| <a id="definitive"></a><a id="vocabulary-verbs-definitive"></a>definitive | <code>define</code> | <code>verb</code> | <code>action.definitive</code> | <code>{"-s":"active","-d":"passive","--ing":"applicative","-r":"objective"}</code> |
+| <a id="descriptive"></a><a id="vocabulary-verbs-descriptive"></a>descriptive | <code>describe</code> | <code>verb</code> | <code>action.descriptive</code> | <code>{"-s":"active","-d":"passive","--ing":"applicative","-r":"objective"}</code> |
+| <a id="expansive"></a><a id="vocabulary-verbs-expansive"></a>expansive | <code>put</code> | <code>verb</code> | <code>action.expansive</code> | <code>{"-s":"active","-":"passive","-ting":"applicative","-er":"objective"}</code> |
+| <a id="locative"></a><a id="vocabulary-verbs-locative"></a>locative | <code>place</code> | <code>verb</code> | <code>action.locative</code> | <code>{"-s":"active","-d":"passive","--ing":"applicative","-r":"objective"}</code> |
+| <a id="receptive"></a><a id="vocabulary-verbs-receptive"></a>receptive | <code>get</code> | <code>verb</code> | <code>action.receptive</code> | <code>{"-s":"active","---otten":"passive","-ting":"applicative","-ter":"objective"}</code> |
+| <a id="reductive"></a><a id="vocabulary-verbs-reductive"></a>reductive | <code>take</code> | <code>verb</code> | <code>action.reductive</code> | <code>{"-s":"active","-n":"passive","--ing":"applicative","-r":"objective"}</code> |
+| <a id="generative"></a><a id="vocabulary-verbs-generative"></a>generative | <code>build</code> | <code>verb</code> | <code>action.generative</code> | <code>{"-s":"active","--t":"passive","-ing":"applicative","-er":"objective"}</code> |
+| <a id="executive"></a><a id="vocabulary-verbs-executive"></a>executive | <code>run</code> | <code>verb</code> | <code>action.executive</code> | <code>{"-s":"active","--an":"passive","-ning":"applicative","-ner":"objective"}</code> |
+| <a id="suspensive"></a><a id="vocabulary-verbs-suspensive"></a>suspensive | <code>await</code> | <code>verb</code> | <code>action.suspensive</code> | <code>{"-s":"active","-ed":"passive","-ing":"applicative"}</code> |
+| <a id="interruptive"></a><a id="vocabulary-verbs-interruptive"></a>interruptive | <code>stop</code> | <code>verb</code> | <code>action.interruptive</code> | <code>{"-s":"active","-ped":"passive","-ping":"applicative","-pper":"objective"}</code> |
+| <a id="inflective"></a><a id="vocabulary-verbs-inflective"></a>inflective | <code>import</code> | <code>verb</code> | <code>action.inflective</code> | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
+| <a id="deflective"></a><a id="vocabulary-verbs-deflective"></a>deflective | <code>export</code> | <code>verb</code> | <code>action.deflective</code> | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
+| <a id="observative"></a><a id="vocabulary-verbs-observative"></a>observative | <code>show</code> | <code>verb</code> | <code>action.observative</code> | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
+| <a id="terminative"></a><a id="vocabulary-verbs-terminative"></a>terminative | <code>exit</code> | <code>verb</code> | <code>action.terminative</code> | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
+| <a id="appropriative"></a><a id="vocabulary-verbs-appropriative"></a>appropriative | <code>have</code> | <code>verb</code> | <code>operation.appropriative</code> | <code>{"---s":"active","---d":"passive","--ing":"applicative","-r":"objective"}</code> |
+| <a id="comparative"></a><a id="vocabulary-verbs-comparative"></a>comparative | <code>equal</code> | <code>verb</code> | <code>operation.comparative</code> | <code>{"-s":"active","-ed":"passive","-ing":"applicative","-er":"objective"}</code> |
+| <a id="invocative"></a><a id="vocabulary-verbs-invocative"></a>invocative | <code>call</code> | <code>verb</code> | <code>action.invocative</code> | <code>{}</code> |
+| <a id="returning"></a><a id="vocabulary-verbs-returning"></a>returning | <code>return</code> | <code>verb</code> | <code>action.returning</code> | <code>{}</code> |
+
+**Handlers and support**
+
+| Word | value | inputs | outputs | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| [passive](#vocabulary-verbs-passive) | <code>IS(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Assignment](../spec/control-flow.md#assignment) | [Note 14](#vocabulary-note-14) |
+| [associative](#vocabulary-verbs-associative) | <code>USE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 15](#vocabulary-note-15) |
+| [declarative](#vocabulary-verbs-declarative) | <code>DECLARE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Declarations](../spec/definitions.md#create-define-and-describe) | [Note 16](#vocabulary-note-16) |
+| [definitive](#vocabulary-verbs-definitive) | <code>DEFINE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Definitions](../spec/definitions.md#create-define-and-describe) | [Note 17](#vocabulary-note-17) |
+| [descriptive](#vocabulary-verbs-descriptive) | <code>DESCRIBE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Descriptors](../spec/definitions.md#descriptors-and-constructors) | [Note 18](#vocabulary-note-18) |
+| [expansive](#vocabulary-verbs-expansive) | <code>PUT(inputs[0], inputs[1], inputs[2])</code> | <code>["*.thing","*.noun.iterative","text"]</code> | <code>["value"]</code> | partial | [Collection operations](../spec/control-flow.md#iteration-and-collection-operations) | [Note 19](#vocabulary-note-19) |
+| [locative](#vocabulary-verbs-locative) | <code>PLACE(inputs[0], inputs[1], inputs[2])</code> | <code>["*.thing","*.noun.iterative","text"]</code> | <code>["value"]</code> | partial | [Collection operations](../spec/control-flow.md#iteration-and-collection-operations) | [Note 20](#vocabulary-note-20) |
+| [receptive](#vocabulary-verbs-receptive) | <code>GET(inputs[0], inputs[1])</code> | <code>["text","*.noun.iterative"]</code> | <code>["value"]</code> | partial | [Collection operations](../spec/control-flow.md#iteration-and-collection-operations) | [Note 21](#vocabulary-note-21) |
+| [reductive](#vocabulary-verbs-reductive) | <code>TAKE(inputs[0], inputs[1])</code> | <code>["text","*.noun.iterative"]</code> | <code>["value"]</code> | partial | [Collection operations](../spec/control-flow.md#iteration-and-collection-operations) | [Note 21](#vocabulary-note-21) |
+| [generative](#vocabulary-verbs-generative) | <code>BUILD(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 22](#vocabulary-note-22) |
+| [executive](#vocabulary-verbs-executive) | <code>RUN(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 23](#vocabulary-note-23) |
+| [suspensive](#vocabulary-verbs-suspensive) | <code>AWAIT(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 24](#vocabulary-note-24) |
+| [interruptive](#vocabulary-verbs-interruptive) | <code>STOP(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 25](#vocabulary-note-25) |
+| [inflective](#vocabulary-verbs-inflective) | <code>IMPORT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Import/export distinction](../spec/imports.md#indexed-dictionaries) | [Note 26](#vocabulary-note-26) |
+| [deflective](#vocabulary-verbs-deflective) | <code>EXPORT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Import/export distinction](../spec/imports.md#indexed-dictionaries) | [Note 26](#vocabulary-note-26) |
+| [observative](#vocabulary-verbs-observative) | <code>SHOW(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 27](#vocabulary-note-27) |
+| [terminative](#vocabulary-verbs-terminative) | <code>EXIT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 28](#vocabulary-note-28) |
+| [appropriative](#vocabulary-verbs-appropriative) | <code>HAVE(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Comparisons](../spec/control-flow.md#comparisons) | [Note 29](#vocabulary-note-29) |
+| [comparative](#vocabulary-verbs-comparative) | <code>EQUAL(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Comparisons](../spec/control-flow.md#comparisons) | [Note 29](#vocabulary-note-29) |
+| [invocative](#vocabulary-verbs-invocative) | <code>CALL(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 30](#vocabulary-note-30) |
+| [returning](#vocabulary-verbs-returning) | <code>RETURN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 31](#vocabulary-note-31) |
 
 ## adjectives
 
-### visibility.public
+**Word forms**
 
-<a id="vocabulary-adjectives-visibility.public"></a>
+| Word | root | pos | type | postfixes |
+| --- | --- | --- | --- | --- |
+| <a id="visibilitypublic"></a><a id="vocabulary-adjectives-visibility.public"></a>visibility.public | <code>public</code> | <code>adjective</code> | <code>visibility.public</code> | <code>{}</code> |
+| <a id="initialization"></a><a id="vocabulary-adjectives-initialization"></a>initialization | <code>new</code> | <code>adjective</code> | <code>initialization</code> | <code>{}</code> |
+| <a id="abstraction"></a><a id="vocabulary-adjectives-abstraction"></a>abstraction | <code>generic</code> | <code>adjective</code> | <code>abstraction</code> | <code>{}</code> |
 
-Public/Publicly marks exactly the associated declaration. It does not publish unrelated owners or sibling declarations.
+**Handlers and support**
 
-Semantic context: [Visibility](../spec/names-and-scope.md#paragraph-scope).
-
-| Field | Value |
-| --- | --- |
-| root | <code>public</code> |
-| pos | <code>adjective</code> |
-| type | <code>visibility.public</code> |
-| postfixes | <code>{}</code> |
-
-### initialization
-
-<a id="vocabulary-adjectives-initialization"></a>
-
-Constructor/descriptor vocabulary determines source construction roles. Its presence does not imply arbitrary type construction or inherited native metadata.
-
-Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-constructors).
-
-| Field | Value |
-| --- | --- |
-| root | <code>new</code> |
-| pos | <code>adjective</code> |
-| type | <code>initialization</code> |
-| postfixes | <code>{}</code> |
-| value | <code>NEW(inputs[0])</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
-
-### abstraction
-
-<a id="vocabulary-adjectives-abstraction"></a>
-
-Constructor/descriptor vocabulary determines source construction roles. Its presence does not imply arbitrary type construction or inherited native metadata.
-
-Semantic context: [Descriptors](../spec/definitions.md#descriptors-and-constructors).
-
-| Field | Value |
-| --- | --- |
-| root | <code>generic</code> |
-| pos | <code>adjective</code> |
-| type | <code>abstraction</code> |
-| postfixes | <code>{}</code> |
-| value | <code>GENERIC(inputs[0])</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
+| Word | value | inputs | outputs | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| [visibility.public](#vocabulary-adjectives-visibility.public) | — | — | — | partial | [Visibility](../spec/names-and-scope.md#paragraph-scope) | [Note 32](#vocabulary-note-32) |
+| [initialization](#vocabulary-adjectives-initialization) | <code>NEW(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Descriptors](../spec/definitions.md#descriptors-and-constructors) | [Note 33](#vocabulary-note-33) |
+| [abstraction](#vocabulary-adjectives-abstraction) | <code>GENERIC(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Descriptors](../spec/definitions.md#descriptors-and-constructors) | [Note 33](#vocabulary-note-33) |
 
 ## adverbs
 
-### visibility.public
+**Word forms**
 
-<a id="vocabulary-adverbs-visibility.public"></a>
+| Word | root | pos | type | postfixes |
+| --- | --- | --- | --- | --- |
+| <a id="visibilitypublic-1"></a><a id="vocabulary-adverbs-visibility.public"></a>visibility.public | <code>publicly</code> | <code>adverb</code> | <code>visibility.public</code> | <code>{}</code> |
+| <a id="nullification"></a><a id="vocabulary-adverbs-nullification"></a>nullification | <code>not</code> | <code>adverb</code> | <code>nullification</code> | <code>{}</code> |
+| <a id="comparisonsubtraction"></a><a id="vocabulary-adverbs-comparison.subtraction"></a>comparison.subtraction | <code>less</code> | <code>adverb</code> | <code>comparison.subtraction</code> | <code>{}</code> |
+| <a id="comparisonmultiplication"></a><a id="vocabulary-adverbs-comparison.multiplication"></a>comparison.multiplication | <code>greater</code> | <code>adverb</code> | <code>comparison.multiplication</code> | <code>{}</code> |
+| <a id="progression"></a><a id="vocabulary-adverbs-progression"></a>progression | <code>then</code> | <code>adverb</code> | <code>abstraction</code> | <code>{}</code> |
 
-Public/Publicly marks exactly the associated declaration. It does not publish unrelated owners or sibling declarations.
+**Handlers and support**
 
-Semantic context: [Visibility](../spec/names-and-scope.md#paragraph-scope).
-
-| Field | Value |
-| --- | --- |
-| root | <code>publicly</code> |
-| pos | <code>adverb</code> |
-| type | <code>visibility.public</code> |
-| postfixes | <code>{}</code> |
-
-### nullification
-
-<a id="vocabulary-adverbs-nullification"></a>
-
-These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.
-
-Semantic context: [Conditions and modifiers](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>not</code> |
-| pos | <code>adverb</code> |
-| type | <code>nullification</code> |
-| postfixes | <code>{}</code> |
-| value | <code>NOT(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### comparison.subtraction
-
-<a id="vocabulary-adverbs-comparison.subtraction"></a>
-
-These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.
-
-Semantic context: [Conditions and modifiers](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>less</code> |
-| pos | <code>adverb</code> |
-| type | <code>comparison.subtraction</code> |
-| postfixes | <code>{}</code> |
-| value | <code>LESSER(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### comparison.multiplication
-
-<a id="vocabulary-adverbs-comparison.multiplication"></a>
-
-These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.
-
-Semantic context: [Conditions and modifiers](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>greater</code> |
-| pos | <code>adverb</code> |
-| type | <code>comparison.multiplication</code> |
-| postfixes | <code>{}</code> |
-| value | <code>GREATER(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### progression
-
-<a id="vocabulary-adverbs-progression"></a>
-
-These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.
-
-Semantic context: [Conditions and modifiers](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>then</code> |
-| pos | <code>adverb</code> |
-| type | <code>abstraction</code> |
-| postfixes | <code>{}</code> |
-| value | <code>THEN(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
+| Word | value | inputs | outputs | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| [visibility.public](#vocabulary-adverbs-visibility.public) | — | — | — | partial | [Visibility](../spec/names-and-scope.md#paragraph-scope) | [Note 32](#vocabulary-note-32) |
+| [nullification](#vocabulary-adverbs-nullification) | <code>NOT(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#comparisons) | [Note 34](#vocabulary-note-34) |
+| [comparison.subtraction](#vocabulary-adverbs-comparison.subtraction) | <code>LESSER(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#comparisons) | [Note 34](#vocabulary-note-34) |
+| [comparison.multiplication](#vocabulary-adverbs-comparison.multiplication) | <code>GREATER(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#comparisons) | [Note 34](#vocabulary-note-34) |
+| [progression](#vocabulary-adverbs-progression) | <code>THEN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#comparisons) | [Note 34](#vocabulary-note-34) |
 
 ## prepositions
 
-### definement.declarative
+**Word forms**
 
-<a id="vocabulary-prepositions-definement.declarative"></a>
+| Word | root | pos | type | postfixes |
+| --- | --- | --- | --- | --- |
+| <a id="definementdeclarative"></a><a id="vocabulary-prepositions-definement.declarative"></a>definement.declarative | <code>as</code> | <code>preposition</code> | <code>definement.declarative</code> | <code>{}</code> |
+| <a id="definementdefinitive"></a><a id="vocabulary-prepositions-definement.definitive"></a>definement.definitive | <code>of</code> | <code>preposition</code> | <code>definement.definitive</code> | <code>{}</code> |
+| <a id="definementlocative"></a><a id="vocabulary-prepositions-definement.locative"></a>definement.locative | <code>at</code> | <code>preposition</code> | <code>definement.locative</code> | <code>{}</code> |
+| <a id="consignmentassociative"></a><a id="vocabulary-prepositions-consignment.associative"></a>consignment.associative | <code>with</code> | <code>preposition</code> | <code>consignment.associative</code> | <code>{}</code> |
+| <a id="consignmentinflective"></a><a id="vocabulary-prepositions-consignment.inflective"></a>consignment.inflective | <code>in</code> | <code>preposition</code> | <code>consignment.inflective</code> | <code>{}</code> |
+| <a id="consignmentdeflective"></a><a id="vocabulary-prepositions-consignment.deflective"></a>consignment.deflective | <code>out</code> | <code>preposition</code> | <code>consignment.deflective</code> | <code>{}</code> |
+| <a id="consignmentindicative"></a><a id="vocabulary-prepositions-consignment.indicative"></a>consignment.indicative | <code>by</code> | <code>preposition</code> | <code>consignment.indicative</code> | <code>{}</code> |
+| <a id="conjoinmentobjective"></a><a id="vocabulary-prepositions-conjoinment.objective"></a>conjoinment.objective | <code>from</code> | <code>preposition</code> | <code>conjoinment.objective</code> | <code>{}</code> |
+| <a id="conjoinmentsubjective"></a><a id="vocabulary-prepositions-conjoinment.subjective"></a>conjoinment.subjective | <code>to</code> | <code>preposition</code> | <code>conjoinment.subjective</code> | <code>{}</code> |
+| <a id="conjoinmentcomparative"></a><a id="vocabulary-prepositions-conjoinment.comparative"></a>conjoinment.comparative | <code>than</code> | <code>preposition</code> | <code>conjoinment.comparative</code> | <code>{}</code> |
+| <a id="conjoinmentdirective"></a><a id="vocabulary-prepositions-conjoinment.directive"></a>conjoinment.directive | <code>for</code> | <code>preposition</code> | <code>conjoinment.directive</code> | <code>{}</code> |
 
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
+**Handlers and support**
 
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>as</code> |
-| pos | <code>preposition</code> |
-| type | <code>definement.declarative</code> |
-| postfixes | <code>{}</code> |
-| value | <code>AS(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### definement.definitive
-
-<a id="vocabulary-prepositions-definement.definitive"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>of</code> |
-| pos | <code>preposition</code> |
-| type | <code>definement.definitive</code> |
-| postfixes | <code>{}</code> |
-| value | <code>OF(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### definement.locative
-
-<a id="vocabulary-prepositions-definement.locative"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>at</code> |
-| pos | <code>preposition</code> |
-| type | <code>definement.locative</code> |
-| postfixes | <code>{}</code> |
-| value | <code>AT(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### consignment.associative
-
-<a id="vocabulary-prepositions-consignment.associative"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>with</code> |
-| pos | <code>preposition</code> |
-| type | <code>consignment.associative</code> |
-| postfixes | <code>{}</code> |
-| value | <code>WITH(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### consignment.inflective
-
-<a id="vocabulary-prepositions-consignment.inflective"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>in</code> |
-| pos | <code>preposition</code> |
-| type | <code>consignment.inflective</code> |
-| postfixes | <code>{}</code> |
-| value | <code>IN(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### consignment.deflective
-
-<a id="vocabulary-prepositions-consignment.deflective"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>out</code> |
-| pos | <code>preposition</code> |
-| type | <code>consignment.deflective</code> |
-| postfixes | <code>{}</code> |
-| value | <code>OUT(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### consignment.indicative
-
-<a id="vocabulary-prepositions-consignment.indicative"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>by</code> |
-| pos | <code>preposition</code> |
-| type | <code>consignment.indicative</code> |
-| postfixes | <code>{}</code> |
-| value | <code>BY(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### conjoinment.objective
-
-<a id="vocabulary-prepositions-conjoinment.objective"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>from</code> |
-| pos | <code>preposition</code> |
-| type | <code>conjoinment.objective</code> |
-| postfixes | <code>{}</code> |
-| value | <code>FROM(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### conjoinment.subjective
-
-<a id="vocabulary-prepositions-conjoinment.subjective"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>to</code> |
-| pos | <code>preposition</code> |
-| type | <code>conjoinment.subjective</code> |
-| postfixes | <code>{}</code> |
-| value | <code>TO(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### conjoinment.comparative
-
-<a id="vocabulary-prepositions-conjoinment.comparative"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>than</code> |
-| pos | <code>preposition</code> |
-| type | <code>conjoinment.comparative</code> |
-| postfixes | <code>{}</code> |
-| value | <code>THAN(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### conjoinment.directive
-
-<a id="vocabulary-prepositions-conjoinment.directive"></a>
-
-This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.
-
-Semantic context: [Prepositions](../spec/grammar.md#phrases).
-
-| Field | Value |
-| --- | --- |
-| root | <code>for</code> |
-| pos | <code>preposition</code> |
-| type | <code>conjoinment.directive</code> |
-| postfixes | <code>{}</code> |
-| value | <code>FOR(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
+| Word | value | inputs | outputs | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| [definement.declarative](#vocabulary-prepositions-definement.declarative) | <code>AS(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 35](#vocabulary-note-35) |
+| [definement.definitive](#vocabulary-prepositions-definement.definitive) | <code>OF(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 35](#vocabulary-note-35) |
+| [definement.locative](#vocabulary-prepositions-definement.locative) | <code>AT(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 36](#vocabulary-note-36) |
+| [consignment.associative](#vocabulary-prepositions-consignment.associative) | <code>WITH(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 35](#vocabulary-note-35) |
+| [consignment.inflective](#vocabulary-prepositions-consignment.inflective) | <code>IN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 37](#vocabulary-note-37) |
+| [consignment.deflective](#vocabulary-prepositions-consignment.deflective) | <code>OUT(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 35](#vocabulary-note-35) |
+| [consignment.indicative](#vocabulary-prepositions-consignment.indicative) | <code>BY(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 35](#vocabulary-note-35) |
+| [conjoinment.objective](#vocabulary-prepositions-conjoinment.objective) | <code>FROM(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 35](#vocabulary-note-35) |
+| [conjoinment.subjective](#vocabulary-prepositions-conjoinment.subjective) | <code>TO(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 35](#vocabulary-note-35) |
+| [conjoinment.comparative](#vocabulary-prepositions-conjoinment.comparative) | <code>THAN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 35](#vocabulary-note-35) |
+| [conjoinment.directive](#vocabulary-prepositions-conjoinment.directive) | <code>FOR(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#phrases) | [Note 35](#vocabulary-note-35) |
 
 ## articles
 
-### variable
+**Word forms**
 
-<a id="vocabulary-articles-variable"></a>
+| Word | root | pos | type | postfixes |
+| --- | --- | --- | --- | --- |
+| <a id="variable"></a><a id="vocabulary-articles-variable"></a>variable | <code>any</code> | <code>article</code> | <code>variable</code> | <code>{}</code> |
+| <a id="none"></a><a id="vocabulary-articles-none"></a>none | <code>no</code> | <code>article</code> | <code>none</code> | <code>{}</code> |
+| <a id="indefinite"></a><a id="vocabulary-articles-indefinite"></a>indefinite | <code>a</code> | <code>article</code> | <code>indefinite</code> | <code>{"-n":"alt"}</code> |
+| <a id="definite"></a><a id="vocabulary-articles-definite"></a>definite | <code>the</code> | <code>article</code> | <code>definite</code> | <code>{}</code> |
 
-Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.
+**Handlers and support**
 
-Semantic context: [Articles and typed arguments](../spec/definitions.md#typed-slots).
-
-| Field | Value |
-| --- | --- |
-| root | <code>any</code> |
-| pos | <code>article</code> |
-| type | <code>variable</code> |
-| postfixes | <code>{}</code> |
-| value | <code>ANY(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### none
-
-<a id="vocabulary-articles-none"></a>
-
-Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.
-
-Semantic context: [Articles and typed arguments](../spec/definitions.md#typed-slots).
-
-| Field | Value |
-| --- | --- |
-| root | <code>no</code> |
-| pos | <code>article</code> |
-| type | <code>none</code> |
-| postfixes | <code>{}</code> |
-| value | <code>NO(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### indefinite
-
-<a id="vocabulary-articles-indefinite"></a>
-
-Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.
-
-Semantic context: [Articles and typed arguments](../spec/definitions.md#typed-slots).
-
-| Field | Value |
-| --- | --- |
-| root | <code>a</code> |
-| pos | <code>article</code> |
-| type | <code>indefinite</code> |
-| postfixes | <code>{"-n":"alt"}</code> |
-| value | <code>A(inputs)</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
-
-### definite
-
-<a id="vocabulary-articles-definite"></a>
-
-Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.
-
-Semantic context: [Articles and typed arguments](../spec/definitions.md#typed-slots).
-
-| Field | Value |
-| --- | --- |
-| root | <code>the</code> |
-| pos | <code>article</code> |
-| type | <code>definite</code> |
-| postfixes | <code>{}</code> |
-| value | <code>THE(inputs)</code> |
-| inputs | <code>["*.noun"]</code> |
-| outputs | <code>["value"]</code> |
+| Word | value | inputs | outputs | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| [variable](#vocabulary-articles-variable) | <code>ANY(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Articles and typed arguments](../spec/definitions.md#typed-slots) | [Note 38](#vocabulary-note-38) |
+| [none](#vocabulary-articles-none) | <code>NO(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Articles and typed arguments](../spec/definitions.md#typed-slots) | [Note 38](#vocabulary-note-38) |
+| [indefinite](#vocabulary-articles-indefinite) | <code>A(inputs)</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Articles and typed arguments](../spec/definitions.md#typed-slots) | [Note 38](#vocabulary-note-38) |
+| [definite](#vocabulary-articles-definite) | <code>THE(inputs)</code> | <code>["*.noun"]</code> | <code>["value"]</code> | partial | [Articles and typed arguments](../spec/definitions.md#typed-slots) | [Note 38](#vocabulary-note-38) |
 
 ## conjunctions
 
-### mutual
+**Word forms**
 
-<a id="vocabulary-conjunctions-mutual"></a>
+| Word | root | pos | type | postfixes |
+| --- | --- | --- | --- | --- |
+| <a id="mutual"></a><a id="vocabulary-conjunctions-mutual"></a>mutual | <code>and</code> | <code>conjunction</code> | <code>mutual</code> | <code>{}</code> |
+| <a id="exclusive"></a><a id="vocabulary-conjunctions-exclusive"></a>exclusive | <code>or</code> | <code>conjunction</code> | <code>exclusive</code> | <code>{}</code> |
 
-These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.
+**Handlers and support**
 
-Semantic context: [Conditions and modifiers](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>and</code> |
-| pos | <code>conjunction</code> |
-| type | <code>mutual</code> |
-| postfixes | <code>{}</code> |
-| value | <code>AND(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### exclusive
-
-<a id="vocabulary-conjunctions-exclusive"></a>
-
-These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.
-
-Semantic context: [Conditions and modifiers](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>or</code> |
-| pos | <code>conjunction</code> |
-| type | <code>exclusive</code> |
-| postfixes | <code>{}</code> |
-| value | <code>OR(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
+| Word | value | inputs | outputs | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| [mutual](#vocabulary-conjunctions-mutual) | <code>AND(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#comparisons) | [Note 34](#vocabulary-note-34) |
+| [exclusive](#vocabulary-conjunctions-exclusive) | <code>OR(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#comparisons) | [Note 34](#vocabulary-note-34) |
 
 ## evaluations
 
-### conditional
+**Word forms**
 
-<a id="vocabulary-evaluations-conditional"></a>
+| Word | root | pos | type | postfixes |
+| --- | --- | --- | --- | --- |
+| <a id="conditional"></a><a id="vocabulary-evaluations-conditional"></a>conditional | <code>if</code> | <code>evaluation</code> | <code>conditional</code> | <code>{}</code> |
+| <a id="exceptional"></a><a id="vocabulary-evaluations-exceptional"></a>exceptional | <code>else</code> | <code>evaluation</code> | <code>exceptional</code> | <code>{}</code> |
+| <a id="alternative"></a><a id="vocabulary-evaluations-alternative"></a>alternative | <code>otherwise</code> | <code>evaluation</code> | <code>alternative</code> | <code>{}</code> |
+| <a id="iterative"></a><a id="vocabulary-evaluations-iterative"></a>iterative | <code>while</code> | <code>evaluation</code> | <code>iterative</code> | <code>{}</code> |
 
-These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.
+**Handlers and support**
 
-Semantic context: [Conditions and modifiers](../spec/control-flow.md#comparisons).
+| Word | value | inputs | outputs | Support | Semantic context | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| [conditional](#vocabulary-evaluations-conditional) | <code>IF(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#comparisons) | [Note 34](#vocabulary-note-34) |
+| [exceptional](#vocabulary-evaluations-exceptional) | <code>ELSE(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#comparisons) | [Note 34](#vocabulary-note-34) |
+| [alternative](#vocabulary-evaluations-alternative) | <code>OTHERWISE(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#comparisons) | [Note 34](#vocabulary-note-34) |
+| [iterative](#vocabulary-evaluations-iterative) | <code>WHILE(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | rejected | [Iteration](../spec/control-flow.md#iteration-and-collection-operations) | [Note 39](#vocabulary-note-39) |
 
-| Field | Value |
+## Support notes
+
+| Note | Reviewed explanation |
 | --- | --- |
-| root | <code>if</code> |
-| pos | <code>evaluation</code> |
-| type | <code>conditional</code> |
-| postfixes | <code>{}</code> |
-| value | <code>IF(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### exceptional
-
-<a id="vocabulary-evaluations-exceptional"></a>
-
-These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.
-
-Semantic context: [Conditions and modifiers](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>else</code> |
-| pos | <code>evaluation</code> |
-| type | <code>exceptional</code> |
-| postfixes | <code>{}</code> |
-| value | <code>ELSE(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### alternative
-
-<a id="vocabulary-evaluations-alternative"></a>
-
-These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.
-
-Semantic context: [Conditions and modifiers](../spec/control-flow.md#comparisons).
-
-| Field | Value |
-| --- | --- |
-| root | <code>otherwise</code> |
-| pos | <code>evaluation</code> |
-| type | <code>alternative</code> |
-| postfixes | <code>{}</code> |
-| value | <code>OTHERWISE(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
-
-### iterative
-
-<a id="vocabulary-evaluations-iterative"></a>
-
-While is recognized but explicitly rejected by outer lowering.
-
-Semantic context: [Iteration](../spec/control-flow.md#iteration-and-collection-operations).
-
-| Field | Value |
-| --- | --- |
-| root | <code>while</code> |
-| pos | <code>evaluation</code> |
-| type | <code>iterative</code> |
-| postfixes | <code>{}</code> |
-| value | <code>WHILE(inputs)</code> |
-| inputs | <code>["*.thing"]</code> |
-| outputs | <code>["value"]</code> |
+| <a id="vocabulary-note-1"></a>1 | Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply. |
+| <a id="vocabulary-note-2"></a>2 | Inputs name ordinary Function parameters or native signature metadata. They do not introduce process stdin/argument transport. |
+| <a id="vocabulary-note-3"></a>3 | Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries. |
+| <a id="vocabulary-note-4"></a>4 | Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API. |
+| <a id="vocabulary-note-5"></a>5 | This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target. |
+| <a id="vocabulary-note-6"></a>6 | Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states. |
+| <a id="vocabulary-note-7"></a>7 | Explicit Thing boundaries retain concrete runtime types; typed reads validate full element, shape and callable identities. No implicit coercion or dynamic arithmetic. |
+| <a id="vocabulary-note-8"></a>8 | The configured text root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |
+| <a id="vocabulary-note-9"></a>9 | The configured number root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |
+| <a id="vocabulary-note-10"></a>10 | The configured byte root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |
+| <a id="vocabulary-note-11"></a>11 | The configured truth root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |
+| <a id="vocabulary-note-12"></a>12 | Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API. |
+| <a id="vocabulary-note-13"></a>13 | Function source vocabulary can describe native composition or an ordinary typed callable; private body scopes and argument/result contracts distinguish them. |
+| <a id="vocabulary-note-14"></a>14 | Assignment follows resolved typed-storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order. |
+| <a id="vocabulary-note-15"></a>15 | Association names an existing canonical value or definition. It does not create an independent runtime copy. |
+| <a id="vocabulary-note-16"></a>16 | A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. |
+| <a id="vocabulary-note-17"></a>17 | Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. |
+| <a id="vocabulary-note-18"></a>18 | Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. |
+| <a id="vocabulary-note-19"></a>19 | Put appends to a List, stores Map/Instance fields or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries. |
+| <a id="vocabulary-note-20"></a>20 | Place replaces a List element at a checked Number index or a keyed runtime field. Required target/key/value types are checked. |
+| <a id="vocabulary-note-21"></a>21 | The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API. |
+| <a id="vocabulary-note-22"></a>22 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. |
+| <a id="vocabulary-note-23"></a>23 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. |
+| <a id="vocabulary-note-24"></a>24 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. |
+| <a id="vocabulary-note-25"></a>25 | Stop requests termination without joining. Final output still requires the Await contract. |
+| <a id="vocabulary-note-26"></a>26 | Configured Import/Export handlers do not replace the supported Use import syntax and are absent from native outer instruction dispatch. |
+| <a id="vocabulary-note-27"></a>27 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. |
+| <a id="vocabulary-note-28"></a>28 | Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion. |
+| <a id="vocabulary-note-29"></a>29 | The configured comparison/appropriation root is used in bounded condition forms. Operand types and Error-member restrictions are enforced by native lowering. |
+| <a id="vocabulary-note-30"></a>30 | Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process. |
+| <a id="vocabulary-note-31"></a>31 | Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return. |
+| <a id="vocabulary-note-32"></a>32 | Public/Publicly marks exactly the associated declaration. It does not publish unrelated owners or sibling declarations. |
+| <a id="vocabulary-note-33"></a>33 | Constructor/descriptor vocabulary determines source construction roles. Its presence does not imply arbitrary type construction or inherited native metadata. |
+| <a id="vocabulary-note-34"></a>34 | These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API. |
+| <a id="vocabulary-note-35"></a>35 | This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules. |
+| <a id="vocabulary-note-36"></a>36 | At selects a Number index or Text field key; its enclosing typed read/update determines the permitted key type. |
+| <a id="vocabulary-note-37"></a>37 | In selects a runtime update destination; the following index or field key remains part of that update. |
+| <a id="vocabulary-note-38"></a>38 | Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion. |
+| <a id="vocabulary-note-39"></a>39 | While is recognized but explicitly rejected by outer lowering. |

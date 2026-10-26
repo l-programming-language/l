@@ -40,7 +40,7 @@ Process composes ordered Syllables through W. Function supplies FW/Func metadata
 
 <!-- example:main-descriptor -->
 
-Each `It describes` refines Main. App construction selects its Service rule, then Object and Function rules. The demonstrated signature has no inputs or outputs; nonempty signatures require explicit native property values, not ordinary Text spelled “with Inputs.” A standalone Main Service remains structural. General closures, methods, overloaded dispatch, async/variadic functions and return-value transport are not implied.
+Each `It describes` refines Main. App construction selects its Service rule, then Object and Function rules. This native Main signature has no inputs or outputs. Ordinary [typed Functions](applicational-types.md#functions-properties-and-operations) use their own L body and checked parameter/result bindings. A standalone Main Service remains structural; methods, overloads and variadic signatures are not introduced.
 
 ## Framing and escaping
 

@@ -9,21 +9,25 @@ import (
 
 // recordID builds an ID string for the subject if subject is declarative
 func (sb *subjectGram) recordID() string {
+	return nominalRecordID(sb.article, sb.noun, sb.adjectives)
+}
+
+func nominalRecordID(article, noun *token, adjectives []*token) string {
 	reID := ""
-	if sb.article != nil {
-		if sb.article.tType == "articles.variable.root" {
+	if article != nil {
+		if article.tType == "articles.variable.root" {
 			reID += "*"
 		}
 	}
-	for _, adj := range valueModifiers(sb.adjectives) {
+	for _, adj := range valueModifiers(adjectives) {
 		if reID == "" {
 			reID += string(adj.rawBytes)
 		} else {
 			reID += "." + string(adj.rawBytes)
 		}
 	}
-	if sb.noun != nil {
-		implicitRoot := sb.noun.getImplicitRoot()
+	if noun != nil {
+		implicitRoot := noun.getImplicitRoot()
 		if reID == "" {
 			reID += strings.Replace(implicitRoot, `"`, ``, -1)
 		} else {
@@ -85,32 +89,14 @@ func (sb *subjectGram) getDeclaration() (extractedDeclaration, error) {
 
 // referenceID builds an ID string for the object
 func (sb *objectGram) referenceID() string {
-	reID := ""
-	if sb.article != nil {
-		if sb.article.tType == "articles.variable.root" {
-			reID += "*"
-		}
-	}
-	for _, adj := range valueModifiers(sb.adjectives) {
-		if reID == "" {
-			reID += string(adj.rawBytes)
-		} else {
-			reID += "." + string(adj.rawBytes)
-		}
-	}
-	if sb.noun != nil {
-		implicitRoot := sb.noun.getImplicitRoot()
-		if reID == "" {
-			reID += strings.Replace(implicitRoot, `"`, ``, -1)
-		} else {
-			reID += "." + strings.Replace(implicitRoot, `"`, ``, -1)
-		}
-	}
-	return reID
+	return nominalRecordID(sb.article, sb.noun, sb.adjectives)
 }
 
 // getValue returns a record entry and valueType for the assignable value of the objectGram
 func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
+	if value, kind, handled, err := runtimeObjectEntry(sb); handled {
+		return value, kind, err
+	}
 	if sb == nil {
 		return nil, "", lerrors.Internal.Errorf("cannot extract value from a nil object")
 	}
@@ -125,7 +111,7 @@ func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
 		return nil, "", err
 	}
 	switch sb.cType {
-	case "definitive":
+	case "definitive", "argument":
 		value := &entry{}
 		value.bindFrom(sb.noun.mem)
 		switch value.Type {
@@ -150,7 +136,7 @@ func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
 		return sb.noun.mem, "primitive.truth", nil
 	case "null":
 		return sb.noun.mem, "primitive.null", nil
-	case "type":
+	case "type", "type_argument":
 		if sb.noun.mem.Type == storageLexeme {
 			value := &entry{}
 			value.bindFrom(sb.noun.mem)

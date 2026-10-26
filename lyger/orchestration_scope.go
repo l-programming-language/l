@@ -9,7 +9,7 @@ func (p *orchestrationPlanner) scoped(block *scopedInstructions, flow orchestrat
 		return nil, flow, lerrors.Internal.Errorf("instruction block requires lexical scope")
 	}
 	result := p.newBlock(block.Scope)
-	p.frames = append(p.frames, &orchestrationFrame{block: result, slots: make(map[*record]*orchestrationStorage)})
+	p.frames = append(p.frames, &orchestrationFrame{block: result, slots: make(map[*record]*orchestrationStorage), callables: make(map[*record]*orchestrationCallable)})
 	defer func() { p.frames = p.frames[:len(p.frames)-1] }()
 	// New private slots have no facts even when another activation shares the
 	// same lexical scope. The suspended caller's slots remain untouched.
@@ -21,6 +21,9 @@ func (p *orchestrationPlanner) scoped(block *scopedInstructions, flow orchestrat
 	for _, slot := range result.Storage {
 		delete(next.assigned, slot)
 		delete(next.written, slot)
+	}
+	for _, slot := range result.Callables {
+		delete(next.bound, slot)
 	}
 	return result, next, nil
 }

@@ -6,7 +6,8 @@
 | [Service](#services) | A unit of code composed into an App. | Main supplies the entry structure; additional App-constructed Services become libraries. A standalone Service is structural. |
 | [Class](#classes-and-objects) | A group of source modules, Objects and nested Classes. | Organize generated code; no independent process or runtime scope. |
 | [Object](#classes-and-objects) | A source-file unit containing definitions. | Own generated file content; no automatic instance lifetime. |
-| [Function](#functions-properties-and-operations) | A named callable composition with inputs, outputs and a body. | Builtin source definitions compose native functions; signatures require correctly bound inputs and outputs. |
+| [Function](#functions-properties-and-operations) | A callable with typed inputs, results and retained captures. | Call an L body with fresh parameters and locals. |
+| [Instance](#instances) | Runtime fields belonging to a canonical user-defined shape. | Own, snapshot, read and update typed fields. |
 | [Attribute](#attributes-and-definitions) | A composed part of an Object. | Internal construction representation; no general source field-construction API. |
 | [Definition](#attributes-and-definitions) | The implementation attached to a constructed element. | Internal representation used by source and logeme-backed definitions; no general standalone constructor. |
 | [Property](#functions-properties-and-operations) | Field or parameter information. | Internal/native representation; reading a member does not construct a Property. |
@@ -46,7 +47,21 @@ When a descriptor constructs a Function inside an Object, the compiler represent
 
 ## Functions, Properties, and Operations
 
-Function is supplied by the embedded builtins. It composes a native callable from Name, Inputs, Outputs and Process; Function.Return supplies a return operation. Nonempty signatures require explicitly bound property values. Main uses No Inputs and No Outputs. Closures, dynamic dispatch and general asynchronous source functions are not provided by this facility.
+An ordinary Function owns the statements in its encapsulated paragraph:
+
+```l
+    Publicly create "Identity" as a New Function with Inputs of "Value" as Text and Outputs of Text.
+Return Value.
+
+Call Identity with `hello` as "Result".
+Show Result.
+```
+
+The four leading spaces begin the Function's private body scope; the blank line ends it. Public exposes Identity, not Value. Call checks argument and result counts/types. Each invocation has fresh locals, and every continuing path in a result-bearing Function must Return. Exit retains its program-termination meaning. Existing Function names can specify a callable parameter/result signature, such as `"Callback" as Identity`.
+
+Calls establish assignment only for their explicit result bindings. Public declarations initialize when their body runs. A Function may Await an App and run its continuation; free values read there must already be initialized at the Function declaration. The caller does not infer assignment from side effects.
+
+Ordinary captures snapshot; explicit Pointers share targets. Callable copies retain their environment. There are no user-written Rust lifetime parameters, inferred contracts for opaque Rust, overloads or variadic signatures. The native Function/Function.Return composition remains separate:
 
 ### Construct a Function in an Object
 
@@ -55,6 +70,22 @@ Function is supplied by the embedded builtins. It composes a native callable fro
 The Function is named `first`, with No Inputs and No Outputs. `any Process` receives its body when the descriptor is applied; `Objective First` wraps the Function in an Object. The [complete fixture](../../lyger/test/classes/interleaved.l) composes that Object into a Class and App.
 
 `Worker's Output` selects an App member after Await; it does not create a Property record. Native `Func`, `Prop` and `Op` metadata have separate [logeme contracts](../../builtins/README.md). To name a sequence of source actions, [define a verb such as Launch](lexical-types.md#define-and-use-a-word); this does not construct an internal Operation.
+
+## Instances
+
+An adjective descriptor defines a runtime field shape, distinct from Class and Object:
+
+```l
+"Person" is a New Adjective describing any Instance.
+It describes a Generic Instance with a `name` Text and a `age` Number.
+Define "ada" as a New Person Instance.
+Put `Ada` in ada as `name`.
+Put 37 in ada as `age`.
+Define "name" as a New Text from ada at `name`.
+Show name.
+```
+
+The canonical Person declaration identifies the shape; unrelated descriptors with the same spelling remain distinct. Fields accept only their declared types. Reading an unassigned field or an unknown field rejects. Assignment snapshots the Instance's ordinary fields and retains nested Pointer targets.
 
 ## Sources and witnesses
 

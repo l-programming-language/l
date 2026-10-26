@@ -73,6 +73,38 @@ func grammarPrefix(tokens, remaining []*token) ([]*token, error) {
 	return tokens[:count], nil
 }
 
+// buildGrammarNode keeps initialization and build failures on the same path.
+// Parents commit the returned child only after both stages succeed.
+func buildGrammarNode[T interface{ build() error }](node T, err error) (T, error) {
+	if err != nil {
+		return node, err
+	}
+	return node, node.build()
+}
+
+// buildGrammarChild installs one child only after initialization and parsing.
+func buildGrammarChild[T interface{ build() error }](destination *T, initialize func(string, []*token, *grammar) (T, error), name string, tokens []*token, gram *grammar) error {
+	node, err := buildGrammarNode(initialize(name, tokens, gram))
+	if err == nil {
+		*destination = node
+	}
+	return err
+}
+
+// buildGrammarPrefix applies a node's selected rule, then commits its consumed
+// prefix. Failed rules leave prefix handling to the enclosing rollback boundary.
+func buildGrammarPrefix(rule *grammeme, caseType string, tokens *[]*token, build func(string) error, remaining func() []*token) error {
+	structure, err := rule.getCasedStructure(caseType)
+	if err != nil {
+		return err
+	}
+	if err := build(structure); err != nil {
+		return err
+	}
+	*tokens, err = grammarPrefix(*tokens, remaining())
+	return err
+}
+
 // Each optional element commits only after success. Grammar matching cannot mutate bindings.
 func applyGrammarRule[T any](target *T, rule string, clone func(T) T,
 	grammatical func(*T, grammarTerm) error,
@@ -200,6 +232,10 @@ func (s objectGram) clone() objectGram {
 }
 
 func (s phraseGram) clone() phraseGram {
+	s.values = append([]*valueGram(nil), s.values...)
+	s.subjects = append([]*subjectGram(nil), s.subjects...)
+	s.markers = append([]*token(nil), s.markers...)
+	s.phrases = append([]*phraseGram(nil), s.phrases...)
 	s.prepositions = append([]*token(nil), s.prepositions...)
 	s.clauses = append([]*clauseGram(nil), s.clauses...)
 	s.conjunctions = append([]*token(nil), s.conjunctions...)
@@ -208,6 +244,10 @@ func (s phraseGram) clone() phraseGram {
 }
 
 func (s clauseGram) clone() clauseGram {
+	s.values = append([]*valueGram(nil), s.values...)
+	s.subjects = append([]*subjectGram(nil), s.subjects...)
+	s.markers = append([]*token(nil), s.markers...)
+	s.phrases = append([]*phraseGram(nil), s.phrases...)
 	s.adverbs = append([]*token(nil), s.adverbs...)
 	s.prepositions = append([]*token(nil), s.prepositions...)
 	s.clauses = append([]*clauseGram(nil), s.clauses...)
@@ -275,10 +315,7 @@ func grammarSequence[T any](tokens []*token, multiple bool, parse func([]*token)
 
 func buildGrammarObjects(term grammarTerm, tokens []*token, gram *grammar) ([]*objectGram, []*token, error) {
 	return grammarSequence(tokens, term.Multiple, func(input []*token) (*objectGram, []*token, error) {
-		object, err := initObjectGram(term.Name, input, gram)
-		if err == nil {
-			err = object.build()
-		}
+		object, err := buildGrammarNode(initObjectGram(term.Name, input, gram))
 		if err != nil {
 			return nil, nil, err
 		}
@@ -292,10 +329,7 @@ func buildGrammarClauses(term grammarTerm, tokens []*token, gram *grammar) ([]*c
 		leading, tokens = tokens[0], tokens[1:]
 	}
 	clauses, separators, err := grammarSequence(tokens, term.Multiple, func(input []*token) (*clauseGram, []*token, error) {
-		clause, err := initClauseGram(term.Name, input, gram)
-		if err == nil {
-			err = clause.build()
-		}
+		clause, err := buildGrammarNode(initClauseGram(term.Name, input, gram))
 		if err != nil {
 			return nil, nil, err
 		}
@@ -308,4 +342,14 @@ func buildGrammarClauses(term grammarTerm, tokens []*token, gram *grammar) ([]*c
 		separators = append([]*token{leading}, separators...)
 	}
 	return clauses, separators, nil
+}
+
+func buildGrammarValues(term grammarTerm, tokens []*token, gram *grammar) ([]*valueGram, []*token, error) {
+	return grammarSequence(tokens, term.Multiple, func(input []*token) (*valueGram, []*token, error) {
+		value, err := buildGrammarNode(initValueGram(term.Name, input, gram))
+		if err != nil {
+			return nil, nil, err
+		}
+		return value, value.tokens, nil
+	})
 }

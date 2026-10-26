@@ -224,11 +224,11 @@
     },
     {
       "path": "lexicon/eng/grammar.json",
-      "sha256": "2ffbe3782ee90053218ade92752d90c93846b639d1410f129f592d0fa547fa18"
+      "sha256": "5ae6d7ef177817197d7bffcf9388ac4934abf4c847c4cfed32336e0d3bd5f001"
     },
     {
       "path": "lexicon/eng/vocabulary.json",
-      "sha256": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321"
+      "sha256": "4c38dfa34c4df0a2dcecb167e76a91713e084f54742076c2b2c20306edce0f6e"
     },
     {
       "path": "logiceme/feature_removal_test.go",
@@ -280,7 +280,7 @@
     },
     {
       "path": "lyger/ir_enums_test.go",
-      "sha256": "966e2f1474e40b746bb3a244086308df710c1018d1a9bd6e8505ce02bda9a37d"
+      "sha256": "ee346bae3006152e7d32e40f92676336b61a1597e9115f03b6b782ba96eca2ad"
     },
     {
       "path": "lyger/lexicon_test.go",
@@ -288,11 +288,11 @@
     },
     {
       "path": "lyger/recursive_classes_test.go",
-      "sha256": "ecec33ac760b6aa355def0ac5d8907e69f9eb5b2c6f208b34aa08e944ac6a18e"
+      "sha256": "0b1e0c54f65873d223a9b7531fbfe03b265b3afb06d868dfcd7caa55329c4eb7"
     },
     {
       "path": "lyger/refactor_value_characterization_test.go",
-      "sha256": "6d92e8f5254d460df83551d7d6543e168b67537d2e065368d3c10f942456b630"
+      "sha256": "936aeda7fff6451e81f43cfa35b3be1a1b7f145d3d12ff58bf7136d7362cebb4"
     },
     {
       "path": "lyger/scanner_test.go",
@@ -300,7 +300,7 @@
     },
     {
       "path": "lyger/stored_values_test.go",
-      "sha256": "a1454eab0ae160a64b4840d18bf28e3c91d6d4692366fa214eafbbec259f95f4"
+      "sha256": "9f8140be3785988804d1f35fe643d0a68746f8868e7e9cd1da5ff9882ef71c97"
     },
     {
       "path": "lyger/test/builds/First/Cargo.lock",
@@ -1400,7 +1400,7 @@
     },
     {
       "path": "lyger/runnable_service_test.go",
-      "sha256": "d354ce57c011f3cda2de213efe98c2ccc474bbc8b7ea14ce115e6f963414df29"
+      "sha256": "0fd6eaadd1fbe3046ac334389d871fd151bbd2373fc23beacc62eabb3e87b8ae"
     },
     {
       "path": "lyger/test/runnable_service/native-body-alias.l",

@@ -5,12 +5,12 @@
 | [Text](#text) | A sequence of bytes, including whitespace. | Write a backtick-delimited literal, such as `` `hello` ``; store, compare, or print it. |
 | [Number](#number) | A finite binary64 number, such as `7` or `-12.5`. | Store, compare, or print it. Integer spellings use the same number type. |
 | [Truth](#truth) | A Boolean value: `true` or `false`. | Store, compare, print, or use it as a condition. |
-| [Thing](#thing) | A broad parameter category that preserves a supplied scalar's type. | Native-backed definitions can accept Text, Number, or Truth through a Thing slot. |
-| [Byte / Bytes](#byte-and-bytes) | Byte-oriented vocabulary and internal byte-sequence storage. | Recognized incompletely; no public byte literal or byte-manipulation API. |
-| [Pointer](#pointer) | A named pointer category in the vocabulary and compiler storage. | No public construction, dereference, or pointer-arithmetic operations. |
-| [Null](#null-and-internal-states) | An absence value at the typed native-definition boundary. | No ordinary L `null` literal or optional-value declaration. |
+| [Thing](#thing) | A value retaining its concrete runtime type. | Hold different value categories at an explicitly broad boundary. |
+| [Byte / Bytes](#byte-and-bytes) | An owned sequence of bytes. | Construct from Text and read numbered bytes. |
+| [Pointer](#pointer) | A managed reference to a typed value. | Copy handles to share a target; checked reads and writes. |
+| [Null](#null-and-internal-states) | An explicit absence value. | Initialize a value with `Null`; distinct from an unassigned slot. |
 
-Use Text, Number, and Truth for ordinary scalar values. The other names have narrower or incomplete support, as described below. Primitive types describe data; [lexical types](lexical-types.md) describe the grammatical roles of words.
+Primitive types describe data; [lexical types](lexical-types.md) describe words. [Collections](collections-and-categories.md) and [Instances and Functions](applicational-types.md) use the same ownership rules.
 
 ## Declarations, assignment, and reading values
 
@@ -20,7 +20,7 @@ The public-values program gives Text, Number, and Truth explicit initial values,
 
 <!-- example:public-values -->
 
-Static values can be captured by source-defined definitions. Assigning an App's Output to a scalar creates a snapshot of that invocation; it does not reread Output after the App runs again. An alias such as `Use value as "Alias"` instead retains the source binding's identity. See [conversion and aliasing](#conversion-and-aliasing-boundaries).
+Assignment, Function arguments/results and captures snapshot ordinary values, recursively through collections and Instances; embedded Pointers retain their shared target. App handles retain process identity. Stored Output keeps its invocation's bytes after reruns. See [capture environments](names-and-scope.md#runtime-storage-and-definite-assignment).
 
 ## Text
 
@@ -74,7 +74,7 @@ Configured `not`/negative forms express negation in conditions, not a general pr
 
 ## Thing
 
-Thing lets a native-backed definition accept supported scalar argument kinds while preserving their native encoding. For example, IO's implementation receives Text, Number, and Truth through a Thing slot without converting them all to Text:
+Thing preserves a contained runtime type and checks typed reads. It does not coerce values into Text. Native-definition slots remain a separate interface: IO accepts Text, Number and Truth through its Thing slot:
 
 <!-- example:values-thing-printing -->
 
@@ -84,19 +84,26 @@ Thing does not provide dynamically typed arithmetic, unrestricted reflection, or
 
 ## Byte and Bytes
 
-The English vocabulary defines `Byte` with the plural `Bytes`; native type recognition accepts `Bytes`, and internal storage holds a byte sequence. The spelling and construction paths are incomplete: there is no public byte-literal syntax, numeric 8-bit scalar, indexing, arithmetic, or conversion API.
-
-Use [Text](#text) for supported byte-preserving source data, including invalid UTF-8. No operational Byte/Bytes example is available.
+``Define "buffer" as a New Bytes of `raw`.`` copies Text bytes. `Define "octet" as a New Number from buffer at 1.` reads the zero-based byte as Number. Indices must be nonnegative integers within bounds; Bytes mutation is not exposed. Byte is vocabulary for byte-oriented storage, not an additional numeric-width family.
 
 ## Pointer
 
-Pointer exists in the vocabulary and internal primitive storage, but has no complete native source-type or executable scalar path. It supplies no public address-of/dereference syntax, pointer arithmetic, allocation, or ownership inference. Explicit native Rust pointer code remains part of a native definition.
+```l
+Define "message" as `first`.
+Define "handle" as a New Pointer of message.
+Define "shared" as handle.
+Put `second` in shared.
+Define "selected" as a New Text from handle.
+Show selected.
+```
+
+The Pointer owns a copy of the initial value. Both handles share that target, so this prints `second`; `message` remains `first`. Target types are checked. Pointer and capture-environment writes reject ownership cycles. Reads release their checked borrow before a nested call or Await. There is no pointer arithmetic or user-managed deallocation.
 
 ## Null and internal states
 
-Null is recognized as a type name and grammar pattern. Typed native definition arguments can supply it directly; its native display atom prints `<nil>`. This binding interface does not establish an ordinary L `null` literal, optional-value declaration, or Rust null pointer.
+`Define "nothing" as Null.` initializes an absence value; Show writes `null`. Null is not a Rust pointer or a substitute for definite assignment. The separate explicit native-definition Null atom retains its `<nil>` display.
 
-Compiler labels are separate from public types: `ID`, `None`, and `Unknown` track resolution; `Lexeme` stores lexical definitions; invalid sentinels indicate compiler state. The runtime `Error` member reports an App's process error rather than supplying a general exception constructor.
+Compiler labels are separate from public types: `ID`, `None`, and `Unknown` track resolution; `Lexeme` stores lexical definitions; invalid sentinels indicate compiler state. An Error value can be created from Text or read from a failed App, stored and passed like other values. Reading an absent App Error rejects; it does not fabricate an Error.
 
 ## Conversion and aliasing boundaries
 

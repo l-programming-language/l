@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 11/01/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
@@ -15,13 +7,6 @@ import (
 	"strings"
 )
 
-/*
-===============================================================================================
-GENERAL STRUCTURES
-===============================================================================================
-*/
-
-// Op
 type Op struct {
 	Prefix   string   `json:"prefix,omitempty"`
 	Type     string   `json:"type,omitempty"`
@@ -63,15 +48,16 @@ func opFromFields(fields [][]string) Op {
 }
 
 // LoadOps decodes the ordered native operation records.
-func LoadOps(meta *MetaObj) []Op {
-	reOps := []Op{}
-	for _, opMeta := range ParseStructArray(meta.Value) {
-		reOps = append(reOps, LoadOp(opMeta))
+func LoadOps(meta *MetaObj) []Op { return loadMetaRecords(meta, LoadOp) }
+
+func loadMetaRecords[T any](meta *MetaObj, load func(*MetaObj) T) []T {
+	result := []T{}
+	for _, item := range ParseStructArray(meta.Value) {
+		result = append(result, load(item))
 	}
-	return reOps
+	return result
 }
 
-// FieldSwitch
 func (o *Op) FieldSwitch(fieldStr string) (interface{}, string) {
 	switch fieldStr {
 	case "Prefix":
@@ -89,7 +75,6 @@ func (o *Op) FieldSwitch(fieldStr string) (interface{}, string) {
 	}
 }
 
-// Prop
 type Prop struct {
 	Key        string `json:"key,omitempty"`
 	Type       string `json:"type,omitempty"`
@@ -97,48 +82,20 @@ type Prop struct {
 	StructTags string `json:"struct_tags,omitempty"`
 }
 
-// IsVoid
-func (pr *Prop) IsVoid() bool {
-	reBool := false
-	eCt := 0
-	if pr.Key == "" {
-		eCt = eCt + 1
-	}
-	if pr.Type == "" {
-		eCt = eCt + 1
-	}
-	if pr.Value == "" {
-		eCt = eCt + 1
-	}
-	if pr.StructTags == "" {
-		eCt = eCt + 1
-	}
-	if eCt == 4 {
-		reBool = true
-	}
-	return reBool
-}
+func (pr *Prop) IsVoid() bool { return *pr == (Prop{}) }
 
-// StringifyProp
 func StringifyProp(prop Prop) string {
 	return prop.Key + " " + prop.Type
 }
 
-// StringifyProps
 func StringifyProps(props []Prop) string {
-	reStr := ""
-	for ind, prop := range props {
-		sProp := StringifyProp(prop)
-		if ind == 0 {
-			reStr = reStr + sProp
-		} else {
-			reStr = reStr + ", " + sProp
-		}
+	values := make([]string, len(props))
+	for i, prop := range props {
+		values[i] = StringifyProp(prop)
 	}
-	return reStr
+	return strings.Join(values, ", ")
 }
 
-// LoadProp
 func LoadProp(meta *MetaObj) Prop {
 	reOp := Prop{}
 	parsedOp := ParseStruct(meta.Value)
@@ -156,18 +113,8 @@ func LoadProp(meta *MetaObj) Prop {
 	return reOp
 }
 
-// LoadProps
-func LoadProps(meta *MetaObj) []Prop {
-	reOps := []Prop{}
-	opMetas := ParseStructArray(meta.Value)
-	for _, opMeta := range opMetas {
-		op := LoadProp(opMeta)
-		reOps = append(reOps, op)
-	}
-	return reOps
-}
+func LoadProps(meta *MetaObj) []Prop { return loadMetaRecords(meta, LoadProp) }
 
-// FieldSwitch
 func (pr *Prop) FieldSwitch(fieldStr string) (interface{}, string) {
 	switch fieldStr {
 	case "Key":
@@ -183,7 +130,6 @@ func (pr *Prop) FieldSwitch(fieldStr string) (interface{}, string) {
 	}
 }
 
-// Func
 type Func struct {
 	Key      string   `json:"key,omitempty"`
 	Inputs   []Prop   `json:"inputs,omitempty"`
@@ -191,80 +137,36 @@ type Func struct {
 	Receiver Prop     `json:"receiver,omitempty"`
 }
 
-// LoadFuncInput
-func LoadFuncInput(key string, segInputs []SegmentInput) SegmentInput {
-	reSeg := SegmentInput{Key: key, Type: "Hashmap"}
-	inStr := "#[Func{"
-	for ind, segIn := range segInputs {
-		if ind > 0 {
-			inStr = inStr + ", "
-		}
-		if segIn.Key == "Key" {
-			inStr = inStr + "Key: " + segIn.Value
-		} else if segIn.Key == "Inputs" {
-			inStr = inStr + "Inputs: " + segIn.Value
-		} else if segIn.Key == "Outputs" {
-			inStr = inStr + "Outputs: " + segIn.Value
-		} else if segIn.Key == "Receiver" {
-			inStr = inStr + "Receiver: " + segIn.Value
+func LoadFuncInput(key string, inputs []SegmentInput) SegmentInput {
+	fields := make([]string, len(inputs))
+	for i, input := range inputs {
+		switch input.Key {
+		case "Key", "Inputs", "Outputs", "Receiver":
+			fields[i] = input.Key + ": " + input.Value
 		}
 	}
-	inStr = inStr + "}Func]#"
-	reSeg.Value = inStr
-	return reSeg
+	return SegmentInput{Key: key, Type: "Hashmap", Value: "#[Func{" + strings.Join(fields, ", ") + "}Func]#"}
 }
 
-// LoadFunc
 func LoadFunc(meta *MetaObj) Func {
-	reOp := Func{}
-	parsedOp := ParseStruct(meta.Value)
-	for _, pOp := range parsedOp {
-		if pOp[0] == "Key" {
-			reOp.Key = pOp[1]
-		} else if pOp[0] == "Inputs" {
-			reProps := []Prop{}
-			inArray := ParseStructArray(pOp[1])
-			for _, opMeta := range inArray {
-				prop := LoadProp(opMeta)
-				reProps = append(reProps, prop)
-			}
-			reOp.Inputs = reProps
-		} else if pOp[0] == "Outputs" {
-			cStr := strings.Trim(strings.Trim(pOp[1], "["), "]")
-			sStrs := strings.Split(cStr, ", ")
-			reOp.Outputs = sStrs
-		} else if pOp[0] == "Receiver" {
-			prop := Prop{}
-			p := ParseStruct(pOp[1])
-			for _, pp := range p {
-				if pp[0] == "Key" {
-					prop.Key = pp[1]
-				} else if pp[0] == "Type" {
-					prop.Type = pp[1]
-				} else if pp[0] == "Value" {
-					prop.Value = pp[1]
-				} else if pp[0] == "StructTags" {
-					prop.StructTags = pp[1]
-				}
-			}
-			reOp.Receiver = prop
+	result := Func{}
+	for _, field := range ParseStruct(meta.Value) {
+		switch field[0] {
+		case "Key":
+			result.Key = field[1]
+		case "Inputs":
+			result.Inputs = LoadProps(&MetaObj{Value: field[1]})
+		case "Outputs":
+			result.Outputs = strings.Split(strings.Trim(strings.Trim(field[1], "["), "]"), ", ")
+		case "Receiver":
+			result.Receiver = LoadProp(&MetaObj{Value: field[1]})
 		}
 	}
-	return reOp
+	return result
 }
 
-// LoadFuncs
-func LoadFuncs(meta *MetaObj) []Func {
-	reOps := []Func{}
-	opMetas := ParseStructArray(meta.Value)
-	for _, opMeta := range opMetas {
-		op := LoadFunc(opMeta)
-		reOps = append(reOps, op)
-	}
-	return reOps
-}
+func LoadFuncs(meta *MetaObj) []Func { return loadMetaRecords(meta, LoadFunc) }
 
-// FieldSwitch
 func (fu *Func) FieldSwitch(fieldStr string) (interface{}, string) {
 	switch fieldStr {
 	case "Key":
@@ -280,23 +182,19 @@ func (fu *Func) FieldSwitch(fieldStr string) (interface{}, string) {
 	}
 }
 
-// Recur
 type Recur struct {
 	Type string `json:"type,omitempty"`
 	Key  string `json:"key,omitempty"`
 }
 
-// LoadRecur
 func LoadRecur(_ *MetaObj) Recur {
 	return Recur{}
 }
 
-// LoadRecurs
 func LoadRecurs(_ *MetaObj) []Recur {
 	return []Recur{}
 }
 
-// FieldSwitch
 func (r *Recur) FieldSwitch(fieldStr string) (interface{}, string) {
 	switch fieldStr {
 	case "Type":
@@ -308,133 +206,64 @@ func (r *Recur) FieldSwitch(fieldStr string) (interface{}, string) {
 	}
 }
 
-// MetaStructFieldSwitch
-func MetaStructFieldSwitch(structEnt interface{}, typeStr string, structField string) (interface{}, string) {
-	refVal := false
-	var structInt interface{}
-	if reflected, ok := structEnt.(reflect.Value); ok {
-		structInt = reflected.Interface()
-		refVal = true
+func MetaStructFieldSwitch(value interface{}, kind, field string) (interface{}, string) {
+	strict := false
+	if reflected, ok := value.(reflect.Value); ok {
+		value, strict = reflected.Interface(), true
 	}
-	switch typeStr {
+	switch kind {
 	case "Op":
-		structure := Op{}
-		ok := false
-		if refVal {
-			structure, ok = structInt.(Op)
-			if !ok {
-				return "Error", "String"
-			}
-		} else {
-			switch value := structEnt.(type) {
-			case Op:
-				structure = value
-			}
-		}
-		return structure.FieldSwitch(structField)
+		return metaRecordField(value, strict, field, (*Op).FieldSwitch)
 	case "Prop":
-		structure := Prop{}
-		ok := false
-		if refVal {
-			structure, ok = structInt.(Prop)
-			if !ok {
-				return "Error", "String"
-			}
-		} else {
-			switch value := structEnt.(type) {
-			case Prop:
-				structure = value
-			}
-		}
-		return structure.FieldSwitch(structField)
+		return metaRecordField(value, strict, field, (*Prop).FieldSwitch)
 	case "Func":
-		structure := Func{}
-		ok := false
-		if refVal {
-			structure, ok = structInt.(Func)
-			if !ok {
-				return "Error", "String"
-			}
-		} else {
-			switch value := structEnt.(type) {
-			case Func:
-				structure = value
-			}
-		}
-		return structure.FieldSwitch(structField)
+		return metaRecordField(value, strict, field, (*Func).FieldSwitch)
 	case "Recur":
-		structure := Recur{}
-		ok := false
-		if refVal {
-			structure, ok = structInt.(Recur)
-			if !ok {
-				return "Error", "String"
-			}
-		} else {
-			switch value := structEnt.(type) {
-			case Recur:
-				structure = value
-			}
-		}
-		return structure.FieldSwitch(structField)
+		return metaRecordField(value, strict, field, (*Recur).FieldSwitch)
 	default:
 		return "Invalid", "String"
 	}
 }
 
-// MetaStructCheckSwitch
-func MetaStructCheckSwitch(typeStr string) (bool, bool) {
-	typeStr = parseMetaTokenHashStr(typeStr)
-	switch typeStr {
-	case "Ops":
-		return true, true
-	case "Op":
-		return true, false
-	case "Props":
-		return true, true
-	case "Prop":
-		return true, false
-	case "Funcs":
-		return true, true
-	case "Func":
-		return true, false
-	case "Recurs":
-		return true, true
-	case "Recur":
-		return true, false
+// Reflected mismatches reject; direct mismatches retain the zero-record lookup.
+func metaRecordField[T any](value interface{}, strict bool, field string, lookup func(*T, string) (interface{}, string)) (interface{}, string) {
+	record, matches := value.(T)
+	if strict && !matches {
+		return "Error", "String"
+	}
+	return lookup(&record, field)
+}
+
+func MetaStructCheckSwitch(kind string) (bool, bool) {
+	kind = parseMetaTokenHashStr(kind)
+	singular := strings.TrimSuffix(kind, "s")
+	switch singular {
+	case "Op", "Prop", "Func", "Recur":
+		return true, singular != kind
 	default:
 		return false, false
 	}
 }
 
-// MetaStructHashSwitch
-func MetaStructHashSwitch(structInt interface{}, typeStr string, posInt int) (interface{}, string) {
-	switch typeStr {
+func MetaStructHashSwitch(value interface{}, kind string, position int) (interface{}, string) {
+	switch kind {
 	case "Ops":
-		structArray, ok := structInt.([]Op)
-		if !ok {
-			return "Error", "String"
-		}
-		return structArray[posInt], "Op"
+		return metaRecordElement[Op](value, position, "Op")
 	case "Props":
-		structArray, ok := structInt.([]Prop)
-		if !ok {
-			return "Error", "String"
-		}
-		return structArray[posInt], "Prop"
+		return metaRecordElement[Prop](value, position, "Prop")
 	case "Funcs":
-		structArray, ok := structInt.([]Func)
-		if !ok {
-			return "Error", "String"
-		}
-		return structArray[posInt], "Func"
+		return metaRecordElement[Func](value, position, "Func")
 	case "Recurs":
-		structArray, ok := structInt.([]Recur)
-		if !ok {
-			return "Error", "String"
-		}
-		return structArray[posInt], "Recur"
+		return metaRecordElement[Recur](value, position, "Recur")
 	default:
 		return "Error", "String"
 	}
+}
+
+func metaRecordElement[T any](value interface{}, position int, kind string) (interface{}, string) {
+	records, ok := value.([]T)
+	if !ok {
+		return "Error", "String"
+	}
+	return records[position], kind
 }

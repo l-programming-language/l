@@ -20,7 +20,7 @@ Descriptor targets, names, typed arguments, source ownership and order remain si
 
 The [canonical core](../../builtins/eng/core.l) defines Start, Execute, Process, Function, Return, Objective, Main and Basic. Start and Execute are source actions for Apps, not primitive runtime opcodes or Service actions.
 
-Process wraps composed backend expressions; Function supplies a native callable with typed inputs and outputs; Return belongs to Function. Objective and Main supply the entry composition used by Basic. These facilities do not make standalone Services executable or establish ordinary L closures, ownership inference, language-level generics or async functions. See [builtins](../reference/builtins/index.md) and the [logeme reference](../reference/logemes/index.md).
+Process, Objective and Main supply the native entry composition used by Basic. Ordinary [typed Functions](../spec/applicational-types.md#functions-properties-and-operations) have L parameters, results and Return statements. The builtin Function.Return remains an explicit native-composition interface; opaque Rust fragments still own their lifetime and generic declarations.
 
 ## Diagnose a definition failure
 

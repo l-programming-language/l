@@ -60,9 +60,9 @@ func bytesToBool(b []byte) bool {
 
 // checkType inputs a token byte slice and determines which (if any) explicit data type/category it is
 func checkType(tBytes []byte) (string, storageKind) {
-	primitives := []string{"null", "text", "number", "truth", "bytes", "thing"}
-	applicatives := []string{"app", "service", "class", "object", "attribute", "definition"}
-	iteratives := []string{"list", "dictionary"}
+	primitives := []string{"null", "text", "number", "truth", "bytes", "thing", "pointer"}
+	applicatives := []string{"app", "service", "class", "object", "attribute", "definition", "instance"}
+	iteratives := []string{"list", "map", "dictionary"}
 	lexemes := []string{"noun", "verb", "adverb", "adjective"}
 	tStr := strings.ToLower(string(tBytes))
 	if inStringSlice(primitives, tStr) {

@@ -139,12 +139,7 @@ func (c *Compilation) constructRelations(node *constructionNode, phrase *phraseG
 		}
 		if obj.noun.hasRole("noun", "functional.inflective") || obj.noun.hasRole("noun", "functional.deflective") {
 			// Signature absence is explicit in the source (No Inputs/Outputs).
-			absent := false
-			for _, tok := range obj.tokens {
-				if tok.hasRole("article", "none") {
-					absent = true
-				}
-			}
+			absent := obj.article.hasRole("article", "none")
 			if !absent {
 				kind := "output"
 				if obj.noun.hasRole("noun", "functional.inflective") {
@@ -247,7 +242,7 @@ func (c *Compilation) constructApplications() error {
 			if err != nil {
 				return fmt.Errorf("application declaration %s: %w", rec.ID, err)
 			}
-			if value.Type != valueApp {
+			if value.Type != valueApp || rec.runtimeType != nil && rec.Value.Runtime != nil {
 				continue
 			}
 			app := value.Data.(*App) //nolint:errcheck // value() validates the tagged payload before this type-specific projection.

@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 11/01/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
@@ -16,7 +8,6 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-// OutlineEntry
 type OutlineEntry struct {
 	Root           string            `json:"Root,omitempty"`
 	Module         *ModuleDescriptor `json:"Module,omitempty"`
@@ -32,7 +23,6 @@ type OutlineEntry struct {
 	Dimensions     []string          `json:"Dimensions,omitempty"`
 }
 
-// Outline
 type Outline struct {
 	Name         string         `json:"Name,omitempty"`
 	Type         string         `json:"Type,omitempty"`
@@ -45,7 +35,6 @@ type Outline struct {
 	Objects      []Object       `json:"Objects,omitempty"`
 }
 
-// BuildSubOutline
 func (out *Outline) BuildSubOutline(name string, outlineType string) Outline {
 	entry := out.GetEntry(name, outlineType)
 	result := Outline{Name: name, Type: outlineType, Meta: out.Meta, Classes: append([]OutlineEntry(nil), out.Classes...), Objects: append([]Object(nil), out.Objects...)}
@@ -65,7 +54,6 @@ func (out *Outline) BuildSubOutline(name string, outlineType string) Outline {
 	return result
 }
 
-// getChildren
 func (out *Outline) getChildren(entryName string, entryType string) []OutlineEntry {
 	children := []OutlineEntry{}
 	if entryType == "Service" {
@@ -84,7 +72,6 @@ func (out *Outline) getChildren(entryName string, entryType string) []OutlineEnt
 	return children
 }
 
-// GetEntryObjects
 func (out *Outline) GetEntryObjects(entry OutlineEntry, entryType string) []Object {
 	var reObjects []Object
 	var obj Object
@@ -134,7 +121,6 @@ func (out *Outline) GetEntry(name string, entryType string) OutlineEntry {
 	return OutlineEntry{}
 }
 
-// DataSource
 type DataSource struct {
 	Name      string
 	Type      string
@@ -145,7 +131,6 @@ type DataSource struct {
 	Inputs    [][]string
 }
 
-// Integration
 type Integration struct {
 	Name      string
 	Type      string
@@ -155,7 +140,6 @@ type Integration struct {
 	Resources [][]byte
 }
 
-// Class
 type Class struct {
 	members          []sourceMember
 	structureVersion string
@@ -170,7 +154,6 @@ type Class struct {
 	SubClasses       []Class
 }
 
-// CompiledClass
 type CompiledClass struct {
 	members          []sourceMember
 	structureVersion string
@@ -191,7 +174,6 @@ type CompiledClass struct {
 	Content          [][]byte
 }
 
-// Link
 func (cc *CompiledClass) Link() {
 	appendObject := func(co CompiledObject) {
 		cc.Content = append(cc.Content, co.Content)
@@ -264,7 +246,6 @@ func (c *Class) Assemble(meta MetaDict, segSys SegmentalSystem) (CompiledClass, 
 	return cClass, nil
 }
 
-// Service
 type Service struct {
 	members          []sourceMember
 	structureVersion string
@@ -281,7 +262,6 @@ type Service struct {
 	SubServices      []Service
 }
 
-// CompiledService
 type CompiledService struct {
 	members          []sourceMember
 	structureVersion string
@@ -304,7 +284,6 @@ type CompiledService struct {
 	Content          [][]byte
 }
 
-// Link
 func (cs *CompiledService) Link() {
 	appendObject := func(co CompiledObject) {
 		cs.Content = append(cs.Content, co.Content)
@@ -383,7 +362,6 @@ func (s *Service) Assemble(meta MetaDict, segSys SegmentalSystem) (CompiledServi
 	return cService, nil
 }
 
-// BuildClass
 func (s *Service) BuildClass(text Text) {
 	re := Class{
 		Name:    text.Name,
@@ -401,7 +379,6 @@ func (s *Service) BuildClass(text Text) {
 	s.Classes = append(s.Classes, re)
 }
 
-// App
 type App struct {
 	sourceTargets   []preparedSourceTarget
 	Name            string
@@ -415,7 +392,6 @@ type App struct {
 	Services        []Service
 }
 
-// CompiledApp
 type CompiledApp struct {
 	sourceTargets   []preparedSourceTarget
 	Name            string
@@ -447,7 +423,6 @@ func (ca *CompiledApp) Link() {
 	removeDuplicateHeaders(&ca.EnvDependencies)
 }
 
-// BuildService
 func (a *App) BuildService(chap Chapter) {
 	newService := Service{
 		Name:     chap.Name,
@@ -470,7 +445,6 @@ func (a *App) BuildService(chap Chapter) {
 	a.Services = append(a.Services, newService)
 }
 
-// BuildServices
 func (a *App) BuildServices(chaps []Chapter) error {
 	for _, chap := range chaps {
 		a.BuildService(chap)
@@ -508,7 +482,6 @@ func (a *App) Assemble(meta MetaDict) (CompiledApp, error) {
 	return cApp, nil
 }
 
-// BuildApp
 func BuildApp(book Book) (App, error) {
 	reApp := App{
 		Name:         book.Name,

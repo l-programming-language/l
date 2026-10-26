@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 11/01/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
@@ -19,13 +11,54 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-/*
-==========================
-UTILITY FUNCTIONS
-==========================
-*/
+// segmentDefinitions owns alphabet names, defaults and field selection. The
+// ordered logiceme prefix also preserves template-load/error order.
+type segmentDefinition struct {
+	symbol, family, name, initial, related string
+	slot                                   func(*SegmentalSystem) *Segment
+}
 
-// Parameter
+var segmentDefinitions = []segmentDefinition{
+	{"C", "Consonant", "Execute", "", "Execution", func(s *SegmentalSystem) *Segment { return &s.Execute }},
+	{"B", "Consonant", "Declare", "", "Declaration", func(s *SegmentalSystem) *Segment { return &s.Declare }},
+	{"D", "Consonant", "Calculate", "", "Calculation", func(s *SegmentalSystem) *Segment { return &s.Calculate }},
+	{"F", "Consonant", "Define", "", "Definition", func(s *SegmentalSystem) *Segment { return &s.Define }},
+	{"G", "Consonant", "Evaluate", "", "Evaluation", func(s *SegmentalSystem) *Segment { return &s.Evaluate }},
+	{"H", "Consonant", "Describe", "", "Description", func(s *SegmentalSystem) *Segment { return &s.Describe }},
+	{"K", "Consonant", "Operate", "", "Operation", func(s *SegmentalSystem) *Segment { return &s.Operate }},
+	{"M", "Consonant", "Instantiate", "", "Instantiation", func(s *SegmentalSystem) *Segment { return &s.Instantiate }},
+	{"P", "Consonant", "Iterate", "", "Iteration", func(s *SegmentalSystem) *Segment { return &s.Iterate }},
+	{"V", "Vowel", "Execution", "", "", func(s *SegmentalSystem) *Segment { return &s.Execution }},
+	{"A", "Vowel", "Declaration", "", "", func(s *SegmentalSystem) *Segment { return &s.Declaration }},
+	{"E", "Vowel", "Calculation", "", "", func(s *SegmentalSystem) *Segment { return &s.Calculation }},
+	{"I", "Vowel", "Evaluation", "", "", func(s *SegmentalSystem) *Segment { return &s.Evaluation }},
+	{"O", "Vowel", "Definition", "", "", func(s *SegmentalSystem) *Segment { return &s.Definition }},
+	{"U", "Vowel", "Description", "", "", func(s *SegmentalSystem) *Segment { return &s.Description }},
+	{"W", "Vowel", "Operation", "", "", func(s *SegmentalSystem) *Segment { return &s.Operation }},
+	{"X", "Vowel", "Iteration", "", "", func(s *SegmentalSystem) *Segment { return &s.Iteration }},
+	{"Y", "Vowel", "Instantiation", "", "", func(s *SegmentalSystem) *Segment { return &s.Instantiation }},
+	{".", "Featural", "Byte", "", "", func(s *SegmentalSystem) *Segment { return &s.Byte }},
+	{"?", "Featural", "Boolean", "True", "", func(s *SegmentalSystem) *Segment { return &s.Boolean }},
+	{",", "Featural", "Integer", "0", "", func(s *SegmentalSystem) *Segment { return &s.Integer }},
+	{"%", "Featural", "Float", "0.0", "", func(s *SegmentalSystem) *Segment { return &s.Float }},
+	{"~", "Featural", "String", "``", "", func(s *SegmentalSystem) *Segment { return &s.String }},
+	{"!", "Featural", "Null", "Null", "", func(s *SegmentalSystem) *Segment { return &s.Null }},
+	{"&", "Featural", "Array", "[]", "", func(s *SegmentalSystem) *Segment { return &s.Array }},
+	{"#", "Featural", "Hashmap", "{}", "", func(s *SegmentalSystem) *Segment { return &s.Hashmap }},
+	{"^", "Conjugate", "Square", "", "", nil},
+	{"*", "Conjugate", "Multiply", "", "", nil},
+	{"+", "Conjugate", "Add", "", "", nil},
+}
+
+func segmentDefinitionFor(symbol string) (segmentDefinition, bool) {
+	for _, definition := range segmentDefinitions {
+		if definition.symbol == symbol {
+			return definition, true
+		}
+	}
+	return segmentDefinition{}, false
+}
+
 type Parameter struct {
 	Key     string
 	Value   string
@@ -34,7 +67,6 @@ type Parameter struct {
 	Plural  bool
 }
 
-// ScanParams
 func ScanParams(params []string) []Parameter {
 	var pars []Parameter
 	for _, param := range params {
@@ -65,12 +97,10 @@ func ScanParams(params []string) []Parameter {
 	return pars
 }
 
-// GetParams
 func GetParams(expressionStr string) []string {
 	return strings.Split(strings.Split(strings.Split(expressionStr, "(")[1], ")")[0], ", ")
 }
 
-// GetFunctionalType
 func GetFunctionalType(params []string) string {
 	eType := params[0]
 	if strings.Contains(params[0], " = ") {
@@ -81,13 +111,6 @@ func GetFunctionalType(params []string) string {
 	return eType
 }
 
-/*
-==========================
-SEGMENT STRUCTS
-==========================
-*/
-
-// Segment
 type Segment struct {
 	Name        string      `json:"name,omitempty"`
 	Type        string      `json:"type,omitempty"`
@@ -100,45 +123,9 @@ type Segment struct {
 	Inputs      []string    `json:"inputs,omitempty"`
 }
 
-// getSegmentName
 func (s *Segment) getSegmentName() string {
-	switch segSymbol := s.Symbol; segSymbol {
-	case "A":
-		return "Declaration"
-	case "E":
-		return "Calculation"
-	case "I":
-		return "Evaluation"
-	case "O":
-		return "Definition"
-	case "U":
-		return "Description"
-	case "W":
-		return "Operation"
-	case "X":
-		return "Iteration"
-	case "Y":
-		return "Instantiation"
-	case "V":
-		return "Execution"
-	case "B":
-		return "Declare"
-	case "C":
-		return "Execute"
-	case "D":
-		return "Calculate"
-	case "F":
-		return "Define"
-	case "G":
-		return "Evaluate"
-	case "H":
-		return "Describe"
-	case "K":
-		return "Operate"
-	case "M":
-		return "Instantiate"
-	case "P":
-		return "Iterate"
+	if d, ok := segmentDefinitionFor(s.Symbol); ok && (d.family == "Vowel" || d.family == "Consonant") {
+		return d.name
 	}
 	return "Error"
 }
@@ -158,134 +145,19 @@ func (s *Segment) loadTemplate(resources fs.FS) error {
 	return nil
 }
 
-// LoadFeatural
 func (s *Segment) LoadFeatural() {
-	// TODO Add Functions to convert between byte slice and data types
-	// Add default values
-	// Test Module
-	switch segSymbol := s.Symbol; segSymbol {
-	case ".":
-		s.Content = []byte{}
-		s.ContentType = "Byte"
-	case "?":
-		s.Content = []byte("True")
-		s.ContentType = "Boolean"
-	case ",":
-		s.Content = []byte("0")
-		s.ContentType = "Integer"
-	case "%":
-		s.Content = []byte("0.0")
-		s.ContentType = "Float"
-	case "~":
-		s.Content = []byte("``")
-		s.ContentType = "String"
-	case "!":
-		s.Content = []byte("Null")
-		s.ContentType = "Null"
-	case "&":
-		s.Content = []byte("[]")
-		s.ContentType = "Array"
-	case "#":
-		s.Content = []byte("{}")
-		s.ContentType = "Hashmap"
+	if d, ok := segmentDefinitionFor(s.Symbol); ok && d.family == "Featural" {
+		s.Content, s.ContentType = []byte(d.initial), d.name
 	}
 }
 
-// featuralCheck
-func featuralCheck(segmentStr string) []string {
-	var reStrs []string
-	featurals := []string{".", "?", ",", "%", "~", "!", "&", "#"}
-	featuralTypes := []string{"Byte", "Boolean", "Integer", "Float", "String", "Null", "Array", "Hashmap"}
-	for ind, featural := range featurals {
-		if segmentStr == featural {
-			fType := featuralTypes[ind]
-			reStrs = append(reStrs, featural)
-			reStrs = append(reStrs, fType)
-			return reStrs
-		}
+func DetermineSegmentType(symbol string) []string {
+	if d, ok := segmentDefinitionFor(symbol); ok {
+		return []string{d.family, symbol, d.name}
 	}
-	return reStrs
+	return nil
 }
 
-// vowelCheck
-func vowelCheck(segmentStr string) []string {
-	var reStrs []string
-	vowels := []string{"A", "E", "I", "O", "U", "W", "X", "Y", "V"}
-	vowelTypes := []string{"Declaration", "Calculation", "Evaluation", "Definition", "Description", "Operation", "Iteration", "Instantiation", "Execution"}
-	for ind, vowel := range vowels {
-		if segmentStr == vowel {
-			fType := vowelTypes[ind]
-			reStrs = append(reStrs, vowel)
-			reStrs = append(reStrs, fType)
-			return reStrs
-		}
-	}
-	return reStrs
-}
-
-// consonantCheck
-func consonantCheck(segmentStr string) []string {
-	var reStrs []string
-	consonants := []string{"B", "D", "F", "G", "H", "K", "M", "P", "C"}
-	consonantTypes := []string{"Declare", "Calculate", "Define", "Evaluate", "Describe", "Operate", "Instantiate", "Iterate", "Execute"}
-	for ind, consonant := range consonants {
-		if segmentStr == consonant {
-			fType := consonantTypes[ind]
-			reStrs = append(reStrs, consonant)
-			reStrs = append(reStrs, fType)
-			return reStrs
-		}
-	}
-	return reStrs
-}
-
-// conjugateCheck
-func conjugateCheck(segmentStr string) []string {
-	var reStrs []string
-	conjugates := []string{"^", "*", "+"}
-	conjugateTypes := []string{"Square", "Multiply", "Add"}
-	for ind, conjugate := range conjugates {
-		if segmentStr == conjugate {
-			fType := conjugateTypes[ind]
-			reStrs = append(reStrs, conjugate)
-			reStrs = append(reStrs, fType)
-			return reStrs
-		}
-	}
-	return reStrs
-}
-
-// DetermineSegmentType
-func DetermineSegmentType(segmentStr string) []string {
-	var reStrs []string
-	fStrs := featuralCheck(segmentStr)
-	if len(fStrs) == 2 {
-		reStrs = append(reStrs, "Featural")
-		reStrs = append(reStrs, fStrs...)
-		return reStrs
-	}
-	cStrs := consonantCheck(segmentStr)
-	if len(cStrs) == 2 {
-		reStrs = append(reStrs, "Consonant")
-		reStrs = append(reStrs, cStrs...)
-		return reStrs
-	}
-	vStrs := vowelCheck(segmentStr)
-	if len(vStrs) == 2 {
-		reStrs = append(reStrs, "Vowel")
-		reStrs = append(reStrs, vStrs...)
-		return reStrs
-	}
-	jStrs := conjugateCheck(segmentStr)
-	if len(jStrs) == 2 {
-		reStrs = append(reStrs, "Conjugate")
-		reStrs = append(reStrs, jStrs...)
-		return reStrs
-	}
-	return reStrs
-}
-
-// Featural
 type Featural struct {
 	Name    string  `json:"name,omitempty"`
 	Type    string  `json:"type,omitempty"`
@@ -293,7 +165,6 @@ type Featural struct {
 	Segment Segment `json:"segment,omitempty"`
 }
 
-// SegmentalSystem
 type SegmentalSystem struct {
 	fileMeta         MetaDict
 	itemVisibility   string
@@ -329,111 +200,39 @@ type SegmentalSystem struct {
 	Hashmap          Segment `json:"hashmap,omitempty"`
 }
 
-// SegmentalDataSwitch
-func (ss *SegmentalSystem) SegmentalDataSwitch(segmentName string) string {
-	switch segName := segmentName; segName {
-	case "Declaration", "Declarations":
-		return "Declaration"
-	case "Calculation", "Calculations":
-		return "Calculation"
-	case "Evaluation", "Evaluations":
-		return "Evaluation"
-	case "Definition", "Definitions":
-		return "Definition"
-	case "Description", "Descriptions":
-		return "Description"
-	case "Operation", "Operations":
-		return "Operation"
-	case "Iteration", "Iterations":
-		return "Iteration"
-	case "Instantiation", "Instantiations":
-		return "Instantiation"
-	case "Execution", "Executions":
-		return "Execution"
+func (ss *SegmentalSystem) SegmentalDataSwitch(name string) string {
+	return vowelName(name)
+}
+
+func vowelName(name string) string {
+	name = strings.TrimSuffix(name, "s")
+	for _, d := range segmentDefinitions {
+		if d.family == "Vowel" && d.name == name {
+			return name
+		}
 	}
 	return "Void"
 }
 
-// SegmentSwitch
-func (ss *SegmentalSystem) SegmentSwitch(segmentSymbol string) Segment {
-	switch segSymbol := segmentSymbol; segSymbol {
-	case "A":
-		return ss.Declaration
-	case "E":
-		return ss.Calculation
-	case "I":
-		return ss.Evaluation
-	case "O":
-		return ss.Definition
-	case "U":
-		return ss.Description
-	case "W":
-		return ss.Operation
-	case "X":
-		return ss.Iteration
-	case "Y":
-		return ss.Instantiation
-	case "V":
-		return ss.Execution
-	case "B":
-		return ss.Declare
-	case "C":
-		return ss.Execute
-	case "D":
-		return ss.Calculate
-	case "F":
-		return ss.Define
-	case "G":
-		return ss.Evaluate
-	case "H":
-		return ss.Describe
-	case "K":
-		return ss.Operate
-	case "M":
-		return ss.Instantiate
-	case "P":
-		return ss.Iterate
-	case ".":
-		return ss.Byte
-	case "?":
-		return ss.Boolean
-	case ",":
-		return ss.Integer
-	case "%":
-		return ss.Float
-	case "~":
-		return ss.String
-	case "!":
-		return ss.Null
-	case "&":
-		return ss.Array
-	case "#":
-		return ss.Hashmap
+func (ss *SegmentalSystem) SegmentSwitch(symbol string) Segment {
+	if d, ok := segmentDefinitionFor(symbol); ok && d.slot != nil {
+		return *d.slot(ss)
 	}
 	return Segment{}
 }
 
-// SegmentInput
 type SegmentInput struct {
 	Key   string `json:"key,omitempty"`
 	Type  string `json:"type,omitempty"`
 	Value string `json:"value,omitempty"`
 }
 
-/*
-==========================
-GLYPH STRUCTS
-==========================
-*/
-
-// DataCompilation
 type DataCompilation struct {
 	Conjoinments    []CompiledConjoinment
 	Meta            MetaDict
 	SegmentalSystem *SegmentalSystem
 }
 
-// Glyph
 type Glyph struct {
 	Name              string
 	Type              string
@@ -458,29 +257,16 @@ type Glyph struct {
 
 // DetermineSegTags Glyph bytes
 func (g *Glyph) DetermineSegTags(seg Segment) Segment {
-	if g.Determinant.Symbol == "" {
-		// Get Default Tag if No Determinant
-		tags := ParseSegmentTags(seg.Tags, g.Meta, "Default", true)
-		seg.Tags = tags
-	} else {
-		// Get Non Default if Determinant
-		if g.Determinant.Symbol == "E" {
-			// E Vowel Determinant
-			//fmt.Println("CHECK SEGMENT, ", string(seg.Content))
-			//fmt.Println("CHECK FOR E DETERMINANT TAG!", string(g.Determinant.Content))
-			tags := ParseSegmentTags(seg.Tags, g.Meta, "E", true)
-			seg.Tags = tags
-		} else {
-			// Regular Consonant Determinant
-			segName := g.Determinant.getSegmentName()
-			tags := ParseSegmentTags(seg.Tags, g.Meta, segName, true)
-			seg.Tags = tags
-		}
+	selected := "Default"
+	if g.Determinant.Symbol == "E" {
+		selected = "E"
+	} else if g.Determinant.Symbol != "" {
+		selected = g.Determinant.getSegmentName()
 	}
+	seg.Tags = ParseSegmentTags(seg.Tags, g.Meta, selected, true)
 	return seg
 }
 
-// CompileConjoinmentsBytes
 func (g *Glyph) CompileConjoinmentsBytes(conjoinmentType string, plural bool) [][]byte {
 	var cBytes [][]byte
 	for _, conjoinment := range g.Conjoinments {
@@ -510,7 +296,6 @@ func (g *Glyph) CompileConjoinmentsBytes(conjoinmentType string, plural bool) []
 	return cBytes
 }
 
-// CompiledConjoinment
 type CompiledConjoinment struct {
 	Key             string
 	Type            string
@@ -520,7 +305,6 @@ type CompiledConjoinment struct {
 	Index           int
 }
 
-// InsertMeta
 func (cc *CompiledConjoinment) InsertMeta(meta MetaDict) {
 	intContents := [][]byte{}
 	baseStr := "Meta."
@@ -537,7 +321,6 @@ func (cc *CompiledConjoinment) InsertMeta(meta MetaDict) {
 	cc.Contents = intContents
 }
 
-// CompileConjoinments
 func (g *Glyph) CompileConjoinments(params []Parameter) []CompiledConjoinment {
 	var cConjs []CompiledConjoinment
 	for _, param := range params {
@@ -552,33 +335,15 @@ func (g *Glyph) CompileConjoinments(params []Parameter) []CompiledConjoinment {
 	return cConjs
 }
 
-// segmentConsonantSwitch
-func segmentConsonantSwitch(consonantType string) string {
-	switch segType := consonantType; segType {
-	case "calculate", "Calculate":
-		return "Calculation"
-	case "declare", "Declare":
-		return "Declaration"
-	case "define", "Define":
-		return "Definition"
-	case "evaluate", "Evaluate":
-		return "Evaluation"
-	case "describe", "Describe":
-		return "Description"
-	case "operate", "Operate":
-		return "Operation"
-	case "iterate", "Iterate":
-		return "Iteration"
-	case "instantiate", "Instantiate":
-		return "Instantiation"
-	case "execute", "Execute":
-		return "Execution"
-	default:
-		return "Void"
+func segmentConsonantSwitch(name string) string {
+	for _, d := range segmentDefinitions {
+		if d.family == "Consonant" && (name == d.name || name == strings.ToLower(d.name)) {
+			return d.related
+		}
 	}
+	return "Void"
 }
 
-// checkParamsConsonant
 func (g *Glyph) checkParamsConsonant(expressionStr string) string {
 	consonantStr := `[|"Consonant"|]`
 	if strings.Contains(expressionStr, consonantStr) {
@@ -732,12 +497,6 @@ func InsertGlyphVals(content []byte, vars [][]string) []byte {
 	return content
 }
 
-// I.E. `BA~`, `O`, `BA~^O`
-// [Determinate, Vowel, Featural-META-Featural, Conjugate]
-// TODO Ensure the following runs:
-// [`A`, `W{Key: ~main~}^U^O^E{Imports: [~“fmt”~], Statement: ~fmt.Println(“Hello World!”)~}`]
-//  DECLARE, Operation^Description^DEFINITION^CALCULATION
-
 // InitializeGlyph initializes the parsing process of a glyph sequence
 func (ss *SegmentalSystem) InitializeGlyph(definition []byte, valVars [][]string, expVars [][]string) Glyph {
 	glyph, err := ss.initializeGlyphChecked(definition, valVars, expVars)
@@ -749,7 +508,6 @@ func (ss *SegmentalSystem) InitializeGlyph(definition []byte, valVars [][]string
 
 func (ss *SegmentalSystem) initializeGlyphChecked(definition []byte, valVars [][]string, expVars [][]string) (Glyph, error) {
 	var seg Segment
-	//var feat Featural
 	var varValManager, varExpManager [][]string
 	reGlyph := Glyph{Name: string(definition), Type: "Simple", SegmentalSystem: ss, Meta: MetaDict{}}
 	definition, varValManager = ParseMetaInserts(definition)
@@ -799,59 +557,31 @@ func (ss *SegmentalSystem) initializeGlyphChecked(definition []byte, valVars [][
 					return reGlyph, lerrors.InvalidConfiguration.Errorf("segment %s (%s) is not configured", sType[1], sType[2])
 				}
 			}
-			if sType[0] == "Consonant" {
+			seg = ss.SegmentSwitch(sType[1])
+			switch sType[0] {
+			case "Consonant":
 				if ind == 0 {
-					// Determinant
-					seg = ss.SegmentSwitch(sType[1])
 					reGlyph.Determinant = seg
 				} else {
-					// Consonant
 					if ss.Language == "Rust" && reGlyph.Consonant.Symbol != "" {
 						return reGlyph, lerrors.Unsupported.Errorf("unsupported stacked Rust codas in %s", reGlyph.Name)
 					}
-					seg = ss.SegmentSwitch(sType[1])
 					reGlyph.Consonant = seg
 				}
-			} else if sType[0] == "Vowel" {
-				if ind == 0 {
-					det := false
-					if sType[1] == "E" && len(curDef) > ind+1 {
-						nextLogiceme := string(curDef[ind+1])
-						if nextLogiceme == "A" {
-							// EA Vowel
-							seg = ss.SegmentSwitch(sType[1])
-							reGlyph.Determinant = seg
-							det = true
-						}
-					}
-					if !det {
-						// Default Vowel
-						seg = ss.SegmentSwitch(sType[1])
-						reGlyph.Vowels = append(reGlyph.Vowels, seg)
-					}
+			case "Vowel":
+				if ind == 0 && b == 'E' && len(curDef) > 1 && curDef[1] == 'A' {
+					reGlyph.Determinant = seg
 				} else {
-					// Determined Vowel
-					seg = ss.SegmentSwitch(sType[1])
 					reGlyph.Vowels = append(reGlyph.Vowels, seg)
 				}
 			}
 		}
 	}
 	if len(splitDefinition) > 1 {
-		var nextDefContent string
-		for ind, sD := range splitDefinition {
-			if ind > 0 {
-				if len(splitDefinition)-1 == ind {
-					nextDefContent = nextDefContent + string(sD)
-				} else {
-					nextDefContent = nextDefContent + string(sD) + "^"
-				}
-			}
-		}
-		if bytes.HasPrefix([]byte(nextDefContent), []byte("|")) {
-			// Expand this group's placeholder only. Nested groups must remain
-			// opaque until their owning child is parsed; expanding them here
-			// exposes their ^ and * delimiters to the wrong tree level.
+		nextDefContent := string(bytes.Join(splitDefinition[1:], []byte("^")))
+		children := [][]byte{[]byte(nextDefContent)}
+		if strings.HasPrefix(nextDefContent, "|") {
+			// Expand only this group's placeholder; nested groups own their delimiters.
 			exp := []byte(nextDefContent)
 			for _, variable := range expVars {
 				if nextDefContent == "|"+variable[0]+"|" {
@@ -859,22 +589,15 @@ func (ss *SegmentalSystem) initializeGlyphChecked(definition []byte, valVars [][
 					break
 				}
 			}
-			conjs := bytes.Split(exp, []byte("*"))
-			for _, conj := range conjs {
-				cGlyph, err := ss.initializeGlyphChecked(conj, valVars, expVars)
-				if err != nil {
-					return reGlyph, err
-				}
-				reGlyph.Type = "Complex"
-				reGlyph.Conjoinments = append(reGlyph.Conjoinments, cGlyph)
-			}
-		} else {
-			cGlyph, err := ss.initializeGlyphChecked([]byte(nextDefContent), valVars, expVars)
+			children = bytes.Split(exp, []byte("*"))
+		}
+		for _, child := range children {
+			glyph, err := ss.initializeGlyphChecked(child, valVars, expVars)
 			if err != nil {
 				return reGlyph, err
 			}
 			reGlyph.Type = "Complex"
-			reGlyph.Conjoinments = append(reGlyph.Conjoinments, cGlyph)
+			reGlyph.Conjoinments = append(reGlyph.Conjoinments, glyph)
 		}
 	}
 	valInput := InsertGlyphVals([]byte(reGlyph.InputString), valVars)
@@ -894,106 +617,34 @@ func (ss *SegmentalSystem) AddLogiceme(segment Segment, load bool, resources fs.
 			return err
 		}
 	}
-	switch segSymbol := segment.Symbol; segSymbol {
-	case "A":
-		ss.Declaration = segment
-	case "E":
-		ss.Calculation = segment
-	case "I":
-		ss.Evaluation = segment
-	case "O":
-		ss.Definition = segment
-	case "U":
-		ss.Description = segment
-	case "W":
-		ss.Operation = segment
-	case "X":
-		ss.Iteration = segment
-	case "Y":
-		ss.Instantiation = segment
-	case "V":
-		ss.Execution = segment
-	case "B":
-		ss.Declare = segment
-	case "C":
-		ss.Execute = segment
-	case "D":
-		ss.Calculate = segment
-	case "F":
-		ss.Define = segment
-	case "G":
-		ss.Evaluate = segment
-	case "H":
-		ss.Describe = segment
-	case "K":
-		ss.Operate = segment
-	case "M":
-		ss.Instantiate = segment
-	case "P":
-		ss.Iterate = segment
+	if d, ok := segmentDefinitionFor(segment.Symbol); ok && (d.family == "Vowel" || d.family == "Consonant") {
+		*d.slot(ss) = segment
 	}
 	return nil
 }
 
 // AddFeatural maps featurals into the system
 func (ss *SegmentalSystem) AddFeatural(segment Segment) {
-	segment.LoadFeatural()
-	switch segSymbol := segment.Symbol; segSymbol {
-	case ".":
-		ss.Byte = segment
-	case "?":
-		ss.Boolean = segment
-	case ",":
-		ss.Integer = segment
-	case "%":
-		ss.Float = segment
-	case "~":
-		ss.String = segment
-	case "!":
-		ss.Null = segment
-	case "&":
-		ss.Array = segment
-	case "#":
-		ss.Hashmap = segment
+	if d, ok := segmentDefinitionFor(segment.Symbol); ok && d.family == "Featural" {
+		segment.LoadFeatural()
+		*d.slot(ss) = segment
 	}
 }
 
 // loadSegmentalSystem builds a fresh Rust alphabet from its fixed identities.
 func loadSegmentalSystem(resources fs.FS) (SegmentalSystem, error) {
-	segments := [...]struct{ symbol, subtype, name string }{
-		{"C", "consonant", "execute"},
-		{"B", "consonant", "declare"},
-		{"D", "consonant", "calculate"},
-		{"F", "consonant", "define"},
-		{"G", "consonant", "evaluate"},
-		{"H", "consonant", "describe"},
-		{"K", "consonant", "operate"},
-		{"M", "consonant", "instantiate"},
-		{"P", "consonant", "iterate"},
-		{"V", "vowel", "execution"},
-		{"A", "vowel", "declaration"},
-		{"E", "vowel", "calculation"},
-		{"I", "vowel", "evaluation"},
-		{"O", "vowel", "definition"},
-		{"U", "vowel", "description"},
-		{"W", "vowel", "operation"},
-		{"X", "vowel", "iteration"},
-		{"Y", "vowel", "instantiation"},
-	}
 	system := SegmentalSystem{Name: "rust", Language: "Rust"}
-	for _, definition := range segments {
-		segment := Segment{
-			Symbol: definition.symbol, Type: "logiceme", SubType: definition.subtype,
-			Name: definition.name, Inputs: []string{"Type"},
+	for _, definition := range segmentDefinitions {
+		if definition.family != "Consonant" && definition.family != "Vowel" {
+			continue
 		}
-		// Preserve the effective ReadString record, including its final
-		// backtick. This storage refactor does not change the glyph protocol.
+		segment := Segment{Symbol: definition.symbol, Type: "logiceme", SubType: strings.ToLower(definition.family), Name: strings.ToLower(definition.name), Inputs: []string{"Type"}}
+		// Preserve the effective ReadString record, including its final backtick.
 		segment.Meta.Add("", "string", "Default`")
 		if err := system.AddLogiceme(segment, true, resources); err != nil {
 			return system, err
 		}
 	}
-	system.Name = "Default"
-	system.Type = "Full"
+	system.Name, system.Type = "Default", "Full"
 	return system, nil
 }

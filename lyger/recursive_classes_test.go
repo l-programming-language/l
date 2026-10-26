@@ -37,7 +37,7 @@ func TestFrontendFeatureTypeRemoved(t *testing.T) {
 }
 
 func TestFrontendSurvivingValueTypeNames(t *testing.T) {
-	names := []string{"", "Thing", "Text", "Number", "Truth", "Bytes", "Pointer", "Lexeme", "App", "Service", "Class", "Object", "Attribute", "Definition", "Function", "Property", "Operation", "List", "Dictionary", "Error", "ID", "None", "Unknown", "Null"}
+	names := []string{"", "Thing", "Text", "Number", "Truth", "Bytes", "Pointer", "Lexeme", "App", "Service", "Class", "Object", "Attribute", "Definition", "Function", "Property", "Operation", "List", "Dictionary", "Error", "ID", "None", "Unknown", "Null", "Map", "Instance"}
 	if int(valueTypeCount) != len(names) {
 		t.Fatalf("value type inventory has %d, want %d", valueTypeCount, len(names))
 	}

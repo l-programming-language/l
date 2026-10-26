@@ -12,11 +12,15 @@ import (
 // punctuation and runtime calls only; it does not rediscover bindings or source
 // control flow from rendered text.
 type orchestrationEmitter struct {
-	plan       *orchestrationPlan
-	artifacts  map[*App]string
-	apps       map[*App]string
-	invocation int
-	processes  *builtinProcessCatalog
+	plan             *orchestrationPlan
+	artifacts        map[*App]string
+	apps             map[*App]string
+	invocation       int
+	processSelection int
+	functionDepth    int
+	programStorage   map[*orchestrationStorage]int
+	programActions   map[*record]int
+	processes        *builtinProcessCatalog
 }
 
 func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact) (BuildUnit, error) {
@@ -66,6 +70,17 @@ func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact
 	for _, app := range emitter.plan.Apps {
 		body = append(body, orchestrationBinding(emitter.apps[app], "runtime.app("+quoteOrchestrationString(emitter.artifacts[app])+")"))
 	}
+	if emitter.plan.RuntimeValues || len(emitter.plan.Callables) > 0 {
+		var actions []*record
+		for _, slot := range emitter.plan.Root.Callables {
+			actions = append(actions, slot.Record)
+		}
+		context, err := emitter.programContext(actions)
+		if err != nil {
+			return BuildUnit{}, err
+		}
+		body = append(body, context...)
+	}
 	statements, err := emitter.block(emitter.plan.Root, false)
 	if err != nil {
 		return BuildUnit{}, err
@@ -76,6 +91,9 @@ func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact
 	// This private observer seam invokes the same generated source; it is not
 	// an alternate entry implementation or a global runtime interception hook.
 	observer := "#[cfg(test)]\npub(crate) async fn l_entry_with_runtime(runtime: &runtime::Runtime) -> u8 {\n    runtime.run(l_main(runtime)).await\n}"
+	if emitter.plan.RuntimeValues || len(emitter.plan.Callables) > 0 {
+		observer = runtimeValueSupport + functionRuntimeSupport() + programRuntimeSupport() + observer
+	}
 	syllables := []*s{{CompiledBytes: []byte("A")}, {CompiledBytes: []byte(function)}, {CompiledBytes: []byte("DA^" + orchestrationEvaluation(observer))}}
 	mainObject, mainService := newRootObject("main"), newRootService("main")
 	mainService.Objects = []*object{mainObject}
@@ -95,7 +113,30 @@ func orchestrationAssignment(target, value string) string {
 
 func (e *orchestrationEmitter) declarations(block *orchestrationBlock) ([]string, error) {
 	var declarations []string
+	for _, slot := range block.Callables {
+		if _, exists := e.programActions[slot.Record]; exists {
+			continue
+		}
+		declarations = append(declarations, orchestrationBinding("mut "+slot.name()+": Option<LEnvironment>", "None"))
+	}
 	for _, slot := range block.Storage {
+		if _, shared := e.programStorage[slot]; shared {
+			if slot.Initial != nil {
+				value, _, err := nativePrimitiveExpression(slot.Initial)
+				if err != nil {
+					return nil, err
+				}
+				stored, err := e.storeRuntimeValue(slot, value)
+				if err != nil {
+					return nil, err
+				}
+				declarations = append(declarations, stored...)
+			}
+			continue
+		}
+		if slot.Parameter {
+			continue
+		}
 		glyph, _, err := orchestrationStorageDeclaration(slot)
 		if err != nil {
 			return nil, err
@@ -160,10 +201,11 @@ func (e *orchestrationEmitter) block(block *orchestrationBlock, scoped bool) ([]
 // emittedExpression retains how a Text is stored so read-only display and
 // comparison borrow it, while language assignments explicitly own snapshots.
 type emittedExpression struct {
-	text   string
-	kind   valueType
-	arc    bool
-	borrow bool
+	optional bool
+	text     string
+	kind     valueType
+	arc      bool
+	borrow   bool
 }
 
 func (value emittedExpression) textReference() string {
@@ -187,7 +229,11 @@ func (e *orchestrationEmitter) value(value *orchestrationValue) (emittedExpressi
 	if value == nil {
 		return emittedExpression{}, lerrors.Internal.Errorf("planned value is missing")
 	}
+	if value.Source != nil && (value.Source.Kind == operandConstruct || value.Source.Kind == operandRead) {
+		return e.runtimeOperand(value)
+	}
 	result := emittedExpression{kind: value.Type}
+	var err error
 	if value.Literal != nil {
 		text, _, err := nativePrimitiveExpression(value.Literal)
 		if err != nil {
@@ -197,10 +243,19 @@ func (e *orchestrationEmitter) value(value *orchestrationValue) (emittedExpressi
 		return result, nil
 	}
 	if value.Storage != nil {
+		if index, shared := e.programStorage[value.Storage]; shared {
+			text, err := unboxRuntimeValue(fmt.Sprintf("lProgram.get(%d)?", index), value.Type)
+			result.text = text
+			return result, err
+		}
+		if capture := value.Storage.Capture; capture != nil {
+			result.text, err = unboxRuntimeValue(fmt.Sprintf("%s.get(%d)?", capture.Name, capture.Index), value.Type)
+			return result, err
+		}
 		result.text = value.Storage.name()
 		if value.Storage.Published {
 			result.text += ".as_ref().ok_or_else(|| runtime::Error::new(" + quoteOrchestrationString("symbol "+value.Record.ID+" is not initialized") + "))?"
-			if value.Type == valueText {
+			if value.Type != valueNumber && value.Type != valueTruth && value.Type != valueNull {
 				result.borrow = true
 			} else {
 				result.text = "(*" + result.text + ")"
@@ -224,7 +279,7 @@ func (e *orchestrationEmitter) value(value *orchestrationValue) (emittedExpressi
 		case memberOutput:
 			result.text, result.arc = owner.text+".output()?", true
 		case memberError:
-			result.text = owner.text + ".error()?"
+			result.text, result.optional = owner.text+".error()?", true
 		default:
 			return result, lerrors.Internal.Errorf("unsupported planned member %s", value.Source.Member)
 		}
@@ -324,46 +379,39 @@ func (e *orchestrationEmitter) instructions(body []*orchestrationInstruction) ([
 
 func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([]string, error) {
 	switch current.Source.Kind {
+	case instructionFunction, instructionInvoke, instructionReturn:
+		return e.functionInstruction(current)
 	case instructionBlock:
 		return e.block(current.Block, true)
+	case instructionBindAction, instructionAliasAction:
+		return e.bindCapture(current)
 	case instructionCall:
-		return e.instructions(current.Actions)
-	case instructionBuild:
-		return e.processes.instantiate(builtinProcessBuild, builtinProcessOperands{receiver: e.processReceiver(current)})
-	case instructionRun:
-		return e.processes.instantiate(builtinProcessRun, builtinProcessOperands{receiver: e.processReceiver(current)})
-	case instructionStop:
-		return e.processes.instantiate(builtinProcessStop, builtinProcessOperands{receiver: e.processReceiver(current)})
-	case instructionAwait:
-		invocation := &builtinProcessInvocation{index: e.invocation}
-		e.invocation++
-		var body []string
-		if current.Continuation != nil {
-			var err error
-			body, err = e.block(current.Continuation, true)
-			if err != nil {
-				return nil, err
-			}
-		}
-		finish, err := e.processes.instantiate(builtinProcessFinish, builtinProcessOperands{invocation: invocation})
+		body, err := e.instructions(current.Actions)
 		if err != nil {
 			return nil, err
 		}
-		body = append(body, finish...)
-		return e.processes.instantiate(builtinProcessAwait, builtinProcessOperands{receiver: e.processReceiver(current), invocation: invocation, body: &builtinProcessBody{statements: body}})
+		if current.CaptureSource != nil {
+			source, err := e.captureReference(current.CaptureSource)
+			if err != nil {
+				return nil, err
+			}
+			body = append([]string{orchestrationBinding(current.CaptureName, source)}, body...)
+		}
+		return body, nil
+	case instructionBuild, instructionRun, instructionStop, instructionAwait:
+		return e.processInstruction(current)
+	case instructionUpdate:
+		return e.runtimeUpdate(current)
 	case instructionAssign:
 		value, err := e.value(current.Value)
 		if err != nil {
 			return nil, err
 		}
-		text := value.text
-		if value.kind == valueText && (current.Value.Access == orchestrationAccessSnapshot || value.arc) {
-			text = "(" + text + ").to_vec()"
+		text, err := runtimeCopyExpression(value, current.Value.Access)
+		if err != nil {
+			return nil, err
 		}
-		if current.Target.Storage.Published {
-			text = "Some(" + text + ")"
-		}
-		return []string{orchestrationAssignment(current.Target.Storage.name(), text)}, nil
+		return e.storeRuntimeValue(current.Target.Storage, text)
 	case instructionShow:
 		value, err := e.value(current.Value)
 		if err != nil {
@@ -372,20 +420,30 @@ func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([
 		text := value.textReference()
 		if value.kind == valueNumber {
 			text = "&runtime::format_number(" + value.text + ")"
-		} else if value.kind != valueText {
+		} else if value.kind == valueTruth {
 			text = "&" + value.text + ".to_string().into_bytes()"
-		}
-		return []string{orchestrationStatement("runtime.show(" + text + ").await?;")}, nil
-	case instructionExit:
-		var statements []string
-		if current.Value != nil {
-			value, err := e.value(current.Value)
+		} else if value.kind == valueBytes {
+			text = value.textReference()
+		} else if value.kind != valueText {
+			boxed, err := boxRuntimeValue(value)
 			if err != nil {
 				return nil, err
 			}
-			statements = append(statements, orchestrationStatement("runtime.fail("+value.text+");"))
+			text = "&(" + boxed + ").display_bytes()?"
 		}
-		return append(statements, orchestrationStatement("return Ok(());")), nil
+		return []string{orchestrationStatement("runtime.show(" + text + ").await?;")}, nil
+	case instructionExit:
+		if current.Value == nil {
+			if e.functionDepth > 0 {
+				return []string{orchestrationStatement("return Ok(LFunctionOutcome::Exit);")}, nil
+			}
+			return []string{orchestrationStatement("return Ok(());")}, nil
+		}
+		value, err := e.value(current.Value)
+		if err != nil {
+			return nil, err
+		}
+		return []string{orchestrationStatement("let lExit = runtime.fail(" + value.text + ");"), orchestrationStatement("return Err(lExit);")}, nil
 	case instructionIf:
 		condition, err := e.condition(current.Condition)
 		if err != nil {

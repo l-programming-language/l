@@ -69,26 +69,17 @@ func (sb *conditionGram) loadTyping(sType string) error {
 	return (grammarTyping{&sb.sType, &sb.gType, &sb.cType}).load(sType, familyCondition, grammarCaseInferred)
 }
 
-// gramSwitch inits a grammar class for a conditionGram
 func (sb *conditionGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyValue:
-		// Init new value
-		vGram, sErr := initValueGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if sErr != nil {
-			return sErr
-		}
-		sErr = vGram.build()
+		vGram, sErr := buildGrammarNode(initValueGram(term.Name, sb.getUnassociatedTokens(), sb.gram))
 		if sErr != nil {
 			return sErr
 		}
 		sb.values = append(sb.values, vGram)
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
-			cErr := sb.caseBuild()
-			if cErr != nil {
-				return cErr
-			}
+			return sb.caseBuild()
 		}
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled CONDITION Grammar Type: "+term.className())
@@ -127,30 +118,18 @@ func (sb *conditionGram) lexSwitch(term grammarTerm) error {
 	return nil
 }
 
-// buildProcess manages gram build iterable process
 func (sb *conditionGram) buildProcess(casedStr string) error {
 	return applyGrammarRule(sb, casedStr, (conditionGram).clone, (*conditionGram).gramSwitch, (*conditionGram).lexSwitch, nil)
 }
 
-// caseBuild compares the current tokens with available grammar cases and determines a match
 func (sb *conditionGram) caseBuild() error {
 	return selectGrammarCase(sb, sb.rule.Cases, (conditionGram).clone, (*conditionGram).buildProcess, (*conditionGram).getUnassociatedTokens, func(s *conditionGram, name string) { s.cType = name }, sb.tokens)
 }
 
-// build an initialized conditionalGram
 func (sb *conditionGram) build() error {
-	casedStr, err := sb.rule.getCasedStructure(sb.cType)
-	if err != nil {
-		return err
-	}
-	if err = sb.buildProcess(casedStr); err != nil {
-		return err
-	}
-	sb.tokens, err = grammarPrefix(sb.tokens, sb.getUnassociatedTokens())
-	return err
+	return buildGrammarPrefix(sb.rule, sb.cType, &sb.tokens, sb.buildProcess, sb.getUnassociatedTokens)
 }
 
-// initConditionGram returns a pointer a new initialized conditionGram
 func initConditionGram(sType string, tokens []*token, gram *grammar) (*conditionGram, error) {
 	var r conditionGram
 	if len(tokens) == 0 {
@@ -170,7 +149,6 @@ func initConditionGram(sType string, tokens []*token, gram *grammar) (*condition
 	return &r, nil
 }
 
-// initConditionalGrams returns a slice of newly initialized conditionGram pointers
 func initConditionGrams(sType string, tokens []*token, gram *grammar) ([]*conditionGram, []*token, error) {
 	var r []*conditionGram
 	if len(tokens) == 0 {
@@ -191,8 +169,6 @@ func initConditionGrams(sType string, tokens []*token, gram *grammar) ([]*condit
 	return r, conjuncts, nil
 }
 
-//	Only test run main.l with conditional statements
-//
 // conditionalGram holds data for the noun being acted in a statement
 type conditionalGram struct {
 	sType        string
@@ -239,7 +215,6 @@ func (sb *conditionalGram) getUnassociatedTokens() []*token {
 // subTypeSwitch checks for a conditionalGram subType if one isn't provided in the sType
 func (sb *conditionalGram) subTypeSwitch() string {
 	if len(sb.tokens) > 0 && sb.tokens[0].getPOS(true) == "evaluations" {
-		// chkVal, _ := generalizePrepTokenType(sb.tokens[0].tType)
 		switch sb.tokens[0].tType {
 		case "evaluations.conditional.root":
 			return "if"
@@ -274,7 +249,6 @@ func (sb *conditionalGram) loadTyping(sType string) error {
 	return nil
 }
 
-// gramSwitch inits a grammar class for a conditionalGram
 func (sb *conditionalGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyClause:
@@ -314,10 +288,7 @@ func (sb *conditionalGram) gramSwitch(term grammarTerm) error {
 
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
-			cErr := sb.caseBuild()
-			if cErr != nil {
-				return cErr
-			}
+			return sb.caseBuild()
 		}
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled CONDITIONAL Grammar Type: "+term.className())
@@ -339,27 +310,16 @@ func (sb *conditionalGram) lexSwitch(term grammarTerm) error {
 	}
 }
 
-// buildProcess manages gram build iterable process
 func (sb *conditionalGram) buildProcess(casedStr string) error {
 	return applyGrammarRule(sb, casedStr, (conditionalGram).clone, (*conditionalGram).gramSwitch, (*conditionalGram).lexSwitch, nil)
 }
 
-// caseBuild compares the current tokens with available grammar cases and determines a match
 func (sb *conditionalGram) caseBuild() error {
 	return selectGrammarCase(sb, sb.rule.Cases, (conditionalGram).clone, (*conditionalGram).buildProcess, (*conditionalGram).getUnassociatedTokens, func(s *conditionalGram, name string) { s.cType = name }, sb.tokens)
 }
 
-// build an initialized conditionalGram
 func (sb *conditionalGram) build() error {
-	casedStr, err := sb.rule.getCasedStructure(sb.cType)
-	if err != nil {
-		return err
-	}
-	if err = sb.buildProcess(casedStr); err != nil {
-		return err
-	}
-	sb.tokens, err = grammarPrefix(sb.tokens, sb.getUnassociatedTokens())
-	return err
+	return buildGrammarPrefix(sb.rule, sb.cType, &sb.tokens, sb.buildProcess, sb.getUnassociatedTokens)
 }
 
 // trimTokens down to if/else & while/then
@@ -404,7 +364,6 @@ func (sb *conditionalGram) trimTokens() error {
 	return lerrors.Syntax.Errorf("conditional must be initialized with a set of tokens")
 }
 
-// initConditionalGram returns a pointer a new initialized conditionalGram
 func initConditionalGram(sType string, tokens []*token, gram *grammar) (*conditionalGram, error) {
 	var r conditionalGram
 	if len(tokens) == 0 {
@@ -431,7 +390,6 @@ func initConditionalGram(sType string, tokens []*token, gram *grammar) (*conditi
 	return &r, nil
 }
 
-// initConditionalGrams returns a slice of newly initialized conditionGram pointers
 func initConditionalGrams(sType string, tokens []*token, gram *grammar) ([]*conditionalGram, error) {
 	var r []*conditionalGram
 	if len(tokens) == 0 {
@@ -505,15 +463,11 @@ func (sb *valueGram) typeSwitch(term grammarTerm) error {
 	return nil
 }
 
-// gramSwitch inits a grammar class for a valueGram
 func (sb *valueGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
-			cErr := sb.caseBuild()
-			if cErr != nil {
-				return cErr
-			}
+			return sb.caseBuild()
 		}
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled VALUE Grammar Type: "+term.className())
@@ -535,30 +489,18 @@ func (sb *valueGram) lexSwitch(term grammarTerm) error {
 	}
 }
 
-// buildProcess manages gram build iterable process
 func (sb *valueGram) buildProcess(casedStr string) error {
 	return applyGrammarRule(sb, casedStr, (valueGram).clone, (*valueGram).gramSwitch, (*valueGram).lexSwitch, (*valueGram).typeSwitch)
 }
 
-// caseBuild compares the current tokens with available grammar cases and determines a match
 func (sb *valueGram) caseBuild() error {
 	return selectGrammarCase(sb, sb.rule.Cases, (valueGram).clone, (*valueGram).buildProcess, (*valueGram).getUnassociatedTokens, func(s *valueGram, name string) { s.cType = name }, sb.tokens)
 }
 
-// build an initialized subjectGram
 func (sb *valueGram) build() error {
-	casedStr, err := sb.rule.getCasedStructure(sb.cType)
-	if err != nil {
-		return err
-	}
-	if err = sb.buildProcess(casedStr); err != nil {
-		return err
-	}
-	sb.tokens, err = grammarPrefix(sb.tokens, sb.getUnassociatedTokens())
-	return err
+	return buildGrammarPrefix(sb.rule, sb.cType, &sb.tokens, sb.buildProcess, sb.getUnassociatedTokens)
 }
 
-// initValueGram returns a pointer a new initialized valueGram
 func initValueGram(gType string, tokens []*token, gram *grammar) (*valueGram, error) {
 	var r valueGram
 	if len(tokens) == 0 {
@@ -623,26 +565,13 @@ func (sb *subjectGram) getAssociatedTokens(update bool) []*token {
 	return associatedTokens
 }
 
-// gramSwitch inits a grammar class for a subjectGram
 func (sb *subjectGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyPhrase:
-		// Init new phrase
-		pGram, pErr := initPhraseGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if pErr != nil {
-			return pErr
-		}
-		pErr = pGram.build()
-		if pErr != nil {
-			return pErr
-		}
-		sb.phrase = pGram
+		return buildGrammarChild(&sb.phrase, initPhraseGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
-			cErr := sb.caseBuild()
-			if cErr != nil {
-				return cErr
-			}
+			return sb.caseBuild()
 		}
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Subject Grammar Type: "+term.className())
@@ -695,30 +624,18 @@ func (sb *subjectGram) typeSwitch(term grammarTerm) error {
 	return nil
 }
 
-// buildProcess manages gram build iterable process
 func (sb *subjectGram) buildProcess(casedStr string) error {
 	return applyGrammarRule(sb, casedStr, (subjectGram).clone, (*subjectGram).gramSwitch, (*subjectGram).lexSwitch, (*subjectGram).typeSwitch)
 }
 
-// caseBuild compares the current tokens with available grammar cases and determines a match
 func (sb *subjectGram) caseBuild() error {
-	return selectGrammarCase(sb, sb.rule.Cases, (subjectGram).clone, (*subjectGram).buildProcess, (*subjectGram).getUnassociatedTokens, func(s *subjectGram, name string) { s.cType = name }, sb.tokens)
+	return selectGrammarCase(sb, inferredSignatureCases(sb.rule.Cases), (subjectGram).clone, (*subjectGram).buildProcess, (*subjectGram).getUnassociatedTokens, func(s *subjectGram, name string) { s.cType = name }, sb.tokens)
 }
 
-// build an initialized subjectGram
 func (sb *subjectGram) build() error {
-	casedStr, err := sb.rule.getCasedStructure(sb.cType)
-	if err != nil {
-		return err
-	}
-	if err = sb.buildProcess(casedStr); err != nil {
-		return err
-	}
-	sb.tokens, err = grammarPrefix(sb.tokens, sb.getUnassociatedTokens())
-	return err
+	return buildGrammarPrefix(sb.rule, sb.cType, &sb.tokens, sb.buildProcess, sb.getUnassociatedTokens)
 }
 
-// initSubjectGram returns a pointer a new initialized subjectGram
 func initSubjectGram(gType string, tokens []*token, gram *grammar) (*subjectGram, error) {
 	var r subjectGram
 	if len(tokens) == 0 {
@@ -778,46 +695,17 @@ func (sb *objectGram) getUnassociatedTokens() []*token {
 	return selected.remaining(sb.tokens)
 }
 
-// gramSwitch inits a grammar class for a objectGram
 func (sb *objectGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyValue:
-		name, err := initValueGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if err != nil {
-			return err
-		}
-		if err = name.build(); err != nil {
-			return err
-		}
-		sb.name = name
+		return buildGrammarChild(&sb.name, initValueGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyClause:
-		// Init new clause
-		cGram, pErr := initClauseGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if pErr != nil {
-			return pErr
-		}
-		pErr = cGram.build()
-		if pErr != nil {
-			return pErr
-		}
-		sb.clause = cGram
+		return buildGrammarChild(&sb.clause, initClauseGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyPhrase:
-		// Init new phrase
-		pGram, pErr := initPhraseGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if pErr != nil {
-			return pErr
-		}
-		pErr = pGram.build()
-		if pErr != nil {
-			return pErr
-		}
-		sb.phrase = pGram
+		return buildGrammarChild(&sb.phrase, initPhraseGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
-			cErr := sb.caseBuild()
-			if cErr != nil {
-				return cErr
-			}
+			return sb.caseBuild()
 		}
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Object Grammar Type: "+term.className())
@@ -868,30 +756,18 @@ func (sb *objectGram) typeSwitch(term grammarTerm) error {
 	return nil
 }
 
-// buildProcess manages gram build iterable process
 func (sb *objectGram) buildProcess(casedStr string) error {
 	return applyGrammarRule(sb, casedStr, (objectGram).clone, (*objectGram).gramSwitch, (*objectGram).lexSwitch, (*objectGram).typeSwitch)
 }
 
-// caseBuild compares the current tokens with available grammar cases and determines a match
 func (sb *objectGram) caseBuild() error {
-	return selectGrammarCase(sb, sb.rule.Cases, (objectGram).clone, (*objectGram).buildProcess, (*objectGram).getUnassociatedTokens, func(s *objectGram, name string) { s.cType = name }, sb.tokens)
+	return selectGrammarCase(sb, withoutGrammarCase(sb.rule.Cases, "callable", "argument", "type_argument"), (objectGram).clone, (*objectGram).buildProcess, (*objectGram).getUnassociatedTokens, func(s *objectGram, name string) { s.cType = name }, sb.tokens)
 }
 
-// build an initialized objectGram
 func (sb *objectGram) build() error {
-	casedStr, err := sb.rule.getCasedStructure(sb.cType)
-	if err != nil {
-		return err
-	}
-	if err = sb.buildProcess(casedStr); err != nil {
-		return err
-	}
-	sb.tokens, err = grammarPrefix(sb.tokens, sb.getUnassociatedTokens())
-	return err
+	return buildGrammarPrefix(sb.rule, sb.cType, &sb.tokens, sb.buildProcess, sb.getUnassociatedTokens)
 }
 
-// initObjectGram returns a pointer a new initialized objectGram
 func initObjectGram(gType string, tokens []*token, gram *grammar) (*objectGram, error) {
 	var r objectGram
 	if len(tokens) == 0 {
@@ -926,7 +802,11 @@ type phraseGram struct {
 	gram         *grammar
 	conjunctions []*token
 
-	objects []*objectGram
+	objects  []*objectGram
+	values   []*valueGram
+	subjects []*subjectGram
+	markers  []*token
+	phrases  []*phraseGram
 }
 
 func (phrase *phraseGram) orderedObjects() []*objectGram {
@@ -1002,25 +882,63 @@ func (sb *phraseGram) getUnassociatedTokens() []*token {
 	for _, object := range sb.objects {
 		selected.add(object.tokens...)
 	}
+	for _, subject := range sb.subjects {
+		selected.add(subject.tokens...)
+	}
+	for _, value := range sb.values {
+		selected.add(value.tokens...)
+	}
+	for _, phrase := range sb.phrases {
+		selected.add(phrase.tokens...)
+	}
+	selected.add(sb.markers...)
 	return selected.remaining(sb.tokens)
 }
 
-// gramSwitch inits a grammar class for a predicateGram
 func (sb *phraseGram) gramSwitch(term grammarTerm) error {
 	switch {
+	case term.Kind == termGrammar && term.Family == familyValue:
+		values, separators, err := buildGrammarValues(term, sb.getUnassociatedTokens(), sb.gram)
+		if err != nil {
+			return err
+		}
+		sb.values = append(sb.values, values...)
+		sb.conjunctions = append(sb.conjunctions, separators...)
 	case term.Kind == termGrammar && term.Family == familySubject:
-		// Init new subject
-		subGram, subErr := initSubjectGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if subErr != nil {
-			return subErr
+		subjects, separators, err := grammarSequence(sb.getUnassociatedTokens(), term.Multiple, func(input []*token) (*subjectGram, []*token, error) {
+			if sb.gType == "phrase.signature" {
+				input = signatureTypePrefix(input)
+			}
+			subject, err := buildGrammarNode(initSubjectGram(term.Name, input, sb.gram))
+			if err != nil {
+				return nil, nil, err
+			}
+			return subject, subject.tokens, nil
+		})
+		if err != nil {
+			return err
 		}
-		subErr = subGram.build()
-		if subErr != nil {
-			return subErr
+		sb.subjects = append(sb.subjects, subjects...)
+		if len(subjects) > 0 && sb.subject == nil {
+			sb.subject = subjects[0]
 		}
-		sb.subject = subGram
+		sb.conjunctions = append(sb.conjunctions, separators...)
+
 	case term.Kind == termGrammar && term.Family == familyObject:
-		objects, conjunctions, err := buildGrammarObjects(term, sb.getUnassociatedTokens(), sb.gram)
+		var objects []*objectGram
+		var conjunctions []*token
+		var err error
+		if sb.gType == "phrase.signature" {
+			objects, conjunctions, err = grammarSequence(sb.getUnassociatedTokens(), term.Multiple, func(input []*token) (*objectGram, []*token, error) {
+				object, err := buildGrammarNode(initObjectGram(term.Name, signatureTypePrefix(input), sb.gram))
+				if err != nil {
+					return nil, nil, err
+				}
+				return object, object.tokens, nil
+			})
+		} else {
+			objects, conjunctions, err = buildGrammarObjects(term, sb.getUnassociatedTokens(), sb.gram)
+		}
 		if err != nil {
 			return err
 		}
@@ -1031,16 +949,7 @@ func (sb *phraseGram) gramSwitch(term grammarTerm) error {
 		sb.conjunctions = append(sb.conjunctions, conjunctions...)
 
 	case term.Kind == termGrammar && term.Family == familyPhrase:
-		// Init new phrase
-		pGram, pErr := initPhraseGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if pErr != nil {
-			return pErr
-		}
-		pErr = pGram.build()
-		if pErr != nil {
-			return pErr
-		}
-		sb.phrase = pGram
+		return buildGrammarChild(&sb.phrase, initPhraseGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyClause:
 		clauses, conjunctions, err := buildGrammarClauses(term, sb.getUnassociatedTokens(), sb.gram)
 		if err != nil {
@@ -1051,10 +960,7 @@ func (sb *phraseGram) gramSwitch(term grammarTerm) error {
 
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
-			cErr := sb.caseBuild()
-			if cErr != nil {
-				return cErr
-			}
+			return sb.caseBuild()
 		}
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Type: "+term.className())
@@ -1065,6 +971,13 @@ func (sb *phraseGram) gramSwitch(term grammarTerm) error {
 // lexSwitch inits associates tokens to phraseGram fields based on the decoded term and token order
 func (sb *phraseGram) lexSwitch(term grammarTerm) error {
 	switch {
+	case term.Kind == termLexical && (term.POS == posNoun || term.POS == posArticle || term.POS == posConjunction):
+		available := sb.getUnassociatedTokens()
+		if len(available) == 0 || !available[0].hasRole(term.POS.String(), term.Qualifier) {
+			return lerrors.Syntax.Errorf("expected %s", term.Name)
+		}
+		sb.markers = append(sb.markers, available[0])
+		return nil
 	case term.Kind == termLexical && term.POS == posPreposition:
 		return term.associateLexicalTokens(sb.getUnassociatedTokens(), &sb.prepositions, lexicalMatchQualified)
 	default:
@@ -1072,30 +985,18 @@ func (sb *phraseGram) lexSwitch(term grammarTerm) error {
 	}
 }
 
-// buildProcess manages gram build iterable process
 func (sb *phraseGram) buildProcess(casedStr string) error {
 	return applyGrammarRule(sb, casedStr, (phraseGram).clone, (*phraseGram).gramSwitch, (*phraseGram).lexSwitch, nil)
 }
 
-// caseBuild compares the current tokens with available grammar cases and determines a match
 func (sb *phraseGram) caseBuild() error {
-	return selectGrammarCase(sb, sb.rule.Cases, (phraseGram).clone, (*phraseGram).buildProcess, (*phraseGram).getUnassociatedTokens, func(s *phraseGram, name string) { s.cType = name }, sb.tokens)
+	return selectGrammarCase(sb, inferredSignatureCases(sb.rule.Cases), (phraseGram).clone, (*phraseGram).buildProcess, (*phraseGram).getUnassociatedTokens, func(s *phraseGram, name string) { s.cType = name }, sb.tokens)
 }
 
-// build an initialized phraseGram
 func (sb *phraseGram) build() error {
-	casedStr, err := sb.rule.getCasedStructure(sb.cType)
-	if err != nil {
-		return err
-	}
-	if err = sb.buildProcess(casedStr); err != nil {
-		return err
-	}
-	sb.tokens, err = grammarPrefix(sb.tokens, sb.getUnassociatedTokens())
-	return err
+	return buildGrammarPrefix(sb.rule, sb.cType, &sb.tokens, sb.buildProcess, sb.getUnassociatedTokens)
 }
 
-// initPhraseGram returns a pointer a new initialized phraseGram
 func initPhraseGram(sType string, tokens []*token, gram *grammar) (*phraseGram, error) {
 	var r phraseGram
 	if len(tokens) == 0 {
@@ -1134,7 +1035,11 @@ type clauseGram struct {
 	gram         *grammar
 	conjunctions []*token
 
-	objects []*objectGram
+	objects  []*objectGram
+	values   []*valueGram
+	subjects []*subjectGram
+	markers  []*token
+	phrases  []*phraseGram
 }
 
 func (clause *clauseGram) orderedObjects() []*objectGram {
@@ -1246,32 +1151,32 @@ func (sb *clauseGram) getUnassociatedTokens() []*token {
 	for _, object := range sb.objects {
 		selected.add(object.tokens...)
 	}
+	for _, subject := range sb.subjects {
+		selected.add(subject.tokens...)
+	}
+	for _, value := range sb.values {
+		selected.add(value.tokens...)
+	}
+	for _, phrase := range sb.phrases {
+		selected.add(phrase.tokens...)
+	}
+	selected.add(sb.markers...)
 	return selected.remaining(sb.tokens)
 }
 
-// gramSwitch inits a grammar class for a predicateGram
 func (sb *clauseGram) gramSwitch(term grammarTerm) error {
 	switch {
-	case term.Kind == termGrammar && term.Family == familyPredicate:
-		predicate, err := initPredicateGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
+	case term.Kind == termGrammar && term.Family == familyValue:
+		values, separators, err := buildGrammarValues(term, sb.getUnassociatedTokens(), sb.gram)
 		if err != nil {
 			return err
 		}
-		if err = predicate.build(); err != nil {
-			return err
-		}
-		sb.predicate = predicate
+		sb.values = append(sb.values, values...)
+		sb.conjunctions = append(sb.conjunctions, separators...)
+	case term.Kind == termGrammar && term.Family == familyPredicate:
+		return buildGrammarChild(&sb.predicate, initPredicateGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familySubject:
-		// Init new subject
-		subGram, subErr := initSubjectGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if subErr != nil {
-			return subErr
-		}
-		subErr = subGram.build()
-		if subErr != nil {
-			return subErr
-		}
-		sb.subject = subGram
+		return buildGrammarChild(&sb.subject, initSubjectGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyObject:
 		// Unary native roots accept coordinated targets. The configured OBJECT
 		// still names the operand grammar; each coordinated member is parsed as
@@ -1295,16 +1200,14 @@ func (sb *clauseGram) gramSwitch(term grammarTerm) error {
 		sb.conjunctions = append(sb.conjunctions, conjunctions...)
 
 	case term.Kind == termGrammar && term.Family == familyPhrase:
-		// Init new phrase
-		pGram, pErr := initPhraseGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if pErr != nil {
-			return pErr
+		phrase, err := buildGrammarNode(initPhraseGram(term.Name, sb.getUnassociatedTokens(), sb.gram))
+		if err != nil {
+			return err
 		}
-		pErr = pGram.build()
-		if pErr != nil {
-			return pErr
+		if sb.phrase == nil {
+			sb.phrase = phrase
 		}
-		sb.phrase = pGram
+		sb.phrases = append(sb.phrases, phrase)
 	case term.Kind == termGrammar && term.Family == familyClause:
 		clauses, conjunctions, err := buildGrammarClauses(term, sb.getUnassociatedTokens(), sb.gram)
 		if err != nil {
@@ -1315,10 +1218,7 @@ func (sb *clauseGram) gramSwitch(term grammarTerm) error {
 
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
-			cErr := sb.caseBuild()
-			if cErr != nil {
-				return cErr
-			}
+			return sb.caseBuild()
 		}
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled CLAUSE Type: "+term.className())
@@ -1361,30 +1261,18 @@ func (sb *clauseGram) lexSwitch(term grammarTerm) error {
 	}
 }
 
-// buildProcess manages gram build iterable process
 func (sb *clauseGram) buildProcess(casedStr string) error {
 	return applyGrammarRule(sb, casedStr, (clauseGram).clone, (*clauseGram).gramSwitch, (*clauseGram).lexSwitch, nil)
 }
 
-// caseBuild compares the current tokens with available grammar cases and determines a match
 func (sb *clauseGram) caseBuild() error {
 	return selectGrammarCase(sb, sb.rule.Cases, (clauseGram).clone, (*clauseGram).buildProcess, (*clauseGram).getUnassociatedTokens, func(s *clauseGram, name string) { s.cType = name }, sb.tokens)
 }
 
-// build an initialized clauseGram
 func (sb *clauseGram) build() error {
-	casedStr, err := sb.rule.getCasedStructure(sb.cType)
-	if err != nil {
-		return err
-	}
-	if err = sb.buildProcess(casedStr); err != nil {
-		return err
-	}
-	sb.tokens, err = grammarPrefix(sb.tokens, sb.getUnassociatedTokens())
-	return err
+	return buildGrammarPrefix(sb.rule, sb.cType, &sb.tokens, sb.buildProcess, sb.getUnassociatedTokens)
 }
 
-// initClauseGram returns a pointer a new initialized clauseGram
 func initClauseGram(sType string, tokens []*token, gram *grammar) (*clauseGram, error) {
 	var r clauseGram
 	if len(tokens) == 0 {
@@ -1444,20 +1332,10 @@ func (sb *predicateGram) getUnassociatedTokens() []*token {
 	return selected.remaining(sb.tokens)
 }
 
-// gramSwitch inits a grammar class for a predicateGram
 func (sb *predicateGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyObject:
-		// Init new object
-		objGram, objErr := initObjectGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-		if objErr != nil {
-			return objErr
-		}
-		objErr = objGram.build()
-		if objErr != nil {
-			return objErr
-		}
-		sb.obj = objGram
+		return buildGrammarChild(&sb.obj, initObjectGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyClause:
 		clauses, conjunctions, err := buildGrammarClauses(term, sb.getUnassociatedTokens(), sb.gram)
 		if err != nil {
@@ -1467,7 +1345,6 @@ func (sb *predicateGram) gramSwitch(term grammarTerm) error {
 		sb.conjunctions = append(sb.conjunctions, conjunctions...)
 
 	case term.Kind == termGrammar && term.Family == familyConditional:
-		// Init new conditional(s)
 		var conditionErr error
 		var conditionals []*conditionalGram
 		if term.Multiple {
@@ -1517,7 +1394,6 @@ func (sb *predicateGram) lexSwitch(term grammarTerm) error {
 	}
 }
 
-// build an initialized predicateGram
 func (sb *predicateGram) build() error {
 	casedStr, err := sb.rule.getCasedStructure(sb.cType)
 	if err != nil {
@@ -1535,7 +1411,6 @@ func (sb *predicateGram) loadTyping(sType string) error {
 	return (grammarTyping{&sb.sType, &sb.gType, &sb.cType}).load(sType, familyPredicate, grammarCaseNone)
 }
 
-// initPredicateGram returns a pointer a new initialized predicateGram
 func initPredicateGram(sType string, tokens []*token, gram *grammar) (*predicateGram, error) {
 	var r predicateGram
 	if err := r.loadTyping(sType); err != nil {
@@ -1611,7 +1486,6 @@ func (sg *statementGram) getUnassociatedTokens() []*token {
 	return selected.remaining(sg.tokens)
 }
 
-// gramSwitch inits a grammar class for a statementGram
 func (sg *statementGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyClause:
@@ -1622,8 +1496,6 @@ func (sg *statementGram) gramSwitch(term grammarTerm) error {
 		sg.clauses = append(sg.clauses, clauses...)
 		sg.conjunctions = append(sg.conjunctions, conjunctions...)
 	case term.Kind == termGrammar && term.Family == familyPredicate:
-		// Init new predicate
-		//unToks := sg.getUnassociatedTokens()
 		predGram, predErr := initPredicateGram(term.Name, sg.getUnassociatedTokens(), sg.gram)
 		if predErr != nil {
 			return predErr
@@ -1634,8 +1506,6 @@ func (sg *statementGram) gramSwitch(term grammarTerm) error {
 			return predErr
 		}
 	case term.Kind == termGrammar && term.Family == familySubject:
-		// Init new subject
-		//unToks := sg.getUnassociatedTokens()
 		subGram, subErr := initSubjectGram(term.Name, sg.getUnassociatedTokens(), sg.gram)
 		if subErr != nil {
 			return subErr
@@ -1668,7 +1538,6 @@ func (sg *statementGram) build() error {
 	return err
 }
 
-// initStatementGram returns a pointer a new initialized statementGram
 func initStatementGram(lsType string, tokens []*token, gram *grammar) (*statementGram, error) {
 	var rGram statementGram
 	rGram.sType = lsType

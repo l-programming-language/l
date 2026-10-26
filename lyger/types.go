@@ -60,6 +60,10 @@ func (p *primitive) value() (val, error) {
 		return val{Type: p.Type, Data: p.Bytes}, nil
 	case valuePointer:
 		return val{Type: p.Type, Data: p.Pointer}, nil
+	case valueNull:
+		return val{Type: p.Type}, nil
+	case valueError:
+		return val{Type: p.Type, Data: p.Bytes}, nil
 	default:
 		return val{}, lerrors.Internal.Errorf("primitive %s has no readable value", p.Type)
 	}
@@ -136,6 +140,8 @@ func newDict() *dictionary {
 }
 
 // applicative structures an Application based Entry of a Record
+type instance struct{ Identity *record }
+
 type applicative struct {
 	ID         string
 	Type       valueType
@@ -148,6 +154,7 @@ type applicative struct {
 	Function   *funct
 	Property   *prop
 	Operation  *op
+	Instance   *instance
 }
 
 // value retains canonical payload identity; it never copies an application.
@@ -156,6 +163,10 @@ func (a *applicative) value() (val, error) {
 		return val{}, lerrors.Internal.Errorf("cannot read a nil applicative")
 	}
 	switch a.Type {
+	case valueInstance:
+		if a.Instance != nil {
+			return val{Type: a.Type, Data: a.Instance}, nil
+		}
 	case valueApp:
 		if a.App != nil {
 			return val{Type: a.Type, Data: a.App}, nil
@@ -200,6 +211,8 @@ func (a *applicative) value() (val, error) {
 func newApplicative(aType valueType) *applicative {
 	a := applicative{Type: aType}
 	switch a.Type {
+	case valueInstance:
+		a.Instance = &instance{}
 	case valueApp:
 		a.App = &App{}
 	case valueService:
@@ -230,6 +243,7 @@ type iterative struct {
 	Type       valueType
 	List       *list
 	Dictionary *dictionary
+	Map        *dictionary
 }
 
 func (i *iterative) value() (val, error) {
@@ -240,6 +254,10 @@ func (i *iterative) value() (val, error) {
 	case valueList:
 		if i.List != nil {
 			return val{Type: i.Type, Data: i.List}, nil
+		}
+	case valueMap:
+		if i.Map != nil {
+			return val{Type: i.Type, Data: i.Map}, nil
 		}
 	case valueDictionary:
 		if i.Dictionary != nil {
@@ -255,6 +273,8 @@ func newIterative(iType valueType) *iterative {
 	switch i.Type {
 	case valueList:
 		i.List = newList()
+	case valueMap:
+		i.Map = newDict()
 	case valueDictionary:
 		i.Dictionary = newDict()
 	default:
@@ -359,11 +379,13 @@ func initLexicalEntry(definition []byte) (*entry, error) {
 
 // record structures an entry for storage in the Memory of an executing L Program
 type record struct {
-	storageScope *lexicalScope
-	members      map[string]*record
-	ID           string
-	Type         string
-	Value        *entry
+	runtimeFunctionAlias bool
+	runtimeType          *runtimeTypeRef
+	storageScope         *lexicalScope
+	members              map[string]*record
+	ID                   string
+	Type                 string
+	Value                *entry
 }
 
 // compileMeta builds the final ID and if a lexeme, the POS if missing from type

@@ -1,9 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceHashes": {
-    "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-    "lyger/instructions.go": "48941b4fbc5b92c59ebabaaf896672afbf6d25b1354bd01b0473bcfd3b6db075",
-    "lyger/utilities.go": "e0f98fa988779de27b2d24003e711bca513445d42b8a26f9043b35a1f8440c74"
+    "lexicon/eng/vocabulary.json": "4c38dfa34c4df0a2dcecb167e76a91713e084f54742076c2b2c20306edce0f6e",
+    "lyger/instructions.go": "47208f4e56296c5f184c985da9e50ef15b736d81bb9dfdb221757aad7c1a0f4e",
+    "lyger/utilities.go": "2e9aa1197bb2a1f8569dc2e668b8a1219d4812384d5a8cb365d41a270fa280b0",
+    "lyger/source_functions.go": "8d39cac20ae471811681c88e5b88d2ac486200556990d4dcee567d7a3ea5ff3e",
+    "lyger/orchestration_functions.go": "ed944a072ca752f5b098e3e5dc1de3d6af78155394a9346ad20cb32316baba22",
+    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716"
   },
   "entries": {
     "nouns.it": {
@@ -28,7 +31,7 @@
       "doc": "docs/reference/builtins/index.md#runtime-members",
       "topic": "Input metadata and runtime boundary",
       "support": "partial",
-      "notes": "Input participates in callable signature metadata; the current process member implementation supports Output/Error. Runtime argument transport is outside the supported contract."
+      "notes": "Inputs name ordinary Function parameters or native signature metadata. They do not introduce process stdin/argument transport."
     },
     "nouns.output": {
       "doc": "docs/spec/execution.md#output-and-error",
@@ -46,7 +49,7 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "list",
       "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API."
     },
     "nouns.dictionary": {
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
@@ -57,14 +60,14 @@
     "nouns.null": {
       "doc": "docs/spec/values.md#null-and-internal-states",
       "topic": "null",
-      "support": "partial",
-      "notes": "The configured null root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API."
+      "support": "supported",
+      "notes": "Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states."
     },
     "nouns.thing": {
       "doc": "docs/spec/values.md#thing",
       "topic": "thing",
       "support": "partial",
-      "notes": "The configured thing root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API."
+      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element, shape and callable identities. No implicit coercion or dynamic arithmetic."
     },
     "nouns.text": {
       "doc": "docs/spec/values.md#text",
@@ -93,8 +96,8 @@
     "nouns.pointer": {
       "doc": "docs/spec/values.md#pointer",
       "topic": "pointer",
-      "support": "partial",
-      "notes": "The configured pointer root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API."
+      "support": "supported",
+      "notes": "Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API."
     },
     "nouns.op": {
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
@@ -112,7 +115,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "func",
       "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "notes": "Function source vocabulary can describe native composition or an ordinary typed callable; private body scopes and argument/result contracts distinguish them."
     },
     "nouns.definition": {
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
@@ -154,7 +157,7 @@
       "doc": "docs/spec/control-flow.md#assignment",
       "topic": "Assignment",
       "support": "partial",
-      "notes": "Assignment follows resolved scalar/storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order."
+      "notes": "Assignment follows resolved typed-storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order."
     },
     "verbs.associative": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
@@ -184,13 +187,13 @@
       "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "topic": "Collection operations",
       "support": "partial",
-      "notes": "The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API."
+      "notes": "Put appends to a List, stores Map/Instance fields or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries."
     },
     "verbs.locative": {
       "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "topic": "Collection operations",
       "support": "partial",
-      "notes": "The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API."
+      "notes": "Place replaces a List element at a checked Number index or a keyed runtime field. Required target/key/value types are checked."
     },
     "verbs.receptive": {
       "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
@@ -250,7 +253,7 @@
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Exit ends the compiled program; source Function.Return is a separate builtin expansion."
+      "notes": "Exit ends the compiled program; ordinary Return exits its Function, while native Function.Return remains a separate builtin expansion."
     },
     "verbs.appropriative": {
       "doc": "docs/spec/control-flow.md#comparisons",
@@ -328,7 +331,7 @@
       "doc": "docs/spec/grammar.md#phrases",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "At selects a Number index or Text field key; its enclosing typed read/update determines the permitted key type."
     },
     "prepositions.consignment.associative": {
       "doc": "docs/spec/grammar.md#phrases",
@@ -340,7 +343,7 @@
       "doc": "docs/spec/grammar.md#phrases",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "In selects a runtime update destination; the following index or field key remains part of that update."
     },
     "prepositions.consignment.deflective": {
       "doc": "docs/spec/grammar.md#phrases",
@@ -437,6 +440,18 @@
       "topic": "Iteration",
       "support": "rejected",
       "notes": "While is recognized but explicitly rejected by outer lowering."
+    },
+    "verbs.invocative": {
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
+      "topic": "Typed Functions",
+      "support": "supported",
+      "notes": "Call invokes an ordinary Function with fresh parameter/local storage and its selected capture environment; it does not run an App process."
+    },
+    "verbs.returning": {
+      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
+      "topic": "Typed Functions",
+      "support": "supported",
+      "notes": "Return is valid inside an ordinary Function and must match its declared output count and types. Every continuing result-bearing path must return."
     }
   }
 }

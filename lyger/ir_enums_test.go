@@ -14,12 +14,12 @@ func TestIREnumNamesAndInvalidValues(t *testing.T) {
 		want  []string
 		get   func(uint8) fmt.Stringer
 	}{
-		{"instructionKind", int(instructionKindCount), []string{"", "assign", "call", "build", "run", "show", "exit", "if", "block", "await", "stop"}, func(n uint8) fmt.Stringer { return instructionKind(n) }},
-		{"operandKind", int(operandKindCount), []string{"", "symbol", "literal", "member", "error"}, func(n uint8) fmt.Stringer { return operandKind(n) }},
+		{"instructionKind", int(instructionKindCount), []string{"", "assign", "call", "build", "run", "show", "exit", "if", "block", "await", "stop", "bind-action", "alias-action", "function", "invoke", "return", "update"}, func(n uint8) fmt.Stringer { return instructionKind(n) }},
+		{"operandKind", int(operandKindCount), []string{"", "symbol", "literal", "member", "error", "construct", "read"}, func(n uint8) fmt.Stringer { return operandKind(n) }},
 		{"nativeMember", int(nativeMemberCount), []string{"", "output", "error"}, func(n uint8) fmt.Stringer { return nativeMember(n) }},
 		{"pronounScopeKind", int(pronounScopeKindCount), []string{"", "paragraph", "action-argument"}, func(n uint8) fmt.Stringer { return pronounScopeKind(n) }},
-		{"nativeRole", int(nativeRoleCount), []string{"", "action.generative", "action.executive", "action.observative", "action.terminative", "action.definitive", "functional.deflective", "functional.error", "action.suspensive", "action.interruptive"}, func(n uint8) fmt.Stringer { return nativeRole(n) }},
-		{"valueType", int(valueTypeCount), []string{"", "Thing", "Text", "Number", "Truth", "Bytes", "Pointer", "Lexeme", "App", "Service", "Class", "Object", "Attribute", "Definition", "Function", "Property", "Operation", "List", "Dictionary", "Error", "ID", "None", "Unknown", "Null"}, func(n uint8) fmt.Stringer { return valueType(n) }},
+		{"nativeRole", int(nativeRoleCount), []string{"", "action.generative", "action.executive", "action.observative", "action.terminative", "action.definitive", "functional.deflective", "functional.error", "action.suspensive", "action.interruptive", "action.declarative", "action.expansive", "action.locative", "action.invocative", "action.returning"}, func(n uint8) fmt.Stringer { return nativeRole(n) }},
+		{"valueType", int(valueTypeCount), []string{"", "Thing", "Text", "Number", "Truth", "Bytes", "Pointer", "Lexeme", "App", "Service", "Class", "Object", "Attribute", "Definition", "Function", "Property", "Operation", "List", "Dictionary", "Error", "ID", "None", "Unknown", "Null", "Map", "Instance"}, func(n uint8) fmt.Stringer { return valueType(n) }},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			if tc.count != len(tc.want) {
@@ -54,6 +54,11 @@ func TestNativeRoleRelationships(t *testing.T) {
 		{"action.observative", "show", "", ""},
 		{"action.terminative", "exit", "", ""},
 		{"action.definitive", "assign", "", ""},
+		{"action.declarative", "assign", "", ""},
+		{"action.expansive", "update", "", ""},
+		{"action.locative", "update", "", ""},
+		{"action.invocative", "invoke", "", ""},
+		{"action.returning", "return", "", ""},
 		{"functional.deflective", "", "output", "Text"},
 		{"functional.error", "", "error", "Error"},
 	} {
@@ -91,7 +96,7 @@ func TestValueTypeNamesAndScalarBoundary(t *testing.T) {
 		if !ok || parsed != kind {
 			t.Errorf("cannot parse known value %q", kind.String())
 		}
-		want := map[string]string{"Text": "Vec<u8>", "Number": "f64", "Truth": "bool"}[kind.String()]
+		want := map[string]string{"Text": "Vec<u8>", "Number": "f64", "Truth": "bool", "Bytes": "Vec<u8>", "Null": "()"}[kind.String()]
 		scope := &lexicalScope{kind: lexicalParagraph}
 		rec := &record{ID: "value", storageScope: scope, Value: &entry{Type: storagePrimitive, Primitive: &primitive{Type: kind}}}
 		semantics := newSemanticProgram()

@@ -160,22 +160,27 @@ func TestParagraphCaptureImportedRuntimeRequiresActiveStorage(t *testing.T) {
 			if captured.Value.Runtime == nil || captured.Value.Runtime.Owner != result.Compilation.Memory["Worker"] || !call.Actions[0].Value.Runtime {
 				t.Fatal("imported runtime capture lost its canonical Output storage")
 			}
-			if !tc.escape {
-				want := []string{"run:Worker", "output:Worker", "show:saved:Worker", "show:argument text"}
-				if actual := paragraphActivationTrace(t, result); !reflect.DeepEqual(actual, want) {
-					t.Fatalf("active definition-site storage = %v; want %v", actual, want)
+			plan, err := planOrchestration(result.Compilation.Semantics)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var binding, invocationPlan *orchestrationInstruction
+			visitCapturePlan(plan.Root.Body, func(current *orchestrationInstruction) {
+				if current.Source.Kind == instructionBindAction && current.Source.Callable == result.Compilation.Memory["Report"] {
+					binding = current
 				}
-				return
+				if current.Source == call {
+					invocationPlan = current
+				}
+			})
+			if binding == nil || len(binding.CaptureValues) != 1 || binding.CaptureValues[0].Record != captured || binding.CaptureValues[0].Access != orchestrationAccessSnapshot {
+				t.Fatal("declaration did not snapshot its definition-site Output storage")
 			}
-			_, err := result.OrchestratorUnit("entry", executableTestCompanions(result))
-			if err == nil {
-				t.Fatal("aliased imported action allowed private runtime storage to escape")
+			if invocationPlan == nil || invocationPlan.CaptureSource == nil || invocationPlan.Actions[0].Value.Storage.Capture == nil {
+				t.Fatal("call did not use its retained environment after active or escaped binding")
 			}
-			message := err.Error()
-			invocationAt := fmt.Sprintf("main.l:%d:", call.Statement.source.Span.Start.Line)
-
-			if !strings.Contains(message, "private runtime capture privateText") || !strings.Contains(message, invocationAt) {
-				t.Fatalf("capture rejection lost its cause or invocation context: %v", err)
+			if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
+				t.Fatal(err)
 			}
 		})
 	}

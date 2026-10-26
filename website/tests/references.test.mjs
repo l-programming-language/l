@@ -3,8 +3,10 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import { checkCoverage, generateReferences, references } from '../scripts/references.mjs';
+import { checkCoverage, generateReferences, references, referenceEntries } from '../scripts/references.mjs';
 import { sha256 } from '../scripts/lib.mjs';
+import { anchors, parseMarkdown } from '../scripts/content.mjs';
+import GithubSlugger from 'github-slugger';
 
 const jsonText = (value) => JSON.stringify(value, null, 2) + '\n';
 const segment = 'builtins/segments/rust/a.def';
@@ -77,14 +79,14 @@ async function fixture(t) {
   const semantic = (id, kind, name, source, doc) => ({
     id, kind, name, role: 'implementation', support: 'supported', doc,
     ...(kind === 'stdlib-export' ? { visibility: 'public' } : {}),
-    sources: [source], sourceHashes: { [source]: sha256(files[source]) },
+    sources: [source],
     witnesses: ['lyger/scanner_test.go'], evidence: 'static-inspection; existing-witness-not-run',
   });
-  await write(root, 'docs/_meta/semantics.json', jsonText({ schemaVersion: 1, entries: [
+  await write(root, 'docs/_meta/semantics.json', jsonText({ schemaVersion: 2, sourceHashes: { 'lyger/value_kinds.go': sha256(files['lyger/value_kinds.go']), 'stdlib/eng/io/dictionary.l': sha256(files['stdlib/eng/io/dictionary.l']) }, entries: [
     semantic('value:Text', 'value-tag', 'Text', 'lyger/value_kinds.go', 'docs/spec/values.md#text'),
     semantic('stdlib:IO.Print', 'stdlib-export', 'IO.Print', 'stdlib/eng/io/dictionary.l', 'docs/stdlib/io.md#print'),
   ] }));
-  await write(root, 'docs/_meta/logemes.json', jsonText({ schemaVersion: 1, entries: [
+  await write(root, 'docs/_meta/logemes.json', jsonText({ schemaVersion: 2, sourceHashes: { [segment]: sha256(files[segment]) }, entries: [
     semantic('logeme:A', 'logeme', 'A', segment, 'docs/reference/logemes/index.md#segment-a'),
   ] }));
   const pages = [
@@ -279,4 +281,121 @@ test('coverage requires an evidence classification separate from support and rol
   await references({ root, write: true });
   await editJSON(root, 'docs/_meta/semantics.json', (value) => { delete value.entries[0].evidence; });
   await assert.rejects(references({ root, write: true }), /independent evidence/);
+});
+
+
+test('semantic review manifests reject missing, competing, and unreferenced hash records', async (t) => {
+  for (const [name, mutate, expected] of [
+    ['missing', (v) => { delete v.sourceHashes['lyger/value_kinds.go']; }, /Missing reviewed semantic hash/],
+    ['entry override', (v) => { v.entries[0].sourceHashes = {}; }, /Entry-specific hashes are not allowed/],
+    ['unused', (v) => { v.sourceHashes['unused.go'] = '0'.repeat(64); }, /Unused semantic review hash/],
+    ['wrong schema', (v) => { v.schemaVersion = 1; }, /Invalid semantic review manifest/],
+  ]) await t.test(name, async (subtest) => {
+    const { root, pages } = await fixture(subtest);
+    const inventory = await references({ root, write: true });
+    await editJSON(root, 'docs/_meta/semantics.json', mutate);
+    await assert.rejects(checkCoverage(root, pages, inventory), expected);
+  });
+  await t.test('cross-manifest conflict', async (subtest) => {
+    const { root, pages } = await fixture(subtest);
+    const inventory = await references({ root, write: true });
+    await editJSON(root, 'docs/_meta/logemes.json', (v) => {
+      v.entries[0].sources.push('lyger/value_kinds.go');
+      v.sourceHashes['lyger/value_kinds.go'] = '0'.repeat(64);
+    });
+    await assert.rejects(checkCoverage(root, pages, inventory), /Conflicting semantic review hash/);
+  });
+});
+
+
+test('snapshot note catalog preserves every reviewed explanation and rejects dangling references', async (t) => {
+  const { root, pages } = await fixture(t);
+  const inventory = await references({ root, write: true });
+  const rule = referenceEntries(inventory).find((entry) => entry.id === 'grammar:statement');
+  assert.equal(rule.notes, 'Recognition is separate from supported lowering.');
+  assert.equal(new Set(inventory.notes).size, inventory.notes.length);
+  const coverage = await checkCoverage(root, pages, inventory);
+  for (const entry of referenceEntries(inventory)) assert.deepEqual(referenceEntries(coverage).find((item) => item.id === entry.id), entry);
+  const broken = structuredClone(inventory);
+  broken.entries[0].note = broken.notes.length;
+  assert.throws(() => referenceEntries(broken), /Missing reference note/);
+  const inline = structuredClone(inventory);
+  inline.entries[0].notes = 'unreviewed';
+  assert.throws(() => referenceEntries(inline), /Inline snapshot note/);
+});
+
+
+test('compact inventories preserve configured fields, anchors and deduplicated review notes', async (t) => {
+  const { root } = await fixture(t);
+  for (const [kind, duplicate] of [['grammar', (data) => { data.duplicate = { ...data.statement }; }], ['vocabulary', (data) => { data.verbs.Tell = { ...data.verbs.Show, description: 'Preserve <literal> | punctuation & bytes.' }; }]]) {
+    const source = `lexicon/eng/${kind}.json`;
+    await editJSON(root, source, duplicate);
+    const hash = sha256(await fs.readFile(path.join(root, source)));
+    await editJSON(root, `docs/_meta/${kind}-review.json`, (review) => {
+      review.sourceHashes[source] = hash;
+      if (kind === 'grammar') review.entries.duplicate = { ...review.entries.statement };
+      else review.entries['verbs.Tell'] = { ...review.entries['verbs.Show'] };
+    });
+  }
+  const { files } = await generateReferences(root);
+  const text = (node) => node.type === 'html' ? '' : node.value ?? (node.children ?? []).map(text).join('');
+  for (const kind of ['grammar', 'vocabulary']) {
+    const source = JSON.parse(await fs.readFile(path.join(root, `lexicon/eng/${kind}.json`), 'utf8'));
+    const review = JSON.parse(await fs.readFile(path.join(root, `docs/_meta/${kind}-review.json`), 'utf8'));
+    const markdown = files[`docs/_generated/${kind}.md`];
+    const ids = anchors(markdown);
+    const tables = new Map();
+    let section; let name;
+    for (const node of parseMarkdown(markdown).children) {
+      if (node.type === 'heading' && node.depth === 2) { section = text(node); name = kind === 'grammar' ? section : null; }
+      if (node.type === 'heading' && node.depth === 3) name = text(node);
+      if (node.type === 'table') {
+        const [header, ...rows] = node.children;
+        if (kind === 'vocabulary' && text(header.children[0]) === 'Word') {
+          for (const row of rows) {
+            const name = text(row.children[0]);
+            tables.set(name, { ...tables.get(name), ...Object.fromEntries(header.children.map((cell, index) => [text(cell), text(row.children[index])])) });
+          }
+        } else if (kind === 'grammar' && name && !tables.has(name)) {
+          tables.set(name, Object.fromEntries(header.children.map((cell, index) => [text(cell), text(rows[0].children[index])])));
+        }
+      }
+    }
+    const entries = kind === 'grammar' ? Object.entries(source).map(([name, value]) => ['', name, value]) : Object.entries(source).flatMap(([section, words]) => Object.entries(words).map(([name, value]) => [section, name, value]));
+    for (const [section, name, configured] of entries) {
+      assert.ok(ids.has(new GithubSlugger().slug(name)));
+      assert.ok(ids.has(kind === 'grammar' ? `grammar-${name.replaceAll('.', '-')}` : `vocabulary-${section}-${name}`));
+      const row = tables.get(name);
+      for (const [field, value] of Object.entries(configured)) {
+        if (kind === 'grammar' && field === 'cases') continue;
+        const key = kind === 'grammar' ? field[0].toUpperCase() + field.slice(1) : field;
+        assert.equal(row[key], typeof value === 'string' ? value : JSON.stringify(value));
+      }
+      const detail = review.entries[kind === 'grammar' ? name : `${section}.${name}`];
+      assert.equal(row.Support, detail.support);
+      assert.equal(row['Semantic context'], detail.topic);
+      assert.match(row.Notes, /^Note [0-9]+$/);
+    }
+    for (const note of new Set(Object.values(review.entries).map((entry) => entry.notes))) {
+      assert.equal(markdown.split(note).length - 1, 1, 'reviewed explanation must appear once, without rewriting');
+    }
+  }
+});
+
+
+test('shared snapshot evidence preserves attribution and rejects overrides', async (t) => {
+  const { root } = await fixture(t);
+  const { inventory } = await generateReferences(root);
+  const expanded = referenceEntries(inventory);
+  assert.ok(inventory.evidenceSets.length < inventory.entries.length);
+  assert.ok(expanded.every((entry) => Array.isArray(entry.sources) && Array.isArray(entry.witnesses) && entry.evidence));
+  const missing = structuredClone(inventory);
+  missing.entries[0].evidenceSet = missing.evidenceSets.length;
+  assert.throws(() => referenceEntries(missing), /Missing or invalid reference evidence/);
+  const override = structuredClone(inventory);
+  override.entries[0].sources = [];
+  assert.throws(() => referenceEntries(override), /Inline snapshot evidence/);
+  const invalid = structuredClone(inventory);
+  invalid.evidenceSets[0].id = 'override';
+  assert.throws(() => referenceEntries(invalid), /Missing or invalid reference evidence/);
 });

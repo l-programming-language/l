@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 11/01/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
@@ -15,7 +7,6 @@ import (
 	"strings"
 )
 
-// Definitional
 type Definitional struct {
 	Definition      []byte
 	SegmentalSystem SegmentalSystem
@@ -131,7 +122,6 @@ type Sentence struct {
 	Content         []byte   `json:"Content,omitempty"`
 }
 
-// compileDependenceMeta
 func compileDependenceMeta(cleanedDepend string, mDepStrs []string, mType string) (string, []string) {
 	var mDeps []string
 	for _, mDepStr := range mDepStrs {
@@ -153,7 +143,6 @@ func compileDependenceMeta(cleanedDepend string, mDepStrs []string, mType string
 	return cleanedDepend, mDeps
 }
 
-// removeDependencyAlias
 func removeDependencyAlias(deps []string) []string {
 	var reDeps []string
 	for _, dep := range deps {
@@ -167,7 +156,6 @@ func removeDependencyAlias(deps []string) []string {
 	return reDeps
 }
 
-// compileDependencies
 func (s *Sentence) compileDependencies() {
 	importStrs := lucidParser(string(s.Content), "Imports")
 	for _, importStr := range importStrs {

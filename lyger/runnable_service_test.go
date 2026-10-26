@@ -479,12 +479,6 @@ func TestRetainedAppTypedCapture(t *testing.T) {
 			}
 			result := runnableServiceRequire(t, source, nil)
 			plan, err := planOrchestration(result.Compilation.Semantics)
-			if tc.name == "escaped-runtime-capture" {
-				if plan != nil || !errors.Is(err, lerrors.Unsupported) || !strings.Contains(err.Error(), "private runtime capture privateText") || !strings.Contains(err.Error(), "main.l:") {
-					t.Fatalf("escaped App runtime capture diagnostic: %v", err)
-				}
-				return
-			}
 			if err != nil {
 				t.Fatalf("valid App capture rejected: %v", err)
 			}
@@ -508,12 +502,27 @@ func TestRetainedAppTypedCapture(t *testing.T) {
 				t.Fatal("source-defined capture lost its ordered typed action expansion")
 			}
 			value := call.Actions[0].Value
-			if tc.escape {
+			if tc.name == "escaped-static-capture" {
 				if value.Storage != nil || value.Literal == nil || value.Literal.Text != "`definition text`" || value.Access != orchestrationAccessOwned {
 					t.Fatal("escaped static capture did not retain its definition-site literal")
 				}
-			} else if value.Storage == nil || value.Storage.Record.ID != "privateText" || value.Storage.Initial != nil || value.Storage.Mutable || value.Access != orchestrationAccessBorrow || value.Storage.Owner != root[1].Continuation {
-				t.Fatal("active runtime capture escaped its typed App activation storage")
+			} else {
+				var binding *orchestrationInstruction
+				visitCapturePlan(root[1].Continuation.Body, func(current *orchestrationInstruction) {
+					if current.Source.Kind == instructionBindAction && current.Source.Callable == result.Compilation.Memory["Report"] {
+						binding = current
+					}
+				})
+				if binding == nil || len(binding.CaptureValues) != 1 || binding.Callable.Owner != plan.Root || call.CaptureSource == nil || call.CaptureSource.Slot != binding.Callable {
+					t.Fatal("published action did not retain its continuation's captured environment")
+				}
+				snapshot := binding.CaptureValues[0]
+				if snapshot.Storage == nil || snapshot.Storage.Record.ID != "privateText" || snapshot.Storage.Initial != nil || snapshot.Storage.Mutable || snapshot.Access != orchestrationAccessSnapshot || snapshot.Storage.Owner != root[1].Continuation {
+					t.Fatal("capture binding did not snapshot the initialized private App activation storage")
+				}
+				if value.Storage == nil || value.Storage == snapshot.Storage || value.Storage.Record != snapshot.Record || value.Storage.Capture == nil || value.Storage.Capture.Name != call.CaptureName || value.Storage.Capture.Index != 0 || value.Access != orchestrationAccessBorrow {
+					t.Fatal("active or escaped call did not read the selected environment's typed Text slot")
+				}
 			}
 			for _, action := range call.Actions {
 				if action.Source.CallSite != call.Source.Statement || action.Source.Statement != call.Source.Definition {

@@ -40,7 +40,7 @@ Generated programs have their own runtime statuses: normal fallthrough/bare Exit
 
 ## Unsupported versus unresolved
 
-A recognized While clause can reach an Unsupported instruction boundary. A missing name reaches a reference boundary. A configured Pointer noun or backend callable template does not establish an operational source construct; its documentation must state the narrower known facts rather than promise a future behavior.
+A recognized While clause can reach an Unsupported instruction boundary. A missing name reaches a reference boundary. A recognized structural category such as Attribute does not by itself establish a runtime constructor; documentation must distinguish compiler representation from executable values.
 
 The specification audit records Byte/Bytes/Pointer/Null construction gaps, collection action support, joined conditions, source versus native callable forms, and other unresolved distinctions. Check those boundaries before relying on a feature.
 

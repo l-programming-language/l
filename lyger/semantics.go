@@ -17,6 +17,7 @@ type semanticProgram struct {
 	Constructions []*applicationConstruction
 	Instructions  []*instruction
 	Continuations map[*App]*scopedInstructions
+	Functions     map[*record]*sourceFunction
 }
 
 type descriptorDefinition struct {
@@ -35,14 +36,15 @@ type descriptorRule struct {
 // runtimeReference gives a typed value a deferred source, without pretending
 // that a compilation has already obtained application stdout.
 type runtimeReference struct {
-	Owner   *record
-	OwnerID string
-	Member  nativeMember
-	Source  *lStatement
+	Expression *objectGram
+	Owner      *record
+	OwnerID    string
+	Member     nativeMember
+	Source     *lStatement
 }
 
 func newSemanticProgram() *semanticProgram {
-	return &semanticProgram{Descriptors: make(map[*record]*descriptorDefinition), Declarations: make(map[*record]*lStatement), Aliases: make(map[*record]*record), Subjects: make(map[*token]*record)}
+	return &semanticProgram{Functions: make(map[*record]*sourceFunction), Descriptors: make(map[*record]*descriptorDefinition), Declarations: make(map[*record]*lStatement), Aliases: make(map[*record]*record), Subjects: make(map[*token]*record)}
 }
 
 func symbolRoot(tok *token) string {
@@ -106,6 +108,7 @@ func definitionLiteral(tokens []*token) (*token, error) {
 type statementRegistration struct {
 	declarations []extractedDeclaration
 	descriptors  []*descriptorDefinition
+	functions    []*sourceFunction
 }
 
 func (d *descriptorDefinition) clone() *descriptorDefinition {
@@ -247,6 +250,12 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 		return prepared, err
 	}
 	for _, site := range sites {
+		if handled, err := c.prepareFunctionSite(stmt, site, &prepared); handled || err != nil {
+			if err != nil {
+				return statementRegistration{}, err
+			}
+			continue
+		}
 		if site.isDescriptor() {
 			if err := c.prepareDescriptor(stmt, site, &prepared); err != nil {
 				return statementRegistration{}, err
@@ -261,6 +270,16 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 		}
 		if err != nil {
 			return statementRegistration{}, err
+		}
+		if runtime := declaration.Record.Value.Runtime; runtime != nil && runtimeReadPhrase(runtime.Expression) != nil {
+			typ, typeErr := sourceTypeFromObject(runtime.Expression)
+			if typeErr == nil {
+				typ, typeErr = canonicalRuntimeType(typ, c.Semantics.Aliases)
+			}
+			if typeErr != nil {
+				return statementRegistration{}, typeErr
+			}
+			declaration.Record.runtimeType = &typ
 		}
 		prepared.declarations = append(prepared.declarations, declaration)
 	}

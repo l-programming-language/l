@@ -39,11 +39,13 @@ Run Second.
 Show ` + "`root|`" + `.
 `
 	child := buildShutdownCompanion(t)
-	for _, completion := range []string{"fallthrough", "bare-exit"} {
+	for _, completion := range []string{"fallthrough", "bare-exit", "function-exit"} {
 		t.Run(completion, func(t *testing.T) {
 			input := source
 			if completion == "bare-exit" {
 				input += "Exit.\n"
+			} else if completion == "function-exit" {
+				input += "\n    Publicly create \"Finish\" as a New Function with No Inputs and No Outputs.\nExit.\n\n    Publicly create \"Relay\" as a New Function with No Inputs and No Outputs.\nCall Finish.\nShow `unexpected-function|`.\n\nCall Relay.\nShow `unexpected-root|`.\n"
 			}
 			result := phase1Require(t, input, nil)
 			// Only the runtime mode changes below. Compile the actual generated

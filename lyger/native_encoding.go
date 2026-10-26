@@ -73,18 +73,7 @@ func nativeTextBytes(value string) string {
 	return "vec![" + strings.Join(parts, ", ") + "]"
 }
 
-func nativeScalarName(kind valueType) (string, bool) {
-	switch kind {
-	case valueText:
-		return "Vec<u8>", true
-	case valueNumber:
-		return "f64", true
-	case valueTruth:
-		return "bool", true
-	default:
-		return "", false
-	}
-}
+func nativeScalarName(kind valueType) (string, bool) { return runtimeTypeName(kind) }
 
 func nativeNumberLiteral(number float64) (string, bool) {
 	if math.IsNaN(number) || math.IsInf(number, 0) {
@@ -102,6 +91,10 @@ func nativePrimitiveExpression(value *primitive) (string, valueType, error) {
 		return "", valueInvalid, err
 	}
 	switch stored.Type {
+	case valueNull:
+		return "()", valueNull, nil
+	case valueBytes:
+		return nativeTextBytes(string(value.Bytes)), valueBytes, nil
 	case valueText:
 		return nativeTextBytes(unquoteImportWord([]byte(stored.Data.(string)))), valueText, nil //nolint:errcheck // value() validates the tagged payload before this type-specific projection.
 	case valueTruth:

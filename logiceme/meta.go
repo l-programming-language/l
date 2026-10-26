@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 11/01/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
@@ -40,7 +32,6 @@ type MetaDict struct {
 	Metas []*MetaObj    `json:"metas,omitempty"`
 }
 
-// metaGetReturn
 type metaGetReturn struct {
 	metaVal   string
 	metaType  string
@@ -122,14 +113,12 @@ func (r *MetaDict) LoadJSON(keyStr string, jsonStr string) {
 	}
 }
 
-// regParse
 func regParse(regStr string, contentStr string) [][]byte {
 	reg := regexp.MustCompile(regStr)
 	res := reg.FindAll([]byte(contentStr), -1)
 	return res
 }
 
-// determineMetaType
 func determineMetaType(varStr string) string {
 	//Check if Dict
 	// '{| |}'
@@ -172,7 +161,6 @@ func determineMetaType(varStr string) string {
 	return "Invalid"
 }
 
-// cacheSubMetas
 func cacheSubMetas(str string) (string, []string, []string) {
 	subMetas := []string{}
 	subs := []string{}
@@ -190,7 +178,6 @@ func cacheSubMetas(str string) (string, []string, []string) {
 	return reStr, subMetas, subs
 }
 
-// insertSubMetas
 func insertSubMetas(str string, subMetas []string, subs []string) string {
 	for ind, sub := range subs {
 		subMeta := subMetas[ind]
@@ -199,7 +186,6 @@ func insertSubMetas(str string, subMetas []string, subs []string) string {
 	return str
 }
 
-// metaStrPP
 func metaStrPP(metaStr string) string {
 	var reStr string
 	metaStr = strings.Split(metaStr, "'{|")[1]
@@ -226,7 +212,6 @@ func metaStrPP(metaStr string) string {
 	return reStr
 }
 
-// parseLoadString
 func parseLoadString(str string) MetaDict {
 	reDict := MetaDict{}
 	// ~{| |}~
@@ -323,7 +308,6 @@ func (r *MetaDict) GetVal(metaKey string) string {
 	return r.get(metaKey).metaVal
 }
 
-// determineStructType
 func determineStructType(structStr string) string {
 	reStr := "Void"
 	if len(structStr) < 6 {
@@ -345,7 +329,6 @@ func determineStructType(structStr string) string {
 	return reStr
 }
 
-// replaceSubsWithVars
 func replaceSubsWithVars(content string, items [][]byte) (string, [][]string) {
 	varMgmr := [][]string{}
 	for _, it := range items {
@@ -357,7 +340,6 @@ func replaceSubsWithVars(content string, items [][]byte) (string, [][]string) {
 	return content, varMgmr
 }
 
-// combineVarMgmrs
 func combineVarMgmrs(v1 [][]string, v2 [][]string) [][]string {
 	v3 := [][]string{}
 	v3 = append(v3, v1...)
@@ -365,7 +347,6 @@ func combineVarMgmrs(v1 [][]string, v2 [][]string) [][]string {
 	return v3
 }
 
-// insertVarIntoVal
 func insertVarIntoVal(val string, varManager [][]string) string {
 	for _, varEnt := range varManager {
 		key := varEnt[0]
@@ -375,7 +356,6 @@ func insertVarIntoVal(val string, varManager [][]string) string {
 	return val
 }
 
-// cleanVal
 func cleanVal(val string) string {
 	if strings.HasPrefix(val, "&[") && strings.HasSuffix(val, "]&") {
 		return val[2 : len(val)-2]

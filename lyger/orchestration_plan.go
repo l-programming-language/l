@@ -10,28 +10,36 @@ import (
 // semantic instructions and Rust source composition. It contains no rendered
 // source and never inspects caller-supplied native fragments.
 type orchestrationPlan struct {
-	Root    *orchestrationBlock
-	Storage []*orchestrationStorage
-	Apps    []*App
+	FunctionProgramState bool
+	Identities           map[*record]uint64
+	Root                 *orchestrationBlock
+	Storage              []*orchestrationStorage
+	Apps                 []*App
+	Callables            []*orchestrationCallable
+	RuntimeValues        bool
 }
 
 // A block identifies an activation, not merely a lexical scope. Two App
 // continuations may share Scope but must never share their private Storage.
 type orchestrationBlock struct {
-	ID      int
-	Scope   *lexicalScope
-	Storage []*orchestrationStorage
-	Body    []*orchestrationInstruction
+	ID        int
+	Scope     *lexicalScope
+	Storage   []*orchestrationStorage
+	Body      []*orchestrationInstruction
+	Callables []*orchestrationCallable
 }
 
 type orchestrationStorage struct {
-	ID        int
-	Record    *record
-	Type      valueType
-	Owner     *orchestrationBlock
-	Initial   *primitive
-	Mutable   bool
-	Published bool
+	Parameter   bool
+	RuntimeType runtimeTypeRef
+	ID          int
+	Record      *record
+	Type        valueType
+	Owner       *orchestrationBlock
+	Initial     *primitive
+	Mutable     bool
+	Published   bool
+	Capture     *orchestrationCaptureAccess
 }
 
 // Access describes the semantic boundary, not a blanket clone policy. A stored
@@ -47,15 +55,18 @@ const (
 )
 
 type orchestrationValue struct {
-	Source  *instructionValue
-	Type    valueType
-	Record  *record
-	Storage *orchestrationStorage
-	Literal *primitive
-	App     *App
-	Owner   *orchestrationValue
-	Payload *orchestrationValue
-	Access  orchestrationAccess
+	RuntimeType runtimeTypeRef
+	Elements    []*orchestrationValue
+	Key         *orchestrationValue
+	Source      *instructionValue
+	Type        valueType
+	Record      *record
+	Storage     *orchestrationStorage
+	Literal     *primitive
+	App         *App
+	Owner       *orchestrationValue
+	Payload     *orchestrationValue
+	Access      orchestrationAccess
 }
 
 type orchestrationCondition struct {
@@ -79,55 +90,64 @@ const (
 )
 
 type orchestrationInstruction struct {
-	Source       *instruction
-	Target       *orchestrationValue
-	Value        *orchestrationValue
-	Condition    *orchestrationCondition
-	Then         []*orchestrationInstruction
-	Else         []*orchestrationInstruction
-	Actions      []*orchestrationInstruction
-	Block        *orchestrationBlock
-	Continuation *orchestrationBlock
-	App          *App
-	Effects      orchestrationEffects
-	ReachesNext  bool
+	AppCases           []*orchestrationInstruction
+	Source             *instruction
+	Target             *orchestrationValue
+	Value              *orchestrationValue
+	Condition          *orchestrationCondition
+	Then               []*orchestrationInstruction
+	Else               []*orchestrationInstruction
+	Actions            []*orchestrationInstruction
+	Block              *orchestrationBlock
+	Continuation       *orchestrationBlock
+	App                *App
+	Effects            orchestrationEffects
+	ReachesNext        bool
+	Callable           *orchestrationCallable
+	CaptureSource      *orchestrationCallableReference
+	CaptureValues      []*orchestrationValue
+	CaptureHandles     []*orchestrationCallableReference
+	CaptureName        string
+	Key                *orchestrationValue
+	Function           *orchestrationFunction
+	Arguments, Results []*orchestrationValue
 }
 
 type orchestrationFrame struct {
-	block *orchestrationBlock
-	slots map[*record]*orchestrationStorage
+	block     *orchestrationBlock
+	slots     map[*record]*orchestrationStorage
+	callables map[*record]*orchestrationCallable
 }
 
 type orchestrationPlanner struct {
-	semantics *semanticProgram
-	plan      *orchestrationPlan
-	dynamic   map[*record]bool
-	shared    map[*record]*orchestrationStorage
-	frames    []*orchestrationFrame
-	active    map[*App]bool
-	apps      map[*App]bool
-	nextBlock int
+	functionDepth   int
+	semantics       *semanticProgram
+	plan            *orchestrationPlan
+	dynamic         map[*record]bool
+	shared          map[*record]*orchestrationStorage
+	frames          []*orchestrationFrame
+	active          map[*App]bool
+	apps            map[*App]bool
+	nextBlock       int
+	captureLayouts  map[*record]*orchestrationCaptureLayout
+	callables       map[*record]*orchestrationCallable
+	captureContexts []orchestrationCaptureContext
+	nextCaptureCall int
 }
 
 func planOrchestration(semantics *semanticProgram) (*orchestrationPlan, error) {
 	if semantics == nil {
 		return nil, lerrors.Internal.Errorf("orchestration requires semantic instructions")
 	}
-	p := &orchestrationPlanner{semantics: semantics, plan: &orchestrationPlan{}, dynamic: make(map[*record]bool), shared: make(map[*record]*orchestrationStorage), active: make(map[*App]bool), apps: make(map[*App]bool)}
-	if err := p.collect(semantics.Instructions); err != nil {
+	dynamic, err := semantics.runtimeRecords()
+	if err != nil {
 		return nil, err
 	}
-	// Collection records facts only. Map traversal cannot influence slot names,
-	// block identities or source order; those arise from the executable walk.
-	for _, continuation := range semantics.Continuations {
-		if continuation == nil {
-			return nil, lerrors.Internal.Errorf("application continuation has no block")
-		}
-		if err := p.collect(continuation.Body); err != nil {
-			return nil, err
-		}
-	}
+	p := &orchestrationPlanner{semantics: semantics, plan: &orchestrationPlan{Identities: make(map[*record]uint64)}, dynamic: dynamic, shared: make(map[*record]*orchestrationStorage), active: make(map[*App]bool), apps: make(map[*App]bool)}
 	p.plan.Root = p.newBlock(nil)
+	if err := p.prepareCaptureLayouts(); err != nil {
+		return nil, err
+	}
 	body, _, err := p.instructions(semantics.Instructions, newOrchestrationFlow())
 	if err != nil {
 		return nil, err
@@ -143,50 +163,7 @@ func (p *orchestrationPlanner) newBlock(scope *lexicalScope) *orchestrationBlock
 }
 
 func (p *orchestrationPlanner) record(value *instructionValue) (*record, valueType, error) {
-	if value == nil || value.Kind != operandSymbol || value.Record == nil {
-		return nil, valueInvalid, lerrors.Internal.Errorf("expected a resolved symbol")
-	}
-	rec, err := canonicalRecord(value.Record, p.semantics.Aliases)
-	if err != nil {
-		return nil, valueInvalid, err
-	}
-	if rec == nil || rec.Value == nil {
-		return nil, valueInvalid, lerrors.Internal.Errorf("symbol has no semantic value")
-	}
-	kind, err := instructionType(rec)
-	if err != nil {
-		return nil, valueInvalid, err
-	}
-	if value.Type != valueInvalid && value.Type != kind {
-		return nil, valueInvalid, lerrors.Internal.Errorf("symbol %s has inconsistent value type %s", rec.ID, value.Type)
-	}
-	return rec, kind, nil
-}
-
-func (p *orchestrationPlanner) collect(body []*instruction) error {
-	for _, current := range body {
-		if current == nil {
-			return lerrors.Internal.Errorf("orchestrator contains a nil instruction")
-		}
-		if current.Kind == instructionAssign {
-			rec, _, err := p.record(current.Target)
-			if err != nil {
-				return current.wrapError(err)
-			}
-			p.dynamic[rec] = true
-		}
-		if current.Block != nil {
-			if err := p.collect(current.Block.Body); err != nil {
-				return err
-			}
-		}
-		for _, nested := range [][]*instruction{current.Actions, current.Then, current.Else} {
-			if err := p.collect(nested); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
+	return p.semantics.instructionRecord(value)
 }
 
 func planPrimitive(original *primitive) (*primitive, error) {
@@ -197,7 +174,7 @@ func planPrimitive(original *primitive) (*primitive, error) {
 	if err != nil {
 		return nil, err
 	}
-	if value.Type != valueText && value.Type != valueNumber && value.Type != valueTruth {
+	if value.Type != valueText && value.Type != valueNumber && value.Type != valueTruth && value.Type != valueBytes && value.Type != valueNull {
 		return nil, lerrors.Unsupported.Errorf("unsupported primitive %s", value.Type)
 	}
 	cloned := *original
@@ -206,7 +183,12 @@ func planPrimitive(original *primitive) (*primitive, error) {
 }
 
 func (p *orchestrationPlanner) storage(rec *record, kind valueType) (*orchestrationStorage, *primitive, error) {
-	if kind != valueText && kind != valueNumber && kind != valueTruth {
+	for index := len(p.captureContexts) - 1; index >= 0; index-- {
+		if slot := p.captureContexts[index].values[rec]; slot != nil {
+			return slot, nil, nil
+		}
+	}
+	if _, ok := runtimeTypeName(kind); !ok {
 		return nil, nil, lerrors.Unsupported.Errorf("unsupported runtime symbol %s of type %s", rec.ID, kind)
 	}
 	owner, slots := p.plan.Root, p.shared
@@ -227,10 +209,17 @@ func (p *orchestrationPlanner) storage(rec *record, kind valueType) (*orchestrat
 		}
 		owner, slots = frame.block, frame.slots
 	}
+	if owner == p.plan.Root && p.functionDepth > 0 {
+		p.plan.FunctionProgramState = true
+	}
 	if slot := slots[rec]; slot != nil {
 		return slot, nil, nil
 	}
-	slot := &orchestrationStorage{ID: len(p.plan.Storage), Record: rec, Type: kind, Owner: owner, Published: owner == p.plan.Root && p.dynamic[rec]}
+	typ, err := recordRuntimeType(rec)
+	if err != nil {
+		return nil, nil, err
+	}
+	slot := &orchestrationStorage{ID: len(p.plan.Storage), Record: rec, Type: kind, RuntimeType: typ, Owner: owner, Published: owner == p.plan.Root && p.dynamic[rec]}
 	if !p.dynamic[rec] && rec.Value.Runtime == nil {
 		var err error
 		slot.Initial, err = planPrimitive(rec.Value.Primitive)
@@ -248,8 +237,13 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 	if value == nil {
 		return nil, lerrors.Internal.Errorf("missing instruction operand")
 	}
-	result := &orchestrationValue{Source: value, Type: value.Type, Access: orchestrationAccessCopy}
+	result := &orchestrationValue{Source: value, Type: value.Type, RuntimeType: value.RuntimeType, Access: orchestrationAccessCopy}
+	if result.RuntimeType.Kind == valueInvalid {
+		result.RuntimeType.Kind = value.Type
+	}
 	switch value.Kind {
+	case operandConstruct, operandRead:
+		return p.runtimeOperand(value, flow)
 	case operandLiteral:
 		literal, err := planPrimitive(value.Literal)
 		if err != nil {
@@ -258,7 +252,10 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 		if value.Type != valueInvalid && value.Type != literal.Type {
 			return nil, lerrors.Internal.Errorf("literal has inconsistent type %s", value.Type)
 		}
-		result.Literal, result.Type = literal, literal.Type
+		result.Literal, result.Type, result.RuntimeType = literal, literal.Type, runtimeTypeRef{Kind: literal.Type}
+		if p.plan != nil && literal.Type == valueNull {
+			p.plan.RuntimeValues = true
+		}
 		if result.Type == valueText {
 			result.Access = orchestrationAccessOwned
 		}
@@ -267,8 +264,12 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 		if err != nil {
 			return nil, err
 		}
+		result.RuntimeType, err = recordRuntimeType(rec)
+		if err != nil {
+			return nil, err
+		}
 		result.Record, result.Type = rec, kind
-		if kind == valueApp {
+		if kind == valueApp && rec.Value.Runtime == nil && !p.dynamic[rec] {
 			stored, err := rec.Value.value()
 			if err != nil {
 				return nil, err
@@ -285,10 +286,10 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 		if err != nil {
 			return nil, err
 		}
-		if flow.live && (p.dynamic[rec] || value.Runtime || rec.Value.Runtime != nil) && !flow.assigned[result.Storage] {
+		if flow.live && (p.dynamic[rec] || value.Runtime || rec.Value.Runtime != nil) && result.Storage.Capture == nil && !flow.assigned[result.Storage] {
 			return nil, lerrors.InvalidInput.Errorf("symbol %s is not definitely assigned", rec.ID)
 		}
-		if kind == valueText {
+		if kind != valueNumber && kind != valueTruth && kind != valueNull {
 			result.Access = orchestrationAccessBorrow
 			if result.Literal != nil {
 				result.Access = orchestrationAccessOwned
@@ -299,7 +300,7 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 		if err != nil {
 			return nil, err
 		}
-		if owner.Type != valueApp || owner.App == nil {
+		if owner.Type != valueApp {
 			return nil, lerrors.TypeMismatch.Errorf("Build/Run or member access requires an application, got %s", owner.Type)
 		}
 		kind, ok := value.Member.ValueType()
@@ -309,7 +310,7 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 		if value.Type != valueInvalid && value.Type != kind {
 			return nil, lerrors.Internal.Errorf("member has inconsistent value type %s", value.Type)
 		}
-		result.Owner, result.Type, result.Access = owner, kind, orchestrationAccessOwned
+		result.Owner, result.Type, result.RuntimeType, result.Access = owner, kind, runtimeTypeRef{Kind: kind}, orchestrationAccessOwned
 	case operandError:
 		payload, err := p.value(value.Payload, flow)
 		if err != nil {
@@ -318,7 +319,7 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 		if payload.Type != valueText {
 			return nil, lerrors.TypeMismatch.Errorf("Error payload requires Text, got %s", payload.Type)
 		}
-		result.Payload, result.Type, result.Access = payload, valueError, orchestrationAccessOwned
+		result.Payload, result.Type, result.RuntimeType, result.Access = payload, valueError, runtimeTypeRef{Kind: valueError}, orchestrationAccessOwned
 	default:
 		return nil, lerrors.Internal.Errorf("unsupported instruction value %s", value.Kind)
 	}
@@ -354,7 +355,7 @@ func (p *orchestrationPlanner) condition(condition *instructionCondition, flow o
 		if left.Type != valueApp || right.Source.Kind != operandMember || right.Source.Member != memberError || right.Type != valueError {
 			return nil, lerrors.TypeMismatch.Errorf("has condition supports an application's Error")
 		}
-		if right.Owner.App != left.App {
+		if !samePlannedApp(right.Owner, left) {
 			return nil, lerrors.TypeMismatch.Errorf("has condition Error belongs to a different application")
 		}
 	case conditionIs, conditionEquals, conditionIsnt:
@@ -375,7 +376,10 @@ func orchestrationValueEffects(value *orchestrationValue) orchestrationEffects {
 	if value == nil {
 		return 0
 	}
-	effects := orchestrationValueEffects(value.Owner) | orchestrationValueEffects(value.Payload)
+	effects := orchestrationValueEffects(value.Owner) | orchestrationValueEffects(value.Payload) | orchestrationValueEffects(value.Key)
+	for _, child := range value.Elements {
+		effects |= orchestrationValueEffects(child)
+	}
 	if value.Source.Kind == operandMember {
 		if value.Source.Member == memberOutput {
 			effects |= orchestrationEffectReadOutput

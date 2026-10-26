@@ -18,7 +18,7 @@ Function has forms Function, Functions, Functional, and Functioning. It supplies
 
 Inputs and Outputs preserve their typed cardinality. Main supplies explicit No Inputs and No Outputs. Nonempty source signatures need explicit property values; the construction pass rejects an unbound nonempty signature. The native definition facility supports concrete typed metadata, not automatic inference of Rust types from arbitrary source text.
 
-Native named functions and callable fragments have separately bounded Rust target support. Function does not promise closures, receiver methods, async functions, or native generic forwarding. See the [specification's definition boundary](../../spec/definitions.md#process-function-and-return).
+Native named functions and callable fragments have separately bounded Rust target support. The native Function template does not infer receiver methods or native generic arguments; ordinary L Function captures and typed calls are checked by the frontend. See the [specification's definition boundary](../../spec/definitions.md#process-function-and-return).
 
 ## Function.Return
 

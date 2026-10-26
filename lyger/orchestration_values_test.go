@@ -62,6 +62,8 @@ func TestLoweredValueCheckedConversions(t *testing.T) {
 		{&primitive{Type: valueText, Text: "`雪, <DEF> and \\n`"}, `BOD^E{|Statement: ~runtime.show(&"雪, <DEF> and \\n".as_bytes().to_vec()).await?;~|}`},
 		{&primitive{Type: valueNumber, Number: 3.5}, `BOD^E{|Statement: ~runtime.show(&runtime::format_number(3.5_f64)).await?;~|}`},
 		{&primitive{Type: valueTruth, Truth: true}, `BOD^E{|Statement: ~runtime.show(&true.to_string().into_bytes()).await?;~|}`},
+		{&primitive{Type: valueBytes, Bytes: []byte{65, 0, 255}}, `BOD^E{|Statement: ~runtime.show(&vec![0x41u8, 0x00u8, 0xffu8]).await?;~|}`},
+		{&primitive{Type: valueNull}, `BOD^E{|Statement: ~runtime.show(&(LValue::Null).display_bytes()?).await?;~|}`},
 	} {
 		t.Run(tc.primitive.Type.String(), func(t *testing.T) {
 			before := *tc.primitive
@@ -99,7 +101,7 @@ func TestLoweredValueCheckedConversions(t *testing.T) {
 	}
 	for kind := valueInvalid; kind <= valueTypeCount; kind++ {
 		operand := &instructionValue{Kind: operandLiteral, Type: kind, Literal: &primitive{Type: kind}}
-		if kind != valueText && kind != valueNumber && kind != valueTruth {
+		if kind != valueText && kind != valueNumber && kind != valueTruth && kind != valueBytes && kind != valueNull {
 			actual, err := (&orchestrationPlanner{}).value(operand, newOrchestrationFlow())
 			if err == nil || actual != nil {
 				t.Errorf("unsupported literal type %s = %#v/%v", kind, actual, err)
@@ -140,8 +142,8 @@ func TestLoweredValueCheckedConversions(t *testing.T) {
 	actual, err := (&orchestrationEmitter{plan: plan}).instructions(plan.Root.Body)
 	want := []string{
 		`BOD^E{|Statement: ~runtime.show(&lValue0).await?;~|}`,
-		`BOD^E{|Statement: ~runtime.fail(runtime::Error::from_bytes((lValue0).to_vec()));~|}`,
-		`BOD^E{|Statement: ~return Ok(());~|}`,
+		`BOD^E{|Statement: ~let lExit = runtime.fail(runtime::Error::from_bytes((lValue0).to_vec()));~|}`,
+		`BOD^E{|Statement: ~return Err(lExit);~|}`,
 	}
 	if err != nil || !reflect.DeepEqual(actual, want) || stored.Value.Primitive.Text != "`value`" || plan.Storage[0].Initial == stored.Value.Primitive {
 		t.Fatalf("Error did not take an independent Text snapshot: %q/%v", actual, err)
@@ -182,7 +184,7 @@ func TestLoweredValuePrimitiveAndConditionResults(t *testing.T) {
 			t.Fatalf("primitive lowering = %#v/%v", actual, err)
 		}
 	}
-	for _, primitive := range []*primitive{nil, {Type: valueNumber, Number: math.NaN()}, {Type: valueNumber, Number: math.Inf(1)}, {Type: valueNull}} {
+	for _, primitive := range []*primitive{nil, {Type: valueNumber, Number: math.NaN()}, {Type: valueNumber, Number: math.Inf(1)}, {Type: valuePointer}} {
 		actual, kind, err := nativePrimitiveExpression(primitive)
 		if err == nil || actual != "" || kind != valueInvalid {
 			t.Fatalf("unsupported primitive returned a value: %#v/%v", actual, err)
@@ -216,7 +218,7 @@ func TestLoweredValueInstructionDependenciesAndState(t *testing.T) {
 		{
 			name:    "Exit Error",
 			current: &instruction{Kind: instructionExit, Value: &instructionValue{Kind: operandError, Type: valueError, Payload: &instructionValue{Kind: operandLiteral, Type: valueText, Literal: &primitive{Type: valueText, Text: "`reason`"}}}},
-			want:    []string{`BOD^E{|Statement: ~runtime.fail(runtime::Error::from_bytes("reason".as_bytes().to_vec()));~|}`, "BOD^E{|Statement: ~return Ok(());~|}"},
+			want:    []string{`BOD^E{|Statement: ~let lExit = runtime.fail(runtime::Error::from_bytes("reason".as_bytes().to_vec()));~|}`, "BOD^E{|Statement: ~return Err(lExit);~|}"},
 		},
 		{name: "Exit without value", current: &instruction{Kind: instructionExit}, want: []string{"BOD^E{|Statement: ~return Ok(());~|}"}},
 	} {

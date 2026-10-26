@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 08/01/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
@@ -45,7 +37,6 @@ func GenerateUuid() string {
 	return curId.String()
 }
 
-// checkIfStrInt
 func checkIfStrInt(checkInt string) (bool, int) {
 	if reInt, err := strconv.Atoi(checkInt); err == nil {
 		return true, reInt
@@ -55,15 +46,7 @@ func checkIfStrInt(checkInt string) (bool, int) {
 
 // StringifyArray converts an array of string into a readable string
 func StringifyArray(strArray []string) string {
-	reStr := ""
-	for ind, st := range strArray {
-		if ind == 0 {
-			reStr = st
-		} else {
-			reStr = reStr + ", " + st
-		}
-	}
-	return reStr
+	return strings.Join(strArray, ", ")
 }
 
 // StringifyStringArray converts a lucid array into a readable string set

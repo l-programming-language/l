@@ -25,6 +25,7 @@ type prop struct {
 
 // funct is an AML structure type abstracting a Function to generate source code for
 type funct struct {
+	Source      *sourceFunction
 	ID          string
 	Key         string
 	Inputs      []*prop

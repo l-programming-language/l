@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 11/01/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
@@ -21,14 +13,12 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-// Regex
 type Regex struct {
 	String string
 	Type   string
 	Reg    *regexp.Regexp
 }
 
-// LoadRegex
 func LoadRegex(reType string, reSub string) (Regex, error) {
 	reString := ""
 	// ||` and `||
@@ -90,14 +80,12 @@ func (r *Regex) Replace(content []byte, replacement []byte) []byte {
 	return r.Reg.ReplaceAll(content, replacement)
 }
 
-// Tag
 type Tag struct {
 	Type      string
 	Variables []string
 	Recursive bool
 }
 
-// LoadTag
 func LoadTag(tagString string) (Tag, error) {
 	recur := false
 	splitString := strings.Split(tagString, " | ")
@@ -108,7 +96,6 @@ func LoadTag(tagString string) (Tag, error) {
 	return Tag{Type: splitString[0], Variables: variables, Recursive: recur}, nil
 }
 
-// LoadTags
 func LoadTags() ([]Tag, error) {
 	tags := []Tag{}
 	defaultTags := []string{
@@ -139,13 +126,11 @@ func LoadTags() ([]Tag, error) {
 	return tags, nil
 }
 
-// DefinitionStore
 type DefinitionStore struct {
 	StandIn []byte
 	Raw     []byte
 }
 
-// RestoreDefinitionBytes
 func RestoreDefinitionBytes(ds []DefinitionStore, contentBytes []byte) []byte {
 	for _, definition := range ds {
 		contentBytes = bytes.Replace(contentBytes, definition.StandIn, definition.Raw, 1)
@@ -153,7 +138,6 @@ func RestoreDefinitionBytes(ds []DefinitionStore, contentBytes []byte) []byte {
 	return contentBytes
 }
 
-// ScannedProgram
 type ScannedProgram struct {
 	Name            string
 	Tags            []Tag
@@ -163,7 +147,6 @@ type ScannedProgram struct {
 	nativeSource    bool
 }
 
-// Scanner
 type Scanner struct {
 	Name            string
 	ProgramBytes    []byte
@@ -172,7 +155,6 @@ type Scanner struct {
 	Program         ScannedProgram
 }
 
-// StoreDefinitionBytes
 func (s *Scanner) StoreDefinitionBytes() error {
 	var framed bytes.Buffer
 	cursor := 0
@@ -214,7 +196,6 @@ func (s *Scanner) StoreDefinitionBytes() error {
 	return nil
 }
 
-// ParseDefinitionals
 func ParseDefinitionals(content []byte, scanType string) [][]byte {
 	regex, regErr := LoadRegex(scanType, "")
 	if regErr != nil {
@@ -223,7 +204,6 @@ func ParseDefinitionals(content []byte, scanType string) [][]byte {
 	return regex.Parse(content)
 }
 
-// LoadScanner
 func LoadScanner(programName string) (Scanner, error) {
 	programDir := "programs/" + programName
 	tags, err := LoadTags()
@@ -239,7 +219,6 @@ func LoadScanner(programName string) (Scanner, error) {
 	return scanner, nil
 }
 
-// loadScannerBytes
 func loadScannerBytes(scannerBytes []byte) (Scanner, error) {
 	tags, err := LoadTags()
 	if err != nil {
@@ -249,7 +228,6 @@ func loadScannerBytes(scannerBytes []byte) (Scanner, error) {
 	return scanner, nil
 }
 
-// StripCommentBytes
 func (s *Scanner) StripCommentBytes() error {
 	programBytes := s.ProgramBytes
 	regex, err := LoadRegex("Comment", "")
@@ -260,7 +238,6 @@ func (s *Scanner) StripCommentBytes() error {
 	return nil
 }
 
-// DetermineTag
 func DetermineTag(tags []Tag, tagType string) Tag {
 	for _, dTag := range tags {
 		if dTag.Type == tagType {
@@ -270,7 +247,6 @@ func DetermineTag(tags []Tag, tagType string) Tag {
 	return Tag{}
 }
 
-// processTagVar
 func processTagVar(tag Tag, parsedBytes []byte) MetaDict {
 	reVars := MetaDict{}
 	cleanedBytes := bytes.Replace(parsedBytes, []byte(">"), []byte(``), -1)
@@ -289,7 +265,6 @@ func processTagVar(tag Tag, parsedBytes []byte) MetaDict {
 	return reVars
 }
 
-// ParseTagVariables
 func ParseTagVariables(tag Tag, contents [][]byte) ([]MetaDict, error) {
 	reDicts := []MetaDict{}
 	for _, content := range contents {
@@ -309,7 +284,6 @@ func ParseTagVariables(tag Tag, contents [][]byte) ([]MetaDict, error) {
 	return reDicts, nil
 }
 
-// ParseTags
 func ParseTags(tags []Tag, content []byte, parseType string, tagType string) ([][]byte, []MetaDict, error) {
 	reBytes := [][]byte{}
 	tag := Tag{}
@@ -342,7 +316,6 @@ func ParseTags(tags []Tag, content []byte, parseType string, tagType string) ([]
 	return reBytes, reVars, regErr
 }
 
-// ScanHashmapEntry
 func ScanHashmapEntry(objBytes []byte) (MetaObj, error) {
 	reObj := MetaObj{}
 	var bKey []byte
@@ -363,7 +336,6 @@ func ScanHashmapEntry(objBytes []byte) (MetaObj, error) {
 	return reObj, nil
 }
 
-// ScanHashmap
 func ScanHashmap(metaDict MetaDict, tags []Tag, hashmapBytes []byte) (MetaDict, error) {
 	objs, _, err := ParseTags(tags, hashmapBytes, "Hashmap", "")
 	if err != nil {
@@ -379,7 +351,6 @@ func ScanHashmap(metaDict MetaDict, tags []Tag, hashmapBytes []byte) (MetaDict, 
 	return metaDict, nil
 }
 
-// ScanDefinitions
 func ScanDefinitions(obj []byte) (MetaDict, error) {
 	cleanedObj := bytes.Replace(obj, []byte("|[ "), []byte(""), -1)
 	cleanedObj = bytes.Replace(cleanedObj, []byte(" ]|"), []byte(""), -1)
@@ -397,7 +368,6 @@ func ScanDefinitions(obj []byte) (MetaDict, error) {
 	return reDict, nil
 }
 
-// ScanArray
 func ScanArray(tags []Tag, arrayBytes []byte, scanType string) (MetaDict, error) {
 	reMeta := MetaDict{}
 	arrayObjects, _, err := ParseTags(tags, arrayBytes, "Array", "")
@@ -419,7 +389,6 @@ func ScanArray(tags []Tag, arrayBytes []byte, scanType string) (MetaDict, error)
 	return reMeta, nil
 }
 
-// ScanJSON
 func ScanJSON(_ []Tag, content []byte) ([][]byte, error) {
 	reBytes := [][]byte{}
 	for {
@@ -451,7 +420,6 @@ func ScanJSON(_ []Tag, content []byte) ([][]byte, error) {
 	}
 }
 
-// determineJSONSliceType
 func determineJSONSliceType(content []byte, parentTag string) string {
 	if parentTag == "Outline" {
 		var record map[string]json.RawMessage
@@ -467,7 +435,6 @@ func determineJSONSliceType(content []byte, parentTag string) string {
 	return "Meta"
 }
 
-// ScanOutline
 func ScanOutline(tags []Tag, outlineBytes []byte) (Outline, error) {
 	reOutline := Outline{}
 	// Outline
@@ -523,7 +490,6 @@ func ScanOutline(tags []Tag, outlineBytes []byte) (Outline, error) {
 	return reOutline, nil
 }
 
-// ScanMetaHash
 func ScanMetaHash(hashBytes []byte) (MetaObj, error) {
 	var result MetaObj
 	body := strings.TrimSuffix(strings.TrimPrefix(strings.TrimSpace(string(hashBytes)), "|{"), "}|")
@@ -549,7 +515,6 @@ func ScanMetaHash(hashBytes []byte) (MetaObj, error) {
 	return result, nil
 }
 
-// ScanMeta
 func ScanMeta(tags []Tag, arrayTags [][]byte) (MetaDict, error) {
 	var reMeta MetaDict
 	for _, arrayTag := range arrayTags {
@@ -568,7 +533,6 @@ func ScanMeta(tags []Tag, arrayTags [][]byte) (MetaDict, error) {
 	return reMeta, nil
 }
 
-// ScanMetaArray
 func ScanMetaArray(tags []Tag, initBytes []byte, parseTags [][]byte) (MetaDict, error) {
 	mBytes := initBytes
 	for _, pTag := range parseTags {
@@ -588,7 +552,6 @@ func ScanMetaArray(tags []Tag, initBytes []byte, parseTags [][]byte) (MetaDict, 
 	return MetaDict{}, nil
 }
 
-// ParseSyllable
 func ParseSyllable(syllableBytes []byte) ([]string, error) {
 	source := strings.TrimSpace(string(syllableBytes))
 	if !strings.HasPrefix(source, "<|S|>") || !strings.HasSuffix(source, "</S|>") {
@@ -626,7 +589,6 @@ func ParseSyllable(syllableBytes []byte) ([]string, error) {
 	return []string{count, body[1 : len(body)-1], exponent, polarity}, nil
 }
 
-// ScanSyllable
 func (sp *ScannedProgram) ScanSyllable(syllableScan []byte) (Syllable, error) {
 	reSyllable := Syllable{Name: string(syllableScan), Count: 1, Exponent: 1, Polarity: false}
 	parsedSylStr, pErr := ParseSyllable(syllableScan)
@@ -654,7 +616,6 @@ func (sp *ScannedProgram) ScanSyllable(syllableScan []byte) (Syllable, error) {
 	return reSyllable, nil
 }
 
-// ScanWords
 func (sp *ScannedProgram) ScanWords(tags []Tag, wordScan []byte) ([]Word, error) {
 	reWords := []Word{}
 	scanArray, sErr := ScanArray(tags, wordScan, "Definitions")
@@ -685,7 +646,6 @@ func (sp *ScannedProgram) ScanWords(tags []Tag, wordScan []byte) ([]Word, error)
 	return reWords, nil
 }
 
-// ScanSentence
 func (sp *ScannedProgram) ScanSentence(tags []Tag, sentenceScan []byte) (Sentence, error) {
 	meta, mErr := ScanMetaArray(tags, sentenceScan, [][]byte{})
 	if mErr != nil {
@@ -766,7 +726,6 @@ func (sp *ScannedProgram) ScanChapters(tags []Tag, chaptersTag []byte) ([]Chapte
 	return reChapters, nil
 }
 
-// ScanBook
 func (sp *ScannedProgram) ScanBook(bookTag []byte) (Book, error) {
 	reBook := Book{Program: bookTag}
 	settingsTags, _, sErr := ParseTags(sp.Tags, bookTag, "Tag", "SETTINGS")
@@ -812,7 +771,6 @@ func (sp *ScannedProgram) ScanBook(bookTag []byte) (Book, error) {
 	return reBook, nil
 }
 
-// ScanStructure
 func (sp *ScannedProgram) ScanStructure() ([]Book, error) {
 	reBooks := []Book{}
 	if len(sp.Structure) == 0 {
@@ -835,7 +793,6 @@ func (sp *ScannedProgram) ScanStructure() ([]Book, error) {
 	return reBooks, nil
 }
 
-// ScanProgramBytes
 func (sp *ScannedProgram) ScanProgramBytes() error {
 	structureBooks, sErr := sp.ScanStructure()
 	if sErr != nil {

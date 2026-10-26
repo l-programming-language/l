@@ -1,7 +1,6 @@
 package Lyger
 
 import (
-	"fmt"
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 
 	"path/filepath"
@@ -289,7 +288,7 @@ func TestParagraphActivationFirstRunExitRetainsNestedInvocation(t *testing.T) {
 	}
 }
 
-func TestParagraphActivationRejectsEscapingPublicRuntimeCapture(t *testing.T) {
+func TestParagraphActivationRetainsEscapingPublicRuntimeCapture(t *testing.T) {
 	source := paragraphSource(t)
 	const declaration = "Publicly create \"Report|-s|-ed|-ing\" for Showing privateText and then Showing any Text."
 	const invocation = "Report `caller`."
@@ -303,34 +302,24 @@ func TestParagraphActivationRejectsEscapingPublicRuntimeCapture(t *testing.T) {
 		t.Fatalf("valid static definition-site capture = %v", actual)
 	}
 	source.main = makeSource("Witness's Output")
-	compilation := compileMemberResolutionSource(t, source)
-	err := compilation.Error
-	if err == nil {
-		result := &CompilationResult{Compilation: compilation}
-		_, err = result.OrchestratorUnit("entry", executableTestCompanions(result))
+	runtimeResult := executableTestResult(t, source)
+	plan, err := planOrchestration(runtimeResult.Compilation.Semantics)
+	if err != nil {
+		t.Fatal(err)
 	}
-	if err == nil {
-		t.Fatal("published action allowed private runtime storage to escape its activation")
-	}
-	message := err.Error()
-	declarationLine, invocationLine := 0, 0
-	for index, line := range strings.Split(source.main, "\n") {
-		if line == declaration {
-			declarationLine = index + 1
+	var boundInContinuation bool
+	var invocationPlan *orchestrationInstruction
+	visitCapturePlan(plan.Root.Body, func(current *orchestrationInstruction) {
+		if current.Continuation != nil {
+			for _, effect := range current.Continuation.Body {
+				boundInContinuation = boundInContinuation || effect.Source.Kind == instructionBindAction
+			}
 		}
-		if line == invocation {
-			invocationLine = index + 1
+		if current.Source.Kind == instructionCall && current.Source.Callable == runtimeResult.Compilation.Memory["Report"] {
+			invocationPlan = current
 		}
-	}
-	atDeclaration := strings.Contains(message, fmt.Sprintf("main.l:%d:", declarationLine))
-	atInvocation := strings.Contains(message, fmt.Sprintf("main.l:%d:", invocationLine))
-	captureCause := false
-	for _, word := range strings.Fields(message) {
-
-		word = strings.Trim(strings.ToLower(word), ":,.;()")
-		captureCause = captureCause || word == "capture" || word == "captures"
-	}
-	if (!atDeclaration && !atInvocation) || !captureCause || !strings.Contains(message, "privateText") {
-		t.Fatalf("runtime capture rejection lost its cause/name and declaration or escape source: %v", err)
+	})
+	if !boundInContinuation || invocationPlan == nil || invocationPlan.Actions[0].Value.Storage.Capture == nil {
+		t.Fatal("Await did not create and preserve its public action environment")
 	}
 }

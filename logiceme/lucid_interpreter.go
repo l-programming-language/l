@@ -1,12 +1,4 @@
-/*
-Author: Connor Sanders
-Version: 0.0.1
-Released: 11/01/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Logiceme Evaluator V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
+// Author: Connor Sanders
 
 package Logiceme
 
@@ -21,7 +13,6 @@ import (
 	"strings"
 )
 
-// LucidInterpreter
 type LucidInterpreter struct {
 	RawContent         []byte
 	InterpretedContent []byte
@@ -33,13 +24,6 @@ type LucidInterpreter struct {
 	WorkingVariables   []*WorkingVariable
 }
 
-/*
-=================================
-LUCID VARIABLE SWITCHES
-=================================
-*/
-
-// varInitSwitch
 func varInitSwitch(curToken string) (string, string) {
 	switch curToken {
 	case "Meta":
@@ -51,7 +35,6 @@ func varInitSwitch(curToken string) (string, string) {
 	}
 }
 
-// parseMetaTokenHashStr
 func parseMetaTokenHashStr(curToken string) string {
 	if strings.Contains(curToken, "[") && strings.Contains(curToken, "]") {
 		curToken = strings.Split(curToken, "[")[0]
@@ -59,7 +42,6 @@ func parseMetaTokenHashStr(curToken string) string {
 	return curToken
 }
 
-// metaSwitch
 func (li *LucidInterpreter) metaSwitch(curToken string) (interface{}, string) {
 	var featural string
 	curToken = parseMetaTokenHashStr(curToken)
@@ -136,7 +118,6 @@ func (li *LucidInterpreter) metaSwitch(curToken string) (interface{}, string) {
 	}
 }
 
-// convertBytesToStr
 func convertBytesToStr(contents [][]byte) []string {
 	var reStrs []string
 	for _, reByte := range contents {
@@ -146,94 +127,24 @@ func convertBytesToStr(contents [][]byte) []string {
 	return reStrs
 }
 
-// segmentalInterfaceSwitch
-func segmentalInterfaceSwitch(segmentalType string, conjoinment CompiledConjoinment) ([]string, string) {
-	switch segName := segmentalType; segName {
-	case "Declaration":
-		return convertBytesToStr(conjoinment.Contents), "Declaration"
-	case "Calculation":
-		return convertBytesToStr(conjoinment.Contents), "Calculation"
-	case "Evaluation":
-		return convertBytesToStr(conjoinment.Contents), "Evaluation"
-	case "Definition":
-		return convertBytesToStr(conjoinment.Contents), "Definition"
-	case "Description":
-		return convertBytesToStr(conjoinment.Contents), "Description"
-	case "Operation":
-		return convertBytesToStr(conjoinment.Contents), "Operation"
-	case "Iteration":
-		return convertBytesToStr(conjoinment.Contents), "Iteration"
-	case "Instantiation":
-		return convertBytesToStr(conjoinment.Contents), "Instantiation"
-	case "Execution":
-		return convertBytesToStr(conjoinment.Contents), "Execution"
+func segmentalInterfaceSwitch(kind string, conjoinment CompiledConjoinment) ([]string, string) {
+	if kind != "Void" && vowelName(kind) == kind {
+		return convertBytesToStr(conjoinment.Contents), kind
 	}
 	return []string{"Void"}, "Void"
 }
 
-// LoadSegmentalConjoinments
-func LoadSegmentalConjoinments(segmentalType string, conjoinments []CompiledConjoinment) ([]string, string) {
-	var reStrs []string
-	switch segName := segmentalType; segName {
-	case "Declaration":
-		for _, conj := range conjoinments {
-			conjBytes, _ := segmentalInterfaceSwitch(segmentalType, conj)
-			reStrs = append(reStrs, conjBytes...)
-		}
-		return reStrs, "Declarations"
-	case "Calculation":
-		for _, conj := range conjoinments {
-			conjBytes, _ := segmentalInterfaceSwitch(segmentalType, conj)
-			reStrs = append(reStrs, conjBytes...)
-		}
-		return reStrs, "Calculations"
-	case "Evaluation":
-		for _, conj := range conjoinments {
-			conjBytes, _ := segmentalInterfaceSwitch(segmentalType, conj)
-			reStrs = append(reStrs, conjBytes...)
-		}
-		return reStrs, "Evaluations"
-	case "Definition":
-		for _, conj := range conjoinments {
-			conjBytes, _ := segmentalInterfaceSwitch(segmentalType, conj)
-			reStrs = append(reStrs, conjBytes...)
-		}
-		return reStrs, "Definitions"
-	case "Description":
-		for _, conj := range conjoinments {
-			conjBytes, _ := segmentalInterfaceSwitch(segmentalType, conj)
-			reStrs = append(reStrs, conjBytes...)
-		}
-		return reStrs, "Descriptions"
-	case "Operation":
-		for _, conj := range conjoinments {
-			conjBytes, _ := segmentalInterfaceSwitch(segmentalType, conj)
-			reStrs = append(reStrs, conjBytes...)
-		}
-		return reStrs, "Operations"
-	case "Iteration":
-		for _, conj := range conjoinments {
-			conjBytes, _ := segmentalInterfaceSwitch(segmentalType, conj)
-			reStrs = append(reStrs, conjBytes...)
-		}
-		return reStrs, "Iterations"
-	case "Instantiation":
-		for _, conj := range conjoinments {
-			conjBytes, _ := segmentalInterfaceSwitch(segmentalType, conj)
-			reStrs = append(reStrs, conjBytes...)
-		}
-		return reStrs, "Instantiations"
-	case "Execution":
-		for _, conj := range conjoinments {
-			conjBytes, _ := segmentalInterfaceSwitch(segmentalType, conj)
-			reStrs = append(reStrs, conjBytes...)
-		}
-		return reStrs, "Executions"
+func LoadSegmentalConjoinments(kind string, conjoinments []CompiledConjoinment) ([]string, string) {
+	if kind == "Void" || vowelName(kind) != kind {
+		return []string{"Void"}, "Void"
 	}
-	return []string{"Void"}, "Void"
+	var values []string
+	for _, conjoinment := range conjoinments {
+		values = append(values, convertBytesToStr(conjoinment.Contents)...)
+	}
+	return values, kind + "s"
 }
 
-// processConjoinmentsSwitch
 func (li *LucidInterpreter) processConjoinmentsSwitch(conjType string, plural bool, pos bool, posInt int) ([]string, string) {
 	segmentalType := li.SegmentalSystem.SegmentalDataSwitch(conjType)
 	if plural {
@@ -263,7 +174,6 @@ func (li *LucidInterpreter) processConjoinmentsSwitch(conjType string, plural bo
 	return []string{"Void"}, "Void"
 }
 
-// conjoinmentsSwitch
 func (li *LucidInterpreter) conjoinmentsSwitch(curToken string) ([]string, string) {
 	pos := false
 	posInt := 0
@@ -319,50 +229,12 @@ func (li *LucidInterpreter) conjoinmentsSwitch(curToken string) ([]string, strin
 		// An alias exposes only its forwarded name, not its source category.
 		return []string{"Void"}, "Void"
 	}
-	switch curToken {
-	case "Declarations":
-		return li.processConjoinmentsSwitch(curToken, true, pos, posInt)
-	case "Declaration":
-		return li.processConjoinmentsSwitch(curToken, false, pos, posInt)
-	case "Calculations":
-		return li.processConjoinmentsSwitch(curToken, true, pos, posInt)
-	case "Calculation":
-		return li.processConjoinmentsSwitch(curToken, false, pos, posInt)
-	case "Evaluations":
-		return li.processConjoinmentsSwitch(curToken, true, pos, posInt)
-	case "Evaluation":
-		return li.processConjoinmentsSwitch(curToken, false, pos, posInt)
-	case "Definitions":
-		return li.processConjoinmentsSwitch(curToken, true, pos, posInt)
-	case "Definition":
-		return li.processConjoinmentsSwitch(curToken, false, pos, posInt)
-	case "Descriptions":
-		return li.processConjoinmentsSwitch(curToken, true, pos, posInt)
-	case "Description":
-		return li.processConjoinmentsSwitch(curToken, false, pos, posInt)
-	case "Operations":
-		return li.processConjoinmentsSwitch(curToken, true, pos, posInt)
-	case "Operation":
-		return li.processConjoinmentsSwitch(curToken, false, pos, posInt)
-	case "Iterations":
-		return li.processConjoinmentsSwitch(curToken, true, pos, posInt)
-	case "Iteration":
-		return li.processConjoinmentsSwitch(curToken, false, pos, posInt)
-	case "Instantiations":
-		return li.processConjoinmentsSwitch(curToken, true, pos, posInt)
-	case "Instantiation":
-		return li.processConjoinmentsSwitch(curToken, false, pos, posInt)
-	case "Executions":
-		return li.processConjoinmentsSwitch(curToken, true, pos, posInt)
-	case "Execution":
-		return li.processConjoinmentsSwitch(curToken, false, pos, posInt)
-	default:
-		// TODO Check for variable in Working Variables if var is not root Meta.
-		return []string{"Void"}, "Void"
+	if kind := vowelName(curToken); kind != "Void" {
+		return li.processConjoinmentsSwitch(curToken, kind != curToken, pos, posInt)
 	}
+	return []string{"Void"}, "Void"
 }
 
-// rootSwitch
 func (li *LucidInterpreter) rootSwitch(curToken string, switchType string) (interface{}, string) {
 	switch switchType {
 	case "Meta":
@@ -377,13 +249,6 @@ func (li *LucidInterpreter) rootSwitch(curToken string, switchType string) (inte
 	}
 }
 
-/*
-=================================
-LUCID VARIABLE MANAGEMENT
-=================================
-*/
-
-// cleanFieldName
 func cleanFieldName(fieldStr string) (string, bool, int) {
 	if strings.Contains(fieldStr, "[") {
 		sStr := strings.Split(fieldStr, "[")
@@ -398,7 +263,6 @@ func cleanFieldName(fieldStr string) (string, bool, int) {
 	return fieldStr, false, 0
 }
 
-// cleanStructKey
 func cleanStructKey(keyStr string) string {
 	if strings.Contains(keyStr, ".") {
 		keyStr = strings.Split(keyStr, ".")[1]
@@ -406,7 +270,6 @@ func cleanStructKey(keyStr string) string {
 	return keyStr
 }
 
-// hashFieldArray
 func hashFieldArray(strStruct interface{}, fieldType string, fieldIndex int) (interface{}, string) {
 	if fieldType == "Array-String" {
 		array := strStruct.([]string) //nolint:errcheck // Array-String is paired with a []string by MetaStructFieldSwitch.
@@ -417,7 +280,6 @@ func hashFieldArray(strStruct interface{}, fieldType string, fieldIndex int) (in
 	return strStruct, fieldType
 }
 
-// findStructData
 func (li *LucidInterpreter) findStructData(strStruct interface{}, structType string, fieldName string) (interface{}, string) {
 	fieldInd := 0
 	isHash := false
@@ -430,14 +292,12 @@ func (li *LucidInterpreter) findStructData(strStruct interface{}, structType str
 	return reData, dataType
 }
 
-// createVariable
 func (li *LucidInterpreter) createVariable(varName string, varType string, varValue interface{}) *WorkingVariable {
 	newVar := newWorkingVariable(varName, varType, varValue)
 	li.WorkingVariables = append(li.WorkingVariables, newVar)
 	return newVar
 }
 
-// getVariable
 func (li *LucidInterpreter) getVariable(varName string) *WorkingVariable {
 	for _, variable := range li.WorkingVariables {
 		if variable.VarName == varName {
@@ -447,7 +307,6 @@ func (li *LucidInterpreter) getVariable(varName string) *WorkingVariable {
 	return newWorkingVariable(varName, "NotFound", "NotFound")
 }
 
-// getVariableValue
 func (li *LucidInterpreter) getVariableValue(varName string) (interface{}, string) {
 	if strings.Contains(varName, ".") {
 		cleanedVariable := strings.Split(varName, ".")[0]
@@ -462,7 +321,6 @@ func (li *LucidInterpreter) getVariableValue(varName string) (interface{}, strin
 	return li.getVariable(varName).VarValue, li.getVariable(varName).VarType
 }
 
-// parseMetaStructArrayPOS
 func parseMetaStructArrayPOS(tokenVar string) (string, string) {
 	if strings.Contains(tokenVar, "[") && strings.Contains(tokenVar, "]") {
 		arrayPOS := strings.Split(tokenVar, "[")[1]
@@ -473,7 +331,6 @@ func parseMetaStructArrayPOS(tokenVar string) (string, string) {
 	return tokenVar, ""
 }
 
-// LucidMetaFunctionSwitch
 func LucidMetaFunctionSwitch(checkStr string) (bool, string) {
 	switch checkStr {
 	case "Count":
@@ -487,7 +344,6 @@ func LucidMetaFunctionSwitch(checkStr string) (bool, string) {
 	}
 }
 
-// checkMetaArrayPOS
 func checkMetaArrayPOS(arrayPOS string) (string, string) {
 	var function bool
 	var funcType string
@@ -506,7 +362,6 @@ func checkMetaArrayPOS(arrayPOS string) (string, string) {
 	return "Error", "Void"
 }
 
-// scanFuncInputs
 func scanFuncInputs(funcStr string) []string {
 	input := strings.Split(funcStr, "(")[1]
 	input = strings.Split(input, ")")[0]
@@ -517,7 +372,6 @@ func scanFuncInputs(funcStr string) []string {
 	return []string{input}
 }
 
-// checkAddInputs
 func checkAddInputs(inputs []string) []string {
 	var re []string
 	for _, input := range inputs {
@@ -531,14 +385,12 @@ func checkAddInputs(inputs []string) []string {
 	return re
 }
 
-// lengthHandler
 func (li *LucidInterpreter) lengthHandler() int {
 	res := 0
 	// Length(Meta.Evals)
 	return res
 }
 
-// addHandler
 func (li *LucidInterpreter) addHandler(funcStr string) int {
 	res := 0
 	// Add(Count, -1)
@@ -570,7 +422,6 @@ func (li *LucidInterpreter) addHandler(funcStr string) int {
 	return res
 }
 
-// countHandler
 func (li *LucidInterpreter) countHandler() []int {
 	// Count(Meta.Evals}
 	// [0, 1, 2]
@@ -578,7 +429,6 @@ func (li *LucidInterpreter) countHandler() []int {
 	return reCount
 }
 
-// handleLucidMetaStructFunction
 func (li *LucidInterpreter) handleLucidMetaStructFunction(funcType string, arrayPOS string, resultType string) (interface{}, string) {
 	switch funcType {
 	case "Count":
@@ -599,7 +449,6 @@ func (li *LucidInterpreter) handleLucidMetaStructFunction(funcType string, array
 	return 0, "Number"
 }
 
-// handleLucidMetaStruct
 func (li *LucidInterpreter) handleLucidMetaStruct(tokenVar string, structInt interface{}, structType string, plural bool) (interface{}, string) {
 	curToken, arrayPOS := parseMetaStructArrayPOS(tokenVar)
 	if arrayPOS != "" {
@@ -620,7 +469,6 @@ func (li *LucidInterpreter) handleLucidMetaStruct(tokenVar string, structInt int
 	return structInt, curToken
 }
 
-// scanTokenVarFeaturals
 func scanTokenVarFeaturals(tokenVar string) (string, string) {
 	lVal := tokenVar[len(tokenVar)-1:]
 	if lVal == "~" {
@@ -630,7 +478,6 @@ func scanTokenVarFeaturals(tokenVar string) (string, string) {
 	return tokenVar, ""
 }
 
-// handleLucidMetaStructVal
 func (li *LucidInterpreter) handleLucidMetaStructVal(tokenVar string, structInt interface{}, structType string) (interface{}, string) {
 	var featural string
 	tokenVar, featural = scanTokenVarFeaturals(tokenVar)
@@ -686,7 +533,6 @@ func (li *LucidInterpreter) handleLucidMetaStructVal(tokenVar string, structInt 
 	return fieldVal, fieldType
 }
 
-// getLucidVarVal
 func (li *LucidInterpreter) getLucidVarVal(tokenizedVar []string) (interface{}, string) {
 	// Examples of usage
 	// for TableField in Meta.
@@ -729,7 +575,6 @@ func (li *LucidInterpreter) getLucidVarVal(tokenizedVar []string) (interface{}, 
 	return switchRe, reType
 }
 
-// preprocessLucidVar
 func (li *LucidInterpreter) preprocessLucidVar(cleanedVariable string) []string {
 	tokenizedVar := []string{}
 	// Sub Variables being referenced by name (dot) or key (square brackets)
@@ -742,7 +587,6 @@ func (li *LucidInterpreter) preprocessLucidVar(cleanedVariable string) []string 
 	return tokenizedVar
 }
 
-// determineVarValues
 func (li *LucidInterpreter) determineVarValues(varName string) (string, interface{}) {
 	if strings.Contains(varName, ".") {
 		if strings.Contains(varName, "Conjoinments.") {
@@ -769,7 +613,6 @@ func (li *LucidInterpreter) determineVarValues(varName string) (string, interfac
 	}
 }
 
-// cleanLucidVar
 func cleanLucidVar(varStr string) string {
 	// Delimiters are tokens, not character sets: the final ] may belong to
 	// a field index immediately before the closing Lucid token.
@@ -781,7 +624,6 @@ func cleanLucidVar(varStr string) string {
 	return varStr
 }
 
-// cleanNewLines
 func cleanNewLines(varVal string, varTag string) string {
 	if strings.Contains(varTag, "%") {
 		varVal = string(inlineConjoinmentNewLines([]byte(varVal)))
@@ -791,7 +633,6 @@ func cleanNewLines(varVal string, varTag string) string {
 	return varVal
 }
 
-// interpretExpressionVars
 func (li *LucidInterpreter) interpretExpressionVars(expressionVars []string, curExpressionStmt string) string {
 	removeDuplicateHeaders(&expressionVars)
 	for _, variable := range expressionVars {
@@ -863,13 +704,6 @@ func (li *LucidInterpreter) interpretExpressionVars(expressionVars []string, cur
 	return curExpressionStmt
 }
 
-/*
-=================================
-LUCID EXPRESSION INTERPRETERS
-=================================
-*/
-
-// scanCondVarStr
 func scanCondVarStr(varStr string) (string, string) {
 	cleanStr := varStr
 	funcType := "none"
@@ -889,7 +723,6 @@ func scanCondVarStr(varStr string) (string, string) {
 	return cleanStr, funcType
 }
 
-// handleConditionalMetaVar
 func (li *LucidInterpreter) handleConditionalMetaVar(varStr string) (interface{}, string) {
 	var funcType string
 	varStr, funcType = scanCondVarStr(varStr)
@@ -904,7 +737,6 @@ func (li *LucidInterpreter) handleConditionalMetaVar(varStr string) (interface{}
 	return vVal, vType
 }
 
-// conditionComparison
 func (li *LucidInterpreter) conditionComparison(value interface{}, valueType, condVal, condOperator string) string {
 	// Compare the already resolved value. Computed expressions such as Length
 	// are not working-variable names and must not read or create a binding.
@@ -955,7 +787,6 @@ func (li *LucidInterpreter) conditionComparison(value interface{}, valueType, co
 	return "false"
 }
 
-// interpretCondition
 func (li *LucidInterpreter) interpretCondition(conditionStr string) string {
 	var condVar string
 	condOperator := "Equals"
@@ -1044,7 +875,6 @@ func (li *LucidInterpreter) interpretCondition(conditionStr string) string {
 	return "false"
 }
 
-// interpretConditionHandler
 func (li *LucidInterpreter) interpretConditionHandler(conditionStr string) string {
 	if strings.Contains(conditionStr, " && ") {
 		condEvals := []string{}
@@ -1176,7 +1006,6 @@ func (li *LucidInterpreter) interpretConditional(tagExpressions []*TagExpression
 	return rendered
 }
 
-// interpretExpression
 func (li *LucidInterpreter) interpretExpression(tagExpressions []*TagExpression) string {
 	expressionType := tagExpressions[0].ExpressionType
 	if expressionType == "forEach" {
@@ -1187,7 +1016,6 @@ func (li *LucidInterpreter) interpretExpression(tagExpressions []*TagExpression)
 	return ""
 }
 
-// interpretSubTag
 func (li *LucidInterpreter) interpretSubTag(subTag *SubTag) *InterpretedSubTag {
 	if li.SegmentalSystem != nil && li.SegmentalSystem.Language == "Rust" && subTag.TagType == "headers" {
 		var output strings.Builder
@@ -1207,7 +1035,6 @@ func (li *LucidInterpreter) interpretSubTag(subTag *SubTag) *InterpretedSubTag {
 	return intTag
 }
 
-// insertGlobalMeta
 func (li *LucidInterpreter) insertGlobalMeta() {
 	// 1: Parse Out varialbes from intStr [| |]
 	intStr := string(li.InterpretedContent)
@@ -1219,7 +1046,6 @@ func (li *LucidInterpreter) insertGlobalMeta() {
 	li.InterpretedContent = intContents
 }
 
-// interpretSubTags
 func (li *LucidInterpreter) interpretSubTags() {
 	// Root literals retain the existing single, final global metadata pass.
 	rendered, tags := li.renderBody(string(li.RawContent), li.SubTags, false)
@@ -1227,7 +1053,6 @@ func (li *LucidInterpreter) interpretSubTags() {
 	li.InterpretedContent = []byte(rendered)
 }
 
-// Interpret
 func (li *LucidInterpreter) Interpret() {
 	if li.SegmentalSystem != nil && li.SegmentalSystem.Language == "Rust" {
 		rendered, tags := li.renderBody(string(li.RawContent), li.SubTags, true)

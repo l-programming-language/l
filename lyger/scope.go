@@ -145,7 +145,9 @@ func (t *token) declarationRoot() string {
 func scopeDeclarations(statement *lStatement, incoming scopedSubject) ([]scopeDeclaration, int) {
 	var declarations []scopeDeclaration
 	pending, directive := false, -1
+	invocation := false
 	for index, current := range statement.tokens {
+		invocation = invocation || current.hasRole("verb", "action.invocative")
 		if current.hasRole("preposition", "conjoinment.directive") && len(declarations) > 0 {
 			directive = index
 			break
@@ -154,7 +156,7 @@ func scopeDeclarations(statement *lStatement, incoming scopedSubject) ([]scopeDe
 			pending = true
 			continue
 		}
-		if root := current.declarationRoot(); root != "" && (index == 0 || pending || (index+1 < len(statement.tokens) && statement.tokens[index+1].getPOS(false) == "verbs" && strings.Contains(statement.tokens[index+1].tType, ".passive."))) {
+		if root := current.declarationRoot(); root != "" && (index == 0 || pending || invocation || (index+1 < len(statement.tokens) && statement.tokens[index+1].getPOS(false) == "verbs" && strings.Contains(statement.tokens[index+1].tType, ".passive."))) {
 			if index > 0 {
 				previous := statement.tokens[index-1]
 				if owner, possessed := possessiveOwner(string(previous.rawBytes)); possessed {

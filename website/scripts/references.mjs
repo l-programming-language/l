@@ -1,11 +1,64 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import GithubSlugger from 'github-slugger';
 import { repository, website, json, sha256, stable, safeFile, atomicWrite, walk, exists, isMain } from './lib.mjs';
 import { anchors, validateStdlib } from './content.mjs';
 
 const cell = (v) => String(v ?? '').replaceAll('|', '&#124;').replaceAll('\n', ' ');
 const code = (v) => `<code>${String(v ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('|', '&#124;').replaceAll('\n', ' ')}</code>`;
+// Repeated reviewed explanations share one visible note; every entry keeps its
+// own classification and semantic target next to the exact configured fields.
+function reviewedNotes(prefix) {
+  const notes = new Map();
+  return {
+    link(text) {
+      if (!notes.has(text)) notes.set(text, notes.size + 1);
+      const id = notes.get(text);
+      return `[Note ${id}](#${prefix}-note-${id})`;
+    },
+    table() {
+      return '\n## Support notes\n\n| Note | Reviewed explanation |\n| --- | --- |\n' + [...notes].map(([text, id]) => `| <a id="${prefix}-note-${id}"></a>${id} | ${cell(text)} |\n`).join('');
+    },
+  };
+}
+const semanticLink = (review) => {
+  const [file, fragment] = review.doc.split('#');
+  return `[${review.topic}](${path.posix.relative('docs/_generated', file)}${fragment ? '#' + fragment : ''})`;
+};
 export const referenceInputs = ['lexicon/eng/grammar.json', 'lexicon/eng/vocabulary.json', 'stdlib/index.json', 'cmd/l/command.go', 'lyger/value_kinds.go', 'logiceme/lucid_generation_test.go', 'logiceme/testdata/lucid/templates.sha256.json'];
+
+// Repeated attribution and explanations are stored once without losing per-entry
+// classification. Consumers expand through referenceEntries before validation.
+const evidenceFields = ['sources', 'witnesses', 'evidence', 'checkedStages', 'executedStages'];
+function referenceSnapshot(document) {
+  const notes = [], evidenceSets = [], positions = new Map(), evidencePositions = new Map();
+  const entries = document.entries.map(({ notes: text, ...entry }) => {
+    const evidence = {};
+    for (const key of evidenceFields) if (Object.hasOwn(entry, key)) { evidence[key] = entry[key]; delete entry[key]; }
+    const fingerprint = JSON.stringify(evidence);
+    if (!evidencePositions.has(fingerprint)) { evidencePositions.set(fingerprint, evidenceSets.length); evidenceSets.push(evidence); }
+    entry.evidenceSet = evidencePositions.get(fingerprint);
+    if (text !== undefined) {
+      if (typeof text !== 'string') throw new Error(`Invalid reference note: ${entry.id}`);
+      if (!positions.has(text)) { positions.set(text, notes.length); notes.push(text); }
+      entry.note = positions.get(text);
+    }
+    return entry;
+  });
+  return { ...document, schemaVersion: 2, notes, evidenceSets, entries };
+}
+
+export function referenceEntries(document) {
+  if (document.schemaVersion !== 2 || !Array.isArray(document.notes) || !Array.isArray(document.evidenceSets) || !Array.isArray(document.entries)) throw new Error('Invalid reference snapshot');
+  return document.entries.map(({ note, evidenceSet, ...entry }) => {
+    if (Object.hasOwn(entry, 'notes')) throw new Error(`Inline snapshot note is not allowed: ${entry.id}`);
+    if (evidenceFields.some((key) => Object.hasOwn(entry, key))) throw new Error(`Inline snapshot evidence is not allowed: ${entry.id}`);
+    const evidence = document.evidenceSets[evidenceSet];
+    if (!Number.isInteger(evidenceSet) || evidenceSet < 0 || !evidence || typeof evidence !== 'object' || Array.isArray(evidence) || Object.keys(evidence).some((key) => !evidenceFields.includes(key))) throw new Error(`Missing or invalid reference evidence: ${entry.id}`);
+    if (note !== undefined && (!Number.isInteger(note) || note < 0 || typeof document.notes[note] !== 'string')) throw new Error(`Missing reference note: ${entry.id}`);
+    return { ...entry, ...evidence, ...(note === undefined ? {} : { notes: document.notes[note] }) };
+  });
+}
 
 export async function generateReferences(root) {
   const files = {};
@@ -18,12 +71,14 @@ export async function generateReferences(root) {
   const lexicalReview = await json(path.join(root, 'docs/_meta/vocabulary-review.json'));
   for (const review of [grammarReview, lexicalReview]) for (const [file, hash] of Object.entries(review.sourceHashes)) if (sha256(await fs.readFile(await safeFile(root, file))) !== hash) throw new Error(`Reviewed grammar/vocabulary dependency changed: ${file}. Review classifications before updating hashes.`);
   const entries = [];
-  let g = '# Grammar rule inventory\n\nThis mechanical reference preserves the configured English recognizers. It does not claim all recognized forms can be lowered or executed. Read [grammar notation](../spec/grammar.md) before interpreting these tables: ` | ` is sequencing, not an alternative operator. Support notes are separately reviewed.\n\n';
+  const grammarNotes = reviewedNotes('grammar');
+  const vocabularyNotes = reviewedNotes('vocabulary');
+  let g = '# Grammar rule inventory\n\nThis mechanical reference preserves the configured English recognizers. It does not claim all recognized forms can be lowered or executed. Read [grammar notation](../spec/grammar.md) before interpreting these tables: ` | ` is sequencing, not an alternative operator. Support notes are separately reviewed. Rules without named cases use their structure directly.\n\n';
   for (const [name, rule] of Object.entries(grammar)) {
     const review = grammarReview.entries[name];
     if (!review) throw new Error(`New unclassified grammar rule: ${name}`);
     const id = `grammar-${name.replaceAll('.', '-')}`;
-    g += `## ${name}\n\n<a id="${id}"></a>\n\n${review.notes}\n\nSemantic context: [${review.topic}](${path.posix.relative('docs/_generated', review.doc.split('#')[0])}${review.doc.includes('#') ? '#' + review.doc.split('#')[1] : ''}).\n\n| Property | Configured value |\n| --- | --- |\n| Category | ${code(rule.category)} |\n| Class | ${code(rule.class)} |\n| Structure | ${code(rule.structure)} |\n| Support | ${review.support} |\n\n`;
+    g += `## ${name}\n\n<a id="${id}"></a>\n\n| Category | Class | Structure | Support | Semantic context | Notes |\n| --- | --- | --- | --- | --- | --- |\n| ${code(rule.category)} | ${code(rule.class)} | ${code(rule.structure)} | ${review.support} | ${semanticLink(review)} | ${grammarNotes.link(review.notes)} |\n\n`;
     const cases = Object.entries(rule.cases ?? {});
     if (cases.length) {
       g += '| Named case | Sequence | Semantic context |\n| --- | --- | --- |\n';
@@ -33,7 +88,7 @@ export async function generateReferences(root) {
         g += `| ${code(caseName)} | ${code(sequence)} | [${detail.topic}](${path.posix.relative('docs/_generated', file)}#${fragment}) · ${detail.support} |\n`;
       }
       g += '\n';
-    } else g += 'This rule has no named case alternatives; its structure is used directly.\n\n';
+    }
     const base = { kind: 'grammar', name, role: 'implementation', support: review.support, doc: `docs/_generated/grammar.md#${id}`, semanticDoc: review.doc, sources: [referenceInputs[0], 'lyger/grammar_terms.go', 'lyger/grammar_match.go'], witnesses: ['lyger/grammar_terms_test.go', 'lyger/grammar_sequence_test.go', 'lyger/grammar_consumption_test.go'], evidence: 'static-inspection; existing-witness-not-run', notes: review.notes };
     entries.push({ id: `grammar:${name}`, ...base });
     for (const [caseName, sequence] of cases) {
@@ -43,22 +98,33 @@ export async function generateReferences(root) {
     for (const caseName of Object.keys(review.cases ?? {})) if (!Object.hasOwn(rule.cases ?? {}, caseName)) throw new Error(`Stale reviewed grammar case: ${name}.${caseName}`);
   }
   for (const name of Object.keys(grammarReview.entries)) if (!grammar[name]) throw new Error(`Stale reviewed grammar rule: ${name}`);
-  files['docs/_generated/grammar.md'] = g.trimEnd() + '\n';
+  files['docs/_generated/grammar.md'] = (g.trimEnd() + '\n' + grammarNotes.table()).trimEnd() + '\n';
   let v = '# Vocabulary inventory\n\nThe configured lexicon supplies roots, inflection transformations, grammatical categories and handler descriptions. These tables are exact configuration data, not a claim that every handler has native instruction support. See [grammar and vocabulary](../spec/grammar.md) and the linked semantic subjects. Source-defined words, including builtins and dictionary exports, are documented separately.\n\n';
+  const wordSlugs = new GithubSlugger();
+  wordSlugs.slug('Vocabulary inventory');
   for (const [section, words] of Object.entries(vocabulary)) {
     v += `## ${section}\n\n`;
+    wordSlugs.slug(section);
+    const fields = [...new Set(Object.values(words).flatMap(Object.keys))];
+    const forms = fields.filter((field) => ['root', 'pos', 'type', 'prefixes', 'postfixes', 'forms'].includes(field));
+    const handlers = fields.filter((field) => !forms.includes(field));
+    const table = (fields, extra = []) => `| Word | ${[...fields, ...extra].map(cell).join(' | ')} |\n| --- | ${[...fields, ...extra].map(() => '---').join(' | ')} |\n`;
+    const values = (word, fields) => fields.map((field) => Object.hasOwn(word, field) ? code(typeof word[field] === 'string' ? word[field] : JSON.stringify(word[field])) : '—').join(' | ');
+    let morphology = '**Word forms**\n\n' + table(forms);
+    let meanings = '**Handlers and support**\n\n' + table(handlers, ['Support', 'Semantic context', 'Notes']);
     for (const [name, word] of Object.entries(words)) {
       const key = `${section}.${name}`; const review = lexicalReview.entries[key];
       if (!review) throw new Error(`New unclassified vocabulary entry: ${key}`);
       const id = `vocabulary-${section}-${name}`;
-      v += `### ${name}\n\n<a id="${id}"></a>\n\n${review.notes}\n\nSemantic context: [${review.topic}](${path.posix.relative('docs/_generated', review.doc.split('#')[0])}${review.doc.includes('#') ? '#' + review.doc.split('#')[1] : ''}).\n\n| Field | Value |\n| --- | --- |\n`;
-      for (const [field, value] of Object.entries(word)) v += `| ${cell(field)} | ${code(typeof value === 'string' ? value : JSON.stringify(value))} |\n`;
-      v += '\n';
+      const heading = wordSlugs.slug(name);
+      morphology += `| <a id="${heading}"></a><a id="${id}"></a>${cell(name)} | ${values(word, forms)} |\n`;
+      meanings += `| [${cell(name)}](#${id}) | ${values(word, handlers)} | ${review.support} | ${semanticLink(review)} | ${vocabularyNotes.link(review.notes)} |\n`;
       entries.push({ id: `vocabulary:${key}`, kind: 'vocabulary', name, role: 'implementation', support: review.support, doc: `docs/_generated/vocabulary.md#${id}`, semanticDoc: review.doc, sources: [referenceInputs[1]], witnesses: ['lyger/scanner_test.go'], evidence: 'static-inspection; existing-witness-not-run', notes: review.notes });
     }
+    v += morphology + '\n' + meanings + '\n';
   }
   for (const key of Object.keys(lexicalReview.entries)) { const dot = key.indexOf('.'); const section = key.slice(0, dot); const name = key.slice(dot + 1); if (!vocabulary[section]?.[name]) throw new Error(`Stale reviewed vocabulary entry: ${key}`); }
-  files['docs/_generated/vocabulary.md'] = v.trimEnd() + '\n';
+  files['docs/_generated/vocabulary.md'] = (v.trimEnd() + '\n' + vocabularyNotes.table()).trimEnd() + '\n';
   const cli = await fs.readFile(path.join(root, 'cmd/l/command.go'), 'utf8');
   // The command parser is unstructured source, so its public surface is a
   // reviewed mapping. Mechanical refresh must never approve a changed parser.
@@ -100,20 +166,40 @@ export async function generateReferences(root) {
     entries.push({ id: `lucid-invalid:${label}`, kind: 'lucid-rejection', name: label, role: 'implementation', support: 'rejected', doc: `docs/_generated/lucid.md#${anchor}`, sources: [file], witnesses: ['logiceme/lucid_generation_test.go'], evidence: 'existing-backend-rejection-witness-not-run' });
   }
   files['docs/_generated/lucid.md'] = l;
-  const inventory = { schemaVersion: 1, inputs, grammarRules: Object.keys(grammar).length, grammarCases: Object.values(grammar).reduce((sum, r) => sum + Object.keys(r.cases ?? {}).length, 0), vocabularyEntries: Object.values(vocabulary).reduce((sum, r) => sum + Object.keys(r).length, 0), valueNames, stdlib, segments, lucidCases: cases, malformedInputs: malformed, entries };
+  const inventory = referenceSnapshot({ inputs, grammarRules: Object.keys(grammar).length, grammarCases: Object.values(grammar).reduce((sum, r) => sum + Object.keys(r.cases ?? {}).length, 0), vocabularyEntries: Object.values(vocabulary).reduce((sum, r) => sum + Object.keys(r).length, 0), valueNames, stdlib, segments, lucidCases: cases, malformedInputs: malformed, entries });
   files['docs/_generated/inventory.json'] = stable(inventory);
   return { files, inventory };
 }
 
+async function semanticReview(root) {
+  const entries = [], sourceHashes = {};
+  for (const name of ['semantics', 'logemes']) {
+    const review = await json(path.join(root, `docs/_meta/${name}.json`));
+    if (review.schemaVersion !== 2 || !Array.isArray(review.entries) || !review.sourceHashes || typeof review.sourceHashes !== 'object' || Array.isArray(review.sourceHashes)) throw new Error(`Invalid semantic review manifest: ${name}`);
+    const used = new Set();
+    for (const entry of review.entries) {
+      if (Object.hasOwn(entry, 'sourceHashes')) throw new Error(`Entry-specific hashes are not allowed: ${entry.id}`);
+      for (const source of entry.sources ?? []) {
+        const hash = review.sourceHashes[source];
+        if (!/^[a-f0-9]{64}$/.test(hash ?? '')) throw new Error(`Missing reviewed semantic hash: ${entry.id} -> ${source}`);
+        if (sourceHashes[source] && sourceHashes[source] !== hash) throw new Error(`Conflicting semantic review hash: ${source}`);
+        sourceHashes[source] = hash;
+        used.add(source);
+      }
+      entries.push(entry);
+    }
+    for (const source of Object.keys(review.sourceHashes)) if (!used.has(source)) throw new Error(`Unused semantic review hash: ${name} -> ${source}`);
+  }
+  return { entries, sourceHashes };
+}
+
 export async function semanticEntries(root) {
-  const entries = [];
-  for (const name of ['semantics', 'logemes']) entries.push(...(await json(path.join(root, `docs/_meta/${name}.json`))).entries);
-  return entries;
+  return (await semanticReview(root)).entries;
 }
 
 export async function checkCoverage(root, pages, inventory) {
-  const semantic = await semanticEntries(root);
-  const entries = [...inventory.entries, ...semantic];
+  const { entries: semantic, sourceHashes } = await semanticReview(root);
+  const entries = [...referenceEntries(inventory), ...semantic];
   const ids = new Set();
   const checkedSources = new Map();
   const docAnchors = new Map();
@@ -126,7 +212,7 @@ export async function checkCoverage(root, pages, inventory) {
     if (!entry.sources?.length) throw new Error(`Missing source evidence: ${entry.id}`);
     for (const p of [...entry.sources, ...(entry.witnesses ?? [])]) if (!checkedSources.has(p)) checkedSources.set(p, sha256(await fs.readFile(await safeFile(root, p))));
     if (semantic.includes(entry)) {
-      for (const p of entry.sources) if (checkedSources.get(p) !== entry.sourceHashes?.[p]) throw new Error(`Reviewed semantic dependency changed: ${entry.id} -> ${p}. Review the meaning before updating its hash.`);
+      for (const p of entry.sources) if (checkedSources.get(p) !== sourceHashes[p]) throw new Error(`Reviewed semantic dependency changed: ${entry.id} -> ${p}. Review the meaning before updating its hash.`);
     }
     for (const target of [entry.doc, entry.semanticDoc].filter(Boolean)) {
       const [file, fragment] = target.split('#');
@@ -137,7 +223,7 @@ export async function checkCoverage(root, pages, inventory) {
   for (const name of inventory.valueNames) if (!semantic.some((e) => e.kind === 'value-tag' && e.name.toLowerCase() === name.toLowerCase())) throw new Error(`Unclassified internal value tag: ${name}`);
   for (const file of Object.keys(inventory.segments)) if (!semantic.some((e) => e.kind === 'logeme' && e.sources.includes(file))) throw new Error(`Unclassified backend segment: ${file}`);
   validateStdlib(inventory.stdlib, pages, semantic);
-  return { schemaVersion: 1, description: 'Static coverage and existing witnesses; no language execution during website validation.', entries };
+  return referenceSnapshot({ sourceHashes, description: 'Static coverage and existing witnesses; no language execution during website validation.', entries });
 }
 
 export async function references({ root = repository, write = false, coverage = true } = {}) {

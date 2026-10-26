@@ -58,7 +58,7 @@ Numeric parsing and source-token boundaries both matter. In particular, an entry
 
 ## Other categories require their own contracts
 
-The frontend has representations for Thing, Bytes, Pointer, collections and application structures, plus internal unresolved states. Those internal tags do not prove that every representation has a public literal, implicit conversion, mutable collection operation or printable form.
+Use [Primitive Types](../spec/values.md), [Iterative Types](../spec/collections-and-categories.md) and [Applicational Types](../spec/applicational-types.md) for construction, copying and sharing rules. Structural source categories and unresolved compiler states remain distinct from runtime data.
 
 The [specification](../spec/index.md) distinguishes source spellings such as Byte from Bytes storage, constructible values from internal `ID`/`None`/`Unknown`, and vocabulary dictionaries from collection behavior. Use that reference before inferring copying, pointer ownership, indexing or iteration from a type's name.
 

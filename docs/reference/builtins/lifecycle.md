@@ -40,7 +40,7 @@ Error identifies the selected operation or invocation failure. Build/Stop can se
 
 ## Show
 
-Show writes Text exactly and formats Number/Truth without adding LF. Show a target's Output only when it is available. It does not replay other targets' streams. This distinguishes it from imported IO.Print, which appends one LF inside its native action.
+Show writes Text exactly and formats supported runtime values without adding LF. Direct App and Error display rejects. Show a target's Output only when it is available. It does not replay other targets' streams. This distinguishes it from imported IO.Print, which appends one LF inside its native action.
 
 The maintained basic program uses Execute then Show:
 

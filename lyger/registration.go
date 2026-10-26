@@ -12,6 +12,8 @@ type registrationSite struct {
 	subject   *subjectGram
 	predicate *predicateGram
 	clause    *clauseGram
+	parameter bool
+	resultOf  *clauseGram
 }
 
 func (s registrationSite) isAlias() bool {
@@ -164,7 +166,25 @@ func (sg *statementGram) walkRegistration(visit func(registrationSite, []*token,
 			conditions = append(conditions, site.predicate.conditionals...)
 			nested = append(nested, nestedDeclarationClauses(nil, site.predicate.obj, nil, nil)...)
 		}
+		var supplemental []registrationSite
+		if object := site.valueObject(); object != nil && object.cType == "callable" && object.phrase != nil {
+			for _, parameter := range object.phrase.subjects {
+				supplemental = append(supplemental, registrationSite{subject: parameter, parameter: true})
+			}
+		}
+		if site.clause != nil && site.clause.gType == "clause.invocative.imperative" {
+			for _, phrase := range site.clause.phrases {
+				if phrase.gType == "phrase.results" {
+					for _, result := range phrase.subjects {
+						supplemental = append(supplemental, registrationSite{subject: result, resultOf: site.clause})
+					}
+				}
+			}
+		}
 		own := tokens
+		for _, child := range supplemental {
+			own = selectTokens(child.subject.tokens).remaining(own)
+		}
 		for _, child := range append(append([]*clauseGram(nil), direct...), nested...) {
 			own = selectTokens(child.tokens).remaining(own)
 		}
@@ -173,6 +193,11 @@ func (sg *statementGram) walkRegistration(visit func(registrationSite, []*token,
 		}
 		if err := visit(site, own, register); err != nil {
 			return err
+		}
+		for _, child := range supplemental {
+			if err := visit(child, child.subject.tokens, register); err != nil {
+				return err
+			}
 		}
 		seen := make(map[*clauseGram]bool)
 		for _, group := range []struct {
@@ -184,7 +209,7 @@ func (sg *statementGram) walkRegistration(visit func(registrationSite, []*token,
 					continue
 				}
 				seen[child] = true
-				if err := walk(registrationSite{child.subject, child.predicate, child}, child.tokens, nil, nil, group.register); err != nil {
+				if err := walk(registrationSite{subject: child.subject, predicate: child.predicate, clause: child}, child.tokens, nil, nil, group.register); err != nil {
 					return err
 				}
 			}
