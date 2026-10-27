@@ -1,5 +1,5 @@
 name: L documentation release
-# INACTIVE. Called explicitly by a future trusted native publisher; no release-event dependency.
+# Publication remains blocked by release-policy.json until a separate reviewed activation.
 on:
   workflow_call:
     inputs:
@@ -29,7 +29,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   prepare:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     permissions:
@@ -50,6 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -57,9 +58,14 @@ jobs:
           node-version-file: website/.node-version
           cache: npm
           cache-dependency-path: website/package-lock.json
+      - name: Authorize manual publication
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
       - run: npm ci
-      - run: npm run test:browsers:install
-      - name: Allocate private native proof paths
+      - run: npm run test:browsers:install -- --with-deps
+      - name: Allocate native proof paths
         run: |
           echo "DOCS_NATIVE_ARCHIVE=$RUNNER_TEMP/native.zip" >> "$GITHUB_ENV"
           echo "DOCS_RELEASE_ARTIFACTS=$RUNNER_TEMP/native" >> "$GITHUB_ENV"
@@ -108,11 +114,17 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version-file: website/.node-version
+      - name: Authorize manual publication
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           artifact-ids: ${{ needs.prepare.outputs.artifact_id }}
@@ -144,11 +156,17 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version-file: website/.node-version
+      - name: Authorize manual publication
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           artifact-ids: ${{ needs.prepare.outputs.artifact_id }}

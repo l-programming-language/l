@@ -8,6 +8,13 @@ App-constructed Service libraries.
 L's documentation site is configured for [ldocs.org](https://ldocs.org).
 See the [website guide](website/README.md) to build and preview it locally.
 
+Manual main-only release workflows and a macOS/Linux release installer are
+implemented, but **publication remains disabled**. No public release is available
+yet. Releases will publish binaries, the installer, and validation evidence in
+this repository after it becomes public. See [installation](docs/cli/installation.md)
+for the installer contract and
+[release activation](website/DEPLOYMENT.md) for the separate maintainer setup.
+
 L, Lyger and Logiceme remain implemented in Go; generated programs use Rust.
 The [Rust reference](builtins/README.md) describes the unchanged frozen
 logemes and their bounded interfaces. The [Lucid suite](logiceme/testdata/lucid/README.md)
@@ -38,6 +45,7 @@ bash ./install.sh
 
 The script verifies dependencies and builds the ignored `bin/l` executable.
 Invoke it by path from any directory; run it rather than sourcing it.
+This source-build script remains separate from the prebuilt-release installer.
 
 Copy `bin/l` wherever you want to run it. Embedded defaults do not depend on the
 executable location or current directory, and `go run ./cmd/l` uses the same

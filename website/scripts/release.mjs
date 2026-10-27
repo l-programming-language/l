@@ -13,6 +13,30 @@ const assert = (ok, message) => { if (!ok) throw new Error(message); };
 export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 export const stableJSON = (value) => JSON.stringify(value, null, 2) + '\n';
 
+export const nativeTargets = ['darwin-arm64', 'darwin-amd64', 'linux-arm64', 'linux-amd64'];
+
+// Local preparation is useful while publication is disabled. Every production
+// entry point, including direct helper invocation, must cross this boundary.
+export function assertPublicationPolicy(policy) {
+  assert(policy.publicationEnabled === true, 'Publication is disabled by the committed release policy');
+  assert(policy.productionBranch === 'main' && policy.repository === 'l-programming-language/l', 'Invalid production repository or branch');
+  assert(Number.isSafeInteger(policy.nativePublisher?.workflowId) && policy.nativePublisher.workflowId > 0 && policy.nativePublisher.workflowPath === '.github/workflows/release.yml', 'Native release publisher is not configured; production activation is blocked');
+  assert(Array.isArray(policy.targets) && [...policy.targets].sort().join(',') === [...nativeTargets].sort().join(','), 'Production requires the complete native target matrix');
+  return policy;
+}
+
+function validationGroups(manifest) {
+  return manifest.schemaVersion === 1 ? [{ stages: manifest.validation?.stages }] : manifest.validation?.targets;
+}
+
+function validateTargetPolicy(manifest, policy) {
+  if (Object.hasOwn(policy, 'publicationEnabled')) assertPublicationPolicy(policy);
+  if (manifest.schemaVersion === 2 || policy.targets) {
+    assert(manifest.schemaVersion === 2, 'Production requires per-target native validation');
+    assert(Array.isArray(policy.targets) && [...policy.targets].sort().join(',') === manifest.validation.targets.map((x) => x.target).sort().join(','), 'Native validation targets do not match release policy');
+  }
+}
+
 // GitHub artifact ZIPs only: bounded, regular UTF-8 files with stored/deflate
 // compression. ZIP64, encrypted entries, links and ambiguous paths fail closed.
 export function readArtifactZip(bytes) {
@@ -87,7 +111,7 @@ export async function verifyInventory(root, inventory) {
 }
 
 export function validateNativeShape(manifest) {
-  assert(manifest.schemaVersion === 1, 'Unsupported native manifest schema');
+  assert([1, 2].includes(manifest.schemaVersion), 'Unsupported native manifest schema');
   assert(/^[\w.-]+\/[\w.-]+$/.test(manifest.repository), 'Invalid repository');
   assert(VERSION.test(manifest.languageVersion) && manifest.tag === `v${manifest.languageVersion}`, 'A real VERSION and matching release tag are required');
   assert(SHA.test(manifest.languageCommit) && FINGERPRINT.test(manifest.sourceFingerprint) && DIGEST.test(manifest.releaseFingerprint), 'Invalid native source identity');
@@ -99,8 +123,28 @@ export function validateNativeShape(manifest) {
     assert(item.releaseAsset === item.path && !item.path.includes('/'), 'Native release assets must have exact basename identities');
   }
   assert(manifest.validation?.command === 'scripts/l-check', 'Canonical language validation is required');
-  assert(Array.isArray(manifest.validation.stages) && manifest.validation.stages.length === 3, 'All three canonical validation stages are required');
-  assert(new Set(manifest.validation.stages.map((x) => x.stage)).size === 3 && ['lint', 'acceptance', 'native'].every((s) => manifest.validation.stages.some((x) => x.stage === s)), 'Missing or duplicate language validation stage');
+  const groups = validationGroups(manifest);
+  assert(Array.isArray(groups) && groups.length > 0, 'Missing native target validation');
+  const paths = new Set();
+  for (const group of groups) {
+    assert(Array.isArray(group.stages) && group.stages.length === 3, 'All three canonical validation stages are required');
+    assert(new Set(group.stages.map((x) => x.stage)).size === 3 && ['lint', 'acceptance', 'native'].every((s) => group.stages.some((x) => x.stage === s)), 'Missing or duplicate language validation stage');
+    for (const entry of group.stages) {
+      safeRelative(entry.path);
+      assert(!paths.has(entry.path), 'Validation stage evidence cannot be shared between targets');
+      paths.add(entry.path);
+    }
+    if (manifest.schemaVersion === 2) {
+      safeRelative(group.smoke);
+      assert(!paths.has(group.smoke), 'Installer smoke evidence cannot be shared between targets or stages');
+      paths.add(group.smoke);
+    }
+  }
+  if (manifest.schemaVersion === 2) {
+    assert(groups.length === nativeTargets.length && groups.map((x) => x.target).sort().join(',') === [...nativeTargets].sort().join(','), 'All four distinct native targets are required');
+    for (const target of nativeTargets) assert(manifest.artifacts.filter((x) => x.target === target).length === 1, `Exactly one native artifact is required: ${target}`);
+    assert(manifest.artifacts.every((x) => x.target === 'all' || nativeTargets.includes(x.target)), 'Unknown native artifact target');
+  }
   return manifest;
 }
 
@@ -108,13 +152,14 @@ export function validateNativeShape(manifest) {
 // They are injectable only to unit-test policy, never as CLI JSON authority.
 export function verifyProducer(manifest, policy, observations) {
   validateNativeShape(manifest);
+  validateTargetPolicy(manifest, policy);
   const publisher = policy.nativePublisher;
   assert(publisher && Number.isSafeInteger(publisher.workflowId) && publisher.workflowPath, 'Native release publisher is not configured; production activation is blocked');
   const { run, job, artifact, release, tagCommit, downloadedArchiveSha256 } = observations;
   assert(run.repository?.full_name === manifest.repository && manifest.repository === policy.repository, 'Producer repository mismatch');
   assert(run.workflow_id === publisher.workflowId && run.path === publisher.workflowPath, 'Native producer is not the approved workflow identity');
   assert(run.id === manifest.producer.runId && run.run_attempt === manifest.producer.runAttempt && run.head_sha === manifest.languageCommit && run.head_branch === policy.productionBranch, 'Native producer revision/ref mismatch');
-  assert(['push', 'workflow_dispatch'].includes(run.event), 'Untrusted native producer event');
+  assert((manifest.schemaVersion === 2 ? ['workflow_dispatch'] : ['push', 'workflow_dispatch']).includes(run.event), 'Untrusted native producer event');
   verifyProducerJob(manifest, run, job);
   assert(artifact.name === `l-native-release-${manifest.languageCommit}` && artifact.workflow_run?.id === run.id && artifact.workflow_run?.head_sha === manifest.languageCommit, 'Native artifact provenance is missing or stale');
   assert(DIGEST.test(downloadedArchiveSha256) && artifact.digest === `sha256:${downloadedArchiveSha256}`, 'Native artifact archive identity mismatch');
@@ -145,10 +190,11 @@ export async function verifyNativeEvidence(manifest, root) {
   await verifyInventory(root, manifest.artifacts);
   const known = await verifyInventory(root, manifest.evidence);
   const identity = new Set();
-  for (const entry of manifest.validation.stages) {
+  for (const group of validationGroups(manifest)) for (const entry of group.stages) {
     assert(known.has(entry.path), `Unhashed stage evidence: ${entry.path}`);
     const report = JSON.parse(await readOwned(root, entry.path));
     assert(report.stage === entry.stage && report.revision === manifest.languageCommit && report.dirty === false && report.passed === true && !report.error, `Failed/mismatched ${entry.stage} report`);
+    if (manifest.schemaVersion === 2) assert(`${report.goos}-${report.goarch}` === group.target, `Validation report host differs from ${group.target}`);
     assert(DIGEST.test(report.source_identity), 'Missing canonical validation source identity');
     identity.add(report.source_identity);
     const start = Date.parse(report.started_at), finish = Date.parse(report.finished_at);
@@ -159,6 +205,15 @@ export async function verifyNativeEvidence(manifest, root) {
     assert(required.every((name) => names.has(name)), `Incomplete ${entry.stage} command inventory`);
   }
   assert(identity.size === 1, 'Language stage source identities disagree');
+  if (manifest.schemaVersion === 2) for (const group of manifest.validation.targets) {
+    assert(known.has(group.smoke), `Unhashed installer smoke evidence: ${group.smoke}`);
+    const smoke = JSON.parse(await readOwned(root, group.smoke));
+    const artifact = manifest.artifacts.find((item) => item.target === group.target);
+    assert(smoke.schemaVersion === 1 && smoke.passed === true && !smoke.error && smoke.target === group.target && smoke.version === manifest.languageVersion && smoke.archiveSha256 === artifact.sha256, `Installer smoke does not match the released package: ${group.target}`);
+    assert(smoke.freshCargoHome === true && smoke.freshRustupHome === true && smoke.offlineBuild === true, `Installer smoke omitted isolated setup or offline compilation: ${group.target}`);
+    const start = Date.parse(smoke.startedAt), finish = Date.parse(smoke.finishedAt);
+    assert(Number.isFinite(start) && Number.isFinite(finish) && finish >= start, `Incomplete installer smoke timing: ${group.target}`);
+  }
   // Detailed command/outcome enforcement remains in scripts/l-check itself;
   // trusted producer + raw hashed reports prevents substituting a boolean claim.
   return true;
@@ -251,6 +306,7 @@ async function download(url, output) {
 }
 
 async function fetchCurrent(policy) {
+  assertPublicationPolicy(policy);
   const deployments = await github(`/repos/${policy.repository}/deployments?environment=github-pages&per_page=30`);
   let deployed = null;
   for (const item of deployments) {
@@ -277,6 +333,9 @@ async function fetchCurrent(policy) {
 }
 
 async function publishDocs(policy, manifest, archive, nativePath, manifestPath) {
+  assertPublicationPolicy(policy);
+  const { guard } = await import('../../scripts/release/github.mjs');
+  await guard({ policy });
   assert(manifest.channel === 'production' && SHA.test(manifest.docsCommit), 'Only sealed production artifacts can be published');
   const native = JSON.parse(await readFile(nativePath, 'utf8'));
   assert(sha256(stableJSON(native)) === manifest.nativeManifestSha256, 'Native identity changed before publication');
@@ -299,11 +358,12 @@ async function publishDocs(policy, manifest, archive, nativePath, manifestPath) 
 
 async function verifyReleasedAuthority(policy, native, release) {
   validateNativeShape(native);
+  validateTargetPolicy(native, policy);
   assert(policy.nativePublisher && native.repository === policy.repository, 'Native publisher/repository is not configured');
   const identity = release.assets.find((x) => x.name === `l-native-release-${native.languageCommit}.json`);
   assert(identity?.state === 'uploaded' && identity.digest === `sha256:${sha256(stableJSON(native))}`, 'Native manifest is not the published release identity');
   const [run, job] = await Promise.all([github(`/repos/${policy.repository}/actions/runs/${native.producer.runId}/attempts/${native.producer.runAttempt}`), github(`/repos/${policy.repository}/actions/jobs/${native.producer.jobId}`)]);
-  assert(run.workflow_id === policy.nativePublisher.workflowId && run.path === policy.nativePublisher.workflowPath && run.head_sha === native.languageCommit && ['push', 'workflow_dispatch'].includes(run.event) && run.head_branch === policy.productionBranch, 'Native producer is untrusted or failed');
+  assert(run.workflow_id === policy.nativePublisher.workflowId && run.path === policy.nativePublisher.workflowPath && run.head_sha === native.languageCommit && (native.schemaVersion === 2 ? ['workflow_dispatch'] : ['push', 'workflow_dispatch']).includes(run.event) && run.head_branch === policy.productionBranch, 'Native producer is untrusted or failed');
   verifyProducerJob(native, run, job);
   let object = (await github(`/repos/${policy.repository}/git/ref/tags/${native.tag}`)).object;
   for (let depth = 0; object.type === 'tag' && depth < 8; depth++) object = (await github(`/repos/${policy.repository}/git/tags/${object.sha}`)).object;
@@ -312,6 +372,7 @@ async function verifyReleasedAuthority(policy, native, release) {
 }
 
 async function downloadPromotion(policy, tag, docsCommit, output) {
+  assertPublicationPolicy(policy);
   assert(policy.nativePublisher, 'Native release publisher is not configured; production activation is blocked');
   assert(SHA.test(docsCommit) && tag.startsWith('v') && VERSION.test(tag.slice(1)), 'Recovery requires an immutable docs SHA and real release tag');
   const release = await github(`/repos/${policy.repository}/releases/tags/${tag}`);
@@ -348,6 +409,7 @@ async function observationsFor(manifest, artifactId, archive) {
 
 export async function authenticatedReleaseIdentity({ root, policyPath, manifestPath, artifacts, artifactId, archive, mode, sourceFingerprint }) {
   const policy = JSON.parse(await readFile(policyPath, 'utf8'));
+  assertPublicationPolicy(policy);
   assert(policy.nativePublisher, 'Native release publisher is not configured; production activation is blocked');
   const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
   await verifyNativeArchive(archive, artifacts, manifestPath);
@@ -372,7 +434,7 @@ async function main() {
   const [command, ...args] = process.argv.slice(2), options = parseArgs(args);
   const json = async (path) => { assert(path, 'Missing required file argument'); return JSON.parse(await readFile(path, 'utf8')); };
   if (command === 'download-native') {
-    const policy = await json(options.policy); assert(policy.nativePublisher, 'Native release publisher is not configured; production activation is blocked'); assert(/^\d+$/.test(options['artifact-id']), 'Invalid native artifact ID');
+    const policy = assertPublicationPolicy(await json(options.policy)); assert(/^\d+$/.test(options['artifact-id']), 'Invalid native artifact ID');
     const artifact = await github(`/repos/${policy.repository}/actions/artifacts/${options['artifact-id']}`);
     assert(/^l-native-release-[a-f0-9]{40}$/.test(artifact.name), 'Artifact is not a native release proof');
     const version = (await readFile(resolve(options.root || '..', 'VERSION'), 'utf8')).trim();
@@ -385,7 +447,7 @@ async function main() {
   } else if (command === 'download-promotion') {
     await downloadPromotion(await json(options.policy), options.tag, options['docs-commit'], options.output);
   } else if (command === 'verify-native') {
-    const manifest = await json(options.manifest), policy = await json(options.policy);
+    const manifest = await json(options.manifest), policy = assertPublicationPolicy(await json(options.policy));
     assert(policy.nativePublisher, 'Native release publisher is not configured; production activation is blocked');
     await verifyNativeArchive(options.archive, options.artifacts, options.manifest);
     await verifyNativeEvidence(manifest, options.artifacts);
@@ -416,7 +478,10 @@ async function main() {
     let descendant = false;
     if (current) { try { execFileSync('git', ['merge-base', '--is-ancestor', current.docsCommit, manifest.docsCommit], { cwd: root, stdio: 'ignore' }); descendant = true; } catch { /* Ancestry failure rejects promotion below. */ } }
     const expected = ['retry', 'rollback'].includes(options.mode) && options['expected-current'] ? options['expected-current'] : manifest.expectedCurrentDigest ?? null;
-    console.log(stableJSON(guardPromotion({ mode: options.mode, desiredDigest: manifest.siteArchiveSha256, currentDigest: current?.siteArchiveSha256 ?? null, expectedCurrentDigest: expected, currentDocsCommit: current?.docsCommit, desiredDocsCommit: manifest.docsCommit, isDescendant: descendant })));
+    // Dispatch inputs are strings; preserve an explicit empty-production baseline
+    // instead of falling back to the retained manifest's original digest.
+    const expectedDigest = expected === 'null' ? null : expected;
+    console.log(stableJSON(guardPromotion({ mode: options.mode, desiredDigest: manifest.siteArchiveSha256, currentDigest: current?.siteArchiveSha256 ?? null, expectedCurrentDigest: expectedDigest, currentDocsCommit: current?.docsCommit, desiredDocsCommit: manifest.docsCommit, isDescendant: descendant })));
   } else if (command === 'fetch-current') {
     const policy = await json(options.policy);
     await writeFile(options.output, stableJSON(await fetchCurrent(policy)));

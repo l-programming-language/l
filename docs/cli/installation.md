@@ -2,17 +2,44 @@
 
 ## Install a released binary
 
-Download the English L binary for your macOS or Linux host and CPU architecture from [GitHub Releases](https://github.com/l-programming-language/l/releases/latest). Language resources are embedded; no separate bundle is required. Extract it, then run from the directory containing `l`:
+**Release publication is currently disabled; no public binary download is available yet.**
+The implemented release process targets macOS and Linux on ARM64 and x86-64.
+Binary releases and the installer will be hosted in `l-programming-language/l`
+after this repository becomes public and publication is explicitly enabled.
+
+After a release is published, download its `install-release.sh` asset and inspect
+it before running it. The installer selects the host archive, checks its SHA-256
+checksum, prepares dependencies, and installs `l` into `~/.local/bin`. Language
+resources are embedded; no separate compiler bundle or Go installation is needed.
+
+macOS releases below `v1.0.0` are distributed without Developer ID signing or
+Apple notarization. Depending on how the binary is downloaded and your security
+settings, macOS may block it or require explicit approval. Follow
+[Apple's guidance for opening downloaded software](https://support.apple.com/102445)
+only after checking that you trust its source. Developer ID signing and
+notarization are required for production macOS releases starting with `v1.0.0`.
+
+For the planned first release:
 
 ```sh
-mkdir -p "$HOME/.local/bin"
-chmod +x ./l
-mv ./l "$HOME/.local/bin/l"
-export PATH="$HOME/.local/bin:$PATH"
+bash ./install-release.sh --version 0.0.1 --with-toolchain
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 l --version
 ```
 
-Add the `PATH` export to your shell configuration. `l --version` reports `0.0.1` for the first release. Read the [compatibility policy](../releases/index.md#versioning-and-compatibility) before upgrading.
+Add that `PATH` export to your shell configuration. The installer never edits a
+shell profile or uses sudo. `--with-toolchain` permits installing missing Rust
+tools; without it, interactive setup asks first, and noninteractive setup requires
+the tools to exist already. `--binary-only` installs only `l` and defers native
+build prerequisites. `--prefix DIRECTORY` selects the executable directory.
+
+Omitting `--version` selects the latest normal release once, then downloads every
+asset from that version in `l-programming-language/l`. `--repository OWNER/REPO`
+overrides that source when intentionally installing another repository's release.
+Repeating installation or upgrading replaces the binary
+only after verification and the requested setup complete; failure preserves an
+existing installation. Read the [compatibility policy](../releases/index.md#versioning-and-compatibility)
+before upgrading.
 
 ## Prerequisites
 
@@ -22,7 +49,16 @@ Running a published L program requires neither the L compiler nor Go/Rust toolch
 
 ## Rust dependency preparation
 
-Follow your release's toolchain and dependency setup instructions before the first native build. L uses pinned, frozen, offline Cargo dependencies; installing Rust alone does not populate that cache.
+The release installer includes `setup-release.sh`, the pinned toolchain version,
+and the retained dependency manifest/lock. It fetches locked dependencies and
+then verifies frozen resolution. L's subsequent compilation remains frozen and
+offline; installing Rust alone does not populate the cache. Setup preserves the
+existing Rust default toolchain and never requires Go, linters or the repository.
+
+For an archive installed manually, run its `bash setup-release.sh --with-toolchain`
+before the first native build, with the setup files still alongside it. Missing
+C/linker tools require your host's normal installation procedure; the installer
+does not invoke a system package manager.
 
 For repository-based setup, install Go 1.27.3 as pinned in [.go-version](../../.go-version), then run `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching source checkout. This downloads pinned tools and locked dependencies and compiles their caches; it can take several minutes. Preserve the retained locks rather than removing `--frozen`. See the [development policy](../development-harness.md#temporary-validation-pause).
 
@@ -42,10 +78,21 @@ Check out the release's tag before building when you need a specific version. [i
 
 ## First native build
 
-From a source checkout containing the [basic demo](../../demo/basic/main.l), after completing dependency setup:
+After completing dependency setup, save this program as `main.l` in a new
+directory; no compiler source checkout is needed:
+
+```l
+Use IO's Print from `io` as "Print".
+
+"message" is `Hello World!`.
+Create "Hello" as a New Basic App.
+The App Prints message.
+Execute Hello.
+Show Hello's Output.
+```
 
 ```sh
-l build --output-dir ./out ./demo/basic/main.l
+l build --output-dir ./out ./main.l
 ./out/main
 ```
 

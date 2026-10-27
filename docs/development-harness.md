@@ -104,6 +104,17 @@ before execution. Weekly Dependabot updates review action pins; tool versions
 remain separate explicit updates. This
 workflow validates code and does not publish releases or deploy applications.
 
+The separate [manual release workflow](../.github/workflows/release.yml) is
+implemented but publication is disabled by the committed
+[release policy](../website/ci-templates/release-policy.json). An explicitly
+authorized dispatch validates the captured main SHA on four native targets,
+preserving this full gate on each. Per-target packaging and clean-home installer
+smoke checks add distribution evidence; they do not replace canonical acceptance.
+The release installer prepares only user-build dependencies, not the CI bootstrap.
+No merge or tag event publishes binaries or documentation. See the
+[activation and recovery guide](../website/DEPLOYMENT.md); remote settings and the
+first release remain separate maintainer operations.
+
 Additional pull-request workflows provide separately visible checks:
 
 - [Lint and security](../.github/workflows/quality.yml) runs the existing complete

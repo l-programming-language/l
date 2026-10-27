@@ -3,6 +3,8 @@
   "repository": "l-programming-language/l",
   "productionBranch": "main",
   "origin": "https://ldocs.org",
+  "publicationEnabled": false,
+  "targets": ["darwin-arm64", "darwin-amd64", "linux-arm64", "linux-amd64"],
   "nativePublisher": null,
-  "activationPrerequisite": "A reviewed native release workflow must publish actual native assets plus canonical scripts/l-check evidence and register its numeric workflowId and exact workflowPath here. No native publisher currently exists."
+  "activationPrerequisite": "Publication stays disabled until a reviewed activation makes this repository public, configures main-only environments and compatible release settings, registers release.yml's numeric workflow ID, and explicitly sets publicationEnabled true. Publication uses this repository's GITHUB_TOKEN; Apple signing credentials are required from v1.0.0. No GitHub settings or releases are changed by installing these workflows."
 }

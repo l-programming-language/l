@@ -1,10 +1,15 @@
 # L documentation website
 
-The independent, private npm package renders canonical repository documentation as a static Astro/Starlight site. It does not execute the L compiler during normal setup, development, checks, builds or browser tests.
+The independent npm package renders canonical repository documentation as a static Astro/Starlight site. Its `private: true` package flag prevents npm publication. It does not execute the L compiler during normal setup, development, checks, builds or browser tests.
 
 The production origin is **https://ldocs.org/**. Local development and preview keep navigation on localhost.
 
-**[Documentation checks](../.github/workflows/docs-check.yml) run on pull requests. Website deployment remains disabled.**
+**[Documentation checks](../.github/workflows/docs-check.yml) run on pull requests. Manual release workflows are implemented, but publication remains disabled by committed policy.**
+
+Native binaries, installer assets, validation evidence and docs recovery archives
+will share releases in `l-programming-language/l` after this repository becomes
+public. Publication uses GitHub's automatic `GITHUB_TOKEN`; no separate
+distribution repository or GitHub App credential is required.
 
 ## Setup and local use
 
@@ -39,7 +44,7 @@ npm run verify:website
 
 `test:browsers:install` explicitly downloads Playwright's Chromium browser; it is not an npm install hook. Set `PLAYWRIGHT_BROWSERS_PATH="$PWD/.cache/ms-playwright"` for a project-local browser cache. The Playwright configuration uses that location by default. Browser tests start and stop their own preview server; close other servers on port 4321. Install browser dependencies through your normal host setup if required; no privileged installer runs automatically.
 
-`verify:website` verifies that deployment remains disabled, then runs reference freshness, content/type checks, unit tests, **one** build with static output checks, and browser tests. It never invokes Go/Rust, native samples, bootstrap, `scripts/l-check`, or the language harness. Tests exercise real assertions and fail on incomplete evidence or output. Reports and screenshots live under ignored `reports/`; the maintained [validation summary](reports/validation.md) records actual outcomes.
+`verify:website` checks the manual release policy (currently disabled), then runs reference freshness, content/type checks, unit tests, **one** build with static output checks, and browser tests. The legacy-named `ci:verify-disabled` command permits only the reviewed manual release paths and verifies publication authorization, action pins and read-only PR checks. It never invokes Go/Rust, native samples, bootstrap, `scripts/l-check`, or the language harness. Tests exercise real assertions and fail on incomplete evidence or output. Reports and screenshots live under ignored `reports/`; the maintained [validation summary](reports/validation.md) records actual outcomes.
 
 The documentation workflow runs this aggregate on Ubuntu for every PR opening, update, and reopening, and supports manual dispatch. It installs the locked dependencies and Chromium with its Linux dependencies, then retains reports and failure traces for seven days. No path filter excludes changes to canonical sources outside `website/`. The repository's [local validation pause](../docs/development-harness.md#temporary-validation-pause) still applies to expensive local checks.
 
@@ -73,7 +78,7 @@ The supplied compiler must already exist with its documented native prerequisite
 - Stale evidence: review the named source/semantic mapping, then regenerate snapshots. Do not simply change expected behavior to pass a check.
 - Missing or renamed document: update its explicit map entry and links. The next preparation deletes only generator-owned stale output.
 - No Git metadata: builds still work. Unknown commits/dirty state become null; source paths are shown without invented remote URLs.
-- Production mode: intentionally fails closed until the native-release integration in [deployment](DEPLOYMENT.md) exists and is explicitly activated.
+- Production mode: intentionally fails closed until this repository is public, the native workflow is registered, and the committed policy is explicitly enabled. Pre-1.0 releases need no custom secrets; macOS signing secrets are required from `v1.0.0` onward. See [deployment](DEPLOYMENT.md).
 
 Keep `.tools`, `.cache`, `node_modules`, `.astro`, `.generated`, projected content, test traces, and `dist` out of Git. The package has no deployment credentials, activation hooks, hosted search, external fonts, analytics, service worker, server adapter or browser L execution.
 

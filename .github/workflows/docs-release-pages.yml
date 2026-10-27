@@ -1,0 +1,196 @@
+name: L documentation release
+# Publication remains blocked by release-policy.json until a separate reviewed activation.
+on:
+  workflow_call:
+    inputs:
+      native_artifact_id:
+        description: Immutable artifact ID emitted by the real native release publisher
+        required: true
+        type: string
+      mode:
+        description: release or docs-correction
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      native_artifact_id:
+        description: Immutable artifact ID from an already successful native release
+        required: true
+        type: string
+      mode:
+        description: Release identity relationship
+        type: choice
+        options: [release, docs-correction]
+        default: docs-correction
+permissions:
+  contents: read
+concurrency:
+  group: l-documentation-production
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      actions: read
+      deployments: read
+      pages: read
+    outputs:
+      artifact_id: ${{ steps.sealed.outputs.artifact-id }}
+    defaults:
+      run:
+        working-directory: website
+        shell: bash
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      DOCS_RELEASE_MODE: ${{ inputs.mode }}
+      DOCS_NATIVE_ARTIFACT_ID: ${{ inputs.native_artifact_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: website/.node-version
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - name: Authorize manual publication
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
+      - run: npm ci
+      - run: npm run test:browsers:install -- --with-deps
+      - name: Allocate native proof paths
+        run: |
+          echo "DOCS_NATIVE_ARCHIVE=$RUNNER_TEMP/native.zip" >> "$GITHUB_ENV"
+          echo "DOCS_RELEASE_ARTIFACTS=$RUNNER_TEMP/native" >> "$GITHUB_ENV"
+          echo "DOCS_RELEASE_MANIFEST=$RUNNER_TEMP/native/native-release.json" >> "$GITHUB_ENV"
+      - name: Verify native release and exact canonical validation evidence
+        run: |
+          node scripts/release.mjs download-native --policy ci-templates/release-policy.json --artifact-id "$DOCS_NATIVE_ARTIFACT_ID" --output "$DOCS_NATIVE_ARCHIVE"
+          node scripts/release.mjs extract-native --archive "$DOCS_NATIVE_ARCHIVE" --output "$DOCS_RELEASE_ARTIFACTS"
+          node scripts/release.mjs verify-native --policy ci-templates/release-policy.json --artifact-id "$DOCS_NATIVE_ARTIFACT_ID" --archive "$DOCS_NATIVE_ARCHIVE" --manifest "$DOCS_RELEASE_MANIFEST" --artifacts "$DOCS_RELEASE_ARTIFACTS"
+          node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
+      - name: Build and validate once against authenticated release identity
+        env:
+          DOCS_CHANNEL: production
+        run: |
+          npm run references:check
+          npm run check
+          DOCS_CHANNEL=local npm test
+          npm run build
+          npm run test:e2e
+      - name: Seal the exact tested site
+        run: |
+          mkdir "$RUNNER_TEMP/sealed"
+          tar --sort=name --mtime=@0 --owner=0 --group=0 --numeric-owner -czf "$RUNNER_TEMP/sealed/site.tar.gz" -C dist .
+          cp "$DOCS_RELEASE_MANIFEST" "$RUNNER_TEMP/sealed/native-release.json"
+          expected=$(node -e 'const fs=require("node:fs");const x=JSON.parse(fs.readFileSync(process.argv[1]));process.stdout.write(x?.siteArchiveSha256 ?? "null")' "$RUNNER_TEMP/current.json")
+          node scripts/release.mjs seal-site --dist dist --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$DOCS_RELEASE_MANIFEST" --identity .generated/version.json --mode "$DOCS_RELEASE_MODE" --expected-current "$expected" --output "$RUNNER_TEMP/sealed/promotion.json"
+          node scripts/release.mjs verify-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --dist dist --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$DOCS_RELEASE_MANIFEST"
+      - id: sealed
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: docs-sealed-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sealed/
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: documentation-publication
+    permissions:
+      contents: write
+      actions: read
+      deployments: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: website/.node-version
+      - name: Authorize manual publication
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ needs.prepare.outputs.artifact_id }}
+          path: ${{ runner.temp }}/sealed
+          merge-multiple: true
+      - name: Reject stale publication and retain immutable release assets
+        working-directory: website
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          MODE: ${{ inputs.mode }}
+        run: |
+          node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
+          node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --root ..
+          node scripts/release.mjs publish-docs --policy ci-templates/release-policy.json --manifest "$RUNNER_TEMP/sealed/promotion.json" --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$RUNNER_TEMP/sealed/native-release.json"
+
+  deploy:
+    needs: [prepare, publish]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      actions: read
+      deployments: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: website/.node-version
+      - name: Authorize manual publication
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ needs.prepare.outputs.artifact_id }}
+          path: ${{ runner.temp }}/sealed
+          merge-multiple: true
+      - name: Verify original archive and current production baseline
+        working-directory: website
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          MODE: ${{ inputs.mode }}
+        run: |
+          node --input-type=module -e 'import fs from "node:fs";import {sha256} from "./scripts/release.mjs";const dir=process.env.RUNNER_TEMP+"/sealed/";const m=JSON.parse(fs.readFileSync(dir+"promotion.json"));if(sha256(fs.readFileSync(dir+"site.tar.gz"))!==m.siteArchiveSha256)throw Error("Archive changed");'
+          mkdir "$RUNNER_TEMP/site"
+          tar -xzf "$RUNNER_TEMP/sealed/site.tar.gz" --no-same-owner -C "$RUNNER_TEMP/site"
+          node scripts/release.mjs verify-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --dist "$RUNNER_TEMP/site" --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$RUNNER_TEMP/sealed/native-release.json"
+          node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
+          node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --root ..
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
+        with:
+          path: ${{ runner.temp }}/site
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+      - name: Verify deployed identity and representative routes
+        working-directory: website
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release.mjs postdeploy --policy ci-templates/release-policy.json --manifest "$RUNNER_TEMP/sealed/promotion.json"

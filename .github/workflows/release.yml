@@ -1,0 +1,304 @@
+name: Release L
+
+# Manual only. The committed publicationEnabled:false policy and unregistered
+# publisher block every production path until a separate activation review.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact committed VERSION to release (without v)
+        required: true
+        type: string
+      dry_run:
+        description: Validate and package only; never publish or deploy
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: l-native-release
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  preflight:
+    name: Authorize release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      sha: ${{ steps.authority.outputs.sha }}
+      version: ${{ steps.authority.outputs.version }}
+      publish: ${{ steps.authority.outputs.publish }}
+      sign_macos: ${{ steps.authority.outputs.sign_macos }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: website/.node-version
+      - name: Verify human roles, main, immutable SHA and committed version
+        id: authority
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          publication=true
+          if [[ "$DRY_RUN" == true ]]; then publication=false; fi
+          node scripts/release/github.mjs preflight --policy website/ci-templates/release-policy.json --version "$RELEASE_VERSION" --publication "$publication"
+
+  native:
+    name: Validate and package (${{ matrix.target }})
+    needs: preflight
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    environment: release-build
+    permissions:
+      contents: read
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: linux-amd64, os: ubuntu-24.04 }
+          - { target: linux-arm64, os: ubuntu-24.04-arm }
+          - { target: darwin-arm64, os: macos-15 }
+          - { target: darwin-amd64, os: macos-15-intel }
+    env:
+      GOENV: 'off'
+      GOFLAGS: ''
+      GOWORK: 'off'
+      GOTOOLCHAIN: local
+      GOMAXPROCS: '4'
+      GOCACHE: ${{ github.workspace }}/.harness/cache/go-build
+      CARGO_INCREMENTAL: '0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.preflight.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: website/.node-version
+      - name: Reauthorize this attempt
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PUBLICATION: ${{ needs.preflight.outputs.publish }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication "$PUBLICATION"
+      - name: Prepare pinned tools and dependencies
+        uses: ./.github/actions/prepare
+      - name: Run the complete canonical gate
+        run: |
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$RUNNER_TEMP/release-started"
+          scripts/l-check
+      - name: Build the standalone CLI
+        run: CGO_ENABLED=0 go build -mod=readonly -trimpath -o "$RUNNER_TEMP/l" ./cmd/l
+      - name: Sign and notarize macOS binary
+        # Developer ID signing starts at v1.0.0; all dry runs stay unsigned.
+        if: needs.preflight.outputs.publish == 'true' && needs.preflight.outputs.sign_macos == 'true' && startsWith(matrix.target, 'darwin-')
+        env:
+          MACOS_CERTIFICATE_P12: ${{ secrets.MACOS_CERTIFICATE_P12 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          SIGNING_IDENTITY: ${{ secrets.SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: |
+          : "${MACOS_CERTIFICATE_P12:?Missing Developer ID certificate}"
+          : "${MACOS_CERTIFICATE_PASSWORD:?Missing certificate password}"
+          keychain="$RUNNER_TEMP/release-signing.keychain-db"
+          certificate="$RUNNER_TEMP/release-signing.p12"
+          trap 'security delete-keychain "$keychain" >/dev/null 2>&1 || true; rm -f "$certificate"' EXIT
+          password=$(openssl rand -hex 24)
+          echo "::add-mask::$password"
+          printf '%s' "$MACOS_CERTIFICATE_P12" | base64 --decode > "$certificate"
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          security import "$certificate" -P "$MACOS_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$keychain"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$password" "$keychain"
+          security list-keychains -d user -s "$keychain"
+          bash scripts/release/sign-macos.sh "$RUNNER_TEMP/l" "$RUNNER_TEMP/signing.json"
+      - name: Package binary and exact validation evidence
+        env:
+          TARGET: ${{ matrix.target }}
+          PUBLICATION: ${{ needs.preflight.outputs.publish }}
+          SIGN_MACOS: ${{ needs.preflight.outputs.sign_macos }}
+        run: |
+          args=(--root "$GITHUB_WORKSPACE" --target "$TARGET" --binary "$RUNNER_TEMP/l" --output "$RUNNER_TEMP/target" --runs "$GITHUB_WORKSPACE/.harness/runs" --since "$(cat "$RUNNER_TEMP/release-started")")
+          if [[ "$PUBLICATION" == true && "$SIGN_MACOS" == true && "$TARGET" == darwin-* ]]; then
+            args+=(--signing developer-id --receipt "$RUNNER_TEMP/signing.json")
+          else
+            args+=(--signing unsigned)
+          fi
+          node scripts/release/package.mjs pack "${args[@]}"
+      - name: Retain native packages for a fresh installer runner
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-target-${{ matrix.target }}
+          path: ${{ runner.temp }}/target/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Retain failed validation evidence
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-failure-${{ matrix.target }}-${{ github.run_attempt }}
+          path: .harness/runs/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
+
+  installer:
+    name: Verify installation (${{ matrix.target }})
+    needs: [preflight, native]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: linux-amd64, os: ubuntu-24.04 }
+          - { target: linux-arm64, os: ubuntu-24.04-arm }
+          - { target: darwin-arm64, os: macos-15 }
+          - { target: darwin-amd64, os: macos-15-intel }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.preflight.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: website/.node-version
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: release-target-${{ matrix.target }}
+          path: ${{ runner.temp }}/target
+      - name: Exercise final package with fresh toolchain and dependency homes
+        run: bash scripts/release/smoke.sh "$RUNNER_TEMP/target"
+      - name: Retain failed installation evidence
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: installer-failure-${{ matrix.target }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/target/smoke.json
+            ${{ runner.temp }}/target/smoke.stdout.log
+            ${{ runner.temp }}/target/smoke.stderr.log
+          if-no-files-found: warn
+          retention-days: 7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-verified-${{ matrix.target }}
+          path: ${{ runner.temp }}/target/
+          if-no-files-found: error
+          retention-days: 30
+
+  seal:
+    name: Seal native release
+    needs: [preflight, installer]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      artifact_id: ${{ steps.proof.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.preflight.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: website/.node-version
+      - name: Resolve authenticated producer job identity
+        id: producer
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PUBLICATION: ${{ needs.preflight.outputs.publish }}
+        run: node scripts/release/github.mjs job-id --policy website/ci-templates/release-policy.json --publication "$PUBLICATION"
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: release-verified-*
+          path: ${{ runner.temp }}/downloaded
+      - name: Assemble all native targets and hashed raw proof
+        env:
+          PRODUCER_JOB: ${{ steps.producer.outputs.job_id }}
+        run: |
+          mkdir "$RUNNER_TEMP/targets"
+          for target in darwin-amd64 darwin-arm64 linux-amd64 linux-arm64; do
+            mv "$RUNNER_TEMP/downloaded/release-verified-$target" "$RUNNER_TEMP/targets/$target"
+          done
+          node scripts/release/package.mjs assemble --root "$GITHUB_WORKSPACE" --input "$RUNNER_TEMP/targets" --output "$RUNNER_TEMP/native" --job-id "$PRODUCER_JOB"
+      - name: Seal the original proof artifact
+        id: proof
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: l-native-release-${{ needs.preflight.outputs.sha }}
+          path: ${{ runner.temp }}/native/
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Publish native release
+    if: needs.preflight.outputs.publish == 'true'
+    needs: [preflight, seal]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: release-publication
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.preflight.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: website/.node-version
+      - name: Reauthorize publication, including failed-job reruns
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          artifact-ids: ${{ needs.seal.outputs.artifact_id }}
+          path: ${{ runner.temp }}/native
+          merge-multiple: true
+      - name: Publish the original verified bytes in this repository
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NATIVE_ARTIFACT_ID: ${{ needs.seal.outputs.artifact_id }}
+        run: |
+          node scripts/release/github.mjs download-proof --policy website/ci-templates/release-policy.json --artifact-id "$NATIVE_ARTIFACT_ID" --output "$RUNNER_TEMP/native.zip"
+          node scripts/release/github.mjs publish --policy website/ci-templates/release-policy.json --native "$RUNNER_TEMP/native" --archive "$RUNNER_TEMP/native.zip" --artifact-id "$NATIVE_ARTIFACT_ID"
+
+  documentation:
+    name: Deploy matching documentation
+    if: needs.preflight.outputs.publish == 'true'
+    needs: [preflight, seal, publish]
+    permissions:
+      contents: write
+      actions: read
+      deployments: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/docs-release-pages.yml
+    with:
+      native_artifact_id: ${{ needs.seal.outputs.artifact_id }}
+      mode: release

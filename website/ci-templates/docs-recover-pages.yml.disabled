@@ -1,5 +1,5 @@
 name: L documentation recovery
-# INACTIVE. Recovery promotes previously published bytes; it never rebuilds.
+# Publication remains blocked by release-policy.json. Recovery never rebuilds.
 on:
   workflow_dispatch:
     inputs:
@@ -17,7 +17,7 @@ on:
         type: string
         required: true
       expected_current_digest:
-        description: Current deployed siteArchiveSha256 (stale requests are rejected)
+        description: Current siteArchiveSha256, or literal null before the first deployment
         type: string
         required: true
 permissions:
@@ -27,7 +27,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   recover:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     environment:
@@ -42,11 +42,17 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version-file: website/.node-version
+      - name: Authorize manual publication
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
       - name: Download and verify original release archive
         working-directory: website
         env:
