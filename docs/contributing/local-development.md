@@ -1,6 +1,6 @@
 # Develop the documentation locally
 
-The website is an independent npm package under `website/`. Use the Node patch in `website/.node-version` and dependencies from `package-lock.json`.
+Use the Node version in [website/.node-version](../../website/.node-version) and its bundled npm. The website is an independent package with locked dependencies.
 
 ## Start the development server
 
@@ -10,40 +10,40 @@ npm ci
 npm run dev
 ```
 
-Open the localhost URL printed by Astro. The supervisor watches canonical documentation, mapped examples, reference inputs and presentation files. Stop it with Ctrl-C before starting another server. Use HTTP: generated HTML opened with `file://` cannot provide working navigation, modules and search.
+Open the localhost URL printed by Astro. Canonical documentation, examples, reference inputs, and presentation files are watched. Stop the server with Ctrl-C before starting another one.
 
 ## Check the built site
 
-With the development server stopped:
-
-```sh
-npm run check
-npm run references:check
-npm test
-npm run build
-npm run preview
-```
-
-Preview serves the static site and Pagefind index at `http://127.0.0.1:4321/`. Test search here; the development server has no production search index. Local navigation should stay on localhost.
-
-Stop preview with Ctrl-C before running browser checks, which start their own server on port 4321. Install Chromium once after dependency installation, and again when Playwright changes:
+With other servers on port 4321 stopped, install Chromium once after setup or a Playwright update, then run the website checks:
 
 ```sh
 npm run test:browsers:install
-npm run test:e2e
-npm run ci:verify-disabled
+npm run verify:website
 ```
 
-Alternatively, `npm run verify:website` runs the website checks, one build and browser tests together; Chromium must already be installed and port 4321 free. See the [website README](../../website/README.md) for stages and browser-cache settings.
+The aggregate checks release policy, references, content/types, unit tests, one static build, and browser behavior. It does not run the L compiler. Browser checks manage their own preview server and use `.cache/ms-playwright` by default; `PLAYWRIGHT_BROWSERS_PATH` can override that cache location.
+
+After a successful build, inspect the site with:
+
+```sh
+npm run preview
+```
+
+Preview serves `http://127.0.0.1:4321/`, including the Pagefind search index that is absent from the development server. Use HTTP rather than opening HTML with `file://`. Stop preview before another verification run. Individual commands in [package.json](../../website/package.json) are available for focused diagnosis.
 
 ## Troubleshoot the right layer
 
-Dependency and browser installation may need network access; content builds use local inputs. For a missing browser, run `npm run test:browsers:install`. Keep Go/Rust pins unchanged when resolving Node problems.
-
-For missing routes, inspect the content map. For broken fragments, check the target heading. For stale example fingerprints, review the source and evidence before regeneration. Source archives remain usable: absent Git metadata produces unknown commit identity and repository-relative source attribution.
+- Missing dependencies or browser: repeat `npm ci` or `npm run test:browsers:install` with the pinned Node. These downloads need network access; content builds use local inputs.
+- Missing route or fragment: check the content-map entry or target heading.
+- Stale example or reference: review its source and evidence before regenerating snapshots. See [authoring](documentation.md).
+- No Git metadata: source archives still build, with unknown commit identity and repository-relative source attribution. `npm run test:archive` checks this path.
 
 ## Keep native work opt-in
 
-Website commands do not run the compiler or native suites. Compiler bootstrap and expensive validation remain subject to the [temporary validation pause](../development-harness.md#temporary-validation-pause).
+Compiler bootstrap and expensive native validation follow the [temporary validation pause](../development-harness.md#temporary-validation-pause). The optional example verifier requires explicit authorization and an existing compiler with its native prerequisites:
 
-The optional example verifier requires explicit invocation and an existing compiler; it does not replace acceptance. Documentation CI runs website checks on pull requests; release and deployment remain disabled. `npm run ci:verify-disabled` verifies that deployment stays disabled while the approved validation workflows are active.
+```sh
+npm run examples:verify -- --compiler /absolute/path/to/l --id basic
+```
+
+This checks approved examples, not arbitrary Markdown fences or the full acceptance gate. Documentation CI runs website checks on pull requests. The legacy-named `ci:verify-disabled` command validates approved manual release paths and publication authorization. Publication remains disabled by committed policy; activation and recovery are covered in [deployment](../../website/DEPLOYMENT.md).

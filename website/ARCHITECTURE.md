@@ -2,46 +2,34 @@
 
 ## Package and framework
 
-This private npm package is independent of the Go module. Astro 7.3.8 and Starlight 0.42.6 build static HTML; Node 24.21.0/npm 11.19.0 are the local/CI pin. Astro Check 0.9.10 accepts TypeScript 6.0.3; TypeScript 7 is deliberately outside this dependency set. Exact direct dependencies and the transitive graph are captured in package-lock.json.
-
-The selected Starlight loader is `docsLoader()` from `@astrojs/starlight/loaders`, paired with `docsSchema()`. No invented loader root/glob options are used. Astro's documented Unified processor (`@astrojs/markdown-remark` 7.3.2) keeps the Markdown-aware tooling consistent. Starlight owns Pagefind, theme selection, native mobile popover navigation, heading links, on-page contents, pagination and Expressive Code. Its source was checked against the selected package version.
+The website is independent of the Go module. Astro and Starlight build static HTML; [package-lock.json](package-lock.json) owns dependency versions and [.node-version](.node-version) pins Node. Starlight provides search, themes, mobile navigation, heading links, contents, pagination, and code blocks.
 
 ## Canonical ownership and projection
 
-Authored prose lives under `docs/`. The four original guides keep their paths. An explicit allowlist also projects maintained AML, builtin and Lucid contract documents. `content-map.json` provides one route/title/description/section/order/role/generated record per canonical source. The landing MDX page and small Astro components are site-owned presentation.
+Prose lives under `docs/` and in explicitly mapped compiler references. [content-map.json](content-map.json) assigns routes, descriptions, navigation, and document roles. The landing page and Astro components own site presentation.
 
-Preparation loads and validates all canonical inputs before writing. Remark parses links, reference definitions, heading anchors and example directives. Positional edits preserve fenced code and untouched literal content. Mapped document links become root-relative routes; other repository files link to identifiable committed sources or display their source path. A changed local file's link is explicitly labeled as its committed base. New/unpublished files do not get fabricated remote edit URLs.
+Preparation validates inputs before writing. Markdown-aware transformations rewrite mapped links to site routes, check heading anchors, and include approved example bytes. Other repository links identify committed sources or show their paths when Git metadata is unavailable. Images are checked for containment and copied by content hash; diagrams use supplied theme variants. Fenced source and literal directive examples are preserved.
 
-Images referenced in Markdown are checked for containment and copied by content hash. `<!-- example:ID -->` includes only manifest-approved source bytes. `<!-- diagram:compiler-pipeline -->`, `runtime-lifecycle` and `process-model` insert the reviewed supplied theme variants. Ordinary fenced examples of these directives remain literal.
+Generated pages under `src/content/docs/docs/` and `releases/` carry explicit slugs, source attribution, and edit targets. Preparation is serialized and writes atomically per file. An ownership manifest limits stale-output deletion; unowned files and symlinked output paths reject.
 
-The pipeline writes ignored `src/content/docs/docs/` and `releases/` files with documented Starlight frontmatter, explicit slugs, canonical edit targets and attribution. It publishes atomically per file and serializes preparation. A private ownership manifest governs stale deletion; unowned files, noncanonical paths and symlinked output paths reject. Starlight's public directories do not begin with underscores.
-
-The development supervisor prepares once, starts Astro, and watches source directories and reference inputs outside the package. Events are debounced and serialized; events arriving during a pass schedule another pass. Failed preparation keeps the last complete projection. Astro watches presentation files. Shutdown terminates the owned child cleanly.
+The development supervisor watches canonical inputs outside the package and serializes refreshes. Failed preparation retains the last complete projection; Astro watches presentation files. Shutdown terminates the owned server.
 
 ## Evidence and future dictionaries
 
-Structured JSON supplies grammar, vocabulary and dictionary index records. Fixed, checked source regions supply the CLI help constant, named value table and Lucid case registrations; these extract names/data only. They are not alternative semantic parsers. Reviewed manifests supply visibility, type meaning, builtin/export and bounded backend classifications with hashes and witness paths.
+JSON inputs and checked source regions supply grammar, vocabulary, CLI help, and Lucid inventories. Reviewed manifests provide semantic classifications, source hashes, and witness paths. Mechanical generation refreshes snapshots, not semantic review hashes. Unclassified entries and stale dependencies fail freshness checks. [Evidence and review](../docs/contributing/evidence.md) explains the distinction between source review and executed validation.
 
-Role, support and evidence remain independent. Existing test paths establish that a witness exists, not that it ran for this checkout. Node freshness checks compare exact snapshots and dependencies. A newly discovered rule, dictionary, value tag or segment without reviewed coverage fails. Semantic review hashes are never automatically refreshed by mechanical generation.
-
-Standard-library navigation comes from index language/key identities joined to authored map records and reviewed exports. Routes use `/docs/stdlib/<lexicon>/<dictionary>/`; the site has no IO-specific renderer. Unknown indexed libraries cannot silently become empty pages. Tests add a synthetic second dictionary to verify this contract.
+The standard-library catalog joins index language/key identities to authored pages and reviewed public exports. Routes use `/docs/stdlib/<lexicon>/<dictionary>/`; new dictionaries require both documentation and reviewed coverage. Catalog rendering is independent of any one dictionary.
 
 ## Identity and release boundary
 
-`/version.json` exposes language version/commit, docs commit/revision, channel, dirty status and source fingerprint. Local builds read root `VERSION` and display `0.0.1 / Local`; Git-less archives retain null Git fields. Dirty status distinguishes current content from HEAD.
+`/version.json` records language and documentation identities, channel, dirty status, and source fingerprint. Local previews use root `VERSION`; source archives retain null Git fields.
 
-The source fingerprint hashes sorted portable paths and exact bytes from root Go files; compiler, backend, resource, stdlib, lexicon, error, utility, acceptance, test, demo, script and harness directories; and relevant root tool/module pins. Generated target/cache directories are excluded. The exact implementation is `inputInventory` in scripts/provenance.mjs. Additions and deletions change the digest. Docs revision hashes canonical docs and website inputs, excluding generated output, caches and reports. There are no wall-clock timestamps in generated identity.
-
-Release tooling additionally uses a conservative Git-tree release fingerprint. Production identity must be authenticated through the dormant release pipeline; setting an environment flag alone fails. See DEPLOYMENT.md for the native release prerequisite and exact-artifact promotion contract.
+[scripts/provenance.mjs](scripts/provenance.mjs) hashes sorted source paths and bytes, excluding generated output and caches. Documentation has its own revision hash. Release tooling additionally records a Git-tree fingerprint. Production identity requires authenticated native-release evidence, not an environment flag alone. [DEPLOYMENT.md](DEPLOYMENT.md) owns activation and recovery procedures.
 
 ## Presentation and validation
 
-The supplied SVG mark geometry is preserved. A thin CSS layer maps brand colors to Starlight tokens using system fonts. Source diagrams are SVG images with nearby explanation; raster social cards are metadata assets. Large diagrams load lazily. Pack navigation/theme/highlighter scripts are excluded.
+Brand colors map to Starlight tokens using system fonts. SVG diagrams have nearby explanations. Keyboard-focus hooks keep code and tables accessible; the Search wrapper handles Pagefind's initial focus timing. Neither reading nor mobile navigation requires JavaScript.
 
-`check` validates canonical content plus Astro types. Node tests exercise transformations, ownership, inventory changes and provenance. Build checks inspect actual emitted HTML, links, fragments, images, 404 and search assets. Playwright tests operate on `build` plus `preview`, including keyboard search, themes, no-JavaScript reading, mobile navigation, asset/network errors, screenshots and axe checks. Neither build nor tests run L examples or language validation.
+Website checks cover canonical content, types, transformations, provenance, emitted HTML/links/assets, search, browser interaction, and accessibility. They do not execute L examples or native validation. See [local development](../docs/contributing/local-development.md) for commands.
 
-The active documentation workflow runs the website verification aggregate on pull requests and manual dispatch. The quality workflow audits website dependencies. Both use read-only permissions; release and recovery templates remain inactive under `ci-templates`. The deployment guard permits these reviewed validation workflows while rejecting publication capabilities. Existing language CI retains its complete compiler validation stages.
-
-The L grammar and keyboard-focus hook are configured in `ec.config.mjs`, as required for non-JSON Expressive Code options shared with the Code component. Code blocks and wide tables remain keyboard accessible without JavaScript. A small Search wrapper handles the initial Pagefind idle-load focus race while retaining Starlight's dialog and controls. Astro telemetry is disabled per command, and foreground `--ignore-lock` mode lets the supervisor and browser tests own server lifetime.
-
-The public stdlib catalog is generated from `<!-- stdlib-catalog -->`, using the same index/authored-page/export join as coverage. It does not require an IO-specific template update when another reviewed dictionary is added. The JSON registry itself is included by the example manifest.
+Pull-request documentation and dependency checks use read-only permissions. Manual release and recovery workflows live in `.github/workflows/`; committed policy currently blocks publication. The release guard checks approved manual paths, authorization, action pins, and read-only PR workflows.

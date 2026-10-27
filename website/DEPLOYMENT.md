@@ -1,77 +1,114 @@
-# Website deployment: prepared and disabled
+# Manual releases and documentation deployment
 
-**Documentation CI is active. Website release and deployment remain disabled.**
+**Publication is implemented but disabled.** This checkout does not change
+repository visibility, GitHub settings, credentials, environment rules, or
+releases. The committed [release policy](ci-templates/release-policy.json) has
+`publicationEnabled: false` and `nativePublisher: null`. Production helpers and
+every publication job reject that state before writing to GitHub or Pages.
+Production publication also requires `l-programming-language/l` to be public;
+manual dry runs can validate the implementation while the repository is private.
 
-[Documentation checks](../.github/workflows/docs-check.yml) run the full website verification aggregate on pull requests and manual dispatch with read-only repository access. [Quality checks](../.github/workflows/quality.yml) also audit the website dependency tree. Release and recovery templates remain under `website/ci-templates/` with `.yml.disabled` extensions, outside workflow discovery. No install hook, build, test or helper copies templates into `.github/workflows/`.
+## Workflows and source identity
 
-`npm run ci:verify-disabled` now verifies that **deployment** remains disabled while the approved `docs-check.yml` and `quality.yml` checks are active. It requires the documentation workflow, read-only permissions, unprivileged PR/manual events, full-commit Action pins and non-persisted checkout credentials. It rejects environments, secrets, Pages actions, release helpers, unexpected website workflows, npm lifecycle hooks and website Dependabot entries. The release/recovery templates remain checked for safe structure and pinned actions. Deliberate future deployment activation requires a separately reviewed policy change.
+[Release L](../.github/workflows/release.yml) is the only native release entry
+point. It uses `workflow_dispatch`, rejects refs other than `refs/heads/main`,
+and checks both the original actor and the actor starting a rerun for Maintain
+or Admin access. Each job checks out the dispatch's captured full SHA. The
+requested version must equal root `VERSION`; the source tag is `vVERSION` at
+that SHA. Merges and tag pushes do not publish anything.
 
-## What is implemented
+The native publisher runs preparation and canonical `scripts/l-check` on
+`darwin-arm64`, `darwin-amd64`, `linux-arm64`, and `linux-amd64`. It retains fresh
+lint, acceptance, and tagged-native reports for every target. Full gates keep
+the existing pins, both unfiltered test phases, watchdogs and concurrency. A
+manual dry run prepares validation and packages without enabling publication.
+Do not dispatch it merely to inspect this implementation: the
+[validation pause](../docs/development-harness.md#temporary-validation-pause)
+still governs expensive local runs and hosted dispatches.
 
-| Template | Workflow path | Responsibility and state |
-| --- | --- | --- |
-| `docs-check.yml.disabled` | `.github/workflows/docs-check.yml` | Active unprivileged PR reference/content/type/unit/build/browser checks, all source paths; template retained as provenance. |
-| `docs-release-pages.yml.disabled` | `.github/workflows/docs-release-pages.yml` | Verify real native release proof; build once; retain exact docs artifacts; publish to Pages. |
-| `docs-recover-pages.yml.disabled` | `.github/workflows/docs-recover-pages.yml` | Retry or approved rollback from an existing immutable docs archive, without rebuilding. |
+[Documentation release](../.github/workflows/docs-release-pages.yml) is callable
+from a downstream job after the native publisher completes. It is also manually
+dispatchable for a docs-only correction. [Documentation recovery](../.github/workflows/docs-recover-pages.yml)
+is manual-only. All three paths reauthorize immediately before publication or
+deployment, including reruns that skip an earlier preflight. A later failure in
+docs does not invalidate a completed successful native producer job.
 
-The release workflow is reusable through `workflow_call`. A future native release orchestrator on push to `main` must call the activated `.github/workflows/docs-release-pages.yml` after real native publication, passing `native_artifact_id` and mode `release`. Docs-only corrections may explicitly dispatch the activated workflow from main with the existing native artifact identity and mode `docs-correction`. No GITHUB_TOKEN-created release event is relied upon. No website-only path filter is present.
+Both docs workflows share `l-documentation-production` concurrency with
+`cancel-in-progress: false`. The native orchestrator uses a distinct group so a
+parent waiting on its reusable docs child cannot deadlock. Promotion also checks
+the previously observed production digest; concurrency alone does not promise
+queue order or protect against stale requests.
 
-The production branch is configured as main based on the checkout's origin default-ref information. The current branch is not changed by this implementation. Live branch protection, Pages, environments and DNS have not been inspected or modified.
+## Releases in this repository
 
-## Native release integration prerequisite
+`l-programming-language/l` hosts each release's installer, final binary archives,
+checksums, provenance, full native validation proof and docs recovery assets.
+The repository must be public before production publication, so source and
+retained raw validation evidence are publicly accessible along with downloads.
+There is no separate distribution repository or metadata commit: the single
+`vVERSION` tag resolves directly to the captured compiler commit.
 
-There is no implemented native release publisher in this checkout. `release-policy.json` intentionally contains `nativePublisher: null`. Every production identity path refuses to proceed until a maintainer implements and reviews that integration. Missing VERSION, native assets or validation proof also fails closed; there is no successful placeholder publisher.
+Publication uses each job's automatic `GITHUB_TOKEN` with the permissions declared
+in its workflow. No GitHub App, personal access token or custom publication
+credential is required. Checksums identify the final distributed bytes.
 
-The future native publisher must run the authoritative, unmodified preparation and validation:
+The first planned version is `0.0.1`. Production docs require a published,
+non-prerelease source release. Pre-1.0 is allowed; GitHub's prerelease flag is not.
+Version changes are ordinary reviewed source changes, not automatic workflow
+commits. The installed compiler embeds `VERSION` directly.
 
-```sh
-scripts/l-ci bootstrap
-scripts/l-check
-```
+Production macOS packages below `v1.0.0` are unsigned and do not require Apple
+credentials. Starting with `v1.0.0`, production macOS packages must be Developer
+ID signed and notarized before packaging and installer verification. Dry runs
+always produce unsigned packages and skip signing credentials. The release
+manifest and package README record the signing status of the actual binary.
+Unsigned downloads may require user approval or be blocked by macOS security
+settings; see the [installation guide](../docs/cli/installation.md).
 
-These commands belong only in explicitly authorized future language-release validation. They are **not** run by website npm commands or this local implementation. Preserve both unfiltered acceptance phases, complete lint profiles, tagged Expected/Generated native compilation, tool pins, watchdogs and concurrency. The existing CI launcher validates report identity, discovery, phases and native outcomes; the website helper does not replace it with a weaker test runner.
+## Native release proof
 
-The publisher must package actual native release outputs at the same clean full commit SHA, publish a real non-draft/non-prerelease `vVERSION` release, and produce a GitHub Actions artifact named `l-native-release-<full-language-SHA>`. Its ZIP must contain `native-release.json`, the native files and raw hashed validation evidence. It must then publish **that identical artifact ZIP** as `l-native-release-<SHA>.zip` on the release, the manifest as `l-native-release-<SHA>.json`, and the native artifacts individually. Serialize the manifest using the helper's `stableJSON` (two-space JSON plus final newline); publication compares that exact identity. There is no self-referential archive digest inside the ZIP: the Actions artifact API and release-asset API provide its independent digest and immutable artifact ID.
+The publisher uploads `l-native-release-<full-language-SHA>` as a GitHub Actions
+artifact. Its ZIP contains `native-release.json`, the native assets and hashed
+canonical evidence. The **identical ZIP** is retained on the public release as
+`l-native-release-<SHA>.zip`, along with the stable-JSON manifest
+`l-native-release-<SHA>.json` and the individual native assets. The manifest does
+not contain its own archive digest: GitHub's independent artifact and release
+asset digests bind the archive.
 
-Register the approved publisher's numeric GitHub workflow ID and exact workflow path in `ci-templates/release-policy.json`. Names and caller-supplied booleans are not trust. Helpers use authenticated GitHub API observations to match repository, workflow ID/path, run/attempt, event, main branch, source SHA, the successful numeric native-publisher job ID, artifact name/run/digest, tag commit, and published native asset hashes. Call the docs workflow from a downstream job after the native producer job completes successfully. The overall orchestration can still be running or can have failed later in docs publication: that downstream failure does not invalidate already verified native proof or block an exact-artifact retry.
+Schema 2 keeps source repository, version/tag, clean SHA, source and release
+fingerprints, and numeric producer run/attempt/job identities. It adds
+`validation.targets`, containing one distinct record per configured native target.
+Each record has exactly the original lint, acceptance, and native stage reports.
+The verifier checks each report's `goos`/`goarch`, clean revision, source identity,
+command inventory, successful completion, and hash. No platform can reuse another
+platform's report. Each target also requires a separately hashed installer smoke
+record matching its exact archive and version, successful isolated Cargo/Rustup
+setup, and offline native compilation. Schema 1 remains readable for its existing tests and historical
+protocol, but the new production policy requires schema 2 and manual dispatch.
 
-Native manifest schema 1 contains:
+Authenticated GitHub observations verify the approved numeric workflow ID/path,
+main ref, run/attempt, successful producer job, source tag, archive digest and
+published asset hashes. Workflow names and caller-supplied pass booleans do not
+establish authority. Keep producer run records and artifact metadata available:
+durable archives do not silently replace missing producer authority.
 
-- `repository`, `languageVersion`, `tag`, `languageCommit`, `dirty: false`.
-- `sourceFingerprint`: the shared website source inventory hash with its `sha256:` prefix.
-- `releaseFingerprint`: SHA-256 of sorted Git tree entries outside `docs/` and `website/`, including modes, paths and blob identities. This conservative inventory treats an unclassified non-documentation change as release-relevant.
-- `producer: {runId, runAttempt, jobId}` identifying the actual native producer, with its numeric job ID checked for successful completion at the matching run/attempt/source SHA.
-- Nonempty `artifacts`, each with `path`, `releaseAsset` (matching basename), `sha256`, `target` and `compilerVersion`.
-- Nonempty `evidence`, each with repository-independent relative `path` and SHA-256.
-- `validation: {command: "scripts/l-check", stages: [...]}`, with exactly lint/acceptance/native entries pointing to hashed canonical stage reports. Reports must share the language SHA, clean status and canonical source identity; commands must have completed successfully and include every required stage command.
+## Documentation build and deployment
 
-Manifest checks do not execute language tools. Fixture tests exercise rejection and integrity logic only; they do not count as native-release validation. Keep producer run records and artifact metadata available; if GitHub no longer provides the required provenance, a new trusted proof/attestation integration is required and promotion remains blocked. Durable release archives do not silently substitute for missing producer authority.
+The site remains static Astro/Starlight with origin `https://ldocs.org` and base
+`/`. The release workflow installs locked Node dependencies and Chromium, checks
+reference freshness, types/content and unit tests, builds once, verifies static
+output, and runs the browser suite against that output. These website checks do
+not execute L, Go or Rust.
 
-## Release and correction identity
+Production identity is authenticated through `scripts/release.mjs`, not merely
+by setting `DOCS_CHANNEL=production`. Initial docs and language releases share
+one clean SHA. A docs-only correction retains the language version and native
+manifest and must preserve both language-source fingerprints. Changes outside
+`docs/` and `website/`, including workflows, release/install scripts, lockfiles and
+root README, remain release-relevant.
 
-Root `VERSION` starts at `0.0.1`. Each release requires its matching `vVERSION` tag, identical language/docs SHA and authenticated native proof; the file alone does not establish a release.
-
-A docs-only correction retains the published language version/commit and native manifest. Both conservative Git release fingerprints and shared reference-source fingerprints must still match. Changes outside `docs/` and `website/`, including code, tests, resources, workflows, lockfiles, install scripts or root README, are conservatively release-relevant. A substantive language change requires a new release decision. A changed historical/internal Markdown file included in the source inventory also requires an explicit reviewed inventory decision; no automatic exception is inferred.
-
-The public version identity records `languageVersion`, `languageCommit`, `docsCommit`, `docsRevision`, `channel`, `dirty`, `sourceFingerprint`, and the release fingerprint. Production docsRevision is the full docs commit; local docsRevision is the deterministic documentation-content digest. These different forms are identified by channel. Source archives without Git remain usable for local builds and cannot impersonate production releases.
-
-Production identity is obtained only through `authenticatedReleaseIdentity()` in `scripts/release.mjs`, using the real native archive and authenticated API evidence. Setting `DOCS_CHANNEL=production` alone grants nothing. The authenticated preparation receives:
-
-```text
-DOCS_CHANNEL=production
-DOCS_RELEASE_MODE=release|docs-correction
-DOCS_NATIVE_ARTIFACT_ID=<immutable GitHub artifact ID>
-DOCS_NATIVE_ARCHIVE=<downloaded original ZIP>
-DOCS_RELEASE_ARTIFACTS=<safely extracted native ZIP directory>
-DOCS_RELEASE_MANIFEST=<that directory>/native-release.json
-GITHUB_TOKEN=<read-only validation token>
-```
-
-The archive reader rejects traversal, symlinks, duplicate files, malformed directories, unsupported compression/encryption and ZIP64. Its total expansion bound is 1 GiB. It verifies extracted bytes and the manifest against the original ZIP. Future larger native packages need a separately reviewed bounded streaming implementation, not a removed safety check.
-
-## Exact artifact publication and promotion
-
-Website checks run once before sealing the tested `dist/`. A deterministic tar archive, complete file inventory, version-file hash and native-manifest hash form `promotion.json`. The publisher retains these immutable release assets:
+The tested `dist/` is sealed into an archive with the full file inventory,
+version-file hash and native-manifest hash. The same repository release retains:
 
 ```text
 docs-<full-docs-SHA>.tar.gz
@@ -79,31 +116,99 @@ docs-<full-docs-SHA>.promotion.json
 docs-<full-docs-SHA>.native.json
 ```
 
-An existing asset of the same name must match exactly; it is never overwritten. Pages expands the validated archive, verifies every file and rejects unlisted files, then uploads those exact site bytes. Packaging into the Pages transport artifact does not rebuild the site or pull from a moving branch.
+Existing asset names must match their original hashes; they are never overwritten.
+Pages deploys those exact bytes using the existing `github-pages` environment.
+Build jobs stay read-only, the archive publisher gets contents write, and
+only the Pages job gets pages write and OIDC permission. Checkout never persists
+credentials. The custom domain is retained; activation should enable HTTPS
+without changing DNS or the site's base path.
 
-The publication and Pages jobs have separate privileges and protected environments. Read-only checks never use `pull_request_target`. The publisher alone gets contents write; Pages alone gets pages write and id-token write. Checkout does not persist credentials. Both release and recovery use the same concurrency group with cancel-in-progress false. Queue order is not assumed: each promotion compares the observed production archive digest to its captured baseline and checks commit ancestry. Stale promotions and ordinary downgrades reject.
+The current append-only docs archive model requires GitHub's immutable-release
+setting to be off for this repository's releases. Activation must disable that
+setting or revise the docs storage design before publication. Enabling it later
+requires separate docs snapshot releases/storage or reviewed staging changes.
+It must not be enabled on an already-published native release and then used to
+append docs assets.
 
-Before publication and again before deployment, `fetch-current` reconciles a successful github-pages deployment record, live `/version.json` and its retained release promotion manifest. A first deployment is recognized only when there is no successful deployment and the configured origin returns HTTP 404; DNS/unavailable/ambiguous states fail. Explicit environment approval remains required. Recovery may run trusted workflow code at a newer SHA while deploying older documented content, so the Pages workflow commit is not misrepresented as the archived docs commit.
+Before publication and again before deployment, the workflow reconciles a
+successful Pages deployment record, live `/version.json`, and the retained
+promotion manifest. First deployment requires no successful prior deployment and
+an HTTP 404 at `/version.json`; ambiguous or unavailable states reject. After
+deployment it verifies identity, homepage, specification, CLI and Pagefind routes.
 
-Postdeployment checks compare deployed identity to the sealed archive and request homepage, specification, CLI and Pagefind assets. They do not invent a performance score or substitute for the full browser suite run before publication.
+## Retry, rollback and corrections
 
-## Future activation checklist
+A failed Pages deployment leaves the native release intact. Dispatch recovery
+from main with `mode: retry`, the existing language tag, full docs SHA, and current
+production digest. Recovery downloads and validates the retained archive; it
+never rebuilds from a moving branch. An already-live identical digest is
+idempotent. A changed current digest rejects a stale request.
 
-Release and deployment activation is a future maintainer operation. Documentation checks are already active; production prerequisites below remain outstanding:
+For a retry before the first successful deployment, enter the literal text `null`
+for `expected_current_digest`. The workflow independently verifies that no
+successful Pages deployment exists and `/version.json` returns HTTP 404. `null`
+is not a wildcard: a different live site rejects that request. If the exact
+requested site is already live, recovery verifies it without deploying again.
 
-1. Implement and validate the native publisher contract, real VERSION/tag policy, supported native targets, evidence retention and producer workflow registration. Configure its all-path push-to-main orchestration to explicitly call the reusable docs workflow after publication.
-2. Review the dormant templates and current official [GitHub Pages custom-workflow guide](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages). Replace no existing workflow or required check; retain existing L CI policy. Reverify Action pins before activation.
-3. Create protected `documentation-publication` and `github-pages` environments restricted to main with production approval. Permit the minimal token permissions shown in the templates. No personal production credential is needed.
-4. Configure repository Pages source as GitHub Actions. Configure `ldocs.org` as the custom domain in Pages, follow GitHub's currently documented DNS/ownership-verification values, wait for provisioning and enable HTTPS. Do not guess DNS records from the repository name or change the site's `/` base to `/l/`.
-5. Manually copy the two reviewed release/recovery templates to the exact activated paths above. Preserve the active documentation checks and update the explicit deployment guard policy at that time. No helper in this package performs activation. Keep `/website` npm Dependabot inactive unless separately approved.
-6. Run unprivileged PR validation and a reviewed native release against immutable SHAs, approve publication/deployment, then examine the actual production identity, HTTPS, canonical URLs, navigation and built search. Record live evidence separately from the local fixture/actionlint results.
+For a failed native publication, rerun **failed jobs only** in the same workflow
+run. That reuses the successful sealing job's original archive and producer
+attempt; publication and deployment still reauthorize the new rerun actor. A
+full rerun collides with the deliberately immutable artifact names and is rejected
+instead of replacing evidence. Start a new manual dry-run dispatch when fresh
+validation is needed. A rebuilt package cannot overwrite existing release bytes;
+use a newly reviewed version for a changed release.
 
-Node is pinned in `.node-version` and all setup-node steps read it. Package installation uses npm ci and the lockfile. Action refs were resolved read-only for these templates: setup-node v4 `49933ea5288caeca8642d1e84afbd3f7d6820020`, configure-pages v5 `983d7736d9b0ae728b81ab479565c72886d7745b`, upload-pages-artifact v3 `56afc609e74202658d3ffba0e8f6dda462b719fa`, deploy-pages v4 `d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e`, download-artifact v4 `d3f86a106a0bac45b974a628896c90dbdf5c8093`. Checkout/upload-artifact retain existing repository pins. These are pinned template dependencies, not evidence of a live workflow run.
+`mode: rollback` permits older docs ancestry while retaining its original language
+and docs identities. It never moves a tag or replaces a native binary. Docs-only
+corrections use the documentation release workflow with an existing native
+artifact ID and `mode: docs-correction`; fingerprints must still match.
 
-## Retry and rollback
+## Deliberate activation after review
 
-If native publication succeeds but docs publication/deployment fails, retain the failure and retry the same sealed artifact. A failed Pages deployment does not justify rebuilding against a newer branch. A retry whose digest is already live is idempotent. A different current production digest rejects a stale retry.
+1. Review and merge this implementation with publication still disabled. GitHub
+   must register `release.yml` before its numeric workflow ID can be recorded.
+2. Make `l-programming-language/l` public before production publication and resolve
+   the immutable-release setting described above. No custom publication credential
+   is needed: native and docs publication use `GITHUB_TOKEN`. Configure macOS
+   Developer ID/notarization secrets before the first `v1.0.0` or later production
+   release; the initial `v0.0.1` release needs no custom secrets. These GitHub
+   settings and credentials are not changed by this checkout.
+3. Configure `release-build`, `release-publication`, `documentation-publication`
+   and `github-pages` environments to permit main only. Keep the existing ldocs.org
+   association and enable HTTPS.
+   Additional reviewers are optional; Maintain/Admin dispatch is the release
+   authorization, subject to available GitHub plan protections.
+4. In a separately reviewed commit, set the registered native workflow ID/path
+   and `publicationEnabled: true`. Preserve all four
+   configured target records and manual-only trigger checks.
+5. Explicitly dispatch a dry run and inspect fresh per-target evidence and
+   clean-home installer smoke results. Dry runs intentionally produce unsigned
+   macOS packages and never access signing credentials. Production dispatches
+   below `v1.0.0` also skip signing; from `v1.0.0` onward they sign/notarize before
+   their own final-package smoke checks. No historical green run establishes
+   the new release revision's status.
+6. Explicitly dispatch the versioned publication and inspect its binary assets,
+   public provenance, deployed identity and HTTPS routes. Native publication and
+   Pages deployment are separate operations; use retained artifacts for recovery.
 
-After activation, dispatch `docs-recover-pages.yml` from main with mode retry or rollback, the existing language tag, full docs SHA and expected current archive digest. It downloads the retained release assets, validates release/native producer authority, checks every file and version identity, and uses the original archive. Rollback alone permits backwards ancestry and requires the production environment approval; it never moves a tag, changes the language version or overwrites the original release assets. Postdeployment identity checks still run.
+No custom secrets or variables are needed for pre-1.0 releases. Defer the Apple
+secrets until preparing a `v1.0.0` or later production release:
 
-To keep deployment disabled, leave the release/recovery templates here, leave nativePublisher null, and retain the deployment guard in the website aggregate. Ordinary local documentation work does not authorize copying publication workflows, configuring credentials or changing remote settings.
+| Environment | Values | Purpose |
+| --- | --- | --- |
+| `release-build` | Secrets `MACOS_CERTIFICATE_P12` (base64), `MACOS_CERTIFICATE_PASSWORD`, `SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD` | Required for production `v1.0.0` and later only: import a temporary Developer ID keychain and submit macOS executables to Apple notarization. Pre-1.0 releases and dry runs do not require these secrets. |
+| `release-publication`, `documentation-publication`, `github-pages` | No custom secrets or variables | Use each job's narrowly scoped automatic `GITHUB_TOKEN`; retain main-only environment rules. |
+
+Keep the repository's default workflow permissions read-only. The native release
+and docs archive publishers request `contents: write` only in their publication
+jobs; the Pages job requests `pages: write` and `id-token: write`. Repository tag
+rules must permit the workflow token to create the version tag at the captured
+commit. Native publication assembles all release assets in a draft before
+publishing; docs recovery assets are then appended to that same release.
+
+The legacy-named `npm run ci:verify-disabled` command now validates the committed
+manual release policy as well as unprivileged PR checks. It permits only the three
+reviewed release workflow paths, rejects automatic release triggers, mutable
+Action pins, missing authorization and publication work before authorization.
+Current policy remains disabled. The `.yml.disabled` files in `ci-templates/` are
+retained reviewable templates; no runtime helper copies or activates them.

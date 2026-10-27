@@ -46,7 +46,7 @@ test('map validation enforces route, ownership and navigation metadata', () => {
   for (const route of ['/docs/guide', '/l/docs/guide/', '/docs/_meta/', '/docs/../guide/', '/']) {
     assert.throws(() => validateMap({ schemaVersion: 1, pages: [page('docs/start.md', route)] }), /route/i);
   }
-  for (const override of [{ title: '' }, { order: NaN }, { generated: 'false' }, { role: 'probably-supported' }, { source: 'docs/_meta/private.md' }]) {
+  for (const override of [{ title: '' }, { order: NaN }, { generated: 'false' }, { sidebar: 'false' }, { role: 'probably-supported' }, { source: 'docs/_meta/private.md' }]) {
     assert.throws(() => validateMap({ schemaVersion: 1, pages: [{ ...page(), ...override }] }));
   }
 });
@@ -114,7 +114,24 @@ test('source inclusions safely fence braces, backticks and tags and retain bytes
   assert.equal(tree.children.filter((node) => node.type === 'code').length, 1);
   assert.equal(tree.children.find((node) => node.type === 'code').value, code.trimEnd());
   assert.match(output, /existing-witness-not-run/);
+  assert.match(output, /\*\*Fragment\.\*\* Source:/);
+  assert.match(output, /<summary>Example evidence<\/summary>[\s\S]*existing-witness-not-run[\s\S]*<\/details>/);
   assert.equal(await fs.readFile(path.join(root, 'examples/path with spaces.l'), 'utf8'), code);
+});
+
+test('intentional runtime failures remain visible outside collapsed example evidence', async (t) => {
+  const source = 'Exit.\n';
+  const input = '# Program\n\n<!-- example:program -->\n';
+  const root = await fixture(t, { 'docs/start.md': input, 'program.l': source });
+  for (const expectedExit of [0, 1]) {
+    const { output } = await project(root, input, { examples: [{
+      id: 'program', source: 'program.l', sha256: sha256(source), classification: 'runnable',
+      description: 'A fixture for presentation only.', validation: 'existing-witness-not-run', expectedExit,
+    }] });
+    const visible = output.split('<details>')[0];
+    if (expectedExit) assert.match(visible, /Complete program · expected runtime failure/);
+    else assert.match(visible, /\*\*Complete program\.\*\*/);
+  }
 });
 
 test('canonical excerpts retain selected line bytes, escape literal content and identify source lines', async (t) => {
@@ -328,6 +345,25 @@ test('clean archive preparation is deterministic and reconciles canonical rename
   await assert.rejects(fs.access(old));
   assert.match(await fs.readFile(path.join(site, 'src/content/docs/docs/renamed/index.md'), 'utf8'), /Source archive content/);
   assert.equal(await fs.readFile(path.join(site, 'src/content/docs/index.mdx'), 'utf8'), '# Authored landing\n');
+});
+
+test('pages omitted from the sidebar retain their routes, fragments and source links', async (t) => {
+  const start = page('docs/start.md', '/docs/start/');
+  const reference = { ...page('docs/reference.md', '/docs/reference/'), sidebar: false };
+  const root = await fixture(t, {
+    'docs/start.md': '# Start\n\n[Reference](reference.md#details)\n',
+    'docs/reference.md': '# Reference\n\n## Details\n\nReference content.\n',
+    'docs/_meta/examples.json': '{"schemaVersion":1,"examples":[]}',
+    'website/content-map.json': JSON.stringify({ schemaVersion: 1, pages: [start, reference] }),
+  });
+  const site = path.join(root, 'website');
+  assert.equal((await prepare({ root, site, verifyReferences: false })).pages, 2);
+  const sidebar = JSON.parse(await fs.readFile(path.join(site, '.generated/sidebar.json'), 'utf8'));
+  assert.deepEqual(sidebar.flatMap((group) => group.items.map((item) => item.link)), ['/docs/start/']);
+  assert.match(await fs.readFile(path.join(site, 'src/content/docs/docs/start/index.md'), 'utf8'), /\/docs\/reference\/#details/);
+  const content = await fs.readFile(path.join(site, 'src/content/docs/docs/reference/index.md'), 'utf8');
+  assert.match(content, /## Details/);
+  assert.match(content, /Canonical source:[\s\S]*docs\/reference.md/);
 });
 
 test('catalog rendering handles additional languages and libraries without IO-specific code', () => {

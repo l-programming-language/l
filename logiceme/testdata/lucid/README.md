@@ -19,8 +19,8 @@ The current runner contains the following obligations:
 Shared interpreter, provenance, primitive, preparation and resource/isolation
 tests supplement these complete-application obligations. The 50 profiles above
 are the generic/lifetime additions, not the total number of low-level suite tests.
-All native checks compile only; they do not execute generated Rust applications
-or deployment scripts.
+Native checks compile the Expected and Generated contracts; three positive
+future cases also execute generated assertions. Deployment scripts remain unexecuted.
 
 This guide owns the current inventory and commands. The [dated ledger](FAILURES.md)
 owns observed generation, native compilation and acceptance results. The sections

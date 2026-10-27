@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, writeFile, rm, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 import { verifyDisabled } from '../scripts/verify-disabled.mjs';
 import {
   sha256, stableJSON, safeRelative, verifyInventory, verifyNativeEvidence,
@@ -103,6 +105,51 @@ test('promotions reject stale baseline and downgrade, retry exact bytes, and iso
   assert.throws(() => guardPromotion({ ...input, isDescendant: false }), /downgrade/);
   assert.equal(guardPromotion({ ...input, mode: 'retry', currentDigest: next }).action, 'verify');
   assert.equal(guardPromotion({ ...input, mode: 'rollback', isDescendant: false }).requiresProductionApproval, true);
+});
+
+test('recovery CLI accepts an explicit null baseline without bypassing stale production checks', async (t) => {
+  const root = await temporary(t), manifestPath = join(root, 'promotion.json'), currentPath = join(root, 'current.json');
+  const desired = 'e'.repeat(64);
+  // A recovery dispatch must use its explicit baseline, even when the retained
+  // manifest was originally prepared against a different production digest.
+  await writeFile(manifestPath, stableJSON({ siteArchiveSha256: desired, docsCommit: A, expectedCurrentDigest: HASH }));
+  const run = (mode, expected) => spawnSync(process.execPath, [
+    fileURLToPath(new URL('../scripts/release.mjs', import.meta.url)), 'guard-promotion',
+    '--manifest', manifestPath, '--current', currentPath, '--mode', mode,
+    '--expected-current', expected, '--root', root,
+  ], { encoding: 'utf8', timeout: 10000 });
+  for (const mode of ['retry', 'rollback']) {
+    await writeFile(currentPath, 'null\n');
+    const initial = run(mode, 'null');
+    assert.equal(initial.status, 0, initial.stderr);
+    assert.equal(JSON.parse(initial.stdout).action, 'deploy');
+    for (const expected of [HASH, 'NULL', 'undefined']) {
+      const invalid = run(mode, expected);
+      assert.equal(invalid.status, 1);
+      assert.match(invalid.stderr, /Stale promotion/);
+    }
+    const empty = run(mode, '');
+    assert.equal(empty.status, 1);
+    assert.match(empty.stderr, /Missing argument: --expected-current/);
+    await writeFile(currentPath, stableJSON({ siteArchiveSha256: HASH, docsCommit: A }));
+    const stale = run(mode, 'null');
+    assert.equal(stale.status, 1);
+    assert.match(stale.stderr, /Stale promotion/);
+    const matching = run(mode, HASH);
+    assert.equal(matching.status, 0, matching.stderr);
+    assert.equal(JSON.parse(matching.stdout).action, 'deploy');
+    await writeFile(currentPath, stableJSON({ siteArchiveSha256: desired, docsCommit: A }));
+    const alreadyLive = run(mode, 'null');
+    assert.equal(alreadyLive.status, 0, alreadyLive.stderr);
+    assert.equal(JSON.parse(alreadyLive.stdout).action, 'verify');
+  }
+  // Ordinary publication still uses the baseline captured in its manifest.
+  await writeFile(currentPath, stableJSON({ siteArchiveSha256: HASH, docsCommit: A }));
+  for (const mode of ['release', 'docs-correction']) {
+    const normal = run(mode, 'null');
+    assert.equal(normal.status, 0, normal.stderr);
+    assert.equal(JSON.parse(normal.stdout).action, 'deploy');
+  }
 });
 
 test('paths, duplicate inventories and symlinks are rejected', async (t) => {

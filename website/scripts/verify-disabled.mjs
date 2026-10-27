@@ -2,6 +2,7 @@ import { readFile, readdir, lstat } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import YAML from 'yaml';
+import { nativeTargets } from './release.mjs';
 
 const script = fileURLToPath(import.meta.url);
 const fail = (message) => { throw new Error(message); };
@@ -31,6 +32,36 @@ function verifyReadOnlyChecks(value, text, name) {
   verifyActions(value, name);
 }
 
+const releaseWorkflows = ['release.yml', 'docs-release-pages.yml', 'docs-recover-pages.yml'];
+const publicationGuard = 'node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true';
+
+export function verifyReleaseWorkflow(value, name, policy) {
+  if (!policy || !value?.on || !value.jobs) fail(`Website deployment automation is active without a reviewed policy: ${name}`);
+  const events = typeof value.on === 'string' ? [value.on] : Array.isArray(value.on) ? value.on : Object.keys(value.on);
+  const allowed = name === 'docs-release-pages.yml' ? ['workflow_dispatch', 'workflow_call'] : ['workflow_dispatch'];
+  if (!events.length || !events.includes('workflow_dispatch') || events.some((event) => !allowed.includes(event))) fail(`Release workflow must be manual-only: ${name}`);
+  if (typeof policy.publicationEnabled !== 'boolean' || policy.productionBranch !== 'main' || policy.repository !== 'l-programming-language/l') fail('Invalid committed release policy');
+  if (!Array.isArray(policy.targets) || [...policy.targets].sort().join(',') !== [...nativeTargets].sort().join(',')) fail('Release policy must retain all four native targets');
+  if (policy.publicationEnabled && (!Number.isSafeInteger(policy.nativePublisher?.workflowId) || policy.nativePublisher.workflowId < 1 || policy.nativePublisher.workflowPath !== '.github/workflows/release.yml')) fail('Enabled publication lacks registered publisher');
+  if (!value.permissions || Object.values(value.permissions).some((p) => !['read', 'none'].includes(p))) fail(`Release default permissions must be read-only: ${name}`);
+  if (value.concurrency?.['cancel-in-progress'] !== false || !value.concurrency.group) fail(`Release concurrency must preserve active publication: ${name}`);
+  for (const [id, job] of Object.entries(value.jobs)) {
+    if (job.uses) {
+      if (name !== 'release.yml' || job.uses !== './.github/workflows/docs-release-pages.yml' || !job.needs) fail(`Unexpected reusable release job: ${name}/${id}`);
+      continue;
+    }
+    const writes = Object.values(job.permissions || {}).some((permission) => permission === 'write');
+    if (name !== 'release.yml' || writes) {
+      const steps = job.steps || [], guardIndex = steps.findIndex((step) => step.run?.trim() === publicationGuard);
+      if (guardIndex < 0) fail(`Missing publication authorization: ${name}/${id}`);
+      const guard = steps[guardIndex];
+      if (guard.if !== undefined || guard['continue-on-error'] || (guard['working-directory'] || job.defaults?.run?.['working-directory'] || '.') !== '.') fail(`Publication authorization can be bypassed: ${name}/${id}`);
+      if (steps.slice(0, guardIndex).some((step) => !/^actions\/(checkout|setup-node)@[a-f0-9]{40}$/.test(step.uses || ''))) fail(`Publication work precedes authorization: ${name}/${id}`);
+    }
+  }
+  verifyActions(value, name);
+}
+
 export async function verifyDisabled({ root = resolve(script, '../../..') } = {}) {
   const site = join(root, 'website'), templateDir = join(site, 'ci-templates');
   const names = await readdir(templateDir);
@@ -45,6 +76,8 @@ export async function verifyDisabled({ root = resolve(script, '../../..') } = {}
     verifyActions(value, name);
   }
   const workflows = join(root, '.github/workflows');
+  const policyPath = join(templateDir, 'release-policy.json');
+  const policy = await exists(policyPath) ? JSON.parse(await readFile(policyPath, 'utf8')) : null;
   if (!await exists(join(workflows, 'docs-check.yml'))) fail('Required active documentation checks are missing');
   if (await exists(workflows)) for (const name of await readdir(workflows)) {
     if (!/\.ya?ml$/.test(name)) continue;
@@ -52,6 +85,10 @@ export async function verifyDisabled({ root = resolve(script, '../../..') } = {}
     const text = await readFile(join(workflows, name), 'utf8');
     if (['docs-check.yml', 'quality.yml'].includes(name)) {
       verifyReadOnlyChecks(YAML.parse(text, { uniqueKeys: true }), text, name);
+      continue;
+    }
+    if (releaseWorkflows.includes(name)) {
+      verifyReleaseWorkflow(YAML.parse(text, { uniqueKeys: true }), name, policy);
       continue;
     }
     if (/^docs-(?:release|recover)-pages\.ya?ml$/.test(name)) fail(`Website deployment automation is active in .github/workflows/${name}`);
@@ -70,7 +107,7 @@ export async function verifyDisabled({ root = resolve(script, '../../..') } = {}
     const text = await readFile(join(site, 'scripts', name), 'utf8');
     if (/(?:copyFile|rename|writeFile|cp\s|mv\s)[^\n]{0,200}\.github\/workflows/.test(text)) fail(`Possible workflow activation helper: ${name}`);
   }
-  return { templates: templates.length, state: 'checks-active', deployment: 'disabled' };
+  return { templates: templates.length, state: 'checks-active', deployment: policy?.publicationEnabled ? 'manual-only' : 'disabled' };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === script) verifyDisabled().then((result) => console.log(`Website checks are active; deployment remains disabled. Checked ${result.templates} dormant templates; no deployment performed.`)).catch((error) => { console.error(error.message); process.exitCode = 1; });
+if (process.argv[1] && resolve(process.argv[1]) === script) verifyDisabled().then((result) => console.log(`Website checks are active; publication policy: ${result.deployment}. Checked ${result.templates} retained templates; no deployment performed.`)).catch((error) => { console.error(error.message); process.exitCode = 1; });

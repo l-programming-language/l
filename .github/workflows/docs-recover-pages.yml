@@ -1,0 +1,80 @@
+name: L documentation recovery
+# Publication remains blocked by release-policy.json. Recovery never rebuilds.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Retry or intentionally roll back to a retained artifact
+        type: choice
+        options: [retry, rollback]
+        required: true
+      release_tag:
+        description: Existing immutable language release tag
+        type: string
+        required: true
+      docs_commit:
+        description: Full docs commit identifying retained release assets
+        type: string
+        required: true
+      expected_current_digest:
+        description: Current siteArchiveSha256, or literal null before the first deployment
+        type: string
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: l-documentation-production
+  cancel-in-progress: false
+jobs:
+  recover:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      actions: read
+      deployments: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: website/.node-version
+      - name: Authorize manual publication
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
+      - name: Download and verify original release archive
+        working-directory: website
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          DOCS_COMMIT: ${{ inputs.docs_commit }}
+          MODE: ${{ inputs.mode }}
+          EXPECTED_CURRENT: ${{ inputs.expected_current_digest }}
+        run: |
+          node scripts/release.mjs download-promotion --policy ci-templates/release-policy.json --tag "$RELEASE_TAG" --docs-commit "$DOCS_COMMIT" --output "$RUNNER_TEMP/sealed"
+          mkdir "$RUNNER_TEMP/site"
+          tar -xzf "$RUNNER_TEMP/sealed/site.tar.gz" --no-same-owner -C "$RUNNER_TEMP/site"
+          node scripts/release.mjs verify-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --dist "$RUNNER_TEMP/site" --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$RUNNER_TEMP/sealed/native-release.json"
+          node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
+          node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --expected-current "$EXPECTED_CURRENT" --root ..
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
+        with:
+          path: ${{ runner.temp }}/site
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+      - name: Verify production identity after recovery
+        working-directory: website
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/release.mjs postdeploy --policy ci-templates/release-policy.json --manifest "$RUNNER_TEMP/sealed/promotion.json"
