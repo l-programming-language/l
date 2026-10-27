@@ -1,0 +1,131 @@
+name: L lint and security
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  GOENV: 'off'
+  GOFLAGS: ''
+  GOWORK: 'off'
+  GOTOOLCHAIN: local
+  GOMAXPROCS: '4'
+  GOCACHE: ${{ github.workspace }}/.harness/cache/go-build
+
+jobs:
+  lint:
+    name: Go and workflow lint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out the tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare pinned tools and dependencies
+        uses: ./.github/actions/prepare
+      - name: Check formatting, workflows, and both Go profiles
+        run: scripts/l-lint
+      - name: Retain lint evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lint-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .harness/runs/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
+
+  go-security:
+    name: Go vulnerability analysis (${{ matrix.profile }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [ordinary, nativecompile]
+    steps:
+      - name: Check out the tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up pinned Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: .go-version
+          cache: false
+          check-latest: false
+      - name: Install pinned govulncheck and download locked modules
+        env:
+          GOBIN: ${{ runner.temp }}/l-security-tools
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@v1.9.0
+          go mod download
+          git diff --exit-code -- go.mod go.sum
+      - name: Analyze source and test call graphs for known vulnerabilities
+        env:
+          GOFLAGS: -mod=readonly
+          L_SECURITY_PROFILE: ${{ matrix.profile }}
+        run: |
+          mkdir -p .harness/security
+          tags=()
+          if [ "$L_SECURITY_PROFILE" = nativecompile ]; then
+            tags=(-tags=nativecompile)
+          fi
+          # Text output retains govulncheck's nonzero exit status on findings.
+          # JSON/SARIF output alone does not fail on detected vulnerabilities.
+          "$RUNNER_TEMP/l-security-tools/govulncheck" -test "${tags[@]}" ./... 2>&1 | tee ".harness/security/govulncheck-$L_SECURITY_PROFILE.txt"
+      - name: Retain vulnerability evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: go-security-${{ matrix.profile }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .harness/security/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
+
+  website-security:
+    name: Website dependency audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - name: Check out the tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up pinned Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: website/.node-version
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - name: Install locked dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --include=dev
+      - name: Audit production and development dependencies
+        run: |
+          mkdir -p reports/security
+          npm audit --include=dev --audit-level=high 2>&1 | tee reports/security/npm-audit.txt
+      - name: Retain dependency audit evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: website-security-${{ github.run_id }}-${{ github.run_attempt }}
+          path: website/reports/security/
+          if-no-files-found: warn
+          retention-days: 7

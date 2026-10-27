@@ -1,16 +1,16 @@
 # Website deployment: prepared and disabled
 
-**Website CI/CD is prepared but disabled. No deployment has been performed.**
+**Documentation CI is active. Website release and deployment remain disabled.**
 
-All new workflow files are under `website/ci-templates/` and end in `.yml.disabled`. Existing L workflows and Dependabot configuration remain independent. No install hook, build, test or helper copies these templates into `.github/workflows/`. A manual-only workflow would still be active; these files are physically outside the workflow discovery directory.
+[Documentation checks](../.github/workflows/docs-check.yml) run the full website verification aggregate on pull requests and manual dispatch with read-only repository access. [Quality checks](../.github/workflows/quality.yml) also audit the website dependency tree. Release and recovery templates remain under `website/ci-templates/` with `.yml.disabled` extensions, outside workflow discovery. No install hook, build, test or helper copies templates into `.github/workflows/`.
 
-`npm run ci:verify-disabled` checks template YAML, full-commit Action pins, non-persisted checkout credentials, dangerous events, active website workflow references, npm lifecycle hooks and website Dependabot entries. Initial/final hashes of existing workflows belong to this implementation's report, not a permanent hash lock in this check. Once maintainers deliberately activate deployment, replace the delivered-state guard with an explicit activated-state policy; do not silently make it accept both states.
+`npm run ci:verify-disabled` now verifies that **deployment** remains disabled while the approved `docs-check.yml` and `quality.yml` checks are active. It requires the documentation workflow, read-only permissions, unprivileged PR/manual events, full-commit Action pins and non-persisted checkout credentials. It rejects environments, secrets, Pages actions, release helpers, unexpected website workflows, npm lifecycle hooks and website Dependabot entries. The release/recovery templates remain checked for safe structure and pinned actions. Deliberate future deployment activation requires a separately reviewed policy change.
 
 ## What is implemented
 
-| Inactive file | Intended activated path | Responsibility |
+| Template | Workflow path | Responsibility and state |
 | --- | --- | --- |
-| `docs-check.yml.disabled` | `.github/workflows/docs-check.yml` | Unprivileged PR reference/content/type/unit/build/browser checks, all source paths. |
+| `docs-check.yml.disabled` | `.github/workflows/docs-check.yml` | Active unprivileged PR reference/content/type/unit/build/browser checks, all source paths; template retained as provenance. |
 | `docs-release-pages.yml.disabled` | `.github/workflows/docs-release-pages.yml` | Verify real native release proof; build once; retain exact docs artifacts; publish to Pages. |
 | `docs-recover-pages.yml.disabled` | `.github/workflows/docs-recover-pages.yml` | Retry or approved rollback from an existing immutable docs archive, without rebuilding. |
 
@@ -89,13 +89,13 @@ Postdeployment checks compare deployed identity to the sealed archive and reques
 
 ## Future activation checklist
 
-Activation is a future maintainer operation. None of these steps has been performed:
+Release and deployment activation is a future maintainer operation. Documentation checks are already active; production prerequisites below remain outstanding:
 
 1. Implement and validate the native publisher contract, real VERSION/tag policy, supported native targets, evidence retention and producer workflow registration. Configure its all-path push-to-main orchestration to explicitly call the reusable docs workflow after publication.
 2. Review the dormant templates and current official [GitHub Pages custom-workflow guide](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages). Replace no existing workflow or required check; retain existing L CI policy. Reverify Action pins before activation.
 3. Create protected `documentation-publication` and `github-pages` environments restricted to main with production approval. Permit the minimal token permissions shown in the templates. No personal production credential is needed.
 4. Configure repository Pages source as GitHub Actions. Configure `ldocs.org` as the custom domain in Pages, follow GitHub's currently documented DNS/ownership-verification values, wait for provisioning and enable HTTPS. Do not guess DNS records from the repository name or change the site's `/` base to `/l/`.
-5. Manually copy the three reviewed templates to the exact activated paths above. Update the explicit delivered-state automation guard policy at that time. No helper in this package performs activation. Keep `/website` npm Dependabot inactive unless separately approved.
+5. Manually copy the two reviewed release/recovery templates to the exact activated paths above. Preserve the active documentation checks and update the explicit deployment guard policy at that time. No helper in this package performs activation. Keep `/website` npm Dependabot inactive unless separately approved.
 6. Run unprivileged PR validation and a reviewed native release against immutable SHAs, approve publication/deployment, then examine the actual production identity, HTTPS, canonical URLs, navigation and built search. Record live evidence separately from the local fixture/actionlint results.
 
 Node is pinned in `.node-version` and all setup-node steps read it. Package installation uses npm ci and the lockfile. Action refs were resolved read-only for these templates: setup-node v4 `49933ea5288caeca8642d1e84afbd3f7d6820020`, configure-pages v5 `983d7736d9b0ae728b81ab479565c72886d7745b`, upload-pages-artifact v3 `56afc609e74202658d3ffba0e8f6dda462b719fa`, deploy-pages v4 `d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e`, download-artifact v4 `d3f86a106a0bac45b974a628896c90dbdf5c8093`. Checkout/upload-artifact retain existing repository pins. These are pinned template dependencies, not evidence of a live workflow run.
@@ -106,4 +106,4 @@ If native publication succeeds but docs publication/deployment fails, retain the
 
 After activation, dispatch `docs-recover-pages.yml` from main with mode retry or rollback, the existing language tag, full docs SHA and expected current archive digest. It downloads the retained release assets, validates release/native producer authority, checks every file and version identity, and uses the original archive. Rollback alone permits backwards ancestry and requires the production environment approval; it never moves a tag, changes the language version or overwrites the original release assets. Postdeployment identity checks still run.
 
-To keep deployment disabled, leave all templates here, leave nativePublisher null, and retain the disabled guard in the website aggregate. Do not copy workflows, configure credentials, dispatch jobs or change remote settings during ordinary local documentation work.
+To keep deployment disabled, leave the release/recovery templates here, leave nativePublisher null, and retain the deployment guard in the website aggregate. Ordinary local documentation work does not authorize copying publication workflows, configuring credentials or changing remote settings.

@@ -155,14 +155,40 @@ test('native ZIP safely binds extracted manifest and bytes to immutable archive'
   await assert.rejects(verifyNativeArchive(archive, extracted, join(extracted, 'native-release.json')), /differs/);
 });
 
-test('disabled guard rejects activation, npm hooks, website Dependabot and mutable Action pins', async (t) => {
+test('deployment guard permits reviewed checks and rejects publication, npm hooks, Dependabot and mutable Action pins', async (t) => {
   const root = await temporary(t), site = join(root, 'website');
   await mkdir(join(site, 'ci-templates'), { recursive: true }); await mkdir(join(site, 'scripts'));
   await mkdir(join(root, '.github/workflows'), { recursive: true });
   const minimal = 'name: Dormant fixture\non:\n  pull_request: {}\njobs:\n  check:\n    runs-on: ubuntu-24.04\n    steps:\n      - run: true\n';
-  for (const name of ['docs-check.yml.disabled', 'docs-release-pages.yml.disabled']) await writeFile(join(site, 'ci-templates', name), minimal);
+  for (const name of ['docs-check.yml.disabled', 'docs-release-pages.yml.disabled', 'docs-recover-pages.yml.disabled']) await writeFile(join(site, 'ci-templates', name), minimal);
   await writeFile(join(site, 'package.json'), '{"scripts":{"build":"node build.mjs"}}');
-  assert.equal((await verifyDisabled({ root })).state, 'disabled');
+  await assert.rejects(verifyDisabled({ root }), /Required active/);
+  const checks = minimal.replace('name: Dormant fixture', 'name: L documentation checks\npermissions:\n  contents: read');
+  const approved = join(root, '.github/workflows/docs-check.yml');
+  await writeFile(approved, checks);
+  assert.deepEqual(await verifyDisabled({ root }), { templates: 3, state: 'checks-active', deployment: 'disabled' });
+  const quality = join(root, '.github/workflows/quality.yml');
+  await writeFile(quality, checks.replace('- run: true', '- run: npm --prefix=website audit --audit-level=high'));
+  assert.equal((await verifyDisabled({ root })).deployment, 'disabled');
+  await rm(quality);
+  for (const [changed, pattern] of [
+    [checks.replace('contents: read', 'contents: write'), /read-only/],
+    [checks.replace('pull_request:', 'pull_request_target:'), /Unexpected event/],
+    [checks.replace('    runs-on:', '    environment: github-pages\n    runs-on:'), /environments/],
+    [checks.replace('    runs-on:', '    permissions:\n      pages: write\n    runs-on:'), /write permissions/],
+    [checks.replace('- run: true', `- uses: actions/deploy-pages@${A}`), /Deployment/],
+    [checks.replace('- run: true', '- run: node scripts/release.mjs deploy'), /Deployment/],
+    [checks.replace('- run: true', '- run: echo "${{ secrets.DEPLOY_TOKEN }}"'), /secrets/],
+    [checks.replace('- run: true', '- uses: actions/checkout@v4'), /Unpinned/],
+    [checks.replace('- run: true', `- uses: actions/checkout@${A}`), /persists credentials/],
+  ]) {
+    await writeFile(approved, changed);
+    await assert.rejects(verifyDisabled({ root }), pattern);
+  }
+  await writeFile(approved, checks);
+  const release = join(root, '.github/workflows/docs-release-pages.yml');
+  await writeFile(release, minimal);
+  await assert.rejects(verifyDisabled({ root }), /deployment automation is active/); await rm(release);
   const active = join(root, '.github/workflows/docs.yml'); await writeFile(active, 'name: Website\njobs:\n  build:\n    working-directory: website\n');
   await assert.rejects(verifyDisabled({ root }), /active/); await rm(active);
   for (const run of ['cd website && npm run build', 'npm --prefix=website run build']) {

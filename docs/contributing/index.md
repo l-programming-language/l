@@ -2,6 +2,8 @@
 
 Documentation belongs beside the language it explains. Canonical prose lives under `docs/`; the independent `website/` package projects reviewed files into a static Starlight site. Source examples, grammar, vocabulary, builtins and standard dictionaries remain owned by their existing repository paths.
 
+Start with the repository [contributors guide](../../CONTRIBUTING.md) for issue linkage, branch setup, test coverage, protected contracts, and the pull-request checklist.
+
 ## Choose the change
 
 For a correction to wording or an example explanation, edit the canonical Markdown source named by the page's source attribution. For a new language feature or API change, inspect the implementation and its existing witnesses, then update the relevant specification prose and coverage mappings together.
@@ -22,6 +24,6 @@ Generated projections, `node_modules`, HTML output and temporary reports are dis
 
 ## Deployment is separate
 
-Website CI/CD is prepared but disabled. No deployment has been performed.
+Documentation CI runs reference, content, type, unit, build, and browser checks on pull requests. Release and deployment remain disabled.
 
-Future activation is documented in [deployment instructions](../../website/DEPLOYMENT.md). No automatic local setup step activates templates or changes existing workflows. Native release publication and successful validation at the matching source revision remain explicit prerequisites for production promotion.
+Future release and deployment activation is documented in [deployment instructions](../../website/DEPLOYMENT.md). No automatic local setup step activates templates or changes existing workflows. Native release publication and successful validation at the matching source revision remain explicit prerequisites for production promotion.

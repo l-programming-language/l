@@ -24,11 +24,11 @@ Running a published L program requires neither the L compiler nor Go/Rust toolch
 
 Follow your release's toolchain and dependency setup instructions before the first native build. L uses pinned, frozen, offline Cargo dependencies; installing Rust alone does not populate that cache.
 
-For repository-based setup, install Go 1.27.1 as pinned in [.go-version](../../.go-version), then run `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching source checkout. This downloads pinned tools and locked dependencies and compiles their caches; it can take several minutes. Preserve the retained locks rather than removing `--frozen`. See the [development policy](../development-harness.md#temporary-validation-pause).
+For repository-based setup, install Go 1.27.3 as pinned in [.go-version](../../.go-version), then run `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching source checkout. This downloads pinned tools and locked dependencies and compiles their caches; it can take several minutes. Preserve the retained locks rather than removing `--frozen`. See the [development policy](../development-harness.md#temporary-validation-pause).
 
 ## Source-build installation
 
-To build the compiler yourself, install [Go](https://go.dev/doc/install) 1.27.1 and Git, then:
+To build the compiler yourself, install [Go](https://go.dev/doc/install) 1.27.3 and Git, then:
 
 ```sh
 git clone https://github.com/l-programming-language/l.git

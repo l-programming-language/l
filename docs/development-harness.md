@@ -31,7 +31,7 @@ remain useful during development but do not establish completion.
 
 Tool versions and verified official lint archive checksums live in
 [.ci-tools.json](../.ci-tools.json); [.go-version](../.go-version) selects Go
-1.27.1 and [.ci/go-checksums.txt](../.ci/go-checksums.txt) pins its fallback
+1.27.3 and [.ci/go-checksums.txt](../.ci/go-checksums.txt) pins its fallback
 archives, without changing the module's Go 1.20 language declaration. Rust remains
 1.98.1, golangci-lint is 2.14.0, and actionlint is 1.7.12. Lint tools, fallback Go,
 Go build caches, seed projects and run evidence stay in ignored repository
@@ -103,6 +103,27 @@ the shared launcher verifies archive checksums, executable bytes and versions
 before execution. Weekly Dependabot updates review action pins; tool versions
 remain separate explicit updates. This
 workflow validates code and does not publish releases or deploy applications.
+
+Additional pull-request workflows provide separately visible checks:
+
+- [Lint and security](../.github/workflows/quality.yml) runs the existing complete
+  `scripts/l-lint` stage, pinned `govulncheck` source analysis including tests in
+  ordinary and `nativecompile` profiles, and the website's locked production and
+  development dependency audit. Go analysis fails on reachable known
+  vulnerabilities; npm audit fails on high or critical findings. These jobs
+  retain their reports for seven days and support manual dispatch. They do not
+  replace any stage of `L CI` or establish native runtime acceptance.
+- [Documentation checks](../.github/workflows/docs-check.yml) installs the pinned
+  Node dependencies and Chromium, then runs the complete website verification
+  aggregate: deployment guard, reference freshness, content/type checks, unit
+  tests, static build/output checks, and browser tests. It runs for every PR
+  regardless of changed paths and supports manual dispatch. Website publishing
+  remains disabled; see [website development](../website/README.md).
+- [PR issue link](../.github/workflows/pr-issue.yml) verifies a tracking line such
+  as `Closes #123` or `Refs #123` against an accessible GitHub Issue. It also runs
+  when the PR description changes, without checking out or executing its code.
+  The [contribution guide](../CONTRIBUTING.md) describes the issue and review
+  requirements. Adding these checks does not change branch-protection settings.
 
 Caches separate pinned tools/dependency downloads from Go/native compiler outputs
 shared by all stages on a platform, including the CLI's external native cache.
