@@ -30,9 +30,11 @@ A single item can have distinct frontend and backend support. For example, a cal
 
 Static inspection establishes what source and contracts currently say. An existing test witness establishes the intended assertion and exercised path. Neither means that the test ran for this checkout.
 
+Example labels distinguish a **complete program**, a **compile-only example**, an **expected compilation failure**, and a **fragment** that needs surrounding code. Complete programs that intentionally exit unsuccessfully are marked **expected runtime failure**. Expand **Example evidence** for the source description and validation record; `existing-witness-not-run` identifies retained tests, not a fresh execution.
+
 Source-generation success establishes returned source bytes. Independent expected-Rust compilation establishes feasibility of an oracle. Compiling generated Rust establishes that returned artifacts compile. Supervised runtime checks establish behavior on their actual host and inputs. Full acceptance adds the unfiltered inventory, integrity and original-outcome requirements.
 
-The [implementation ledger](../../testdata/integration/IMPLEMENTATION.md) identifies the tested source, host and validation stages. It does not validate a later checkout. The [Lucid guide](../../logiceme/testdata/lucid/README.md) owns compile-only backend coverage; the [Service ledger](../../testdata/service-execution/coverage.md) separates generation, native and runtime witnesses.
+The [implementation ledger](../../testdata/integration/IMPLEMENTATION.md) identifies the tested source, host and validation stages. It does not validate a later checkout. The [Lucid guide](../../logiceme/testdata/lucid/README.md) covers generation, native compilation and three focused future execution checks; the [Service ledger](../../testdata/service-execution/coverage.md) separates generation, native and runtime witnesses.
 
 ## Resolve a discrepancy without changing semantics
 

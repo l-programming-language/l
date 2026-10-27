@@ -8,7 +8,8 @@ framing and logical obligations; it does not make proposed syllables operational
 The [Rust suite](testdata/lucid/README.md) preserves the original flat composed
 baseline and adds scoped selection, iteration, declaration, invocation, callable,
 trait, empty-composition, keyed-pattern and generic/lifetime coverage. Its
-inventory and dated results define that compile-only scope. Separate [frontend/runtime
+inventory and dated results distinguish generation, native compilation, and
+bounded execution of three future cases. Separate [frontend/runtime
 evidence](../testdata/integration/IMPLEMENTATION.md) covers the Rust
 CLI and supervised native programs. Source-graph schemas
 and preparation branches are documented separately.

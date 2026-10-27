@@ -121,7 +121,7 @@ test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ 
     const blocks = await page.locator('pre[data-language="l"]').evaluateAll((pres) => pres.map((pre) => [...pre.querySelectorAll('.ec-line .code')].map((line) => line.textContent?.replace(/\n$/, '')).join('\n').trimEnd()));
     expect(blocks).toContain(source);
   }
-  await expect(page.locator('pre[data-language="sh"]').first()).toContainText(/^l build demo\/basic\/main\.l/);
+  await expect(page.locator('pre[data-language="sh"]').first()).toContainText(/^l build main\.l/);
   await page.goto('/docs/stdlib/');
   expect(JSON.parse((await page.locator('pre[data-language="json"] code').textContent())!)).toEqual(JSON.parse(await fs.readFile('../stdlib/index.json', 'utf8')));
   await page.goto('/docs/reference/logemes/rust-contract/');

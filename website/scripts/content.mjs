@@ -33,7 +33,7 @@ export function validateMap(map) {
     if (!/^\/(?:docs(?:\/[a-z0-9-]+)*|releases(?:\/[a-z0-9-]+)*)\/$/.test(p.route)) throw new Error(`Invalid public route: ${p.route}`);
     if (routes.has(p.route)) throw new Error(`Duplicate route: ${p.route}`);
     if (sources.has(p.source)) throw new Error(`Duplicate canonical source: ${p.source}`);
-    if (!Number.isFinite(p.order) || typeof p.generated !== 'boolean') throw new Error(`Invalid navigation metadata: ${p.source}`);
+    if (!Number.isFinite(p.order) || typeof p.generated !== 'boolean' || (p.sidebar !== undefined && typeof p.sidebar !== 'boolean')) throw new Error(`Invalid navigation metadata: ${p.source}`);
     if (!['normative', 'explanatory', 'implementation', 'future'].includes(p.role)) throw new Error(`Invalid document role: ${p.role}`);
     if (p.source.includes('/_meta/')) throw new Error(`Private metadata cannot be a public page: ${p.source}`);
     routes.add(p.route); sources.add(p.source);
@@ -174,7 +174,9 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
       }
       const fence = '`'.repeat(Math.max(3, ...[...code.matchAll(/`+/g)].map((m) => m[0].length + 1)));
       const link = sourceURL(root, example.source, identity);
-      add(node, `${fence}${example.lang ?? example.language ?? 'l'} title="${sourceLabel}"\n${code}${code.endsWith('\n') ? '' : '\n'}${fence}\n\nSource: ${link ? `[${sourceLabel}](${link}${sourceFragment})` : `\`${sourceLabel}\``}. ${example.description} Classification: **${example.classification}**. Evidence: **${example.validation}**.${displayNote}`);
+      const runtimeFailure = example.classification === 'runnable' && Number.isInteger(example.expectedExit) && example.expectedExit !== 0;
+      const label = runtimeFailure ? 'Complete program · expected runtime failure' : { runnable: 'Complete program', 'compile-only': 'Compile-only example', invalid: 'Expected compilation failure', fragment: 'Fragment' }[example.classification];
+      add(node, `${fence}${example.lang ?? example.language ?? 'l'} title="${sourceLabel}"\n${code}${code.endsWith('\n') ? '' : '\n'}${fence}\n\n**${label}.** Source: ${link ? `[${sourceLabel}](${link}${sourceFragment})` : `\`${sourceLabel}\``}.${displayNote}\n\n<details>\n<summary>Example evidence</summary>\n\n${example.description} Validation record: **${example.validation}**. [About these records](/docs/contributing/evidence/).\n\n</details>`);
       continue;
     }
     if (node.type.endsWith('Reference')) {

@@ -1,21 +1,19 @@
 # Releases and source identity
 
-L releases are published through the repository's GitHub CI/CD. Get the [latest release](https://github.com/l-programming-language/l/releases/latest), or browse [all releases](https://github.com/l-programming-language/l/releases) for a specific version.
+**Publication is disabled; the first binary release is not available yet.**
 
 ## Download L
 
-Choose the binary for your operating system and CPU architecture. English grammar, vocabulary, builtins, standard library, and backend resources are embedded. Follow [installation](../cli/installation.md) for the external build-tool prerequisites and `PATH` setup.
+Follow [installation](../cli/installation.md) to build from source now or install a binary once releases are available in [GitHub Releases](https://github.com/l-programming-language/l/releases).
 
 ## Versioning and compatibility
 
-Releases are **English-only**. Other source languages are out of scope until after `v1.0.0`. Tags use **major.minor.patch**, starting at `v0.0.1`; `l --version` reports the bare version, `0.0.1`.
+Releases are **English-only** until after `v1.0.0`. Release tags start at `v0.0.1` and use `vMAJOR.MINOR.PATCH`; `l --version` reports the bare version.
 
-Backward compatibility is **not guaranteed before `v1.0.0`**. Read the release notes before upgrading between any pre-1.0 versions, including minor and patch updates.
+Backward compatibility is **not guaranteed before `v1.0.0`**. Read the release notes before upgrading, including minor and patch updates.
 
 ## Inspect this site's provenance
 
-The site's `/version.json` records its language version/commit, documentation revision, channel and source fingerprint when available. A documentation correction can have a newer revision while describing the same language release.
+`/version.json` identifies the language version/commit, documentation revision, channel, and source fingerprint. Local previews are labeled **Local**; source links identify their committed base. A fingerprint identifies content, not a passing test result.
 
-Local previews read `VERSION` and display **0.0.1 / Local**. Uncommitted source links identify the last committed base; the fingerprint identifies current bytes. Source archives remain usable without Git metadata.
-
-A fingerprint identifies content; it does not establish that tests passed. Maintainers can find release verification, publication and recovery procedures in the [deployment guide](../../website/DEPLOYMENT.md).
+Maintainers can find publication and recovery procedures in the [deployment guide](../../website/DEPLOYMENT.md).

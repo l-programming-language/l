@@ -5,7 +5,8 @@
 **Release publication is currently disabled; no public binary download is available yet.**
 The implemented release process targets macOS and Linux on ARM64 and x86-64.
 Binary releases and the installer will be hosted in `l-programming-language/l`
-after this repository becomes public and publication is explicitly enabled.
+after the repository becomes public and publication is enabled. Until then, use
+[source-build installation](#source-build-installation).
 
 After a release is published, download its `install-release.sh` asset and inspect
 it before running it. The installer selects the host archive, checks its SHA-256
@@ -78,22 +79,6 @@ Check out the release's tag before building when you need a specific version. [i
 
 ## First native build
 
-After completing dependency setup, save this program as `main.l` in a new
-directory; no compiler source checkout is needed:
-
-```l
-Use IO's Print from `io` as "Print".
-
-"message" is `Hello World!`.
-Create "Hello" as a New Basic App.
-The App Prints message.
-Execute Hello.
-Show Hello's Output.
-```
-
-```sh
-l build --output-dir ./out ./main.l
-./out/main
-```
-
-The first command prints the executable path; the second runs it. Keep `out/main.apps/` beside `out/main` when moving the program. See [published files](build.md#published-files).
+After dependency setup, [build your first program](../guide/first-program.md).
+The walkthrough covers saving a source file, compiling it, and running the result
+without a compiler source checkout.

@@ -45,8 +45,9 @@ export async function prepare({ root = repository, site = website, verifyReferen
     }
     if (problems.length) throw new Error(`Canonical content errors:\n${problems.map((p) => `- ${p}`).join('\n')}`);
     for (const [name, bytes] of assets) outputs.set(`public/content-assets/${name}`, bytes);
-    const groups = [...new Set(map.pages.map((p) => p.section))];
-    const sidebar = groups.map((label) => ({ label, collapsed: !['Start here', 'Guide'].includes(label), items: map.pages.filter((p) => p.section === label).sort((a, b) => a.order - b.order || a.route.localeCompare(b.route)).map((p) => ({ label: p.title, link: p.route })) }));
+    const navigation = map.pages.filter((p) => p.sidebar !== false);
+    const groups = [...new Set(navigation.map((p) => p.section))];
+    const sidebar = groups.map((label) => ({ label, collapsed: label !== 'Learn L', items: navigation.filter((p) => p.section === label).sort((a, b) => a.order - b.order || a.route.localeCompare(b.route)).map((p) => ({ label: p.title, link: p.route })) }));
     outputs.set('.generated/sidebar.json', stable(sidebar));
     outputs.set('.generated/version.json', stable(version));
     outputs.set('public/version.json', stable(version));

@@ -42,7 +42,7 @@ Generated programs have their own runtime statuses: normal fallthrough/bare Exit
 
 A recognized While clause can reach an Unsupported instruction boundary. A missing name reaches a reference boundary. A recognized structural category such as Attribute does not by itself establish a runtime constructor; documentation must distinguish compiler representation from executable values.
 
-The specification audit records Byte/Bytes/Pointer/Null construction gaps, collection action support, joined conditions, source versus native callable forms, and other unresolved distinctions. Check those boundaries before relying on a feature.
+See the [type reference](values.md) and [control-flow limits](control-flow.md) for current supported operations.
 
 ### Rejected operands: a type error and a missing name
 
