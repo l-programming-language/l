@@ -127,9 +127,9 @@ func TestDefinitionNumberPrimitiveParity(t *testing.T) {
 	for _, tc := range definitionNumberCases {
 		t.Run(tc.name, func(t *testing.T) {
 			value := &primitive{Type: valueNumber, Number: math.Float64frombits(tc.bits)}
-			literal, kind, err := nativePrimitiveExpression(value)
-			if err != nil || kind != valueNumber || literal != tc.literal || math.Float64bits(value.Number) != tc.bits {
-				t.Fatalf("primitive Number changed: %q/%s/%v; want %q", literal, kind, err, tc.literal)
+			literal, finite := nativeNumberLiteral(value.Number)
+			if !finite || literal != tc.literal || math.Float64bits(value.Number) != tc.bits {
+				t.Fatalf("primitive Number changed: %q/%v; want %q", literal, finite, tc.literal)
 			}
 			argument, err := argumentFromToken(&token{mem: &entry{Type: storagePrimitive, Primitive: value}})
 			if err != nil || argument.Kind != "Number" || argument.Text != strings.TrimSuffix(tc.literal, "_f64") {
@@ -138,9 +138,10 @@ func TestDefinitionNumberPrimitiveParity(t *testing.T) {
 		})
 	}
 	for _, number := range []float64{math.NaN(), math.Inf(1), math.Inf(-1)} {
-		literal, kind, err := nativePrimitiveExpression(&primitive{Type: valueNumber, Number: number})
-		if literal != "" || kind != valueInvalid || !errors.Is(err, lerrors.Unsupported) || errors.Is(err, lerrors.Syntax) || err.Error() != "non-finite Number is not supported" {
-			t.Fatalf("nonfinite primitive Number changed its failure: %q/%s/%v", literal, kind, err)
+		e := &orchestrationEmitter{}
+		bound, err := e.literalValue(&primitive{Type: valueNumber, Number: number})
+		if bound != (emittedExpression{}) || len(e.pending) != 0 || !errors.Is(err, lerrors.Unsupported) || errors.Is(err, lerrors.Syntax) || err.Error() != "non-finite Number is not supported" {
+			t.Fatalf("nonfinite primitive Number changed its failure: %#v/%v/%v", bound, e.pending, err)
 		}
 	}
 }

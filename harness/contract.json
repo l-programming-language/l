@@ -280,7 +280,7 @@
     },
     {
       "path": "lyger/ir_enums_test.go",
-      "sha256": "f555adf0ba63c77aab9f233f95f86e86e0e453505e71399da3c8d4ac4f0bc040"
+      "sha256": "106f4d3198b571e2a1212f978a67661431c405ffb160167b54385ef694237143"
     },
     {
       "path": "lyger/lexicon_test.go",
@@ -288,11 +288,11 @@
     },
     {
       "path": "lyger/recursive_classes_test.go",
-      "sha256": "0b1e0c54f65873d223a9b7531fbfe03b265b3afb06d868dfcd7caa55329c4eb7"
+      "sha256": "a370851d08a720c244c253d2fa3421c93c65463442a61aff5006a0927ac029a7"
     },
     {
       "path": "lyger/refactor_value_characterization_test.go",
-      "sha256": "936aeda7fff6451e81f43cfa35b3be1a1b7f145d3d12ff58bf7136d7362cebb4"
+      "sha256": "7061f5dc4532990d40a8b36ac264c084537caf1b525fdfebdd9e08133ba64467"
     },
     {
       "path": "lyger/scanner_test.go",
@@ -300,7 +300,7 @@
     },
     {
       "path": "lyger/stored_values_test.go",
-      "sha256": "9f8140be3785988804d1f35fe643d0a68746f8868e7e9cd1da5ff9882ef71c97"
+      "sha256": "4ff1bf30ac56d3bf9866f5188ff0fe42d457e716a3554f0acb6901353da3c1a5"
     },
     {
       "path": "lyger/test/builds/First/Cargo.lock",
@@ -417,6 +417,10 @@
     {
       "path": "lyger/test/native/observer/main.rs",
       "sha256": "5f7ab7c327d7e8382c5b1a6e12cd90589f24fb8dc341419f4a5b87aab1ea4550"
+    },
+    {
+      "path": "lyger/test/native/runtime-lifetimes.l",
+      "sha256": "440868a64226e6a289f86281ec5a230a59deac2c64db1d0d8044539292fa77fe"
     },
     {
       "path": "lyger/test/workspace/services.l",
@@ -976,7 +980,7 @@
     },
     {
       "path": "cmd/l/runnable_service_native_test.go",
-      "sha256": "b035f1cbcd6253f19e028f03a60e898ab23e6eb53c920dede005004469c105a4"
+      "sha256": "27b37358a20a39451c6c432606d6baa94b07c56fd80c6862449b1e48741b5eca"
     },
     {
       "path": "cmd/l/runnable_service_test.go",
@@ -1400,7 +1404,7 @@
     },
     {
       "path": "lyger/runnable_service_test.go",
-      "sha256": "0fd6eaadd1fbe3046ac334389d871fd151bbd2373fc23beacc62eabb3e87b8ae"
+      "sha256": "24e3202645616494f26ca56de24f97f9335b6790051639f368406fdf37804632"
     },
     {
       "path": "lyger/test/runnable_service/native-body-alias.l",

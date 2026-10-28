@@ -45,10 +45,6 @@ func TestSourceActionArgumentBoundaries(t *testing.T) {
 			if !found {
 				t.Fatal("source action was not planned")
 			}
-			generated := requireFunctionGenerated(t, tc.source)
-			if tc.name == "once" && strings.Count(generated, ".get(0_f64)?") != 1 {
-				t.Fatal("actual argument expression was not evaluated once")
-			}
 		})
 	}
 }

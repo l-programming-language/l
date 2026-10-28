@@ -84,40 +84,37 @@ func (e *orchestrationEmitter) processInstruction(current *orchestrationInstruct
 	if current.App != nil {
 		return e.canonicalProcess(current, e.processReceiver(current))
 	}
-	selected, err := e.transferRuntimeValue(current.Target, current.Target.RuntimeType)
+	selected, err := e.value(current.Target)
 	if err != nil {
 		return nil, err
 	}
 	name := fmt.Sprintf("lSelectedApp%d", e.processSelection)
 	e.processSelection++
-	result := []string{orchestrationBinding(name, selected)}
-	for index, branch := range current.AppCases {
-		prefix := "if "
-		if index > 0 {
-			prefix = "} else if "
-		}
+	cases := make([]builtinAppCase, 0, len(current.AppCases))
+	for _, branch := range current.AppCases {
 		canonical := e.apps[branch.App]
 		if canonical == "" {
 			return nil, lerrors.Internal.Errorf("dynamic App case has no canonical handle")
 		}
-		result = append(result, orchestrationStatement(prefix+"std::sync::Arc::ptr_eq(&"+name+", &"+canonical+") {"))
-		// Pointer equality proves this private compiler receiver's canonical target;
-		// the builtin signature still receives a checked App and a hygienic local.
+		// The selected comparison proves this private receiver's canonical target.
+		// Each operation still binds the checked App and its hygienic local.
 		receiver := &builtinProcessReceiver{value: branch.Target, name: name}
 		body, err := e.canonicalProcess(branch, receiver)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, body...)
+		cases = append(cases, builtinAppCase{canonical: canonical, body: body})
 	}
-	if len(current.AppCases) > 0 {
-		result = append(result, orchestrationStatement("} else {"))
+	var returned *DefinitionTemplate
+	if e.functionWords != nil {
+		returned = e.functionWords.ReturnTemplate
+	} else {
+		returned, err = e.compilation.builtinMemberDefinition("Function", "Return")
+		if err != nil {
+			return nil, err
+		}
 	}
-	result = append(result, orchestrationStatement("return Err(runtime::Error::new(\"App handle is not owned by this program\"));"))
-	if len(current.AppCases) > 0 {
-		result = append(result, orchestrationStatement("}"))
-	}
-	return result, nil
+	return e.composeAppSelection(name, current.Target, selected.text, cases, returned)
 }
 func (e *orchestrationEmitter) canonicalProcess(current *orchestrationInstruction, receiver *builtinProcessReceiver) ([]string, error) {
 	switch current.Source.Kind {
@@ -142,7 +139,11 @@ func (e *orchestrationEmitter) canonicalProcess(current *orchestrationInstructio
 		if err != nil {
 			return nil, err
 		}
-		return e.processes.instantiate(builtinProcessAwait, builtinProcessOperands{receiver: receiver, invocation: invocation, body: &builtinProcessBody{statements: append(body, finish...)}})
+		process, err := e.compilation.processDefinition(append(body, finish...))
+		if err != nil {
+			return nil, err
+		}
+		return e.processes.instantiate(builtinProcessAwait, builtinProcessOperands{receiver: receiver, invocation: invocation, body: &builtinProcessBody{definition: process}})
 	}
 	return nil, lerrors.Internal.Errorf("invalid process operation %s", current.Source.Kind)
 }

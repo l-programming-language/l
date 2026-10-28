@@ -50,7 +50,7 @@ Show ` + "`root|`" + `.
 			result := phase1Require(t, input, nil)
 			// Only the runtime mode changes below. Compile the actual generated
 			// project and its observer once for this completion/source group.
-			built, _ := buildOrchestratorForTest(t, result, orchestratorTestBuild{instrumentation: shutdownInstrumentation, race: false})
+			built := buildOrchestratorForTest(t, result, orchestratorTestBuild{instrumentation: shutdownInstrumentation, race: false})
 			executable, err := os.ReadFile(built)
 			if err != nil {
 				t.Fatal(err)

@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "sourceHashes": {
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-    "lyger/instructions.go": "230b1a93cdf475156264b6531262072cc0a3f6599a2b26883c45f91355a7b3a6",
-    "lyger/orchestration_functions.go": "f13b92c9caf1c1d3c77105c2a69785e55a16ba88e3ca73347fd925ede99041fc",
-    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
+    "lyger/function_composition.go": "7ffdd2b335b2e34f838adbb6625b0d4cfc088212ceec76a43bb93a1bd2a8d9a6",
+    "lyger/instructions.go": "0523dc88c56bc41bb4db1b5f791c59118adddc2b8618fa47fed14cb5c5946e31",
+    "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
     "lyger/source_functions.go": "aea627402c886b8289eda7da8318637c744f2f7029781106d419b5a7d9e9a8c1",
-    "lyger/utilities.go": "2e9aa1197bb2a1f8569dc2e668b8a1219d4812384d5a8cb365d41a270fa280b0"
+    "lyger/utilities.go": "ddbeecbb98d75bd88061be583462e9df1e1b9adaa5e8d181e78f17c24c45e5a8"
   },
   "entries": {
     "nouns.it": {
@@ -187,7 +187,7 @@
       "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "topic": "Collection operations",
       "support": "partial",
-      "notes": "Put appends to a List, stores Map/Instance fields or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries."
+      "notes": "Put appends to a List, stores Map values or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries."
     },
     "verbs.locative": {
       "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",

@@ -88,8 +88,8 @@ func TestDefinitionNativeIdentifierBoundary(t *testing.T) {
 	}
 }
 
-func TestDefinitionNullIsTypedDisplayAtom(t *testing.T) {
-	const want = `{ struct LNull; impl ::core::fmt::Display for LNull { fn fmt(&self, formatter: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result { formatter.write_str("<nil>") } } LNull }`
+func TestDefinitionNullIsTypedAtom(t *testing.T) {
+	const want = `()`
 	for _, kind := range []string{"Thing", "Null"} {
 		template := parseTestDefinition(t, `<DEF>E{|Statement: ~<@Value|`+kind+`@>~|}<DEF>`)
 		instance, err := template.Instantiate(map[string]DefinitionArgument{"Value": {Kind: "Null"}})
@@ -109,12 +109,31 @@ func TestDefinitionNullIsTypedDisplayAtom(t *testing.T) {
 }
 
 func TestDefinitionNullCompleteApplication(t *testing.T) {
-	writer := parseTestDefinition(t, `<DEF>BOD^E{|Statement: ~::std::println!("{}", <@Value|Thing@>);~|}<DEF>`)
-	instance, err := writer.Instantiate(map[string]DefinitionArgument{"Value": {Kind: "Null"}})
+	c := requireDistributionFrontend(t, "Create \"Child\" as a New Basic App.\n", nil).Compilation
+
+	formatted, err := c.instantiateBuiltin("Null.Format", map[string]DefinitionArgument{"Name": definitionReferenceArgument("nullDisplay")})
 	if err != nil {
 		t.Fatal(err)
 	}
-	document := `<PROGRAM><STRUCTURE><BOOK "Worker"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`" + `</S|><|S|>` + "`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^" + instance.Expression + "`" + `</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`
+	writer := parseTestDefinition(t, `<DEF>BOD^E{|Statement: ~::std::println!("{}", <@Value|Thing@>);~|}<DEF>`)
+	value := definitionReferenceArgument("nullDisplay")
+	value.Kind = "Null"
+	instance, err := writer.Instantiate(map[string]DefinitionArgument{"Value": value})
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, err := c.instantiateBuiltin("Process", map[string]DefinitionArgument{"Definitions": {Kind: "Syllables", Syllables: []string{formatted.Expression, instance.Expression}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	function, err := c.instantiateBuiltin("Function", map[string]DefinitionArgument{
+		"Name": {Kind: "Text", Text: "main"}, "Inputs": {Kind: "Props"}, "Outputs": {Kind: "Texts"},
+		"Process": {Kind: "Definition", Definition: &body},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	document := `<PROGRAM><STRUCTURE><BOOK "Worker"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`" + `</S|><|S|>` + "`" + function.Expression + "`" + `</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`
 	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate([]byte(document), Logiceme.GenerationOptions{})
 	recordBundle(t, bundle)
 	if err != nil {

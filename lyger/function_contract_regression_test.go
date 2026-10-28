@@ -46,12 +46,11 @@ func TestFunctionConstructorContractRejectsStaticSubstitution(t *testing.T) {
 }
 
 var functionContractReads = map[string]string{
-	"Thing":    "Define \"saved\" as a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved.\n",
-	"List":     "Define \"saved\" as a New List of a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved at 0.\n",
-	"Map":      "Define \"saved\" as a New Map of Thing.\nPut Other in saved as `key`.\nDefine \"Selected\" as a New Identity from saved at `key`.\n",
-	"Pointer":  "Define \"saved\" as a New Pointer of a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved.\n",
-	"Instance": "\"Holder\" is a New Adjective describing any Instance.\nIt describes a Generic Instance with a `callback` Thing.\nDefine \"saved\" as a New Holder Instance.\nPut Other in saved as `callback`.\nDefine \"Selected\" as a New Identity from saved at `callback`.\n",
-	"result":   functionSource("Select", "", "Thing", "Define \"boxed\" as a New Thing of Other.\nReturn boxed.") + "Select as \"saved\".\nDefine \"Selected\" as a New Identity from saved.\n",
+	"Thing":   "Define \"saved\" as a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved.\n",
+	"List":    "Define \"saved\" as a New List of a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved at 0.\n",
+	"Map":     "Define \"saved\" as a New Map of Thing.\nPut Other in saved as `key`.\nDefine \"Selected\" as a New Identity from saved at `key`.\n",
+	"Pointer": "Define \"saved\" as a New Pointer of a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved.\n",
+	"result":  functionSource("Select", "", "Thing", "Define \"boxed\" as a New Thing of Other.\nReturn boxed.") + "Select as \"saved\".\nDefine \"Selected\" as a New Identity from saved.\n",
 }
 
 func TestFunctionConstructorContractRuntimeReads(t *testing.T) {

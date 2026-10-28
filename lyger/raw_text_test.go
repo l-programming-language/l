@@ -97,6 +97,7 @@ func TestSourceLogPreservesRawText(t *testing.T) {
 }
 
 func TestSourceLogTypedDispatch(t *testing.T) {
+	compilation := requireDistributionFrontend(t, `Create "Worker" as a New Basic App.`, nil).Compilation
 	logger := sourceLogTemplate(t)
 	var body []string
 	for _, argument := range []DefinitionArgument{
@@ -106,6 +107,15 @@ func TestSourceLogTypedDispatch(t *testing.T) {
 		{Kind: "Truth", Text: "false"},
 		{Kind: "Null"},
 	} {
+		if argument.Kind == "Null" {
+			formatted, err := compilation.instantiateBuiltin("Null.Format", map[string]DefinitionArgument{"Name": definitionReferenceArgument("nullDisplay")})
+			if err != nil {
+				t.Fatal(err)
+			}
+			body = append(body, formatted.Expression)
+			argument = definitionReferenceArgument("nullDisplay")
+			argument.Kind = "Null"
+		}
 		instance, err := logger.Instantiate(map[string]DefinitionArgument{"Output": argument})
 		if err != nil {
 			t.Fatal(err)

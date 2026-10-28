@@ -36,7 +36,6 @@ const (
 	valueUnknown
 	valueNull
 	valueMap
-	valueInstance
 	valueTypeCount
 )
 
@@ -46,7 +45,7 @@ var valueTypeNames = [valueTypeCount]string{
 	valueService: "Service", valueClass: "Class", valueObject: "Object",
 	valueAttribute: "Attribute", valueDefinition: "Definition", valueFunction: "Function",
 	valueProperty: "Property", valueOperation: "Operation", valueList: "List", valueDictionary: "Dictionary",
-	valueMap: "Map", valueInstance: "Instance", valueError: "Error", valueID: "ID", valueNone: "None", valueUnknown: "Unknown", valueNull: "Null",
+	valueMap: "Map", valueError: "Error", valueID: "ID", valueNone: "None", valueUnknown: "Unknown", valueNull: "Null",
 }
 
 func (k valueType) String() string {
@@ -110,7 +109,7 @@ func (k valueType) StorageKind() (storageKind, bool) {
 		return storagePrimitive, true
 	case valueLexeme:
 		return storageLexeme, true
-	case valueApp, valueInstance, valueService, valueClass, valueObject, valueAttribute,
+	case valueApp, valueService, valueClass, valueObject, valueAttribute,
 		valueDefinition, valueFunction, valueProperty, valueOperation:
 		return storageApplicative, true
 	case valueList, valueMap, valueDictionary:

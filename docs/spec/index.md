@@ -15,7 +15,7 @@ The type reference answers two questions: **what does this value represent?** an
 | [Primitive Types](values.md) | Individual data values and managed references. | Text, Number, Truth, Thing, Bytes, Pointer, Null |
 | [Iterative Types](collections-and-categories.md) | Collections and named-member namespaces. | List, Map, Dictionary |
 | [Lexical Types](lexical-types.md) | Grammatical roles of words. | Nouns, Verbs, Adjectives, Adverbs, Articles, Prepositions |
-| [Applicational Types](applicational-types.md) | Application structure and behavior. | App, Service, Class, Object, Function, Instance |
+| [Applicational Types](applicational-types.md) | Application structure and behavior. | App, Service, Class, Object, Function |
 
 These are related dimensions: `App` is a noun grammatically and names an applicational type. Each page starts with the complete category table, including names with limited support.
 

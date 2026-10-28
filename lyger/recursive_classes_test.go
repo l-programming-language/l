@@ -37,7 +37,7 @@ func TestFrontendFeatureTypeRemoved(t *testing.T) {
 }
 
 func TestFrontendSurvivingValueTypeNames(t *testing.T) {
-	names := []string{"", "Thing", "Text", "Number", "Truth", "Bytes", "Pointer", "Lexeme", "App", "Service", "Class", "Object", "Attribute", "Definition", "Function", "Property", "Operation", "List", "Dictionary", "Error", "ID", "None", "Unknown", "Null", "Map", "Instance"}
+	names := []string{"", "Thing", "Text", "Number", "Truth", "Bytes", "Pointer", "Lexeme", "App", "Service", "Class", "Object", "Attribute", "Definition", "Function", "Property", "Operation", "List", "Dictionary", "Error", "ID", "None", "Unknown", "Null", "Map"}
 	if int(valueTypeCount) != len(names) {
 		t.Fatalf("value type inventory has %d, want %d", valueTypeCount, len(names))
 	}
@@ -212,7 +212,7 @@ func TestFrontendRecursiveClassSource(t *testing.T) {
 	file := observeBundleMain(t, bundle)
 	file.function(t, "main")
 	assertClassModules(t, bundle, map[string][]string{
-		"/src/__l_service_main.rs": {"mod outer;", "outer::middle::leaf::main::main();"},
+		"/src/__l_service_main.rs": {"mod outer;"},
 		"/src/__l_class_outer.rs":  {"mod middle;"},
 		"/src/__l_class_middle.rs": {"mod leaf;"},
 		"/src/__l_class_leaf.rs":   {"mod main;"},

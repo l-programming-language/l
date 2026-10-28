@@ -19,7 +19,7 @@ func TestCanonicalFunctionDefinitionsOwnEmission(t *testing.T) {
 		{"Suspend", "Statement: ~lPinned~", "Statement: ~/* selected_Suspend */ lPinned~"},
 		{"Invoke", "Value: ~<@Target@>~", "Value: ~/* selected_Invoke */ <@Target@>~"},
 		{"Yield", "Key: ~std::ops::ControlFlow::Continue~", "Key: ~/* selected_Yield */ std::ops::ControlFlow::Continue~"},
-		{"Bind", "Key: ~LEnvironment::typed~", "Key: ~/* selected_Bind */ LEnvironment::typed~"},
+		{"Bind", "Key: ~l_environment_new~", "Key: ~/* selected_Bind */ l_environment_new~"},
 		{"Exit", "Key: ~Ok~", "Key: ~/* selected_Exit */ Ok~"},
 	} {
 		t.Run(test.member, func(t *testing.T) {
@@ -107,7 +107,7 @@ func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
 		callee.Members[name] = template
 	}
 	callee.Members["Invoke"] = parseTestDefinition(t, strings.Replace(string(definition.Members["Invoke"].Original), "Value: ~<@Target@>~", "Value: ~/* selected invocation */ <@Target@>~", 1))
-	emitter := orchestrationEmitter{
+	emitter := orchestrationEmitter{compilation: c,
 		plan: &orchestrationPlan{Identities: map[*record]uint64{callee.Definition: 1}}, functionDepth: 1, functionWords: &caller,
 		functionContracts: map[*record]*sourceFunction{callee.Definition: &callee},
 	}

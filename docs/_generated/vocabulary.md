@@ -264,7 +264,7 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 | <a id="vocabulary-note-16"></a>16 | A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. |
 | <a id="vocabulary-note-17"></a>17 | Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. |
 | <a id="vocabulary-note-18"></a>18 | Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. |
-| <a id="vocabulary-note-19"></a>19 | Put appends to a List, stores Map/Instance fields or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries. |
+| <a id="vocabulary-note-19"></a>19 | Put appends to a List, stores Map values or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries. |
 | <a id="vocabulary-note-20"></a>20 | Place replaces a List element at a checked Number index or a keyed runtime field. Required target/key/value types are checked. |
 | <a id="vocabulary-note-21"></a>21 | The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API. |
 | <a id="vocabulary-note-22"></a>22 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. |

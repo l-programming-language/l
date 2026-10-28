@@ -3,34 +3,7 @@ package Lyger
 import (
 	"fmt"
 	"strconv"
-	"strings"
 )
-
-func orchestrationStatement(statement string, imports ...string) string {
-	return "BOD^" + orchestrationEvaluation(statement, imports...)
-}
-
-func orchestrationEvaluation(expression string, imports ...string) string {
-	metadata := ""
-	if len(imports) > 0 {
-		var paths []string
-		for _, path := range imports {
-			paths = append(paths, strconv.Quote(path))
-		}
-		metadata = "Imports: ~&[" + strings.Join(paths, ", ") + "]&~, "
-	}
-	return "E{|" + metadata + "Statement: ~" + expression + "~|}"
-}
-
-func orchestrationOperation(statements []string) string {
-	if len(statements) == 0 {
-		statements = []string{orchestrationStatement("{}")}
-	}
-	if len(statements) == 1 {
-		return "W^" + statements[0]
-	}
-	return "W^(" + strings.Join(statements, "*") + ")"
-}
 
 func (current *instruction) wrapError(err error) error {
 	if err == nil {

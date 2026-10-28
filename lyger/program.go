@@ -96,7 +96,7 @@ func (c *Compilation) lowerProgram() error {
 			app.Services = append(app.Services, serviceValue)
 			appBook.Chapters = append(appBook.Chapters, serviceChapter)
 		}
-		if err := prepareSourceTopology(app, appBook); err != nil {
+		if err := c.prepareSourceTopology(app, appBook); err != nil {
 			return fmt.Errorf("prepare %s source topology: %w", app.ID, err)
 		}
 		program.Books = append(program.Books, appBook)

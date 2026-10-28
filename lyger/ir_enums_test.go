@@ -3,7 +3,6 @@ package Lyger
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 	"testing"
 )
 
@@ -19,7 +18,7 @@ func TestIREnumNamesAndInvalidValues(t *testing.T) {
 		{"nativeMember", int(nativeMemberCount), []string{"", "output", "error"}, func(n uint8) fmt.Stringer { return nativeMember(n) }},
 		{"pronounScopeKind", int(pronounScopeKindCount), []string{"", "paragraph", "action-argument"}, func(n uint8) fmt.Stringer { return pronounScopeKind(n) }},
 		{"nativeRole", int(nativeRoleCount), []string{"", "action.generative", "action.executive", "action.observative", "action.terminative", "action.definitive", "functional.deflective", "functional.error", "action.suspensive", "action.interruptive", "action.declarative", "action.expansive", "action.locative"}, func(n uint8) fmt.Stringer { return nativeRole(n) }},
-		{"valueType", int(valueTypeCount), []string{"", "Thing", "Text", "Number", "Truth", "Bytes", "Pointer", "Lexeme", "App", "Service", "Class", "Object", "Attribute", "Definition", "Function", "Property", "Operation", "List", "Dictionary", "Error", "ID", "None", "Unknown", "Null", "Map", "Instance"}, func(n uint8) fmt.Stringer { return valueType(n) }},
+		{"valueType", int(valueTypeCount), []string{"", "Thing", "Text", "Number", "Truth", "Bytes", "Pointer", "Lexeme", "App", "Service", "Class", "Object", "Attribute", "Definition", "Function", "Property", "Operation", "List", "Dictionary", "Error", "ID", "None", "Unknown", "Null", "Map"}, func(n uint8) fmt.Stringer { return valueType(n) }},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			if tc.count != len(tc.want) {
@@ -116,9 +115,8 @@ func TestValueTypeNamesAndScalarBoundary(t *testing.T) {
 			t.Fatalf("Rust storage for %s did not retain one paragraph slot: %+v", kind, plan)
 		}
 		slot := plan.Storage[0]
-		_, declaration, err := orchestrationStorageDeclaration(slot)
-		if err != nil || slot.Type != kind || slot.Initial != nil || slot.Published || !strings.Contains(declaration, ": "+want) {
-			t.Errorf("Rust storage for %s = %q/%v; want explicit uninitialized %s", kind, declaration, err, want)
+		if slot.Type != kind || slot.Initial != nil || slot.Published {
+			t.Errorf("Rust storage for %s = %+v; want explicit uninitialized %s", kind, slot, want)
 		}
 	}
 	for _, kind := range []valueType{valueTypeCount, 255} {

@@ -1,7 +1,6 @@
 package Lyger
 
 import (
-	distribution "github.com/l-programming-language/l"
 	"strings"
 	"testing"
 )
@@ -11,61 +10,6 @@ func dynamicAppTestRecord(name string) *record {
 	rec := ref.Record
 	rec.Value.Runtime = &runtimeReference{}
 	return rec
-}
-func TestDynamicAppAwaitJoinsOnlyContinuingFacts(t *testing.T) {
-	for _, scenario := range []string{"both", "missing", "exit"} {
-		t.Run(scenario, func(t *testing.T) {
-			first, firstRef := planTestApp("First")
-			second, _ := planTestApp("Second")
-			selected := dynamicAppTestRecord("Selected")
-			result := planTestScalar("result", valueNumber, nil)
-			assign := &instruction{Kind: instructionAssign, Target: planTestRef(result), Value: &instructionValue{Kind: operandLiteral, Type: valueNumber, Literal: &primitive{Type: valueNumber, Number: 7}}}
-			semantics := newSemanticProgram()
-			semantics.Apps = []*App{first, second}
-			semantics.Continuations = map[*App]*scopedInstructions{first: {Scope: &lexicalScope{kind: lexicalParagraph}, Body: []*instruction{assign}}, second: {Scope: &lexicalScope{kind: lexicalParagraph}}}
-			if scenario == "both" {
-				semantics.Continuations[second].Body = []*instruction{assign}
-			} else if scenario == "exit" {
-				semantics.Continuations[second].Body = []*instruction{{Kind: instructionExit}}
-			}
-			semantics.Instructions = []*instruction{{Kind: instructionAssign, Target: planTestRef(selected), Value: firstRef}, {Kind: instructionAwait, Target: planTestRef(selected)}, {Kind: instructionShow, Value: planTestRef(result)}}
-			plan, err := planOrchestration(semantics)
-			if scenario == "missing" {
-				if err == nil || !strings.Contains(err.Error(), "not definitely assigned") {
-					t.Fatalf("incomplete dynamic continuation facts: %v", err)
-				}
-				return
-			}
-			if err != nil {
-				t.Fatal(err)
-			}
-			await := plan.Root.Body[1]
-			if await.Target.App != nil || await.Target.Storage == nil || len(await.AppCases) != 2 || await.AppCases[0].App != first || await.AppCases[1].App != second {
-				t.Fatal("dynamic handle lost canonical dispatch alternatives")
-			}
-			if await.AppCases[0].Continuation == await.AppCases[1].Continuation {
-				t.Fatal("distinct Apps shared one continuation activation")
-			}
-			catalog, err := loadBuiltinProcesses(distribution.Files())
-			if err != nil {
-				t.Fatal(err)
-			}
-			emitter := &orchestrationEmitter{plan: plan, apps: map[*App]string{first: "lApp0", second: "lApp1"}, processes: catalog}
-			generated, err := emitter.processInstruction(await)
-			if err != nil {
-				t.Fatal(err)
-			}
-			source := strings.Join(generated, "\n")
-			for _, part := range []string{"Arc::ptr_eq(&lSelectedApp0, &lApp0)", "Arc::ptr_eq(&lSelectedApp0, &lApp1)", "App handle is not owned by this program"} {
-				if !strings.Contains(source, part) {
-					t.Fatalf("missing %s in %s", part, source)
-				}
-			}
-			if strings.Count(source, "claim_continuation") != 2 || strings.Count(source, "finish_continuation") != 2 {
-				t.Fatal("dynamic Await bypassed selected builtin continuation claim/finish")
-			}
-		})
-	}
 }
 
 func TestDynamicAppFunctionParameterUsesRuntimeStorage(t *testing.T) {

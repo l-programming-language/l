@@ -5,9 +5,8 @@
 | [App](#apps) | An application with source, identity and process state. | Construct, build, run, stop and await a separate process; read its Output or Error. |
 | [Service](#services) | A unit of code composed into an App. | Main supplies the entry structure; additional App-constructed Services become libraries. A standalone Service is structural. |
 | [Class](#classes-and-objects) | A group of source modules, Objects and nested Classes. | Organize generated code; no independent process or runtime scope. |
-| [Object](#classes-and-objects) | A source-file unit containing definitions. | Own generated file content; no automatic instance lifetime. |
+| [Object](#classes-and-objects) | A source-file unit containing definitions. | Own generated file content; no automatic runtime lifetime. |
 | [Function](#functions-properties-and-operations) | A callable with typed inputs, results and retained captures. | Invoke its descriptive verb with fresh parameters and locals. |
-| [Instance](#instances) | Runtime fields belonging to a canonical user-defined shape. | Own, snapshot, read and update typed fields. |
 | [Attribute](#attributes-and-definitions) | A composed part of an Object. | Internal construction representation; no general source field-construction API. |
 | [Definition](#attributes-and-definitions) | The implementation attached to a constructed element. | Internal representation used by source and logeme-backed definitions; no general standalone constructor. |
 | [Property](#functions-properties-and-operations) | Field or parameter information. | Internal/native representation; reading a member does not construct a Property. |
@@ -72,22 +71,6 @@ Source declarations and Object construction use the same selected Function/logem
 `first` has No Inputs and No Outputs; `any Process` receives its body. `Objective First` supplies the Object, which the [complete fixture](../../lyger/test/classes/interleaved.l) composes into a Class and App.
 
 `Worker's Output` selects an App member after Await; it does not create a Property record. Native `Func`, `Prop` and `Op` metadata have separate [logeme contracts](../../builtins/README.md). To name a sequence of source actions, [define a verb such as Launch](lexical-types.md#define-and-use-a-word); this does not construct an internal Operation.
-
-## Instances
-
-An adjective descriptor defines a runtime field shape, distinct from Class and Object:
-
-```l
-"Person" is a New Adjective describing any Instance.
-It describes a Generic Instance with a `name` Text and a `age` Number.
-Define "ada" as a New Person Instance.
-Put `Ada` in ada as `name`.
-Put 37 in ada as `age`.
-Define "name" as a New Text from ada at `name`.
-Show name.
-```
-
-The canonical Person declaration identifies the shape; unrelated descriptors with the same spelling remain distinct. Fields accept only their declared types. Reading an unassigned field or an unknown field rejects. Assignment snapshots the Instance's ordinary fields and retains nested Pointer targets.
 
 ## Sources and witnesses
 

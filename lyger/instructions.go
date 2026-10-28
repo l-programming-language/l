@@ -39,7 +39,6 @@ type instruction struct {
 // compile-time value. Runtime distinguishes conditional assignments and member
 // reads from literal values; Output's bytes are never trimmed or normalized.
 type instructionValue struct {
-	Fields      []runtimeField
 	RuntimeType runtimeTypeRef
 	Elements    []*instructionValue
 	Key         *instructionValue

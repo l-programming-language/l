@@ -130,48 +130,8 @@ func (b *instructionBuilder) constructedValue(object *objectGram, ctx instructio
 			}
 		}
 	}
-	if kind == valueInstance {
-		typeRef, err := sourceTypeFromObject(object)
-		if err != nil {
-			return nil, err
-		}
-		identity, err := canonicalRecord(typeRef.Identity, b.semantics.Aliases)
-		if err != nil {
-			return nil, err
-		}
-		descriptor := b.semantics.Descriptors[identity]
-		if descriptor == nil || !descriptor.Targets[nominalIdentity{native: valueInstance}] {
-			return nil, lerrors.TypeMismatch.Errorf("Instance shape must describe Instance")
-		}
-		result.RuntimeType.Identity = identity
-		seen := make(map[string]bool)
-		for _, rule := range descriptor.Rules {
-			if rule.Target != (nominalIdentity{native: valueInstance}) {
-				continue
-			}
-			for _, field := range phraseObjects(rule.Object.phrase) {
-				if field.name == nil || field.name.noun == nil {
-					return nil, lerrors.TypeMismatch.Errorf("Instance fields require names and types")
-				}
-				name := unquoteImportWord(field.name.noun.rawBytes)
-				if seen[name] {
-					return nil, lerrors.TypeMismatch.Errorf("duplicate Instance field %s", name)
-				}
-				seen[name] = true
-				typ, err := sourceTypeFromObject(field)
-				if err != nil {
-					return nil, err
-				}
-				typ, err = canonicalRuntimeType(typ, b.semantics.Aliases)
-				if err != nil {
-					return nil, err
-				}
-				result.Fields = append(result.Fields, runtimeField{Name: name, Type: typ})
-			}
-		}
-	}
 	switch kind {
-	case valueNull, valueMap, valueInstance:
+	case valueNull, valueMap:
 		if len(result.Elements) != 0 {
 			return nil, lerrors.TypeMismatch.Errorf("%s construction does not accept values", kind)
 		}

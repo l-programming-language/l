@@ -1,18 +1,20 @@
 {
   "schemaVersion": 1,
   "sourceHashes": {
+    "builtins/eng/core.l": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
     "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
     "lyger/construction.go": "4462bf8ddcc940d085e92f11fa951371caff1720f6c0ee22d5f8f1e921b501b6",
+    "lyger/function_composition.go": "7ffdd2b335b2e34f838adbb6625b0d4cfc088212ceec76a43bb93a1bd2a8d9a6",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/grammar_match.go": "bb6700a68686d2d88457df89053d38298c2230b3cc324c2f662e41665c2a5d53",
     "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
-    "lyger/instructions.go": "230b1a93cdf475156264b6531262072cc0a3f6599a2b26883c45f91355a7b3a6",
-    "lyger/native_encoding.go": "19785ba3dd27e613fa7a35ec5a60fef78a087743b965124087d535416c7aaa0a",
-    "lyger/orchestration_functions.go": "f13b92c9caf1c1d3c77105c2a69785e55a16ba88e3ca73347fd925ede99041fc",
-    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
+    "lyger/instructions.go": "0523dc88c56bc41bb4db1b5f791c59118adddc2b8618fa47fed14cb5c5946e31",
+    "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
+    "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
     "lyger/semantic_resolution.go": "a8e9eb4140547b6e488b5869ed73b7754181d3296918900c51c989d09df2e3f8",
     "lyger/source_functions.go": "aea627402c886b8289eda7da8318637c744f2f7029781106d419b5a7d9e9a8c1",
-    "lyger/types.go": "ccefcec0547794da4a35f9f58ad00131b5dab02808d4dbb910eef39102f951eb"
+    "lyger/types.go": "3c7c5f701ba06818f5c288fc8a514bde495a68ed49051390460e871170e6c703",
+    "lyger/word_values.go": "9df04c567676addb9086e386e448f320288d7131733f287c89c6ef5033839e30"
   },
   "entries": {
     "value": {
@@ -320,7 +322,7 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed runtime access",
       "support": "partial",
-      "notes": "Supplies a Number index for Lists/Bytes or a Text key for Map/Instance reads and writes. Runtime checks reject invalid keys and bounds."
+      "notes": "Supplies a Number index for Lists/Bytes or a Text key for Map reads and writes. Runtime checks reject invalid keys and bounds."
     },
     "phrase.objective": {
       "doc": "docs/spec/collections-and-categories.md#lists",

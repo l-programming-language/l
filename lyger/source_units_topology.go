@@ -11,7 +11,7 @@ import (
 // modules, Objects remain files, and neither creates a runtime activation.
 // Compiler-owned roots contain only source structure or the entry delegation;
 // the original Object bodies are never flattened, moved, or reparsed.
-func prepareSourceTopology(app *App, book *book) error {
+func (c *Compilation) prepareSourceTopology(app *App, book *book) error {
 	structural := len(app.Services) != 1
 	for _, service := range app.Services {
 		structural = structural || len(service.Classes) != 0 || len(service.Objects) != 1
@@ -86,7 +86,10 @@ func prepareSourceTopology(app *App, book *book) error {
 				return err
 			}
 			name := allocate("__l_class_" + sourceModuleName(group.ID))
-			root, content := sourceTopologyRoot(name, "")
+			root, content, err := c.sourceTopologyRoot(name, "")
+			if err != nil {
+				return err
+			}
 			group.Root = name
 			group.Objects = append(group.Objects, root)
 			group.members = append(group.members, sourceMember{Object: root})
@@ -117,10 +120,14 @@ func prepareSourceTopology(app *App, book *book) error {
 			id := allocate("__l_service_" + sourceModuleName(service.ID))
 			delegation := ""
 			if service == mainService {
-				delegation = strings.Join(mainPath, "::") + "();"
+				delegation = strings.Join(mainPath, "::")
 			}
 			var content *sentence
-			root, content = sourceTopologyRoot(id, delegation)
+			var err error
+			root, content, err = c.sourceTopologyRoot(id, delegation)
+			if err != nil {
+				return err
+			}
 			service.Objects = append(service.Objects, root)
 			service.members = append(service.members, sourceMember{Object: root})
 			chapter.sentences = append(chapter.sentences, content)
@@ -132,15 +139,30 @@ func prepareSourceTopology(app *App, book *book) error {
 	return nil
 }
 
-func sourceTopologyRoot(name, delegation string) (*object, *sentence) {
+func (c *Compilation) sourceTopologyRoot(name, delegation string) (*object, *sentence, error) {
 	root := newRootObject(name)
 	content := &sentence{Name: name, Type: "Object", Words: []*w{{Type: "Word", Syllables: []*s{{Type: "Syllable", CompiledBytes: []byte("A")}}}}}
 	if delegation != "" {
-		expression := "FW{|Key: ~main~, Inputs: ~&[]&~, Outputs: ~&[]&~|}^W^BOD^E{|Statement: ~" + delegation + "~|}"
+		call, err := c.instantiateBuiltin("Delegate", map[string]DefinitionArgument{"Target": definitionReferenceArgument(delegation)})
+		if err != nil {
+			return nil, nil, err
+		}
+		body, err := c.instantiateBuiltin("Process", map[string]DefinitionArgument{"Definitions": {Kind: "Syllables", Syllables: []string{call.Expression}}})
+		if err != nil {
+			return nil, nil, err
+		}
+		entry, err := c.instantiateBuiltin("Function", map[string]DefinitionArgument{
+			"Name": {Kind: "Text", Text: "main"}, "Inputs": {Kind: "Props"}, "Outputs": {Kind: "Texts"},
+			"Process": {Kind: "Definition", Definition: &body},
+		})
+		if err != nil {
+			return nil, nil, err
+		}
+		expression := entry.Expression
 		content.Words[0].Syllables = append(content.Words[0].Syllables, &s{Type: "Syllable", CompiledBytes: []byte(expression)})
 		root.Attributes = []*attribute{{ID: "main", Definition: &def{ID: "main", Type: "Function", Text: expression, Compilation: []byte(expression)}}}
 	}
-	return root, content
+	return root, content, nil
 }
 
 // Rust module names are a compiler namespace. Preserve ordinary source names;

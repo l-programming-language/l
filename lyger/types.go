@@ -140,8 +140,6 @@ func newDict() *dictionary {
 }
 
 // applicative structures an Application based Entry of a Record
-type instance struct{ Identity *record }
-
 type applicative struct {
 	ID         string
 	Type       valueType
@@ -154,7 +152,6 @@ type applicative struct {
 	Function   *funct
 	Property   *prop
 	Operation  *op
-	Instance   *instance
 }
 
 // value retains canonical payload identity; it never copies an application.
@@ -163,10 +160,6 @@ func (a *applicative) value() (val, error) {
 		return val{}, lerrors.Internal.Errorf("cannot read a nil applicative")
 	}
 	switch a.Type {
-	case valueInstance:
-		if a.Instance != nil {
-			return val{Type: a.Type, Data: a.Instance}, nil
-		}
 	case valueApp:
 		if a.App != nil {
 			return val{Type: a.Type, Data: a.App}, nil
@@ -211,8 +204,6 @@ func (a *applicative) value() (val, error) {
 func newApplicative(aType valueType) *applicative {
 	a := applicative{Type: aType}
 	switch a.Type {
-	case valueInstance:
-		a.Instance = &instance{}
 	case valueApp:
 		a.App = &App{}
 	case valueService:

@@ -43,6 +43,8 @@ func TestCaptureActivationAliasesNative(t *testing.T) {
 	value := planTestScalar("private", valueText, scope)
 	action, alias := captureTestAction("Report"), captureTestAction("Saved")
 	semantics := newSemanticProgram()
+	semantics.Declarations = c.Semantics.Declarations
+	semantics.Subjects = c.Semantics.Subjects
 	semantics.Aliases[alias] = action
 	bind := captureTestBind(action, value)
 	first := &instruction{Kind: instructionBlock, Block: &scopedInstructions{Scope: scope, Body: []*instruction{captureTestSet(value, "first"), bind, captureTestCall(action, captureTestSet(value, "mutated"), captureTestShow(value)), captureTestShow(value)}}}

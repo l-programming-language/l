@@ -55,8 +55,9 @@ type DefinitionSlot struct {
 }
 
 type DefinitionProperty struct {
-	Key  string
-	Type string
+	Key   string
+	Type  string
+	Value *DefinitionArgument
 }
 
 // DefinitionArgument separates source text from generated expressions and
@@ -69,12 +70,18 @@ type DefinitionArgument struct {
 	Props      []DefinitionProperty
 	Texts      []string
 	Definition *DefinitionInstance
+	reference  string
+	atoms      *[]DefinitionArgument
+	typeAtom   string
+	index      *uint64
+	sequence   []DefinitionInstance
 }
 
 type DefinitionBinding struct {
 	Slot    DefinitionSlot
 	Kind    string
 	Emitted string
+	Sources []SourceSpan
 }
 
 // DefinitionInstance owns fresh output and an argument ledger. Expression is
@@ -98,12 +105,13 @@ type definitionPart struct {
 // DefinitionTemplate retains the raw source prototype. Instantiation uses its
 // parsed private parts and never substitutes into or updates the prototype.
 type DefinitionTemplate struct {
-	Original []byte
-	Span     SourceSpan
-	Slots    []DefinitionSlot
-	parts    []definitionPart
-	words    [][][]definitionPart
-	function bool
+	Original       []byte
+	Span           SourceSpan
+	Slots          []DefinitionSlot
+	parts          []definitionPart
+	words          [][][]definitionPart
+	function       bool
+	signatureSlots map[string]string
 }
 
 // ParseDefinitionTemplate accepts a raw source literal or definitionMarker-framed content.
@@ -170,6 +178,21 @@ func ParseDefinitionTemplate(raw []byte, span SourceSpan) (*DefinitionTemplate, 
 			if end, err := definitionMetadataEnd(body, start); err == nil {
 				meta := strings.TrimSpace(body[start+2 : end])
 				template.function = strings.HasPrefix(meta, "Func{") && strings.HasSuffix(meta, "}Func")
+				if template.function {
+					template.signatureSlots = make(map[string]string)
+					fields, err := splitDefinitionFields(meta[5 : len(meta)-5])
+					if err != nil {
+						return nil, template.failure(err)
+					}
+					for _, field := range fields {
+						key, value, ok := strings.Cut(field, ":")
+						value = strings.TrimSpace(value)
+						if ok && strings.HasPrefix(value, "<@") && strings.HasSuffix(value, "@>") {
+							name, _, _ := strings.Cut(value[2:len(value)-2], "|")
+							template.signatureSlots[name] = strings.TrimSpace(key)
+						}
+					}
+				}
 			}
 		}
 		template.parts, err = template.parseParts(body)
@@ -183,6 +206,26 @@ func ParseDefinitionTemplate(raw []byte, span SourceSpan) (*DefinitionTemplate, 
 // IsFunction identifies a root Func metadata structure, independent of the
 // source-defined word's name or grammatical part of speech.
 func (t *DefinitionTemplate) IsFunction() bool { return t.function }
+
+// Signature values bind the source slots occupying Func fields. A second Text
+// slot does not silently acquire the callable's name merely because its type fits.
+func (t *DefinitionTemplate) signatureArguments(name string, inputs []DefinitionProperty, outputs []string) (map[string]DefinitionArgument, error) {
+	values := map[string]DefinitionArgument{
+		"Key": {Kind: "Text", Text: name}, "Inputs": {Kind: "Props", Props: inputs}, "Outputs": {Kind: "Texts", Texts: outputs},
+	}
+	bindings := make(map[string]DefinitionArgument)
+	for _, slot := range t.Slots {
+		value, exists := values[t.signatureSlots[slot.Name]]
+		if !exists {
+			continue
+		}
+		if slot.Type != value.Kind {
+			return nil, lerrors.Unsupported.Errorf("unsupported function slot %s: %s", slot.Name, slot.Type)
+		}
+		bindings[slot.Name] = value
+	}
+	return bindings, nil
+}
 
 func (t *DefinitionTemplate) failure(err error) error {
 	if err == nil {
@@ -283,7 +326,11 @@ func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument)
 			return DefinitionInstance{}, t.failure(fmt.Errorf("parameter %q: %w", slot.Name, err))
 		}
 		values[slot.Name] = value
-		instance.Bindings = append(instance.Bindings, DefinitionBinding{Slot: slot, Kind: argument.Kind, Emitted: value})
+		binding := DefinitionBinding{Slot: slot, Kind: argument.Kind, Emitted: value}
+		for _, child := range argument.sequence {
+			binding.Sources = append(binding.Sources, child.Span)
+		}
+		instance.Bindings = append(instance.Bindings, binding)
 	}
 	render := func(parts []definitionPart) (string, string, error) {
 		var result strings.Builder
@@ -330,6 +377,39 @@ func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error
 	expected, actual := strings.ToLower(slot.Type), strings.ToLower(argument.Kind)
 	kind, _ := parseDefinitionArgKindFolded(argument.Kind)
 	if expected == "" || expected == "syllable" {
+		if argument.atoms != nil {
+			if argument.Text != "" || argument.reference != "" || argument.typeAtom != "" || argument.index != nil || argument.Definition != nil || len(argument.sequence) != 0 || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
+				return "", lerrors.TypeMismatch.Errorf("atom list cannot contain a definition or another value")
+			}
+			values := make([]string, len(*argument.atoms))
+			for index, atom := range *argument.atoms {
+				var err error
+				values[index], err = atom.metadataAtom()
+				if err != nil {
+					return "", err
+				}
+			}
+			return strings.Join(values, ", "), nil
+		}
+		if argument.typeAtom != "" {
+			return argument.metadataAtom()
+		}
+		if argument.index != nil {
+			return argument.propertyAtom()
+		}
+		if argument.reference != "" {
+			return argument.referenceAtom()
+		}
+		if len(argument.sequence) != 0 {
+			var expressions []string
+			for _, child := range argument.sequence {
+				if child.Expression == "" {
+					return "", lerrors.TypeMismatch.Errorf("composition sequence requires instantiated syllables")
+				}
+				expressions = append(expressions, child.Expression)
+			}
+			return strings.Join(expressions, "*"), nil
+		}
 		if argument.Definition != nil && argument.Definition.Expression != "" {
 			return argument.Definition.Expression, nil
 		}
@@ -351,6 +431,9 @@ func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error
 	if expected != actual {
 		return "", lerrors.TypeMismatch.Errorf("requires %s, got %s", slot.Type, argument.Kind)
 	}
+	if argument.reference != "" {
+		return argument.referenceAtom()
+	}
 	switch kind {
 	case definitionArgText:
 		return definitionTextLiteral(argument.Text), nil
@@ -370,9 +453,7 @@ func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error
 		}
 		return argument.Text, nil
 	case definitionArgNull:
-		// A typed, expression-local atom preserves Null's display semantics without
-		// coercing it to Text or inventing a type for an opaque native Thing slot.
-		return `{ struct LNull; impl ::core::fmt::Display for LNull { fn fmt(&self, formatter: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result { formatter.write_str("<nil>") } } LNull }`, nil
+		return "()", nil
 	case definitionArgSyllables:
 		if len(argument.Syllables) == 0 {
 			return "", lerrors.InvalidInput.Errorf("requires at least one syllable")
@@ -389,10 +470,21 @@ func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error
 	case definitionArgProps:
 		var props []string
 		for _, property := range argument.Props {
-			if !validDefinitionNativeName(property.Key) || !validDefinitionNativeType(property.Type) {
+			if !validDefinitionNativeName(property.Key) || property.Type != "" && !validDefinitionNativeType(property.Type) || property.Type == "" && property.Value == nil {
 				return "", lerrors.Syntax.Errorf("invalid property %q of type %q", property.Key, property.Type)
 			}
-			props = append(props, "Prop{Key: "+property.Key+", Type: "+property.Type+"}Prop")
+			fields := []string{"Key: " + property.Key}
+			if property.Type != "" {
+				fields = append(fields, "Type: "+property.Type)
+			}
+			if property.Value != nil {
+				value, err := property.Value.propertyAtom()
+				if err != nil {
+					return "", fmt.Errorf("property %s: %w", property.Key, err)
+				}
+				fields = append(fields, "Value: "+value)
+			}
+			props = append(props, "Prop{"+strings.Join(fields, ", ")+"}Prop")
 		}
 		return "&[" + strings.Join(props, ", ") + "]&", nil
 	case definitionArgTexts:
@@ -403,6 +495,88 @@ func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error
 		return string(encoded), lerrors.Internal.Wrap(err, "")
 	default:
 		return "", lerrors.Unsupported.Errorf("unsupported parameter type %q", slot.Type)
+	}
+}
+
+// A reference names a previously bound value. Calls and value construction must
+// be supplied by the selected definition, never manufactured in an argument.
+// The selected definition controls child grouping; this argument retains the
+// ordered, already-instantiated children and their source spans in the ledger.
+func definitionSequenceArgument(children []DefinitionInstance) DefinitionArgument {
+	return DefinitionArgument{Kind: "Definition", sequence: append([]DefinitionInstance(nil), children...)}
+}
+
+func definitionReferenceArgument(name string) DefinitionArgument {
+	return DefinitionArgument{Kind: definitionArgSyllable.String(), reference: name}
+}
+
+func definitionAtomListArgument(values ...DefinitionArgument) DefinitionArgument {
+	atoms := append([]DefinitionArgument{}, values...)
+	return DefinitionArgument{Kind: definitionArgSyllable.String(), atoms: &atoms}
+}
+
+// This constructor accepts a resolved type spelling, never an expression. Type
+// syntax remains native metadata and retains the existing framing validation.
+func definitionTypeArgument(name string) DefinitionArgument {
+	return DefinitionArgument{Kind: definitionArgSyllable.String(), typeAtom: name}
+}
+
+func definitionIndexArgument(index uint64) DefinitionArgument {
+	return DefinitionArgument{Kind: definitionArgSyllable.String(), index: &index}
+}
+
+func (argument DefinitionArgument) metadataAtom() (string, error) {
+	if argument.typeAtom != "" {
+		if !validDefinitionNativeType(argument.typeAtom) || argument.reference != "" || argument.Text != "" || argument.Definition != nil || len(argument.sequence) != 0 || argument.atoms != nil || argument.index != nil || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
+			return "", lerrors.TypeMismatch.Errorf("type atom requires one resolved type")
+		}
+		return argument.typeAtom, nil
+	}
+	return argument.propertyAtom()
+}
+
+func (argument DefinitionArgument) referenceAtom() (string, error) {
+	kind, _ := parseDefinitionArgKindFolded(argument.Kind)
+	if kind != definitionArgSyllable && kind != definitionArgText && kind != definitionArgNumber && kind != definitionArgTruth && kind != definitionArgNull || argument.reference == "" || argument.Text != "" || argument.Definition != nil || len(argument.sequence) != 0 || argument.atoms != nil || argument.typeAtom != "" || argument.index != nil || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
+		return "", lerrors.TypeMismatch.Errorf("reference cannot contain a value or definition")
+	}
+	for _, path := range strings.Split(argument.reference, "::") {
+		for index, member := range strings.Split(path, ".") {
+			if validDefinitionNativeName(member) {
+				continue
+			}
+			if index > 0 && member != "" {
+				if _, err := strconv.ParseUint(member, 10, 32); err == nil {
+					continue
+				}
+			}
+			return "", lerrors.Syntax.Errorf("invalid value reference %q", argument.reference)
+		}
+	}
+	return argument.reference, nil
+}
+
+func (argument DefinitionArgument) propertyAtom() (string, error) {
+	if argument.reference != "" {
+		return argument.referenceAtom()
+	}
+	if argument.Definition != nil || len(argument.sequence) != 0 || argument.atoms != nil || argument.typeAtom != "" || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
+		return "", lerrors.TypeMismatch.Errorf("property value cannot contain a definition or collection")
+	}
+	if argument.index != nil {
+		if argument.Kind != definitionArgSyllable.String() || argument.Text != "" {
+			return "", lerrors.TypeMismatch.Errorf("index atom requires one unsigned value")
+		}
+		return strconv.FormatUint(*argument.index, 10), nil
+	}
+	kind, _ := parseDefinitionArgKindFolded(argument.Kind)
+	switch kind {
+	case definitionArgText, definitionArgNumber, definitionArgTruth:
+		return argument.renderFor(DefinitionSlot{Type: argument.Kind})
+	case definitionArgNull:
+		return "()", nil
+	default:
+		return "", lerrors.TypeMismatch.Errorf("property value requires a literal or bound reference")
 	}
 }
 
@@ -518,6 +692,26 @@ func normalizeDefinitionSignature(source string) (string, error) {
 	if inputs := values["Inputs"]; inputs != "" && inputs != "[]" && inputs != "&[]&" {
 		if !strings.HasPrefix(inputs, "&[") || !strings.HasSuffix(inputs, "]&") {
 			return "", lerrors.TypeMismatch.Errorf("Func Inputs require a Props value")
+		}
+		props, err := splitDefinitionFields(inputs[2 : len(inputs)-2])
+		if err != nil {
+			return "", err
+		}
+		for _, prop := range props {
+			prop = strings.TrimSpace(prop)
+			if !strings.HasPrefix(prop, "Prop{") || !strings.HasSuffix(prop, "}Prop") {
+				return "", lerrors.TypeMismatch.Errorf("Func Inputs require Prop records")
+			}
+			fields, err := splitDefinitionFields(prop[5 : len(prop)-5])
+			if err != nil {
+				return "", err
+			}
+			for _, field := range fields {
+				key, _, _ := strings.Cut(field, ":")
+				if strings.TrimSpace(key) == "Value" {
+					return "", lerrors.TypeMismatch.Errorf("Func input properties cannot have values")
+				}
+			}
 		}
 		parts = append(parts, "Inputs: ~"+inputs+"~")
 	}

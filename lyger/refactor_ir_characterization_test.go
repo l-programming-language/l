@@ -2,7 +2,6 @@ package Lyger
 
 import (
 	"encoding/json"
-	"strings"
 	"testing"
 )
 
@@ -54,26 +53,5 @@ func TestRefactorNativeMembersFollowRoleNotSpelling(t *testing.T) {
 				t.Fatalf("member = %+v, %v; want %q/%q", spec, ok, tc.name, tc.kind)
 			}
 		})
-	}
-}
-
-func TestRefactorOmittedOperandTypeAndUnknownExecutionOperator(t *testing.T) {
-	planner := &orchestrationPlanner{}
-	value := &instructionValue{Kind: operandLiteral, Literal: &primitive{Type: valueText, Text: "`unchanged`"}}
-	planned, err := planner.value(value, newOrchestrationFlow())
-	if err != nil {
-		t.Fatal(err)
-	}
-	lowered, err := (&orchestrationEmitter{}).value(planned)
-	if err != nil || lowered.text != `"unchanged".as_bytes().to_vec()` || planned.Type != valueText || lowered.kind != valueText {
-		t.Fatalf("unspecified type = %q/%s, %v", lowered.text, lowered.kind, err)
-	}
-	condition := &instructionCondition{Operator: "configured_extension", Left: value, Right: value}
-	_, err = planner.condition(condition, newOrchestrationFlow())
-	if err == nil || !strings.Contains(err.Error(), "unsupported condition operator configured_extension") {
-		t.Fatalf("configured operator error = %v", err)
-	}
-	if condition.Operator != "configured_extension" {
-		t.Fatal("lowering rewrote configured operator")
 	}
 }

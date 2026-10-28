@@ -1279,7 +1279,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 | <a id="grammar-note-2"></a>2 | A subject participates in declaration/binding and paragraph antecedent selection. Its cases distinguish declared names, resolved references and definitions. |
 | <a id="grammar-note-3"></a>3 | This phrase associates grammatical objects, prepositions or clauses as given by its sequence. Its location and optional/repeated terms are defined by the configured matcher, not conventional EBNF. |
 | <a id="grammar-note-4"></a>4 | This phrase participates in construction or argument attachment. Native placeholders have explicit type and encoding contracts; do not infer arbitrary coercions. |
-| <a id="grammar-note-5"></a>5 | Supplies a Number index for Lists/Bytes or a Text key for Map/Instance reads and writes. Runtime checks reject invalid keys and bounds. |
+| <a id="grammar-note-5"></a>5 | Supplies a Number index for Lists/Bytes or a Text key for Map reads and writes. Runtime checks reject invalid keys and bounds. |
 | <a id="grammar-note-6"></a>6 | Selects the source of a typed read, with an optional indexed key. Complete requested runtime type identities are checked before extraction. |
 | <a id="grammar-note-7"></a>7 | Selects a typed update destination and optional index or field key; runtime mutation does not change vocabulary namespaces. |
 | <a id="grammar-note-8"></a>8 | The to phrase supplies an imperative source clause or Text body to a definition. It is distinct from Use/import dependency resolution. |

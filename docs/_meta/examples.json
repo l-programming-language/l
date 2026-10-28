@@ -357,10 +357,10 @@
         "lyger/construction_test.go"
       ],
       "lines": {
-        "start": 12,
-        "end": 15
+        "start": 13,
+        "end": 16
       },
-      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
+      "sha256": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
       "lang": "l"
     },
     {
@@ -482,8 +482,7 @@
       "witnesses": [
         "lyger/grammar.go",
         "lyger/source_test.go",
-        "lyger/literal_framing_regression_test.go",
-        "lyger/orchestration_values_test.go"
+        "lyger/literal_framing_regression_test.go"
       ],
       "sha256": "909214e00186b0698b4ef07801ea44271b3c570f2bcba453962fccf5247a41a7",
       "lang": "l"
@@ -514,7 +513,7 @@
         "lyger/builtin_operations_contract_test.go",
         "lyger/distribution_frontend_test.go"
       ],
-      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
+      "sha256": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
       "lang": "l",
       "lines": {
         "start": 1,
@@ -665,7 +664,7 @@
       "source": "builtins/eng/core.l",
       "classification": "fragment",
       "description": "Canonical Process, Function and Function.Return definitions shared by source bodies and Object construction.",
-      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
+      "sha256": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/definition_test.go",
@@ -683,7 +682,7 @@
       "source": "builtins/eng/core.l",
       "classification": "fragment",
       "description": "Implicit Objective descriptor uses a grouped native word; the nested array is not an L collection literal.",
-      "sha256": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
+      "sha256": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/definition_test.go",

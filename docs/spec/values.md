@@ -10,7 +10,7 @@
 | [Pointer](#pointer) | A managed reference to a typed value. | Copy handles to share a target; checked reads and writes. |
 | [Null](#null-and-internal-states) | An explicit absence value. | Initialize a value with `Null`; distinct from an unassigned slot. |
 
-Primitive types describe data; [lexical types](lexical-types.md) describe words. [Collections](collections-and-categories.md) and [Instances and Functions](applicational-types.md) use the same ownership rules.
+Primitive types describe data; [lexical types](lexical-types.md) describe words. [Collections](collections-and-categories.md) and [Functions](applicational-types.md#functions-properties-and-operations) use the same ownership rules.
 
 ## Declarations, assignment, and reading values
 
@@ -20,7 +20,7 @@ The public-values program gives Text, Number, and Truth explicit initial values,
 
 <!-- example:public-values -->
 
-Assignment, Function arguments/results and captures snapshot ordinary values, recursively through collections and Instances; embedded Pointers retain their shared target. App handles retain process identity. Stored Output keeps its invocation's bytes after reruns. See [capture environments](names-and-scope.md#runtime-storage-and-definite-assignment).
+Assignment, Function arguments/results and captures snapshot ordinary values, recursively through collections; embedded Pointers retain their shared target. App handles retain process identity. Stored Output keeps its invocation's bytes after reruns. See [capture environments](names-and-scope.md#runtime-storage-and-definite-assignment).
 
 ## Text
 
@@ -117,4 +117,4 @@ The repeated-activation demo contrasts an App alias with a Text snapshot:
 
 ## Sources and witnesses
 
-Primary sources: [value tags](../../lyger/value_kinds.go), [primitive storage and loading](../../lyger/types.go), [type spellings](../../lyger/utilities.go), [native encoding](../../lyger/native_encoding.go), [definition encoding](../../lyger/definition.go), and [typed orchestration](../../lyger/orchestration_plan.go). Existing witnesses: [Number encoding](../../lyger/definition_number_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), [raw Text](../../lyger/raw_text_test.go), [Text encoding](../../lyger/definition_text_encoding_test.go), [IO numeric formatting](../../lyger/io_numeric_test.go), [stored-value invariants](../../lyger/stored_values_test.go), and [scalar conditions](../../lyger/orchestrator_test.go). Example labels distinguish complete programs from fragments; website validation does not execute L.
+Primary sources: [value tags](../../lyger/value_kinds.go), [primitive storage and loading](../../lyger/types.go), [type spellings](../../lyger/utilities.go), [native encoding](../../lyger/literal_atoms.go), [definition encoding](../../lyger/definition_bindings.go), and [typed orchestration](../../lyger/orchestration_plan.go). Existing witnesses: [Number encoding](../../lyger/definition_number_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), [raw Text](../../lyger/raw_text_test.go), [Text encoding](../../lyger/definition_text_encoding_test.go), [IO numeric formatting](../../lyger/io_numeric_test.go), [stored-value invariants](../../lyger/stored_values_test.go), and [scalar conditions](../../lyger/orchestrator_test.go). Example labels distinguish complete programs from fragments; website validation does not execute L.

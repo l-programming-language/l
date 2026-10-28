@@ -20,7 +20,7 @@ Define "first" as a New Number from items at 0.
 Show first.
 ```
 
-`of Number` declares the element type. The read states its expected result type; incompatible reads or updates reject. Indices must be nonnegative integers within bounds. A List constructed from differently typed values infers Thing elements and preserves their individual kinds. Typed reads verify complete element types, Instance identities and Function signatures. A List owns its elements; an L List does not become native `Props` or `Texts` metadata.
+`of Number` declares the element type. The read states its expected result type; incompatible reads or updates reject. Indices must be nonnegative integers within bounds. A List constructed from differently typed values infers Thing elements and preserves their individual kinds. Typed reads verify complete element types and Function signatures. A List owns its elements; an L List does not become native `Props` or `Texts` metadata.
 
 ## Maps
 
@@ -41,4 +41,4 @@ An imported dictionary has its own source scope and exports. [Indexed imports](i
 
 ## Sources and witnesses
 
-[Runtime values](../../lyger/runtime_values.go), [source operations](../../lyger/runtime_values_source.go), and [value regressions](../../lyger/runtime_values_test.go) define runtime collections. [Member-resolution tests](../../lyger/member_resolution_regression_test.go) cover vocabulary ownership.
+[Runtime values](../../lyger/runtime_types.go), [source operations](../../lyger/runtime_values_source.go), and [value regressions](../../lyger/runtime_values_test.go) define runtime collections. [Member-resolution tests](../../lyger/member_resolution_regression_test.go) cover vocabulary ownership.

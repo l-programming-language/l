@@ -80,7 +80,7 @@ func (s *lexicalScope) lookupLocal(raw []byte) (*tokenBinding, lookupState, erro
 func (d *scopeDeclaration) matches(raw []byte) bool {
 	word := newBindingQuery(raw).word
 	if d.Owner != nil {
-		// Instance members use their owner's table. Native type namespaces
+		// Owned members use their owner's table. Native type namespaces
 		// instead reserve the qualified form in the lexical environment.
 		name, _ := possessiveOwner(string(d.Owner.rawBytes))
 		kind, _ := checkType([]byte(name))

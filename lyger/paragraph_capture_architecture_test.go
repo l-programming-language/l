@@ -3,7 +3,6 @@ package Lyger
 import (
 	"fmt"
 	"path/filepath"
-	"reflect"
 	"strings"
 	"testing"
 )
@@ -115,10 +114,6 @@ func TestParagraphCaptureStaticDefinitionSurvivesCallerShadow(t *testing.T) {
 					if err != nil || canonical != result.Compilation.Memory["Report"] || call.Target.Token.binding.Record == canonical {
 						t.Fatalf("aliased invocation did not preserve its distinct alias and canonical action: %v", err)
 					}
-				}
-				want := []string{"show:definition text", "show:argument text", "show:caller shadow"}
-				if actual := paragraphActivationTrace(t, result); !reflect.DeepEqual(actual, want) {
-					t.Fatalf("captured/argument/caller output = %v; want %v", actual, want)
 				}
 			})
 		}

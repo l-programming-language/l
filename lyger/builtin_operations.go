@@ -86,7 +86,7 @@ func validateBuiltinProcessTemplate(template *DefinitionTemplate, operation buil
 	bindings := map[string]DefinitionArgument{
 		"Receiver":   {Kind: "Syllable", Text: "receiver"},
 		"Invocation": {Kind: "Syllable", Text: "invocation"},
-		"Body":       {Kind: "Syllable", Text: "W^BOD^E{|Statement: ~{}~|}"},
+		"Body":       {Kind: "Syllable", Text: "W"},
 	}
 	instance, err := template.Instantiate(bindings)
 	if err != nil {
@@ -153,7 +153,7 @@ func (invocation builtinProcessInvocation) name() string {
 	return fmt.Sprintf("lInvocation%d", invocation.index)
 }
 
-type builtinProcessBody struct{ statements []string }
+type builtinProcessBody struct{ definition DefinitionInstance }
 
 type builtinProcessOperands struct {
 	receiver   *builtinProcessReceiver
@@ -185,7 +185,8 @@ func (catalog *builtinProcessCatalog) instantiate(operation builtinProcessOperat
 			if operands.body == nil {
 				return nil, template.failure(lerrors.Internal.Errorf("Body requires a composed continuation"))
 			}
-			expression = orchestrationOperation(operands.body.statements)
+			bindings[slot] = DefinitionArgument{Kind: "Definition", Definition: &operands.body.definition}
+			continue
 		}
 		// The generic renderer only receives checked compiler operands after
 		// the private signature has enforced their distinct roles.

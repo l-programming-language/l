@@ -307,41 +307,31 @@ func (c *Compilation) lowerFunction(node *constructionNode, body []DefinitionIns
 	if node.Name == "" || !node.EmptyInputs || !node.EmptyOutputs {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("function constructor requires name and explicit signature")
 	}
-	bindings := make(map[string]DefinitionArgument)
-	var expressions []string
-	for _, instance := range body {
-		expressions = append(expressions, instance.Expression)
+	bindings, err := template.signatureArguments(node.Name, nil, nil)
+	if err != nil {
+		return DefinitionInstance{}, err
 	}
-	process := DefinitionInstance{Expression: strings.Join(expressions, "*")}
 	for _, slot := range template.Slots {
-		if slot.Type == "" {
-			matched := false
-			for _, parameter := range node.Parameters {
-				nominal, err := nominalType(parameter.noun)
-				if err != nil {
-					return DefinitionInstance{}, err
-				}
-				if strings.EqualFold(nominal, slot.Name) {
-					matched = true
-				}
-			}
-			if !matched {
-				return DefinitionInstance{}, lerrors.InvalidInput.Errorf("function slot %s has no declared constructor parameter", slot.Name)
-			}
-			bindings[slot.Name] = DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &process}
+		if _, signature := bindings[slot.Name]; signature {
 			continue
 		}
-		kind, _ := parseDefinitionArgKindExact(slot.Type)
-		switch kind {
-		case definitionArgText:
-			bindings[slot.Name] = DefinitionArgument{Kind: definitionArgText.String(), Text: node.Name}
-		case definitionArgProps:
-			bindings[slot.Name] = DefinitionArgument{Kind: definitionArgProps.String(), Props: []DefinitionProperty{}}
-		case definitionArgTexts:
-			bindings[slot.Name] = DefinitionArgument{Kind: definitionArgTexts.String(), Texts: []string{}}
-		default:
+		if slot.Type != "" {
 			return DefinitionInstance{}, lerrors.Unsupported.Errorf("unsupported function slot %s: %s", slot.Name, slot.Type)
 		}
+		var parameter *record
+		for _, object := range node.Parameters {
+			nominal, err := nominalType(object.noun)
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			if strings.EqualFold(nominal, slot.Name) && object.noun.binding != nil {
+				parameter = object.noun.binding.Record
+			}
+		}
+		if parameter == nil {
+			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("function slot %s has no declared constructor parameter", slot.Name)
+		}
+		bindings[slot.Name] = definitionSequenceArgument(body)
 	}
 	instance, err := template.Instantiate(bindings)
 	if err != nil {
