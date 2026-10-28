@@ -11,13 +11,14 @@ import (
 // lexicalScope owns bindings, independently of physical paragraph pronouns and
 // runtime activation. The root records map is Compilation.Memory itself.
 type lexicalScope struct {
-	kind         scopeKind
-	unit         *SourceUnit
-	parent       *lexicalScope
-	function     *sourceFunction
-	records      map[string]*record
-	declarations []*scopeDeclaration
-	source       SourceSpan
+	kind           scopeKind
+	unit           *SourceUnit
+	parent         *lexicalScope
+	function       *sourceFunction
+	callableHeader *lStatement
+	records        map[string]*record
+	declarations   []*scopeDeclaration
+	source         SourceSpan
 }
 
 type scopeKind uint8
@@ -28,6 +29,17 @@ const (
 	lexicalDictionary
 	lexicalParagraph
 )
+
+// An explicit callable signature determines how its paragraph declarations bind.
+// Constant-only locals must not commit while that header awaits a forward type.
+func (s *lexicalScope) waitsForHeader(statement *lStatement) bool {
+	for ; s != nil; s = s.parent {
+		if s.callableHeader != nil && s.callableHeader != statement && s.callableHeader.sGram == nil {
+			return true
+		}
+	}
+	return false
+}
 
 func (s *lexicalScope) isParagraph() bool { return s != nil && s.kind == lexicalParagraph }
 func (s *lexicalScope) unitRoot() *lexicalScope {

@@ -80,6 +80,19 @@ func testProgramSemanticCounts(c *Compilation) (subjects, declarations, descript
 	return
 }
 
+func testProgramAliasCount(c *Compilation) int {
+	count := 0
+	for alias := range c.Semantics.Aliases {
+		source := c.Semantics.Declarations[alias]
+		// Unattributed aliases still count: a failed publication must not hide
+		// a partially registered edge merely because it lost provenance.
+		if source == nil || source.source == nil || source.source.Unit == nil || source.source.Unit.Kind == SourceProgram {
+			count++
+		}
+	}
+	return count
+}
+
 func assertFrontendResources(t *testing.T, c *Compilation) {
 	t.Helper()
 	if c == nil {

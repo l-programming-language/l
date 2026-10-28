@@ -109,47 +109,9 @@ func TestDefinitionNullIsTypedAtom(t *testing.T) {
 }
 
 func TestDefinitionNullCompleteApplication(t *testing.T) {
-	c := requireDistributionFrontend(t, "Create \"Child\" as a New Basic App.\n", nil).Compilation
-
-	formatted, err := c.instantiateBuiltin("Null.Format", map[string]DefinitionArgument{"Name": definitionReferenceArgument("nullDisplay")})
-	if err != nil {
-		t.Fatal(err)
-	}
-	writer := parseTestDefinition(t, `<DEF>BOD^E{|Statement: ~::std::println!("{}", <@Value|Thing@>);~|}<DEF>`)
-	value := definitionReferenceArgument("nullDisplay")
-	value.Kind = "Null"
-	instance, err := writer.Instantiate(map[string]DefinitionArgument{"Value": value})
-	if err != nil {
-		t.Fatal(err)
-	}
-	body, err := c.instantiateBuiltin("Process", map[string]DefinitionArgument{"Definitions": {Kind: "Syllables", Syllables: []string{formatted.Expression, instance.Expression}}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	function, err := c.instantiateBuiltin("Function", map[string]DefinitionArgument{
-		"Name": {Kind: "Text", Text: "main"}, "Inputs": {Kind: "Props"}, "Outputs": {Kind: "Texts"},
-		"Process": {Kind: "Definition", Definition: &body},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	document := `<PROGRAM><STRUCTURE><BOOK "Worker"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`" + `</S|><|S|>` + "`" + function.Expression + "`" + `</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`
-	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate([]byte(document), Logiceme.GenerationOptions{})
-	recordBundle(t, bundle)
-	if err != nil {
-		t.Fatal(err)
-	}
-	binary := buildActualBundle(t, bundle, "Worker", false, "")
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	command := exec.CommandContext(ctx, binary)
-	var stdout, stderr bytes.Buffer
-	command.Stdout, command.Stderr = &stdout, &stderr
-	if err := command.Run(); err != nil {
-		t.Fatalf("Null application: %v: %s", err, stderr.Bytes())
-	}
-	if stdout.String() != "<nil>\n" || stderr.Len() != 0 {
-		t.Fatalf("Null output: stdout=%q stderr=%q", stdout.Bytes(), stderr.Bytes())
+	source := []byte("Use IO's Print from `io`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints Null.\n")
+	if got := runSourceIO(t, source, "null-io.l"); !bytes.Equal(got, []byte("<nil>\n")) {
+		t.Fatalf("Null output: %q", got)
 	}
 }
 

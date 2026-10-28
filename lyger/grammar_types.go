@@ -721,6 +721,14 @@ func (sb *objectGram) lexSwitch(term grammarTerm) error {
 	case term.Kind == termLexical && term.POS == posArticle:
 		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.article, lexicalMatchClass)
 	case term.Kind == termIdentifier:
+		// A callable keeps the same optional pre-nominal name as other named
+		// objects, while its enclosing rule still owns the explicit signature.
+		available := sb.getUnassociatedTokens()
+		if sb.cType == "callable" && len(available) > 0 && isText(available[0].rawBytes) {
+			if err := buildGrammarChild(&sb.name, initValueGram, "value.text", available, sb.gram); err != nil {
+				return err
+			}
+		}
 		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.noun, lexicalMatchClass)
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Object Lex Type: "+term.className())
@@ -1254,7 +1262,8 @@ func (sb *clauseGram) buildProcess(casedStr string) error {
 func (sb *clauseGram) caseBuild() error {
 	cases := sb.rule.Cases
 	if strings.HasPrefix(sb.gType, "clause.generic.") && sb.gType != "clause.generic.passive" {
-		if sb.verb != nil && ((sb.verb.binding != nil && sb.verb.binding.Record.isFunction()) || sb.verb.isFunctionReturn()) {
+		zeroWord := sb.verb != nil && sb.verb.binding != nil && sb.verb.binding.Record.Value != nil && sb.verb.binding.Record.Value.Lexeme != nil && len(sb.verb.binding.Record.Value.Lexeme.Inputs) == 0 && len(sb.getUnassociatedTokens()) == 0
+		if sb.verb != nil && ((sb.verb.binding != nil && sb.verb.binding.Record.isFunction()) || sb.verb.isFunctionReturn() && !sb.verb.inNativeFunction() || zeroWord) {
 			cases = map[string]string{"callable": cases["callable"]}
 		} else {
 			cases = withoutGrammarCase(cases, "callable")

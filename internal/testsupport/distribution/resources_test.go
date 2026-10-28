@@ -19,7 +19,7 @@ func TestReleaseInventory(t *testing.T) {
 			t.Errorf("non-release resource %q", path)
 		}
 	}
-	for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "stdlib/index.json", "stdlib/eng/io/dictionary.l", "builtins/templates/runtime/runtime.lu", "builtins/templates/runtime/process_unix.lu", "builtins/templates/runtime/process_other.lu"} {
+	for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "stdlib/index.json", "stdlib/eng/io/dictionary.l", "stdlib/eng/storage/dictionary.l", "builtins/runtime/eng/foundations.l", "builtins/runtime/support.aml", "builtins/runtime/support.json", "builtins/templates/runtime/host.lu", "builtins/templates/runtime/process_unix.lu", "builtins/templates/runtime/process_other.lu"} {
 		if !seen[path] {
 			t.Errorf("missing required release path %s", path)
 		}
@@ -46,7 +46,7 @@ func TestReleaseSourceResources(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(files) != 36 {
-		t.Errorf("embedded resources = %d; want 36", len(files))
+	if len(files) != 49 {
+		t.Errorf("embedded resources = %d; want 49", len(files))
 	}
 }

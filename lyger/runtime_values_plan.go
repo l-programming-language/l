@@ -3,7 +3,6 @@ package Lyger
 import "github.com/l-programming-language/l/lerrors"
 
 func (p *orchestrationPlanner) runtimeOperand(source *instructionValue, flow orchestrationFlow) (*orchestrationValue, error) {
-	p.plan.RuntimeValues = true
 	result := &orchestrationValue{Source: source, Type: source.Type, RuntimeType: source.RuntimeType, Access: orchestrationAccessOwned}
 	p.registerRuntimeType(source.RuntimeType)
 	for _, element := range source.Elements {

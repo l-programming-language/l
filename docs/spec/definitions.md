@@ -66,9 +66,14 @@ A body may be one expression, a JSON string array representing a word, or an arr
 | Syllables | Ordered expressions with preserved cardinality |
 | Props | Typed native property records |
 | Texts | Ordered native type/output text collection |
+| Type | Native type atom or selected source type declaration, retaining its dependency |
+| Atoms | Ordered scalar/name/reference arguments; never an executable body |
+| Label | Validated result identifier, distinct from an assignment target |
 | Definition | Instantiated definition with identity and grouping |
 
-Thing slots bind supported scalars without converting everything to strings; this Log body specifically requires Text for its Rust `.as_bytes()` call. Changing Thing to Props would request property records, not parse Text into them. Ordinary stored source-call arguments currently lower Text, Number and Truth; the public Go DefinitionArgument interface supports the wider table.
+Thing slots bind supported scalars without converting everything to strings; this Log body specifically requires Text for its Rust `.as_bytes()` call. Changing Thing to Props would request property records, not parse Text into them. Ordinary stored source-call arguments lower Text, Number, Truth and Null; the public Go DefinitionArgument interface supports the wider table.
+
+Type, Atoms and Label are frontend roles using existing AML metadata. Nested constructors bind results once, in operand order, before the consuming word; composition slots retain their selected definitions. Native and ordinary Functions share body lowering and bind their own invocation words. Dependencies retain canonical source ownership.
 
 Unknown kinds, incompatible types, missing bindings, invalid native names and malformed compositions reject. Text receives protected native quoting around AML/logeme delimiters; explicit native fragments retain target-dependent meaning.
 

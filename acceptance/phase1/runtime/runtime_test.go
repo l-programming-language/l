@@ -8,9 +8,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	distribution "github.com/l-programming-language/l"
-	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
-	"github.com/l-programming-language/l/internal/testsupport/phase1"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -18,6 +15,12 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	distribution "github.com/l-programming-language/l"
+	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
+	"github.com/l-programming-language/l/internal/testsupport/phase1"
+	Logiceme "github.com/l-programming-language/l/logiceme"
+	Lyger "github.com/l-programming-language/l/lyger"
 )
 
 type runtimeCase struct {
@@ -50,7 +53,7 @@ func runtimeProject(t testing.TB) (string, []runtimeCase, map[string][]byte) {
 		t.Fatalf("Rust runtime inventory=%d; want98", len(cases))
 	}
 	files := map[string][]byte{}
-	for source, target := range map[string]string{"Cargo.toml.txt": "Cargo.toml", "Cargo.lock": "Cargo.lock", "driver.Cargo.toml.txt": "driver/Cargo.toml", "helper.Cargo.toml.txt": "companion/Cargo.toml", "driver.rs.txt": "driver/driver.rs", "checks.rs.txt": "driver/checks.rs", "support.rs.txt": "driver/support.rs", "fault.rs.txt": "driver/fault.rs", "helper.rs.txt": "companion/helper.rs"} {
+	for source, target := range map[string]string{"Cargo.toml.txt": "Cargo.toml", "Cargo.lock": "Cargo.lock", "driver.Cargo.toml.txt": "driver/Cargo.toml", "helper.Cargo.toml.txt": "companion/Cargo.toml", "driver.rs.txt": "driver/driver.rs", "checks.rs.txt": "driver/checks.rs", "support.rs.txt": "driver/support.rs", "api.rs.txt": "driver/runtime_api.rs", "fault.rs.txt": "driver/fault.rs", "helper.rs.txt": "companion/helper.rs"} {
 		b, e := os.ReadFile(filepath.Join(fixtures, source))
 		if e != nil {
 			t.Fatal(e)
@@ -63,7 +66,7 @@ func runtimeProject(t testing.TB) (string, []runtimeCase, map[string][]byte) {
 	}
 	files["driver/ownership.rs"] = ownership
 	files["companion/ownership.rs"] = bytes.Clone(ownership)
-	for source, target := range map[string]string{"builtins/templates/runtime/runtime.lu": "driver/runtime.rs", "builtins/templates/runtime/process_unix.lu": "driver/process.rs"} {
+	for source, target := range map[string]string{"builtins/runtime/support.aml": "runtime.aml", "builtins/templates/runtime/host.lu": "driver/runtime/host.rs", "builtins/templates/runtime/process_unix.lu": "driver/process.rs"} {
 		b, e := fs.ReadFile(distribution.Files(), source)
 		if e != nil {
 			t.Fatal(e)
@@ -74,6 +77,29 @@ func runtimeProject(t testing.TB) (string, []runtimeCase, map[string][]byte) {
 		}
 		files[target] = b
 	}
+	entry, e := Lyger.NewLygerService(Lyger.Options{Resources: distribution.Files()}).Compile([]byte("Show ``.\n"), "runtime-observer.l")
+	if e != nil {
+		t.Fatal(e)
+	}
+	unit, e := entry.OrchestratorUnit("runtime_observer", nil)
+	if e != nil {
+		t.Fatal(e)
+	}
+	_, bundle, e := Logiceme.NewLogicemeService(distribution.Files()).EvaluateWorkspaceEntry(unit.BackendAML, Logiceme.WorkspaceRuntime{Package: "runtime_support", RelativeDirectory: "../runtime_support"})
+	if e != nil {
+		t.Fatal(e)
+	}
+	for i, paths := range bundle.MapArrays {
+		for j, path := range paths {
+			if path == "/src/runtime.rs" {
+				files["driver/runtime.rs"] = bundle.ByteArrays[i][j]
+			}
+		}
+	}
+	if len(files["driver/runtime.rs"]) == 0 {
+		t.Fatal("canonical source composition supplied no runtime library")
+	}
+	files["driver/runtime.rs"] = append(files["driver/runtime.rs"], []byte("\n#[cfg(test)]\ninclude!(\"runtime_api.rs\");\n")...)
 	return nativetest.Materialize(t, files), cases, files
 }
 

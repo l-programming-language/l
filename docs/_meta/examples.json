@@ -313,7 +313,7 @@
       "source": "stdlib/index.json",
       "classification": "fragment",
       "description": "Exact structured registry for source lexicons and dictionary entries; this is resource configuration, not L source.",
-      "sha256": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1",
+      "sha256": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
       "validation": "static-inspection",
       "witnesses": [
         "lyger/dictionary_index_test.go"
@@ -357,10 +357,10 @@
         "lyger/construction_test.go"
       ],
       "lines": {
-        "start": 13,
-        "end": 16
+        "start": 9,
+        "end": 12
       },
-      "sha256": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
+      "sha256": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
       "lang": "l"
     },
     {
@@ -513,7 +513,7 @@
         "lyger/builtin_operations_contract_test.go",
         "lyger/distribution_frontend_test.go"
       ],
-      "sha256": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
+      "sha256": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
       "lang": "l",
       "lines": {
         "start": 1,
@@ -664,7 +664,7 @@
       "source": "builtins/eng/core.l",
       "classification": "fragment",
       "description": "Canonical Process, Function and Function.Return definitions shared by source bodies and Object construction.",
-      "sha256": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
+      "sha256": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/definition_test.go",
@@ -682,7 +682,7 @@
       "source": "builtins/eng/core.l",
       "classification": "fragment",
       "description": "Implicit Objective descriptor uses a grouped native word; the nested array is not an L collection literal.",
-      "sha256": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
+      "sha256": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/definition_test.go",
@@ -690,8 +690,8 @@
       ],
       "lang": "l",
       "lines": {
-        "start": 11,
-        "end": 11
+        "start": 7,
+        "end": 7
       }
     },
     {
@@ -746,8 +746,8 @@
       "id": "imports-private-helper",
       "source": "docs/examples/imports-private-helper.l",
       "classification": "fragment",
-      "description": "Intentionally invalid explanatory fragment shortened from the IO02 private-helper regression; Log is unresolved. Static review only, not independently compiled.",
-      "sha256": "759a4737ea6324faafdc9fdb205c6ddb784a0427fd374eb2bf30d7bc4762e695",
+      "description": "Intentionally invalid explanatory fragment shortened from the IO02 private-helper regression; Write is unresolved. Static review only, not independently compiled.",
+      "sha256": "29ae5ae0a33019bb89d1c35d879f5a2792bcdef91948a6bc9071d9d0fa7dd6d5",
       "validation": "static-inspection",
       "witnesses": [
         "lyger/distribution_frontend_test.go",

@@ -74,11 +74,11 @@ Configured `not`/negative forms express negation in conditions, not a general pr
 
 ## Thing
 
-Thing preserves a contained runtime type and checks typed reads. It does not coerce values into Text. Native-definition slots remain a separate interface: IO accepts Text, Number and Truth through its Thing slot:
+Thing preserves a contained runtime type and checks typed reads. It does not coerce values into Text. Native-definition slots remain a separate interface: IO selects typed Print members for Text, Number, Truth and Null:
 
 <!-- example:values-thing-printing -->
 
-The arguments retain their original types. There is no `Thing(...)` cast: Print binds each supplied value and its native implementation handles the type. This fragment supplies an App body; declaration alone does not run it. The public Print action uses a private Log implementation.
+The arguments retain their original types. There is no `Thing(...)` cast: Print binds each supplied value and its native implementation handles the type. This fragment supplies an App body; declaration alone does not run it. The public Print action composes private rendering and writing Functions.
 
 Thing does not provide dynamically typed arithmetic, unrestricted reflection, or printing for every application or collection value. Its usable arguments depend on the definition and native consumer.
 

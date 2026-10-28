@@ -370,6 +370,10 @@ func initLexicalEntry(definition []byte) (*entry, error) {
 
 // record structures an entry for storage in the Memory of an executing L Program
 type record struct {
+	function             *sourceFunction
+	declarationOwner     *record
+	staticConstructor    *constructionNode
+	definitionArgument   *DefinitionArgument
 	runtimeFunctionAlias bool
 	runtimeType          *runtimeTypeRef
 	storageScope         *lexicalScope

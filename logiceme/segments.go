@@ -166,6 +166,7 @@ type Featural struct {
 }
 
 type SegmentalSystem struct {
+	templateCases    map[string]*segmentCases
 	fileMeta         MetaDict
 	itemVisibility   string
 	initializeConfig bool
@@ -256,14 +257,18 @@ type Glyph struct {
 }
 
 // DetermineSegTags Glyph bytes
-func (g *Glyph) DetermineSegTags(seg Segment) Segment {
-	selected := "Default"
+func (g *Glyph) segmentSelection() string {
 	if g.Determinant.Symbol == "E" {
-		selected = "E"
-	} else if g.Determinant.Symbol != "" {
-		selected = g.Determinant.getSegmentName()
+		return "E"
 	}
-	seg.Tags = ParseSegmentTags(seg.Tags, g.Meta, selected, true)
+	if g.Determinant.Symbol != "" {
+		return g.Determinant.getSegmentName()
+	}
+	return "Default"
+}
+
+func (g *Glyph) DetermineSegTags(seg Segment) Segment {
+	seg.Tags = ParseSegmentTags(seg.Tags, g.Meta, g.segmentSelection(), true)
 	return seg
 }
 
@@ -403,17 +408,8 @@ func (g *Glyph) validateSelectedCase(vowel Segment) error {
 	if executionShape && (len(g.Vowels) != 1 || g.Consonant.Symbol != "") {
 		return lerrors.Unsupported.Errorf("unsupported Execution glyph %s: execution forms require one vowel and no terminal consonant", glyphForm(g))
 	}
-	selected := "Default"
-	if g.Determinant.Symbol == "E" {
-		selected = "E"
-	} else if g.Determinant.Symbol != "" {
-		selected = g.Determinant.getSegmentName()
-	}
-	tags := vowel.Tags
-	if len(tags) == 0 {
-		tags = CompileMainTags(vowel.Content)
-	}
-	if len(ParseSegmentTags(tags, g.Meta, selected, false)) > 0 {
+	selected := g.segmentSelection()
+	if vowel.hasTemplateCase(g.SegmentalSystem, selected) {
 		return nil
 	}
 	switch glyphForm(g) {
@@ -610,6 +606,12 @@ func (ss *SegmentalSystem) AddLogiceme(segment Segment, load bool, resources fs.
 	}
 	if d, ok := segmentDefinitionFor(segment.Symbol); ok && (d.family == "Vowel" || d.family == "Consonant") {
 		*d.slot(ss) = segment
+		if load {
+			if ss.templateCases == nil {
+				ss.templateCases = make(map[string]*segmentCases)
+			}
+			ss.templateCases[segment.Symbol] = parseSegmentCases(segment.Content)
+		}
 	}
 	return nil
 }

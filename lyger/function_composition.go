@@ -2,8 +2,9 @@ package Lyger
 
 import (
 	"fmt"
-	"github.com/l-programming-language/l/lerrors"
 	"strings"
+
+	"github.com/l-programming-language/l/lerrors"
 )
 
 type orchestrationFunction struct {
@@ -16,7 +17,6 @@ type orchestrationFunction struct {
 }
 
 func (p *orchestrationPlanner) functionInstruction(current *instruction, flow orchestrationFlow) (*orchestrationInstruction, orchestrationFlow, error) {
-	p.plan.RuntimeValues = true
 	result := &orchestrationInstruction{Source: current, Effects: orchestrationEffectAssign, ReachesNext: flow.live}
 	if current.Kind == instructionReturn {
 		for _, source := range current.Arguments {
@@ -176,8 +176,8 @@ func nativeRuntimeTypeAt(typ runtimeTypeRef, depth int) (string, error) {
 	return name, nil
 }
 
-func instantiateFunctionWord(function *sourceFunction, member string, bindings map[string]DefinitionArgument) ([]string, error) {
-	if function == nil || function.Members[member] == nil {
+func (e *orchestrationEmitter) functionOperation(function *sourceFunction, member string, bindings map[string]DefinitionArgument) ([]string, error) {
+	if function == nil {
 		return nil, lerrors.InvalidConfiguration.Errorf("Function requires its %s composition", member)
 	}
 	if member == "Yield" || member == "Exit" {
@@ -194,12 +194,7 @@ func instantiateFunctionWord(function *sourceFunction, member string, bindings m
 		}
 		bindings["Return"] = DefinitionArgument{Kind: "Syllable", Definition: &returned}
 	}
-	template := function.Members[member]
-	instance, err := template.Instantiate(bindings)
-	if err != nil {
-		return nil, err
-	}
-	return builtinProcessExpressions(template, instance)
+	return e.word("Storage.Function."+member, bindings)
 }
 
 func (e *orchestrationEmitter) collectFunctionContracts(body []*orchestrationInstruction) {
@@ -240,17 +235,11 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		arguments = append(arguments, definitionReferenceArgument(argument))
 	}
 	if current.Source.Kind == instructionReturn {
-		word := "Resultvalues"
-		args := map[string]DefinitionArgument{"Values": definitionAtomListArgument(arguments...)}
-		if len(arguments) == 0 {
-			word = "Emptyresults"
-			args = nil
-		}
-		value, err := e.valueBinding(word, args)
+		value, err := e.results(arguments)
 		if err != nil {
 			return nil, err
 		}
-		return instantiateFunctionWord(e.functionWords, "Yield", map[string]DefinitionArgument{"Values": definitionReferenceArgument(value)})
+		return e.functionOperation(e.functionWords, "Yield", map[string]DefinitionArgument{"Values": definitionReferenceArgument(value)})
 	}
 	if current.Source.Kind == instructionInvoke {
 		contract := e.functionContracts[current.Target.RuntimeType.Definition]
@@ -263,15 +252,18 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		}
 		name := fmt.Sprintf("lCalled%d", e.functionCall)
 		e.functionCall++
-		returnContract, stoppedWord := contract, "Emptyresults"
+		returnContract := contract
+		var stopped string
 		if e.functionDepth > 0 {
-			returnContract, stoppedWord = e.functionWords, "Stoppedfunction"
+			returnContract = e.functionWords
+			stopped, err = e.valueBinding("Storage.Function.Stop", nil)
+		} else {
+			stopped, err = e.results(nil)
 		}
-		stopped, err := e.valueBinding(stoppedWord, nil)
 		if err != nil {
 			return nil, err
 		}
-		exit, err := instantiateFunctionWord(returnContract, "Exit", map[string]DefinitionArgument{"Value": definitionReferenceArgument(stopped)})
+		exit, err := e.functionOperation(returnContract, "Exit", map[string]DefinitionArgument{"Value": definitionReferenceArgument(stopped)})
 		if err != nil {
 			return nil, err
 		}
@@ -279,9 +271,23 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		if err != nil {
 			return nil, err
 		}
-		result, err := instantiateFunctionWord(contract, "Invoke", map[string]DefinitionArgument{
-			"Target": definitionReferenceArgument(target), "Name": definitionReferenceArgument(name), "Context": definitionReferenceArgument("lContext"),
-			"Arguments": definitionAtomListArgument(arguments...), "Exit": {Kind: "Syllable", Definition: &exitProcess},
+		if contract.Members["Invoke"] == nil {
+			return nil, lerrors.InvalidConfiguration.Errorf("Function requires its Invoke composition")
+		}
+		invoked := append([]DefinitionArgument{definitionReferenceArgument(name + "Context"), definitionReferenceArgument(name + "Environment")}, arguments...)
+		invocation, err := contract.Members["Invoke"].Instantiate(map[string]DefinitionArgument{
+			"Target": definitionReferenceArgument(name + ".1"), "Arguments": definitionAtomListArgument(invoked...),
+		})
+		if err != nil {
+			return nil, err
+		}
+		copier, err := e.functionReference("Storage.Environment.Copy")
+		if err != nil {
+			return nil, err
+		}
+		result, err := e.word("Storage.Invoke", map[string]DefinitionArgument{
+			"Value": definitionReferenceArgument(target), "Name": definitionReferenceArgument(name), "Context": definitionReferenceArgument("lContext"),
+			"Invocation": {Kind: "Definition", Definition: &invocation}, "Exit": {Kind: "Syllable", Definition: &exitProcess}, "Copy": copier,
 		})
 		if err != nil {
 			return nil, err
@@ -315,17 +321,26 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 		return nil, err
 	}
 	inputs := []DefinitionProperty{{Key: "lContext", Type: "&(runtime::Runtime, LProgram)"}, {Key: "lEnvironment", Type: "LEnvironment"}}
-	body, err := e.word("Functioncontext", map[string]DefinitionArgument{"Context": definitionReferenceArgument("lContext")})
+	body, err := e.word("Storage.Context.Read", map[string]DefinitionArgument{"Context": definitionReferenceArgument("lContext")})
 	if err != nil {
 		return nil, err
 	}
-	self, err := e.word("Functionself", map[string]DefinitionArgument{"Name": definitionReferenceArgument(function.Self.name()), "Environment": definitionReferenceArgument("lEnvironment"), "Function": definitionReferenceArgument(name), "Type": definitionTypeArgument(pointer)})
+	copier, err := e.functionReference("Storage.Environment.Copy")
+	if err != nil {
+		return nil, err
+	}
+	self, err := e.word("Storage.Function.Retain", map[string]DefinitionArgument{"Name": definitionReferenceArgument(function.Self.name()), "Environment": definitionReferenceArgument("lEnvironment"), "Function": definitionReferenceArgument(name), "Type": definitionTypeArgument(pointer), "Copy": copier})
 	if err != nil {
 		return nil, err
 	}
 	body = append(body, self...)
 	for index, app := range e.plan.Apps {
-		bound, err := e.word("Programapp", map[string]DefinitionArgument{"Name": definitionReferenceArgument(e.apps[app]), "Program": definitionReferenceArgument("lProgram"), "Index": definitionIndexArgument(uint64(index))})
+		bound, err := e.namedBinding(e.apps[app]+"Outcome", "Storage.Program.Select", map[string]DefinitionArgument{"Program": definitionReferenceArgument("lProgram"), "Index": definitionIndexArgument(uint64(index))})
+		if err != nil {
+			return nil, err
+		}
+		checked, err := e.describedWord("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Name": definitionReferenceArgument(e.apps[app]), "Value": definitionReferenceArgument(e.apps[app] + "Outcome")})
+		bound = append(bound, checked...)
 		if err != nil {
 			return nil, err
 		}
@@ -338,7 +353,7 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 		}
 		inputs = append(inputs, DefinitionProperty{Key: parameter.name(), Type: typ})
 		if parameter.Mutable {
-			mutable, err := e.word("Mutablebinding", map[string]DefinitionArgument{"Name": definitionReferenceArgument(parameter.name()), "Value": definitionReferenceArgument(parameter.name())})
+			mutable, err := e.bindValue(parameter.name(), parameter.name(), true)
 			if err != nil {
 				return nil, err
 			}
@@ -355,11 +370,11 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 	body = append(body, statements...)
 	if len(function.Source.Outputs) == 0 {
 		emptyName := fmt.Sprintf("lFunction%dEmpty", function.Body.ID)
-		empty, err := e.word("Emptyresults", map[string]DefinitionArgument{"Name": definitionReferenceArgument(emptyName)})
+		empty, err := e.describedWord("Storage.Tuple", []string{"Storage.Empty"}, map[string]DefinitionArgument{"Name": definitionReferenceArgument(emptyName)})
 		if err != nil {
 			return nil, err
 		}
-		tail, err := instantiateFunctionWord(function.Source, "Yield", map[string]DefinitionArgument{"Values": definitionReferenceArgument(emptyName)})
+		tail, err := e.functionOperation(function.Source, "Yield", map[string]DefinitionArgument{"Values": definitionReferenceArgument(emptyName)})
 		if err != nil {
 			return nil, err
 		}
@@ -370,7 +385,11 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 	if err != nil {
 		return nil, err
 	}
-	process, err := instantiateFunctionWord(function.Source, "Suspend", map[string]DefinitionArgument{"Body": {Kind: "Syllable", Definition: &bodyProcess}})
+	process, err := e.functionOperation(function.Source, "Suspend", map[string]DefinitionArgument{"Body": {Kind: "Syllable", Definition: &bodyProcess}})
+	if err != nil {
+		return nil, err
+	}
+	suspended, err := e.processDefinition(process)
 	if err != nil {
 		return nil, err
 	}
@@ -389,7 +408,7 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 		if slot.Type != "" {
 			return nil, lerrors.Unsupported.Errorf("unsupported Function body slot %s", slot.Name)
 		}
-		signature[slot.Name] = DefinitionArgument{Kind: "Definition", Definition: &DefinitionInstance{Expression: process[0]}}
+		signature[slot.Name] = DefinitionArgument{Kind: "Definition", Definition: &suspended}
 	}
 	definition, err := function.Source.Template.Instantiate(signature)
 	if err != nil {
@@ -400,9 +419,13 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 		e.functionEmitted[function.Body.ID] = true
 	}
 	created := fmt.Sprintf("lCreatedFunction%d", function.Body.ID)
-	bindings, err := instantiateFunctionWord(function.Source, "Bind", map[string]DefinitionArgument{
+	environment, err := e.compilation.instantiateBuiltin("Storage.Environment.Create", map[string]DefinitionArgument{"Types": definitionReferenceArgument(captureTypes), "Values": definitionReferenceArgument(captures)})
+	if err != nil {
+		return nil, err
+	}
+	bindings, err := e.functionOperation(function.Source, "Bind", map[string]DefinitionArgument{
 		"Name": definitionReferenceArgument(created), "Function": definitionReferenceArgument(name), "Type": definitionTypeArgument(pointer),
-		"Types": definitionReferenceArgument(captureTypes), "Captures": definitionReferenceArgument(captures),
+		"Environment": {Kind: "Definition", Definition: &environment},
 	})
 	if err != nil {
 		return nil, err

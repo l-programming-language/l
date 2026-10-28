@@ -9,28 +9,32 @@ import (
 
 // Compilation organizes the pre-assembled structure of an L program as it is recursively pre-processed
 type Compilation struct {
-	Gram              *grammar
-	MainBytes         []byte
-	MainPath          string
-	RootDir           string
-	CompiledBytes     []byte
-	ASMBytes          []byte
-	Memory            map[string]*record
-	TextCache         map[string][]byte
-	Statements        []*lStatement
-	ProcStatements    []*lStatement
-	Program           *Program
-	Error             error
-	Prepared          *PreparedSource
-	SourceStatements  []SourceStatement
-	SourcePaths       []string
-	SourceOccurrences []sourceOccurrence
-	SourceUnits       []*SourceUnit
-	SourceOrigins     []SourceOrigin
-	Semantics         *semanticProgram
-	Scope             *scopePlan
-	ExpandedBytes     []byte
-	builtinProcesses  *builtinProcessCatalog
+	definitionTemporaries []int
+	definitionReserved    map[string]bool
+	definitionStatements  int
+	Gram                  *grammar
+	MainBytes             []byte
+	MainPath              string
+	RootDir               string
+	CompiledBytes         []byte
+	ASMBytes              []byte
+	Memory                map[string]*record
+	TextCache             map[string][]byte
+	Statements            []*lStatement
+	ProcStatements        []*lStatement
+	Program               *Program
+	Error                 error
+	Prepared              *PreparedSource
+	SourceStatements      []SourceStatement
+	SourcePaths           []string
+	SourceOccurrences     []sourceOccurrence
+	SourceUnits           []*SourceUnit
+	SourceOrigins         []SourceOrigin
+	Semantics             *semanticProgram
+	Scope                 *scopePlan
+	ExpandedBytes         []byte
+	builtinProcesses      *builtinProcessCatalog
+	nativeDeclarations    map[*record]bool
 }
 
 // newCompilation returns a newly created Compilation struct
@@ -163,6 +167,10 @@ func (c *Compilation) buildMemory() {
 		var pending []*lStatement
 		progress := false
 		for _, statement := range c.ProcStatements {
+			if len(statement.tokens) > 0 && statement.tokens[0].scope.waitsForHeader(statement) {
+				pending = append(pending, statement)
+				continue
+			}
 			ready, err := c.dictionaryImportReady(statement)
 			if err == nil && ready {
 				ready, err = c.resolver().bindStatementMembers(statement)
@@ -194,6 +202,19 @@ func (c *Compilation) buildMemory() {
 			}
 			if c.checkStatementError(statement, "register statement", c.registerStatement(statement)) {
 				return
+			}
+			for _, tok := range statement.tokens {
+				if tok.pendingDeclaration == nil {
+					continue
+				}
+				state, err := c.resolver().bindToken(tok)
+				if err == nil && (state != lookupFound || tok.binding.Record != c.Semantics.Subjects[tok.pendingDeclaration]) {
+					err = lerrors.UnresolvedReference.Errorf("same-statement declaration %s was not published", tok.rawBytes)
+				}
+				if c.checkStatementError(statement, "bind declaration", err) {
+					return
+				}
+				tok.pendingDeclaration = nil
 			}
 			progress = true
 		}

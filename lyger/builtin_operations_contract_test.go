@@ -20,11 +20,11 @@ const builtinProcessDirectory = "builtins/operations/rust/"
 // slots belong to the private compiler binder, not the public argument API.
 func builtinProcessDefinitions() map[string]string {
 	return map[string]string{
-		"build":               `<DEF>BOD^E{|Statement: ~<@Receiver@>.build()?;~|}<DEF>`,
-		"run":                 `<DEF>BOD^E{|Statement: ~<@Receiver@>.run()?;~|}<DEF>`,
-		"stop":                `<DEF>BOD^E{|Statement: ~<@Receiver@>.stop().await?;~|}<DEF>`,
-		"await":               `<DEF>[["OB{|Key: ~<@Invocation@>~, Value: ~<@Receiver@>.wait().await?~|}", "BOG^GI^(E{|Statement: ~<@Invocation@>.claim_continuation()?~|}*<@Body@>)"]]<DEF>`,
-		"finish-continuation": `<DEF>BOD^E{|Statement: ~<@Invocation@>.finish_continuation();~|}<DEF>`,
+		"build":               `<DEF>MOB{|Key: ~lProcessResult~|}^KY{|Key: ~runtime::app_build~, Inputs: ~&[&<@Receiver@>]&~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>`,
+		"run":                 `<DEF>MOB{|Key: ~lProcessResult~|}^KY{|Key: ~runtime::app_run~, Inputs: ~&[&<@Receiver@>]&~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>`,
+		"stop":                `<DEF>MOB{|Key: ~lProcessFuture~|}^KY{|Key: ~runtime::app_stop~, Inputs: ~&[&<@Receiver@>]&~|}*COB{|Key: ~lProcessResult~|}^DV{|Key: ~lProcessFuture~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>`,
+		"await":               `<DEF>[["MOB{|Key: ~lProcessFuture~|}^KY{|Key: ~runtime::app_wait~, Inputs: ~&[&<@Receiver@>]&~|}*COB{|Key: ~lProcessResult~|}^DV{|Key: ~lProcessFuture~|}*OB{|Key: ~<@Invocation@>~, Value: ~lProcessResult?~|}", "MOB{|Key: ~lProcessClaim~|}^KY{|Key: ~runtime::invocation_claim~, Inputs: ~&[&<@Invocation@>]&~|}*OB{|Key: ~lProcessClaimed~, Value: ~lProcessClaim?~|}*BOG^GI^(E{|Statement: ~lProcessClaimed~|}*<@Body@>)"]]<DEF>`,
+		"finish-continuation": `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~runtime::invocation_finish~, Inputs: ~&[&<@Invocation@>]&~|}<DEF>`,
 	}
 }
 
@@ -138,11 +138,14 @@ func TestBuiltinProcessLogemeCatalog(t *testing.T) {
 			t.Run(operation, func(t *testing.T) {
 				files := builtinProcessFilesystem(t)
 				marker := "/* selected_process_" + strings.ReplaceAll(operation, "-", "_") + " */ "
-				field := "Statement: ~"
+				field := "Key: ~runtime::"
 				if operation == "await" {
-					field = "Value: ~"
+					field = "Value: ~lProcessResult?"
 				}
-				definition = strings.Replace(definition, field, field+marker, 1)
+				if strings.Count(definition, field) != 1 {
+					t.Fatalf("%s fixture requires one selected marker location", operation)
+				}
+				definition = strings.Replace(definition, field, strings.Replace(field, "~", "~"+marker, 1), 1)
 				files[builtinProcessPath(operation)] = &fstest.MapFile{Data: []byte(definition)}
 				before := bytes.Clone(files[builtinProcessPath(operation)].Data)
 				_, unit, bundle := builtinProcessRequire(t, files, builtinProcessSource)
@@ -199,6 +202,7 @@ func TestBuiltinProcessLogemeCatalog(t *testing.T) {
 			t.Fatal("renamed descriptor input requires the canonical builtin declaration")
 		}
 		files[core] = &fstest.MapFile{Data: bytes.ReplaceAll(files[core].Data, []byte("Main"), []byte("Entry"))}
+		deriveTestRuntime(t, files)
 		builtinProcessRequire(t, files, builtinProcessSource)
 		cfg := Options{Resources: files}
 		result, err := runnableServiceCompile(t, "Create \"Worker\" as a New Entry Service.\n", nil, cfg)
@@ -220,7 +224,7 @@ func TestBuiltinProcessLogemeCatalog(t *testing.T) {
 		for _, label := range []string{"alpha", "beta", ""} {
 			files := builtinProcessFilesystem(t)
 			if label != "" {
-				definition := strings.Replace(builtinProcessDefinitions()["run"], "Statement: ~", "Statement: ~/* "+label+" */ ", 1)
+				definition := strings.Replace(builtinProcessDefinitions()["run"], "Key: ~runtime::", "Key: ~/* "+label+" */ runtime::", 1)
 				files[builtinProcessPath("run")] = &fstest.MapFile{Data: []byte(definition)}
 			}
 			var provider fs.FS = files
@@ -229,7 +233,7 @@ func TestBuiltinProcessLogemeCatalog(t *testing.T) {
 			}
 			_, unit, bundle := builtinProcessRequire(t, provider, source)
 			for i := 0; i < 2; i++ {
-				want := fmt.Sprintf("lApp%d.run()?;", i)
+				want := fmt.Sprintf("Inputs: ~&[&lApp%d]&~", i)
 				if !bytes.Contains(unit.BackendAML, []byte(want)) {
 					t.Errorf("%s omitted independently bound receiver %s", label, want)
 				}
@@ -307,10 +311,12 @@ func TestBuiltinProcessLogemeAppParity(t *testing.T) {
 	t.Run("literal lifecycle glyph sequence", func(t *testing.T) {
 		_, unit, _ := builtinProcessRequire(t, distribution.Files(), builtinProcessSource)
 		ordered := []string{
-			`BOD^E{|Statement: ~lApp0.build()?;~|}`,
-			`BOD^E{|Statement: ~lApp0.run()?;~|}`,
-			`BOD^E{|Statement: ~lApp0.stop().await?;~|}`,
-			`OB{|Key: ~lInvocation0~, Value: ~lApp0.wait().await?~|}*BOG^GI^(E{|Statement: ~lInvocation0.claim_continuation()?~|}*W^BOD^E{|Statement: ~lInvocation0.finish_continuation();~|})`,
+			`KY{|Key: ~runtime::app_build~, Inputs: ~&[&lApp0]&~|}`,
+			`KY{|Key: ~runtime::app_run~, Inputs: ~&[&lApp0]&~|}`,
+			`KY{|Key: ~runtime::app_stop~, Inputs: ~&[&lApp0]&~|}`,
+			`KY{|Key: ~runtime::app_wait~, Inputs: ~&[&lApp0]&~|}`,
+			`KY{|Key: ~runtime::invocation_claim~, Inputs: ~&[&lInvocation0]&~|}`,
+			`BOG^GI^(E{|Statement: ~lProcessClaimed~|}*W^MOB{|Key: ~_~|}^KY{|Key: ~runtime::invocation_finish~, Inputs: ~&[&lInvocation0]&~|})`,
 		}
 		rest := string(unit.BackendAML)
 		for _, expected := range ordered {
@@ -347,7 +353,7 @@ func TestBuiltinProcessLogemeAppParity(t *testing.T) {
 	t.Run("source Run is not native redispatch", func(t *testing.T) {
 		source := "Create \"Run|-s|-ning\" for Showing any Text.\nRun `ordinary action`.\n"
 		result, unit, _ := builtinProcessRequire(t, distribution.Files(), source)
-		if got := phase1Kinds(result.Compilation.Semantics.Instructions); !reflect.DeepEqual(got, []string{"show"}) || bytes.Contains(unit.BackendAML, []byte(".run()?")) {
+		if got := phase1Kinds(result.Compilation.Semantics.Instructions); !reflect.DeepEqual(got, []string{"show"}) || bytes.Contains(unit.BackendAML, []byte("Key: ~runtime::app_run~")) {
 			t.Fatalf("source-defined Run was redispatched as a primitive: %v", got)
 		}
 	})

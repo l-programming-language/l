@@ -243,6 +243,14 @@ test('a second indexed dictionary requires both a dedicated page and reviewed pu
   ]);
 });
 
+test('reviewed internal dictionaries retain coverage without becoming public catalog entries', () => {
+  const index = { format: 1, languages: { eng: { support: { entry: 'stdlib/eng/support.l', dictionary: 'Support' } } } };
+  const entries = [{ kind: 'stdlib-export', visibility: 'namespace', support: 'internal', sources: ['stdlib/eng/support.l'] }];
+  assert.deepEqual(validateStdlib(index, [], entries), []);
+  entries.push({ kind: 'stdlib-export', visibility: 'public', support: 'supported', sources: ['stdlib/eng/support.l'] });
+  assert.throws(() => validateStdlib(index, [], entries), /conflicting public documentation classifications/);
+});
+
 test('portable containment and safe files reject traversal and external symlinks', async (t) => {
   const root = await fixture(t, { 'inside.txt': 'inside' });
   const outside = await fixture(t, { 'private.txt': 'outside' });

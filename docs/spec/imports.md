@@ -14,7 +14,7 @@ For example:
 
 <!-- example:imports-indexed-member -->
 
-This imports the public member from the registered IO dictionary and binds a local alias. It does not search for a neighboring `io` directory or `io.l`, nor does it expose private Log/Logger helpers. Importing the dictionary itself retains a namespace instead of flattening all members into the program.
+This imports the public member from the registered IO dictionary and binds a local alias. It does not search for a neighboring `io` directory or `io.l`, nor does it expose private rendering and writing helpers. Importing the dictionary itself retains a namespace instead of flattening all members into the program.
 
 The index validates duplicate JSON keys, safe resource paths, format, actual entry files, and consistent dictionary identity. An unknown key is an unresolved dictionary; an unsupported provider-style name reports its bounded unsupported-provider diagnostic. There is no package download or unrestricted remote dependency resolver hidden in Use.
 
@@ -60,7 +60,7 @@ Two imports that attempt incompatible declarations in one scope can collide. Cas
 
 <!-- example:imports-private-helper -->
 
-The Print import is valid, but the final name is unresolved: Log belongs to the dictionary's private lexical root. The [existing distribution test](../../lyger/distribution_frontend_test.go) checks this rejection for both Log and Logger after a complete App program. This shortened documentation fragment is inspected against that test; it is not a separately executed negative fixture. Import the documented public member instead of depending on a helper's implementation spelling.
+The Print import is valid, but the final name is unresolved: Write belongs to the dictionary's private lexical root. The [existing distribution test](../../lyger/distribution_frontend_test.go) checks this rejection for Write and Discard after a complete App program. This shortened documentation fragment is inspected against that test; it is not a separately executed negative fixture. Import the documented public member instead of depending on a helper's implementation spelling.
 
 ## Source units and generated layout
 

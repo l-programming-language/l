@@ -69,8 +69,8 @@ func workspaceRuntimeLibrary(name string, templates map[string][]byte) (Executab
 	}
 	return Executable{
 		Name:             name,
-		MapArrays:        [][]string{{"/src/lib.rs", "/src/runtime.rs", "/src/process_unix.rs", "/src/process_other.rs", "/Cargo.toml"}},
-		ByteArrays:       [][][]byte{{[]byte(root), bytes.Clone(templates["runtime/runtime.lu"]), bytes.Clone(templates["runtime/process_unix.lu"]), bytes.Clone(templates["runtime/process_other.lu"]), cargo}},
+		MapArrays:        [][]string{{"/src/lib.rs", "/src/runtime.rs", "/src/runtime/host.rs", "/src/process_unix.rs", "/src/process_other.rs", "/Cargo.toml"}},
+		ByteArrays:       [][][]byte{{[]byte(root), bytes.Clone(templates["runtime/runtime.rs"]), bytes.Clone(templates["runtime/host.lu"]), bytes.Clone(templates["runtime/process_unix.lu"]), bytes.Clone(templates["runtime/process_other.lu"]), cargo}},
 		DependencyArrays: [][]string{dependencies},
 		EnvDepArrays:     [][]string{nil},
 	}, nil

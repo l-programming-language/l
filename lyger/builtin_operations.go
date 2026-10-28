@@ -200,6 +200,28 @@ func (catalog *builtinProcessCatalog) instantiate(operation builtinProcessOperat
 }
 
 func builtinProcessExpressions(template *DefinitionTemplate, instance DefinitionInstance) ([]string, error) {
+	if len(instance.before) > 0 {
+		var expressions []string
+		for _, step := range definitionSteps(instance) {
+			selected, err := builtinProcessExpressions(template, step)
+			if err != nil {
+				return nil, err
+			}
+			expressions = append(expressions, selected...)
+		}
+		return expressions, nil
+	}
+	if instance.sequence != nil {
+		var expressions []string
+		for _, child := range instance.sequence {
+			selected, err := builtinProcessExpressions(template, child)
+			if err != nil {
+				return nil, err
+			}
+			expressions = append(expressions, selected...)
+		}
+		return expressions, nil
+	}
 	if instance.Words == nil {
 		return []string{instance.Expression}, nil
 	}
@@ -207,4 +229,13 @@ func builtinProcessExpressions(template *DefinitionTemplate, instance Definition
 		return nil, template.failure(lerrors.InvalidConfiguration.Errorf("builtin process composition requires one ordered word"))
 	}
 	return append([]string(nil), instance.Words[0]...), nil
+}
+
+func definitionSteps(instance DefinitionInstance) []DefinitionInstance {
+	var steps []DefinitionInstance
+	for _, prior := range instance.before {
+		steps = append(steps, definitionSteps(prior)...)
+	}
+	instance.before = nil
+	return append(steps, instance)
 }

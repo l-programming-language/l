@@ -13,20 +13,21 @@ import (
 
 // token contains the parsed contents information for a lexical word of LStatement,
 type token struct {
-	rawBytes     []byte // []byte(key)
-	tType        string // prepositions.consignment.associative.root / type / primitive,
-	category     string // POS type (noun, verb, etc.),
-	subCategory  string // vocab type, i.e. primitive, structure, applicative, etc...
-	class        string // vocab sub-type, i.e. () (text, app, number, etc.), or structure type (list, etc...)
-	abstract     bool   // concrete if false
-	conjoined    bool   // if rawBytes ended with a comma
-	defined      bool   // if true token is user defined word aka id, if false token is a built in word
-	mem          *entry // raw data value
-	gram         *grammar
-	binding      *tokenBinding
-	bindingError error
-	scope        *lexicalScope
-	rangeError   error // Provisional primitive failure until names resolve.
+	rawBytes           []byte // []byte(key)
+	tType              string // prepositions.consignment.associative.root / type / primitive,
+	category           string // POS type (noun, verb, etc.),
+	subCategory        string // vocab type, i.e. primitive, structure, applicative, etc...
+	class              string // vocab sub-type, i.e. () (text, app, number, etc.), or structure type (list, etc...)
+	abstract           bool   // concrete if false
+	conjoined          bool   // if rawBytes ended with a comma
+	defined            bool   // if true token is user defined word aka id, if false token is a built in word
+	mem                *entry // raw data value
+	gram               *grammar
+	binding            *tokenBinding
+	pendingDeclaration *token
+	bindingError       error
+	scope              *lexicalScope
+	rangeError         error // Provisional primitive failure until names resolve.
 }
 
 // isPossessive returns whether the token is possessive or now

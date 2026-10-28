@@ -15,7 +15,7 @@ The public prose must not turn implementation gaps into intended guarantees. The
 | ID | Finding | Documentation disposition | Primary evidence |
 | --- | --- | --- | --- |
 | SPEC-001 | Byte/Bytes names byte-oriented storage; runtime Bytes copies Text and supports checked indexed Number reads. | No invented 8-bit scalar or mutation API. | `lyger/runtime_values_source.go`, `builtins/eng/core.l`, `lyger/runtime_values_test.go` |
-| SPEC-002 | Pointer is a typed managed handle; clones share a target while construction copies the initial value. | Document checked access and cycle rejection, not raw addresses or arithmetic. | `builtins/eng/core.l`, `lyger/runtime_values_source.go`, `lyger/runtime_values_test.go` |
+| SPEC-002 | Pointer is a typed managed handle; clones share a target while construction copies the initial value. | Document checked access and cycle rejection, not raw addresses or arithmetic. | `stdlib/eng/storage/dictionary.l`, `lyger/runtime_values_source.go`, `lyger/runtime_values_test.go` |
 | SPEC-003 | Ordinary Null initializes an explicit value and displays as null; unassigned storage remains separate. | Preserve the separate native-definition Null atom. | `lyger/runtime_values_plan.go`, `builtins/eng/core.l`, `lyger/definition_framing_test.go` |
 | SPEC-004 | List and Map have typed runtime construction, updates and reads. Dictionary remains a vocabulary namespace. | Document bounds, type checks and missing keys; do not imply general iteration. | `lyger/runtime_values_source.go`, `lyger/runtime_values_plan.go`, `lyger/runtime_values_test.go` |
 | SPEC-005 | While and repeated CONDITION grammar exist; outer instructions reject While and multiple condition joins. | Mark recognized forms rejected at outer lowering; no short-circuit or source-loop contract. | `lexicon/eng/grammar.json`, `lyger/instructions.go`, `lyger/orchestration_plan.go` |
@@ -39,7 +39,7 @@ New libraries are expected. Documentation must enumerate every actual `(language
 
 A recommended stable identity is `stdlib:<language>:<key>` for a dictionary and `stdlib-export:<language>:<key>:<canonical-name>` for an export. Renaming/removing a key must invalidate the old mapping. Changed source bytes must invalidate review hashes. An unresolved public surface is a failed documentation classification check, not an invitation to classify every regex-found declaration as public.
 
-The current dictionary exports IO and IO.Print; private Log/Logger support remains classified as implementation detail. Future dictionary metadata may be obtained through a separately invoked narrow exporter using real frontend resolution if reviewed mappings are no longer sufficient. It must not silently run compiler/native suites during the Node-only website build.
+The current dictionary exports IO and IO.Print; private rendering and writing support remains classified as implementation detail. Future dictionary metadata may be obtained through a separately invoked narrow exporter using real frontend resolution if reviewed mappings are no longer sufficient. It must not silently run compiler/native suites during the Node-only website build.
 
 ## Existing witnesses and validation status
 

@@ -4,7 +4,7 @@ Builtins are implicit, standard dictionaries are imported explicitly, and projec
 
 ## Import the public IO member
 
-The [basic program](first-program.md) imports IO's Print from `io` under the local name Print. The standard-library index maps `eng/io` to the IO dictionary, whose public member is IO.Print; Log/Logger remain private helpers. Builtins need no project copy, but Print requires its import. A local `io` or `io.l` does not shadow the indexed `io` import.
+The [basic program](first-program.md) imports IO's Print from `io` under the local name Print. The standard-library index maps `eng/io` to the IO dictionary, whose public member is IO.Print; rendering and writing helpers remain private. Builtins need no project copy, but Print requires its import. A local `io` or `io.l` does not shadow the indexed `io` import.
 
 ## Import a project-owned member
 

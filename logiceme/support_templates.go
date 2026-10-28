@@ -14,7 +14,7 @@ import (
 func loadSupportTemplates(resources fs.FS, includeRuntime bool) (map[string][]byte, error) {
 	names := []string{"config/config.lu", "install/cargo.lu", "operate/start.lu", "operate/stop.lu"}
 	if includeRuntime {
-		names = append(names, "runtime/main.lu", "runtime/runtime.lu", "runtime/process_unix.lu", "runtime/process_other.lu")
+		names = append(names, "runtime/main.lu", "runtime/host.lu", "runtime/process_unix.lu", "runtime/process_other.lu")
 	}
 	result := make(map[string][]byte, len(names))
 	for _, name := range names {
@@ -28,6 +28,13 @@ func loadSupportTemplates(resources fs.FS, includeRuntime bool) (map[string][]by
 			return nil, fmt.Errorf("load Rust support template %s: %w", asset, err)
 		}
 		result[name] = content
+	}
+	if includeRuntime {
+		runtime, err := loadRuntimeComposition(resources, result)
+		if err != nil {
+			return nil, err
+		}
+		result["runtime/runtime.rs"] = runtime
 	}
 	return result, nil
 }

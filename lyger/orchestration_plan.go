@@ -16,7 +16,6 @@ type orchestrationPlan struct {
 	Storage              []*orchestrationStorage
 	Apps                 []*App
 	Callables            []*orchestrationCallable
-	RuntimeValues        bool
 }
 
 // A block identifies an activation, not merely a lexical scope. Two App
@@ -247,6 +246,9 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 		return nil, lerrors.Internal.Errorf("source action argument is outside its call")
 	}
 	result := &orchestrationValue{Source: value, Type: value.Type, RuntimeType: value.RuntimeType, Access: orchestrationAccessCopy}
+	if value.Atom != nil {
+		return result, nil
+	}
 	if result.RuntimeType.Kind == valueInvalid {
 		result.RuntimeType.Kind = value.Type
 	}
@@ -262,9 +264,6 @@ func (p *orchestrationPlanner) value(value *instructionValue, flow orchestration
 			return nil, lerrors.Internal.Errorf("literal has inconsistent type %s", value.Type)
 		}
 		result.Literal, result.Type, result.RuntimeType = literal, literal.Type, runtimeTypeRef{Kind: literal.Type}
-		if p.plan != nil && literal.Type == valueNull {
-			p.plan.RuntimeValues = true
-		}
 		if result.Type == valueText {
 			result.Access = orchestrationAccessOwned
 		}
@@ -347,7 +346,19 @@ func (p *orchestrationPlanner) condition(condition *instructionCondition, flow o
 		return nil, err
 	}
 	result := &orchestrationCondition{Source: condition, Left: left}
-	op, _ := parseConditionOperator(condition.Operator)
+	op, valid := parseConditionOperator(condition.Operator)
+	if !valid {
+		return nil, lerrors.Unsupported.Errorf("unsupported condition operator %s", condition.Operator)
+	}
+	if condition.Left.Atom != nil {
+		if op == conditionTruth && condition.Right != nil || op != conditionTruth && condition.Right == nil {
+			return nil, lerrors.TypeMismatch.Errorf("condition %s has unsupported operand count", condition.Operator)
+		}
+		if condition.Right != nil {
+			result.Right, err = p.value(condition.Right, flow)
+		}
+		return result, err
+	}
 	if op == conditionTruth {
 		if left.Type != valueTruth || condition.Right != nil {
 			return nil, lerrors.TypeMismatch.Errorf("truth condition requires one Truth operand")

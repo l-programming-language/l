@@ -10,7 +10,7 @@ Process has forms Process, Processes, Processive, and Processing. Its native def
 <DEF>W^<@Definitions|Syllables@><DEF>
 ```
 
-A Process collects existing instantiated definition expressions. It is not an OS process handle; App invocations own those. Processing a source-defined Logger in IO is an application-body composition, not a direct runtime launch instruction.
+A Process collects existing instantiated definition expressions. It is not an OS process handle; App invocations own those. Processing a source-defined rendering or writing operation in IO is an application-body composition, not a direct runtime launch instruction.
 
 ## Function
 

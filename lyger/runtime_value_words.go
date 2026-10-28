@@ -10,7 +10,7 @@ func (e *orchestrationEmitter) transferRuntimeValue(value *orchestrationValue, t
 	if target.Kind == valueThing {
 		return e.boxValue(resolved, value.RuntimeType)
 	}
-	return e.copyValue(resolved, value.RuntimeType)
+	return e.copyValue(resolved)
 }
 
 func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result emittedExpression) (emittedExpression, error) {
@@ -25,31 +25,54 @@ func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result 
 			if err != nil {
 				return result, err
 			}
-			args["Index"] = definitionReferenceArgument(key.text)
-			args["Key"] = definitionReferenceArgument(key.text)
+			field := "Index"
+			if value.Owner.Type == valueMap {
+				field = "Key"
+			}
+			args[field] = definitionReferenceArgument(key.text)
 		}
 		word := ""
 		switch value.Owner.Type {
 		case valueList:
-			word = "UseReadlist"
+			word = "Storage.List.Read"
 			args["List"] = definitionReferenceArgument(owner.text)
 		case valueMap:
-			word = "UseReadmap"
+			word = "Storage.Map.Read"
 			args["Map"] = definitionReferenceArgument(owner.text)
 		case valuePointer:
-			word = "UseReadpointer"
+			word = "Storage.Pointer.Read"
 			args["Pointer"] = definitionReferenceArgument(owner.text)
 		case valueBytes:
 			args["Bytes"] = definitionReferenceArgument(owner.text)
-			result.text, err = e.valueBinding("UseReadbyte", args)
+			if err = e.borrowArgument(args, "Bytes", false); err != nil {
+				return result, err
+			}
+			result.text, err = e.resultBinding("Storage.Bytes.Read", args)
 			return result, err
 		case valueThing:
-			word = "UseSnapshotvalue"
-			args["Value"] = definitionReferenceArgument(owner.text)
+			word = "Storage.Value.Copy"
+			borrowed, err := e.valueBinding("Storage.Borrow", map[string]DefinitionArgument{"Value": definitionReferenceArgument(owner.text)})
+			if err != nil {
+				return result, err
+			}
+			args["Value"] = definitionReferenceArgument(borrowed)
 		default:
 			return result, lerrors.Internal.Errorf("unsupported planned read")
 		}
-		boxed, err := e.valueBinding(word, args)
+		var boxed string
+		if value.Owner.Type == valueThing {
+			boxed, err = e.valueBinding(word, args)
+		} else {
+			if err = e.borrowArgument(args, value.Owner.Type.String(), false); err != nil {
+				return result, err
+			}
+			if value.Owner.Type == valueMap {
+				if err = e.borrowArgument(args, "Key", false); err != nil {
+					return result, err
+				}
+			}
+			boxed, err = e.resultBinding(word, args)
+		}
 		if err != nil {
 			return result, err
 		}
@@ -57,7 +80,11 @@ func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result 
 		if err != nil {
 			return result, err
 		}
-		checked, err := e.valueBinding("UseExpectvalue", map[string]DefinitionArgument{"Value": definitionReferenceArgument(boxed), "Expected": definitionReferenceArgument(expected)})
+		outcome, err := e.valueBinding("Storage.Value.Expect", map[string]DefinitionArgument{"Value": definitionReferenceArgument(boxed), "Expected": definitionReferenceArgument(expected)})
+		if err != nil {
+			return emittedExpression{}, err
+		}
+		checked, err := e.checkedBinding(outcome)
 		if err != nil {
 			return result, err
 		}
@@ -67,14 +94,14 @@ func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result 
 	switch value.Type {
 	case valueNull:
 		var err error
-		result.text, err = e.valueBinding("Emptyresults", map[string]DefinitionArgument{})
+		result.text, err = e.results(nil)
 		return result, err
 	case valueText, valueBytes, valueError:
 		child := value.Elements[0]
 		var err error
 		result.text, err = e.transferRuntimeValue(child, child.RuntimeType)
 		if err == nil && value.Type == valueError {
-			result.text, err = e.valueBinding("Constructerror", map[string]DefinitionArgument{"Value": definitionReferenceArgument(result.text)})
+			result.text, err = e.valueBinding("Storage.Error.Create", map[string]DefinitionArgument{"Value": definitionReferenceArgument(result.text)})
 		}
 		return result, err
 	}
@@ -101,21 +128,25 @@ func (e *orchestrationEmitter) runtimeOperand(value *orchestrationValue, result 
 	word := ""
 	switch value.Type {
 	case valuePointer:
-		word = "UseConstructpointer"
+		word = "Storage.Pointer.Create"
 		args["Value"] = definitionReferenceArgument(values[0])
 	case valueList:
-		word = "UseConstructlist"
+		word = "Storage.List.Create"
 		items, err := e.vector(references(values), "LValue")
 		if err != nil {
 			return result, err
 		}
 		args["Values"] = definitionReferenceArgument(items)
 	case valueMap:
-		word = "UseConstructmap"
+		word = "Storage.Map.Create"
 	default:
 		return result, lerrors.Internal.Errorf("unsupported planned construction %s", value.Type)
 	}
-	result.text, err = e.valueBinding(word, args)
+	if value.Type == valueMap {
+		result.text, err = e.valueBinding(word, args)
+	} else {
+		result.text, err = e.resultBinding(word, args)
+	}
 	return result, err
 }
 
@@ -127,21 +158,25 @@ func (e *orchestrationEmitter) storeRuntimeValue(slot *orchestrationStorage, val
 			return nil, err
 		}
 		args := map[string]DefinitionArgument{"Value": definitionReferenceArgument(boxed)}
-		word := "UseWriteprogramvalues"
+		word := "Storage.Program.Values.Write"
 		if shared {
 			args["Program"] = definitionReferenceArgument("lProgram")
 			args["Index"] = definitionIndexArgument(uint64(index))
 		} else {
-			word = "UseUpdatecapture"
+			word = "Storage.Environment.Update"
 			args["Environment"] = definitionReferenceArgument(slot.Capture.Name)
 			args["Index"] = definitionIndexArgument(uint64(slot.Capture.Index))
 		}
-		_, err = e.valueBinding(word, args)
+		key := "Environment"
+		if shared {
+			key = "Program"
+		}
+		_, err = e.borrowedResultBinding(word, args, key)
 		return nil, err
 	}
-	word := "Assignedvalue"
+	word := "Storage.Assign"
 	if slot.optionalStorage() {
-		word = "Publishedvalue"
+		word = "Storage.Publish"
 	}
 	return e.word(word, map[string]DefinitionArgument{"Name": definitionReferenceArgument(slot.name()), "Value": definitionReferenceArgument(value)})
 }
@@ -158,33 +193,41 @@ func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) 
 	args := map[string]DefinitionArgument{"Value": definitionReferenceArgument(boxed)}
 	if target.kind == valuePointer {
 		args["Pointer"] = definitionReferenceArgument(target.text)
-		_, err = e.valueBinding("UseUpdatepointer", args)
+		if err = e.borrowArgument(args, "Pointer", false); err != nil {
+			return nil, err
+		}
+		_, err = e.resultBinding("Storage.Pointer.Update", args)
 		return nil, err
 	}
-	snapshot, err := e.copyValue(target, current.Target.RuntimeType)
+	snapshot, err := e.copyValue(target)
 	if err != nil {
 		return nil, err
 	}
-	mutable, err := e.valueBinding("Mutablebinding", map[string]DefinitionArgument{"Value": definitionReferenceArgument(snapshot)})
+	mutable, err := e.describedValueBinding("Storage.Binding", []string{"Storage.Mutable"}, map[string]DefinitionArgument{"Value": definitionReferenceArgument(snapshot)})
 	if err != nil {
 		return nil, err
 	}
-	word := "UseAppendlist"
+	word := "Storage.List.Append"
 	args["List"] = definitionReferenceArgument(mutable)
 	if current.Key != nil {
 		key, err := e.transferRuntimeValue(current.Key, current.Key.RuntimeType)
 		if err != nil {
 			return nil, err
 		}
-		word = "UseUpdatelist"
-		args["Index"] = definitionReferenceArgument(key)
 		if target.kind == valueMap {
-			word = "UseUpdatemap"
+			word = "Storage.Map.Update"
+			delete(args, "List")
 			args["Map"] = definitionReferenceArgument(mutable)
 			args["Key"] = definitionReferenceArgument(key)
+		} else {
+			word = "Storage.List.Update"
+			args["Index"] = definitionReferenceArgument(key)
 		}
 	}
-	if _, err = e.valueBinding(word, args); err != nil {
+	if err = e.borrowArgument(args, target.kind.String(), true); err != nil {
+		return nil, err
+	}
+	if _, err = e.resultBinding(word, args); err != nil {
 		return nil, err
 	}
 	return e.storeRuntimeValue(current.Target.Storage, mutable)

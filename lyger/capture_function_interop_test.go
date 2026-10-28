@@ -42,15 +42,12 @@ func TestCaptureActivationAliasesNative(t *testing.T) {
 	scope := &lexicalScope{kind: lexicalParagraph}
 	value := planTestScalar("private", valueText, scope)
 	action, alias := captureTestAction("Report"), captureTestAction("Saved")
-	semantics := newSemanticProgram()
-	semantics.Declarations = c.Semantics.Declarations
-	semantics.Subjects = c.Semantics.Subjects
+	semantics := c.Semantics
 	semantics.Aliases[alias] = action
 	bind := captureTestBind(action, value)
 	first := &instruction{Kind: instructionBlock, Block: &scopedInstructions{Scope: scope, Body: []*instruction{captureTestSet(value, "first"), bind, captureTestCall(action, captureTestSet(value, "mutated"), captureTestShow(value)), captureTestShow(value)}}}
 	second := &instruction{Kind: instructionBlock, Block: &scopedInstructions{Scope: scope, Body: []*instruction{captureTestSet(value, "second"), bind}}}
 	semantics.Instructions = []*instruction{first, {Kind: instructionAliasAction, Callable: alias, Target: &instructionValue{Kind: operandSymbol, Record: action}}, second, captureTestCall(alias, captureTestShow(value)), captureTestCall(action, captureTestShow(value))}
-	c.Semantics = semantics
 	captureNativeResult(t, c, "mutatedfirstmutatedsecond")
 }
 

@@ -67,9 +67,9 @@ func TestParagraphDemoSourceGeneratesSource(t *testing.T) {
 	}
 	for index, message := range []string{"Hello World!", "Hello Again World!"} {
 		t.Run(wantIDs[index], func(t *testing.T) {
-			expression := []byte("(&&LPrintValue(&(" + strconv.Quote(message) + "))).l_print();")
+			literal := []byte(strconv.Quote(message))
 			for name, markup := range map[string][]byte{"observable": result.AML, "backend": result.BackendAML} {
-				if !bytes.Contains(markup, expression) {
+				if !bytes.Contains(markup, literal) {
 					t.Fatalf("%s AML lost paragraph App Text %q", name, message)
 				}
 			}

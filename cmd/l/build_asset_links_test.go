@@ -19,8 +19,8 @@ func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 	}{
 		{"dictionary index", "stdlib/index.json", false, false},
 		{"grammar", "lexicon/eng/grammar.json", false, false},
-		{"runtime template", "builtins/templates/runtime/runtime.lu", false, false},
-		{"nested directory", "builtins/templates/runtime/runtime.lu", true, false},
+		{"runtime host adapter", "builtins/templates/runtime/host.lu", false, false},
+		{"nested directory", "builtins/templates/runtime/host.lu", true, false},
 		{"hard link", "stdlib/index.json", false, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

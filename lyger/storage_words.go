@@ -7,26 +7,26 @@ func (e *orchestrationEmitter) captureReference(source *orchestrationCallableRef
 		return "", lerrors.Internal.Errorf("missing captured callable")
 	}
 	if capture := source.Capture; capture != nil {
-		value, err := e.valueBinding("UseReadcapture", map[string]DefinitionArgument{
+		value, err := e.borrowedResultBinding("Storage.Environment.Read", map[string]DefinitionArgument{
 			"Environment": definitionReferenceArgument(capture.Name), "Index": definitionIndexArgument(uint64(capture.Index)),
-		})
+		}, "Environment")
 		if err != nil {
 			return "", err
 		}
-		return e.valueBinding("UseExtractenvironment", map[string]DefinitionArgument{"Value": definitionReferenceArgument(value)})
+		return e.restoreValue(value, "LEnvironment", "expected Environment", "Storage.Environment.Copy")
 	}
 	if source.Slot == nil {
 		return "", lerrors.Internal.Errorf("captured callable has no slot")
 	}
 	if index, exists := e.programActions[source.Slot.Record]; exists {
-		return e.valueBinding("UseReadprogramaction", map[string]DefinitionArgument{
+		return e.borrowedResultBinding("Storage.Program.Actions.Read", map[string]DefinitionArgument{
 			"Program": definitionReferenceArgument("lProgram"), "Index": definitionIndexArgument(uint64(index)),
-		})
+		}, "Program")
 	}
-	return e.valueBinding("Requiredcapture", map[string]DefinitionArgument{
+	return e.borrowedResultBinding("Storage.Environment.Require", map[string]DefinitionArgument{
 		"Value":   definitionReferenceArgument(source.Slot.name()),
 		"Message": {Kind: "Text", Text: "action " + source.Slot.Record.ID + " is not initialized"},
-	})
+	}, "Value")
 }
 
 func (e *orchestrationEmitter) bindCapture(current *orchestrationInstruction) ([]string, error) {
@@ -38,7 +38,7 @@ func (e *orchestrationEmitter) bindCapture(current *orchestrationInstruction) ([
 		var types, fields string
 		types, fields, err = e.captureEnvironment(current.CaptureValues, current.CaptureHandles)
 		if err == nil {
-			value, err = e.valueBinding("UseConstructcapture", map[string]DefinitionArgument{
+			value, err = e.resultBinding("Storage.Environment.Create", map[string]DefinitionArgument{
 				"Types": definitionReferenceArgument(types), "Values": definitionReferenceArgument(fields),
 			})
 		}
@@ -47,13 +47,13 @@ func (e *orchestrationEmitter) bindCapture(current *orchestrationInstruction) ([
 		return nil, err
 	}
 	if index, exists := e.programActions[current.Callable.Record]; exists {
-		_, err = e.valueBinding("UseWriteprogramactions", map[string]DefinitionArgument{
+		_, err = e.borrowedResultBinding("Storage.Program.Actions.Write", map[string]DefinitionArgument{
 			"Program": definitionReferenceArgument("lProgram"), "Index": definitionIndexArgument(uint64(index)),
 			"Value": definitionReferenceArgument(value),
-		})
+		}, "Program")
 		return nil, err
 	}
-	return e.word("Publishedvalue", map[string]DefinitionArgument{
+	return e.word("Storage.Publish", map[string]DefinitionArgument{
 		"Name": definitionReferenceArgument(current.Callable.name()), "Value": definitionReferenceArgument(value),
 	})
 }
@@ -88,13 +88,11 @@ func (e *orchestrationEmitter) captureEnvironment(values []*orchestrationValue, 
 			return "", "", err
 		}
 		// Boxing owns its signature; the schema needs its own vector value.
-		signature, err := e.valueBinding("Copiedvalue", map[string]DefinitionArgument{"Value": definitionReferenceArgument(typeName)})
+		signature, err := e.copyAtom(typeName, false)
 		if err != nil {
 			return "", "", err
 		}
-		field, err := e.valueBinding("UseBoxenvironment", map[string]DefinitionArgument{
-			"Value": definitionReferenceArgument(handle), "Signature": definitionReferenceArgument(signature),
-		})
+		field, err := e.wrapValue(handle, signature, "Storage.Environment.Render", "Storage.Environment.Visit", "")
 		if err != nil {
 			return "", "", err
 		}
@@ -130,7 +128,7 @@ func (e *orchestrationEmitter) programContext(actions []*record) ([]string, erro
 		}
 	}
 	for _, app := range e.plan.Apps {
-		retained, err := e.valueBinding("RetainedApp", map[string]DefinitionArgument{"Target": definitionReferenceArgument(e.apps[app])})
+		retained, err := e.valueBinding("Retain", map[string]DefinitionArgument{"Target": definitionReferenceArgument(e.apps[app])})
 		if err != nil {
 			return nil, err
 		}
@@ -144,14 +142,14 @@ func (e *orchestrationEmitter) programContext(actions []*record) ([]string, erro
 	if err != nil {
 		return nil, err
 	}
-	program, err := e.valueBinding("UseConstructprogram", map[string]DefinitionArgument{
+	program, err := e.valueBinding("Storage.Program.Create", map[string]DefinitionArgument{
 		"Apps": definitionReferenceArgument(appVector), "Types": definitionReferenceArgument(typeVector),
 		"Action_count": definitionIndexArgument(uint64(len(e.programActions))),
 	})
 	if err != nil {
 		return nil, err
 	}
-	context, err := e.word("Programcontext", map[string]DefinitionArgument{
+	context, err := e.word("Storage.Context.Create", map[string]DefinitionArgument{
 		"Name": definitionReferenceArgument("lContext"), "Runtime": definitionReferenceArgument("runtime"),
 		"Program": definitionReferenceArgument(program), "Binding": definitionReferenceArgument("lProgram"),
 	})

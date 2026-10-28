@@ -17,11 +17,15 @@ func functionContractSource(t *testing.T) string {
 	if err != nil {
 		t.Fatal(err)
 	}
+	const invocation = "Key: ~(<@Target@>)~"
+	if strings.Count(string(core), invocation) != 1 {
+		t.Fatal("constructor contract fixture requires the selected Function invocation")
+	}
 	var words []string
 	for _, line := range strings.Split(string(core), "\n") {
 		if strings.HasPrefix(line, `Define "Function`) || strings.HasPrefix(line, `Define any Function's`) {
 			line = strings.Replace(line, "Function", "Routine", 1)
-			words = append(words, strings.ReplaceAll(line, "Value: ~<@Target@>~", "Value: ~/* selected Routine */ <@Target@>~"))
+			words = append(words, strings.ReplaceAll(line, invocation, "Key: ~(/* selected Routine */ <@Target@>)~"))
 		}
 	}
 	return strings.Join(words, "\n") + "\n\n" + identityFunction +

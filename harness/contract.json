@@ -147,10 +147,6 @@
       "sha256": "13eb68104e052f1daac62d254d86a52b1518769bddd3e96dfc719d7c27900814"
     },
     {
-      "path": "cmd/l/test/main.aml.txt",
-      "sha256": "5760ffaa30aa3411f38c5c4ad55e4584fc6f3be29c35867b7eda5075f1e7d577"
-    },
-    {
       "path": "cmd/l/test/main.l",
       "sha256": "70ee78d382c213fa2111c022c41af25dc92ddb1ba3778867d34fde8a3ffd3988"
     },
@@ -420,7 +416,7 @@
     },
     {
       "path": "lyger/test/native/runtime-lifetimes.l",
-      "sha256": "440868a64226e6a289f86281ec5a230a59deac2c64db1d0d8044539292fa77fe"
+      "sha256": "4d40470c64d59665b7f511022d9c4922e9303ce5d556634010ee88fa1e84e0f7"
     },
     {
       "path": "lyger/test/workspace/services.l",
@@ -432,7 +428,7 @@
     },
     {
       "path": "testdata/distribution/api/probe_test.go.txt",
-      "sha256": "325c96c11997182d172b2f487e3d6dd6385ae7b32e0696d7eb90c74d3ca86fd6"
+      "sha256": "e694aaf49aff9cd5f7bb9288083657d98a09451c362eb1ec8e78f9f6f5c23a84"
     },
     {
       "path": "testdata/distribution/observers/Build-only.l",
@@ -980,7 +976,7 @@
     },
     {
       "path": "cmd/l/runnable_service_native_test.go",
-      "sha256": "27b37358a20a39451c6c432606d6baa94b07c56fd80c6862449b1e48741b5eca"
+      "sha256": "737b74ec2e375ffdbb22771b4fc4af31cf628184664c59b8563a1d26cce1905a"
     },
     {
       "path": "cmd/l/runnable_service_test.go",
@@ -1400,7 +1396,7 @@
     },
     {
       "path": "lyger/builtin_operations_contract_test.go",
-      "sha256": "1d7e02828a60cb159fbaa6266b7a2611ccaf64ebdb6b96dd155c3639e50a872f"
+      "sha256": "cccfe52f43053970c58b3ac29986b10fbdc80c9e22393e33ea63193d67cd89fd"
     },
     {
       "path": "lyger/runnable_service_test.go",
@@ -1549,6 +1545,10 @@
     {
       "path": "cmd/l/test/runnable_service/expected/app-config.rs",
       "sha256": "7b025b1b74d6457ed34428d5c84ef5203f6f3975b74bb756b8af05c8d8c5ec73"
+    },
+    {
+      "path": "testdata/phase1/runtime/api.rs.txt",
+      "sha256": "6bc1fd92c8b47c15bc2811c7235af85579fae5f928c78c3d514e09348eed8ee1"
     }
   ],
   "absent_files": [
@@ -1559,7 +1559,8 @@
     "configurations",
     "lyger/test/configurations/test_conf.json",
     "lyger/test/lexicon/eng/grammar.json",
-    "lyger/test/lexicon/eng/vocabulary.json"
+    "lyger/test/lexicon/eng/vocabulary.json",
+    "cmd/l/test/main.aml.txt"
   ],
   "tests": [
     {

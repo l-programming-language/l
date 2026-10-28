@@ -20,7 +20,7 @@ func (e *orchestrationEmitter) composeAppSelection(name string, value *orchestra
 	if returned == nil {
 		return nil, lerrors.InvalidConfiguration.Errorf("App selection requires its enclosing Function's Return definition")
 	}
-	retained, err := e.word("RetainedApp", map[string]DefinitionArgument{
+	retained, err := e.word("Retain", map[string]DefinitionArgument{
 		"Name": definitionReferenceArgument(name), "Target": definitionReferenceArgument(target),
 	})
 	if err != nil {
@@ -30,7 +30,7 @@ func (e *orchestrationEmitter) composeAppSelection(name string, value *orchestra
 	if err != nil {
 		return nil, err
 	}
-	rejected, err := e.word("Reject", map[string]DefinitionArgument{
+	rejected, err := e.word("Storage.Reject", map[string]DefinitionArgument{
 		"Name": definitionReferenceArgument(name), "Message": {Kind: "Text", Text: "App handle is not owned by this program"},
 		"Return": {Kind: "Syllable", Definition: &result},
 	})
@@ -41,7 +41,7 @@ func (e *orchestrationEmitter) composeAppSelection(name string, value *orchestra
 	for index := len(cases) - 1; index >= 0; index-- {
 		candidate := cases[index]
 		matchName := name + "Match" + strconv.Itoa(index)
-		matches, err := e.word("SameApp", map[string]DefinitionArgument{
+		matches, err := e.describedWord("Storage.Comparison", []string{"Storage.Identical"}, map[string]DefinitionArgument{
 			"Name": definitionReferenceArgument(matchName),
 			"Left": definitionReferenceArgument(name), "Right": definitionReferenceArgument(candidate.canonical),
 		})

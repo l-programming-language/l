@@ -40,13 +40,20 @@ func TestSourceUnitOriginsAndPhysicalProjection(t *testing.T) {
 			if !bytes.Equal(c.MainBytes, []byte(source)) || !bytes.Equal(c.Prepared.Original, []byte(source)) {
 				t.Fatal("unit preparation changed original main bytes")
 			}
-			if len(c.SourceUnits) != 3 || len(c.SourceOrigins) != 5 {
-				t.Fatalf("units/origins=%d/%d; want3/5", len(c.SourceUnits), len(c.SourceOrigins))
+			if len(c.SourceUnits) != 5 || len(c.SourceOrigins) != 8 {
+				t.Fatalf("units/origins=%d/%d; want5/8", len(c.SourceUnits), len(c.SourceOrigins))
 			}
 			units := map[SourceKind]*SourceUnit{}
+			dictionaries := map[string]*SourceUnit{}
 			for _, unit := range c.SourceUnits {
-				if units[unit.Kind] != nil {
+				if units[unit.Kind] != nil && unit.Kind != SourceDictionary {
 					t.Fatalf("duplicate %s unit", unit.Kind)
+				}
+				if unit.Kind == SourceDictionary {
+					if dictionaries[unit.Dictionary] != nil {
+						t.Fatalf("duplicate Dictionary %s unit", unit.Dictionary)
+					}
+					dictionaries[unit.Dictionary] = unit
 				}
 				units[unit.Kind] = unit
 				checkSourceOrigin(t, c, unit.Origin, override)
@@ -57,8 +64,13 @@ func TestSourceUnitOriginsAndPhysicalProjection(t *testing.T) {
 			if !reflect.DeepEqual(c.Memory, c.Scope.Root.records) || c.Scope.Root.isParagraph() || units[SourceBuiltin].root.isParagraph() || units[SourceDictionary].root.isParagraph() {
 				t.Fatal("unit roots became activation frames")
 			}
-			if c.SourceUnits[0].Kind != SourceBuiltin || c.SourceUnits[1].Kind != SourceDictionary || c.SourceUnits[2].Kind != SourceProgram {
+			if c.SourceUnits[0] != dictionaries["Storage"] || c.SourceUnits[1].Kind != SourceBuiltin || c.SourceUnits[2] != dictionaries["Formatting"] || c.SourceUnits[3] != dictionaries["IO"] || c.SourceUnits[4].Kind != SourceProgram {
 				t.Fatal("source unit inventory lost dependency order")
+			}
+			for _, unit := range dictionaries {
+				if unit.root.parent != units[SourceBuiltin].root || unit.root.isParagraph() {
+					t.Fatal("dictionary unit lost builtin inheritance or became an activation frame")
+				}
 			}
 			var paths []string
 			for _, origin := range c.SourceOrigins {
@@ -144,8 +156,8 @@ func TestSourceUnitDiamondIdentity(t *testing.T) {
 	}
 	c := result.Compilation
 	assertFrontendResources(t, c)
-	if len(c.SourceUnits) != 5 {
-		t.Fatalf("diamond units=%d; want5", len(c.SourceUnits))
+	if len(c.SourceUnits) != 7 {
+		t.Fatalf("diamond units=%d; want7", len(c.SourceUnits))
 	}
 	var ioUnit *SourceUnit
 	for _, unit := range c.SourceUnits {

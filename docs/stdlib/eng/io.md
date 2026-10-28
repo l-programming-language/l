@@ -14,11 +14,11 @@ The action's forms are Print, Prints, Printed, Printing, and Printer. Use it in 
 
 ## Public and private names
 
-IO.Print is public. Its Log/Logger helpers are private and cannot be called through a Print import.
+IO.Print is public. Its typed rendering and writing helpers remain private dependencies of that import.
 
 ## Value handling
 
-Print accepts supported Text, Number, and Truth operands and evaluates each argument once. It does not first convert every argument to Text.
+Print accepts supported Text, Number, Truth and Null operands and evaluates each argument once. It does not first convert every argument to Text.
 
 Text bytes are written unchanged, including whitespace, NUL and invalid UTF-8.
 

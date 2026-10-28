@@ -8,7 +8,6 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-	"testing/fstest"
 
 	"github.com/l-programming-language/l/lerrors"
 )
@@ -59,7 +58,7 @@ func TestWorkspaceRuntimeBridge(t *testing.T) {
 		t.Fatalf("entry has inline runtime artifacts: %v", entry.MapArrays)
 	}
 	main := entryFiles["/src/main.rs"]
-	if bytes.Count(main, []byte("use ::l_runtime_support_2::runtime;")) != 1 || bytes.Contains(main, []byte("mod runtime;")) || bytes.Contains(main, []byte("mod process;")) {
+	if bytes.Count(main, []byte("use ::l_runtime_support_2::runtime;")) != 1 || bytes.Contains(main, []byte("mod runtime;")) || bytes.Contains(main, []byte("mod host;")) || bytes.Contains(main, []byte("mod process;")) {
 		t.Fatalf("entry did not use allocated runtime library:\n%s", main)
 	}
 	if !bytes.Contains(main, []byte(`runtime.show(b"source-owned\xff").await?; Ok(())`)) || bytes.Count(main, []byte("\nfn l_main(")) != 1 {
@@ -86,14 +85,15 @@ func TestWorkspaceRuntimeBridge(t *testing.T) {
 	if string(supportFiles["/src/lib.rs"]) != libraryRoot {
 		t.Fatalf("library root = %q", supportFiles["/src/lib.rs"])
 	}
-	if !reflect.DeepEqual(support.MapArrays[0], []string{"/src/lib.rs", "/src/runtime.rs", "/src/process_unix.rs", "/src/process_other.rs", "/Cargo.toml"}) {
+	if !reflect.DeepEqual(support.MapArrays[0], []string{"/src/lib.rs", "/src/runtime.rs", "/src/runtime/host.rs", "/src/process_unix.rs", "/src/process_other.rs", "/Cargo.toml"}) {
 		t.Fatalf("runtime library inventory: %v", support.MapArrays)
 	}
-	for _, name := range []string{"runtime", "process_unix", "process_other"} {
-		canonical, err := fs.ReadFile(config, "builtins/templates/runtime/"+name+".lu")
-		if err != nil {
-			t.Fatal(err)
-		}
+	templates, err := loadSupportTemplates(config, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"runtime", "runtime/host", "process_unix", "process_other"} {
+		canonical := runtimeSupportSource(templates, name)
 		if !bytes.Equal(canonical, supportFiles["/src/"+name+".rs"]) {
 			t.Fatalf("changed canonical %s", name)
 		}
@@ -174,31 +174,13 @@ func TestWorkspaceRuntimeEntryShapes(t *testing.T) {
 }
 
 func TestWorkspaceRuntimeResourceOwnership(t *testing.T) {
-	config := runtimeGenerationResources(t)
-	provider := config
-	files := fstest.MapFS{}
-	for _, root := range []string{"builtins/segments", "builtins/templates"} {
-		if err := fs.WalkDir(provider, root, func(name string, entry fs.DirEntry, err error) error {
-			if err != nil {
-				return err
-			}
-			if entry.IsDir() {
-				return nil
-			}
-			data, err := fs.ReadFile(provider, name)
-			if err != nil {
-				return err
-			}
-			files[name] = &fstest.MapFile{Data: bytes.Clone(data), Mode: 0600}
-			return nil
-		}); err != nil {
-			t.Fatal(err)
-		}
+	files := compositionResources(t, "7")
+	templates, err := loadSupportTemplates(files, true)
+	if err != nil {
+		t.Fatal(err)
 	}
-	const asset = "builtins/templates/runtime/runtime.lu"
-	selected := append([]byte("// explicit selected provider\n"), files[asset].Data...)
-	files[asset] = &fstest.MapFile{Data: bytes.Clone(selected), Mode: 0600}
-	config = files
+	selected := bytes.Clone(templates["runtime/runtime.rs"])
+	config := files
 	service := NewLogicemeService(config)
 	input := workspaceRuntimeInput()
 	_, support, err := service.EvaluateWorkspaceEntry(input, WorkspaceRuntime{Package: "l_runtime_support", RelativeDirectory: "../support/runtime"})

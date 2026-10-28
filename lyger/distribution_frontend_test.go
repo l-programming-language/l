@@ -133,7 +133,7 @@ func TestDistributionBuiltins(t *testing.T) {
 		walk = func(node *constructionNode) {
 			if node.Definition != nil && node.Definition.ID == "Function" {
 				functions++
-				if node.Name != "main" || !node.EmptyInputs || !node.EmptyOutputs {
+				if node.Name != "main" || !node.InputsDefined || !node.OutputsDefined {
 					t.Errorf("Main function relationships changed: %+v", node)
 				}
 			}
@@ -183,7 +183,7 @@ func TestDistributionBuiltins(t *testing.T) {
 func TestDistributionIO(t *testing.T) {
 	t.Run("IO02-explicit-import-and-private-helpers", func(t *testing.T) {
 		r := requireDistributionFrontend(t, distributionIOImport+distributionApp, nil)
-		for _, name := range []string{"IO", "IO.Print", "Log", "Logger"} {
+		for _, name := range []string{"IO", "IO.Print", "Write", "Discard", "Text.Render"} {
 			if r.Compilation.Memory[name] != nil {
 				t.Errorf("selected import leaked %s", name)
 			}
@@ -191,7 +191,7 @@ func TestDistributionIO(t *testing.T) {
 		t.Run("Print-needs-import", func(t *testing.T) {
 			distributionNegative(t, distributionApp, "Prints", lerrors.UnresolvedReference)
 		})
-		for _, word := range []string{"Log", "Logger"} {
+		for _, word := range []string{"Write", "Discard"} {
 			t.Run(word+"-is-private", func(t *testing.T) {
 				distributionNegative(t, distributionIOImport+distributionApp+"Show "+word+".\n", word, lerrors.UnresolvedReference)
 			})
@@ -220,20 +220,30 @@ func TestDistributionIO(t *testing.T) {
 			})
 		}
 	})
-	t.Run("IO05-caller-cannot-replace-private-Log", func(t *testing.T) {
-		const caller = "Define \"Log|-s|-ged|-ging|-ger\" to `<DEF>BOD^E{|Statement: ~::std::print!(\"{}\", \"caller-wrong|\");~|}<DEF>`.\n"
+	t.Run("IO05-caller-cannot-replace-private-Write", func(t *testing.T) {
+		const caller = "Define \"Write|-s|----ote|--ing|-r\" to `<DEF>BOD^E{|Statement: ~::std::print!(\"{}\", \"caller-wrong|\");~|}<DEF>`.\n"
 		r := requireDistributionFrontend(t, caller+distributionIOImport+distributionApp, nil)
-		if !bytes.Contains(r.BackendAML, []byte(`(&&LPrintValue(&("Hello World!"))).l_print();`)) || bytes.Contains(r.BackendAML, []byte("caller-wrong|")) {
-			t.Fatalf("caller substituted dictionary-private helper:\n%s", r.BackendAML)
+		c := r.Compilation
+		body, err := c.lowerAppBody(c.Semantics.Apps[0])
+		if err != nil {
+			t.Fatal(err)
 		}
-		callerLog := r.Compilation.Memory["Log"]
-		var privateLog *record
-		for rec, declaration := range r.Compilation.Semantics.Declarations {
-			if rec.ID == "Log" && declaration.source.Span.Path != r.Compilation.MainPath {
-				privateLog = rec
+		dependencies, err := definitionClosure(body...)
+		if err != nil {
+			t.Fatal(err)
+		}
+		callerWrite := c.Memory["Write"]
+		var privateWrite *record
+		for _, dependency := range dependencies {
+			if dependency.definition == callerWrite {
+				t.Fatal("caller replaced a selected dictionary dependency")
+			}
+			declaration := c.Semantics.Declarations[dependency.definition]
+			if dependency.Symbol == "Write" && declaration != nil && declaration.source.Unit.Dictionary == "IO" {
+				privateWrite = dependency.definition
 			}
 		}
-		if callerLog == nil || privateLog == nil || privateLog == callerLog || privateLog.storageScope == callerLog.storageScope {
+		if callerWrite == nil || privateWrite == nil || privateWrite == callerWrite || privateWrite.storageScope == callerWrite.storageScope {
 			t.Fatal("IO helper and caller share mutable bindings/scope")
 		}
 	})
@@ -252,9 +262,6 @@ func TestDistributionIO(t *testing.T) {
 		recordBundle(t, bundle)
 		if err != nil {
 			t.Fatalf("real backend prerequisite failed; runtime not exercised: %v", err)
-		}
-		if calls := definitionTextMainCalls(t, bundle, "l_print"); !reflect.DeepEqual(calls, []string{"Hello World!"}) {
-			t.Fatalf("actual generated print calls = %q", calls)
 		}
 		wrapper := "Use IO's Print from `io` as \"ImportedPrint\".\nCreate \"LocalWords\" as a Dictionary.\nUse ImportedPrint as LocalWords's \"Paint\".\n"
 		local := requireDistributionFrontend(t, "Use LocalWords's Paint from `words.l` as \"Print\".\n"+distributionApp, map[string]string{"words.l": wrapper})

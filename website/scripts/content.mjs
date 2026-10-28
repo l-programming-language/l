@@ -47,12 +47,16 @@ export function validateStdlib(index, pages, semanticEntries) {
   for (const [language, entries] of Object.entries(index.languages).sort()) {
     for (const [key, entry] of Object.entries(entries).sort()) {
       if (!/^[a-z0-9-]+$/.test(language) || !/^[a-z0-9-]+$/.test(key) || !entry.entry || !entry.dictionary) throw new Error(`Invalid indexed dictionary: ${language}/${key}`);
+      const reviewed = semanticEntries.filter((x) => x.kind === 'stdlib-export' && x.sources.includes(entry.entry));
+      if (reviewed.some((x) => !['namespace', 'public', 'private'].includes(x.visibility))) throw new Error(`Missing reviewed export visibility for ${language}/${key}.`);
+      if (reviewed.some((x) => x.visibility === 'namespace' && x.support === 'internal')) {
+        if (reviewed.some((x) => x.support !== 'internal')) throw new Error(`Internal dictionary ${language}/${key} has conflicting public documentation classifications.`);
+        continue;
+      }
       const route = `/docs/stdlib/${language}/${key}/`;
       const page = pages.find((p) => p.route === route);
       if (!page) throw new Error(`Unclassified indexed dictionary ${language}/${key}: author its documentation and add ${route} to content-map.json.`);
-      const reviewed = semanticEntries.filter((x) => x.kind === 'stdlib-export' && x.sources.includes(entry.entry));
       if (!reviewed.length) throw new Error(`Missing reviewed export inventory for ${language}/${key}.`);
-      if (reviewed.some((x) => !['namespace', 'public', 'private'].includes(x.visibility))) throw new Error(`Missing reviewed export visibility for ${language}/${key}.`);
       dictionaries.push({ language, key, ...entry, route, source: page.source, exports: reviewed.filter((x) => x.visibility === 'public').map((x) => x.name) });
     }
   }

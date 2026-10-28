@@ -67,6 +67,10 @@ func evaluateSourceWithSupport(input []byte, system SegmentalSystem, templates m
 	if err := scanSourceProgram(&scanner); err != nil {
 		return Executable{}, err
 	}
+	return evaluateScannedSource(scanner, system, templates, includeRuntime, workspace)
+}
+
+func evaluateScannedSource(scanner Scanner, system SegmentalSystem, templates map[string][]byte, includeRuntime bool, workspace *WorkspaceRuntime) (Executable, error) {
 	if workspace != nil && len(scanner.Program.Books) != 1 {
 		return Executable{}, lerrors.InvalidInput.Errorf("Rust workspace entry requires exactly one application book")
 	}

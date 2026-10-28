@@ -1,0 +1,82 @@
+// Test-only spelling adapters keep the retained observer inputs and assertions
+// unchanged while invoking the actual source-composed production Functions.
+use std::future::Future;
+use std::path::PathBuf;
+use std::sync::Arc;
+
+impl Runtime {
+    pub fn new() -> Result<Self> { runtime_new() }
+    pub fn app(&self, path: impl Into<PathBuf>) -> Arc<App> { runtime_app(self, path.into()) }
+    pub fn check_source(&self) -> Result<()> { runtime_check(self) }
+    pub fn fail(&self, error: impl Into<Option<Error>>) -> Error { runtime_fail(self, error.into()) }
+    pub fn exit(&self) -> Error { runtime_exit(self) }
+    pub async fn run<F: Future<Output = Result<()>>>(&self, source: F) -> u8 { runtime_run(self, source).await }
+    pub async fn show(&self, bytes: &[u8]) -> Result<()> { runtime_show(self, bytes).await }
+    pub async fn shutdown(&self) -> Result<()> { runtime_shutdown(self).await }
+    pub async fn finish(&self, result: Result<()>) -> u8 { runtime_finish(self, result).await }
+}
+impl App {
+    pub fn set_source(&self, source: impl Into<String>) { app_set_source(self, source.into()) }
+    pub fn build(&self) -> Result<()> { app_build(self) }
+    pub fn run(self: &Arc<Self>) -> Result<Arc<Invocation>> { app_run(self) }
+    pub async fn stop(&self) -> Result<()> { app_stop(self).await }
+    pub async fn wait(&self) -> Result<Arc<Invocation>> { app_wait(self).await }
+    pub fn output(&self) -> Result<Arc<[u8]>> { app_output(self) }
+    pub fn error(&self) -> Result<Option<Error>> { app_error(self) }
+}
+impl Invocation {
+    pub fn snapshot(&self) -> Option<Snapshot> { invocation_snapshot(self) }
+    pub fn claim_continuation(&self) -> Result<bool> { invocation_claim(self) }
+    pub fn finish_continuation(self: &Arc<Self>) { invocation_finish(self) }
+}
+impl std::fmt::Debug for Snapshot {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter.debug_struct("Snapshot").field("stdout", &self.stdout).field("stderr", &self.stderr).field("error", &self.error).field("status", &self.status).finish()
+    }
+}
+impl Error {
+    pub fn new(message: impl Into<String>) -> Self { error_new_text(&message.into()) }
+    pub fn from_bytes(bytes: impl Into<Vec<u8>>) -> Self { error_new(bytes.into()) }
+    pub fn causes(&self) -> &[Error] { error_causes(self) }
+}
+
+pub(crate) mod test_support {
+    use super::*;
+    use std::io;
+    use std::process::ExitStatus;
+    use std::sync::Weak;
+    use tokio::process::Child;
+    use tokio::sync::Mutex as AsyncMutex;
+    use tokio::time::{Duration, Instant};
+    use crate::runtime::host::lock;
+    pub(crate) use crate::runtime::host::{Checkpoint, Dependencies, Output, SignalTarget, Stream, TerminalRequest, Wait};
+    pub(crate) fn new_observed(dependencies: Arc<dyn Dependencies>, stdout: Output, stderr: Output) -> Result<Runtime> {
+        runtime_observed(dependencies, stdout, stderr)
+    }
+    pub(crate) fn latest_invocation(app: &Arc<App>) -> Option<Arc<Invocation>> { app_invocation(app) }
+    pub(crate) fn terminal_status(runtime: &Runtime) -> Option<u8> {
+        let state = lock(&runtime.inner.state);
+        state.final_status.or_else(|| state.terminal.as_ref().map(|t| t.status))
+    }
+    pub(crate) struct ObservedInvocation {
+        invocation: Arc<Invocation>, child: AsyncMutex<Option<Child>>,
+        result: tokio::sync::OnceCell<std::result::Result<ExitStatus, Arc<io::Error>>>, pid: u32,
+    }
+    pub(crate) fn observe_invocation(child: Child, dependencies: Arc<dyn Dependencies>, wait_delay: Duration) -> ObservedInvocation {
+        let pid = child.id().expect("observed live child");
+        let (invocation, _) = invocation_allocate(Weak::new(), Weak::new(), 0, dependencies, wait_delay, Some(pid));
+        ObservedInvocation { invocation, child: AsyncMutex::new(Some(child)), result: tokio::sync::OnceCell::new(), pid }
+    }
+    impl ObservedInvocation {
+        pub(crate) async fn terminate(&self, final_signal: bool) -> io::Result<()> { invocation_signal(&self.invocation, final_signal).await }
+        pub(crate) async fn wait(&self) -> io::Result<ExitStatus> {
+            let result = self.result.get_or_init(|| async {
+                let mut child = self.child.lock().await.take().expect("single observed Wait owner");
+                self.invocation.dependencies.wait(&mut child).await.map_err(Arc::new)
+            }).await;
+            match result { Ok(status) => Ok(*status), Err(error) => Err(io::Error::new(error.kind(), error.clone())) }
+        }
+        pub(crate) fn deadline(&self) -> Option<Instant> { self.invocation.group.try_lock().expect("idle observed signal").termination_deadline }
+        pub(crate) fn pid(&self) -> u32 { self.pid }
+    }
+}

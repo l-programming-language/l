@@ -104,12 +104,12 @@ func TestMemberSourceGeneratesBuildableSource(t *testing.T) {
 			if got, want := message.Value.Primitive.Text, "`"+tc.text+"`"; got != want {
 				t.Errorf("semantic Text = %q; want original source value %q", got, want)
 			}
-			printedExpression := []byte("(&&LPrintValue(&(" + strconv.Quote(tc.text) + "))).l_print();")
+			literal := []byte(strconv.Quote(tc.text))
 			if tc.encodedText != "" {
-				printedExpression = []byte("(&&LPrintValue(&(" + tc.encodedText + "))).l_print();")
+				literal = []byte(tc.encodedText)
 			}
 			for name, markup := range map[string][]byte{"observable": result.AML, "backend": result.BackendAML} {
-				if !bytes.Contains(markup, printedExpression) {
+				if !bytes.Contains(markup, literal) {
 					t.Errorf("%s AML lost source Text %q", name, tc.text)
 				}
 			}

@@ -109,7 +109,7 @@ func TestDistributionCLI(t *testing.T) {
 		t.Parallel()
 		// Each missing-resource case has an independent valid-bundle control. No
 		// fallback assertion can pass on an unrelated builtin or syntax failure.
-		for _, resource := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "stdlib/eng/io/dictionary.l", "stdlib/index.json", "builtins/segments/vowels/execution.lu", "builtins/templates/config/config.lu", "builtins/templates/runtime/runtime.lu"} {
+		for _, resource := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "stdlib/eng/io/dictionary.l", "stdlib/index.json", "builtins/segments/vowels/execution.lu", "builtins/templates/config/config.lu", "builtins/runtime/support.aml"} {
 			resource := resource
 			t.Run(resource, func(t *testing.T) {
 				nativeCases.Parallel(t)

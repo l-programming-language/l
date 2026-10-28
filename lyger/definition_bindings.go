@@ -64,17 +64,19 @@ type DefinitionProperty struct {
 // preserves collection cardinality. Text contains the unquoted scalar value.
 // Syllables and Definition contain expressions that were already instantiated.
 type DefinitionArgument struct {
-	Kind       string
-	Text       string
-	Syllables  []string
-	Props      []DefinitionProperty
-	Texts      []string
-	Definition *DefinitionInstance
-	reference  string
-	atoms      *[]DefinitionArgument
-	typeAtom   string
-	index      *uint64
-	sequence   []DefinitionInstance
+	Kind         string
+	Text         string
+	Syllables    []string
+	Props        []DefinitionProperty
+	Texts        []string
+	Definition   *DefinitionInstance
+	reference    string
+	atoms        *[]DefinitionArgument
+	typeAtom     string
+	index        *uint64
+	sequence     []DefinitionInstance
+	source       SourceSpan
+	dependencies []DefinitionInstance
 }
 
 type DefinitionBinding struct {
@@ -87,6 +89,8 @@ type DefinitionBinding struct {
 // DefinitionInstance owns fresh output and an argument ledger. Expression is
 // a glyph expression; Words preserves an explicit word/sentence grouping.
 type DefinitionInstance struct {
+	result             *DefinitionArgument
+	before             []DefinitionInstance
 	Symbol             string  // source-defined spelling, retained for diagnostics
 	definition         *record // canonical nominal identity, set by semantic instantiation
 	Original           []byte
@@ -95,6 +99,8 @@ type DefinitionInstance struct {
 	Expression         string
 	Words              [][]string
 	Bindings           []DefinitionBinding
+	Dependencies       []DefinitionInstance
+	sequence           []DefinitionInstance // retained children of a verified pure W sequence
 }
 
 type definitionPart struct {
@@ -112,6 +118,8 @@ type DefinitionTemplate struct {
 	words          [][][]definitionPart
 	function       bool
 	signatureSlots map[string]string
+	metadataSlots  map[string]bool
+	dependencies   []DefinitionInstance
 }
 
 // ParseDefinitionTemplate accepts a raw source literal or definitionMarker-framed content.
@@ -177,10 +185,11 @@ func ParseDefinitionTemplate(raw []byte, span SourceSpan) (*DefinitionTemplate, 
 		if start := strings.Index(body, "{|"); start >= 0 && !strings.ContainsAny(body[:start], "^*(") {
 			if end, err := definitionMetadataEnd(body, start); err == nil {
 				meta := strings.TrimSpace(body[start+2 : end])
-				template.function = strings.HasPrefix(meta, "Func{") && strings.HasSuffix(meta, "}Func")
+				signature, _, signatureErr := splitDefinitionFunction(meta)
+				template.function = signatureErr == nil && signature != ""
 				if template.function {
 					template.signatureSlots = make(map[string]string)
-					fields, err := splitDefinitionFields(meta[5 : len(meta)-5])
+					fields, err := splitDefinitionFields(signature)
 					if err != nil {
 						return nil, template.failure(err)
 					}
@@ -253,6 +262,35 @@ func decodeDefinitionEscapes(source string) string {
 }
 
 func (t *DefinitionTemplate) parseParts(source string) ([]definitionPart, error) {
+	if t.metadataSlots == nil {
+		t.metadataSlots = make(map[string]bool)
+	}
+	for position := 0; position < len(source); {
+		start := strings.Index(source[position:], "{|")
+		if start < 0 {
+			break
+		}
+		start += position
+		end, err := definitionMetadataEnd(source, start)
+		if err != nil {
+			break
+		}
+		metadata := source[start:end]
+		for {
+			opening := strings.Index(metadata, "<@")
+			if opening < 0 {
+				break
+			}
+			closing := strings.Index(metadata[opening+2:], "@>")
+			if closing < 0 {
+				break
+			}
+			closing += opening + 2
+			t.metadataSlots[strings.SplitN(metadata[opening+2:closing], "|", 2)[0]] = true
+			metadata = metadata[closing+2:]
+		}
+		position = end + 2
+	}
 	var parts []definitionPart
 	for {
 		start := strings.Index(source, "<@")
@@ -314,20 +352,54 @@ func definitionName(name string) bool {
 // Instantiate binds every slot by name. Values are emitted only at parsed slot
 // locations, so a replacement never reinterprets argument text as another slot.
 func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument) (DefinitionInstance, error) {
-	instance := DefinitionInstance{Original: bytes.Clone(t.Original), Span: t.Span}
+	instance := DefinitionInstance{Original: bytes.Clone(t.Original), Span: t.Span, Dependencies: append([]DefinitionInstance(nil), t.dependencies...)}
 	values := make(map[string]string, len(t.Slots))
 	for _, slot := range t.Slots {
 		argument, ok := bindings[slot.Name]
 		if !ok {
 			return DefinitionInstance{}, t.failure(lerrors.InvalidInput.Errorf("missing parameter %q", slot.Name))
 		}
-		value, err := argument.renderFor(slot)
+		if slot.Type == "Type" {
+			var err error
+			argument, err = argument.nativeType()
+			if err != nil {
+				return DefinitionInstance{}, t.failure(fmt.Errorf("parameter %q: %w", slot.Name, err))
+			}
+		}
+		if t.metadataSlots[slot.Name] && slot.Type != "Type" {
+			var before []DefinitionInstance
+			argument, before = argument.boundResult()
+			instance.before = append(instance.before, before...)
+		} else if argument.Definition != nil && slot.Type != "Type" {
+			instance.before = append(instance.before, argument.Definition.before...)
+		}
+		rendered := argument
+		if len(t.parts) == 3 && t.parts[0].text == "W^" && t.parts[1].slot != nil && t.parts[1].slot.Name == slot.Name && t.parts[2].text == "" && slot.Type == "Syllables" {
+			rendered, instance.sequence = argument.orderedSequence()
+		}
+		value, err := rendered.renderFor(slot)
 		if err != nil {
 			return DefinitionInstance{}, t.failure(fmt.Errorf("parameter %q: %w", slot.Name, err))
 		}
 		values[slot.Name] = value
+		instance.Dependencies = append(instance.Dependencies, argument.dependencies...)
 		binding := DefinitionBinding{Slot: slot, Kind: argument.Kind, Emitted: value}
+		if argument.source.Path != "" {
+			binding.Sources = append(binding.Sources, argument.source)
+		}
+		if argument.atoms != nil {
+			for _, atom := range *argument.atoms {
+				if atom.source.Path != "" {
+					binding.Sources = append(binding.Sources, atom.source)
+				}
+			}
+		}
+		if argument.Definition != nil {
+			instance.Dependencies = append(instance.Dependencies, argument.Definition.Dependencies...)
+			binding.Sources = append(binding.Sources, argument.Definition.Span)
+		}
 		for _, child := range argument.sequence {
+			instance.Dependencies = append(instance.Dependencies, child.Dependencies...)
 			binding.Sources = append(binding.Sources, child.Span)
 		}
 		instance.Bindings = append(instance.Bindings, binding)
@@ -373,10 +445,61 @@ func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument)
 	return instance, nil
 }
 
+// A pure sequence has no scope, metadata or operation of its own. Preserve its
+// selected children so an enclosing sequence can compose them without a nested W.
+// Strings supplied without matching structural children never acquire this proof.
+func (argument DefinitionArgument) orderedSequence() (DefinitionArgument, []DefinitionInstance) {
+	if len(argument.sequence) == 0 || len(argument.sequence) != len(argument.Syllables) {
+		return argument, nil
+	}
+	var children []DefinitionInstance
+	for i, child := range argument.sequence {
+		if child.Expression != argument.Syllables[i] {
+			return argument, nil
+		}
+		if child.sequence == nil {
+			children = append(children, child)
+		} else {
+			children = append(children, child.sequence...)
+		}
+	}
+	argument.Syllables = make([]string, len(children))
+	for i, child := range children {
+		argument.Syllables[i] = child.Expression
+	}
+	return argument, children
+}
+
+// Source wrappers retain the same proof only when all their authored actions
+// are pure sequences. Definitions with any additional behavior remain opaque.
+func pureDefinitionSequence(actions []DefinitionInstance) []DefinitionInstance {
+	var children []DefinitionInstance
+	for _, action := range actions {
+		if action.sequence == nil {
+			return nil
+		}
+		children = append(children, action.sequence...)
+	}
+	return children
+}
+
 func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error) {
 	expected, actual := strings.ToLower(slot.Type), strings.ToLower(argument.Kind)
 	kind, _ := parseDefinitionArgKindFolded(argument.Kind)
-	if expected == "" || expected == "syllable" {
+	if slot.Type == "Label" {
+		name, err := argument.referenceAtom()
+		if err != nil {
+			return "", err
+		}
+		if !validDefinitionNativeName(name) || name == "_" {
+			return "", lerrors.TypeMismatch.Errorf("Label requires one checked declaration name")
+		}
+		return name, nil
+	}
+	if slot.Type == "Type" && argument.typeAtom != "" {
+		return argument.metadataAtom()
+	}
+	if expected == "" || expected == "syllable" || slot.Type == "Atoms" {
 		if argument.atoms != nil {
 			if argument.Text != "" || argument.reference != "" || argument.typeAtom != "" || argument.index != nil || argument.Definition != nil || len(argument.sequence) != 0 || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
 				return "", lerrors.TypeMismatch.Errorf("atom list cannot contain a definition or another value")
@@ -390,6 +513,9 @@ func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error
 				}
 			}
 			return strings.Join(values, ", "), nil
+		}
+		if slot.Type == "Atoms" {
+			return "", lerrors.TypeMismatch.Errorf("Atoms requires an ordered metadata atom list")
 		}
 		if argument.typeAtom != "" {
 			return argument.metadataAtom()
@@ -463,9 +589,6 @@ func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error
 				return "", err
 			}
 		}
-		if len(argument.Syllables) == 1 {
-			return argument.Syllables[0], nil
-		}
 		return "(" + strings.Join(argument.Syllables, "*") + ")", nil
 	case definitionArgProps:
 		var props []string
@@ -510,9 +633,67 @@ func definitionReferenceArgument(name string) DefinitionArgument {
 	return DefinitionArgument{Kind: definitionArgSyllable.String(), reference: name}
 }
 
+// Metadata consumes the checked reference produced by an authored operation.
+// Preserve its ordered prerequisites separately, including in variadic atoms.
+func (argument DefinitionArgument) boundResult() (DefinitionArgument, []DefinitionInstance) {
+	if child := argument.Definition; child != nil && child.result != nil {
+		result := *child.result
+		result.dependencies = append(append([]DefinitionInstance(nil), result.dependencies...), child.Dependencies...)
+		return result, definitionSteps(*child)
+	}
+	var before []DefinitionInstance
+	if argument.atoms != nil {
+		atoms := append([]DefinitionArgument(nil), (*argument.atoms)...)
+		for index, atom := range atoms {
+			var steps []DefinitionInstance
+			atoms[index], steps = atom.boundResult()
+			before = append(before, steps...)
+		}
+		argument = definitionAtomListArgument(atoms...)
+	}
+	return argument, before
+}
+
 func definitionAtomListArgument(values ...DefinitionArgument) DefinitionArgument {
 	atoms := append([]DefinitionArgument{}, values...)
-	return DefinitionArgument{Kind: definitionArgSyllable.String(), atoms: &atoms}
+	argument := DefinitionArgument{Kind: definitionArgSyllable.String(), atoms: &atoms}
+	for _, value := range values {
+		argument.dependencies = append(argument.dependencies, value.dependencies...)
+	}
+	return argument
+}
+
+// Type is a frontend metadata role, not an L runtime value kind or AML field.
+// Only explicit authored type text or a selected native declaration can supply
+// it; ordinary Text arguments remain quoted literal data everywhere else.
+func (argument DefinitionArgument) nativeType() (DefinitionArgument, error) {
+	if argument.typeAtom != "" {
+		if _, err := argument.metadataAtom(); err != nil {
+			return DefinitionArgument{}, err
+		}
+		return argument, nil
+	}
+	name := ""
+	dependencies := argument.dependencies
+	if argument.Definition != nil {
+		var err error
+		name, err = nativeDeclarationName(argument.Definition.Expression)
+		if err != nil {
+			return DefinitionArgument{}, err
+		}
+		dependencies = append(dependencies, *argument.Definition)
+		if argument.source.Path == "" {
+			argument.source = argument.Definition.Span
+		}
+	} else if argument.Kind == "Text" && argument.reference == "" && argument.atoms == nil && len(argument.sequence) == 0 && argument.index == nil && len(argument.Syllables) == 0 && len(argument.Props) == 0 && len(argument.Texts) == 0 {
+		name = argument.Text
+	}
+	if !validDefinitionNativeType(name) {
+		return DefinitionArgument{}, lerrors.TypeMismatch.Errorf("Type requires authored native type text or a selected native declaration")
+	}
+	result := definitionTypeArgument(name)
+	result.source, result.dependencies = argument.source, dependencies
+	return result, nil
 }
 
 // This constructor accepts a resolved type spelling, never an expression. Type
@@ -645,13 +826,15 @@ func normalizeDefinitionFunctions(source string) (string, error) {
 		result.WriteString(source[:start+2])
 		meta := strings.TrimSpace(source[start+2 : end])
 		if strings.HasPrefix(meta, "Func{") {
-			if !strings.HasSuffix(meta, "}Func") {
-				return "", lerrors.Syntax.Errorf("unterminated Func metadata")
-			}
-			meta, err = normalizeDefinitionSignature(meta[5 : len(meta)-5])
+			signature, local, err := splitDefinitionFunction(meta)
 			if err != nil {
 				return "", err
 			}
+			meta, err = normalizeDefinitionSignature(signature)
+			if err != nil {
+				return "", err
+			}
+			meta += local
 		} else {
 			meta = source[start+2 : end]
 		}
@@ -659,6 +842,57 @@ func normalizeDefinitionFunctions(source string) (string, error) {
 		result.WriteString("|}")
 		source = source[end+2:]
 	}
+}
+
+// The source Func shorthand owns only signature fields. Approved generic and
+// lifetime String inputs remain local to the enclosing glyph after normalization.
+func splitDefinitionFunction(metadata string) (string, string, error) {
+	if !strings.HasPrefix(metadata, "Func{") {
+		return "", "", nil
+	}
+	depth, close := 1, -1
+	for i := 5; i < len(metadata); i++ {
+		end, literal, err := definitionNativeLiteralEnd(metadata, i)
+		if err != nil {
+			return "", "", err
+		}
+		if literal {
+			i = end - 1
+			continue
+		}
+		if metadata[i] == '{' {
+			depth++
+		} else if metadata[i] == '}' {
+			depth--
+			if depth == 0 {
+				close = i
+				break
+			}
+		}
+	}
+	if close < 0 || !strings.HasPrefix(metadata[close:], "}Func") {
+		return "", "", lerrors.Syntax.Errorf("unterminated Func metadata")
+	}
+	remaining := strings.TrimSpace(metadata[close+5:])
+	local := remaining
+	seen := make(map[string]bool)
+	for remaining != "" {
+		if remaining[0] != ',' {
+			return "", "", lerrors.Syntax.Errorf("local Func inputs require a field separator")
+		}
+		key, value, found := strings.Cut(remaining[1:], ":")
+		key, value = strings.TrimSpace(key), strings.TrimSpace(value)
+		if !found || key != "Lifetimes" && key != "GenericTypes" || seen[key] || !strings.HasPrefix(value, "~") {
+			return "", "", lerrors.InvalidInput.Errorf("invalid local Func input %q", key)
+		}
+		end := strings.IndexByte(value[1:], '~')
+		if end < 0 || strings.TrimSpace(value[1:end+1]) == "" {
+			return "", "", lerrors.InvalidInput.Errorf("local Func input %s requires a nonempty String", key)
+		}
+		seen[key] = true
+		remaining = strings.TrimSpace(value[end+2:])
+	}
+	return metadata[5:close], local, nil
 }
 
 func normalizeDefinitionSignature(source string) (string, error) {
@@ -862,15 +1096,18 @@ func normalizeDefinitionGroups(source string) (string, error) {
 			position++
 			switch current {
 			case '(':
+				// A sibling's transparent grouping does not introduce a child
+				// level. Groups after ^ still own their complete child sequence.
+				sameLevel := strings.HasSuffix(strings.TrimSpace(output.String()), "*")
 				inner, many, err := group(true)
 				if err != nil {
 					return "", false, err
 				}
-				if many {
+				if many && !sameLevel {
 					output.WriteByte('(')
 				}
 				output.WriteString(inner)
-				if many {
+				if many && !sameLevel {
 					output.WriteByte(')')
 				}
 			case ')':

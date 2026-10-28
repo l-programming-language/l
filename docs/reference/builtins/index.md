@@ -10,7 +10,9 @@ Builtins are available from the selected complete distribution without an explic
 | Execute | Execute, Executes, Executed, Executing, Executor | Start any App, then Await it |
 | Process | Process, Processes, Processive, Processing | Compose ordered definition syllables into operation W |
 | Function | Function, Functions, Functional, Functioning | Compose FW with typed native signature/body inputs |
+| Function.Invoke | Invoke, Invokes, Invoked, Invoking, Invoker | Bind a selected callable and ordered argument references through KY |
 | Function.Return | Return, Returns, Returned, Returning, Returner | Native-backed return statement inside the supplied Function composition |
+| Retain | Retain, Retains, Retained, Retaining, Retainer | Retain a selected shared handle |
 | Objective | Objective | Wrap a Function's source grouping |
 | Main | Main | Describe the canonical bounded Service/Object/Function entry structure |
 | Basic | Basic | Compose an App with a Main Service using a Process |

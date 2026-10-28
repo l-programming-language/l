@@ -5,7 +5,6 @@ package main
 import (
 	"crypto/sha256"
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
-	"os"
 	"reflect"
 	"strings"
 	"sync"
@@ -30,15 +29,6 @@ func sourceStdout(t *testing.T, action func()) string {
 }
 
 func compilerTestCLI() *cliData { return &cliData{"build", "./test/main.l", "ubuntu"} }
-
-func expectedCompilerAML(t testing.TB) []byte {
-	t.Helper()
-	b, e := os.ReadFile("test/main.aml.txt")
-	if e != nil {
-		t.Fatal(e)
-	}
-	return b
-}
 
 func assertFrontendResources(t testing.TB, c *Lyger.Compilation) {
 	t.Helper()
@@ -79,23 +69,17 @@ func assertMemberSourceBuild(t *testing.T, bundle Logiceme.Executable, text stri
 	}
 	config.Function(t, "initialize_configuration_settings")
 	calls := observeCalls(main.Body)
-	var initializers, printers []nativetest.RustCall
+	var initializers []nativetest.RustCall
 	for _, call := range calls {
 		if call.Name == "initialize_configuration_settings" {
 			initializers = append(initializers, call)
 		}
-		if call.Name == "l_print" {
-			printers = append(printers, call)
-		}
 	}
-	// Rust propagates configuration failure through an explicit guarded error
-	// path. Its Err pattern and diagnostic calls are not extra initializations
-	// or user prints; retain the semantic once-and-before obligation.
-	if len(initializers) != 1 || len(initializers[0].Args) != 0 || len(printers) != 1 || initializers[0].At >= printers[0].At {
-		t.Fatalf("main must initialize configuration then print exactly once: %#v", calls)
-	}
-	if got := observedPrinted(t, main.Body); !reflect.DeepEqual(got, []string{text}) {
-		t.Fatalf("source text=%q want%q", got, text)
+	// Configuration must initialize once before the source value is evaluated.
+	// Print implementation details belong to the selected source definitions.
+	literal := observedText(t, main.Body, text)
+	if len(initializers) != 1 || len(initializers[0].Args) != 0 || initializers[0].At >= literal {
+		t.Fatalf("main must initialize configuration before source evaluation: %#v", calls)
 	}
 	for i, p := range bundle.MapArrays[0] {
 		t.Logf("%s %d bytes SHA256 %x", p, len(bundle.ByteArrays[0][i]), sha256.Sum256(bundle.ByteArrays[0][i]))
@@ -115,9 +99,7 @@ func assertParagraphSourceSyntax(t *testing.T, contents [][]byte, paths []string
 		t.Fatal("paragraph main signature")
 	}
 	if printed != nil {
-		if got := observedPrinted(t, main.Body); !reflect.DeepEqual(got, []string{*printed}) {
-			t.Fatalf("paragraph print=%q want%q", got, *printed)
-		}
+		observedText(t, main.Body, *printed)
 	}
 	buildReturnedBundle(t, bundle)
 }

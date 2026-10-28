@@ -1,27 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceHashes": {
-    "builtins/eng/core.l": "7dca6b918dc07c3b9db364985774be311e3ebf744a119938ae4d6a7957e6dce4",
+    "builtins/eng/core.l": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
     "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
-    "lyger/construction.go": "4462bf8ddcc940d085e92f11fa951371caff1720f6c0ee22d5f8f1e921b501b6",
-    "lyger/function_composition.go": "7ffdd2b335b2e34f838adbb6625b0d4cfc088212ceec76a43bb93a1bd2a8d9a6",
+    "lyger/construction.go": "2d2461bf4d9ea601248b0a162954039c6625a60c93a2eddb62e52505e12e7f24",
+    "lyger/function_composition.go": "a2185c26a3ded4d1ee2bf14f36206eee994543b06280b5aa0c8df2aed3e1da71",
+    "lyger/function_definitions.go": "7e34a60852e8ced992ae676afbd001fd736c6428476ec1897c43055887e82c3a",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/grammar_match.go": "bb6700a68686d2d88457df89053d38298c2230b3cc324c2f662e41665c2a5d53",
     "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
-    "lyger/instructions.go": "0523dc88c56bc41bb4db1b5f791c59118adddc2b8618fa47fed14cb5c5946e31",
+    "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
+    "lyger/lowering.go": "29c6a7ae8f4842baa6d20af8d0641fde841319e4945fdc347b0238c49951bdbf",
     "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
     "lyger/semantic_resolution.go": "a8e9eb4140547b6e488b5869ed73b7754181d3296918900c51c989d09df2e3f8",
-    "lyger/source_functions.go": "aea627402c886b8289eda7da8318637c744f2f7029781106d419b5a7d9e9a8c1",
-    "lyger/types.go": "3c7c5f701ba06818f5c288fc8a514bde495a68ed49051390460e871170e6c703",
-    "lyger/word_values.go": "9df04c567676addb9086e386e448f320288d7131733f287c89c6ef5033839e30"
+    "lyger/source_body.go": "41cbf8f1711709cfdc86ceec733a495c027c03b9b3dd60c0f6d7ee9376f336b0",
+    "lyger/source_functions.go": "5c52512041d254d5c523e55f39ae3dcb4df89b0b39500837a8861ca91854e50e",
+    "lyger/types.go": "8d1c5403e26386b560c2bad36d8e5b3aaed28174708f46dda470f572fcf75859",
+    "lyger/word_values.go": "f30788b00ce62cdcd39658bab21aa2df228889a25c914263277a8b136d2d361b"
   },
   "entries": {
     "value": {
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type\u2019s support boundary before using a configured value pattern.",
+      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -153,7 +156,7 @@
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type\u2019s support boundary before using a configured value pattern.",
+      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -254,7 +257,7 @@
           "doc": "docs/spec/definitions.md#source-actions",
           "topic": "Source action body",
           "support": "supported",
-          "notes": "The for phrase contains ordered applicative clauses. Generic action arguments and recursive-expansion checks belong to source action semantics."
+          "notes": "The for phrase contains ordered applicative clauses. Source actions retain their generic argument and recursion checks. Constructor directives in native metadata Functions use the shared instruction path with enclosing Function bindings; they do not introduce loop-local declarations."
         }
       }
     },
@@ -805,25 +808,25 @@
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.observative.active": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.observative.passive": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.observative.applicative": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.terminative.imperative": {
       "doc": "docs/spec/control-flow.md#exit-and-return",

@@ -149,8 +149,7 @@ func (g *Glyph) compilePreparedGlyph() error {
 		return e
 	}
 	vowel := g.Vowels[0]
-	vowel.Tags = CompileMainTags(vowel.Content)
-	vowel = g.DetermineSegTags(vowel)
+	vowel.Tags = parseSegmentTags(vowel.selectedTemplateTags(g.SegmentalSystem, g.segmentSelection(), true), g.Meta, g.segmentSelection(), true, true)
 	var cases []*LucidTag
 	for _, candidate := range vowel.Tags {
 		switch candidate.Expressions[1].ExpressionString {
@@ -205,7 +204,7 @@ func (g *Glyph) compilePreparedGlyph() error {
 		}
 		callee := *g
 		callee.Meta = data.Meta
-		tags := callee.FunctionalTags(primitive.Content, selector)
+		tags := parseSegmentTags(primitive.selectedTemplateTags(callee.SegmentalSystem, selector, false), callee.Meta, selector, false, true)
 		if len(tags) == 0 {
 			return lerrors.InvalidConfiguration.Errorf("Rust primitive %s missing case %s", primitive.Name, selector)
 		}

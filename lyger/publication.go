@@ -176,7 +176,13 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 		c.Semantics.Descriptors[descriptor.Record] = descriptor
 	}
 	for _, function := range prepared.functions {
-		c.Semantics.Functions[function.Record] = function
+		if function.Native && function.Constructor.Name == "" {
+			function.Constructor.Name = sourceModuleName(strings.ToLower(function.Record.ID))
+		}
+		function.Record.function = function
+		if !function.Native {
+			c.Semantics.Functions[function.Record] = function
+		}
 		function.Scope.function = function
 	}
 	return nil
@@ -194,6 +200,7 @@ func (p declarationPublication) commit(c *Compilation, stmt *lStatement) {
 		p.reservation.Scope.records[id] = rec
 	}
 	if p.owner != nil {
+		rec.declarationOwner = p.owner
 		if p.owner.members == nil {
 			p.owner.members = make(map[string]*record)
 		}

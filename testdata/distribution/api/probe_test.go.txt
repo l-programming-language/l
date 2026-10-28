@@ -124,7 +124,7 @@ func TestDistributionAPI(t *testing.T) {
 				t.Errorf("nonrelease resource %q", path)
 			}
 		}
-		for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "stdlib/index.json", "stdlib/eng/io/dictionary.l", "builtins/templates/runtime/runtime.lu", "builtins/templates/runtime/process_unix.lu", "builtins/templates/runtime/process_other.lu"} {
+		for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "stdlib/index.json", "stdlib/eng/io/dictionary.l", "stdlib/eng/storage/dictionary.l", "builtins/runtime/support.aml", "builtins/runtime/support.json", "builtins/templates/runtime/host.lu", "builtins/templates/runtime/process_unix.lu", "builtins/templates/runtime/process_other.lu"} {
 			if !seen[path] {
 				t.Error(fmt.Sprintf("missing required Rust release resource %s", path))
 			}
@@ -181,7 +181,7 @@ func TestDistributionAPI(t *testing.T) {
 		ioSource := append([]byte(nil), filesystem[ioPath].Data...)
 		ioSource = append(ioSource, []byte("\r\nDefine IO's \"FixtureText\" as `first\r\n雪 \\`literal\\`\r\n\r\nlast`.\r\n")...)
 		filesystem[ioPath] = &fstest.MapFile{Data: ioSource}
-		runtimePath := "builtins/templates/runtime/runtime.lu"
+		runtimePath := "builtins/templates/runtime/host.lu"
 		runtimeBytes := append(append([]byte(nil), filesystem[runtimePath].Data...), []byte("\r\n// exact template 雪 `literal`\r\n\r\n// no final newline")...)
 		filesystem[runtimePath] = &fstest.MapFile{Data: runtimeBytes}
 		input := []byte("Use IO's Print from `io` as \"Print\".\r\nUse IO's FixtureText from `io` as \"message\".\r\nCreate \"Hello\" as a New Basic App.\r\nThe App Prints message.\r\nExecute Hello.")
@@ -204,7 +204,7 @@ func TestDistributionAPI(t *testing.T) {
 		foundLiteral, foundRuntime := false, false
 		for i, name := range bundle.MapArrays[0] {
 			data := bundle.ByteArrays[0][i]
-			if strings.HasSuffix(name, "/runtime.rs") {
+			if strings.HasSuffix(name, "/host.rs") {
 				foundRuntime = true
 				if !bytes.Equal(data, runtimeBytes) {
 					t.Fatal("runtime template bytes normalized")
@@ -217,12 +217,10 @@ func TestDistributionAPI(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			// Literal encoding and the selected borrowed dispatch are exact source
-			// observations, not a replacement source oracle or a Go AST approximation.
-			call := append([]byte(`(&&LPrintValue(&(`), quoted...)
-			call = append(call, []byte(`))).l_print();`)...)
-			if bytes.Count(data, call) != 1 || bytes.Count(data, []byte(`).l_print();`)) != 1 {
-				t.Errorf("native Rust literal changed: want %q in %s", call, data)
+			// Preserve the exact literal without requiring the retired inline
+			// Print implementation or its native dispatch spelling.
+			if bytes.Count(data, quoted) != 1 {
+				t.Errorf("native literal changed or duplicated: want %q in %s", quoted, data)
 			} else {
 				foundLiteral = true
 			}
@@ -334,7 +332,7 @@ func TestDistributionAPI(t *testing.T) {
 		}
 		var paths []string
 		for path := range original {
-			if strings.HasPrefix(path, "builtins/segments/") || strings.HasPrefix(path, "builtins/templates/") {
+			if strings.HasPrefix(path, "builtins/segments/") || strings.HasPrefix(path, "builtins/templates/") || strings.HasPrefix(path, "builtins/runtime/") {
 				paths = append(paths, path)
 			}
 		}
@@ -357,7 +355,7 @@ func TestDistributionAPI(t *testing.T) {
 	})
 	t.Run("MG10", func(t *testing.T) {
 		root := os.DirFS(os.Getenv("L_DISTRIBUTION_ROOT"))
-		for _, name := range []string{"runtime.lu", "process_unix.lu", "process_other.lu"} {
+		for _, name := range []string{"host.lu", "process_unix.lu", "process_other.lu"} {
 			path := "builtins/templates/runtime/" + name
 			if !bytes.Equal(read(t, root, path), read(t, distribution.Files(), path)) {
 				t.Errorf("runtime template substitution: %s", path)

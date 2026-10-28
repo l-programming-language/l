@@ -36,8 +36,8 @@ fn main() -> ExitCode {
     };
 
     let result = catch_unwind(AssertUnwindSafe(|| executor.block_on(async {
-        match runtime::Runtime::new() {
-            Ok(runtime) => runtime.run(l_main(&runtime)).await,
+        match runtime::runtime_new() {
+            Ok(runtime) => runtime::runtime_run(&runtime, l_main(&runtime)).await,
             Err(error) => {
                 let _ = writeln!(std::io::stderr().lock(), "l: {error}");
                 1
@@ -45,7 +45,7 @@ fn main() -> ExitCode {
         }
     })));
 
-    // Runtime::run settles owned children and captures before returning or
+    // runtime_run settles owned children and captures before returning or
     // resuming a source panic. A cancelled standard-stream write may still be
     // blocked in Tokio's blocking pool; executor Drop must not delay process
     // exit waiting for that unrelated work. No child cleanup is delegated here.

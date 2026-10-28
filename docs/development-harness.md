@@ -349,6 +349,18 @@ changes and updated hashes. All behavioral assertions, expected output bytes,
 canonical resources, test obligations and the other 376 protected hashes remain
 unchanged; this amendment does not authorize behavioral oracle changes.
 
+The source-word restructuring has a finite protected-input amendment: the four selected
+Pointer copier references in `lyger/test/native/runtime-lifetimes.l`, the resource
+paths and exact literal observation in `testdata/distribution/api/probe_test.go.txt`,
+and the lifecycle composition expectations and active marker locations in
+`lyger/builtin_operations_contract_test.go`. The shared-support loader in
+`cmd/l/runnable_service_native_test.go` uses the actual source-composed runtime and
+the protected `testdata/phase1/runtime/api.rs.txt` spelling adapters. Its independent
+scenario sources and runtime assertions remain unchanged. The obsolete
+`cmd/l/test/main.aml.txt` oracle for the retired inline Print implementation is
+removed; source bytes, initialized state and source-origin checks remain. Expected
+streams, tool pins, deadlines and frozen backend fixtures remain unchanged.
+
 The harness checks current files directly. Ordinary build, tests, doctor and verify do not require archived documents, attachments, historical baseline reports, a Git object lookup, or a network fetch for provenance. Initial Go dependency setup can still need network access. Markdown link checking discovers maintained documentation; it does not preserve a closed list of obsolete plans. Repository skills remain under `.agents/skills`.
 
 ## Reproducible execution and evidence

@@ -79,6 +79,13 @@ func (p *orchestrationPlanner) instruction(current *instruction, flow orchestrat
 		return nil, flow, lerrors.Internal.Errorf("nil instruction")
 	}
 	result := &orchestrationInstruction{Source: current}
+	if current.Application != nil || current.Constructor != nil {
+		if current.Kind == instructionReturn {
+			flow.live = false
+		}
+		result.ReachesNext = flow.live
+		return result, flow, nil
+	}
 	var err error
 	switch current.Kind {
 	case instructionFunction, instructionInvoke, instructionReturn:

@@ -1,1 +1,1 @@
-<DEF>BOD^E{|Statement: ~<@Receiver@>.run()?;~|}<DEF>
+<DEF>MOB{|Key: ~lProcessResult~|}^KY{|Key: ~runtime::app_run~, Inputs: ~&[&<@Receiver@>]&~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>

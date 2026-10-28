@@ -23,7 +23,7 @@ func TestAppBodyRejectsRuntimeCaptures(t *testing.T) {
 			}
 		}
 	}
-	// IO.Print itself composes Process and its private Logger definition. An
+	// IO.Print itself composes Process and its private typed Print definitions. An
 	// alias must retain that composition and the original value's identity.
 	distributionNegative(t, distributionIOImport+"Use Print as \"Display\".\nIf false, define \"message\" as `payload`.\nCreate \"Worker\" as a New Basic App.\nThe App Displays message.\n", "runtime value message cannot be captured by an App body", lerrors.Unsupported)
 }

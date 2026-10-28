@@ -399,14 +399,17 @@ func runnableExpectedWorkspaceFiles(t testing.TB, scenario, source, generation s
 	// scenario-specific expected Rust is extracted from production or snapshots.
 	files["support/runtime/src/lib.rs"] = runnableRead(t, "expected/support/runtime/src/lib.rs")
 	files["support/runtime/Cargo.toml"] = runnableRead(t, "expected/support/runtime/Cargo.toml")
-	root := distributiontest.RepoRoot(t)
-	for _, name := range []string{"runtime", "process_unix", "process_other"} {
-		data, err := os.ReadFile(filepath.Join(root, "builtins", "templates", "runtime", name+".lu"))
-		if err != nil {
-			t.Fatal(err)
-		}
-		files["support/runtime/src/"+name+".rs"] = data
+	for name, data := range canonicalRuntimeSources(t) {
+		files["support/runtime/src/"+name] = data
 	}
+	// The adapters retain observer method spellings and forward directly to
+	// source-composed Functions; no scenario or runtime policy is substituted.
+	api, err := os.ReadFile(filepath.Join(distributiontest.RepoRoot(t), "testdata/phase1/runtime/api.rs.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	files["support/runtime/src/runtime_api.rs"] = api
+	files["support/runtime/src/runtime.rs"] = append(files["support/runtime/src/runtime.rs"], []byte("\ninclude!(\"runtime_api.rs\");\n")...)
 	for name := range files {
 		if strings.HasSuffix(name, "/Cargo.toml") && !strings.HasPrefix(name, "services/") && !strings.HasPrefix(name, "support/") {
 			config := strings.TrimSuffix(name, "Cargo.toml") + "src/config.rs"
@@ -608,7 +611,7 @@ func TestRunnableServiceExpectedWorkspaceCorpusCompiles(t *testing.T) {
 				t.Fatal("independent root manifest does not match ordered expected package members")
 			}
 			// Assemble only local lock records around the retained pinned external
-			// fragment. No dependency resolution, updates, or source generation.
+			// fragment. No dependency resolution or dependency updates.
 			lock, err := cargoWorkspaceLock(packages)
 			if err != nil {
 				t.Fatal(err)

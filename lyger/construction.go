@@ -11,15 +11,20 @@ import (
 // component. Nominal remains the source-defined type; function structure is
 // recognized from the bound definition when lowered.
 type constructionNode struct {
-	Nominal      string
-	Name         string
-	Definition   *record
-	Source       *objectGram
-	Children     []*constructionNode
-	Wrappers     []*descriptorRule
-	Parameters   []*objectGram
-	EmptyInputs  bool
-	EmptyOutputs bool
+	Nominal        string
+	Name           string
+	Definition     *record
+	Source         *objectGram
+	Children       []*constructionNode
+	Wrappers       []*descriptorRule
+	Parameters     []*objectGram
+	Arguments      []*objectGram // Child and parameter operands in authored order.
+	InputsDefined  bool
+	OutputsDefined bool
+	Dependencies   []DefinitionInstance
+	InputTokens    []*token
+	Inputs         []DefinitionProperty
+	Outputs        []string
 }
 
 type applicationConstruction struct {
@@ -53,8 +58,13 @@ func (dst *constructionNode) mergeDescriptor(src *constructionNode) {
 	dst.Children = append(dst.Children, src.Children...)
 	dst.Wrappers = append(dst.Wrappers, src.Wrappers...)
 	dst.Parameters = append(dst.Parameters, src.Parameters...)
-	dst.EmptyInputs = dst.EmptyInputs || src.EmptyInputs
-	dst.EmptyOutputs = dst.EmptyOutputs || src.EmptyOutputs
+	dst.Arguments = append(dst.Arguments, src.Arguments...)
+	dst.InputsDefined = dst.InputsDefined || src.InputsDefined
+	dst.OutputsDefined = dst.OutputsDefined || src.OutputsDefined
+	dst.Dependencies = append(dst.Dependencies, src.Dependencies...)
+	dst.InputTokens = append(dst.InputTokens, src.InputTokens...)
+	dst.Inputs = append(dst.Inputs, src.Inputs...)
+	dst.Outputs = append(dst.Outputs, src.Outputs...)
 }
 
 func (c *Compilation) constructObject(obj *objectGram, active map[*descriptorRule]bool) (*constructionNode, error) {
@@ -119,12 +129,51 @@ func (c *Compilation) constructObject(obj *objectGram, active map[*descriptorRul
 		// A source-defined `using` relation supplies the enclosing parameter;
 		// it does not create another application component.
 		node.Parameters = append(node.Parameters, obj.clause.orderedObjects()...)
+		node.Arguments = append(node.Arguments, obj.clause.orderedObjects()...)
 	}
 	return node, nil
 }
 
 func (c *Compilation) constructRelations(node *constructionNode, phrase *phraseGram, active map[*descriptorRule]bool) error {
 	if phrase == nil {
+		return nil
+	}
+	if phrase.gType == "phrase.signature" {
+		node.InputsDefined, node.OutputsDefined = true, true
+		for _, input := range phrase.subjects {
+			if input.phrase == nil || input.phrase.obj == nil {
+				return lerrors.InvalidInput.Errorf("Function input requires a type")
+			}
+			typ, dependency, err := c.nativeSignatureType(input.phrase.obj.noun)
+			if err != nil {
+				return err
+			}
+			if typ == "" {
+				return lerrors.TypeMismatch.Errorf("native Function requires native type atoms")
+			}
+			name := unquoteImportWord(input.noun.rawBytes)
+			if !validDefinitionNativeName(name) {
+				return lerrors.InvalidInput.Errorf("invalid Function parameter %s", name)
+			}
+			node.Inputs = append(node.Inputs, DefinitionProperty{Key: name, Type: typ})
+			if dependency != nil {
+				node.Dependencies = append(node.Dependencies, *dependency)
+			}
+			node.InputTokens = append(node.InputTokens, input.noun)
+		}
+		for _, output := range phrase.orderedObjects() {
+			typ, dependency, err := c.nativeSignatureType(output.noun)
+			if err != nil {
+				return err
+			}
+			if typ == "" {
+				return lerrors.TypeMismatch.Errorf("native Function requires native type atoms")
+			}
+			node.Outputs = append(node.Outputs, typ)
+			if dependency != nil {
+				node.Dependencies = append(node.Dependencies, *dependency)
+			}
+		}
 		return nil
 	}
 	association := false
@@ -138,22 +187,12 @@ func (c *Compilation) constructRelations(node *constructionNode, phrase *phraseG
 			return lerrors.Internal.Errorf("constructor relation has no object")
 		}
 		if obj.noun.hasRole("noun", "functional.inflective") || obj.noun.hasRole("noun", "functional.deflective") {
-			// Signature absence is explicit in the source (No Inputs/Outputs).
-			absent := obj.article.hasRole("article", "none")
-			if !absent {
-				kind := "output"
-				if obj.noun.hasRole("noun", "functional.inflective") {
-					kind = "input"
-				}
-				return lerrors.Unsupported.Errorf("nonempty function %s signature requires explicit property values", kind)
-			}
-			if obj.noun.hasRole("noun", "functional.inflective") {
-				node.EmptyInputs = true
-			} else {
-				node.EmptyOutputs = true
+			if err := c.bindConstructorSignature(node, obj); err != nil {
+				return err
 			}
 			continue
 		}
+		node.Arguments = append(node.Arguments, obj)
 		if association {
 			child, err := c.constructObject(obj, active)
 			if err != nil {
@@ -162,12 +201,108 @@ func (c *Compilation) constructRelations(node *constructionNode, phrase *phraseG
 			node.Children = append(node.Children, child)
 		} else {
 			node.Parameters = append(node.Parameters, obj)
+			// Nested operands belong to their own constructor. Existing topology
+			// descriptors still expose their signature relations to this owner.
+			count := len(node.Arguments)
 			if err := c.constructRelations(node, obj.phrase, active); err != nil {
 				return err
 			}
+			node.Arguments = node.Arguments[:count]
 		}
 	}
 	return c.constructRelations(node, phrase.phrase, active)
+}
+
+func (c *Compilation) nativeSignatureType(tok *token) (string, *DefinitionInstance, error) {
+	name, declaration, err := c.nativeTypeDefinition(tok)
+	if err != nil || name != "" {
+		return name, declaration, err
+	}
+	if tok != nil && strings.HasPrefix(tok.tType, "type.") {
+		return "", nil, nil
+	}
+	argument, err := argumentFromToken(tok)
+	if err != nil {
+		return "", nil, err
+	}
+	if argument.Kind != definitionArgText.String() {
+		return "", nil, nil
+	}
+	typed, err := argument.nativeType()
+	if err != nil {
+		return "", nil, err
+	}
+	return typed.typeAtom, nil, nil
+}
+
+// bindSignature reads native signature atoms authored in a compile-time
+// constructor. Ordinary source Functions continue through sourceTypeFromObject.
+func (c *Compilation) bindConstructorSignature(node *constructionNode, object *objectGram) error {
+	input := object.noun.hasRole("noun", "functional.inflective")
+	defined := &node.OutputsDefined
+	if input {
+		defined = &node.InputsDefined
+	}
+	if *defined {
+		return lerrors.InvalidInput.Errorf("function signature is supplied more than once")
+	}
+	*defined = true
+	if object.article != nil && object.article.hasRole("article", "none") {
+		if object.phrase != nil {
+			return lerrors.InvalidInput.Errorf("absent function signature has values")
+		}
+		return nil
+	}
+	if object.phrase == nil {
+		return lerrors.InvalidInput.Errorf("function signature has no values")
+	}
+	for _, item := range object.phrase.orderedObjects() {
+		// Coordinated Outputs is retained under the Inputs relation by the
+		// ordinary object grammar. It is another signature, not a parameter.
+		if item.noun.hasRole("noun", "functional.inflective") || item.noun.hasRole("noun", "functional.deflective") {
+			if err := c.bindConstructorSignature(node, item); err != nil {
+				return err
+			}
+			continue
+		}
+		typeObject := item
+		if input {
+			if item.cType != "declarative" || item.phrase == nil || len(item.phrase.orderedObjects()) != 1 {
+				return lerrors.Unsupported.Errorf("nonempty function input signature requires explicit property values")
+			}
+			typeObject = item.phrase.orderedObjects()[0]
+		}
+		typ, dependency, err := c.nativeSignatureType(typeObject.noun)
+		if err != nil {
+			return err
+		}
+		if typ == "" {
+			kind := "output"
+			if input {
+				kind = "input"
+			}
+			return lerrors.Unsupported.Errorf("nonempty function %s signature requires explicit property values", kind)
+		}
+		if dependency != nil {
+			node.Dependencies = append(node.Dependencies, *dependency)
+		}
+		if input {
+			name := unquoteImportWord(item.noun.rawBytes)
+			if !validDefinitionNativeName(name) {
+				return lerrors.InvalidInput.Errorf("invalid function input name %q", name)
+			}
+			for _, prior := range node.Inputs {
+				if prior.Key == name {
+					return lerrors.DuplicateDeclaration.Errorf("duplicate function input %s", name)
+				}
+			}
+			node.Inputs = append(node.Inputs, DefinitionProperty{Key: name, Type: typ})
+			node.InputTokens = append(node.InputTokens, item.noun)
+		} else {
+			node.Outputs = append(node.Outputs, typ)
+		}
+	}
+	return nil
 }
 
 // declarationObject selects the value belonging to one source declaration,

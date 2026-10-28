@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 	"testing/fstest"
@@ -33,9 +34,10 @@ func configuredImportAssets(t *testing.T, root string, words [3]string) Options 
 		t.Fatal(err)
 	}
 
-	for _, name := range []string{"builtins/eng/core.l", "stdlib/eng/io/dictionary.l"} {
-		resources[name].Data = bytes.ReplaceAll(resources[name].Data, []byte(" as "), []byte(" "+words[2]+" "))
-		resources[name].Data = bytes.ReplaceAll(resources[name].Data, []byte(" using "), []byte(" "+processLexFix(strings.ToLower(words[0]), "--ing", "postfix")+" "))
+	for name, file := range resources {
+		if strings.HasSuffix(name, ".l") {
+			file.Data = configuredSourceWords(t, file.Data, words)
+		}
 	}
 	directory := filepath.Join(root, "assets", "lexicon", "eng")
 	if err := os.MkdirAll(directory, 0700); err != nil {
@@ -73,6 +75,39 @@ func configuredImportAssets(t *testing.T, root string, words [3]string) Options 
 		}
 	}
 	return Options{Language: "eng", Resources: resources}
+}
+
+var configuredGrammarWords = regexp.MustCompile(`(?i)\b(use|from|as|using)\b`)
+
+// A configured distribution translates its source grammar, including private
+// dictionary imports. Literal labels, native leaves and data retain their bytes.
+func configuredSourceWords(t *testing.T, source []byte, words [3]string) []byte {
+	t.Helper()
+	spellings := map[string]string{"use": strings.ToLower(words[0]), "from": words[1], "as": words[2], "using": processLexFix(strings.ToLower(words[0]), "--ing", "postfix")}
+	replace := func(source string) string {
+		return configuredGrammarWords.ReplaceAllStringFunc(source, func(word string) string {
+			if word == "Use" {
+				return words[0]
+			}
+			return spellings[strings.ToLower(word)]
+		})
+	}
+	var translated strings.Builder
+	start := 0
+	for at := 0; at < len(source); at++ {
+		if source[at] != '`' && source[at] != '"' {
+			continue
+		}
+		end, err := quotedEnd(source, at)
+		if err != nil {
+			t.Fatal(err)
+		}
+		translated.WriteString(replace(string(source[start:at])))
+		translated.Write(source[at:end])
+		start, at = end, end-1
+	}
+	translated.WriteString(replace(string(source[start:])))
+	return []byte(translated.String())
 }
 
 func TestConfiguredImportVocabulary(t *testing.T) {
@@ -271,7 +306,7 @@ func TestConfiguredDictionaryImportBindings(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !bytes.Contains(result.BackendAML, []byte(`(&&LPrintValue(&("dialect"))).l_print();`)) {
+			if !bytes.Contains(result.BackendAML, []byte(`Inputs: ~&["dialect"]&~`)) {
 				t.Fatalf("selected dictionary failed under configured import words: %s", result.BackendAML)
 			}
 		})

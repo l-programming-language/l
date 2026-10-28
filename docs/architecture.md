@@ -26,7 +26,7 @@ Apps run as separate OS processes while the orchestrator preserves ordered sourc
 | `lexicon/eng` | Configured lexical roots, inflections, grammatical structures and cases |
 | `lyger` | Source preparation, vocabulary, grammar, bindings, types, ownership/activation analysis and AML composition |
 | `logiceme` | AML interpretation, glyph/template evaluation, callable declaration rendering, support assembly and linking |
-| `builtins/eng` and `stdlib/eng` | English L source definitions with native Rust bodies and source-defined construction descriptors |
+| `builtins/eng` and `stdlib/eng` | English L source compositions, small native leaves and construction descriptors |
 | `builtins/operations/rust` | Typed builtin process-operation compositions selected by the frontend |
 | `builtins/segments` and `builtins/templates` | Frozen Rust templates with reviewed composition amendments and retained Cargo/configuration/runtime support assets; the maintained Lucid suite defines verified scope |
 
@@ -55,14 +55,19 @@ override is useful for development. Resource files stay in their native JSON, L
 and template formats, and generated programs do not depend on them at runtime.
 
 `builtins/<configured-language>/core.l` supplies the implicit builtin unit.
-The current [English Rust core](../builtins/eng/core.l) contains Process,
-Function/Return, Objective, Main, Basic, Start and Execute. The program and
-dictionary units inherit this builtin scope. Start/Execute lower through their
-ordinary source definitions. The standard `io` dictionary exports IO.Print,
-while its Log/Logger implementation is private. The version-1
-[dictionary index](../stdlib/index.json) selects
-`stdlib/eng/io/dictionary.l` for `eng/io`; the compiler has no IO-specific
-lookup or Print lowering. Adding an indexed dictionary never adds implicit words.
+The [core](../builtins/eng/core.l) supplies foundational words and imports the
+[Storage dictionary](../stdlib/eng/storage/dictionary.l) privately. Programs and
+dictionaries inherit core words; they do not inherit Storage's implementation
+namespace. Ordinary source Functions, locals, descriptors and invocation words
+compose storage behavior. Selected declarations carry only their required source
+dependencies into AML.
+
+The [dictionary index](../stdlib/index.json) also selects IO and private support
+dictionaries. IO.Print composes typed rendering with byte output. IO and Runtime
+select the same [Formatting Function](../builtins/runtime/eng/number.l). Runtime lifecycle, error and capture policy lives in
+[builtins/runtime/eng](../builtins/runtime/eng); its generated, fingerprinted AML
+is rendered by Logiceme with the same frozen logemes. Host adapters retain OS and
+async access. Adding an indexed dictionary never makes its words implicit.
 
 Build, Run, Stop and Await retain their semantic operation identities. The
 [private builtin catalog](../lyger/builtin_operations.go) loads their process
@@ -75,7 +80,6 @@ The catalog belongs to one compilation,
 validates its complete inputs, and adds no public definition-slot or glyph field.
 Start and Execute still accept `any App` through their existing source signatures.
 
-Rust core and IO preserve the source-defined vocabulary and composition; Return punctuation and the native print expression use Rust syntax. These L-source directories are distinct from the backend assets. Rust definition encoding preserves typed slots and native framing; the source-defined print body dispatches native byte Text, finite Number formatting and other scalar Display values, with an added newline and panic on write failure. It evaluates its input once and remains synchronous; the compiler has no vocabulary-specific print path. See the [Rust library contract](../builtins/README.md#l-source-library-counterparts).
 
 The [basic demo](../demo/basic/main.l) imports IO.Print, creates a Basic App, executes it, and shows its raw output. Tests execute that source directly. Controlled process fixtures use explicit test-owned companion definitions without copying the language foundation. Basic construction and backend generation retain their existing semantic assertions.
 
@@ -198,7 +202,7 @@ The checked grammar loader validates [configured rule references](../lyger/gramm
 
 [Application units](../lyger/application_units.go) preserve the source graph: each App owns a binary, its additional Services become libraries, Classes become modules, and Objects remain files. Standalone Services create no package, process or continuation. Raw AML retains independent library/bin targets. Programs without Apps still use the orchestrator with an empty generation manifest.
 
-The [typed plan](../lyger/orchestration_plan.go) resolves storage, captures, definite assignment and transfers before AML generation. Functions bind invocation verbs and instantiate their selected builtin definitions for construction, suspension, invocation and returns. Lyger supplies resolved signature/value atoms; Logiceme renders callable syntax. Generated bodies stay composed, and authored native leaves remain opaque.
+The [typed plan](../lyger/orchestration_plan.go) resolves storage, captures, definite assignment and transfers before AML generation. Functions bind invocation verbs and compose their selected construction, invocation and Return definitions with private source storage/suspension words. Lyger supplies resolved signature/value atoms; Logiceme renders callable syntax. Generated bodies stay composed, and authored native leaves remain opaque.
 
 A Function stores its retained environment and a typed native function pointer. Its boxed future borrows the program context and returns a typed result tuple or program Exit. Invocation preserves the callable; arguments/results snapshot ordinary values, share Pointer targets and box concrete values when Thing is required. Function types include canonical constructor identity: incompatible contracts reject, including extraction from erased storage. Aliases preserve that identity. A composed Return must belong to the enclosing Function's constructor.
 
@@ -271,4 +275,4 @@ Backend linking can add Rust configuration modules, initialization calls, Cargo 
 
 The generated runtime uses per-runtime dependencies, never mutable global injection. `Runtime::new()` initializes real OS operations and streams. Synchronized invocation snapshots expose immutable result state rather than a live capture buffer. Concurrent internal observers share one result, one OS Wait owner and one continuation claim; this adds no L concurrency syntax.
 
-Native drivers compile the actual production runtime templates and wrap real Start/Wait/process-group signaling/capture only at named fault or barrier points. Checkpoints run outside locks held across callbacks: `pre-start` follows allocation and precedes readiness/admission, including refused attempts; `successful-start` follows Start success and secured ownership; `captured-stop-target` follows stable invocation selection and precedes signaling; `pre-publication` follows reaping/capture/group cleanup and precedes final publication. The [test-local receiver contract](../testdata/phase1/runtime/contract.md) defines the private interface. Drivers compile the unchanged production Rust templates; fixture expectations never substitute for the runtime.
+Native drivers compile the actual generated runtime and host adapters, wrapping real Start/Wait/process-group signaling/capture only at named fault or barrier points. Checkpoints run outside locks held across callbacks: `pre-start` follows allocation and precedes readiness/admission, including refused attempts; `successful-start` follows Start success and secured ownership; `captured-stop-target` follows stable invocation selection and precedes signaling; `pre-publication` follows reaping/capture/group cleanup and precedes final publication. The [test-local receiver contract](../testdata/phase1/runtime/contract.md) defines the private interface. Fixture expectations never substitute for production runtime code.

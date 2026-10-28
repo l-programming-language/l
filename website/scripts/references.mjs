@@ -178,7 +178,6 @@ export async function generateReferences(root) {
   }
   files['docs/_generated/lucid.md'] = l;
   const inventory = referenceSnapshot({ inputs, grammarRules: Object.keys(grammar).length, grammarCases: Object.values(grammar).reduce((sum, r) => sum + Object.keys(r.cases ?? {}).length, 0), vocabularyEntries: Object.values(vocabulary).reduce((sum, r) => sum + Object.keys(r).length, 0), valueNames, stdlib, segments, lucidCases: cases, malformedInputs: malformed, entries });
-  files['docs/_generated/inventory.json'] = stable(inventory);
   return { files, inventory };
 }
 
@@ -235,7 +234,7 @@ export async function checkCoverage(root, pages, inventory) {
   for (const name of inventory.valueNames) if (!semantic.some((e) => e.kind === 'value-tag' && e.name.toLowerCase() === name.toLowerCase())) throw new Error(`Unclassified internal value tag: ${name}`);
   for (const file of Object.keys(inventory.segments)) if (!semantic.some((e) => e.kind === 'logeme' && e.sources.includes(file))) throw new Error(`Unclassified backend segment: ${file}`);
   validateStdlib(inventory.stdlib, pages, semantic);
-  return referenceSnapshot({ sourceHashes, description: 'Static coverage and existing witnesses; no language execution during website validation.', entries });
+  return referenceSnapshot({ ...inventory, sourceHashes, description: 'Static coverage and existing witnesses; no language execution during website validation.', entries });
 }
 
 export async function references({ root = repository, write = false, coverage = true } = {}) {

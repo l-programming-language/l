@@ -1,7 +1,6 @@
 package Lyger
 
 import (
-	"sort"
 	"strings"
 
 	"github.com/l-programming-language/l/lerrors"
@@ -108,8 +107,20 @@ func (r *record) binding(query bindingQuery) (*tokenBinding, bool) {
 		return nil, false
 	}
 	word := query.word
-	b := &tokenBinding{Record: r, Root: strings.ToLower(r.ID), Form: "root", Possessive: query.possessive}
-	if lexical := r.bindingWord(); lexical != nil {
+	var lexical *lexeme
+	if r.Value.Type == storageLexeme {
+		lexical = r.Value.Lexeme
+	} else if r.isFunction() {
+		// Matching reads morphology only. Invocation uses still clone the
+		// selected word; a failed lookup need not clone its mutable arguments.
+		functionWord := lexeme{POS: "verb"}
+		if source := r.Value.Applicative.Function.Source; source != nil && source.Word != nil {
+			functionWord = *source.Word
+		}
+		functionWord.Root = strings.ToLower(r.ID[strings.LastIndex(r.ID, ".")+1:])
+		lexical = &functionWord
+	}
+	if lexical != nil {
 		// A member is visible through its qualified name until an import creates
 		// an unqualified alias. Suffix matching must not leak dictionary members.
 		prefix := ""
@@ -123,10 +134,13 @@ func (r *record) binding(query bindingQuery) (*tokenBinding, bool) {
 		if !matched {
 			return nil, false
 		}
-		b.Root, b.POS, b.Form = lexical.Root, lexical.POS, form
-		return b, true
+		return &tokenBinding{Record: r, Root: lexical.Root, POS: lexical.POS, Form: form, Possessive: query.possessive}, true
 	}
-	return b, word == strings.ToLower(r.ID)
+	root := strings.ToLower(r.ID)
+	if word != root {
+		return nil, false
+	}
+	return &tokenBinding{Record: r, Root: root, Form: "root", Possessive: query.possessive}, true
 }
 
 func (b *tokenBinding) lexicalType() string {
@@ -159,21 +173,28 @@ func (b *tokenBinding) lexicalType() string {
 
 func resolveTokenBinding(contents []byte, memory map[string]*record) (*tokenBinding, error) {
 	query := newBindingQuery(contents)
-	keys := make([]string, 0, len(memory))
-	for key := range memory {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	var result *tokenBinding
-	for _, key := range keys {
-		if binding, ok := memory[key].binding(query); ok {
-			if result != nil && result.Record != binding.Record {
-				return nil, lerrors.AmbiguousReference.Errorf("ambiguous reference %q: %s and %s", contents, result.Record.ID, binding.Record.ID)
+	var first, second *tokenBinding
+	var firstKey, secondKey string
+	for key, rec := range memory {
+		binding, ok := rec.binding(query)
+		if !ok {
+			continue
+		}
+		// Preserve the sorted scan's first two distinct matching records
+		// without sorting or allocating storage for every unrelated name.
+		if first == nil || key < firstKey {
+			if first != nil && binding.Record != first.Record {
+				second, secondKey = first, firstKey
 			}
-			result = binding
+			first, firstKey = binding, key
+		} else if binding.Record != first.Record && (second == nil || key < secondKey) {
+			second, secondKey = binding, key
 		}
 	}
-	return result, nil
+	if second != nil {
+		return nil, lerrors.AmbiguousReference.Errorf("ambiguous reference %q: %s and %s", contents, first.Record.ID, second.Record.ID)
+	}
+	return first, nil
 }
 
 // bindStatementMembers resolves the right side of possessive member access in
@@ -206,7 +227,7 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 				if err != nil {
 					return false, err
 				}
-				if state == lookupPending {
+				if state == lookupPending && !bindEarlierStatementDeclaration(statement, i, member) {
 					ready = false
 				}
 			}
@@ -273,4 +294,27 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 		break
 	}
 	return ready, nil
+}
+
+// A later reference to a plain declaration in the same statement can be parsed
+// as a noun before atomic registration. No value or semantic record is guessed:
+// publication resolves this source edge before the statement leaves registration.
+func bindEarlierStatementDeclaration(statement *lStatement, index int, tok *token) bool {
+	for _, declaration := range tok.scope.declarations {
+		if declaration.Record != nil || declaration.Owner != nil || strings.Contains(string(declaration.Token.rawBytes), "|") || !declaration.matches(tok.rawBytes) {
+			continue
+		}
+		for _, candidate := range statement.tokens[:index] {
+			if candidate != declaration.Token {
+				continue
+			}
+			word := newLexeme("noun")
+			word.Root = newBindingQuery(tok.rawBytes).word
+			tok.pendingDeclaration = declaration.Token
+			tok.mem = &entry{Type: storageLexeme, Lexeme: word}
+			tok.tType, tok.defined = "nouns.generic.root", true
+			return true
+		}
+	}
+	return false
 }
