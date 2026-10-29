@@ -249,6 +249,7 @@ func (c *Compilation) analyze() {
 		c.checkError(err)
 		return
 	}
+	defer c.Scope.indexBindings()()
 	c.ProcStatements = append([]*lStatement{}, c.Statements...)
 	// 1) determine each c.Statement type (i.e. IMPERATIVE.CREATE.VERB) with Subject and Predicate Tokens (LProcess E.1)
 	//		1.A) Any statement with an unknown is set aside.

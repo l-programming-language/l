@@ -195,9 +195,9 @@ func (p declarationPublication) commit(c *Compilation, stmt *lStatement) {
 		c.Semantics.Aliases[rec] = p.declaration.Alias
 	}
 	id := rec.ID
-	p.destination.records[id] = rec
+	p.destination.storeBinding(id, rec)
 	if p.declaration.Visibility == visibilityPublic && p.destination != p.reservation.Scope {
-		p.reservation.Scope.records[id] = rec
+		p.reservation.Scope.storeBinding(id, rec)
 	}
 	if p.owner != nil {
 		rec.declarationOwner = p.owner

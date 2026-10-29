@@ -11,6 +11,7 @@ import (
 	"path"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/l-programming-language/l/lerrors"
 )
@@ -24,6 +25,14 @@ type runtimeComposition struct {
 	Version int               `json:"version"`
 	SHA256  string            `json:"sha256"`
 	Sources map[string]string `json:"sources"`
+}
+
+// Keep one successful rendering, up to 1 MiB. Providers are reread and validated
+// before lookup; no filesystem identity, mutable parsed graph, or error is cached.
+var runtimeCompositionCache struct {
+	sync.Mutex
+	key     [sha256.Size]byte
+	runtime []byte
 }
 
 func loadRuntimeComposition(resources fs.FS, templates map[string][]byte) ([]byte, error) {
@@ -61,6 +70,53 @@ func loadRuntimeComposition(resources fs.FS, templates map[string][]byte) ([]byt
 	if err != nil {
 		return nil, err
 	}
+	system, err := loadSegmentalSystem(resources)
+	if err != nil {
+		return nil, fmt.Errorf("load composed runtime logemes: %w", err)
+	}
+	key := runtimeCompositionKey(raw, aml, system, templates)
+	runtimeCompositionCache.Lock()
+	defer runtimeCompositionCache.Unlock()
+	if runtimeCompositionCache.runtime != nil && runtimeCompositionCache.key == key {
+		return bytes.Clone(runtimeCompositionCache.runtime), nil
+	}
+	runtime, err := generateRuntimeComposition(aml, system, templates)
+	if err != nil {
+		return nil, err
+	}
+	if len(runtime) <= 1<<20 {
+		runtimeCompositionCache.key = key
+		runtimeCompositionCache.runtime = bytes.Clone(runtime)
+	}
+	return runtime, nil
+}
+
+func runtimeCompositionKey(manifest, aml []byte, system SegmentalSystem, templates map[string][]byte) [sha256.Size]byte {
+	var fingerprints []byte
+	add := func(content []byte) {
+		digest := sha256.Sum256(content)
+		fingerprints = append(fingerprints, digest[:]...)
+	}
+	add(manifest)
+	add(aml)
+	for _, definition := range segmentDefinitions {
+		if definition.family == "Consonant" || definition.family == "Vowel" {
+			add(definition.slot(&system).Content)
+		}
+	}
+	names := make([]string, 0, len(templates))
+	for name := range templates {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		add([]byte(name))
+		add(templates[name])
+	}
+	return sha256.Sum256(fingerprints)
+}
+
+func generateRuntimeComposition(aml []byte, system SegmentalSystem, templates map[string][]byte) ([]byte, error) {
 	scanner, err := loadScannerBytes(aml)
 	if err != nil {
 		return nil, fmt.Errorf("read composed runtime: %w", err)
@@ -74,10 +130,6 @@ func loadRuntimeComposition(resources fs.FS, templates map[string][]byte) ([]byt
 	target := scanner.Program.Books[0].Outline.Services[0].Target
 	if target == nil || target.Kind != "lib" || target.Root != "runtime" || target.Primary {
 		return nil, lerrors.InvalidConfiguration.Errorf("composed runtime requires a sole library target rooted at runtime")
-	}
-	system, err := loadSegmentalSystem(resources)
-	if err != nil {
-		return nil, fmt.Errorf("load composed runtime logemes: %w", err)
 	}
 	bundle, err := evaluateScannedSource(scanner, system, templates, false, nil)
 	if err != nil {
