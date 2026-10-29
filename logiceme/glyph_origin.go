@@ -20,7 +20,7 @@ type glyphOrigin struct {
 func attachGlyphOrigins(g *Glyph) error {
 	source := g.Name
 	position := 0
-	origin, err := readGlyphOrigin(source, &position)
+	origin, err := readGlyphOrigin(source, []byte(source), &position)
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func attachGlyphOrigins(g *Glyph) error {
 	return attach(g, origin)
 }
 
-func readGlyphOrigin(source string, position *int) (*glyphOrigin, error) {
+func readGlyphOrigin(source string, sourceBytes []byte, position *int) (*glyphOrigin, error) {
 	start := *position
 	for *position < len(source) && source[*position] >= 'A' && source[*position] <= 'Z' {
 		*position++
@@ -66,7 +66,7 @@ func readGlyphOrigin(source string, position *int) (*glyphOrigin, error) {
 				break
 			}
 			if strings.HasPrefix(source[*position:], ": ~") {
-				end, err := nativeValueEnd([]byte(source), *position+3)
+				end, err := nativeValueEnd(sourceBytes, *position+3)
 				if err != nil {
 					return nil, err
 				}
@@ -83,7 +83,7 @@ func readGlyphOrigin(source string, position *int) (*glyphOrigin, error) {
 			*position++
 		}
 		for {
-			child, err := readGlyphOrigin(source, position)
+			child, err := readGlyphOrigin(source, sourceBytes, position)
 			if err != nil {
 				return nil, err
 			}

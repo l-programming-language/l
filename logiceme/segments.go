@@ -551,8 +551,7 @@ func (ss *SegmentalSystem) initializeBoundGlyph(definition []byte, name string, 
 	inputCount := 0
 	input := false
 	inputStr := ""
-	splitDefinition := bytes.Split(definition, []byte("^"))
-	curDef := splitDefinition[0]
+	curDef, nextDef, hasChildren := bytes.Cut(definition, []byte("^"))
 	for ind, b := range curDef {
 		if string(b) == "{" {
 			if input {
@@ -611,18 +610,17 @@ func (ss *SegmentalSystem) initializeBoundGlyph(definition []byte, name string, 
 			}
 		}
 	}
-	if len(splitDefinition) > 1 {
-		nextDefContent := string(bytes.Join(splitDefinition[1:], []byte("^")))
-		children := [][]byte{[]byte(nextDefContent)}
-		if strings.HasPrefix(nextDefContent, "|") {
+	if hasChildren {
+		children := [][]byte{nextDef}
+		if bytes.HasPrefix(nextDef, []byte("|")) {
 			// Expand only this group's placeholder; nested groups own their delimiters.
-			exp := []byte(nextDefContent)
-			if group, found := bindings.groups[nextDefContent]; found {
+			exp := nextDef
+			if group, found := bindings.groups[string(nextDef)]; found {
 				exp = []byte(group)
 			}
 			children = bytes.Split(exp, []byte("*"))
 		}
-		for _, child := range children {
+		for i, child := range children {
 			var glyph Glyph
 			var err error
 			if bindings.external {
@@ -632,6 +630,9 @@ func (ss *SegmentalSystem) initializeBoundGlyph(definition []byte, name string, 
 			}
 			if err != nil {
 				return reGlyph, err
+			}
+			if i == 0 {
+				reGlyph.Conjoinments = make([]Glyph, 0, len(children))
 			}
 			reGlyph.Type = "Complex"
 			reGlyph.Conjoinments = append(reGlyph.Conjoinments, glyph)

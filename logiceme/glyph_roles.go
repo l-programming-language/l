@@ -117,7 +117,6 @@ func prepareInstantiation(g *Glyph, ctx glyphContext, roles map[int]string, head
 				if len(g.Conjoinments) != 0 {
 					return invalidGlyph(g, "named KY excludes a callable child")
 				}
-				g.appendNativeAtoms("Callee", key)
 			} else {
 				if _, supplied := m["Receiver"]; supplied {
 					return invalidGlyph(g, "anonymous KY excludes Receiver")
@@ -127,9 +126,7 @@ func prepareInstantiation(g *Glyph, ctx glyphContext, roles map[int]string, head
 				}
 				use(0, "Callee", "callee")
 			}
-		} else if m["Key"] != "" {
-			g.appendNativeAtoms("Callee", m["Key"])
-		} else {
+		} else if m["Key"] == "" {
 			if len(g.Conjoinments) != 1 {
 				return invalidGlyph(g, "invocation requires exactly one anonymous Operation or DY callee")
 			}
@@ -169,14 +166,8 @@ func prepareInstantiation(g *Glyph, ctx glyphContext, roles map[int]string, head
 			for _, i := range ids {
 				use(i, "Targets", "type")
 			}
-		} else {
-			if m["Receiver"] == "" {
-				return invalidGlyph(g, "implementation requires Receiver target")
-			}
-			if m["Key"] != "" {
-				g.appendNativeAtoms("Targets", m["Key"])
-			}
-			g.appendNativeAtoms("Targets", m["Receiver"])
+		} else if m["Receiver"] == "" {
+			return invalidGlyph(g, "implementation requires Receiver target")
 		}
 		for _, i := range g.childIndices("Operation") {
 			f := glyphForm(&g.Conjoinments[i])
@@ -225,7 +216,6 @@ func prepareInstantiation(g *Glyph, ctx glyphContext, roles map[int]string, head
 				if f.Value != "" {
 					return invalidGlyph(g, "struct field declaration cannot supply a value; definitions own explicit initialization")
 				}
-				g.appendNativeAtoms("Fields", f.Key+": "+f.Type)
 			}
 		} else {
 			for _, i := range g.childIndices("Operation") {
@@ -256,22 +246,11 @@ func prepareInstantiation(g *Glyph, ctx glyphContext, roles map[int]string, head
 				if strings.TrimSpace(f.Key) == "" {
 					return invalidGlyph(g, "trait signatures require named methods")
 				}
-				var p []string
 				if !f.Receiver.IsVoid() {
-					receiver, err := formatReceiver(f.Receiver, "Self")
-					if err != nil {
+					if _, err := formatReceiver(f.Receiver, "Self"); err != nil {
 						return invalidGlyph(g, err.Error())
 					}
-					p = append(p, receiver)
 				}
-				for _, a := range f.Inputs {
-					p = append(p, a.Key+": "+a.Type)
-				}
-				sig := "fn " + f.Key + "(" + strings.Join(p, ", ") + ")"
-				if len(f.Outputs) > 0 {
-					sig += " -> " + nativeTuple(f.Outputs)
-				}
-				g.appendNativeAtoms("Methods", sig+";\n")
 			}
 		}
 	case "Y":
@@ -286,7 +265,6 @@ func prepareInstantiation(g *Glyph, ctx glyphContext, roles map[int]string, head
 			if f.Key == "" || f.Value == "" {
 				return invalidGlyph(g, "construction fields require name and value")
 			}
-			g.appendNativeAtoms("Fields", f.Key+": "+f.Value)
 		}
 	}
 	// The copied native-record interfaces must receive a collection even when
@@ -362,7 +340,6 @@ func prepareDescription(g *Glyph, ctx glyphContext, roles map[int]string) error 
 			if len(g.Conjoinments) > 0 {
 				return invalidGlyph(g, "field type sources are exclusive: native or composed child")
 			}
-			g.appendNativeAtoms("TypeValue", p.Type)
 			return nil
 		}
 		return projectTypedChildRoles(g, roles, "Instantiation", "TypeValue", "type", 1, 1)
@@ -439,7 +416,6 @@ func prepareDescription(g *Glyph, ctx glyphContext, roles map[int]string) error 
 			if len(g.Conjoinments) > 0 {
 				return invalidGlyph(g, "native and composed atom are exclusive")
 			}
-			g.appendNativeAtoms("Atom", p.Value)
 		} else {
 			if e := projectTypedChildRoles(g, roles, "Instantiation", "Atom", "type", 1, 1); e != nil {
 				return e
@@ -471,9 +447,6 @@ func prepareDescription(g *Glyph, ctx glyphContext, roles map[int]string) error 
 				use(i, "Fields", "type")
 			}
 		} else {
-			if p.Type != "" {
-				g.appendNativeAtoms("Constructor", p.Type)
-			}
 			ids := g.childIndices("Instantiation")
 			if len(ids) > 1 || len(ids) > 0 && p.Type != "" {
 				return invalidGlyph(g, "multiple constructors")
@@ -520,7 +493,7 @@ func prepareDescription(g *Glyph, ctx glyphContext, roles map[int]string) error 
 		return invalidGlyph(g, "unknown Shape")
 	}
 	g.setSourceMeta("SingletonComma", "false")
-	if shape == "Positional" && ctx.role != "payload" && len(g.plan.slots["Fields"]) == 1 && len(g.plan.slots["Constructor"])+len(g.plan.atoms["Constructor"]) == 0 {
+	if shape == "Positional" && ctx.role != "payload" && len(g.plan.slots["Fields"]) == 1 && len(g.plan.slots["Constructor"]) == 0 && p.Type == "" {
 		g.setSourceMeta("SingletonComma", "true")
 	}
 	return nil
@@ -546,7 +519,6 @@ func prepareEvaluation(g *Glyph, ctx glyphContext, roles map[int]string, names *
 	case "MI":
 		count := 0
 		if m["Key"] != "" {
-			g.appendNativeAtoms("Subject", m["Key"])
 			count++
 		}
 		for _, i := range g.childIndices("Calculation") {

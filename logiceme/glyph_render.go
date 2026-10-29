@@ -8,11 +8,17 @@ import (
 )
 
 func glyphInputSource(g *Glyph) string {
-	s := g.InputString
-	for i := range g.Conjoinments {
-		s += " " + glyphInputSource(&g.Conjoinments[i])
+	var source strings.Builder
+	var appendInputs func(*Glyph)
+	appendInputs = func(glyph *Glyph) {
+		source.WriteString(glyph.InputString)
+		for i := range glyph.Conjoinments {
+			source.WriteByte(' ')
+			appendInputs(&glyph.Conjoinments[i])
+		}
 	}
-	return s
+	appendInputs(g)
+	return source.String()
 }
 func (g *Glyph) compiledChildGroups() []CompiledConjoinment {
 	out := make([]CompiledConjoinment, 0, 18)

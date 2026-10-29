@@ -100,20 +100,18 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 		if destination == nil {
 			destination = c.Scope.Root
 		}
+		rejectDuplicate := stmt.source.imported == nil && (destination.isParagraph() || destination.kind == lexicalDictionary || declaration.Visibility == visibilityPublic)
 		var prior *record
-		for name, existing := range destination.records {
-			if strings.EqualFold(name, id) {
-				prior = existing
-				break
-			}
-		}
 		for _, candidate := range pending {
-			if candidate.destination == destination && strings.EqualFold(candidate.staged.ID, id) {
+			if rejectDuplicate && candidate.destination == destination && strings.EqualFold(candidate.staged.ID, id) {
 				prior = candidate.declaration.Record
 				break
 			}
 		}
-		for _, existing := range destination.records {
+		for name, existing := range destination.records {
+			if rejectDuplicate && prior == nil && strings.EqualFold(name, id) {
+				prior = existing
+			}
 			previous := c.Semantics.Declarations[existing]
 			priorImport := previous != nil && previous.source != nil && previous.source.imported != nil
 			if stmt.source.imported == nil && !priorImport {
@@ -145,7 +143,7 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 			}
 		}
 
-		if prior != nil && stmt.source.imported == nil && (destination.isParagraph() || destination.kind == lexicalDictionary || declaration.Visibility == visibilityPublic) {
+		if prior != nil {
 			if source := c.Semantics.Declarations[prior]; source != nil && source.source != nil {
 				return lerrors.DuplicateDeclaration.Errorf("duplicate declaration %s (previous declaration at %s:%d:%d)", id, source.source.Span.Path, source.source.Span.Start.Line, source.source.Span.Start.Column)
 			}
