@@ -163,8 +163,8 @@ func applyGrammarRule[T any](target *T, rule string, clone func(T) T,
 	return nil
 }
 
-// Evaluate every alternative from the same state. Prefer the longest valid prefix;
-// equal matches use sorted case names so map iteration cannot change the parse.
+// Evaluate alternatives from the same state, preferring the longest valid prefix.
+// Sorted names break ties; a complete prefix cannot be beaten by any later case.
 // As in applyGrammarRule, callbacks borrow the candidate without retaining it.
 func selectGrammarCase[T any](target *T, cases map[string]string, clone func(T) T,
 	build func(*T, string) error, remaining func(*T) []*token,
@@ -204,6 +204,10 @@ func selectGrammarCase[T any](target *T, cases map[string]string, clone func(T) 
 		}
 		if len(prefix) > bestCount {
 			setCase(&candidate, name)
+			if len(prefix) == len(tokens) {
+				*target = candidate
+				return nil
+			}
 			best, bestCount = candidate, len(prefix)
 		}
 	}

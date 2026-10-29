@@ -109,8 +109,7 @@ func (t *token) restoreLiteral(cache map[string][]byte) error {
 
 // getCase returns the case of the token, i.e. appropriative.active
 func (t *token) getCase() string {
-	splitType := strings.Split(t.tType, ".")
-	subType := strings.Join(splitType[1:], ".")
+	_, subType, _ := strings.Cut(t.tType, ".")
 	subType = strings.Replace(subType, ".root", "", 1)
 	return subType
 }
@@ -123,7 +122,7 @@ func (t *token) getPOS(trim bool) string {
 	if t.tType == "nouns.NotFound.possessive" {
 		return "unknown"
 	}
-	rawPOS := strings.Split(t.tType, ".")[0]
+	rawPOS, _, _ := strings.Cut(t.tType, ".")
 	if trim {
 		return trimSuffix(rawPOS, "s")
 	}
