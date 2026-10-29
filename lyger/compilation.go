@@ -100,6 +100,7 @@ func (c *Compilation) preProcess() {
 
 // build recursively checks for import statements in the L code and builds up CompiledBytes if found using builder
 func (c *Compilation) build() {
+	defer c.Gram.lex.indexLookups()()
 	b := newPreparedBuilder(c.Prepared, c.Gram)
 	if err := b.process(); err != nil {
 		c.checkError(fmt.Errorf("expand %s: %w", c.MainPath, err))
@@ -116,6 +117,7 @@ func (c *Compilation) build() {
 
 // scan tokenize & scan the grammar/lexicon of Compilation statements
 func (c *Compilation) scan() {
+	defer c.Gram.lex.indexLookups()()
 	var isErr bool
 	p := newParser(c.CompiledBytes)
 	for index, stmtBytes := range p.parseStatements() {
@@ -150,10 +152,8 @@ candidates:
 		}
 		// Include root reservations here without changing root lookup/replacement.
 		for scope := tok.scope; scope != nil; scope = scope.parent {
-			for _, declaration := range scope.declarations {
-				if declaration.matches(tok.rawBytes) {
-					continue candidates
-				}
+			if len(scope.reserved(tok.rawBytes)) != 0 {
+				continue candidates
 			}
 		}
 		return tok.rangeError

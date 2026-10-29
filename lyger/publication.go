@@ -205,6 +205,9 @@ func (p declarationPublication) commit(c *Compilation, stmt *lStatement) {
 			p.owner.members = make(map[string]*record)
 		}
 		p.owner.members[id] = rec
+		if index := c.Scope.memberBindings[p.owner]; index != nil {
+			index.store(id, rec)
+		}
 	}
 	if p.value.Type == valueDictionary && c.Semantics.Aliases[rec] == nil {
 		p.value.Data.(*dictionary).ID = id //nolint:errcheck // Declaration preparation validates the tagged payload before this atomic commit.

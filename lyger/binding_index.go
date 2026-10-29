@@ -59,10 +59,24 @@ func (s *lexicalScope) storeBinding(key string, rec *record) {
 	}
 }
 
+func (p *scopePlan) resolveMemberBinding(owner *record, raw []byte) (*tokenBinding, error) {
+	records := owner.members
+	if p != nil && p.memberBindings != nil {
+		index := p.memberBindings[owner]
+		if index == nil {
+			index = newRecordBindingIndex(records)
+			p.memberBindings[owner] = index
+		}
+		records = index.words[newBindingQuery(raw).word]
+	}
+	return resolveTokenBinding(raw, records)
+}
+
 // Semantic analysis has a single publication path. Drop its indexes when it
 // returns so later clients can inspect or modify the exposed Memory records
 // without retaining a stale derived view.
 func (p *scopePlan) indexBindings() func() {
+	p.memberBindings = make(map[*record]*recordBindingIndex)
 	scopes := make(map[*lexicalScope]bool)
 	add := func(scope *lexicalScope) {
 		for ; scope != nil && !scopes[scope]; scope = scope.parent {
@@ -78,6 +92,7 @@ func (p *scopePlan) indexBindings() func() {
 		}
 	}
 	return func() {
+		p.memberBindings = nil
 		for scope := range scopes {
 			scope.bindings = nil
 		}

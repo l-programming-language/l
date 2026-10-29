@@ -225,6 +225,7 @@ func newToken(rawBytes []byte, gram *grammar) *token {
 
 // lexicon structures the Lyger keyword lexicon
 type lexicon struct {
+	lookupIndex  map[string]map[string]map[string]lexeme
 	Nouns        map[string]lexeme `json:"nouns,omitempty"`
 	Verbs        map[string]lexeme `json:"verbs,omitempty"`
 	Adjectives   map[string]lexeme `json:"adjectives,omitempty"`
@@ -242,25 +243,25 @@ func (l *lexicon) scanLex(tBytes []byte, lType string) (lexeme, string) {
 		var isPossessive bool
 		owner, possessive := possessiveOwner(string(tBytes))
 		isPossessive, tBytes = possessive, []byte(owner)
-		reLexeme, lCat := checkLexemeMap(tBytes, l.Nouns)
+		reLexeme, lCat := l.scanMap(tBytes, lType, l.Nouns)
 		if isPossessive && lCat != "NotFound" {
 			lCat = lCat + ".possessive"
 		}
 		return reLexeme, lCat
 	case "Verbs":
-		return checkLexemeMap(tBytes, l.Verbs)
+		return l.scanMap(tBytes, lType, l.Verbs)
 	case "Adjectives":
-		return checkLexemeMap(tBytes, l.Adjectives)
+		return l.scanMap(tBytes, lType, l.Adjectives)
 	case "Adverbs":
-		return checkLexemeMap(tBytes, l.Adverbs)
+		return l.scanMap(tBytes, lType, l.Adverbs)
 	case "Prepositions":
-		return checkLexemeMap(tBytes, l.Prepositions)
+		return l.scanMap(tBytes, lType, l.Prepositions)
 	case "Articles":
-		return checkLexemeMap(tBytes, l.Articles)
+		return l.scanMap(tBytes, lType, l.Articles)
 	case "Conjunctions":
-		return checkLexemeMap(tBytes, l.Conjunctions)
+		return l.scanMap(tBytes, lType, l.Conjunctions)
 	case "Evaluations":
-		return checkLexemeMap(tBytes, l.Evaluations)
+		return l.scanMap(tBytes, lType, l.Evaluations)
 	default:
 		return lexeme{}, "Error"
 	}

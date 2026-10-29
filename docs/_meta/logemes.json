@@ -32,7 +32,7 @@
     "logiceme/lucid_interpreter.go": "059d1225282dc28d4c6be4f340ec0c4f0c909d34900ae799aa67ebac2c805ded",
     "logiceme/segment_case_clone.go": "a182522b1eda6bf025db241a5367900031abaa5fdff3ff2a3c247a3d4f584319",
     "logiceme/segment_cases.go": "9c90aaf406fde24089d0a2bc5732ab938841b6ae566e5fca20a808b0db99df06",
-    "logiceme/segments.go": "1137f86c4666e4692575cb1410df757c8e4881a1633981d45fe514a7c52b623b"
+    "logiceme/segments.go": "b0c7c4f4e863206a445ff93680ae87ddd278e6e2e2791c5c59d71db75d41eed1"
   },
   "entries": [
     {

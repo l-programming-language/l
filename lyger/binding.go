@@ -300,8 +300,8 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 // as a noun before atomic registration. No value or semantic record is guessed:
 // publication resolves this source edge before the statement leaves registration.
 func bindEarlierStatementDeclaration(statement *lStatement, index int, tok *token) bool {
-	for _, declaration := range tok.scope.declarations {
-		if declaration.Record != nil || declaration.Owner != nil || strings.Contains(string(declaration.Token.rawBytes), "|") || !declaration.matches(tok.rawBytes) {
+	for _, declaration := range tok.scope.reserved(tok.rawBytes) {
+		if declaration.Record != nil || declaration.Owner != nil || strings.Contains(string(declaration.Token.rawBytes), "|") {
 			continue
 		}
 		for _, candidate := range statement.tokens[:index] {

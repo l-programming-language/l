@@ -494,16 +494,45 @@ func (ss *SegmentalSystem) InitializeGlyph(definition []byte, valVars [][]string
 }
 
 func (ss *SegmentalSystem) initializeGlyphChecked(definition []byte, valVars [][]string, expVars [][]string) (Glyph, error) {
+	name := string(definition)
+	bound, values := ParseMetaInserts(definition)
+	bound, groups := ParseGlyphExpressions(bound)
+	bindings := glyphBindings{values: make(map[string]string, len(values)), groups: make(map[string]string, len(expVars)+len(groups))}
+	for _, value := range values {
+		bindings.values[value[0]] = value[1]
+	}
+	bindings.orderedValues = append(valVars, values...)
+	if len(valVars) != 0 || len(expVars) != 0 {
+		// Explicit public substitution lists retain their ordered replacement
+		// semantics; ordinary parsed metadata uses exact placeholder lookup.
+		bindings.orderedGroups = append(expVars, groups...)
+		bindings.external = true
+	}
+	for _, group := range append(expVars, groups...) {
+		key := "|" + group[0] + "|"
+		if _, present := bindings.groups[key]; !present {
+			bindings.groups[key] = group[1]
+		}
+	}
+	return ss.initializeBoundGlyph(bound, name, &bindings)
+}
+
+// Bind placeholders once per source tree. Descendants contain references to
+// these bindings, so rescanning them and searching every sibling's metadata is
+// both redundant and quadratic for large composed Functions.
+type glyphBindings struct {
+	values, groups map[string]string
+	orderedValues  [][]string
+	orderedGroups  [][]string
+	external       bool
+}
+
+func (ss *SegmentalSystem) initializeBoundGlyph(definition []byte, name string, bindings *glyphBindings) (Glyph, error) {
 	var seg Segment
-	var varValManager, varExpManager [][]string
-	reGlyph := Glyph{Name: string(definition), Type: "Simple", SegmentalSystem: ss, Meta: MetaDict{}}
-	definition, varValManager = ParseMetaInserts(definition)
-	valVars = append(valVars, varValManager...)
+	reGlyph := Glyph{Name: name, Type: "Simple", SegmentalSystem: ss, Meta: MetaDict{}}
 	inputCount := 0
 	input := false
 	inputStr := ""
-	definition, varExpManager = ParseGlyphExpressions(definition)
-	expVars = append(expVars, varExpManager...)
 	splitDefinition := bytes.Split(definition, []byte("^"))
 	curDef := splitDefinition[0]
 	for ind, b := range curDef {
@@ -570,16 +599,19 @@ func (ss *SegmentalSystem) initializeGlyphChecked(definition []byte, valVars [][
 		if strings.HasPrefix(nextDefContent, "|") {
 			// Expand only this group's placeholder; nested groups own their delimiters.
 			exp := []byte(nextDefContent)
-			for _, variable := range expVars {
-				if nextDefContent == "|"+variable[0]+"|" {
-					exp = []byte(variable[1])
-					break
-				}
+			if group, found := bindings.groups[nextDefContent]; found {
+				exp = []byte(group)
 			}
 			children = bytes.Split(exp, []byte("*"))
 		}
 		for _, child := range children {
-			glyph, err := ss.initializeGlyphChecked(child, valVars, expVars)
+			var glyph Glyph
+			var err error
+			if bindings.external {
+				glyph, err = ss.initializeGlyphChecked(child, bindings.orderedValues, bindings.orderedGroups)
+			} else {
+				glyph, err = ss.initializeBoundGlyph(child, string(child), bindings)
+			}
 			if err != nil {
 				return reGlyph, err
 			}
@@ -587,8 +619,13 @@ func (ss *SegmentalSystem) initializeGlyphChecked(definition []byte, valVars [][
 			reGlyph.Conjoinments = append(reGlyph.Conjoinments, glyph)
 		}
 	}
-	valInput := InsertGlyphVals([]byte(reGlyph.InputString), valVars)
-	reGlyph.InputString = string(valInput)
+	if bindings.external {
+		reGlyph.InputString = string(InsertGlyphVals([]byte(reGlyph.InputString), bindings.orderedValues))
+	} else if value, found := bindings.values[reGlyph.InputString]; found {
+		reGlyph.InputString = value
+	} else if reGlyph.InputString != "" {
+		reGlyph.InputString = string(InsertGlyphVals([]byte(reGlyph.InputString), bindings.orderedValues))
+	}
 	for _, vowel := range reGlyph.Vowels {
 		if err := reGlyph.validateSelectedCase(vowel); err != nil {
 			return reGlyph, err

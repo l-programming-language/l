@@ -97,11 +97,12 @@ func (s scopedStatement) subjectBefore(at *token) *token {
 }
 
 type scopePlan struct {
-	Root         *lexicalScope
-	environments map[sourceParagraphKey]*lexicalScope
-	declarations map[*token]*scopeDeclaration
-	Ordered      []scopedStatement
-	Pronouns     map[*token]pronounBinding
+	Root           *lexicalScope
+	environments   map[sourceParagraphKey]*lexicalScope
+	declarations   map[*token]*scopeDeclaration
+	memberBindings map[*record]*recordBindingIndex
+	Ordered        []scopedStatement
+	Pronouns       map[*token]pronounBinding
 }
 
 type scopedSubject struct {

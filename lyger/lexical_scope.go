@@ -138,16 +138,6 @@ func (d *scopeDeclaration) surfaceForms() []string {
 	return forms
 }
 
-func (d *scopeDeclaration) matches(raw []byte) bool {
-	word := newBindingQuery(raw).word
-	for _, form := range d.surfaceForms() {
-		if form == word {
-			return true
-		}
-	}
-	return false
-}
-
 // prepareEnvironments runs before any binding. Import sites can introduce an
 // environment even when their original statement disappears during expansion.
 func (p *scopePlan) prepareEnvironments(occurrences []sourceOccurrence) error {

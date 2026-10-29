@@ -12,6 +12,7 @@ import (
 // Object ...
 type Object struct {
 	Module           *ModuleDescriptor `json:"Module,omitempty"`
+	prepared         *sourceFileAnalysis
 	header           sourceHeader
 	structureVersion string
 	sourcePath       string
@@ -67,13 +68,24 @@ func (obj *Object) Assemble(meta MetaDict, segSys SegmentalSystem) (CompiledObje
 	extension := ""
 	var literal bool
 	if segSys.Language == "Rust" {
-		contents, suffix, isLiteral, err := prepareSourceFile(obj.Sentence, &segSys)
-		if err != nil {
+		// Header preparation already checked the same source tree. Inherited
+		// metadata is supplied later, so its independent restriction is rechecked.
+		if err := validateGenericInputInheritance(&segSys); err != nil {
 			return CompiledObject{}, sourceObjectError(obj.Location+obj.Name, err)
 		}
-		extension, literal = "."+suffix, isLiteral
+		prepared := obj.prepared
+		obj.prepared = nil
+		if prepared == nil {
+			prepared = &sourceFileAnalysis{}
+			var err error
+			prepared.contents, prepared.extension, prepared.literal, err = prepareSourceFile(obj.Sentence, &segSys, prepared)
+			if err != nil {
+				return CompiledObject{}, sourceObjectError(obj.Location+obj.Name, err)
+			}
+		}
+		extension, literal = "."+prepared.extension, prepared.literal
 		if literal {
-			obj.Sentence.Content = contents
+			obj.Sentence.Content = prepared.contents
 		}
 	}
 	if !literal {
@@ -151,10 +163,18 @@ func BuildObjects(sentences []Sentence) []Object {
 	return reObjs
 }
 
+type sourceFileAnalysis struct {
+	contents  []byte
+	extension string
+	literal   bool
+	imports   []string
+	importErr error
+}
+
 // prepareSourceFile recognizes the literal-file primitive at its owning Object,
 // before source rendering. Native values are opaque while glyph identities and
 // child relationships are parsed by the ordinary segmental system.
-func prepareSourceFile(sentence Sentence, system *SegmentalSystem) (contents []byte, extension string, literal bool, err error) {
+func prepareSourceFile(sentence Sentence, system *SegmentalSystem, analysis *sourceFileAnalysis) (contents []byte, extension string, literal bool, err error) {
 	if err := validateGenericInputInheritance(system); err != nil {
 		return nil, "", false, err
 	}
@@ -180,6 +200,11 @@ func prepareSourceFile(sentence Sentence, system *SegmentalSystem) (contents []b
 			if form != "EA" {
 				if syllable.hasExplicitModifiers || syllable.Count != 1 || syllable.Exponent != 1 || syllable.Polarity {
 					return nil, "", false, lerrors.Unsupported.Errorf("Rust syllable modifiers have no supported repetition, exponent or polarity semantics")
+				}
+				if analysis.importErr == nil {
+					var imports []string
+					imports, analysis.importErr = glyphImports(&glyph, restore)
+					analysis.imports = append(analysis.imports, imports...)
 				}
 				continue
 			}

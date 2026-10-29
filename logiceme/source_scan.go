@@ -178,6 +178,7 @@ func scanSourceProgram(scanner *Scanner) error {
 	if err := scanner.StripCommentBytes(); err != nil {
 		return err
 	}
+	var structures [][]byte
 	for _, kind := range []string{"PROGRAM", "STRUCTURE"} {
 		spans, err := framedStructuralTags(scanner.ProgramBytes, kind)
 		if err != nil {
@@ -186,13 +187,23 @@ func scanSourceProgram(scanner *Scanner) error {
 		if len(spans) != 1 {
 			return lerrors.Syntax.Errorf("Rust document requires exactly one complete %s", kind)
 		}
+		if kind == "STRUCTURE" {
+			structures = [][]byte{scanner.ProgramBytes[spans[0].start:spans[0].end]}
+		}
 	}
-	structures, _, err := ParseTags(scanner.Tags, scanner.ProgramBytes, "Tag", "STRUCTURE")
-	if err != nil {
-		return err
-	}
-	if len(structures) != 1 {
-		return lerrors.Syntax.Errorf("Rust program requires one STRUCTURE tag")
+	// The existing regexp owns irregular framing (including nested tags and
+	// tag-like JSON text). Reuse the span only when its exact delimiters are
+	// unique, preserving the legacy first-match behavior and error classification.
+	if bytes.Count(scanner.ProgramBytes, []byte("<STRUCTURE")) != 1 ||
+		bytes.Count(scanner.ProgramBytes, []byte("</STRUCTURE>")) != 1 ||
+		!bytes.HasSuffix(structures[0], []byte("</STRUCTURE>")) {
+		structures, _, err = ParseTags(scanner.Tags, scanner.ProgramBytes, "Tag", "STRUCTURE")
+		if err != nil {
+			return err
+		}
+		if len(structures) != 1 {
+			return lerrors.Syntax.Errorf("Rust program requires one STRUCTURE tag")
+		}
 	}
 	program := ScannedProgram{Name: scanner.Name, Tags: scanner.Tags, Structure: structures, nativeSource: true}
 	content := structures[0]
