@@ -423,8 +423,7 @@ func (g *Glyph) validateSelectedCase(vowel Segment) error {
 func ParseMetaInserts(definition []byte) ([]byte, [][]string) {
 	var varManager [][]string
 	if bytes.Contains(definition, []byte("{|")) && bytes.Contains(definition, []byte("|}")) {
-		varsParser, _ := LoadRegex("MetaDefs", "") //nolint:errcheck // LoadRegex returns a compiled built-in expression and a nil error.
-		parsedBytes := varsParser.Parse(definition)
+		parsedBytes := metaInsertFrames(definition)
 		for _, parsedByte := range parsedBytes {
 			varUuid := GenerateUuid()
 			varUuid = strings.Replace(varUuid, "-", "", -1)
@@ -437,6 +436,25 @@ func ParseMetaInserts(definition []byte) ([]byte, [][]string) {
 		}
 	}
 	return definition, varManager
+}
+
+// Match the existing non-greedy MetaDefs framing without regexp scratch space
+// proportional to the complete composition. Replacement order remains separate.
+func metaInsertFrames(definition []byte) [][]byte {
+	var frames [][]byte
+	for {
+		start := bytes.Index(definition, []byte("{|"))
+		if start < 0 {
+			return frames
+		}
+		end := bytes.Index(definition[start+2:], []byte("|}"))
+		if end < 0 {
+			return frames
+		}
+		end += start + 4
+		frames = append(frames, definition[start:end])
+		definition = definition[end:]
+	}
 }
 
 // ParseGlyphExpressions parses the glyph expressions wrapped in () and replaces with a uuid placeholder string

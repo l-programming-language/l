@@ -296,9 +296,9 @@ func (r *MetaDict) GetMetas() []*MetaObj {
 
 // GetMetaData Get All MetaObjs Data
 func (r *MetaDict) GetMetaData() []MetaObj {
-	reMeta := []MetaObj{}
-	for _, metaPointer := range r.Metas {
-		reMeta = append(reMeta, *metaPointer)
+	reMeta := make([]MetaObj, len(r.Metas))
+	for index, metaPointer := range r.Metas {
+		reMeta[index] = *metaPointer
 	}
 	return reMeta
 }

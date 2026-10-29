@@ -352,7 +352,7 @@ func injectMetaConjoinments(tag *LucidTag, m MetaDict) *LucidTag {
 
 func injectConjoinments(tag *LucidTag, m MetaDict, freshTree bool) *LucidTag {
 	curExpStr := tag.Expressions[2].ExpressionString
-	for _, mo := range m.GetMetaData() {
+	for _, mo := range m.Metas {
 		if mo.Type == "Conjoinment" {
 			var key string
 			var val string

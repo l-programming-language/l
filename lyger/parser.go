@@ -26,9 +26,9 @@ var parserPatterns = [parseKindCount]*parserPattern{
 	parseInputs:    newParserPattern("<@", "@>"),
 }
 
-// Fixed frames contain arbitrary bytes up to their first closing delimiter.
-// Literal scanning avoids a regex execution bitmap for each source suffix;
-// Expand retains the public replacement operations' capture semantics.
+// Single-line frames end at their first closing delimiter. Multiline frames
+// retain the original expression's repetition semantics. Literal scanning
+// avoids a regex execution bitmap for ordinary source stamps and inputs.
 type parserPattern struct {
 	open, close []byte
 	expansion   *regexp.Regexp
@@ -37,7 +37,7 @@ type parserPattern struct {
 func newParserPattern(open, close string) *parserPattern {
 	return &parserPattern{
 		open: []byte(open), close: []byte(close),
-		expansion: regexp.MustCompile(regexp.QuoteMeta(open) + `(?s:(.*?))` + regexp.QuoteMeta(close)),
+		expansion: regexp.MustCompile(regexp.QuoteMeta(open) + `((?:.*?\r?\n?)*)` + regexp.QuoteMeta(close)),
 	}
 }
 
@@ -53,6 +53,13 @@ func (p *parserPattern) next(source []byte, offset int) ([4]int, bool) {
 		return [4]int{}, false
 	}
 	end += body
+	if bytes.ContainsAny(source[body:end], "\r\n") {
+		match := p.expansion.FindSubmatchIndex(source[start:])
+		if match == nil {
+			return [4]int{}, false
+		}
+		return [4]int{start + match[0], start + match[1], start + match[2], start + match[3]}, true
+	}
 	return [4]int{start, end + len(p.close), body, end}, true
 }
 

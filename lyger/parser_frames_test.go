@@ -2,6 +2,7 @@ package Lyger
 
 import (
 	"bytes"
+	"math/rand"
 	"reflect"
 	"regexp"
 	"testing"
@@ -47,5 +48,32 @@ func TestParserFramesPreserveExpressionSemantics(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestParserFramesKeepMultilineRepetition(t *testing.T) {
+	for _, kind := range []parseKind{parseLineStamp, parseInputs} {
+		pattern, err := kind.pattern()
+		if err != nil {
+			t.Fatal(err)
+		}
+		oracle := regexp.MustCompile(regexp.QuoteMeta(string(pattern.open)) + `((?:.*?\r?\n?)*)` + regexp.QuoteMeta(string(pattern.close)))
+		pieces := [][]byte{pattern.open, pattern.close, []byte("x"), []byte("\r"), []byte("\n"), []byte("\xff")}
+		random := rand.New(rand.NewSource(1)) //nolint:gosec // Fixed parser differential corpus, not security randomness.
+		for sample := 0; sample < 2000; sample++ {
+			var source []byte
+			for count := random.Intn(32); count > 0; count-- {
+				source = append(source, pieces[random.Intn(len(pieces))]...)
+			}
+			parser := newParser(source)
+			got, err := parser.parse(kind)
+			if want := oracle.FindAll(source, -1); err != nil || !reflect.DeepEqual(got, want) {
+				t.Fatalf("%s parse %q: %q, %v; want %q", kind, source, got, err, want)
+			}
+			gotReplacement, err := parser.replaceAll(kind, []byte("<$1>"))
+			if want := oracle.ReplaceAll(source, []byte("<$1>")); err != nil || !reflect.DeepEqual(gotReplacement, want) {
+				t.Fatalf("%s replace %q: %q, %v; want %q", kind, source, gotReplacement, err, want)
+			}
+		}
 	}
 }

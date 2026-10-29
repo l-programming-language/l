@@ -115,7 +115,7 @@ func (b *builder) expand(source *PreparedSource, unit *SourceUnit, parent source
 		statement.occurrence = occurrence
 		statement.Unit = unit
 		statement.Origin = origin
-		isImport, imported, err := b.Gram.isImportStatement(statement.Prepared)
+		isImport, imported, words, err := b.Gram.scanImportStatement(statement.Prepared)
 		if err != nil {
 			return statement.Span.wrapError(err)
 		}
@@ -148,10 +148,6 @@ func (b *builder) expand(source *PreparedSource, unit *SourceUnit, parent source
 			}
 			// Keep a readable binding projection, but resolve its left side only
 			// in the imported unit. This does not expose that unit to the caller.
-			words, err := sourceWords(statementBody(statement.Prepared))
-			if err != nil {
-				return err
-			}
 			use := string(words[0])
 			as := b.Gram.lex.Prepositions["definement.declarative"].Root
 			if imported.alias != "" {
@@ -189,7 +185,7 @@ func (b *builder) expand(source *PreparedSource, unit *SourceUnit, parent source
 			return statement.Span.wrapError(err)
 		}
 		if imported.alias != "" {
-			alias, err := imported.aliasStatement(statement)
+			alias, err := imported.aliasStatement(statement, words)
 			if err != nil {
 				return statement.Span.wrapError(err)
 			}
@@ -201,11 +197,7 @@ func (b *builder) expand(source *PreparedSource, unit *SourceUnit, parent source
 
 // aliasStatement removes the file clause from a validated import, retaining
 // its configured operators and the caller's spelling, location and scope.
-func (i *importStatement) aliasStatement(original SourceStatement) (SourceStatement, error) {
-	words, err := sourceWords(statementBody(original.Prepared))
-	if err != nil {
-		return SourceStatement{}, err
-	}
+func (i *importStatement) aliasStatement(original SourceStatement, words [][]byte) (SourceStatement, error) {
 	expected := 6
 	if i.module != "" {
 		expected++

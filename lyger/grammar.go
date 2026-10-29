@@ -174,28 +174,40 @@ func (g *grammar) importWordPattern(words [][]byte) ([]string, bool, error) {
 			kind, possessive = "POSSESSIVE.OBJECT", false
 		}
 		pattern = append(pattern, kind)
+		// Every import form starts with the configured associative root. Once
+		// that position cannot match, operands need no lexical classification.
+		if len(pattern) == 1 && kind != "USE" {
+			return pattern, false, nil
+		}
 	}
 	return pattern, !possessive, nil
 }
 
 // isImportStatement checks if statement imports from another file
 func (g *grammar) isImportStatement(stmt []byte) (bool, *importStatement, error) {
+	matched, imported, _, err := g.scanImportStatement(stmt)
+	return matched, imported, err
+}
+
+// Expansion reuses statementBody's parsed words for its binding/alias projection;
+// neither projection changes those bytes or the caller's original statement.
+func (g *grammar) scanImportStatement(stmt []byte) (bool, *importStatement, [][]byte, error) {
 	var imported importStatement
 	words, err := sourceWords(statementBody(stmt))
 	if err != nil {
-		return false, &imported, err
+		return false, &imported, nil, err
 	}
 	pattern, valid, err := g.importWordPattern(words)
 	if err != nil || !valid {
-		return false, &imported, err
+		return false, &imported, words, err
 	}
 	for _, rule := range importRules {
 		if checkImportPatterns(rule.pattern, pattern) {
 			imported.load(rule.name, stmt, words)
-			return true, &imported, nil
+			return true, &imported, words, nil
 		}
 	}
-	return false, &imported, nil
+	return false, &imported, words, nil
 }
 
 func loadGrammar(options Options) (*grammar, error) {
