@@ -21,9 +21,39 @@ var parseKindNames = [parseKindCount]string{
 	parseLineStamp: "lineStamp", parseInputs: "inputs",
 }
 
-var parserPatterns = [parseKindCount]*regexp.Regexp{
-	parseLineStamp: regexp.MustCompile(`\$\$HEAD\<((?:.*?\r?\n?)*)\>HEAD\$\$`),
-	parseInputs:    regexp.MustCompile(`\<\@((?:.*?\r?\n?)*)\@\>`),
+var parserPatterns = [parseKindCount]*parserPattern{
+	parseLineStamp: newParserPattern("$$HEAD<", ">HEAD$$"),
+	parseInputs:    newParserPattern("<@", "@>"),
+}
+
+// Fixed frames contain arbitrary bytes up to their first closing delimiter.
+// Literal scanning avoids a regex execution bitmap for each source suffix;
+// Expand retains the public replacement operations' capture semantics.
+type parserPattern struct {
+	open, close []byte
+	expansion   *regexp.Regexp
+}
+
+func newParserPattern(open, close string) *parserPattern {
+	return &parserPattern{
+		open: []byte(open), close: []byte(close),
+		expansion: regexp.MustCompile(regexp.QuoteMeta(open) + `(?s:(.*?))` + regexp.QuoteMeta(close)),
+	}
+}
+
+func (p *parserPattern) next(source []byte, offset int) ([4]int, bool) {
+	start := bytes.Index(source[offset:], p.open)
+	if start < 0 {
+		return [4]int{}, false
+	}
+	start += offset
+	body := start + len(p.open)
+	end := bytes.Index(source[body:], p.close)
+	if end < 0 {
+		return [4]int{}, false
+	}
+	end += body
+	return [4]int{start, end + len(p.close), body, end}, true
 }
 
 func (kind parseKind) String() string {
@@ -33,7 +63,7 @@ func (kind parseKind) String() string {
 	return parseKindNames[kind]
 }
 
-func (kind parseKind) pattern() (*regexp.Regexp, error) {
+func (kind parseKind) pattern() (*parserPattern, error) {
 	if kind == parseInvalid || kind >= parseKindCount {
 		return nil, lerrors.Internal.Errorf("invalid parser mode %d", kind)
 	}
@@ -54,7 +84,15 @@ func (p *parser) parse(kind parseKind) ([][]byte, error) {
 	if err != nil {
 		return [][]byte{}, err
 	}
-	return pattern.FindAll(p.contentBytes, -1), nil
+	var matches [][]byte
+	for offset := 0; ; {
+		match, ok := pattern.next(p.contentBytes, offset)
+		if !ok {
+			return matches, nil
+		}
+		matches = append(matches, p.contentBytes[match[0]:match[1]])
+		offset = match[1]
+	}
 }
 
 func (p *parser) replaceAll(kind parseKind, replacement []byte) ([]byte, error) {
@@ -62,7 +100,17 @@ func (p *parser) replaceAll(kind parseKind, replacement []byte) ([]byte, error) 
 	if err != nil {
 		return []byte{}, err
 	}
-	return pattern.ReplaceAll(p.contentBytes, replacement), nil
+	var result []byte
+	offset := 0
+	for {
+		match, ok := pattern.next(p.contentBytes, offset)
+		if !ok {
+			return append(result, p.contentBytes[offset:]...), nil
+		}
+		result = append(result, p.contentBytes[offset:match[0]]...)
+		result = pattern.expansion.Expand(result, replacement, p.contentBytes, match[:])
+		offset = match[1]
+	}
 }
 
 func (p *parser) removeLineStamps() ([]byte, error) {
@@ -95,11 +143,11 @@ func (p *parser) statementScanBytes() ([]byte, error) {
 			continue
 		}
 		if bytes.HasPrefix(p.contentBytes[i:], []byte("$$HEAD<")) {
-			if match := parserPatterns[parseLineStamp].FindIndex(p.contentBytes[i:]); match != nil && match[0] == 0 {
+			if match, ok := parserPatterns[parseLineStamp].next(p.contentBytes, i); ok {
 				if masked == nil {
 					masked = bytes.Clone(p.contentBytes)
 				}
-				end := i + match[1]
+				end := match[1]
 				for j := i; j < end; j++ {
 					masked[j] = '_'
 				}

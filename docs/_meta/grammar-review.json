@@ -8,7 +8,7 @@
     "lyger/function_definitions.go": "7e34a60852e8ced992ae676afbd001fd736c6428476ec1897c43055887e82c3a",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/grammar_match.go": "8ce853b5f30b0d45c315f84614c6ed87e2df81c6edb905890afa064e0318e227",
-    "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
+    "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
     "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
     "lyger/lowering.go": "29c6a7ae8f4842baa6d20af8d0641fde841319e4945fdc347b0238c49951bdbf",

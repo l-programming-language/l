@@ -146,11 +146,6 @@ func checkLexemeMap(tBytes []byte, lMap map[string]lexeme) (lexeme, string) {
 	return lexeme{}, "NotFound"
 }
 
-// splitGramRule inputs a ruleStr (structure/cased structure of a grammeme and splits it)
-func splitGramRule(ruleStr string) []string {
-	return strings.Split(ruleStr, " | ")
-}
-
 // tokenMatch inputs two token slices and returns whether there's a match and between where
 func tokenMatch(primeSlice []*token, subSlice []*token) (bool, []int) {
 	// Tokens identify source occurrences, so identical spelling is not identity.

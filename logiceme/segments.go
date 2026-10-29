@@ -647,7 +647,7 @@ func (ss *SegmentalSystem) AddLogiceme(segment Segment, load bool, resources fs.
 			if ss.templateCases == nil {
 				ss.templateCases = make(map[string]*segmentCases)
 			}
-			ss.templateCases[segment.Symbol] = parseSegmentCases(segment.Content)
+			ss.templateCases[segment.Symbol] = parsedSegmentCases.load(segment.Content)
 		}
 	}
 	return nil

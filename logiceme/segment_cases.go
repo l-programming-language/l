@@ -1,5 +1,49 @@
 package Logiceme
 
+import "sync"
+
+const (
+	maxParsedSegments     = 32
+	maxParsedSegmentBytes = 64 * 1024
+)
+
+// Resource loading still reads and validates every selected file. Only the
+// immutable parsed cases are shared; selectedTemplateTags copies them before use.
+type segmentCaseCache struct {
+	mu      sync.Mutex
+	entries map[string]*segmentCases
+	order   []string
+	next    int
+}
+
+var parsedSegmentCases segmentCaseCache
+
+func (cache *segmentCaseCache) load(content []byte) *segmentCases {
+	if len(content) > maxParsedSegmentBytes {
+		return parseSegmentCases(content)
+	}
+	source := string(content)
+	cache.mu.Lock()
+	defer cache.mu.Unlock()
+	if parsed := cache.entries[source]; parsed != nil {
+		return parsed
+	}
+	parsed := parseSegmentCases(content)
+	parsed.source = source
+	if cache.entries == nil {
+		cache.entries = make(map[string]*segmentCases)
+	}
+	if len(cache.order) == maxParsedSegments {
+		delete(cache.entries, cache.order[cache.next])
+		cache.order[cache.next] = source
+		cache.next = (cache.next + 1) % maxParsedSegments
+	} else {
+		cache.order = append(cache.order, source)
+	}
+	cache.entries[source] = parsed
+	return parsed
+}
+
 type segmentCase struct {
 	condition string
 	tag       *LucidTag
