@@ -23,7 +23,10 @@ Restoring the required branch check remains a separate explicit decision.
 ## Full validation when requested
 
 When explicitly requested, run `scripts/l-ci bootstrap` if setup is needed, then
-`GOMAXPROCS=4 scripts/l-check`.
+`scripts/l-check`. The shared CI launcher sets child `GOMAXPROCS` to the smaller
+of four and the logical CPUs available to the process, overriding inherited
+values. A two-CPU runner therefore uses two concurrent packages and two parallel
+tests per package; hosts with four or more CPUs retain the four-CPU profile.
 The completion command runs workflow linting, both Go lint profiles, harness
 `doctor` and unfiltered `verify`, and the complete tagged native compilation
 stage. Every stage must succeed with fresh, complete evidence. Focused tests
@@ -199,7 +202,7 @@ go test -p=N -parallel=P -mod=readonly -count=1 -timeout=120s -json ORDINARY_PAC
 go test -p=N -parallel=P -mod=readonly -count=1 -timeout=10m -json NATIVE_HEAVY_PACKAGES...
 ```
 
-`N` is `min(3, effective GOMAXPROCS)` and `P` is effective `GOMAXPROCS` from the harness runtime snapshot. These preserve the existing package cap and Go case default. `-p` bounds each outer test command's builds and test binaries; inherited `GOMAXPROCS`, nested builds and application settings are unchanged. The [budget policy](#validation-budgets) distinguishes phase deadlines from runtime watchdogs.
+`N` is `min(3, effective GOMAXPROCS)` and `P` is effective `GOMAXPROCS` from the harness runtime snapshot. Direct `scripts/l-harness` invocations preserve inherited `GOMAXPROCS`; `scripts/l-ci` and `scripts/l-check` supply the CPU-capped value described above. `-p` bounds each outer test command's builds and test binaries, not nested builds. Native-case admission limits and application settings are unchanged. The [budget policy](#validation-budgets) distinguishes phase deadlines from runtime watchdogs.
 
 Native acceptance cases may run concurrently when projects, resource overrides,
 provenance records and process groups are independent. Per-package admission is
@@ -237,9 +240,10 @@ files/state with verified artifact bytes. Source/resource/publication/cache
 invalidation scenarios still rebuild independently. The
 [implementation ledger](../testdata/integration/IMPLEMENTATION.md) records measured
 results; measurements do not redefine the current budgets or authorize concurrency changes.
-The retained reference profile uses `GOMAXPROCS=4`, `-p=3`, `-parallel=4`, four
-native-case permits for distribution/language/CLI and two for other Phase 1
-packages. The CLI's six Cargo-cache slots are unchanged. Recorded timings apply
+The historical reference profile used `GOMAXPROCS=4`, `-p=3`, `-parallel=4`.
+Current CI caps that profile to available CPUs. The four native-case permits for
+distribution/language/CLI, two for other Phase 1 packages, and six CLI Cargo-cache
+slots are unchanged. Recorded timings apply
 to their host and installed toolchain, not a cold-cache guarantee.
 
 Use [Cargo's HTML timings](https://doc.rust-lang.org/cargo/reference/timings.html)

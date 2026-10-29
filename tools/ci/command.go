@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -40,7 +41,7 @@ func environment(root string, extra map[string]string) []string {
 	}
 	values["GOENV"], values["GOFLAGS"], values["GOWORK"], values["GOTOOLCHAIN"] = "off", "", "off", "local"
 	values["GOCACHE"] = filepath.Join(root, ".harness", "cache", "go-build")
-	values["GOMAXPROCS"] = "4"
+	values["GOMAXPROCS"] = strconv.Itoa(ciParallelism(runtime.NumCPU()))
 	values["PATH"] = filepath.Join(runtime.GOROOT(), "bin") + string(os.PathListSeparator) + values["PATH"]
 	for key, value := range extra {
 		values[key] = value
@@ -55,6 +56,13 @@ func environment(root string, extra map[string]string) []string {
 		env = append(env, key+"="+values[key])
 	}
 	return env
+}
+
+func ciParallelism(cpus int) int {
+	if cpus < 4 {
+		return cpus
+	}
+	return 4
 }
 
 func (r *runner) command(name string, timeout time.Duration, extra map[string]string, executable string, args ...string) ([]byte, error) {
