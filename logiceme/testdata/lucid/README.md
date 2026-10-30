@@ -209,67 +209,43 @@ runtime behavior.
 
 ## Run and retain evidence
 
-The [validation policy](../../../docs/development-harness.md#temporary-validation-pause)
-governs the local pause and authorized hosted runs. Run full local validation only
-when explicitly requested. The focused command below is diagnostic evidence, not
-the ordinary repository gate. From the repository root, select a new absolute
-run directory so previous artifacts remain intact:
+Follow the [validation policy](../../../docs/development-harness.md#temporary-validation-pause).
+Full local validation requires an explicit request; focused checks establish only
+their stated boundary. The [development guide](../../../docs/development-harness.md)
+owns tool provisioning, environment and validation budgets.
+
+For an authorized native-compilation check, run:
 
 ```sh
-export L_LUCID_ARTIFACT_DIR="$PWD/.harness/runs/lucid-native-$(date -u +%Y%m%dT%H%M%SZ)"
-GOMAXPROCS=4 GOCACHE="$PWD/.harness/cache/go-build" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local \
-  go test -mod=readonly -count=1 -run '^TestLucid' -timeout=60s \
-  -json ./logiceme
+scripts/l-ci native
 ```
 
-For explicitly requested full validation, run the separate required native stage:
+This records fresh evidence for Expected and Generated compilation of the
+[current inventory](#current-inventory), including intentional native negatives,
+and the native-metadata arrow regression. It compiles independently authored
+expected projects and actual returned projects without repair. A byte mismatch
+does not block compilation of materializable output; generation failure records
+a blocked phase. The arrow regression reuses the retained plain manifest and
+lock rather than adding a corpus fixture.
+
+The configured native stage compiles only. The three [future cases](#futures)
+have a separate tagged execution check; when that check is requested, run it on
+macOS or Linux with the pinned toolchain and retained dependencies:
 
 ```sh
-GOMAXPROCS=4 GOCACHE="$PWD/.harness/cache/go-build" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local \
-  go test -mod=readonly -count=1 -tags=nativecompile \
-  -run '^(TestLucidNativeCompile|TestNativeMetadataArrowsCompile)$' -timeout=30m -json ./logiceme
+L_LUCID_ARTIFACT_DIR="$PWD/.harness/runs/lucid-futures-$(date -u +%Y%m%dT%H%M%SZ)" \
+  scripts/l-go test -mod=readonly -count=1 -tags=nativecompile \
+  -run '^TestLucidFutureExecution$' -timeout=30m -json ./logiceme
 ```
 
-The native stage has Expected and Generated sub-stages for all 54 exact-generation
-cases, including twelve intentional native negatives per phase.
-It compiles independently authored expected projects to detect authoring mistakes,
-then materializes and compiles actual returned projects without repair. A byte
-mismatch does not block compilation of materializable actual output; generation
-failure records an explicit blocked native phase.
+Retain each fixture's initial lockfile and frozen dependency resolution. Missing
+tooling, dependencies or expired deadlines are failures. Generated start/stop
+scripts remain artifacts. Compilation alone does not establish execution behavior.
 
-The same command also runs the inline native-metadata arrow regression's
-independent Expected and Generated phases. It reuses the retained plain manifest
-and lock under `lucid_nested_rust`; it does not add a frozen-corpus fixture.
-
-Use installed Rust **1.98.1**, edition **2024**, and each fixture's retained initial
-lockfile. Communication uses Tokio **=1.53.1** with `rt` and `sync`; selection adds
-`macros` in a separate manifest and initial lockfile. The original locks remain unchanged. Initial locks are resolved from the independently authored manifests;
-verification never regenerates them or performs version fallback. Native builds
-use the generated manifest:
-
-```sh
-cargo +1.98.1 build --frozen --message-format=json --color=never \
-  --manifest-path <materialized-project>/Cargo.toml
-```
-
-Dependencies must already be available for frozen builds. The subprocess limit
-is three minutes and the separate stage limit is thirty minutes. Missing tooling,
-cache, dependencies, or timeouts are infrastructure failures. Never execute
-Rust binaries or generated start/stop scripts. Successful compilation does not
-establish runtime behavior or parity.
-
-For requested full validation, also retain shared regression results and run the
-repository gate:
-
-```sh
-scripts/l-harness doctor
-scripts/l-harness verify
-```
-
-Focused checks and the native stage do not replace acceptance. When full validation
-is requested, run `scripts/l-check` before claiming it passed; it includes workflow/Go linting,
-unfiltered acceptance and this complete native stage. Preserve existing limits
-and assertions; report each stage's result separately.
+For requested full repository validation, run `scripts/l-check`; it includes
+linting, unfiltered acceptance and the configured native-compilation stage.
+Report any separately requested future-execution results explicitly. Preserve
+assertions and budgets; do not substitute focused checks for the gate.
 
 ## Declaration adapters
 

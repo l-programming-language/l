@@ -22,8 +22,8 @@ Restoring the required branch check remains a separate explicit decision.
 
 ## Full validation when requested
 
-When explicitly requested, run `scripts/l-ci bootstrap` if setup is needed, then
-`scripts/l-check`. The shared CI launcher sets child `GOMAXPROCS` to the smaller
+When explicitly requested, prepare pinned tools and dependencies with
+`scripts/l-ci bootstrap`, then run `scripts/l-check`. The shared CI launcher sets child `GOMAXPROCS` to the smaller
 of four and the logical CPUs available to the process, overriding inherited
 values. A two-CPU runner therefore uses two concurrent packages and two parallel
 tests per package; hosts with four or more CPUs retain the four-CPU profile.
@@ -51,13 +51,10 @@ changed-lines baseline, blanket test exclusion, output cap or automatic CI fix.
 Specific, explained suppressions are reserved for proven invariants and
 intentional best-effort behavior; they must not hide meaningful errors.
 
-The shared stage launcher supports `scripts/l-ci lint`, `scripts/l-ci acceptance`
-and `scripts/l-ci native` for investigation and independent CI jobs. The default
-`scripts/l-check` always runs all of them. It preserves harness interpretation
-and rejects missing, malformed, stale or incomplete reports and native outcomes.
-See the fresh ignored run directories under `.harness/runs` for logs and
-structured results; cached reports or previous successful test outcomes never
-stand in for a new run.
+For investigation, run an individual stage with `scripts/l-ci lint`,
+`scripts/l-ci acceptance` or `scripts/l-ci native`. Fresh logs and structured
+results live under ignored `.harness/runs`; missing, malformed, stale or
+incomplete reports and native outcomes fail the gate.
 
 Bootstrap separates dependency preparation from validation. It verifies the native C compiler,
 installs pinned tools, fetches Go dependencies without changing module files,
@@ -87,10 +84,9 @@ deployment scripts, filters acceptance tests or changes retained locks.
 [CI](../.github/workflows/ci.yml) is enabled and automatically validates Linux
 (Ubuntu 24.04 x64) on PR creation, new commits, and reopening. There is no separate
 push trigger or run for title/description edits. Manual dispatch defaults to
-`linux`; `macos` selects macOS 15 ARM64, and `both` selects both platforms. Each selected
-platform prepares once and runs `scripts/l-check`: formatting, workflow lint,
-both Go lint profiles, doctor, unfiltered acceptance, and Expected/Generated native
-compilation. Hosted checks set `CARGO_INCREMENTAL=0`; local runs retain their
+`linux`; `macos` selects macOS 15 ARM64, and `both` selects both platforms. Each
+selected platform bootstraps once and runs the [full gate](#full-validation-when-requested).
+Hosted checks set `CARGO_INCREMENTAL=0`; local runs retain their
 configured Cargo setting. This changes compilation reuse without changing test
 selection, compiler concurrency or deadlines. A stage failure stops later stages on that platform; the other
 selected platform continues. The stable aggregate `L CI` requires every selected
@@ -136,8 +132,7 @@ Additional pull-request workflows provide separately visible checks:
 - [PR issue link](../.github/workflows/pr-issue.yml) verifies a tracking line such
   as `Closes #123` or `Refs #123` against an accessible GitHub Issue. It also runs
   when the PR description changes, without checking out or executing its code.
-  The [contribution guide](../CONTRIBUTING.md) describes the issue and review
-  requirements. Adding these checks does not change branch-protection settings.
+  The [contribution guide](../CONTRIBUTING.md) describes the issue and review requirements.
 
 Caches separate pinned tools/dependency downloads from Go/native compiler outputs
 shared by all stages on a platform, including the CLI's external native cache.
@@ -165,11 +160,6 @@ The [implementation ledger](../testdata/integration/IMPLEMENTATION.md) records
 validation evidence and its limits. The [native runtime contract](#native-runtime-validation)
 requires observable process and resource cleanup.
 Setup, lint and tagged compilation alone do not establish runtime acceptance.
-
-`main` still requires a pull request, but its required `L CI` status check has
-not been reinstated. Existing deletion and
-force-push protections remain in force; merging and public release are separate
-steps.
 
 ## Commands
 
@@ -285,16 +275,13 @@ staging operation. The helper preserves discovery stdout, stderr and native
 errors separately, and reads Cargo's line-oriented records without discarding
 later artifacts after unrelated output.
 
-The CLI slots and default native-test shards reconcile each complete source tree
-at a stable `StageCurrent` path. Unchanged bytes retain their timestamps.
-Reintroduced bytes matching a path's latest retired hash may retain its timestamp;
-metadata for at most 4096 absent paths stays outside the source tree. History
-stores no source bytes; the supplied tree remains authoritative. Incoming files
-consume old hints before writes;
-filesystem aliases and future timestamps cannot restore stale versions. Missing
-history costs a normal rebuild; malformed state fails closed. Every build still
-invokes Cargo and snapshots its actual artifacts. See the [cache contract](cli-build.md#source-generation-and-native-builds)
-for identity and ownership requirements.
+CLI slots and native-test shards reconcile complete trees at stable `StageCurrent`
+paths. Unchanged bytes retain timestamps; at most 4096 absent-path hash hints may
+restore timestamps when identical bytes return. Hints contain no source, are
+consumed before writes, and cannot restore aliases, future timestamps or stale
+versions. Missing history causes a rebuild; malformed state fails closed. Every
+build invokes Cargo and snapshots its artifacts. The [cache contract](cli-build.md#source-generation-and-native-builds)
+defines source identity and ownership.
 
 Use `CARGO_LOG=cargo::compiler::fingerprint=info` during a controlled rebuild to
 record its reason; Cargo cannot reconstruct that explanation afterward. Compare
@@ -311,12 +298,11 @@ keyed-pattern and generic/lifetime scenarios. The suite guide owns the current c
 verification runs exact-bundle comparisons, malformed-input and focused checks,
 and the 18-template freeze check. Native Rust
 compilation is separately tagged and is **not** part of the untagged acceptance
-command. When explicitly requested, `scripts/l-check` runs both the gate and this stage; ordinary frontend/runtime parity tests also compile and execute their controlled Rust programs:
+command. The [full gate](#full-validation-when-requested) includes the complete
+paired Expected/Generated compilation stage, also available separately:
 
 ```sh
-GOMAXPROCS=4 GOCACHE="$PWD/.harness/cache/go-build" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local \
-  go test -mod=readonly -count=1 -tags=nativecompile \
-  -run '^(TestLucidNativeCompile|TestNativeMetadataArrowsCompile)$' -timeout=30m -json ./logiceme
+scripts/l-ci native
 ```
 
 Use the suite's retained locks and pinned Rust 1.98.1 toolchain; communication
@@ -325,7 +311,10 @@ manifest and retained lockfile. Keep frozen dependency resolution
 and three-minute subprocess limits. The stage compiles independently authored
 expected projects and actual returned projects, without source repair, formatting,
 oracle substitution, lock regeneration or dependency fallback. It does not run
-Rust applications or generated scripts. See the suite guide for artifact retention
+Rust applications or generated scripts. The suite also has three bounded future
+execution checks, separate from this compilation stage and not run by
+`scripts/l-check`. Ordinary frontend/runtime parity tests compile and execute
+their controlled Rust programs. See the suite guide for commands and retention,
 and the [dated results](../logiceme/testdata/lucid/FAILURES.md) for evidence.
 
 The [Service boundary coverage ledger](../testdata/service-execution/coverage.md) maps typed builtin selection, App-only lifecycle, structural standalone Service rejection, retained App-constructed libraries and raw AML library/native-consumer controls. Exact generation, independent expected-Rust compilation, generated-Rust compilation and supervised execution remain separate evidence.
@@ -346,24 +335,9 @@ scoped task; protected bytes still require a finite approved amendment.
 
 Never regenerate hashes or expected values to make an implementation failure pass. Preserve raw expected streams/statuses, actual behavioral assertions, canonical grammar/vocabulary and source-defined builtins. A fixture/oracle amendment requires explicit authorization identifying its exact scope and reason. Historical exceptions grant no standing permission to change expectations. Source expansion preserves declaration targets, typed slots and order; compiler output must follow source semantics rather than fixture-specific substitutions.
 
-The October 25, 2026 organization migration changes only the Go module/import
-prefix from `github.com/jecsand838/l` to `github.com/l-programming-language/l`.
-The ten protected files containing that prefix receive matching import-only
-changes and updated hashes. All behavioral assertions, expected output bytes,
-canonical resources, test obligations and the other 376 protected hashes remain
-unchanged; this amendment does not authorize behavioral oracle changes.
-
-The source-word restructuring has a finite protected-input amendment: the four selected
-Pointer copier references in `lyger/test/native/runtime-lifetimes.l`, the resource
-paths and exact literal observation in `testdata/distribution/api/probe_test.go.txt`,
-and the lifecycle composition expectations and active marker locations in
-`lyger/builtin_operations_contract_test.go`. The shared-support loader in
-`cmd/l/runnable_service_native_test.go` uses the actual source-composed runtime and
-the protected `testdata/phase1/runtime/api.rs.txt` spelling adapters. Its independent
-scenario sources and runtime assertions remain unchanged. The obsolete
-`cmd/l/test/main.aml.txt` oracle for the retired inline Print implementation is
-removed; source bytes, initialized state and source-origin checks remain. Expected
-streams, tool pins, deadlines and frozen backend fixtures remain unchanged.
+The [implementation ledger](../testdata/integration/IMPLEMENTATION.md) records
+revision-specific evidence. Historical migration counts and approved amendments
+do not redefine the current contract or authorize further fixture changes.
 
 The harness checks current files directly. Ordinary build, tests, doctor and verify do not require archived documents, attachments, historical baseline reports, a Git object lookup, or a network fetch for provenance. Initial Go dependency setup can still need network access. Markdown link checking discovers maintained documentation; it does not preserve a closed list of obsolete plans. Repository skills remain under `.agents/skills`.
 
@@ -441,11 +415,11 @@ builds use Rust. L, Lyger and Logiceme remain Go programs. The
 outcomes; the [current integrity contract](#current-integrity-and-amendments)
 protects their inputs and original required outcomes.
 
-The backend Lucid corpus remains compile-only. Supervised frontend/runtime tests
-exercise actual generated Rust binaries, Cargo artifact provenance, native cleanup
-and standalone relocation. They never run deployment scripts. Report exact
-generation, native compilation, runtime and full acceptance separately, with the
-first real failure and downstream blocked phases retained.
+Lucid's [generation, compilation and bounded future execution checks](#rust-source-generation-verification)
+establish separate stages. Supervised frontend/runtime tests cover generated
+binaries, Cargo artifact provenance, native cleanup and standalone relocation.
+No validation stage runs deployment scripts. Report each stage separately,
+retaining the first failure and downstream blocked phases.
 
 ## Validation budgets
 
@@ -504,10 +478,7 @@ members and Service continuation ownership are retired. Main/Basic construction,
 primary Service topology, additional App-constructed libraries and raw AML
 library/bin controls remain unchanged.
 
-The finite contract updates 53 reviewed hashes, removes 67 retired entries and
-adds 31 App-oracle entries, leaving 386 protections. All 302 unrelated protected
-hashes, sixteen original required outcomes and required-absent entries remain.
-App runtime observers preserve their output, cleanup, provenance, publication
-and watchdog obligations. This scope adds no linking feature, library-root
-migration or in-process task runtime. Validation remains subject to the pause;
-static inspection does not establish a fresh native or acceptance result.
+The linked amendment records its exact historical scope. Current protections
+come from [the integrity contract](#current-integrity-and-amendments); App output,
+cleanup, provenance, publication and watchdog obligations remain. The retirement
+adds no linking feature, library-root migration or in-process task runtime.

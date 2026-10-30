@@ -127,9 +127,9 @@
       "source": "docs/cli/installation.md",
       "route": "/docs/cli/installation/",
       "title": "Install L",
-      "description": "Install an L release, prepare the native toolchain, or build the compiler from source.",
-      "section": "CLI",
-      "order": 1,
+      "description": "Build L from source and prepare the native toolchain; release installation is not yet available.",
+      "section": "Learn L",
+      "order": -1,
       "role": "explanatory",
       "generated": false
     },
@@ -658,7 +658,8 @@
       "section": "CLI",
       "order": 5,
       "role": "implementation",
-      "generated": true
+      "generated": true,
+      "sidebar": false
     },
     {
       "source": "docs/releases/index.md",

@@ -113,7 +113,7 @@ test('source inclusions safely fence braces, backticks and tags and retain bytes
   const tree = parseMarkdown(output.replace(/^---\n[\s\S]*?\n---\n/, ''));
   assert.equal(tree.children.filter((node) => node.type === 'code').length, 1);
   assert.equal(tree.children.find((node) => node.type === 'code').value, code.trimEnd());
-  assert.match(output, /existing-witness-not-run/);
+  assert.match(output, /<div data-pagefind-ignore>[\s\S]*existing-witness-not-run[\s\S]*<\/div>/);
   assert.match(output, /\*\*Fragment\.\*\* Source:/);
   assert.match(output, /<summary>Example evidence<\/summary>[\s\S]*existing-witness-not-run[\s\S]*<\/details>/);
   assert.equal(await fs.readFile(path.join(root, 'examples/path with spaces.l'), 'utf8'), code);
@@ -222,7 +222,7 @@ test('frontmatter source ownership is canonical and generated references have no
   assert.equal(metadata.sourcePath, 'docs/start.md');
   assert.equal(metadata.editUrl, false);
   assert.equal(metadata.generatedReference, true);
-  assert.match(output, /Refresh the canonical snapshot/);
+  assert.match(output, /<div data-pagefind-ignore>[\s\S]*Generated reference:[\s\S]*docs\/start.md[\s\S]*<\/div>/);
 });
 
 test('a second indexed dictionary requires both a dedicated page and reviewed public exports', () => {

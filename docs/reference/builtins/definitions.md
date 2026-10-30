@@ -30,8 +30,6 @@ Return completes that invocation; Exit terminates the enclosing program. Neither
 
 Objective describes any Function by wrapping its existing definition in a grouped native source word containing A and the Function. It preserves the input definition and grouping; it does not clone its runtime semantics or infer additional function arguments.
 
-The source-native grouping is explicitly represented as JSON arrays within the framed definition. Treat it as escaped code in documentation, not HTML/AML to be reparsed by the page renderer.
-
 ## Main
 
 Main is a New Adjective describing Service, Object, or Function. Its ordered refinements compose:
@@ -49,8 +47,6 @@ Main does not grant standalone Service execution. A standalone declaration is st
 ## Basic
 
 Basic describes a Generic App with a New Main Service using a Process. It is the composition behind `Create "Hello" as a New Basic App.` The App's source actions supply its body; the orchestrator separately controls launch and output.
-
-Basic is implicit; copying its declaration into a project bootstrap is unnecessary and can alter canonical identity or collide with existing definitions. Custom descriptors can compose equivalent supported structure while retaining their own declaration identity; they must obey constructor target and parameter rules.
 
 ## Failures and visibility
 

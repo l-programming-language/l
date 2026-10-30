@@ -12,6 +12,7 @@ Builtins are available from the selected complete distribution without an explic
 | Function | Function, Functions, Functional, Functioning | Compose FW with typed native signature/body inputs |
 | Function.Invoke | Invoke, Invokes, Invoked, Invoking, Invoker | Bind a selected callable and ordered argument references through KY |
 | Function.Return | Return, Returns, Returned, Returning, Returner | Native-backed return statement inside the supplied Function composition |
+| Delegate | Delegate, Delegates, Delegated, Delegating, Delegator | Compose a call to a selected target through KY |
 | Retain | Retain, Retains, Retained, Retaining, Retainer | Retain a selected shared handle |
 | Objective | Objective | Wrap a Function's source grouping |
 | Main | Main | Describe the canonical bounded Service/Object/Function entry structure |
@@ -27,7 +28,7 @@ The exact source-defined [construction and callable reference](definitions.md) e
 | Run | Run, Runs, Ran, Running, Runner | Checked target; launch without join |
 | Await | Await, Awaits, Awaited, Awaiting | Checked target; join finalized result and claim continuation once |
 | Stop | Stop, Stops, Stopped, Stopping, Stopper | Checked target; request termination without join |
-| Show | Show, Shows, Showed, Showing, Shower | Supported scalar/member observation; no added newline |
+| Show | Show, Shows, Showed, Showing, Shower | Observe supported runtime values; no added newline |
 | Exit | Exit, Exits, Exited, Exiting, Exiter | Terminate whole program, with optional supported failure operand |
 
 Inflection recognition does not make every grammatical owner valid. For example, native Await inside an App body rejects even though its word form is recognized. The [lifecycle reference](lifecycle.md) records supported contexts and failure modes.
@@ -36,7 +37,7 @@ Inflection recognition does not make every grammatical owner valid. For example,
 
 Create, Define, Describe, and Use establish declarations, typed/native definitions, descriptors, aliases, and supported imports. Public/Publicly controls visibility at one declaration site; New and Generic participate in construction. Noun/Verb/Adjective/Adverb are lexical categories, not native scalar types.
 
-The configured vocabulary also contains Put, Place, Get, Take, Import, Export, Have, Equal, articles, prepositions, conjunctions, condition markers, and type/category nouns. Some are grammar-only or bounded roles: Have/Equal participate in conditions; collection actions and While do not have general executable outer lowering. Read the [grammar chapter](../../spec/grammar.md) rather than assuming every configured word is an implemented procedure.
+[Collections](../../spec/collections-and-categories.md) support Put, Place and typed reads. Get, Take and While remain unsupported operations. The [grammar chapter](../../spec/grammar.md) distinguishes executable actions from other configured vocabulary.
 
 ## Runtime members
 

@@ -68,13 +68,25 @@ Lyger preserves canonical application books and projects each App and its additi
 
 The CLI accepts Rust source bundles only. Whole bundles are checked for matching dimensions, safe logical paths, duplicate/colliding entries and valid Cargo target/dependency relationships. The workspace contains an orchestrator binary, ordered App binaries and App-constructed Service libraries. Recursive Classes supply modules and Objects remain files. A leading slash is a logical bundle root, never a host absolute destination. Compiler-owned visibility and module assembly preserve declared ownership; no generated source rewriting is performed.
 
-The lifecycle runtime is a compiler-owned library at `support/runtime`, linked
-into the orchestrator. Its allocated package name avoids application, Service,
-entry and dependency-alias collisions. Its runtime/process source bytes come
-unchanged from the selected resources. This library is built with the workspace;
-it introduces no separately installed runtime or launcher. Splitting it from the
-entry allows Cargo to reuse it when only orchestrator source changes within the
-locked build slot and the library's actual inputs remain unchanged.
+The lifecycle runtime is a library at `support/runtime`, linked into the
+orchestrator under an allocated package name that avoids workspace collisions.
+Its policy comes from authored [L words](../builtins/runtime/eng/dictionary.l).
+Resource generation produces [support.aml](../builtins/runtime/support.aml) and
+[support.json](../builtins/runtime/support.json), containing source fingerprints
+and a dependency-selection index. These are derived resources; the index adds no
+AML fields or logeme interfaces.
+
+With unmodified embedded definitions, the CLI selects runtime declarations from
+that index using the orchestrator's imports, retaining shared type and host
+requirements. When selection is unavailable—including explicit resource providers,
+user-authored native definitions or unrecognized runtime imports—it uses the
+selected provider's full composition. Missing or stale resources reject without
+falling back to embedded files. Logiceme renders complete framed AML in either
+case; only the host/process adapters are copied unchanged.
+
+The runtime builds with the workspace and needs no separately installed launcher.
+Cargo can reuse it when only the entry changes and the library's actual inputs
+remain unchanged within the locked build slot.
 
 Cargo builds every workspace package with Rust 1.98.1, `--frozen`, offline resolution and native target selection. The coordinator isolates caller target/compiler flags and uses retained pinned dependency resolution; it does not fetch arbitrary new dependencies. Builds supervise child process groups and retain their existing deadlines. A private versioned cache retains compiler products, with concurrent builds serialized through artifact snapshotting so publication cannot pick up another source's executable.
 

@@ -214,62 +214,33 @@ Both compiler services accept the same resource filesystem; explicit providers h
 
 ## AML and logeme protocol
 
-`Logiceme.NewLogicemeService(resources).Evaluate(documentBytes)` returns an `Executable` with `ByteArrays`, `MapArrays`, `DependencyArrays` and `EnvDepArrays`. Evaluation scans tagged input, compiles document structure, assembles glyph/template output, then links source files and imports. Every AML book becomes a separate Cargo project; the caller owns building and execution.
+`Logiceme.NewLogicemeService(resources).Evaluate(documentBytes)` returns an
+`Executable` containing ordered source bytes, paths and dependency metadata.
+Each AML book becomes a Cargo project; building and execution belong to the caller.
+`Evaluate` generates Rust and accepts only `IncludeRuntime`. The CLI's separate
+workspace bridge follows the [runtime selection contract](cli-build.md#source-generation-and-native-builds).
 
-`Evaluate` generates Rust and accepts only the `IncludeRuntime` option. L, Lyger and Logiceme remain Go implementations. This is an AML source-generation API; the frontend/CLI separately owns building and execution. The 18 Rust segments remain frozen after reviewed amendments; the [Rust reference](../builtins/README.md) distinguishes their implemented composition contracts from retained but incomplete integration.
+The [AML guide](../logiceme/AML.md) owns framing, topology, metadata, library
+visibility and support assembly. AML is a custom protocol: preserve backticks,
+literal bytes and source ownership. Host-file AML reads remain independent of
+resource-provider selection. The [logical alphabet](../builtins/LOGEMES.md)
+defines the nine letter pairs and composition operators; the [Rust reference](../builtins/README.md)
+defines their bounded implementation contracts, including glyph-local lifetime
+and generic inputs. The eighteen segment templates remain frozen.
 
-The Rust renderer separates initialization records from executable cases, dispatches parsed primitive calls, prepares existing Func/Prop/Op records and forwards ordered category collections through explicit aliases. A renders its package comment and collected `use` imports. Standalone EA retains exact file contents. The [Lucid suite](../logiceme/testdata/lucid/README.md) preserves exact composition scenarios covering scoped selection, iteration, declaration, invocation, callable, trait, empty-composition, keyed-pattern and generic/lifetime witnesses. It compares every returned artifact exactly and compiles both expected and actual projects; its [dated ledger](../logiceme/testdata/lucid/FAILURES.md) records counts and results separately from runtime claims. Three future-composition cases also execute their generated programs; broader runtime behavior belongs to supervised frontend/runtime tests. Generated deployment scripts remain unexecuted.
+The Lucid scanner recognizes `(/`, optional space/tab/CR/newline, then `={`.
+Each subtag requires three complete `={...}=` expressions and closing `/)`;
+nested tags count separately. Original slices preserve literal bytes. Incomplete
+recognized tags produce contextual asset errors through `Evaluate`; the
+extraction-only API returns no slices. Complete openers remain reserved, without
+an additional native quote parser or escape convention.
 
-Rust supports optional glyph-local `Lifetimes` and `GenericTypes` String inputs through existing cases: FW/HY/MY declare parameters, while Y and named KY apply arguments. Templates own the conditional angle-bracket or turbofish punctuation. Callers supply native list interiors, and Rust checks their legality. These inputs are not inherited Class/Object defaults or fields inside Func/Prop/Op records; see the [input contract](../builtins/README.md#lifetime-and-generic-inputs).
-
-Version-2 recursive Classes, Object roots, module descriptors and Service crate targets are integrated through compiler-owned structural header and workspace assembly. A retains its frozen package-comment/import convention; the compiler supplies module, visibility and startup boundaries without adding template interfaces. Library-only bundles omit executable support and reject executable configuration/runtime options. Focused tests compile actual generated libraries against independent consumers. See [current integration limits](../builtins/README.md#current-integration-limits). Leftover advanced preparation/validation entries are not the frozen template inventory, and neither their presence nor old matrix results certify a feature.
-
-| Tagged unit | Meaning |
-| --- | --- |
-| Book | Application |
-| Chapter | Service |
-| Text | Recursive Class; source-file membership, not runtime scope |
-| Sentence | Object/source file |
-| Word | Collection of syllables |
-| Syllable | Composed glyph expression |
-
-The `PROGRAM`, `STRUCTURE`, `OUTLINE`, `JSON`, `SETTINGS` and `CONTENT` records must agree on hierarchy and output locations. This is a custom tagged format, not general Markdown or XML. JSON supplies application/component metadata; settings carry key/value/type records. Syllables require literal backticks, for example:
-
-```text
-<|W|>
-<|S|>`A`</S|>
-<|S|>`FW{|Key: ~main~|}^W^BOD^E{|Statement: ~::std::println!("Hello World!");~|}`</S|>
-</W|>
-```
-
-That fragment still needs the surrounding book, outline, service and sentence. `{|...|}` contains metadata; `^` composes glyphs, parentheses group expressions and `*` separates grouped siblings. Func, Prop and Op encode structured signatures, properties and operators.
-
-| Content category | Action |
-| --- | --- |
-| A Declaration | B Declare |
-| E Calculation | D Calculate |
-| I Evaluation | G Evaluate |
-| O Definition | F Define |
-| U Description | H Describe |
-| V Execution | C Execute |
-| W Operation | K Operate |
-| X Iteration | P Iterate |
-| Y Instantiation | M Instantiate |
-
-A fixed typed backend table registers the 18 segment templates, including Execute/Execution; their presence in backend templates does not add L concurrency syntax. `EA` supports literal file contents. Child glyphs compile first, and parent templates consume their output by category. Linking gathers dependency/import metadata; recursive source composition is the purpose of the backend's scalar/vector/matrix terminology.
-
-Lucid uses conditions, repeated regions and substitutions:
-
-```text
-{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{template body}-|/|}
-(/={tags: Meta.Tags}=={for Operation in Conjoinments.Operations}=={[|Operation|]}=/)
-[|Meta.Key|]
-[|Conjoinments.Operation|]
-```
-
-The shared scanner in `logiceme/lucid.go` recognizes a subtag at `(/`, optional space/tab/CR/newline, then `={`. Each tag needs three complete `={...}=` expressions and closing `/)`; nested tags count their own expressions. Original slices preserve Unicode, whitespace and ordinary delimiter fragments. Incomplete recognized tags return contextual asset errors through Evaluate. The extraction-only API retains its slice-only signature and returns no slices on a scanner error. Complete openers remain reserved; there is no additional native quote parser or escape convention.
-
-Backend linking can add Rust configuration modules, initialization calls, Cargo manifests and setup/start/stop scripts. These scripts are generated artifacts; native build and acceptance never execute them. The typed generation option adds runtime support only for the synthetic orchestrator. Public Evaluate retains default source-bundle behavior. Host-file AML reads remain host-file operations, independently of embedded resource loading.
+The [backend architecture](../logiceme/ARCHITECTURE.md) locates scanning,
+preparation, interpretation and linking. The [Lucid suite](../logiceme/testdata/lucid/README.md)
+records exact-generation and native-compilation obligations plus three bounded
+future-execution checks. Its dated results do not establish broader runtime
+behavior; supervised process evidence belongs to the [runtime ledger](../testdata/integration/IMPLEMENTATION.md).
+Generated deployment scripts remain unexecuted.
 
 ## Runtime test boundary
 

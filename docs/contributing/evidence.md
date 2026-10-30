@@ -11,8 +11,6 @@ A useful specification says both what readers can rely on and how that claim is 
 | Implementation reference | Internal representations, algorithms, generation or host details |
 | Future design | A proposal that does not claim present operational support |
 
-Newly authored specification chapters consolidate maintained contracts and source observations. They have not thereby received independent maintainer ratification or standards-body approval.
-
 ## Implementation support
 
 | Disposition | Meaning |

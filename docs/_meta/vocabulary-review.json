@@ -61,13 +61,13 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "topic": "null",
       "support": "supported",
-      "notes": "Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states."
+      "notes": "Explicit Null initializes an absence value; Show renders null. It is distinct from an unassigned slot and internal None/Unknown states."
     },
     "nouns.thing": {
       "doc": "docs/spec/values.md#thing",
       "topic": "thing",
       "support": "partial",
-      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element, shape and callable identities. No implicit coercion or dynamic arithmetic."
+      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate element types and callable identities. No implicit coercion or dynamic arithmetic."
     },
     "nouns.text": {
       "doc": "docs/spec/values.md#text",

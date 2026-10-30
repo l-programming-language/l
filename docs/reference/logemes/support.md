@@ -18,4 +18,4 @@ Deferred and three-part loops are unsupported. CV/DV and CO/COB provide [bounded
 
 ## Support assets
 
-Config/Cargo templates supply configuration and manifests; runtime and process templates supply lifecycle support. Start/stop templates produce deployment artifacts. These assets are separate from the eighteen segments and L's public standard library.
+Config/Cargo templates supply configuration and manifests; start/stop templates produce deployment artifacts. [Runtime support](../../cli-build.md#source-generation-and-native-builds) combines authored L policy with bounded host adapters. These assets are separate from the eighteen segments and L's public standard library.

@@ -251,8 +251,8 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 | <a id="vocabulary-note-3"></a>3 | Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries. |
 | <a id="vocabulary-note-4"></a>4 | Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API. |
 | <a id="vocabulary-note-5"></a>5 | This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target. |
-| <a id="vocabulary-note-6"></a>6 | Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states. |
-| <a id="vocabulary-note-7"></a>7 | Explicit Thing boundaries retain concrete runtime types; typed reads validate full element, shape and callable identities. No implicit coercion or dynamic arithmetic. |
+| <a id="vocabulary-note-6"></a>6 | Explicit Null initializes an absence value; Show renders null. It is distinct from an unassigned slot and internal None/Unknown states. |
+| <a id="vocabulary-note-7"></a>7 | Explicit Thing boundaries retain concrete runtime types; typed reads validate element types and callable identities. No implicit coercion or dynamic arithmetic. |
 | <a id="vocabulary-note-8"></a>8 | The configured text root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |
 | <a id="vocabulary-note-9"></a>9 | The configured number root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |
 | <a id="vocabulary-note-10"></a>10 | The configured byte root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |

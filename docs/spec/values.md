@@ -56,7 +56,7 @@ Positive and negative zero retain their sign through native encoding. Overflow, 
 
 Number supports equality and order comparisons with Number. Text/Number comparisons do not coerce. The English source grammar has no general arithmetic operator expressions; native logeme calculations are a separate interface.
 
-`IO.Print` uses shortest round-tripping binary64 formatting, corresponding to `strconv.FormatFloat(value, 'g', -1, 64)`. One million prints as `1e+06`, followed by LF. Native integer operands in explicit native definitions retain their own formatting; they do not introduce L integer types.
+`IO.Print` uses shortest round-tripping binary64 formatting, corresponding to `strconv.FormatFloat(value, 'g', -1, 64)`. One million prints as `1e+06`, followed by LF.
 
 <!-- example:values-number-printing -->
 
@@ -74,11 +74,11 @@ Configured `not`/negative forms express negation in conditions, not a general pr
 
 ## Thing
 
-Thing preserves a contained runtime type and checks typed reads. It does not coerce values into Text. Native-definition slots remain a separate interface: IO selects typed Print members for Text, Number, Truth and Null:
+Thing preserves a contained runtime type and checks typed reads. It does not coerce values into Text. IO.Print selects typed rendering definitions for Text, Number, Truth and Null:
 
 <!-- example:values-thing-printing -->
 
-The arguments retain their original types. There is no `Thing(...)` cast: Print binds each supplied value and its native implementation handles the type. This fragment supplies an App body; declaration alone does not run it. The public Print action composes private rendering and writing Functions.
+The public Print action composes private rendering and writing Functions. This fragment supplies an App body; declaration alone does not run it.
 
 Thing does not provide dynamically typed arithmetic, unrestricted reflection, or printing for every application or collection value. Its usable arguments depend on the definition and native consumer.
 

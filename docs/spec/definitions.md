@@ -71,7 +71,7 @@ A body may be one expression, a JSON string array representing a word, or an arr
 | Label | Validated result identifier, distinct from an assignment target |
 | Definition | Instantiated definition with identity and grouping |
 
-Thing slots bind supported scalars without converting everything to strings; this Log body specifically requires Text for its Rust `.as_bytes()` call. Changing Thing to Props would request property records, not parse Text into them. Ordinary stored source-call arguments lower Text, Number, Truth and Null; the public Go DefinitionArgument interface supports the wider table.
+Native Thing slots accept Text, Number, Truth and Null without converting them to strings; this Log body requires Text for `.as_bytes()`. Ordinary source actions also accept supported collection and Pointer arguments, preserving [value ownership](values.md#conversion-and-aliasing-boundaries).
 
 Type, Atoms and Label are frontend roles using existing AML metadata. Nested constructors bind results once, in operand order, before the consuming word; composition slots retain their selected definitions. Native and ordinary Functions share body lowering and bind their own invocation words. Dependencies retain canonical source ownership.
 

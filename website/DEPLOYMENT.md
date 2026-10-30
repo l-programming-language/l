@@ -1,12 +1,9 @@
 # Manual releases and documentation deployment
 
-**Publication is implemented but disabled.** This checkout does not change
-repository visibility, GitHub settings, credentials, environment rules, or
-releases. The committed [release policy](ci-templates/release-policy.json) has
+**Publication is implemented but disabled.** The committed [release policy](ci-templates/release-policy.json) has
 `publicationEnabled: false` and `nativePublisher: null`. Production helpers and
 every publication job reject that state before writing to GitHub or Pages.
-Production publication also requires `l-programming-language/l` to be public;
-manual dry runs can validate the implementation while the repository is private.
+Manual dry runs can validate the implementation while the repository is private.
 
 ## Workflows and source identity
 
@@ -48,9 +45,9 @@ retained raw validation evidence are publicly accessible along with downloads.
 There is no separate distribution repository or metadata commit: the single
 `vVERSION` tag resolves directly to the captured compiler commit.
 
-Publication uses each job's automatic `GITHUB_TOKEN` with the permissions declared
-in its workflow. No GitHub App, personal access token or custom publication
-credential is required. Checksums identify the final distributed bytes.
+Publication uses each job's automatic `GITHUB_TOKEN`; checksums identify the
+final distributed bytes. See [activation](#deliberate-activation-after-review)
+for permissions and credentials.
 
 The first planned version is `0.0.1`. Production docs require a published,
 non-prerelease source release. Pre-1.0 is allowed; GitHub's prerelease flag is not.
@@ -117,11 +114,9 @@ docs-<full-docs-SHA>.native.json
 ```
 
 Existing asset names must match their original hashes; they are never overwritten.
-Pages deploys those exact bytes using the existing `github-pages` environment.
-Build jobs stay read-only, the archive publisher gets contents write, and
-only the Pages job gets pages write and OIDC permission. Checkout never persists
-credentials. The custom domain is retained; activation should enable HTTPS
-without changing DNS or the site's base path.
+Pages deploys those exact bytes using the existing `github-pages` environment
+and custom domain. Checkout never persists credentials; activation preserves
+DNS and the site's base path.
 
 The current append-only docs archive model requires GitHub's immutable-release
 setting to be off for this repository's releases. Activation must disable that
@@ -165,14 +160,11 @@ artifact ID and `mode: docs-correction`; fingerprints must still match.
 
 ## Deliberate activation after review
 
-1. Review and merge this implementation with publication still disabled. GitHub
+1. Merge the reviewed implementation with publication still disabled. GitHub
    must register `release.yml` before its numeric workflow ID can be recorded.
 2. Make `l-programming-language/l` public before production publication and resolve
-   the immutable-release setting described above. No custom publication credential
-   is needed: native and docs publication use `GITHUB_TOKEN`. Configure macOS
-   Developer ID/notarization secrets before the first `v1.0.0` or later production
-   release; the initial `v0.0.1` release needs no custom secrets. These GitHub
-   settings and credentials are not changed by this checkout.
+   the immutable-release setting described above. Configure credentials below
+   according to the planned release version.
 3. Configure `release-build`, `release-publication`, `documentation-publication`
    and `github-pages` environments to permit main only. Keep the existing ldocs.org
    association and enable HTTPS.
@@ -182,21 +174,19 @@ artifact ID and `mode: docs-correction`; fingerprints must still match.
    and `publicationEnabled: true`. Preserve all four
    configured target records and manual-only trigger checks.
 5. Explicitly dispatch a dry run and inspect fresh per-target evidence and
-   clean-home installer smoke results. Dry runs intentionally produce unsigned
-   macOS packages and never access signing credentials. Production dispatches
-   below `v1.0.0` also skip signing; from `v1.0.0` onward they sign/notarize before
-   their own final-package smoke checks. No historical green run establishes
-   the new release revision's status.
+   clean-home installer smoke results. Apply the [signing policy](#releases-in-this-repository)
+   to the subsequent production run; historical green evidence does not establish
+   the new revision's status.
 6. Explicitly dispatch the versioned publication and inspect its binary assets,
    public provenance, deployed identity and HTTPS routes. Native publication and
    Pages deployment are separate operations; use retained artifacts for recovery.
 
-No custom secrets or variables are needed for pre-1.0 releases. Defer the Apple
-secrets until preparing a `v1.0.0` or later production release:
+Pre-1.0 releases need no custom secrets or variables, GitHub App or personal
+access token. Prepare Apple secrets only for `v1.0.0` or later production releases:
 
 | Environment | Values | Purpose |
 | --- | --- | --- |
-| `release-build` | Secrets `MACOS_CERTIFICATE_P12` (base64), `MACOS_CERTIFICATE_PASSWORD`, `SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD` | Required for production `v1.0.0` and later only: import a temporary Developer ID keychain and submit macOS executables to Apple notarization. Pre-1.0 releases and dry runs do not require these secrets. |
+| `release-build` | Secrets `MACOS_CERTIFICATE_P12` (base64), `MACOS_CERTIFICATE_PASSWORD`, `SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD` | Production `v1.0.0` onward: temporary Developer ID keychain and Apple notarization. |
 | `release-publication`, `documentation-publication`, `github-pages` | No custom secrets or variables | Use each job's narrowly scoped automatic `GITHUB_TOKEN`; retain main-only environment rules. |
 
 Keep the repository's default workflow permissions read-only. The native release

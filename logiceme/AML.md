@@ -420,7 +420,7 @@ support artifacts, while library-only packages omit them. IncludeRuntime expects
 the first book to supply composed `l_main`, returning a future whose output is
 `runtime::Result<()>`, and inserts the supervised runtime entry. Companion books
 supply ordinary entries. The wrapper is support, not a replacement for user logic.
-Its native execution tests are separate from the compile-only Lucid corpus.
+Its process-runtime tests are separate from the [Lucid composition suite](testdata/lucid/README.md#current-inventory).
 
 The existing Rust support boundary uses App.Name, App.MainLocation and App.Deps.
 AppMeta.Deps contains a JSON-encoded ordered array of normalized TOML dependency
@@ -449,12 +449,10 @@ inventories, dependency metadata, exact bytes and no unexpected Go files for a
 Rust target. Compile the actual returned project when that stage is required;
 never substitute expected code or formatting repairs. See the
 [minimum composed corpus](../builtins/CONTRACTS.md#verification-contract).
-The [result ledger](testdata/lucid/FAILURES.md) records exact bundles,
-expected/actual compilation contracts and acceptance separately for each scoped
-extension. Those cases remain compile-only. Separate runtime tests
-execute bounded generated native applications; deployment scripts remain
-unexecuted. Consult the [implementation record](../testdata/integration/IMPLEMENTATION.md)
-for their actual status rather than inferring full acceptance.
+The [result ledger](testdata/lucid/FAILURES.md) records revision-specific generation,
+compilation and execution evidence. Three Lucid future cases have bounded execution
+checks; the separate [frontend/runtime record](../testdata/integration/IMPLEMENTATION.md)
+covers supervised processes. Deployment scripts remain unexecuted.
 
 Native fragments are appropriate for atoms and external calls. They must not
 replace the feature under test. EA is the emergency standalone whole-file

@@ -61,10 +61,10 @@ interfaces. Native and ordinary Function bodies share instruction lowering.
 
 Runtime policy is authored in [L source](runtime/eng/dictionary.l). Run
 `scripts/l-go run ./tools/composition` after changing its dependencies, then
-`scripts/l-go run ./tools/composition --check` to verify the derived AML and source
-fingerprints. Logiceme renders that complete AML through the unchanged logemes;
-it does not parse L or accept private frontend plans. Missing or stale source
-fingerprints reject. The host support file contains bounded OS/async/trait adapters.
+`scripts/l-go run ./tools/composition --check` to verify the derived AML,
+fingerprints and selection index. The [CLI contract](../docs/cli-build.md#source-generation-and-native-builds)
+defines runtime selection and provider behavior. Logiceme consumes complete AML,
+not L source or private frontend plans.
 
 ## Typed builtin process implementations
 
@@ -717,10 +717,9 @@ Raw AML library targets and explicit native consumers retain this library-only c
 
 ## Support assets and verification
 
-The eight support assets have responsibilities separate from the eighteen
-segment templates:
+Support resources have responsibilities separate from the eighteen segment templates:
 
-| Template | Intended responsibility |
+| Resource | Responsibility |
 | --- | --- |
 | [config/config.lu](templates/config/config.lu) | Startup configuration. |
 | [install/cargo.lu](templates/install/cargo.lu) | Cargo manifest. |
@@ -728,7 +727,7 @@ segment templates:
 | [operate/stop.lu](templates/operate/stop.lu) | Explicit-PID stop script. |
 | [runtime/main.lu](templates/runtime/main.lu) | Runtime entry and shutdown. |
 | [runtime/host.lu](templates/runtime/host.lu) | Host process, async and trait adapters. |
-| [runtime/support.aml](runtime/support.aml) | Derived source-word composition for lifecycle, capture, errors and formatting. |
+| [runtime/support.aml](runtime/support.aml), [support.json](runtime/support.json) | Derived runtime composition, source fingerprints and selection index. |
 | [runtime/process_unix.lu](templates/runtime/process_unix.lu) | Unix process support. |
 | [runtime/process_other.lu](templates/runtime/process_other.lu) | Unsupported-platform reporting. |
 
@@ -740,13 +739,9 @@ cover process launch, streams, continuation ownership and cleanup. See the
 [implementation evidence](../testdata/integration/IMPLEMENTATION.md) for
 observed outcomes.
 
-Use the [suite reference](../logiceme/testdata/lucid/README.md) for complete
-commands, Rust 1.98.1/edition 2024, retained locks, separate expected/actual native
-compilation and artifact reporting. Communication uses Tokio =1.53.1 with rt/sync features; selection cases add
-macros through a separate manifest and retained initial lockfile. Iteration reuses
-the existing plain and rt/sync manifest/lock variants without a new dependency.
-Keep the three-minute subprocess and thirty-minute stage
-limits. Generated actual files are compiled without repair or substitution.
+The [suite guide](../logiceme/testdata/lucid/README.md#run-and-retain-evidence)
+owns commands, pins, locks and artifact reporting. Compile generated files without
+repair or substitution; preserve the [validation budgets](../docs/development-harness.md#validation-budgets).
 
 Preserve shared interpreter regressions and L/Lyger integration checks.
 The [acceptance guide](../docs/development-harness.md) owns the full repository

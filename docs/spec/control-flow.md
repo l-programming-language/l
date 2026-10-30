@@ -24,7 +24,7 @@ Definite assignment intersects all paths that continue to a read. Exit branches 
 
 <!-- example:control-output-snapshot -->
 
-The first Await makes Output available. Define reads that finalized value once; the second invocation does not turn `snapshot` into a live member reference. The last Show performs a separate read of the latest Output. Both invocations happen to print the same text in this witness, so its `saved\nsaved\n` output alone is not proof of distinct storage; the [frontend witness](../../lyger/phase1_language_test.go) also checks that the saved value retains its binding and is not reevaluated. Neither witness was run here.
+The first Await makes Output available. Define reads it once; later invocations do not change `snapshot`. The last Show reads the latest Output separately. The [frontend witness](../../lyger/phase1_language_test.go) checks that the saved value retains its binding.
 
 ## Comparisons
 
@@ -42,7 +42,7 @@ The current condition operators and their boundaries are:
 | `left greater than equal to right` | Number and Number | Inclusive order grammar |
 | `target has an Error` | Checked App and its Error | Test the selected process operation/invocation error |
 
-The unusual inclusive-order spelling follows the actual grammar sequence; it is not corrected into a conventional operator. Native typed-IR witnesses cover the operators, while a particular source phrase additionally depends on grammar and binding. A grammar match must not be presented as a newly executed program.
+The inclusive-order spelling follows L's grammar. Source phrases must satisfy both grammar and operand typing.
 
 `not` or `no` negates only the condition forms whose grammar owns that modifier. Values do not have general truthiness, Text ordering is rejected, and mixed scalar comparisons do not coerce. The Error in a has condition must belong to the same target; it is not generic collection membership.
 
@@ -54,13 +54,13 @@ If selects a branch from a supported condition. An attached else belongs to the 
 
 <!-- example:values-truth-condition -->
 
-`enabled` is Truth. When it equals true, Await joins Worker; otherwise Exit terminates the program. Every path that reaches the Output assignment has therefore joined. The existing native witness expects `condition\n`. This establishes the displayed equality form, not every operator combination in the table.
+`enabled` is Truth. When it equals true, Await joins Worker; otherwise Exit terminates the program. Every path reaching the Output assignment has joined. Expected stdout is `condition\n`.
 
 **Conditional ownership — excerpt from a frontend witness.** The [member-resolution source](../../lyger/test/member-resolution.l) declares an App, declares Text `x`, and executes the App before these clauses:
 
 <!-- example:control-otherwise -->
 
-The first `else` belongs to the Error test and assigns `y` from the completed invocation. Otherwise belongs to the immediately preceding `If x isnt y`, not the earlier Error test. The source spelling `it's Output` is retained exactly. This excerpt requires those preceding declarations and is not a standalone program. Its complete fixture compares `Hello World!` against the newline-bearing output from Print, so it must not be presented as a successful equality/output tutorial. The [member-resolution tests](../../lyger/member_resolution_regression_test.go) inspect binding and emitted instructions; no runtime success is claimed here.
+The first `else` belongs to the Error test and assigns `y` from the completed invocation. Otherwise belongs to the immediately preceding `If x isnt y`. This [binding fixture](../../lyger/member_resolution_regression_test.go) requires the earlier declarations; its Text comparison differs by Print's final newline.
 
 The grammar can parse multiple conditions, but outer lowering explicitly rejects joined condition lists. Consequently `and`/`or` in the vocabulary does not establish general boolean short-circuiting. Coordination of actions, declarations, and operands is a different supported use of conjunctions.
 
@@ -68,11 +68,11 @@ The grammar can parse multiple conditions, but outer lowering explicitly rejects
 
 While and three-part source loops remain unsupported. [Collections](collections-and-categories.md) support Put, Place and typed reads; configured Get/Take words do not introduce further operations.
 
-**Unsupported outer loop — explanatory source fragment, static inspection only.** This illustrates the configured While shape; it is deliberately not a runnable loop recipe:
+**Unsupported loop — source fragment:**
 
 <!-- example:control-while-unsupported -->
 
-The [grammar's `conditional.while` rule](../../lexicon/eng/grammar.json) recognizes a condition followed by an imperative clause. The [instruction builder](../../lyger/instructions.go) accepts If/else/Otherwise conditionals and rejects the While kind. It supplies no supported way to repeat Show; use it to recognize the unsupported boundary.
+The [grammar](../../lexicon/eng/grammar.json) recognizes this While shape, but the [instruction builder](../../lyger/instructions.go) rejects it.
 
 The Rust backend separately supports bounded iteration compositions described in the [target reference](../../builtins/README.md#iteration-and-definition-contract). It rejects the three-part X form. Native loop composition does not confer source-level iteration semantics, collection ordering, bounds behavior, or break/continue vocabulary.
 
@@ -86,7 +86,7 @@ D/E calculates native expressions; G/I selects branches. A source-defined native
 
 Show is an outer observation instruction. It writes Text bytes unchanged and formats supported runtime values without adding a newline. Direct App and Error display rejects. It does not implicitly join a process, replay unrelated captured output, or turn child stderr into stdout. Use explicit Await before Output when completion is required.
 
-IO.Print is an imported application/native action that adds one newline. See [IO](../stdlib/eng/io.md#output-and-newlines) for raw-byte and numeric behavior. Mixing Print and Show without accounting for that newline is a real source-program error, not a reason to trim runtime output.
+IO.Print is an imported action that adds one newline. See [IO](../stdlib/eng/io.md#output-and-newlines) for raw-byte and numeric behavior.
 
 **Supported application print and outer observation — complete canonical example.**
 

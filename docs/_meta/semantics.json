@@ -9,7 +9,7 @@
     "builtins/runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
     "builtins/runtime/eng/foundations.l": "3f21a1e80f4249af50a48d35149f2144b00fa3c448eae1a3ab465b97b6044fd7",
     "builtins/runtime/eng/number.l": "7d9f41f3990343b3ec6c63f5b03ca4762c5fab7207641d20515327ff71012f2b",
-    "docs/cli-build.md": "6f8e150591f7a1347cce5c5d1c4e1e810a2bbc71f67c007593d0ad9acfa558c8",
+    "docs/cli-build.md": "1610aca679670fd07d05cdce15142e5136df7fb20dcbabf65f73ec4e779324e6",
     "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "logiceme/logiceme_service.go": "0452128b7476dcd377bbceb6e96268498777e1bc4a15331994cff0f87c139bbb",

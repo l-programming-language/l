@@ -5,7 +5,7 @@
   ],
   "executedStages": [],
   "sourceHashes": {
-    "builtins/README.md": "4c5b39051c4924efefac3eb3ec097544e9c34d8db65a558509f191a12bce7888",
+    "builtins/README.md": "3f0865288ba3db13d96b9242ccdb3676c297f7dd8c1a0437fe519581e48cac2e",
     "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
     "builtins/segments/consonants/define.lu": "d2b292d8fd284d677f7866cb7ae745adef00cb9ca6b3d92c92ec609e36de2899",

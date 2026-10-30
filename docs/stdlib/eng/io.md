@@ -22,7 +22,7 @@ Print accepts supported Text, Number, Truth and Null operands and evaluates each
 
 Text bytes are written unchanged, including whitespace, NUL and invalid UTF-8.
 
-Print does not accept every L value: Lists, Dictionaries, Pointers and internal compiler states have no general Print contract. Native definitions can supply additional native values through the private Rust implementation.
+Lists, Dictionaries, Pointers and internal compiler states have no general Print contract.
 
 ## Output and newlines
 
@@ -44,7 +44,7 @@ Number uses binary64. Print uses the shortest round-tripping representation, inc
 | `0.00001` | `1e-05\n` |
 | `-0` | `-0\n` |
 
-Large source integers may already have rounded; Print reports that binary64 value. Nonfinite Numbers are rejected. Native integer arguments supplied explicitly through a native definition retain their own formatting.
+Large source integers may already have rounded; Print reports that binary64 value. Nonfinite Numbers are rejected.
 
 ## Errors and return behavior
 

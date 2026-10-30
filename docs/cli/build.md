@@ -31,7 +31,7 @@ In `v0.0.1`, builds target the host OS and architecture; `-os`/`--os` is rejecte
 
 ## Help
 
-`--help`, `-h`, and `-help` show [CLI usage](../../cmd/l/command.go) alone or after `build`, before a filename. Help writes to stdout and returns 0, or 1 if writing fails. After a filename, a help flag is another positional argument.
+`--help`, `-h`, and `-help` show [source-derived CLI help](../_generated/cli-help.md) alone or after `build`, before a filename. Help writes to stdout and returns 0, or 1 if writing fails. After a filename, a help flag is another positional argument.
 
 ## Version
 

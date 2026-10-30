@@ -48,7 +48,7 @@
           "doc": "docs/spec/values.md#null-and-internal-states",
           "topic": "Null",
           "support": "supported",
-          "notes": "Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states."
+          "notes": "Explicit Null initializes an absence value; Show renders null. It is distinct from an unassigned slot and internal None/Unknown states."
         },
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
@@ -180,7 +180,7 @@
           "doc": "docs/spec/values.md#null-and-internal-states",
           "topic": "Null",
           "support": "supported",
-          "notes": "Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states."
+          "notes": "Explicit Null initializes an absence value; Show renders null. It is distinct from an unassigned slot and internal None/Unknown states."
         },
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
