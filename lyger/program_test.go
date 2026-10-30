@@ -38,7 +38,7 @@ func TestDemoCompilationRetainsSemanticProgram(t *testing.T) {
 	if err != nil || printDefinition == nil || printDefinition.ID != "IO.Print" {
 		t.Fatalf("selected import lost IO.Print: %v", err)
 	}
-	if comp.Memory["IO"] != nil || comp.Memory["Log"] != nil || comp.Memory["Logger"] != nil {
+	if comp.Memory["IO"] != nil || comp.Memory["Write"] != nil || comp.Memory["Discard"] != nil {
 		t.Fatal("selected IO import published its unit bindings")
 	}
 	output := comp.Memory["y"].Value

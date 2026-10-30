@@ -135,13 +135,13 @@ func (r semanticResolver) lookupMember(owner *record, tail []byte) (*tokenBindin
 		return nil, lookupPending, nil
 	}
 	qualified := owner.ID + "." + string(tail)
-	binding, err := resolveTokenBinding([]byte(qualified), owner.members)
+	binding, err := r.scopes.resolveMemberBinding(owner, []byte(qualified))
 	if err != nil || binding != nil {
 		return binding, lookupFound, err
 	}
 	for dot := bytes.LastIndexByte(tail, '.'); dot > 0; dot = bytes.LastIndexByte(tail[:dot], '.') {
 		prefix := []byte(owner.ID + "." + string(tail[:dot]))
-		member, err := resolveTokenBinding(prefix, owner.members)
+		member, err := r.scopes.resolveMemberBinding(owner, prefix)
 		if err != nil {
 			return nil, lookupPending, err
 		}

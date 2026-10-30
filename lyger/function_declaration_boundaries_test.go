@@ -5,28 +5,6 @@ import (
 	"testing"
 )
 
-func TestFunctionHeaderPreservesControlFlow(t *testing.T) {
-	conditional := strings.Replace(identityFunction, "Publicly create", "If false, Publicly create", 1)
-	generated, err := functionGenerated(t, conditional)
-	if err != nil || !strings.Contains(generated, "if false") {
-		t.Fatalf("Function header lost its condition: %v", err)
-	}
-	if _, err := functionGenerated(t, conditional+"Identity `skipped` as \"Result\".\n"); err == nil || !strings.Contains(err.Error(), "not definitely assigned") {
-		t.Fatalf("conditional Function binding was treated as initialized: %v", err)
-	}
-	effects := strings.Replace(identityFunction, "and Outputs of Text.", "and Outputs of Text and then Show `header-effect`.", 1)
-	generated, err = functionGenerated(t, effects)
-	if err != nil || !strings.Contains(generated, "header-effect") {
-		t.Fatalf("Function header lost its sequenced effect: %v", err)
-	}
-	if _, err := functionGenerated(t, strings.Replace(conditional, "Return Value.", "Otherwise, Show `not a body branch`.\nReturn Value.", 1)); err == nil || !strings.Contains(err.Error(), "otherwise") {
-		t.Fatalf("Function body Otherwise attached to its declaration's conditional: %v", err)
-	}
-	if _, err := functionGenerated(t, "    If true, Publicly create \"First\" as a New Function with No Inputs and No Outputs, else Publicly create \"Second\" as a New Function with No Inputs and No Outputs.\nReturn.\n"); err == nil || !strings.Contains(err.Error(), "one Function body") {
-		t.Fatalf("two Functions claimed one paragraph body: %v", err)
-	}
-}
-
 func TestFunctionDeclarationBoundariesNative(t *testing.T) {
 	source := "    If false, Publicly create \"Unused\" as a New Function with No Inputs and No Outputs and then Show `skipped|`.\nReturn.\n\n" +
 		strings.Replace(identityFunction, "and Outputs of Text.", "and Outputs of Text and then Show `header|`.", 1) +

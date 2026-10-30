@@ -250,6 +250,12 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 		return prepared, err
 	}
 	for _, site := range sites {
+		if handled, err := c.prepareDefinitionBindingSite(stmt, site, &prepared); handled || err != nil {
+			if err != nil {
+				return statementRegistration{}, err
+			}
+			continue
+		}
 		if handled, err := c.prepareFunctionSite(stmt, site, &prepared); handled || err != nil {
 			if err != nil {
 				return statementRegistration{}, err

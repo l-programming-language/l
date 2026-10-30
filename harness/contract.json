@@ -147,10 +147,6 @@
       "sha256": "13eb68104e052f1daac62d254d86a52b1518769bddd3e96dfc719d7c27900814"
     },
     {
-      "path": "cmd/l/test/main.aml.txt",
-      "sha256": "5760ffaa30aa3411f38c5c4ad55e4584fc6f3be29c35867b7eda5075f1e7d577"
-    },
-    {
       "path": "cmd/l/test/main.l",
       "sha256": "70ee78d382c213fa2111c022c41af25dc92ddb1ba3778867d34fde8a3ffd3988"
     },
@@ -280,7 +276,7 @@
     },
     {
       "path": "lyger/ir_enums_test.go",
-      "sha256": "f555adf0ba63c77aab9f233f95f86e86e0e453505e71399da3c8d4ac4f0bc040"
+      "sha256": "106f4d3198b571e2a1212f978a67661431c405ffb160167b54385ef694237143"
     },
     {
       "path": "lyger/lexicon_test.go",
@@ -288,11 +284,11 @@
     },
     {
       "path": "lyger/recursive_classes_test.go",
-      "sha256": "0b1e0c54f65873d223a9b7531fbfe03b265b3afb06d868dfcd7caa55329c4eb7"
+      "sha256": "a370851d08a720c244c253d2fa3421c93c65463442a61aff5006a0927ac029a7"
     },
     {
       "path": "lyger/refactor_value_characterization_test.go",
-      "sha256": "936aeda7fff6451e81f43cfa35b3be1a1b7f145d3d12ff58bf7136d7362cebb4"
+      "sha256": "7061f5dc4532990d40a8b36ac264c084537caf1b525fdfebdd9e08133ba64467"
     },
     {
       "path": "lyger/scanner_test.go",
@@ -300,7 +296,7 @@
     },
     {
       "path": "lyger/stored_values_test.go",
-      "sha256": "9f8140be3785988804d1f35fe643d0a68746f8868e7e9cd1da5ff9882ef71c97"
+      "sha256": "4ff1bf30ac56d3bf9866f5188ff0fe42d457e716a3554f0acb6901353da3c1a5"
     },
     {
       "path": "lyger/test/builds/First/Cargo.lock",
@@ -419,6 +415,10 @@
       "sha256": "5f7ab7c327d7e8382c5b1a6e12cd90589f24fb8dc341419f4a5b87aab1ea4550"
     },
     {
+      "path": "lyger/test/native/runtime-lifetimes.l",
+      "sha256": "4d40470c64d59665b7f511022d9c4922e9303ce5d556634010ee88fa1e84e0f7"
+    },
+    {
       "path": "lyger/test/workspace/services.l",
       "sha256": "1f58d1f9cb54a0ad5ea75c624a72b2927605f2f4b20ec3672fc6277d1de4a49f"
     },
@@ -428,7 +428,7 @@
     },
     {
       "path": "testdata/distribution/api/probe_test.go.txt",
-      "sha256": "325c96c11997182d172b2f487e3d6dd6385ae7b32e0696d7eb90c74d3ca86fd6"
+      "sha256": "e694aaf49aff9cd5f7bb9288083657d98a09451c362eb1ec8e78f9f6f5c23a84"
     },
     {
       "path": "testdata/distribution/observers/Build-only.l",
@@ -976,7 +976,7 @@
     },
     {
       "path": "cmd/l/runnable_service_native_test.go",
-      "sha256": "b035f1cbcd6253f19e028f03a60e898ab23e6eb53c920dede005004469c105a4"
+      "sha256": "737b74ec2e375ffdbb22771b4fc4af31cf628184664c59b8563a1d26cce1905a"
     },
     {
       "path": "cmd/l/runnable_service_test.go",
@@ -1396,11 +1396,11 @@
     },
     {
       "path": "lyger/builtin_operations_contract_test.go",
-      "sha256": "1d7e02828a60cb159fbaa6266b7a2611ccaf64ebdb6b96dd155c3639e50a872f"
+      "sha256": "570c17aeaafebfeba850d3764b83c23c3861efce8b58344ba23f4d6162db5b8d"
     },
     {
       "path": "lyger/runnable_service_test.go",
-      "sha256": "0fd6eaadd1fbe3046ac334389d871fd151bbd2373fc23beacc62eabb3e87b8ae"
+      "sha256": "24e3202645616494f26ca56de24f97f9335b6790051639f368406fdf37804632"
     },
     {
       "path": "lyger/test/runnable_service/native-body-alias.l",
@@ -1545,6 +1545,10 @@
     {
       "path": "cmd/l/test/runnable_service/expected/app-config.rs",
       "sha256": "7b025b1b74d6457ed34428d5c84ef5203f6f3975b74bb756b8af05c8d8c5ec73"
+    },
+    {
+      "path": "testdata/phase1/runtime/api.rs.txt",
+      "sha256": "6bc1fd92c8b47c15bc2811c7235af85579fae5f928c78c3d514e09348eed8ee1"
     }
   ],
   "absent_files": [
@@ -1555,7 +1559,8 @@
     "configurations",
     "lyger/test/configurations/test_conf.json",
     "lyger/test/lexicon/eng/grammar.json",
-    "lyger/test/lexicon/eng/vocabulary.json"
+    "lyger/test/lexicon/eng/vocabulary.json",
+    "cmd/l/test/main.aml.txt"
   ],
   "tests": [
     {

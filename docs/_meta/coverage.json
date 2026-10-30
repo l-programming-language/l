@@ -1,79 +1,845 @@
 {
-  "sourceHashes": {
-    "lyger/types.go": "ccefcec0547794da4a35f9f58ad00131b5dab02808d4dbb910eef39102f951eb",
-    "lyger/value_kinds.go": "c58424bedff22327c0557efd0e4b4b3cc0ff2ba4a6ab4f642e0f2177025ed8aa",
-    "lyger/utilities.go": "2e9aa1197bb2a1f8569dc2e668b8a1219d4812384d5a8cb365d41a270fa280b0",
-    "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-    "lyger/native_encoding.go": "19785ba3dd27e613fa7a35ec5a60fef78a087743b965124087d535416c7aaa0a",
-    "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba",
-    "lyger/grammar.go": "a6ec88acca64421c18f229395f39b4f9f5c5e03feca1c630fa64916a3f1e7f3b",
-    "lyger/runtime_values.go": "0299dc9895f29ab358763466e58e6b2a59e20c0c7dc1009cdb88e8de3e6332bf",
-    "lyger/runtime_values.rs": "277fbc8c71f50e49e3ff89709a2f0e6f4ef0edf74453854f882a171e0ce7f97e",
-    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
-    "lyger/runtime_values_plan.go": "81c3ad15087143c8cc43f42e4704c8c5147d0690298dd3ac18ef7814f68a8c13",
-    "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
-    "lyger/semantic_resolution.go": "a8e9eb4140547b6e488b5869ed73b7754181d3296918900c51c989d09df2e3f8",
-    "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
-    "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
-    "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
-    "lyger/instructions.go": "230b1a93cdf475156264b6531262072cc0a3f6599a2b26883c45f91355a7b3a6",
-    "lyger/source_topology.go": "81c7cb6e966f8f859396c572e72ff124cf95c90244ad597cb44e6b52db5e8fdb",
-    "lyger/construction.go": "4462bf8ddcc940d085e92f11fa951371caff1720f6c0ee22d5f8f1e921b501b6",
-    "builtins/eng/core.l": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
-    "lyger/source_functions.go": "aea627402c886b8289eda7da8318637c744f2f7029781106d419b5a7d9e9a8c1",
-    "lyger/orchestration_functions.go": "f13b92c9caf1c1d3c77105c2a69785e55a16ba88e3ca73347fd925ede99041fc",
-    "lyger/orchestration_program.go": "2384e9b51b00d1abaff9c3f17a6be198c366fc0177efdd5bf0fe818903d5d5f0",
-    "lyger/program_runtime.go": "a5459e008c9233e9786b44cc7475fc6a1e7479141c01849b240d33b774f0a5ed",
-    "lyger/binding.go": "d9cfe48702fa909c7f5a083a35e59417202c23bc41b408ac33028b879f24ba33",
-    "lyger/scope.go": "90539a132dd1b8695f6a273a63da33776a38612ace8ff92e45b2e0b7e1f3649a",
-    "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
-    "lyger/semantics.go": "5ddc61918206d280737b0998706eb8b4feb2c4b9180bd7a175b505825df77346",
-    "docs/cli-build.md": "6f8e150591f7a1347cce5c5d1c4e1e810a2bbc71f67c007593d0ad9acfa558c8",
-    "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
-    "lyger/orchestration_emit.go": "01435407fafcd88b3dd564bb3237345a27ac89f1364c727e8cf1cb933b948a43",
-    "lyger/orchestration_plan.go": "82887b2646fcc51bab55a97c6ccf6e504bd992ba9e21f06bc1fc8655be949a8d",
-    "lyger/registration.go": "2ef2c5f1d08897b7754d16bf56b8a0ff069a17c2f6171985e6374150de8ca4d5",
-    "lyger/builder.go": "5888114b3e4068d85014bd8b8c2b3bf0041f922fef7822c20f3797e079734554",
-    "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
-    "lyger/publication.go": "6ecc4e84b0428d14aa5ea402d478ea1a7607c2f4fa19e123462251ed333dcc17",
+  "inputs": {
     "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
-    "lyger/ir_kinds.go": "d552e2cd21079344f25317d13aec439bb665d269678a879169ac065b45058a79",
-    "lyger/runtime_values_emit.go": "9ffc587b5dd63e10d90bc013af7b86c25b6076e3cb23fa3b7a6b7002b779b04c",
-    "stdlib/index.json": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1",
-    "stdlib/eng/io/dictionary.l": "40f07155226ddb60830dc847829f071d2e26c5fed240210ded1a80ee6c269e1f",
-    "lyger/lexical_scope.go": "5bad4be8d5dd5fba403b2b56ade33e1a3b74cefaef83a7fd2db67c9c03684c83",
-    "lyger/grammar_types.go": "0b5f68eee4eec3d5763a29479683ed258143ad241f389b08182449aa4370eb77",
-    "lyger/lexicon.go": "f5e19a1e702b87ae564521b1389d0b647e9525d57a680f49419452aab6c83bd8",
-    "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
-    "lyger/grammar_match.go": "bb6700a68686d2d88457df89053d38298c2230b3cc324c2f662e41665c2a5d53",
-    "lyger/instruction_captures.go": "d0ff0ee3d439fb491dcb7b03e5455faf85d14a2f26a3b93e5f526f4b6c78925f",
-    "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
-    "lyger/orchestration_capture_emit.go": "a6c0155bf6948e434e303a108bc19fff493adb3ef4d1469f5ea79e39cb01ce75",
-    "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
-    "builtins/README.md": "84af82bef5776cc5240d452a88c7d5cce5e6af34ec08b17e61986fa7672d189e",
-    "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",
+    "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
+    "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
+    "cmd/l/command.go": "c6b04031528b51d3474fafa701093ecc5e7010359f4408eac767e1b88d94102f",
+    "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
+    "logiceme/lucid_generation_test.go": "67bef27205fcba5d5c53067eb5c68a67925bd0da03edca5f1de516df1f475a2a",
+    "logiceme/testdata/lucid/templates.sha256.json": "d58dd55cf122abddc073a41259995c2bfb2d4e2639c41592f22bb4982378fa1a",
     "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
-    "builtins/segments/vowels/calculation.lu": "18fa1ec1c7e13df95c5581646418aaa457f7779dac06fc44015ae20f1d4ebf86",
-    "builtins/segments/consonants/evaluate.lu": "560028f7aa15f57e57847f813cfee74fb32fac6b742a97fb414261aa897309f4",
-    "builtins/segments/vowels/evaluation.lu": "82253180544936ccbb5c0cbc7b8c48874bae363b50ab8593da994094461b9645",
+    "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
     "builtins/segments/consonants/define.lu": "d2b292d8fd284d677f7866cb7ae745adef00cb9ca6b3d92c92ec609e36de2899",
-    "builtins/segments/vowels/definition.lu": "3fa695123d814616bfb8c225dc200da5f31d563b6f787c98b54975aa41b8a971",
     "builtins/segments/consonants/describe.lu": "e9965c87b7913cd803e1df673b96db0886ea157ac51382004177070a5579d271",
-    "builtins/segments/vowels/description.lu": "854c95540f06905bb5ee1f166399c4edd3c1381f7afd6c79e469c76dbb3853a1",
-    "builtins/segments/consonants/operate.lu": "9685b54f1e5a28986a928d2f31fd7561ac80eb852225b76079a6988cfa05409a",
-    "builtins/segments/vowels/operation.lu": "4b439302f6c59f3eea42df4be91e788b50739c19ad290d1448f493e591699824",
-    "builtins/segments/consonants/iterate.lu": "b9d9e295e4587229dc72b12ea491abe27d79e38f19fc6af09347444236e2ec4f",
-    "builtins/segments/vowels/iteration.lu": "6321d1948be328cdcbe2a520bbf5263043f774eccb4759e7dfe930397ac06af4",
-    "builtins/segments/consonants/instantiate.lu": "864fa161e1edaefe8282fd5d916de7586cb2503680a0001c2f9b35321d95353f",
-    "builtins/segments/vowels/instantiation.lu": "9a19335f7d45435346f3c7e065000e6e6e12ea22e0798ad14381084a5a7e9c8d",
+    "builtins/segments/consonants/evaluate.lu": "560028f7aa15f57e57847f813cfee74fb32fac6b742a97fb414261aa897309f4",
     "builtins/segments/consonants/execute.lu": "8f756c87b1b5290f61f43db52a140ac0aa0a89a77692a19ad67170aec89c5927",
+    "builtins/segments/consonants/instantiate.lu": "864fa161e1edaefe8282fd5d916de7586cb2503680a0001c2f9b35321d95353f",
+    "builtins/segments/consonants/iterate.lu": "b9d9e295e4587229dc72b12ea491abe27d79e38f19fc6af09347444236e2ec4f",
+    "builtins/segments/consonants/operate.lu": "9685b54f1e5a28986a928d2f31fd7561ac80eb852225b76079a6988cfa05409a",
+    "builtins/segments/vowels/calculation.lu": "18fa1ec1c7e13df95c5581646418aaa457f7779dac06fc44015ae20f1d4ebf86",
+    "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",
+    "builtins/segments/vowels/definition.lu": "3fa695123d814616bfb8c225dc200da5f31d563b6f787c98b54975aa41b8a971",
+    "builtins/segments/vowels/description.lu": "854c95540f06905bb5ee1f166399c4edd3c1381f7afd6c79e469c76dbb3853a1",
+    "builtins/segments/vowels/evaluation.lu": "82253180544936ccbb5c0cbc7b8c48874bae363b50ab8593da994094461b9645",
     "builtins/segments/vowels/execution.lu": "210f5f882123c4a64d33ebb539d2f3c61182dce55a2c862e9615e57a7871d5e8",
-    "logiceme/glyph_roles.go": "ebc293803656702784d9380ab1c0dd5d0a29161d19898c9abd0f3138190dcdae",
-    "logiceme/glyph_metadata_validation.go": "7ad22b69af7b2b17f13285676fa0957ece073714dca1f3c6a5b12f9d44a0ae0c",
-    "logiceme/glyph_prepare.go": "092b15d38cce7b045c1a17c313e2a7256ad3400091f9d6d366151858d2e49021",
-    "logiceme/segments.go": "93432a8e201fa5ae444c06d4fbd533aec5264f2a9bf930a2f0e8c82c278733a7"
+    "builtins/segments/vowels/instantiation.lu": "9a19335f7d45435346f3c7e065000e6e6e12ea22e0798ad14381084a5a7e9c8d",
+    "builtins/segments/vowels/iteration.lu": "6321d1948be328cdcbe2a520bbf5263043f774eccb4759e7dfe930397ac06af4",
+    "builtins/segments/vowels/operation.lu": "4b439302f6c59f3eea42df4be91e788b50739c19ad290d1448f493e591699824",
+    "logiceme/testdata/lucid/callable-invalid/bw-capture.aml.txt": "e4e7ea49f4c045de039c6c008a58b937a06a624966c46549463f6ce2c8279230",
+    "logiceme/testdata/lucid/callable-invalid/bw-duplicate-input-prop-key.aml.txt": "6465becb87bab13254ff7c77f9d442bcc2e3f241dd638afeb38343915417eda4",
+    "logiceme/testdata/lucid/callable-invalid/bw-file-kob.aml.txt": "ed2d6c88a6b56d0437c8ff82c42438b30985c61d07b9acee37f6d56f27c25e30",
+    "logiceme/testdata/lucid/callable-invalid/bw-file-ky.aml.txt": "52e8b6d414eeed11de72bd866a4934f6ba02ab27739748bc2d2e7189a217ac15",
+    "logiceme/testdata/lucid/callable-invalid/bw-file-scope.aml.txt": "978cb093ed83420a025f96247a0adf56295cb8329fc47b88cac02302f2b541d2",
+    "logiceme/testdata/lucid/callable-invalid/bw-flat-name.aml.txt": "6e7d5cea4a452963fc92bbcd0cf8c8cf05c4d1786dcb07f3b0c8123e42da377e",
+    "logiceme/testdata/lucid/callable-invalid/bw-flat-receiver.aml.txt": "c69fa6fa7be3321564ab6777989ccf052461864ef3af18bfebd2b53472f8a506",
+    "logiceme/testdata/lucid/callable-invalid/bw-func-outputs-conflict.aml.txt": "4adc3d7c928489cbdd24a76372ff9a656e73a52596092ce0700f2b73806cceed",
+    "logiceme/testdata/lucid/callable-invalid/bw-malformed-func.aml.txt": "9adb8dce9d7ca8fb444ae7250e2f55d0099e24bf451d165f4b0c4590fcb330d5",
+    "logiceme/testdata/lucid/callable-invalid/bw-operation-body.aml.txt": "bc59dd9500172dd10a1f04ce04d877d139f0a2d4359d9ac19825ac5e0bc0c1c8",
+    "logiceme/testdata/lucid/callable-invalid/bw-parameter-header.aml.txt": "fc9818bd69c26392bc28943d4d195db750c8a819b80f49c6a93fa520e6e5639a",
+    "logiceme/testdata/lucid/callable-invalid/bw-record-capture.aml.txt": "2a297788118c3f60e7f9abdd0f4c4969487132be2afa62f063595554259ee4c3",
+    "logiceme/testdata/lucid/callable-invalid/bw-record-name.aml.txt": "9cf0204fd95966b402835b54ac8a04e2c5bc5a223230cc73e434b3fba2ac5cf2",
+    "logiceme/testdata/lucid/callable-invalid/bw-record-receiver.aml.txt": "54660f4428936bad8317c0b96be24dc8e1c3b5cc6f39c31a1e6cb96447d50b81",
+    "logiceme/testdata/lucid/callable-invalid/bw-requirements-header.aml.txt": "a096d0b31388e2edd00f78fcb4e96708c5701c88239199a4ae45ca34b2936a0b",
+    "logiceme/testdata/lucid/callable-invalid/bw-unknown-func-field.aml.txt": "894b0d0879fcae57f9d2d36af73907f609c1044ebd4c19fa22e193644e3fd991",
+    "logiceme/testdata/lucid/callable-invalid/bw-unknown-receiver-field.aml.txt": "77711d6489b400d726ca20f83547ea4275d394f897a5c4b084fac3ab308fab6e",
+    "logiceme/testdata/lucid/callable-invalid/fw-capture.aml.txt": "6fdf8ec4ea272a378a90b3ce4496e27638cafd4d6033b30ab9bebd6fd7c1b163",
+    "logiceme/testdata/lucid/callable-invalid/fw-duplicate-func-key.aml.txt": "76a8995ac257d224be5de0cf47d99585e7921427d384f2042aeb3ac3c8a0cbe9",
+    "logiceme/testdata/lucid/callable-invalid/fw-empty-func.aml.txt": "66da20ec2dbfcfadd4985538da6a5ffc7738bc11bdd3f3a6c1e13e47aed4b08a",
+    "logiceme/testdata/lucid/callable-invalid/fw-empty-name.aml.txt": "1813d8c7959f407b0760b91a7f900582a5100fc470230add67d164f0b38be8ce",
+    "logiceme/testdata/lucid/callable-invalid/fw-func-inputs-conflict.aml.txt": "a72fefc07b721051e8e20541164b467bef5b07bf726335606ac909dae1233500",
+    "logiceme/testdata/lucid/callable-invalid/fw-malformed-input-prop.aml.txt": "7bebc3a502e6b22930215dc91e26e11911b49fbf455e3574bd43bc8f9765cec5",
+    "logiceme/testdata/lucid/callable-invalid/fw-malformed-receiver-prop.aml.txt": "b3255e80882730f67e80513c625b675f3c23757e0f9402e88198c251a1cb6f2d",
+    "logiceme/testdata/lucid/callable-invalid/fw-missing-name.aml.txt": "4ef140296faf2a14f2cbc2eff6030ff42645384a5c8801b54d10ab2a862f0642",
+    "logiceme/testdata/lucid/callable-invalid/fw-parameter-header.aml.txt": "42fa85de1de7daed28a99e95a6609f73f14cb8b1d0542cfda18578ad13a864e2",
+    "logiceme/testdata/lucid/callable-invalid/fw-record-capture.aml.txt": "999d73d200dc1977f1d3ce1e42df2adc2f556bd3aad877e93b2a16c63a4c46d2",
+    "logiceme/testdata/lucid/callable-invalid/fw-record-empty-name.aml.txt": "59d5698fc0baaa8a53b6d714e0b014394e560757313dc24b9ca0b9c8b80713cc",
+    "logiceme/testdata/lucid/callable-invalid/fw-record-missing-name.aml.txt": "941ae3dd9c5aa7832f6b3955a5bd3d62f81db8e8a479c262a7ddc801f73716a7",
+    "logiceme/testdata/lucid/callable-invalid/fw-requirements-header.aml.txt": "bfb1b44d4c22d7f1701a51742273c12e8f4750fea2c9326aad5fe28731c5369d",
+    "logiceme/testdata/lucid/callable-invalid/fw-unknown-func-field.aml.txt": "d2a1514b39e5bdc8f440a17c6ebe8e0c80a6c385afe00fdccd0e7aeabdc5dca3",
+    "logiceme/testdata/lucid/callable-invalid/fw-whitespace-name.aml.txt": "5d75a75a1ec13c84d2641503240ec58214726c57e1d4b5683fcb1d20dabb1893",
+    "logiceme/testdata/lucid/callable-invalid/input-empty-name.aml.txt": "1525940240e5262893b6aa70136d44c20758496dedafbab4385a245999483cf9",
+    "logiceme/testdata/lucid/callable-invalid/input-empty-type.aml.txt": "8b47d6683b872c3aac4b92937daee60a57744c45d1013c1edde728cd66119af3",
+    "logiceme/testdata/lucid/callable-invalid/input-flat-struct-tags.aml.txt": "241f8c75d41177cf652d7935c977da9fb0c420ff901b9eb50befa1d11a92280d",
+    "logiceme/testdata/lucid/callable-invalid/input-flat-unknown.aml.txt": "e9910048f31509cd7bde2961e5bd2a8861e9b0d036b0e73ac2df689dcb7faa34",
+    "logiceme/testdata/lucid/callable-invalid/input-flat-value.aml.txt": "a9c0e81205c3d6ee2a12527db8a044afec0805b455914486c19a0df0b92ae24a",
+    "logiceme/testdata/lucid/callable-invalid/input-missing-name.aml.txt": "8dd836aa29458d9997ef5a919e8c7603d2eef8699182d60648cb9ed794e92725",
+    "logiceme/testdata/lucid/callable-invalid/input-missing-type.aml.txt": "adcd7fb06df7f30cd2fa70110eaa48a60eb35624f59eeb58ec6d9cb2a9878877",
+    "logiceme/testdata/lucid/callable-invalid/input-record-struct-tags.aml.txt": "435043ad024bf6d5374929bb8331db8a3be2d89ddac5890833cb261798882f04",
+    "logiceme/testdata/lucid/callable-invalid/input-record-unknown.aml.txt": "cbd68d24fd16aa3ccc9fbd4b050ebaef56531a7e18ff978575aa42a0e6043379",
+    "logiceme/testdata/lucid/callable-invalid/input-record-value.aml.txt": "ef56a3a9094b2615a01d80c016e3074ca97254a0fd2f7c2d685e4415403c0a47",
+    "logiceme/testdata/lucid/callable-invalid/ky-anonymous-receiver.aml.txt": "a6d30c2c306bcc9cbbcc2aeafca8bba51b67304748e21677f8a635a862a160c6",
+    "logiceme/testdata/lucid/callable-invalid/ky-e-child.aml.txt": "203ab658bfe362112e302b121d847b23d3f8fd2b0007ba8457d23f18ae69fa74",
+    "logiceme/testdata/lucid/callable-invalid/ky-empty-key.aml.txt": "21e92c77a62106f32aeb033d313ebfc73cc25765f09dd0b9f0aee6dcdde4bb69",
+    "logiceme/testdata/lucid/callable-invalid/ky-fw-child.aml.txt": "ae45ab103dc0572b66d88fb4ae4570f5d6bb74cc5b3b79aa1d02269641110600",
+    "logiceme/testdata/lucid/callable-invalid/ky-missing-callee.aml.txt": "9856a49f6e62f641c68caf4949af5ee4e12c19ba2b04ad913779664c8595deef",
+    "logiceme/testdata/lucid/callable-invalid/ky-multiple-callees.aml.txt": "afac0144645e25ba56b29223030a954e7fbea83cd0a0cb41617eae867c3fe2af",
+    "logiceme/testdata/lucid/callable-invalid/ky-named-child.aml.txt": "de351bff93eced1afe3af44eab18f44d7143a7194ebd7798a0f6133d169c86b4",
+    "logiceme/testdata/lucid/callable-invalid/ky-w-child.aml.txt": "643bc099c3b4993708a6e06978579c5dc7d656abc5e2f0c68b7192da79d69dd4",
+    "logiceme/testdata/lucid/callable-invalid/ky-whitespace-key.aml.txt": "ee2d88ba2a60dcf2d6c3d066fd1f9991462379c5e78d789e3ba36e19b4a8d67a",
+    "logiceme/testdata/lucid/callable-invalid/my-duplicate-func-key.aml.txt": "c6f1d3b7e7f3aef7b598685e28ed8db670f92088f5b5277edfae842a2282ff3c",
+    "logiceme/testdata/lucid/callable-invalid/my-duplicate-input-prop-key.aml.txt": "8204fe92678fc3764dcfbddf8e1cf88e55a483267baab8981ae80dd3e645571a",
+    "logiceme/testdata/lucid/callable-invalid/my-empty-receiver.aml.txt": "daa10ededbb1b9173b27d4b74667d354cc1b722cbbe9e2cd4f07c0fe6764bb3e",
+    "logiceme/testdata/lucid/callable-invalid/my-input-missing-name.aml.txt": "770a02996a6645271b56dd945476ec40ae42480a9b2024fc01746f6f6422f1e1",
+    "logiceme/testdata/lucid/callable-invalid/my-input-missing-type.aml.txt": "7290191ec7dc9f253abbe2b7b36db1a06f89692f33097c704cf2dde5953bcbe9",
+    "logiceme/testdata/lucid/callable-invalid/my-input-unknown-field.aml.txt": "59bf40345a967495a0d06b394a234f6ee2311775f8205998478c6779f43cf6f4",
+    "logiceme/testdata/lucid/callable-invalid/my-malformed-func.aml.txt": "45344e0ec526ed1ad1bede25305367921235535a658f3930debc10b0312f86ef",
+    "logiceme/testdata/lucid/callable-invalid/my-malformed-input-prop.aml.txt": "26d08847711fea66c7c9612adaa62ff39761d9ff8f078a33fa5fc4f952de2e52",
+    "logiceme/testdata/lucid/callable-invalid/my-missing-name.aml.txt": "31d9a9c3e6ffc78ac96a21fe0ddbbe6b57791f9f5490302327b95c49caddf249",
+    "logiceme/testdata/lucid/callable-invalid/my-receiver.aml.txt": "9d3f2b32971f3bc560ffb455e507b8d9ae0cf8301d0bd892de7404909ffbd4ca",
+    "logiceme/testdata/lucid/callable-invalid/my-unknown-func-field.aml.txt": "ca2e8f2696ef27002a9bbe355dba862580fe7d8164ade2459d5902f0a6febe75",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/hy-empty-props-parameters.aml.txt": "36b57c53c3ec8d4cd91255762fd5b2d4811fff7dff47add49bf5299b99a78220",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/hy-empty-sum.aml.txt": "27913d117c5299db46f803e7fa851f30415c2d63e69e9df7ccd028bb76f953ae",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/hy-missing-props-parameters.aml.txt": "86223b87c76a7ea7352b2f102207e892e5c24ea919a77aa2e48ae8e541313bbf",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/my-empty-funcs-parameters.aml.txt": "e11adf3f6f725f75d9e0d5cd21db04f80fa31470d0abe4665f5790914346ffd1",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/my-missing-funcs-method.aml.txt": "6050bc7fa8fc7f3c97ed8df1e6cef084439fc4cf3f8274f366d5abce4f511c38",
+    "logiceme/testdata/lucid/generics-invalid/anonymous-ky-generic-types.aml.txt": "5270b939c3ee9249123f2180a556e5fd7648ecc47d670f7e2345a14ae43dee3b",
+    "logiceme/testdata/lucid/generics-invalid/anonymous-ky-lifetimes.aml.txt": "944d925e72fe15d6c39fd0a21bec71796bddf80a111b1108eff8acbc5b1f3a26",
+    "logiceme/testdata/lucid/generics-invalid/bw-generic-types.aml.txt": "06a0894c3dd1c729fa76d544079834459de1fd3fa4bca03f4b985b0948d5d604",
+    "logiceme/testdata/lucid/generics-invalid/bw-lifetimes.aml.txt": "c26297b45f840996d78727c8fd2babbc14cb44e20136e60f6f7381963f9fe3f8",
+    "logiceme/testdata/lucid/generics-invalid/class-generic-types.aml.txt": "7c098c20757151bed24a31e3a0e107aabd449246849188bc01fd6de183f053eb",
+    "logiceme/testdata/lucid/generics-invalid/class-lifetimes.aml.txt": "4c2069d94684897e2d0eb5c39f64a2dabf6f9772a6366a8402f93751d87284c9",
+    "logiceme/testdata/lucid/generics-invalid/duplicate-generic-types.aml.txt": "5d34d9d1c41fb55b798bd7a077ed1c011c8989f3247fcae1c7fb02f7b3ccf6e0",
+    "logiceme/testdata/lucid/generics-invalid/duplicate-lifetimes.aml.txt": "489b138ab74fd3c3d2c06ec1d082465086e59032b4faf1ffa3dd299cbb0269e1",
+    "logiceme/testdata/lucid/generics-invalid/e-lifetimes.aml.txt": "2e5f56469c4b213844933ddbfe4d0ab840a2fdac51e4d5aaca98cc3a5b375ca4",
+    "logiceme/testdata/lucid/generics-invalid/func-generic-types.aml.txt": "75e281f52e2f3cb77729735a1ac4e6cec1684a40dcf25d20c726329a57333823",
+    "logiceme/testdata/lucid/generics-invalid/func-lifetimes.aml.txt": "1574235d25323c98f4b9a9e9a724e1028fcfa96b20213bc366134e06512ee5b0",
+    "logiceme/testdata/lucid/generics-invalid/funcs-generic-types.aml.txt": "60125448253cb9bd35aaad5aa43a9c55dce3bad1b459bc8be0505bb05275b5ca",
+    "logiceme/testdata/lucid/generics-invalid/funcs-lifetimes.aml.txt": "b2258d016aff380f6ac62bf3238b2543d0f7e4c84ca6c1cfac17e2dff4b6d1cc",
+    "logiceme/testdata/lucid/generics-invalid/fw-empty-lifetimes.aml.txt": "c99bc3a8ca73abf2219c22542cf1414b59b3090ede4c2f42f42ce1a62e3bfc17",
+    "logiceme/testdata/lucid/generics-invalid/fw-whitespace-lifetimes.aml.txt": "1ccbb5e6e15ce6d5231d8c77380cee39c1828a589fbc491e7f7f18b50745c5c9",
+    "logiceme/testdata/lucid/generics-invalid/hy-empty-generic-types.aml.txt": "913c517b3548e4fa21e66eb0a1ebea23f18cae15829bc548a4e6f8b23c1e87df",
+    "logiceme/testdata/lucid/generics-invalid/hy-whitespace-generic-types.aml.txt": "8b557a39d404449b2793e5bf44addbee2d6985300d00de684bb7adf97444ad18",
+    "logiceme/testdata/lucid/generics-invalid/o-generic-types.aml.txt": "455bc43b686f6b3676736632566b3a031f12a476c581308a311f37401619d47b",
+    "logiceme/testdata/lucid/generics-invalid/object-generic-types-ea.aml.txt": "a4a7bf6d2be689471c03f3e2b446d1d4e330c71fe9de9b60f8dc5e952274d77d",
+    "logiceme/testdata/lucid/generics-invalid/object-lifetimes.aml.txt": "6c1f6e070004d902fceaa779869e1d73af27aa4781fa4a2b71cff2f6aa7ee425",
+    "logiceme/testdata/lucid/invocation-invalid/empty-receiver.aml.txt": "1208040086b43b70e0be988267cdb69d6123fb89b16fb5f7546f6af39c49dd8a",
+    "logiceme/testdata/lucid/invocation-invalid/whitespace-receiver.aml.txt": "2fb4c73fd593d6985ed6fafdcf5beca66574287acbd29a15fc95bc9cadf70419",
+    "logiceme/testdata/lucid/iteration-invalid/calculation-definition-conflict.aml.txt": "b9f859d03581ca525395a1ab8af2553af3b0d5e0718e36a9ef848dab6204ff43",
+    "logiceme/testdata/lucid/iteration-invalid/calculation-evaluation-conflict.aml.txt": "6ef07ce06f1039895f53fb2d566c35a9cf93a8e1f4cc1d18eaf55c2de3bb63c0",
+    "logiceme/testdata/lucid/iteration-invalid/dog-empty-pattern.aml.txt": "5f025a09eb1dd18a95793f3417c7a4db7819a05303fdedd5bccec0ca30f17bf8",
+    "logiceme/testdata/lucid/iteration-invalid/dog-key-keys-conflict.aml.txt": "7fde0e53299367abfe098e7a52196f6a3fb03a508e9f53a8b0f261f7380f8aba",
+    "logiceme/testdata/lucid/iteration-invalid/dog-missing-child.aml.txt": "5ea470f7cfdd4f197dd839c19f8d35967fe3c4c7b8d31750b7241c6b42da4a5d",
+    "logiceme/testdata/lucid/iteration-invalid/dog-missing-pattern.aml.txt": "4d1613d0c60cd5b810f8954ff69922ca1b5a122ac0b820d364496291944b8dde",
+    "logiceme/testdata/lucid/iteration-invalid/dog-multiple-children.aml.txt": "3e3ae11ff62e8a3a02577c486bdffbf552676561934eadf437709fda6e144067",
+    "logiceme/testdata/lucid/iteration-invalid/dog-multiple-patterns.aml.txt": "410718f3d3b10dfd270f89020ff355744fa2156162276b4f393166f9cd01f503",
+    "logiceme/testdata/lucid/iteration-invalid/dog-native-value.aml.txt": "9420fac625399d7b24c57dc18b532882416b06c831240781f27fbd1fb1157956",
+    "logiceme/testdata/lucid/iteration-invalid/dog-outside-x.aml.txt": "758e6d56169ee57974426e5063c2fb7c02d1841e8259c4e4ef90977615584748",
+    "logiceme/testdata/lucid/iteration-invalid/dog-unsupported-mutable.aml.txt": "c224a5eb4ba126a16b4b264e352eb2944aacc7ce9b8a6efbfe7a597b12b3e609",
+    "logiceme/testdata/lucid/iteration-invalid/dog-wrong-child.aml.txt": "524889e44a957a61ad82484bed118c3edfbb5377f3bff21af5752c0eb11cd541",
+    "logiceme/testdata/lucid/iteration-invalid/evaluation-definition-conflict.aml.txt": "a0b81b400d5e673e99d5071e60cdbe1fc77962d7bd39fb6b944e7a97743b9179",
+    "logiceme/testdata/lucid/iteration-invalid/iterator-calculation-conflict.aml.txt": "288edd20ea6a71615ff78fc2c985886022555d49e67272e9eff32640da5f4f93",
+    "logiceme/testdata/lucid/iteration-invalid/iterator-definition-conflict.aml.txt": "404aed2bf4f5282ffb6e089c82002743f8d8092b245dab3be6f1c0e92933fd83",
+    "logiceme/testdata/lucid/iteration-invalid/iterator-evaluation-conflict.aml.txt": "b4991af92506b3898f8232f16813b88998a530dc335945532912b9e6a340315a",
+    "logiceme/testdata/lucid/iteration-invalid/missing-body.aml.txt": "3accfdb518040e4a175ee72e1ab7db0a29ed991ab6137d6f3c2617ad6fefc0b3",
+    "logiceme/testdata/lucid/iteration-invalid/multiple-bodies.aml.txt": "b87d8321c3b4917f12e5959b33dabbf540b0b933fba9835974b9e9646be36448",
+    "logiceme/testdata/lucid/iteration-invalid/og-child.aml.txt": "edc427c5dfa93e3a51eb635cfb078adf714ae3fcdfc271db739bb0e7e86503e7",
+    "logiceme/testdata/lucid/iteration-invalid/og-empty-pattern.aml.txt": "861790495ceb4dfeb84028a42662573871214dda357763b6706fafbca516c1d0",
+    "logiceme/testdata/lucid/iteration-invalid/og-empty-value.aml.txt": "cdbbcc6bb5de3ee312eb6b739bdb758c261b30a5be0dc7127650484693571fd2",
+    "logiceme/testdata/lucid/iteration-invalid/og-key-keys-conflict.aml.txt": "90946581b59b6a01765826e14dbd42915843d894f6497b802b7d86bd40e3bb4f",
+    "logiceme/testdata/lucid/iteration-invalid/og-missing-pattern.aml.txt": "efd270db42bd4f54cc31813300883e5369d5bfc0577db60320ea139e61c8450a",
+    "logiceme/testdata/lucid/iteration-invalid/og-missing-value.aml.txt": "874b960cd637398d745dc69525ed20fbc41beeda3bbb866d2bb8c6424d72e81b",
+    "logiceme/testdata/lucid/iteration-invalid/og-multiple-patterns.aml.txt": "dc79d72f76f93c5263b048c0ad6e0cef83728f6bf20f6b7af12bed66f84cfaa3",
+    "logiceme/testdata/lucid/iteration-invalid/og-multiple-values.aml.txt": "fce43849eda14a51010190bfb28c2e461004e339ee38714ab3ef1e16215dcfd8",
+    "logiceme/testdata/lucid/iteration-invalid/og-outside-x.aml.txt": "f6c4c8ab64651b9f1d66809d79aad83915e18772e379fc817ed69a3fd3b67ab3",
+    "logiceme/testdata/lucid/iteration-invalid/og-unsupported-type.aml.txt": "782a9120c6fc6ac49cd49a13e93e45b32fae8b35e35c685c74cf0518107c04c4",
+    "logiceme/testdata/lucid/iteration-invalid/og-value-values-conflict.aml.txt": "ecb741e55f51d4dbb615fe90ad64bcd58d21d2cf065619d877318b8d43b3a2d8",
+    "logiceme/testdata/lucid/iteration-invalid/ordinary-do-condition.aml.txt": "ecfe7dee0a521b268be16d20e7af014c820e6c0d2e131af282ef82f36dc5f18c",
+    "logiceme/testdata/lucid/iteration-invalid/ordinary-dob-condition.aml.txt": "546718c3c7e7fbb79042dce5182b88ef4a65d54bb4748a676b516a864244b2be",
+    "logiceme/testdata/lucid/iteration-invalid/ordinary-o-condition.aml.txt": "7e7f3ca7e799bf6f13f5c0fbf12260e88dcd7c75ad1e900b459ab8280714f6ca",
+    "logiceme/testdata/lucid/iteration-invalid/ordinary-ob-condition.aml.txt": "7b8f07c31f62482ccb953ec969921953a73dc006f4cb576b05c8d0582ba65421",
+    "logiceme/testdata/lucid/iteration-invalid/po-empty-label.aml.txt": "d26e8d84a8a6d38bd034b99586e2b09f71f933f3446dafd056ee56d9e81abcb0",
+    "logiceme/testdata/lucid/iteration-invalid/po-file-scope.aml.txt": "f661fec2895e8f20f1ce54eb1dfa6e7339f3236e108555daf0e95822fa1432ad",
+    "logiceme/testdata/lucid/iteration-invalid/po-key-keys-conflict.aml.txt": "4140bf32cffee18e22728b3f6ebc9ce02612d908f4542abb3a417bd27ffc61ca",
+    "logiceme/testdata/lucid/iteration-invalid/po-missing-child.aml.txt": "5d06dd8453a151dcb4db55d88f27c400bad7c03b71b1bd7b64b22ec524739eac",
+    "logiceme/testdata/lucid/iteration-invalid/po-missing-label.aml.txt": "5bc87b3c0713f6501dc36ce24458e4e3f230b891e1eab341ac0783ae7d793ac8",
+    "logiceme/testdata/lucid/iteration-invalid/po-multiple-children.aml.txt": "ffa58f6ed403d57f0bc1ff30db86868d63087634d3df438b71abc8017fee0719",
+    "logiceme/testdata/lucid/iteration-invalid/po-multiple-labels.aml.txt": "01775a05151058cb3af7ee9abcbde3667f1ef79d9b4aae97454d2b971de876ce",
+    "logiceme/testdata/lucid/iteration-invalid/po-native-values.aml.txt": "b1c1f2df595235e484b1a5bf609a49915b7532eff9ae89b6de18c4ac566f2ba8",
+    "logiceme/testdata/lucid/iteration-invalid/po-unsupported-coda.aml.txt": "60e266e82f6790d32f9c0c0db701fe7fb7eda8b038f5a9b762c9487f2e89d8f9",
+    "logiceme/testdata/lucid/iteration-invalid/po-unsupported-parameter.aml.txt": "0c16e31daf1972ec8283597ca676a459a87ed3931be71ca21031ad1f878a9af5",
+    "logiceme/testdata/lucid/iteration-invalid/po-wrong-child.aml.txt": "5658b2207099fe7ae6078f664136ccb61b30561cbd4d3b048f0a54737a672f38",
+    "logiceme/testdata/lucid/iteration-invalid/repeated-calculation.aml.txt": "241319c6c27b604a048ecf41d25846da1ff083125fa115dbb57fdde50be571d2",
+    "logiceme/testdata/lucid/iteration-invalid/repeated-definition.aml.txt": "6c339b7c539d3fe9ae023ecfaf168d0e655eb10e51f7ef608883117b8f98dc87",
+    "logiceme/testdata/lucid/iteration-invalid/repeated-evaluation.aml.txt": "60d222f428175804bd3aacacbb1809b371a1604525ae8f2846d5a9b022a0b1fd",
+    "logiceme/testdata/lucid/iteration-invalid/three-part.aml.txt": "783f4827ebdf2e2eb71ecffedeaabafdd71b8ad6f1f9cf6ad1bd5b4c041ef346",
+    "logiceme/testdata/lucid/iteration-invalid/unsupported-evaluation-adapter.aml.txt": "63cb93ebb57781811ad5f35bee8fec55bd63578a1b72f04fc5ef8b32176bce3e",
+    "logiceme/testdata/lucid/iteration-invalid/wrong-category-body.aml.txt": "3ccf146bd0d081830ca2d96d3cba8f19a6644798a10ae8b2e012898634b75ef4",
+    "logiceme/testdata/lucid/keyed-invalid/body-without-pattern.aml.txt": "495779a07b0481e42691d24d98da518b14305ffcbd5a909fc40b686824026de4",
+    "logiceme/testdata/lucid/keyed-invalid/duplicate-composed-fallback.aml.txt": "fad46dd4ae795dd7299a8bf4e3df8c5677743f5365380124b777eec9baf8bfa0",
+    "logiceme/testdata/lucid/keyed-invalid/duplicate-fallback.aml.txt": "3f532168f047ebe3296728b89350f35026bdb050ab903f9d94fc0db88d66a686",
+    "logiceme/testdata/lucid/keyed-invalid/empty-key.aml.txt": "9a8e8208f30653d0259e64e61fd730a9756ad15476ce5561c449a5d20bcd59ba",
+    "logiceme/testdata/lucid/keyed-invalid/empty-pattern.aml.txt": "5b8266bb67303c3e887de39fb94db722d9780ea100700d0db0d3b24f68d4420b",
+    "logiceme/testdata/lucid/keyed-invalid/excess-bodies.aml.txt": "cc71cd62220c9ab9194417b84f9b698fdcd758acaec3be3f048fd0d28706e800",
+    "logiceme/testdata/lucid/keyed-invalid/excess-patterns.aml.txt": "dfdebe5b8de314917a8c0aa461be455b42eacbdffc725c30b548315e148f84ca",
+    "logiceme/testdata/lucid/keyed-invalid/no-entries.aml.txt": "65a7b183054f7cf3255d97370b620e0a04488b0be103e49ce01fbb9a5bea5098",
+    "logiceme/testdata/lucid/keyed-invalid/nonterminal-composed-fallback.aml.txt": "3a1391b986e363464ca32dfe416589f9bc03351ce4e33f55e6c033b2a03b6b55",
+    "logiceme/testdata/lucid/keyed-invalid/nonterminal-fallback.aml.txt": "6324da07999a5310e1764c0c692438d423f7701fb38d3f620bae41b20e4c0b22",
+    "logiceme/testdata/lucid/keyed-invalid/pattern-without-body.aml.txt": "6e443be1b02094c745ac85196be2a583634b196a3a1c168a8cb4de5d45e48a48",
+    "logiceme/testdata/lucid/keyed-invalid/unexpected-child.aml.txt": "49b3f7d25f9df9655d9607f34e1c4e915c51fbaf91607e706d5d5410cb7f827a",
+    "logiceme/testdata/lucid/keyed-invalid/whitespace-key.aml.txt": "a86757ca33c2d2922963b121aed8a4f185b1b06a463af1000e83851cdcfcd0d1",
+    "logiceme/testdata/lucid/keyed-invalid/whitespace-pattern.aml.txt": "e74dc84ee68e42371d0109dfe6f83784850558c7122458c86666723a0e9d9389",
+    "logiceme/testdata/lucid/scheduling-invalid/mv-deferred-false.aml.txt": "144fef3ef3011cd99cc5df9dca48de7e42c57bc98b33cc4f1b8789df623a61ee",
+    "logiceme/testdata/lucid/scheduling-invalid/mv-deferred-true.aml.txt": "b586d1fbd8a531656cf830ade2dc1afc455706ed71299e9e6151c2a7513db107",
+    "logiceme/testdata/lucid/scheduling-invalid/v-deferred-false.aml.txt": "4a0db1fe9af5f4bead61a5d099b0dbaeb07f55da4e5c9b172588b61cddc7de40",
+    "logiceme/testdata/lucid/scheduling-invalid/v-deferred-true.aml.txt": "65fa39cc6c41e098ad94d68486bb037130ca15e97756268a2fe3caeb2e954b3d",
+    "logiceme/testdata/lucid/selection-invalid/assignment-target.aml.txt": "865afb6971f3d10ea48d24292a779367392f19317829dc69ee3eb735f4310964",
+    "logiceme/testdata/lucid/selection-invalid/bare-calculation.aml.txt": "3847eba5fd10f54b683e35e9a3e57708dd8d23937ac57c7aff02b4c58564d70d",
+    "logiceme/testdata/lucid/selection-invalid/bare-ce.aml.txt": "8cec2b5e3196c65263d95a63a875bf4cc5ba5e980c3f6f95c72ddecff59660ad",
+    "logiceme/testdata/lucid/selection-invalid/bi-orphan.aml.txt": "5af0eccf40d763c308de376429605b44d2ad6b3c00b535222382083ac27a740c",
+    "logiceme/testdata/lucid/selection-invalid/caller-key.aml.txt": "cc9b07e6cb15265531f411e96c1add7256179c29978d3b5eb944349107ce342e",
+    "logiceme/testdata/lucid/selection-invalid/ci-file-scope.aml.txt": "7063c2fa97c94bbe6db74eef67113dd58e1c5b06cd78856408d345262da23bef",
+    "logiceme/testdata/lucid/selection-invalid/ci-non-bi-child.aml.txt": "db3a8068c58a0e41e80e032e3f3eac8d35d9037cfe060d8fd45fa67ec7d8524a",
+    "logiceme/testdata/lucid/selection-invalid/default-missing-definition.aml.txt": "dde6bb8f52a355fff585fd64f169eee5d6d2c7348584ee538112c3d1004457b4",
+    "logiceme/testdata/lucid/selection-invalid/do-guard.aml.txt": "08fab56aae3ed3702cf9a3ae8240858395376c35875d662b37fa2f9211dac3f1",
+    "logiceme/testdata/lucid/selection-invalid/dob-guard.aml.txt": "f21d2cb42d483ee00b310712e44d98589c59d62c9d6bbccbaac4a44c36decfd5",
+    "logiceme/testdata/lucid/selection-invalid/doc-missing-child.aml.txt": "c4b89d31895edc1255b1dc3ba953ddc0127910b194735416cd1f77045eb7fd3d",
+    "logiceme/testdata/lucid/selection-invalid/doc-multiple-children.aml.txt": "197b6969a8f0da59ea96623bc880759551a6c3dc23b8aa78c9025764c49b0f3d",
+    "logiceme/testdata/lucid/selection-invalid/doc-native-value.aml.txt": "93855e92b71d7a12375504d9ab7d107a524ab62c8c7e1298c0e84766664258b4",
+    "logiceme/testdata/lucid/selection-invalid/doc-outside-bi.aml.txt": "d38d3168a9e250c08766cc584ba6df038193ef197b73673c116ccde2e46c5160",
+    "logiceme/testdata/lucid/selection-invalid/doc-wrong-child.aml.txt": "3852ddeefbf0161c324384f4c0303b128a027b9f8ef42bd639d24a56a4f8339f",
+    "logiceme/testdata/lucid/selection-invalid/duplicate-default.aml.txt": "099ac6a6c3f6b1961cfc68e7f9a2752f6d162035b5fc1ec574ebd899eb2e6ccd",
+    "logiceme/testdata/lucid/selection-invalid/guard-mutable.aml.txt": "1a4e026a89e3011c00f1e9ea9b1574c43b63595e5d448ba298bbf6d0e8d15e29",
+    "logiceme/testdata/lucid/selection-invalid/guard-parameter.aml.txt": "3e6ce207fc029c559ec416ceb8f7cdda3188c9ca8e5af28eaed3faeb11581567",
+    "logiceme/testdata/lucid/selection-invalid/guard-type.aml.txt": "f8a84a9cd2da4b4f321a0c4626d2a493b926051f859032a8a8a402ad411e3e01",
+    "logiceme/testdata/lucid/selection-invalid/invalid-default.aml.txt": "deec344213af8fda4e1ef5a99b8592a86b4a55fb5bc8a73f3ff9ef5871d6d1ea",
+    "logiceme/testdata/lucid/selection-invalid/missing-guard.aml.txt": "bb6346325794df2366d99f88f988661f989f855c9a7a710990baf2e71cd00eda",
+    "logiceme/testdata/lucid/selection-invalid/missing-name.aml.txt": "de97c01a873ebfdd7751bc36736402e5725d8fa68020ee608f8f8e5ef6c3e6d9",
+    "logiceme/testdata/lucid/selection-invalid/mixed-guards.aml.txt": "7b52cbcc15d109eaa9e5784df03ec66de3ac3bec0ce5f67c91a97605eeeeb54f",
+    "logiceme/testdata/lucid/selection-invalid/multiple-bodies.aml.txt": "7996b6796b01d0a5097e02de7cae9f8fbb3a5482715932a046483288763a5203",
+    "logiceme/testdata/lucid/selection-invalid/multiple-definitions.aml.txt": "c638bd467a29ce091560db56acad83c29d616f274ef90eddd0b8e29040186159",
+    "logiceme/testdata/lucid/selection-invalid/multiple-names.aml.txt": "16106f27e21cfadda6ecc42033f37b71c4f5ba55af8af3a82ff6eeb38e2a1499",
+    "logiceme/testdata/lucid/selection-invalid/non-w-body.aml.txt": "31b76dda3a370c92d5e5f4f0c774c3d28052ef5eacaf93ed433f0506488b4a77",
+    "logiceme/testdata/lucid/selection-invalid/oc-child.aml.txt": "f5dd568774170d6ca249b9a36be079c6b69f7bea967d78151ad330f77611bf6f",
+    "logiceme/testdata/lucid/selection-invalid/oc-empty-value.aml.txt": "647019ea337fe661c7555c14c79bc25394a701743c4fc042069199edcc801997",
+    "logiceme/testdata/lucid/selection-invalid/oc-missing-value.aml.txt": "b8c7bffafb0cf64b22d5261c7ee4948600a852804c413bff28c22db61067b00d",
+    "logiceme/testdata/lucid/selection-invalid/oc-multiple-values.aml.txt": "666132f5fc7990c95e1879b603962055cd3c3657a8ca72a99b05ec69903d9c8f",
+    "logiceme/testdata/lucid/selection-invalid/oc-outside-bi.aml.txt": "1c04595f7acab6861c01d86345706ca6ea402cf39cb7c52b18754cd6156b91c8",
+    "logiceme/testdata/lucid/selection-invalid/pattern-binding.aml.txt": "0be4db354f42b148e27cb60901ba4701bb6d4918f27bfb8b2bdedd62fe74c06b",
+    "logiceme/testdata/lucid/selection-invalid/unsupported-c-qualified.aml.txt": "20c3b32830e1c2bac8f3b7368a6d0b9921597668e3495c023aa639d2d3e92cef",
+    "logiceme/testdata/lucid/selection-invalid/unsupported-definition.aml.txt": "1eafe9aabffb9a1b620a60b85b9cf5a8754e6db9e3570273545fb401d4913097",
+    "logiceme/testdata/lucid/future-composed.aml.txt": "b7f86dd82af798de0163728174230970e1def2444726f4a86b176342ae770e24",
+    "logiceme/testdata/lucid/future-composed.rs.txt": "ca38130543704ea4635312c571bf5a308d9c98e06dfa5e6f924369b6a3080912",
+    "logiceme/testdata/lucid/future-move.aml.txt": "0d0a17e589b83793dd2cf1ca387ad71ae3dc750a6c8d1fe7d6f39a70e3eeeb03",
+    "logiceme/testdata/lucid/future-move.rs.txt": "aaa76835b29602a9ec7502eb6eb444f98c4db22533696c9e4d5210a97a68cc20",
+    "logiceme/testdata/lucid/future-infer.aml.txt": "6efcd16e2918bfa2ae073d233c6f4594429a64da3f02dd70e64162cdfb41029f",
+    "logiceme/testdata/lucid/future-infer.rs.txt": "4878caa5968d17bb9a50b46d272e10e056ef8165ed4b3a9462dbb50d505a6682",
+    "logiceme/testdata/lucid/future-borrow-escape.aml.txt": "0d6cbd8a9f3e0a04ce778f4ce63917e94c7fe3624e134ad59aab5f2e5d9b5929",
+    "logiceme/testdata/lucid/future-borrow-escape.rs.txt": "8298af5f1c04e849dd8edd9bcea06e49f4142ca4d2d16051a97ae9ec9ee0d144",
+    "logiceme/testdata/lucid/future-move-reuse.aml.txt": "5fc24cf08c50001f6966fece03282b4f5a72edc14c27fbead4015c2a382c84bf",
+    "logiceme/testdata/lucid/future-move-reuse.rs.txt": "26df5012efb5a9908f7c2b38d57a3b7716c24355b7dcd985710cf57ca59326fa",
+    "logiceme/testdata/lucid/generics-functions.aml.txt": "d9963aeaf691d5b92c43fe123c858ddaead5716273683f2ae7638e2675a54d0f",
+    "logiceme/testdata/lucid/generics-functions.rs.txt": "fe63935221e9de212c776ea742afab9410887c34ae384963354cf92327bb25d5",
+    "logiceme/testdata/lucid/generics-records.aml.txt": "172886a55a75b3a357e0b44a36379e3818b042c754099037ee1d3be3e37a91f9",
+    "logiceme/testdata/lucid/generics-records.rs.txt": "6ee97d6515044b264bd0ef52c2fa6f0360d92dc9764184b34ce1ede034df65cc",
+    "logiceme/testdata/lucid/generics-traits.aml.txt": "c41c08fecf1a2a4c999550a839b8ae01f7c40488e9ae8ad6078650b9026769fb",
+    "logiceme/testdata/lucid/generics-traits.rs.txt": "f7ce722823b1b6a793a4968a06f2f96d5e6b600a13075e5496eccd9d615b6ad7",
+    "logiceme/testdata/lucid/generics-calls.aml.txt": "44e3caa4c8c38cb0e3855af125c5650dd1fdb3f0067abf04f7b6ac033fb8d149",
+    "logiceme/testdata/lucid/generics-calls.rs.txt": "3e91d06b5dd6b1beed66a650c6b86ea72dfdf2866f50ab6c77207f004f09b3a7",
+    "logiceme/testdata/lucid/generics-late-bound-lifetime.aml.txt": "c06af4d20c60481c6267a8f85621712e8f61ea997852cfddfc04fc063441f5ac",
+    "logiceme/testdata/lucid/generics-late-bound-lifetime.rs.txt": "fb5c50577b30f4b626e4e912c282ec3150dc7a24b390b93f63372340ec100801",
+    "logiceme/testdata/lucid/generics-unused-parameters.aml.txt": "cdb8aff8708f127b0a51ad355cbf0861ff6b251c5f268dc1f00d0cc7bfa2d0f5",
+    "logiceme/testdata/lucid/generics-unused-parameters.rs.txt": "811509af47bf910d20b19f90ab90f2fd0ed2fb1c2f339cbe40a709baebeaae70",
+    "logiceme/testdata/lucid/generics-argument-arity.aml.txt": "be5d797417798cc9baea35270778ca23b7125098e575389ec899e2207b8c8f66",
+    "logiceme/testdata/lucid/generics-argument-arity.rs.txt": "8b4f7242269e25a3bbf493e0a80a365bdbc5a245c024792c7e2bf9b61a8303e4",
+    "logiceme/testdata/lucid/keyed-conditionals.aml.txt": "e3797260c82f408547bf9695f0f290113bead58f5a9de52062c97ba8322357c2",
+    "logiceme/testdata/lucid/keyed-conditionals.rs.txt": "f1a485a45e45068835b76c0495969eeed487b44c28f0f8357e2dad4c25aa1525",
+    "logiceme/testdata/lucid/keyed-nonexhaustive.aml.txt": "d35a266b550fa5adc4631ce827c8b6faed81a3f1080204a008cd913c6692fc60",
+    "logiceme/testdata/lucid/keyed-nonexhaustive.rs.txt": "e740f685a998bf76b6ea874906049945092f62e4691e8e4d734a6532697294b0",
+    "logiceme/testdata/lucid/keyed-call-pattern.aml.txt": "32cf2b625da4b00879ac75094ada2d9d460e4e84f62dbf9b8066bf426e3e2a70",
+    "logiceme/testdata/lucid/keyed-call-pattern.rs.txt": "5fe4e365fb83c74d42eb39b337b19b324c4ffdbae4c975d9160c43c051004c19",
+    "logiceme/testdata/lucid/empty-instantiations.aml.txt": "ee534d0fd073c74114d117904b54f1cd0c6e1c9bc8c525006ae6c0b69ec9350b",
+    "logiceme/testdata/lucid/empty-instantiations.rs.txt": "0666a0f9608c0ca9b8036667c332f0d83b97e041ea213cc3de99e8050666d8f9",
+    "logiceme/testdata/lucid/trait-signature-outputs.aml.txt": "3df43d05a3215dd7f417f834117b38239804afd101ca56afb9f25e905360418a",
+    "logiceme/testdata/lucid/trait-signature-outputs.rs.txt": "edd1ba750fdfe50ac7f6b47695fe7d471d7f43d481fd9771c9f712915867656c",
+    "logiceme/testdata/lucid/callable-output-void.aml.txt": "bf722669b4d3b074eefbc15e814f3ceed74f14ce077fc9260f81e84b6819a0ad",
+    "logiceme/testdata/lucid/callable-output-void.rs.txt": "45eb938e9382f542a0314e3cc82cbe408ab938c93dbaf4fc47de544d99d4cbd0",
+    "logiceme/testdata/lucid/callable-typed-flat.aml.txt": "0b48ea3501345876c58565131f5d97d17673c9ed6c4251667eda7cfb16f9f825",
+    "logiceme/testdata/lucid/callable-typed-flat.rs.txt": "afc09782bd7ef5aa805fdcf0b54419fe31438bd28df1f28bbd2a3db0ec6a76a4",
+    "logiceme/testdata/lucid/callable-typed-record.aml.txt": "fa4ba5b41032f78e5f0ed2aaaa66fbc2abb046505a5e5f692a2d82a0cc317924",
+    "logiceme/testdata/lucid/callable-typed-record.rs.txt": "a6f28c132412c398f4493f9d3387cd3ca3e0dbca6e0c194e40b6ccf5c53dd2a9",
+    "logiceme/testdata/lucid/callable-outputs.aml.txt": "871d8bd9c80de19ddb44b9724ad1652e7c27f0fcb77ae4652e5ee7d6f2113e86",
+    "logiceme/testdata/lucid/callable-outputs.rs.txt": "527f2486f5fce90195bd805095befc2bad6148d66176f075a6935c3a4a04a66a",
+    "logiceme/testdata/lucid/closure-inline.aml.txt": "42543bc29adc9bd64138554405d12b2b03b0de06fe7aff473b673fa7120600f5",
+    "logiceme/testdata/lucid/closure-inline.rs.txt": "c814c4a4f9dffecac6befb2db14a753b980eea0671ec3e41d6d92c5f7d6d1bda",
+    "logiceme/testdata/lucid/closure-stored-capture.aml.txt": "1b2f7f83f96480e4cc2d2e20c0aa17cafd049f14c432c0679f96b145659c0031",
+    "logiceme/testdata/lucid/closure-stored-capture.rs.txt": "cecc180d1ed8f2440508de97c6a05c4626a645c71811ad74dfc187028fd86d1a",
+    "logiceme/testdata/lucid/callable-unit-mismatch.aml.txt": "ddad3e5edfd4cea8e32ee4c276f24c187c6cfecced0dfbd07ebc416ee2b21eb7",
+    "logiceme/testdata/lucid/callable-unit-mismatch.rs.txt": "6f61ba1b66346a69e99ce2277298c2f20c5e72f09664e45bbb1b8a9f13da44a9",
+    "logiceme/testdata/lucid/function-void-flat.aml.txt": "751570ce33f914bbf685511d421378a0e5ae92a2ba0a90adb04cc2beec0eccfb",
+    "logiceme/testdata/lucid/function-void-flat.rs.txt": "5226f6da7f9b447860e8a7fa19dca81fb5d67108798918658f80e0e29778bcee",
+    "logiceme/testdata/lucid/function-void-record.aml.txt": "7c579642e0ae1b0d387e7159ee813903429365acf1a85c10e348156c5374ab01",
+    "logiceme/testdata/lucid/function-void-record.rs.txt": "5226f6da7f9b447860e8a7fa19dca81fb5d67108798918658f80e0e29778bcee",
+    "logiceme/testdata/lucid/invocation-named.aml.txt": "3404b5346c8fa8cf0815c782005d5d68c8dbc16d9a1177405918ba14fa239ba1",
+    "logiceme/testdata/lucid/invocation-named.rs.txt": "885dde31d31473c1b9509153883f542b03b27893fb71d63c3c6a09fff20dd1a9",
+    "logiceme/testdata/lucid/invocation-void.aml.txt": "c901681eb91426020aede054f1e51001ef6ebf8f451aee2f3c8a973c59fd59cd",
+    "logiceme/testdata/lucid/invocation-void.rs.txt": "df2efc5082becca7d89835c5cf6ee0cba122077ec89d3ea068c91ea2f71345f1",
+    "logiceme/testdata/lucid/declaration-operation.aml.txt": "3b7e533a09ad9ec0261a982f7f526395816da423ffae09a022631050e3d4e1cb",
+    "logiceme/testdata/lucid/declaration-operation.rs.txt": "7368cae4157a9eb7ff711b270732be07398e2c06d8fab6611437051b1caef681",
+    "logiceme/testdata/lucid/declaration-description.aml.txt": "103140759fc00f19315ccb3699a70d8ed3a585daa8372d6a1e462ebec24c7d67",
+    "logiceme/testdata/lucid/declaration-description.rs.txt": "c2e3ee8a065106406570173240f6519df7181e6e3bdb30459bdd0b21eca5fbc4",
+    "logiceme/testdata/lucid/declaration-evaluation.aml.txt": "8998333ae8cbd043ca66bf742186c8341c65d6f7c1aede4024d11fca606f01e5",
+    "logiceme/testdata/lucid/declaration-evaluation.rs.txt": "2789720e94782aa4fcb092076868f250e913be9aa113c5f40b1252ce40becadb",
+    "logiceme/testdata/lucid/declaration-instantiation.aml.txt": "a92deefcac32364ec8b2ff6f84aa0a147431e1128f599393ad792398a3c7536c",
+    "logiceme/testdata/lucid/declaration-instantiation.rs.txt": "8b76e29fab8e1deff33b8dd818d2cba135ba657910badcccf2f6e21120d39c72",
+    "logiceme/testdata/lucid/declaration-iteration.aml.txt": "ad7d99668798cdae5a11d9b652e769146e10a8e07307d0d5b592a93ea783cecc",
+    "logiceme/testdata/lucid/declaration-iteration.rs.txt": "f65086eab8fe92dd69e0a026ceb3257b159c8922d4df78db0aec5c065131c7cb",
+    "logiceme/testdata/lucid/grouping.aml.txt": "7b9971e5c2d6c631c26b9e4dbd12d80f10cae3434a630dca92a82c6bbb6f39c2",
+    "logiceme/testdata/lucid/grouping.rs.txt": "83fc28b0d8906e19d510a6337a738e3691daf22163c4e6116120d02aa2a6dc0b",
+    "logiceme/testdata/lucid/statements.aml.txt": "e546146fadad91e2828950ba0332f42f8b93e3d2ae64bc26d6022df983aa96cf",
+    "logiceme/testdata/lucid/statements.rs.txt": "9f089650c71067c232d398f31a230dc2be5c7a32b720b25e49692b3345200754",
+    "logiceme/testdata/lucid/fields.aml.txt": "7610967bc9dc6b48a11b7364c8f0d99ff4e28eabe6548a89747b5325b8e440c5",
+    "logiceme/testdata/lucid/fields.rs.txt": "cbc1f4a1067650961e52350ec25cb8f5ba9222d11050ebc03478d9b6215de2ae",
+    "logiceme/testdata/lucid/calculations.aml.txt": "702d821e6e5d56cb3f8da18e4685522b2a8943a8d5fdcd11af507a4c0aea47c9",
+    "logiceme/testdata/lucid/calculations.rs.txt": "f7aaaec063588ecd78e7cb5785f0512a864ca16c6a070fa322c966d41f3deaef",
+    "logiceme/testdata/lucid/communication.aml.txt": "75ecdaa1157340128f5cdcc658164fb2cbdfcb0e6ab293553047b0d59e652d77",
+    "logiceme/testdata/lucid/communication.rs.txt": "a7db24eed0eb9d4bcbbd5315f4175d15fda2ba454fbc2e250689396b99e99821",
+    "logiceme/testdata/lucid/conditionals.aml.txt": "c818ffd2c59b7ae8d4365e2c28be9ac447b89a33a1cd259f6e3b4c18db146493",
+    "logiceme/testdata/lucid/conditionals.rs.txt": "ea90ad6d803e089d21fc3a6d9fd2680b73e3d9b891ce326cdb0d4154219d4bf7",
+    "logiceme/testdata/lucid/select-communication.aml.txt": "b517499ee72eb8d9bc0412bdfba3203e880b8cd2a1cb2d792f88a5ad2354a716",
+    "logiceme/testdata/lucid/select-communication.rs.txt": "5c782de04d9dfa77988011eb33b33d97bc9b4fbdcc5e18f9ee9ac7c587bc0a0d",
+    "logiceme/testdata/lucid/select-bindings.aml.txt": "1431e4644d17a0e947495159684ae09e10b3bc9008455031645756aff325f11b",
+    "logiceme/testdata/lucid/select-bindings.rs.txt": "cd7bf25f5042fbf319ea3ae75a99fb62e3290f4ca02bf3387fa3c77fe569ff48",
+    "logiceme/testdata/lucid/select-default-order.aml.txt": "9c361f7f9bf6545a2e57d211a17199516886b3ec2407a966be4ad9ffe2123e9f",
+    "logiceme/testdata/lucid/select-default-order.rs.txt": "61494203a2095b34f1cac447a2a4c5eb60990d8365b1c197e4948897bb87bf21",
+    "logiceme/testdata/lucid/select-degenerate.aml.txt": "35e71c736337a804c9bb1d90c80db78f6a0d39ea94abedaa6348ae7fa511789d",
+    "logiceme/testdata/lucid/select-degenerate.rs.txt": "10d81d21ad4e599f7ca8c503f5df1953d85151fe496ab3f2d8dca9d8c35cef0c",
+    "logiceme/testdata/lucid/select-nesting-hygiene.aml.txt": "a378e55a4f244986be98ad9ebc1effe0307ec2c311bccc1ccd9c0a7e6932274b",
+    "logiceme/testdata/lucid/select-nesting-hygiene.rs.txt": "8a61d7623beb81529c9231cb63534bbeababbaa2ee63e8c7caad310d9faedfc9",
+    "logiceme/testdata/lucid/select-closed-receive.aml.txt": "7cfe4eb8c66e7a73d3502813e19d5ad66a1297c954e20a3212674f677eef88e3",
+    "logiceme/testdata/lucid/select-closed-receive.rs.txt": "ca964c04c7c93d0bd6639b31a1ec3a86bb3b70fcff70ecf183c9908962bcbf9e",
+    "logiceme/testdata/lucid/select-sync-context.aml.txt": "2a137bb3749be5c4d9d11e9de7f43677fb1ae26e6c409fef1bde9cd07702cf5f",
+    "logiceme/testdata/lucid/select-sync-context.rs.txt": "0097be3e73db3ae9573805adda5c6bef0518bc931053add208674bb9f865875f",
+    "logiceme/testdata/lucid/select-borrow-conflict.aml.txt": "483119fe9f23a5315099b0780cdb6ec3d90b31567185c5407764c68879698f66",
+    "logiceme/testdata/lucid/select-borrow-conflict.rs.txt": "2ef1c572df2c39464c96a9a4d47a5802868e86f1b67fa536802e4e79906e0eed",
+    "logiceme/testdata/lucid/select-moved-send.aml.txt": "ad4f15f21b5c21f6c6a5ae98c61aaa02e07cd4c725125e461974a74a2c8f8ffd",
+    "logiceme/testdata/lucid/select-moved-send.rs.txt": "7c2ae0e104c9aa13ba940034c7bf54f82f5b7b1d5157390710e59e4284780fbd",
+    "logiceme/testdata/lucid/iteration-conditions.aml.txt": "bd6fbc02ff483b13f8b17250d152e57116e681cb998b90d08b3c3ffa6e1224c2",
+    "logiceme/testdata/lucid/iteration-conditions.rs.txt": "88e7ae533df87d87f30c2cdd9df3417414d220c0a795c3d9db80f3491befed88",
+    "logiceme/testdata/lucid/iteration-bindings.aml.txt": "308ba7bae0614f464cc75329b1ee14a54886ce4c42db57baa611eb6a3fca1497",
+    "logiceme/testdata/lucid/iteration-bindings.rs.txt": "830a8733666f374d0311df94b4795946fd505fcde201e442af250db026eb5775",
+    "logiceme/testdata/lucid/iteration-async.aml.txt": "8d65097c6187a7fe7bb2bb9ac1bfb6c2a84f288d5a4e0e731e9c564dd7efae85",
+    "logiceme/testdata/lucid/iteration-async.rs.txt": "6f30f1e6b66986186448535a298210cb02907299ea118d7356020ae211715e9b",
+    "logiceme/testdata/lucid/iteration-traversal.aml.txt": "7a29e7ba788ae47c4c624862d090af6a5ab48769f4d4e291c933b39e5ebd5bc5",
+    "logiceme/testdata/lucid/iteration-traversal.rs.txt": "5c2095ca241206e7aedefb935f334464ded21f46bd802ecd3790699e9543ebac",
+    "logiceme/testdata/lucid/iteration-labels.aml.txt": "a16a015fa896004abbbae42c335ad56ffddce0598e3e6b7814662c1300039557",
+    "logiceme/testdata/lucid/iteration-labels.rs.txt": "f8df44e0fa40078f00c0c8305643ee2ef9746a975c96ab581d68e9bbd0db062a",
+    "logiceme/testdata/lucid/iteration-nesting-scope.aml.txt": "ca3492014d96f765b5748870007ab1a49eeededdbe8b2554968c8e7e18c123b8",
+    "logiceme/testdata/lucid/iteration-nesting-scope.rs.txt": "357b048ea7c022e60eeecae451cc0c83d8f7420520933e57fb9df2032d92ff23",
+    "logiceme/testdata/lucid/iteration-nonboolean.aml.txt": "a890c0f8ce8ca273cb70e42d72fd0dfda9b746a739af06a6165036d61a7deb9f",
+    "logiceme/testdata/lucid/iteration-nonboolean.rs.txt": "871a463c38da32b7277334acf3072e90d9b699ec212a5fcb0b5910fdc71bf354",
+    "logiceme/testdata/lucid/iteration-binding-scope.aml.txt": "42616ebd36fd6bcc7470baf52aab622bad579113b18ee1b44688945a038de6e3",
+    "logiceme/testdata/lucid/iteration-binding-scope.rs.txt": "d18bbdd1f7cca704ceb448ff122db277d6d498fac55d891a76a4fdaf1f348e14",
+    "logiceme/testdata/lucid/iteration-sync-await.aml.txt": "db9d8a1d28503fc081f9bde0871bbcb9a5377c6acf1f2ada69f4e469a28e3aea",
+    "logiceme/testdata/lucid/iteration-sync-await.rs.txt": "87f9c43a3e7a7a9c06370a4c92c729df2267ec687ce8f6937bdee84962e51186",
+    "logiceme/testdata/lucid/schedule-direct.aml.txt": "83e1cdac2c119753a469056d068d8cf3e38440ac7d28cac7d23c3ce00bf5d535",
+    "logiceme/testdata/lucid/schedule-direct.rs.txt": "e3915ad08c93525c25bc97b533183696fa33f1abe0e474bf8d0cc484144eee1b",
+    "logiceme/testdata/lucid/schedule-composed.aml.txt": "2f61d968ff2aa03cfd71e6844d5fcf69c32f1aded9cc6a7702e215edf76e52b6",
+    "logiceme/testdata/lucid/schedule-composed.rs.txt": "42dc9d2427c3cfbc172b320e1c49b1b33e40f98f7d1e22c282a3e965c2d7b4c2"
   },
-  "description": "Static coverage and existing witnesses; no language execution during website validation.",
+  "grammarRules": 99,
+  "grammarCases": 306,
+  "vocabularyEntries": 72,
+  "valueNames": [
+    "Thing",
+    "Text",
+    "Number",
+    "Truth",
+    "Bytes",
+    "Pointer",
+    "Lexeme",
+    "App",
+    "Service",
+    "Class",
+    "Object",
+    "Attribute",
+    "Definition",
+    "Function",
+    "Property",
+    "Operation",
+    "List",
+    "Dictionary",
+    "Map",
+    "Error",
+    "ID",
+    "None",
+    "Unknown",
+    "Null"
+  ],
+  "stdlib": {
+    "format": 1,
+    "languages": {
+      "eng": {
+        "io": {
+          "entry": "stdlib/eng/io/dictionary.l",
+          "dictionary": "IO"
+        },
+        "format": {
+          "entry": "builtins/runtime/eng/number.l",
+          "dictionary": "Formatting"
+        },
+        "runtime": {
+          "entry": "builtins/runtime/eng/dictionary.l",
+          "dictionary": "Runtime"
+        },
+        "storage": {
+          "entry": "stdlib/eng/storage/dictionary.l",
+          "dictionary": "Storage"
+        }
+      }
+    }
+  },
+  "segments": {
+    "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
+    "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
+    "builtins/segments/consonants/define.lu": "d2b292d8fd284d677f7866cb7ae745adef00cb9ca6b3d92c92ec609e36de2899",
+    "builtins/segments/consonants/describe.lu": "e9965c87b7913cd803e1df673b96db0886ea157ac51382004177070a5579d271",
+    "builtins/segments/consonants/evaluate.lu": "560028f7aa15f57e57847f813cfee74fb32fac6b742a97fb414261aa897309f4",
+    "builtins/segments/consonants/execute.lu": "8f756c87b1b5290f61f43db52a140ac0aa0a89a77692a19ad67170aec89c5927",
+    "builtins/segments/consonants/instantiate.lu": "864fa161e1edaefe8282fd5d916de7586cb2503680a0001c2f9b35321d95353f",
+    "builtins/segments/consonants/iterate.lu": "b9d9e295e4587229dc72b12ea491abe27d79e38f19fc6af09347444236e2ec4f",
+    "builtins/segments/consonants/operate.lu": "9685b54f1e5a28986a928d2f31fd7561ac80eb852225b76079a6988cfa05409a",
+    "builtins/segments/vowels/calculation.lu": "18fa1ec1c7e13df95c5581646418aaa457f7779dac06fc44015ae20f1d4ebf86",
+    "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",
+    "builtins/segments/vowels/definition.lu": "3fa695123d814616bfb8c225dc200da5f31d563b6f787c98b54975aa41b8a971",
+    "builtins/segments/vowels/description.lu": "854c95540f06905bb5ee1f166399c4edd3c1381f7afd6c79e469c76dbb3853a1",
+    "builtins/segments/vowels/evaluation.lu": "82253180544936ccbb5c0cbc7b8c48874bae363b50ab8593da994094461b9645",
+    "builtins/segments/vowels/execution.lu": "210f5f882123c4a64d33ebb539d2f3c61182dce55a2c862e9615e57a7871d5e8",
+    "builtins/segments/vowels/instantiation.lu": "9a19335f7d45435346f3c7e065000e6e6e12ea22e0798ad14381084a5a7e9c8d",
+    "builtins/segments/vowels/iteration.lu": "6321d1948be328cdcbe2a520bbf5263043f774eccb4759e7dfe930397ac06af4",
+    "builtins/segments/vowels/operation.lu": "4b439302f6c59f3eea42df4be91e788b50739c19ad290d1448f493e591699824"
+  },
+  "lucidCases": [
+    {
+      "name": "future-composed",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "future-move",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "future-infer",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "future-borrow-escape",
+      "expectedRustDiagnostic": "E0373"
+    },
+    {
+      "name": "future-move-reuse",
+      "expectedRustDiagnostic": "E0382"
+    },
+    {
+      "name": "generics-functions",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "generics-records",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "generics-traits",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "generics-calls",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "generics-late-bound-lifetime",
+      "expectedRustDiagnostic": "E0794"
+    },
+    {
+      "name": "generics-unused-parameters",
+      "expectedRustDiagnostic": "E0392"
+    },
+    {
+      "name": "generics-argument-arity",
+      "expectedRustDiagnostic": "E0107"
+    },
+    {
+      "name": "keyed-conditionals",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "keyed-nonexhaustive",
+      "expectedRustDiagnostic": "E0004"
+    },
+    {
+      "name": "keyed-call-pattern",
+      "expectedRustDiagnostic": "E0164"
+    },
+    {
+      "name": "empty-instantiations",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "trait-signature-outputs",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "callable-output-void",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "callable-typed-flat",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "callable-typed-record",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "callable-outputs",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "closure-inline",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "closure-stored-capture",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "callable-unit-mismatch",
+      "expectedRustDiagnostic": "E0308"
+    },
+    {
+      "name": "function-void-flat",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "function-void-record",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "invocation-named",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "invocation-void",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "declaration-operation",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "declaration-description",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "declaration-evaluation",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "declaration-instantiation",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "declaration-iteration",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "grouping",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "statements",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "fields",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "calculations",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "communication",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "conditionals",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "select-communication",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "select-bindings",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "select-default-order",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "select-degenerate",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "select-nesting-hygiene",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "select-closed-receive",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "select-sync-context",
+      "expectedRustDiagnostic": "E0728"
+    },
+    {
+      "name": "select-borrow-conflict",
+      "expectedRustDiagnostic": "E0499"
+    },
+    {
+      "name": "select-moved-send",
+      "expectedRustDiagnostic": "E0382"
+    },
+    {
+      "name": "iteration-conditions",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "iteration-bindings",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "iteration-async",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "iteration-traversal",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "iteration-labels",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "iteration-nesting-scope",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "iteration-nonboolean",
+      "expectedRustDiagnostic": "E0308"
+    },
+    {
+      "name": "iteration-binding-scope",
+      "expectedRustDiagnostic": "E0425"
+    },
+    {
+      "name": "iteration-sync-await",
+      "expectedRustDiagnostic": "E0728"
+    },
+    {
+      "name": "schedule-direct",
+      "expectedRustDiagnostic": null
+    },
+    {
+      "name": "schedule-composed",
+      "expectedRustDiagnostic": null
+    }
+  ],
+  "malformedInputs": [
+    "logiceme/testdata/lucid/callable-invalid/bw-capture.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-duplicate-input-prop-key.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-file-kob.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-file-ky.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-file-scope.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-flat-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-flat-receiver.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-func-outputs-conflict.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-malformed-func.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-operation-body.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-parameter-header.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-record-capture.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-record-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-record-receiver.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-requirements-header.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-unknown-func-field.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/bw-unknown-receiver-field.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-capture.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-duplicate-func-key.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-empty-func.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-empty-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-func-inputs-conflict.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-malformed-input-prop.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-malformed-receiver-prop.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-missing-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-parameter-header.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-record-capture.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-record-empty-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-record-missing-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-requirements-header.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-unknown-func-field.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/fw-whitespace-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-empty-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-empty-type.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-flat-struct-tags.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-flat-unknown.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-flat-value.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-missing-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-missing-type.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-record-struct-tags.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-record-unknown.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/input-record-value.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/ky-anonymous-receiver.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/ky-e-child.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/ky-empty-key.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/ky-fw-child.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/ky-missing-callee.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/ky-multiple-callees.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/ky-named-child.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/ky-w-child.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/ky-whitespace-key.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-duplicate-func-key.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-duplicate-input-prop-key.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-empty-receiver.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-input-missing-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-input-missing-type.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-input-unknown-field.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-malformed-func.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-malformed-input-prop.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-missing-name.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-receiver.aml.txt",
+    "logiceme/testdata/lucid/callable-invalid/my-unknown-func-field.aml.txt",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/hy-empty-props-parameters.aml.txt",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/hy-empty-sum.aml.txt",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/hy-missing-props-parameters.aml.txt",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/my-empty-funcs-parameters.aml.txt",
+    "logiceme/testdata/lucid/empty-instantiation-invalid/my-missing-funcs-method.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/anonymous-ky-generic-types.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/anonymous-ky-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/bw-generic-types.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/bw-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/class-generic-types.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/class-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/duplicate-generic-types.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/duplicate-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/e-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/func-generic-types.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/func-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/funcs-generic-types.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/funcs-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/fw-empty-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/fw-whitespace-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/hy-empty-generic-types.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/hy-whitespace-generic-types.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/o-generic-types.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/object-generic-types-ea.aml.txt",
+    "logiceme/testdata/lucid/generics-invalid/object-lifetimes.aml.txt",
+    "logiceme/testdata/lucid/invocation-invalid/empty-receiver.aml.txt",
+    "logiceme/testdata/lucid/invocation-invalid/whitespace-receiver.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/calculation-definition-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/calculation-evaluation-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-empty-pattern.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-key-keys-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-missing-child.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-missing-pattern.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-multiple-children.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-multiple-patterns.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-native-value.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-outside-x.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-unsupported-mutable.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/dog-wrong-child.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/evaluation-definition-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/iterator-calculation-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/iterator-definition-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/iterator-evaluation-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/missing-body.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/multiple-bodies.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-child.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-empty-pattern.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-empty-value.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-key-keys-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-missing-pattern.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-missing-value.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-multiple-patterns.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-multiple-values.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-outside-x.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-unsupported-type.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/og-value-values-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/ordinary-do-condition.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/ordinary-dob-condition.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/ordinary-o-condition.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/ordinary-ob-condition.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-empty-label.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-file-scope.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-key-keys-conflict.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-missing-child.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-missing-label.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-multiple-children.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-multiple-labels.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-native-values.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-unsupported-coda.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-unsupported-parameter.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/po-wrong-child.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/repeated-calculation.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/repeated-definition.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/repeated-evaluation.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/three-part.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/unsupported-evaluation-adapter.aml.txt",
+    "logiceme/testdata/lucid/iteration-invalid/wrong-category-body.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/body-without-pattern.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/duplicate-composed-fallback.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/duplicate-fallback.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/empty-key.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/empty-pattern.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/excess-bodies.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/excess-patterns.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/no-entries.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/nonterminal-composed-fallback.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/nonterminal-fallback.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/pattern-without-body.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/unexpected-child.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/whitespace-key.aml.txt",
+    "logiceme/testdata/lucid/keyed-invalid/whitespace-pattern.aml.txt",
+    "logiceme/testdata/lucid/scheduling-invalid/mv-deferred-false.aml.txt",
+    "logiceme/testdata/lucid/scheduling-invalid/mv-deferred-true.aml.txt",
+    "logiceme/testdata/lucid/scheduling-invalid/v-deferred-false.aml.txt",
+    "logiceme/testdata/lucid/scheduling-invalid/v-deferred-true.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/assignment-target.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/bare-calculation.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/bare-ce.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/bi-orphan.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/caller-key.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/ci-file-scope.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/ci-non-bi-child.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/default-missing-definition.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/do-guard.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/dob-guard.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/doc-missing-child.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/doc-multiple-children.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/doc-native-value.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/doc-outside-bi.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/doc-wrong-child.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/duplicate-default.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/guard-mutable.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/guard-parameter.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/guard-type.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/invalid-default.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/missing-guard.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/missing-name.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/mixed-guards.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/multiple-bodies.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/multiple-definitions.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/multiple-names.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/non-w-body.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/oc-child.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/oc-empty-value.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/oc-missing-value.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/oc-multiple-values.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/oc-outside-bi.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/pattern-binding.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/unsupported-c-qualified.aml.txt",
+    "logiceme/testdata/lucid/selection-invalid/unsupported-definition.aml.txt"
+  ],
   "entries": [
     {
       "id": "grammar:value",
@@ -6627,7 +7393,7 @@
       "name": "Null",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
-      "evidenceSet": 260,
+      "evidenceSet": 262,
       "note": 161
     },
     {
@@ -6635,7 +7401,7 @@
       "name": "List",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 14,
-      "evidenceSet": 262,
+      "evidenceSet": 263,
       "note": 7
     },
     {
@@ -6643,21 +7409,21 @@
       "name": "Dictionary",
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
       "classification": 14,
-      "evidenceSet": 263
+      "evidenceSet": 264
     },
     {
       "id": "type:app",
       "name": "App",
       "doc": "docs/spec/applicational-types.md#apps",
       "classification": 13,
-      "evidenceSet": 264
+      "evidenceSet": 265
     },
     {
       "id": "type:service",
       "name": "Service",
       "doc": "docs/spec/applicational-types.md#services",
       "classification": 13,
-      "evidenceSet": 265,
+      "evidenceSet": 266,
       "note": 162
     },
     {
@@ -6665,35 +7431,35 @@
       "name": "Class",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 13,
-      "evidenceSet": 266
+      "evidenceSet": 267
     },
     {
       "id": "type:object",
       "name": "Object",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 13,
-      "evidenceSet": 266
+      "evidenceSet": 267
     },
     {
       "id": "type:attribute",
       "name": "Attribute",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 14,
-      "evidenceSet": 267
+      "evidenceSet": 268
     },
     {
       "id": "type:definition",
       "name": "Definition",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 14,
-      "evidenceSet": 268
+      "evidenceSet": 269
     },
     {
       "id": "type:function",
       "name": "Function",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 13,
-      "evidenceSet": 269,
+      "evidenceSet": 270,
       "note": 163
     },
     {
@@ -6701,49 +7467,49 @@
       "name": "Property",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 15,
-      "evidenceSet": 270
+      "evidenceSet": 271
     },
     {
       "id": "type:operation",
       "name": "Operation",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 15,
-      "evidenceSet": 270
+      "evidenceSet": 271
     },
     {
       "id": "type:noun",
       "name": "Noun",
       "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "classification": 13,
-      "evidenceSet": 271
+      "evidenceSet": 272
     },
     {
       "id": "type:verb",
       "name": "Verb",
       "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "classification": 13,
-      "evidenceSet": 272
+      "evidenceSet": 273
     },
     {
       "id": "type:adjective",
       "name": "Adjective",
       "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "classification": 13,
-      "evidenceSet": 273
+      "evidenceSet": 274
     },
     {
       "id": "type:adverb",
       "name": "Adverb",
       "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "classification": 14,
-      "evidenceSet": 274
+      "evidenceSet": 275
     },
     {
       "id": "value-tag:Thing",
       "name": "Thing",
       "doc": "docs/spec/values.md#thing",
       "classification": 16,
-      "evidenceSet": 275,
+      "evidenceSet": 276,
       "note": 164
     },
     {
@@ -6751,7 +7517,7 @@
       "name": "Text",
       "doc": "docs/spec/values.md#text",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6759,7 +7525,7 @@
       "name": "Number",
       "doc": "docs/spec/values.md#number",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6767,7 +7533,7 @@
       "name": "Truth",
       "doc": "docs/spec/values.md#truth",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6775,7 +7541,7 @@
       "name": "Bytes",
       "doc": "docs/spec/values.md#byte-and-bytes",
       "classification": 16,
-      "evidenceSet": 275,
+      "evidenceSet": 276,
       "note": 164
     },
     {
@@ -6783,7 +7549,7 @@
       "name": "Pointer",
       "doc": "docs/spec/values.md#pointer",
       "classification": 16,
-      "evidenceSet": 275,
+      "evidenceSet": 276,
       "note": 164
     },
     {
@@ -6791,7 +7557,7 @@
       "name": "Lexeme",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6799,7 +7565,7 @@
       "name": "App",
       "doc": "docs/spec/applicational-types.md#apps",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6807,7 +7573,7 @@
       "name": "Service",
       "doc": "docs/spec/applicational-types.md#services",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6815,7 +7581,7 @@
       "name": "Class",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6823,7 +7589,7 @@
       "name": "Object",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6831,7 +7597,7 @@
       "name": "Attribute",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6839,7 +7605,7 @@
       "name": "Definition",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6847,7 +7613,7 @@
       "name": "Function",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
-      "evidenceSet": 277,
+      "evidenceSet": 278,
       "note": 165
     },
     {
@@ -6855,7 +7621,7 @@
       "name": "Property",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6863,7 +7629,7 @@
       "name": "Operation",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6871,7 +7637,7 @@
       "name": "List",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 16,
-      "evidenceSet": 275,
+      "evidenceSet": 276,
       "note": 164
     },
     {
@@ -6879,7 +7645,7 @@
       "name": "Dictionary",
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6887,7 +7653,7 @@
       "name": "Error",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 275,
+      "evidenceSet": 276,
       "note": 164
     },
     {
@@ -6895,7 +7661,7 @@
       "name": "ID",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6903,7 +7669,7 @@
       "name": "None",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6911,7 +7677,7 @@
       "name": "Unknown",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 276,
+      "evidenceSet": 277,
       "note": 165
     },
     {
@@ -6919,7 +7685,7 @@
       "name": "Null",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 275,
+      "evidenceSet": 279,
       "note": 164
     },
     {
@@ -6927,21 +7693,21 @@
       "name": "Start",
       "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
       "classification": 17,
-      "evidenceSet": 278
+      "evidenceSet": 280
     },
     {
       "id": "builtin:execute",
       "name": "Execute",
       "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
       "classification": 17,
-      "evidenceSet": 278
+      "evidenceSet": 280
     },
     {
       "id": "builtin:build",
       "name": "Build",
       "doc": "docs/reference/builtins/lifecycle.md#build",
       "classification": 17,
-      "evidenceSet": 279,
+      "evidenceSet": 281,
       "note": 166
     },
     {
@@ -6949,7 +7715,7 @@
       "name": "Run",
       "doc": "docs/reference/builtins/lifecycle.md#run",
       "classification": 17,
-      "evidenceSet": 280,
+      "evidenceSet": 282,
       "note": 166
     },
     {
@@ -6957,7 +7723,7 @@
       "name": "Stop",
       "doc": "docs/reference/builtins/lifecycle.md#stop",
       "classification": 17,
-      "evidenceSet": 281,
+      "evidenceSet": 283,
       "note": 166
     },
     {
@@ -6965,7 +7731,7 @@
       "name": "Await",
       "doc": "docs/reference/builtins/lifecycle.md#await",
       "classification": 17,
-      "evidenceSet": 282,
+      "evidenceSet": 284,
       "note": 166
     },
     {
@@ -6973,21 +7739,21 @@
       "name": "Show",
       "doc": "docs/reference/builtins/lifecycle.md#show",
       "classification": 17,
-      "evidenceSet": 283
+      "evidenceSet": 285
     },
     {
       "id": "builtin:exit",
       "name": "Exit",
       "doc": "docs/reference/builtins/lifecycle.md#exit",
       "classification": 17,
-      "evidenceSet": 284
+      "evidenceSet": 286
     },
     {
       "id": "builtin:output",
       "name": "Output",
       "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
       "classification": 17,
-      "evidenceSet": 285,
+      "evidenceSet": 287,
       "note": 166
     },
     {
@@ -6995,7 +7761,7 @@
       "name": "Error",
       "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
       "classification": 17,
-      "evidenceSet": 286,
+      "evidenceSet": 288,
       "note": 166
     },
     {
@@ -7003,156 +7769,157 @@
       "name": "Process",
       "doc": "docs/reference/builtins/definitions.md#process",
       "classification": 17,
-      "evidenceSet": 287
+      "evidenceSet": 289,
+      "note": 167
     },
     {
       "id": "builtin:function",
       "name": "Function",
       "doc": "docs/reference/builtins/definitions.md#function",
       "classification": 18,
-      "evidenceSet": 288,
-      "note": 167
+      "evidenceSet": 290,
+      "note": 168
     },
     {
       "id": "builtin:function.return",
       "name": "Function.Return",
       "doc": "docs/reference/builtins/definitions.md#functionreturn",
       "classification": 18,
-      "evidenceSet": 289,
-      "note": 168
+      "evidenceSet": 291,
+      "note": 169
     },
     {
       "id": "builtin:objective",
       "name": "Objective",
       "doc": "docs/reference/builtins/definitions.md#objective",
       "classification": 17,
-      "evidenceSet": 287
+      "evidenceSet": 292
     },
     {
       "id": "builtin:main",
       "name": "Main",
       "doc": "docs/reference/builtins/definitions.md#main",
       "classification": 17,
-      "evidenceSet": 287,
-      "note": 169
+      "evidenceSet": 292,
+      "note": 170
     },
     {
       "id": "builtin:basic",
       "name": "Basic",
       "doc": "docs/reference/builtins/definitions.md#basic",
       "classification": 17,
-      "evidenceSet": 287
+      "evidenceSet": 292
     },
     {
       "id": "builtin:create",
       "name": "Create",
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 17,
-      "evidenceSet": 290
+      "evidenceSet": 293
     },
     {
       "id": "builtin:define",
       "name": "Define",
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 17,
-      "evidenceSet": 291
+      "evidenceSet": 294
     },
     {
       "id": "builtin:describe",
       "name": "Describe",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 17,
-      "evidenceSet": 292
+      "evidenceSet": 295
     },
     {
       "id": "builtin:use",
       "name": "Use",
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "classification": 17,
-      "evidenceSet": 293
+      "evidenceSet": 296
     },
     {
       "id": "builtin:public",
       "name": "Public",
       "doc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 17,
-      "evidenceSet": 294
+      "evidenceSet": 297
     },
     {
       "id": "builtin:publicly",
       "name": "Publicly",
       "doc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 17,
-      "evidenceSet": 294
+      "evidenceSet": 297
     },
     {
       "id": "builtin:new",
       "name": "New",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 17,
-      "evidenceSet": 295
+      "evidenceSet": 298
     },
     {
       "id": "builtin:generic",
       "name": "Generic",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 18,
-      "evidenceSet": 295
+      "evidenceSet": 298
     },
     {
       "id": "builtin:input",
       "name": "Input",
       "doc": "docs/reference/builtins/index.md#runtime-members",
       "classification": 18,
-      "evidenceSet": 296
+      "evidenceSet": 299
     },
     {
       "id": "builtin:put",
       "name": "Put",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 17,
-      "evidenceSet": 297,
-      "note": 170
+      "evidenceSet": 300,
+      "note": 171
     },
     {
       "id": "builtin:place",
       "name": "Place",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 17,
-      "evidenceSet": 297,
-      "note": 170
+      "evidenceSet": 300,
+      "note": 171
     },
     {
       "id": "builtin:get",
       "name": "Get",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 298,
-      "note": 171
+      "evidenceSet": 301,
+      "note": 172
     },
     {
       "id": "builtin:take",
       "name": "Take",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 298,
-      "note": 171
+      "evidenceSet": 301,
+      "note": 172
     },
     {
       "id": "builtin:import",
       "name": "Import",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 298,
-      "note": 171
+      "evidenceSet": 301,
+      "note": 172
     },
     {
       "id": "builtin:export",
       "name": "Export",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 298,
-      "note": 171
+      "evidenceSet": 301,
+      "note": 172
     },
     {
       "id": "stdlib:eng:io",
@@ -7164,8 +7931,8 @@
       },
       "visibility": "namespace",
       "classification": 20,
-      "evidenceSet": 299,
-      "note": 172
+      "evidenceSet": 302,
+      "note": 173
     },
     {
       "id": "stdlib-export:eng:io:IO.Print",
@@ -7186,14 +7953,14 @@
       "argumentRoles": [
         "Output (Thing)"
       ],
-      "effect": "Writes the resolved scalar through the private Log/Logger implementation and appends LF; no L return value is declared.",
+      "effect": "Writes the selected typed rendering and appends LF; no L return value is declared.",
       "classification": 20,
-      "evidenceSet": 300,
-      "note": 173
+      "evidenceSet": 303,
+      "note": 174
     },
     {
-      "id": "stdlib-internal:eng:io:Log",
-      "name": "Log / Logger",
+      "id": "stdlib-internal:eng:io:output",
+      "name": "Render / Write",
       "doc": "docs/stdlib/eng/io.md#public-and-private-names",
       "dictionary": {
         "lexicon": "eng",
@@ -7201,63 +7968,63 @@
       },
       "visibility": "private",
       "classification": 21,
-      "evidenceSet": 301,
-      "note": 174
+      "evidenceSet": 304,
+      "note": 175
     },
     {
       "id": "grammar-group:values-subjects-objects",
       "name": "values-subjects-objects",
       "doc": "docs/spec/grammar.md#values-subjects-and-objects",
       "classification": 22,
-      "evidenceSet": 302,
-      "note": 175
+      "evidenceSet": 305,
+      "note": 176
     },
     {
       "id": "grammar-group:phrases",
       "name": "phrases",
       "doc": "docs/spec/grammar.md#phrases",
       "classification": 22,
-      "evidenceSet": 303,
-      "note": 175
+      "evidenceSet": 306,
+      "note": 176
     },
     {
       "id": "grammar-group:declarations",
       "name": "declarations",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 304,
-      "note": 175
+      "evidenceSet": 307,
+      "note": 176
     },
     {
       "id": "grammar-group:definitions",
       "name": "definitions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 305,
-      "note": 175
+      "evidenceSet": 308,
+      "note": 176
     },
     {
       "id": "grammar-group:descriptors",
       "name": "descriptors",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 306,
-      "note": 175
+      "evidenceSet": 309,
+      "note": 176
     },
     {
       "id": "grammar-group:aliases-imports",
       "name": "aliases-imports",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 307,
-      "note": 175
+      "evidenceSet": 310,
+      "note": 176
     },
     {
       "id": "grammar-group:process-lifecycle",
       "name": "process-lifecycle",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 308,
+      "evidenceSet": 311,
       "note": 166
     },
     {
@@ -7265,104 +8032,88 @@
       "name": "collection-actions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 22,
-      "evidenceSet": 309,
-      "note": 176
+      "evidenceSet": 312,
+      "note": 177
     },
     {
       "id": "grammar-group:conditions",
       "name": "conditions",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 22,
-      "evidenceSet": 310,
-      "note": 175
+      "evidenceSet": 313,
+      "note": 176
     },
     {
       "id": "grammar-group:while",
       "name": "while",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 24,
-      "evidenceSet": 308,
-      "note": 175
+      "evidenceSet": 311,
+      "note": 176
     },
     {
       "id": "grammar-group:joined-conditions",
       "name": "joined-conditions",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 24,
-      "evidenceSet": 308,
-      "note": 175
+      "evidenceSet": 311,
+      "note": 176
     },
     {
       "id": "grammar-group:predicates-statements",
       "name": "predicates-statements",
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "classification": 22,
-      "evidenceSet": 308,
-      "note": 175
+      "evidenceSet": 311,
+      "note": 176
     },
     {
       "id": "grammar-group:vocabulary",
       "name": "vocabulary",
       "doc": "docs/spec/grammar.md#vocabulary-reference",
       "classification": 22,
-      "evidenceSet": 311,
-      "note": 175
+      "evidenceSet": 314,
+      "note": 176
     },
     {
       "id": "grammar-group:notation",
       "name": "notation",
       "doc": "docs/spec/grammar.md#configuration-notation",
       "classification": 23,
-      "evidenceSet": 312,
-      "note": 175
+      "evidenceSet": 315,
+      "note": 176
     },
     {
       "id": "grammar-group:matching",
       "name": "matching",
       "doc": "docs/spec/grammar.md#matching-and-ambiguity",
       "classification": 23,
-      "evidenceSet": 313,
-      "note": 175
+      "evidenceSet": 316,
+      "note": 176
     },
     {
       "id": "value-tag:invalid-zero",
       "name": "Invalid zero sentinel",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 314,
-      "note": 177
+      "evidenceSet": 317,
+      "note": 178
     },
     {
       "id": "type:map",
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "classification": 13,
-      "evidenceSet": 315,
-      "note": 178
+      "evidenceSet": 318,
+      "note": 179
     },
     {
       "id": "value-tag:Map",
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "classification": 16,
-      "evidenceSet": 316,
-      "note": 179
-    },
-    {
-      "id": "type:instance",
-      "name": "Instance",
-      "doc": "docs/spec/applicational-types.md#instances",
-      "classification": 13,
-      "evidenceSet": 261,
+      "evidenceSet": 319,
       "note": 180
-    },
-    {
-      "id": "value-tag:Instance",
-      "name": "Instance",
-      "doc": "docs/spec/applicational-types.md#instances",
-      "classification": 16,
-      "evidenceSet": 316,
-      "note": 179
     },
     {
       "id": "type:error",
@@ -7377,247 +8128,286 @@
       "name": "runtime-captures",
       "doc": "docs/spec/names-and-scope.md#runtime-storage-and-definite-assignment",
       "classification": 23,
-      "evidenceSet": 317,
+      "evidenceSet": 320,
       "note": 182
+    },
+    {
+      "id": "stdlib-internal:eng:storage",
+      "name": "Storage",
+      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "visibility": "namespace",
+      "classification": 21,
+      "evidenceSet": 321,
+      "note": 183
+    },
+    {
+      "id": "stdlib-internal:eng:runtime",
+      "name": "Runtime",
+      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "runtime"
+      },
+      "visibility": "namespace",
+      "classification": 21,
+      "evidenceSet": 322,
+      "note": 183
+    },
+    {
+      "id": "stdlib-internal:eng:format",
+      "name": "Formatting",
+      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "format"
+      },
+      "visibility": "namespace",
+      "classification": 21,
+      "evidenceSet": 323,
+      "note": 184
     },
     {
       "id": "logeme.segment.B",
       "name": "B / declare",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 25,
-      "evidenceSet": 318
+      "evidenceSet": 324
     },
     {
       "id": "logeme.segment.A",
       "name": "A / declaration",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 25,
-      "evidenceSet": 319
+      "evidenceSet": 325
     },
     {
       "id": "logeme.segment.D",
       "name": "D / calculate",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 25,
-      "evidenceSet": 320
+      "evidenceSet": 326
     },
     {
       "id": "logeme.segment.E",
       "name": "E / calculation",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 25,
-      "evidenceSet": 321
+      "evidenceSet": 327
     },
     {
       "id": "logeme.segment.G",
       "name": "G / evaluate",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 25,
-      "evidenceSet": 322
+      "evidenceSet": 328
     },
     {
       "id": "logeme.segment.I",
       "name": "I / evaluation",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 25,
-      "evidenceSet": 323
+      "evidenceSet": 329
     },
     {
       "id": "logeme.segment.F",
       "name": "F / define",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 25,
-      "evidenceSet": 324
+      "evidenceSet": 330
     },
     {
       "id": "logeme.segment.O",
       "name": "O / definition",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 25,
-      "evidenceSet": 325
+      "evidenceSet": 331
     },
     {
       "id": "logeme.segment.H",
       "name": "H / describe",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 326
+      "evidenceSet": 332
     },
     {
       "id": "logeme.segment.U",
       "name": "U / description",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 327
+      "evidenceSet": 333
     },
     {
       "id": "logeme.segment.K",
       "name": "K / operate",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 25,
-      "evidenceSet": 328
+      "evidenceSet": 334
     },
     {
       "id": "logeme.segment.W",
       "name": "W / operation",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 25,
-      "evidenceSet": 329
+      "evidenceSet": 335
     },
     {
       "id": "logeme.segment.P",
       "name": "P / iterate",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 25,
-      "evidenceSet": 330
+      "evidenceSet": 336
     },
     {
       "id": "logeme.segment.X",
       "name": "X / iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 25,
-      "evidenceSet": 331
+      "evidenceSet": 337
     },
     {
       "id": "logeme.segment.M",
       "name": "M / instantiate",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 25,
-      "evidenceSet": 332
+      "evidenceSet": 338
     },
     {
       "id": "logeme.segment.Y",
       "name": "Y / instantiation",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 25,
-      "evidenceSet": 333
+      "evidenceSet": 339
     },
     {
       "id": "logeme.segment.C",
       "name": "C / execute",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 334
+      "evidenceSet": 340
     },
     {
       "id": "logeme.segment.V",
       "name": "V / execution",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 335
+      "evidenceSet": 341
     },
     {
       "id": "logeme.family.declaration-adapters",
       "name": "A/BA/DA/KA/HA/GA/MA/PA",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 26,
-      "evidenceSet": 336
+      "evidenceSet": 342
     },
     {
       "id": "logeme.family.definition-adapters",
       "name": "O/OB/FO/FOB/KO/KOB/DO/DOB/GO/GOB/MO/MOB/CO/COB/BO/BOD/BOK/BOH/BOG/BOM/BOP/BOC",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 26,
-      "evidenceSet": 337
+      "evidenceSet": 343
     },
     {
       "id": "logeme.family.literal-file",
       "name": "EA complete literal file",
       "doc": "docs/reference/logemes/declarations.md#ea-complete-literal-file",
       "classification": 26,
-      "evidenceSet": 338
+      "evidenceSet": 344
     },
     {
       "id": "logeme.family.communication",
       "name": "CE communication calculations",
       "doc": "docs/reference/logemes/calculations.md#communication-calculations",
       "classification": 25,
-      "evidenceSet": 339
+      "evidenceSet": 345
     },
     {
       "id": "logeme.family.description",
       "name": "U/MU description and updates",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 340
+      "evidenceSet": 346
     },
     {
       "id": "logeme.family.selection",
       "name": "I/GE/GI ordered selection",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 26,
-      "evidenceSet": 341
+      "evidenceSet": 347
     },
     {
       "id": "logeme.family.readiness",
       "name": "CI/BI/OC/DOC readiness selection",
       "doc": "docs/reference/logemes/selection.md#ci-and-bi-bounded-readiness-selection",
       "classification": 25,
-      "evidenceSet": 342
+      "evidenceSet": 348
     },
     {
       "id": "logeme.family.callables",
       "name": "W/FW/BW/KY/KO/KOB callables",
       "doc": "docs/reference/logemes/callables.md#invocation-through-ky",
       "classification": 25,
-      "evidenceSet": 343
+      "evidenceSet": 349
     },
     {
       "id": "logeme.family.iteration",
       "name": "X/I/OG/DOG/PO four-category iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 26,
-      "evidenceSet": 344
+      "evidenceSet": 350
     },
     {
       "id": "logeme.family.unsupported-loops",
       "name": "Three-part loops",
       "doc": "docs/reference/logemes/iteration.md#unsupported-forms-and-native-failures",
       "classification": 27,
-      "evidenceSet": 338
+      "evidenceSet": 351
     },
     {
       "id": "logeme.family.instantiation",
       "name": "Y/HY empty and populated records",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 26,
-      "evidenceSet": 345
+      "evidenceSet": 352
     },
     {
       "id": "logeme.family.traits",
       "name": "MY required signatures",
       "doc": "docs/reference/logemes/instantiation.md#required-trait-signatures",
       "classification": 25,
-      "evidenceSet": 346
+      "evidenceSet": 353
     },
     {
       "id": "logeme.family.generics",
       "name": "Local FW/HY/MY/Y/named KY parameters",
       "doc": "docs/reference/logemes/metadata.md#lifetimes-and-generictypes",
       "classification": 25,
-      "evidenceSet": 347
+      "evidenceSet": 354
     },
     {
       "id": "logeme.family.scheduling",
       "name": "V/MV scheduling",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 348
+      "evidenceSet": 355
     },
     {
       "id": "logeme.family.deferred",
       "name": "Deferred metadata",
       "doc": "docs/reference/logemes/instantiation.md#deferred-is-rejected",
       "classification": 27,
-      "evidenceSet": 338
+      "evidenceSet": 351
     },
     {
       "id": "logeme.family.futures",
       "name": "CV/DV/CO/COB future composition",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 28,
-      "evidenceSet": 349,
-      "note": 183
+      "evidenceSet": 356,
+      "note": 185
     }
   ],
   "schemaVersion": 3,
@@ -7627,7 +8417,7 @@
     "Recognizes a Text token. Ordinary source Text and typed scalar/native-byte emission are implemented; preserve literal bytes and distinguish framing escapes from general string escapes.",
     "Recognizes a binary64 Number token, not a %-delimited source literal. Range, finite-value and native encoding boundaries remain stage-specific.",
     "Recognizes a Truth token loaded from lowercase true/false. This pattern does not introduce ?-delimited source literals or implicit truthiness.",
-    "Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states.",
+    "Explicit Null initializes an absence value; Show renders null. It is distinct from an unassigned slot and internal None/Unknown states.",
     "Matches the native type token category. Construction and usable values depend on the explicit source type whitelist, descriptor binding and selected category.",
     "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API.",
     "Recognizes Dictionary type/storage structure. Namespace members and imports are demonstrated; arbitrary runtime map operations are not thereby supported.",
@@ -7654,7 +8444,7 @@
     "A Function name carries its explicit Inputs/Outputs signature; descriptors supply the Process to the same canonical constructor.",
     "This phrase associates grammatical objects, prepositions or clauses as given by its sequence. Its location and optional/repeated terms are defined by the configured matcher, not conventional EBNF.",
     "This phrase participates in construction or argument attachment. Native placeholders have explicit type and encoding contracts; do not infer arbitrary coercions.",
-    "The for phrase contains ordered applicative clauses. Generic action arguments and recursive-expansion checks belong to source action semantics.",
+    "The for phrase contains ordered applicative clauses. Source actions retain their generic argument and recursion checks. Constructor directives in native metadata Functions use the shared instruction path with enclosing Function bindings; they do not introduce loop-local declarations.",
     "Recognizes List type/storage structure. General runtime element construction, mutation, indexing, iteration and bounds behavior are not established.",
     "The phrase owns a declaration object whose scope and publication are resolved semantically.",
     "The as phrase supplies a bound value; concrete type and runtime assignment requirements remain enforced.",
@@ -7662,7 +8452,7 @@
     "A declarative alias phrase must resolve its target and preserve canonical ownership; it does not copy an application or widen visibility.",
     "Declares an ordinary Function with its signature.",
     "Pairs a named parameter with a complete runtime type or existing Function signature.",
-    "Supplies a Number index for Lists/Bytes or a Text key for Map/Instance reads and writes. Runtime checks reject invalid keys and bounds.",
+    "Supplies a Number index for Lists/Bytes or a Text key for Map reads and writes. Runtime checks reject invalid keys and bounds.",
     "Selects the source of a typed read, with an optional indexed key. Complete requested runtime type identities are checked before extraction.",
     "Selects a typed update destination and optional index or field key; runtime mutation does not change vocabulary namespaces.",
     "Configured in/collection relation; the retained grammar does not establish general executable insertion, indexing, or dictionary mutation.",
@@ -7741,7 +8531,7 @@
     "Inputs name ordinary Function parameters or native signature metadata. They do not introduce process stdin/argument transport.",
     "Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries.",
     "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.",
-    "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element, shape and callable identities. No implicit coercion or dynamic arithmetic.",
+    "Explicit Thing boundaries retain concrete runtime types; typed reads validate element types and callable identities. No implicit coercion or dynamic arithmetic.",
     "The configured text root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.",
     "The configured number root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.",
     "The configured byte root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.",
@@ -7753,7 +8543,7 @@
     "A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior.",
     "Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion.",
     "Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership.",
-    "Put appends to a List, stores Map/Instance fields or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries.",
+    "Put appends to a List, stores Map values or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries.",
     "Place replaces a List element at a checked Number index or a keyed runtime field. Required target/key/value types are checked.",
     "The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API.",
     "Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output.",
@@ -7781,7 +8571,7 @@
     "Supported help alias.",
     "End flag parsing, including before a filename beginning with a dash.",
     "OS targeting follows v0.0.1; currently rejected.",
-    "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types, shape identities and callable signatures. No implicit coercion or dynamic arithmetic.",
+    "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types and callable signatures. No implicit coercion or dynamic arithmetic.",
     "Owned byte sequences construct from Text, snapshot and support checked indexed reads as Number. Byte mutation and numeric-width families are not supplied.",
     "Null initializes an explicit absence value; typed reads preserve evaluation and type/index/key checks. Unassigned storage and the native-definition Null atom remain separate.",
     "Service declarations remain structural; standalone bodies, packages and native process operations are unsupported. App-constructed Service libraries retain their workspace topology. Static inspection; witnesses not run.",
@@ -7789,22 +8579,24 @@
     "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
     "Internal tag; source construction and runtime support are documented separately.",
     "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+    "Native metadata Functions can bind ordered source operations through directive compositions; locals retain their enclosing Function scope.",
     "The canonical Function definition supplies composed signatures and Process bodies for source declarations and constructed Objects.",
     "Return retains its definition-site member through word expansion; different constructor contracts reject. Output counts and types remain checked.",
     "Source-defined Service/Object/Function construction descriptor used by Apps; it grants no standalone Service process role.",
-    "Typed updates append/replace List elements, write Map/Instance fields or replace a Pointer target. Destination kind, keys, element/field types and managed ownership cycles are checked.",
+    "Typed updates append/replace List elements, write Map values or replace a Pointer target. Destination kind, keys, element types and managed ownership cycles are checked.",
     "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
     "Reviewed registered export namespace for dictionary language=eng key=io. Index-driven addition/rename/deletion must trigger new review.",
-    "Reviewed sole public member of current eng/io dictionary. Forms Print/Prints/Printed/Printing/Printer. Log/Logger remain private dependencies; no regex-derived visibility.",
-    "Private native-backed implementation required by IO.Print, not an importable public member.",
+    "IO.Print composes the operand's selected Render member with Write; implementation dependencies retain their private owners.",
+    "Private source Functions and small host operations selected by IO.Print, not additional imported API.",
     "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
     "Put/Place lower to checked runtime updates. Typed constructor reads supply indexed access; Get/Take, iteration and general removal are not established.",
     "The unnamed zero value is a compiler sentinel; it is not one of the 23 named representation tags or a public source constructor. valueTypeCount is an enum bound, not a stored value. Static inspection only.",
     "Owned typed values keyed by Text bytes; insertion/replacement and checked reads preserve complete element types and deterministic byte ordering. Distinct from a vocabulary Dictionary.",
     "Internal representation tag; executable source semantics are defined by the linked runtime type contract.",
-    "A canonical descriptor fixes the runtime field schema and identity. Ordinary fields snapshot; Pointer targets remain shared. Unknown, absent and incorrectly typed fields reject.",
     "Error values can be constructed, stored, captured and placed in typed containers. App Error is optional until inspected; extracting an absent Error rejects. Direct Show remains unsupported.",
     "Activation-specific environments snapshot ordinary captures and retain shared Pointer targets. Actual arguments evaluate once in caller scope before callee entry; copies retain environments until last-owner release. App-process capture transport is not inferred.",
+    "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog.",
+    "IO and Runtime select one canonical formatting Function and its source-owned dependencies; importing IO does not load process supervision.",
     "CV constructs one unscheduled future; local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing; this adds no async-FW modifier or Function dispatcher."
   ],
   "evidenceSets": [
@@ -10235,11 +11027,12 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go",
+        "lyger/literal_atoms.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/definition_bindings.go",
         "lyger/grammar.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_types.go"
       ],
       "witnesses": [
         "lyger/raw_text_test.go",
@@ -10258,10 +11051,11 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/literal_atoms.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/definition_bindings.go",
+        "lyger/runtime_types.go"
       ],
       "witnesses": [
         "lyger/definition_number_test.go",
@@ -10281,10 +11075,11 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/literal_atoms.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/definition_bindings.go",
+        "lyger/runtime_types.go"
       ],
       "witnesses": [
         "lyger/orchestrator_test.go",
@@ -10300,10 +11095,11 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -10322,8 +11118,10 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go"
+        "lyger/literal_atoms.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -10339,10 +11137,11 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -10358,10 +11157,11 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -10379,10 +11179,32 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "builtins/eng/core.l",
+        "stdlib/eng/storage/dictionary.l"
+      ],
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/utilities.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -10458,7 +11280,7 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/source_topology.go"
+        "lyger/source_units_topology.go"
       ],
       "witnesses": [
         "lyger/recursive_classes_test.go"
@@ -10492,7 +11314,7 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/definition_test.go"
@@ -10506,14 +11328,17 @@
     {
       "sources": [
         "builtins/eng/core.l",
-        "lyger/definition.go",
+        "lyger/definition_bindings.go",
         "lyger/source_functions.go",
-        "lyger/orchestration_functions.go",
-        "lyger/runtime_values.go",
-        "lyger/orchestration_program.go",
-        "lyger/program_runtime.go",
+        "lyger/function_composition.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "lyger/storage_words.go",
         "lyger/binding.go",
-        "lyger/scope.go"
+        "lyger/scope.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/function_definitions.go",
+        "lyger/lowering.go"
       ],
       "witnesses": [
         "lyger/source_functions_test.go",
@@ -10525,7 +11350,8 @@
         "lyger/function_composition_test.go",
         "lyger/function_scope_regression_test.go",
         "lyger/function_transfer_regression_test.go",
-        "lyger/function_contract_regression_test.go"
+        "lyger/function_contract_regression_test.go",
+        "lyger/nested_definition_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -10539,7 +11365,7 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -10623,8 +11449,9 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -10657,11 +11484,34 @@
         "lyger/value_kinds.go",
         "lyger/types.go",
         "lyger/source_functions.go",
-        "lyger/orchestration_functions.go",
-        "lyger/runtime_values.go"
+        "lyger/function_composition.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "builtins/eng/core.l",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/source_functions_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/types.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "builtins/eng/core.l",
+        "stdlib/eng/storage/dictionary.l"
+      ],
+      "witnesses": [
+        "lyger/stored_values_test.go",
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -10745,7 +11595,8 @@
     },
     {
       "sources": [
-        "lyger/orchestration_emit.go",
+        "lyger/execution_composition.go",
+        "lyger/entry_composition.go",
         "docs/cli-build.md"
       ],
       "witnesses": [
@@ -10759,7 +11610,8 @@
     },
     {
       "sources": [
-        "lyger/orchestration_emit.go",
+        "lyger/execution_composition.go",
+        "lyger/entry_composition.go",
         "lyger/instructions.go",
         "docs/cli-build.md"
       ],
@@ -10806,30 +11658,14 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go"
-      ],
-      "witnesses": [
-        "lyger/definition_test.go",
-        "lyger/construction_test.go"
-      ],
-      "evidence": "static-inspection; existing-witness-not-run",
-      "checkedStages": [
-        "static-source-inspection"
-      ],
-      "executedStages": []
-    },
-    {
-      "sources": [
-        "builtins/eng/core.l",
-        "lyger/construction.go",
-        "lyger/definition.go",
-        "lyger/source_functions.go",
-        "lyger/orchestration_functions.go"
+        "lyger/definition_bindings.go",
+        "lyger/source_body.go",
+        "lyger/function_definitions.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
-        "lyger/function_composition_test.go"
+        "lyger/scoped_definition_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -10841,17 +11677,59 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go",
+        "lyger/definition_bindings.go",
         "lyger/source_functions.go",
-        "lyger/orchestration_functions.go",
-        "lyger/binding.go",
-        "lyger/scope.go"
+        "lyger/function_composition.go",
+        "lyger/function_definitions.go",
+        "lyger/lowering.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
         "lyger/function_composition_test.go",
-        "lyger/function_contract_regression_test.go"
+        "lyger/nested_definition_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "builtins/eng/core.l",
+        "lyger/construction.go",
+        "lyger/definition_bindings.go",
+        "lyger/source_functions.go",
+        "lyger/function_composition.go",
+        "lyger/binding.go",
+        "lyger/scope.go",
+        "lyger/function_definitions.go",
+        "lyger/lowering.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/definition_test.go",
+        "lyger/construction_test.go",
+        "lyger/function_composition_test.go",
+        "lyger/function_contract_regression_test.go",
+        "lyger/nested_definition_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "builtins/eng/core.l",
+        "lyger/construction.go",
+        "lyger/definition_bindings.go"
+      ],
+      "witnesses": [
+        "lyger/definition_test.go",
+        "lyger/construction_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -10878,7 +11756,7 @@
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/semantics.go",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/definition_test.go"
@@ -10971,8 +11849,9 @@
         "lyger/ir_kinds.go",
         "lyger/instructions.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values_emit.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_value_words.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -11019,12 +11898,15 @@
         "stdlib/index.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go",
+        "lyger/lowering.go",
+        "lyger/function_definitions.go"
       ],
       "witnesses": [
         "lyger/configured_import_test.go",
         "lyger/raw_text_test.go",
-        "lyger/io_numeric_test.go"
+        "lyger/io_numeric_test.go",
+        "lyger/nested_definition_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -11100,11 +11982,14 @@
       "sources": [
         "lexicon/eng/grammar.json",
         "lexicon/eng/vocabulary.json",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go",
+        "lyger/source_body.go",
+        "lyger/lowering.go"
       ],
       "witnesses": [
         "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
+        "lyger/grammar_consumption_test.go",
+        "lyger/scoped_definition_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -11168,7 +12053,9 @@
         "lyger/instructions.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values_emit.go"
+        "lyger/runtime_value_words.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -11261,10 +12148,11 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -11283,7 +12171,9 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
-        "lyger/runtime_values.go"
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -11298,14 +12188,62 @@
       "sources": [
         "lyger/instruction_captures.go",
         "lyger/orchestration_captures.go",
-        "lyger/orchestration_capture_emit.go",
-        "lyger/runtime_values.rs"
+        "lyger/storage_words.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/orchestration_captures_test.go",
         "lyger/function_publication_test.go",
         "lyger/runtime_lifetime_test.go",
         "lyger/source_action_arguments_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/storage/dictionary.l"
+      ],
+      "witnesses": [
+        "lyger/private_dictionary_test.go",
+        "lyger/definition_export_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "stdlib/index.json",
+        "builtins/runtime/eng/dictionary.l",
+        "logiceme/runtime_composition.go",
+        "logiceme/logiceme_service.go"
+      ],
+      "witnesses": [
+        "lyger/private_dictionary_test.go",
+        "lyger/definition_export_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "stdlib/index.json",
+        "builtins/runtime/eng/number.l",
+        "builtins/runtime/eng/foundations.l"
+      ],
+      "witnesses": [
+        "lyger/format_dictionary_test.go",
+        "lyger/io_numeric_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -11623,7 +12561,9 @@
       "sources": [
         "builtins/README.md",
         "logiceme/glyph_roles.go",
-        "logiceme/glyph_metadata_validation.go"
+        "logiceme/glyph_metadata_validation.go",
+        "logiceme/lucid_interpreter.go",
+        "logiceme/lucid.go"
       ],
       "witnesses": [
         "logiceme/lucid_generation_test.go"
@@ -11731,6 +12671,21 @@
         "logiceme/glyph_metadata_validation.go"
       ],
       "witnesses": [
+        "logiceme/lucid_generation_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "builtins/README.md",
+        "logiceme/glyph_roles.go",
+        "logiceme/glyph_metadata_validation.go"
+      ],
+      "witnesses": [
         "logiceme/testdata/lucid/empty-instantiations.aml.txt"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
@@ -11792,7 +12747,10 @@
         "logiceme/glyph_prepare.go",
         "logiceme/glyph_metadata_validation.go",
         "builtins/README.md",
-        "logiceme/segments.go"
+        "logiceme/segments.go",
+        "logiceme/segment_cases.go",
+        "logiceme/glyph_render.go",
+        "logiceme/segment_case_clone.go"
       ],
       "witnesses": [
         "logiceme/lucid_future_test.go",
@@ -11802,7 +12760,8 @@
         "logiceme/testdata/lucid/future-infer.aml.txt",
         "logiceme/testdata/lucid/future-borrow-escape.aml.txt",
         "logiceme/testdata/lucid/future-move-reuse.aml.txt",
-        "logiceme/glyph_expression_occurrence_test.go"
+        "logiceme/glyph_expression_occurrence_test.go",
+        "logiceme/segment_cases_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -11957,5 +12916,93 @@
       "role": "explanatory",
       "support": "partial"
     }
-  ]
+  ],
+  "sourceHashes": {
+    "lyger/types.go": "8d1c5403e26386b560c2bad36d8e5b3aaed28174708f46dda470f572fcf75859",
+    "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
+    "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
+    "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
+    "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
+    "lyger/word_values.go": "f30788b00ce62cdcd39658bab21aa2df228889a25c914263277a8b136d2d361b",
+    "stdlib/eng/storage/dictionary.l": "5d658412b1684a59d585ef6139302cf5dbd3a3458eaf2e78df06d40ce6ff57e2",
+    "lyger/definition_bindings.go": "c239e4939718346ed7db8b7677167f3a8fdcad97da3b0001afd1dbd20cf4377c",
+    "lyger/grammar.go": "5879aa138ee902f20463aa57ee5fe470c848b2f0ede945417d8487c8253b4f02",
+    "lyger/runtime_types.go": "4334d0bc85798b5afac5fa32ba1dd33dc1b95e887a707e5e6f3995a635e363fc",
+    "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
+    "lyger/runtime_values_plan.go": "91ff1b5e9143c06fd85f883a2130a06abb10a7777b4d534b99625f6c35536671",
+    "builtins/eng/core.l": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
+    "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
+    "lyger/semantic_resolution.go": "21f4b08ca04bed3f0247ed0a458d93685138cac538f3e6554ee41dbf249f3cee",
+    "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
+    "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
+    "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
+    "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
+    "lyger/source_units_topology.go": "eb006bc1866daab6eba15a67c0e35b8c2bee94a15328927d388e54789c002ff5",
+    "lyger/construction.go": "2d2461bf4d9ea601248b0a162954039c6625a60c93a2eddb62e52505e12e7f24",
+    "lyger/source_functions.go": "9e19b22b4d6614c38160528e67e7c426b8c1b5a658bd16be4073336957ee0fbf",
+    "lyger/function_composition.go": "b1cc7002bf7a5f8ea20cf977bc9f94da30ebf4e57ba6fb6bd80e7600b55b63b6",
+    "lyger/storage_words.go": "c22cd50d27415e75bed937d40fa469736d2963d7376144af2c2d124d61fabcfc",
+    "lyger/binding.go": "be5070f9f04486c61ecae6e832ac09e85339df355b3eb2a4f157e553f4ac1b87",
+    "lyger/scope.go": "c8fdbeb575b95e77f5785072ff8b15ad070af862033e48acd07346c0c980fdef",
+    "lyger/function_definitions.go": "ffcc74f3c577d20a4155b032595834a0e446b03066e720e588f1f6968f2c845c",
+    "lyger/lowering.go": "28dc70d4430c83d708361bff5c69d0f09d4ebe86cdc184dddba1e1cb6db1102d",
+    "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
+    "lyger/semantics.go": "cdbd1b22d181b3026ddfd97d73dd5a13567d8a9b60da56822b423d49a73be383",
+    "docs/cli-build.md": "1610aca679670fd07d05cdce15142e5136df7fb20dcbabf65f73ec4e779324e6",
+    "lyger/builtin_operations.go": "2f025da178c6f59db2aa098f90d83cd81fd3e28e1d5cf50b71330a73a923e376",
+    "lyger/execution_composition.go": "db693560633b7b611eaf85955db65f5c4244f6692b3b08965efe7ceec1cda2e0",
+    "lyger/entry_composition.go": "561579d280ba920406d3f38b0c96aa8ffe324eca0be7877071783340d8f23214",
+    "lyger/orchestration_plan.go": "5a9fbaa1d0e0eaf132720b960db17a216a11c65e90cf2ddb79e039200dc9ac0d",
+    "lyger/source_body.go": "41cbf8f1711709cfdc86ceec733a495c027c03b9b3dd60c0f6d7ee9376f336b0",
+    "lyger/registration.go": "2ef2c5f1d08897b7754d16bf56b8a0ff069a17c2f6171985e6374150de8ca4d5",
+    "lyger/builder.go": "4ac944a308bb7f0e940013c32488a2cbb89f450de2fec15e1b7558c33c004845",
+    "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
+    "lyger/publication.go": "9ead493a6787b091e7f86e21d43a2b08cf7d19c6d790a02c829990c4c800a298",
+    "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
+    "lyger/ir_kinds.go": "d552e2cd21079344f25317d13aec439bb665d269678a879169ac065b45058a79",
+    "lyger/runtime_value_words.go": "ce9dde35894efd49f03b1374720c784303b0f00eba6a8f8d37d290b01db536bf",
+    "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
+    "stdlib/eng/io/dictionary.l": "0aee928628163ae6deebcf061cb7a61680cb4da36177202694e739062ca56d82",
+    "lyger/lexical_scope.go": "2d2690c205ef1da8e1868a10d57eeb222018172fda7da9de76c0dc9c84c78288",
+    "lyger/grammar_types.go": "c57ca69f9748e991cd757cf567ee45c996ab57da9699afbef57fb6ac31970f1e",
+    "lyger/lexicon.go": "e6c61d41351f3116573742fbe107f87de188c9b36e0b6fc0cb14a8b74e60c2c7",
+    "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
+    "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
+    "lyger/instruction_captures.go": "04f088e7411621e8a9261626485903aa426b574b1bd6dd0e16881a1dbc26006d",
+    "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
+    "builtins/runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
+    "logiceme/runtime_composition.go": "24f443bd4fba2d87f7031c1acf3e39d02657c6fe4fb368449ac6a193ffe9b0b7",
+    "logiceme/logiceme_service.go": "0452128b7476dcd377bbceb6e96268498777e1bc4a15331994cff0f87c139bbb",
+    "builtins/runtime/eng/number.l": "7d9f41f3990343b3ec6c63f5b03ca4762c5fab7207641d20515327ff71012f2b",
+    "builtins/runtime/eng/foundations.l": "3f21a1e80f4249af50a48d35149f2144b00fa3c448eae1a3ab465b97b6044fd7",
+    "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
+    "builtins/README.md": "3f0865288ba3db13d96b9242ccdb3676c297f7dd8c1a0437fe519581e48cac2e",
+    "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",
+    "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
+    "builtins/segments/vowels/calculation.lu": "18fa1ec1c7e13df95c5581646418aaa457f7779dac06fc44015ae20f1d4ebf86",
+    "builtins/segments/consonants/evaluate.lu": "560028f7aa15f57e57847f813cfee74fb32fac6b742a97fb414261aa897309f4",
+    "builtins/segments/vowels/evaluation.lu": "82253180544936ccbb5c0cbc7b8c48874bae363b50ab8593da994094461b9645",
+    "builtins/segments/consonants/define.lu": "d2b292d8fd284d677f7866cb7ae745adef00cb9ca6b3d92c92ec609e36de2899",
+    "builtins/segments/vowels/definition.lu": "3fa695123d814616bfb8c225dc200da5f31d563b6f787c98b54975aa41b8a971",
+    "builtins/segments/consonants/describe.lu": "e9965c87b7913cd803e1df673b96db0886ea157ac51382004177070a5579d271",
+    "builtins/segments/vowels/description.lu": "854c95540f06905bb5ee1f166399c4edd3c1381f7afd6c79e469c76dbb3853a1",
+    "builtins/segments/consonants/operate.lu": "9685b54f1e5a28986a928d2f31fd7561ac80eb852225b76079a6988cfa05409a",
+    "builtins/segments/vowels/operation.lu": "4b439302f6c59f3eea42df4be91e788b50739c19ad290d1448f493e591699824",
+    "builtins/segments/consonants/iterate.lu": "b9d9e295e4587229dc72b12ea491abe27d79e38f19fc6af09347444236e2ec4f",
+    "builtins/segments/vowels/iteration.lu": "6321d1948be328cdcbe2a520bbf5263043f774eccb4759e7dfe930397ac06af4",
+    "builtins/segments/consonants/instantiate.lu": "864fa161e1edaefe8282fd5d916de7586cb2503680a0001c2f9b35321d95353f",
+    "builtins/segments/vowels/instantiation.lu": "9a19335f7d45435346f3c7e065000e6e6e12ea22e0798ad14381084a5a7e9c8d",
+    "builtins/segments/consonants/execute.lu": "8f756c87b1b5290f61f43db52a140ac0aa0a89a77692a19ad67170aec89c5927",
+    "builtins/segments/vowels/execution.lu": "210f5f882123c4a64d33ebb539d2f3c61182dce55a2c862e9615e57a7871d5e8",
+    "logiceme/glyph_roles.go": "7fff2384971f7caa0ef572fe51e8e5b3ef8886652a98144cb1ab273945099c0f",
+    "logiceme/glyph_metadata_validation.go": "7ad22b69af7b2b17f13285676fa0957ece073714dca1f3c6a5b12f9d44a0ae0c",
+    "logiceme/lucid_interpreter.go": "5026306d05519f289d05e6e9a20baf8274ea94ea99ced817e26fe81eaea45f17",
+    "logiceme/lucid.go": "c70058815dcf9518d6c7a3cedeaa012e0c203742c9536b8a0af0584af7f91fbb",
+    "logiceme/glyph_prepare.go": "42b316c2a4bd1b5ca5feec2b274becd2844e9583762c1af79faa3cf90734440e",
+    "logiceme/segments.go": "de380d45b7ba7ce74e72c23ad9455f6258a5f79ae2f90811ef1ab50f0d5c8c3a",
+    "logiceme/segment_cases.go": "ad3f50c82c8747cb17234668e0501d4b76063dc53fc4c1528d4473fe586ef11f",
+    "logiceme/glyph_render.go": "299b68c52e473d28473f180be1d23ea330881bcb4c62e833729f946dd6fb615c",
+    "logiceme/segment_case_clone.go": "bd199296a249db44d2a594fd29a21656fb7fa15861adcb502272a2ad602720bb"
+  },
+  "description": "Static coverage and existing witnesses; no language execution during website validation."
 }

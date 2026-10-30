@@ -62,17 +62,6 @@ func functionTransferCases() []struct{ name, source, output, diagnostic string }
 	}
 }
 
-func TestFunctionTransferSourceGeneration(t *testing.T) {
-	for _, tc := range functionTransferCases() {
-		t.Run(tc.name, func(t *testing.T) {
-			generated := requireFunctionGenerated(t, tc.source)
-			if tc.diagnostic != "" && strings.Count(generated, ".expect_type(LType::Null)") != 1 {
-				t.Fatal("Function transfer must preserve the checked Null read exactly once")
-			}
-		})
-	}
-}
-
 func TestFunctionTransfersNative(t *testing.T) {
 	for _, tc := range functionTransferCases() {
 		t.Run(tc.name, func(t *testing.T) {

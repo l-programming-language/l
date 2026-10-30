@@ -10,21 +10,21 @@ type functionParameter struct {
 	Type   runtimeTypeRef
 }
 type sourceFunction struct {
-	aliases        map[*record]*record
-	Definition     *record
-	Template       *DefinitionTemplate
-	Return         *record
-	ReturnTemplate *DefinitionTemplate
-	Members        map[string]*DefinitionTemplate
-	Word           *lexeme
-	Record         *record
-	Header         *lStatement
-	Scope          *lexicalScope
-	Inputs         []functionParameter
-	Outputs        []runtimeTypeRef
-	Body           []*instruction
-	Captures       []*instructionValue
-	CaptureCalls   []*record
+	Native       bool
+	Constructor  *constructionNode
+	Invoke       *record
+	aliases      map[*record]*record
+	Definition   *record
+	Return       *record
+	Word         *lexeme
+	Record       *record
+	Header       *lStatement
+	Scope        *lexicalScope
+	Inputs       []functionParameter
+	Outputs      []runtimeTypeRef
+	Body         []*instruction
+	Captures     []*instructionValue
+	CaptureCalls []*record
 }
 
 func (f *sourceFunction) bindsReturn(tok *token) bool {
@@ -116,15 +116,45 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		return true, lerrors.Internal.Errorf("Function result has no ordered position")
 	}
 	object := site.valueObject()
-	if object == nil || object.cType != "callable" {
+	if object == nil || object.noun == nil || object.noun.binding == nil || site.isDescriptor() {
 		return false, nil
+	}
+	native := object.name != nil
+	if object.phrase != nil && object.phrase.gType == "phrase.signature" {
+		var types []*objectGram
+		for _, input := range object.phrase.subjects {
+			if input.phrase != nil && input.phrase.obj != nil {
+				types = append(types, input.phrase.obj)
+			}
+		}
+		types = append(types, object.phrase.orderedObjects()...)
+		for _, typ := range types {
+			name, _, err := c.nativeTypeDefinition(typ.noun)
+			if err != nil {
+				return true, err
+			}
+			native = native || typ.cType == "text" || name != ""
+		}
+	}
+	if !native && object.cType != "callable" && (object.phrase == nil || object.phrase.gType != "phrase.signature") {
+		return false, nil
+	}
+	template, err := c.callableTemplate(object.noun.binding.Record, make(map[*record]bool))
+	if err != nil {
+		return true, err
+	}
+	if template == nil || !template.IsFunction() {
+		if native {
+			return false, nil
+		}
+		return true, lerrors.TypeMismatch.Errorf("signature requires a Function constructor")
 	}
 	target, err := site.target()
 	if err != nil {
 		return true, err
 	}
 	if target == nil || !target.isDeclare() {
-		return true, lerrors.Syntax.Errorf("ordinary Function requires a named declaration")
+		return true, lerrors.Syntax.Errorf("Function requires a named declaration")
 	}
 	scope := target.scope
 	if !scope.isParagraph() || statement.source.Span.Start != scope.source.Start {
@@ -132,16 +162,6 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 	}
 	if len(prepared.functions) != 0 {
 		return true, lerrors.Syntax.Errorf("a paragraph has only one Function body")
-	}
-	if object.noun.binding == nil {
-		return true, lerrors.TypeMismatch.Errorf("Function constructor requires a bound callable definition")
-	}
-	template, err := c.recordTemplate(object.noun.binding.Record)
-	if err != nil {
-		return true, err
-	}
-	if template == nil || !template.IsFunction() {
-		return true, lerrors.TypeMismatch.Errorf("signature requires a Function constructor")
 	}
 	word := newLexeme("verb")
 	if err := word.reLabel(string(target.rawBytes)); err != nil {
@@ -151,22 +171,50 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 	if err != nil {
 		return true, err
 	}
-	function := &sourceFunction{aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition, Template: template, Word: word, Members: make(map[string]*DefinitionTemplate)}
-	for _, name := range []string{"Return", "Suspend", "Invoke", "Yield", "Bind", "Exit"} {
-		binding, _, err := c.resolver().lookupMember(function.Definition, []byte(name))
+	function := &sourceFunction{Native: native, aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition, Word: word}
+	for _, name := range []string{"Return", "Invoke"} {
+		binding, _, err := c.resolver().lookupMember(definition, []byte(name))
 		if err != nil {
 			return true, err
 		}
 		if binding == nil {
-			continue
-		}
-		function.Members[name], err = c.recordTemplate(binding.Record)
-		if err != nil {
-			return true, err
+			return true, lerrors.UnresolvedReference.Errorf("Function constructor has no %s definition", name)
 		}
 		if name == "Return" {
-			function.Return, function.ReturnTemplate = binding.Record, function.Members[name]
+			function.Return = binding.Record
+		} else {
+			function.Invoke = binding.Record
 		}
+	}
+	constructor := *object
+	if !native {
+		constructor.phrase = nil // Runtime signatures are resolved below; descriptors still belong to the constructor.
+	}
+	node, err := c.constructObject(&constructor, make(map[*descriptorRule]bool))
+	if err != nil {
+		return true, err
+	}
+	function.Constructor = node
+	if native {
+		if !node.InputsDefined || !node.OutputsDefined {
+			return true, lerrors.InvalidInput.Errorf("Function requires an explicit signature")
+		}
+		function.Record = &record{ID: word.Root, Type: "lexeme.verb.generic", Value: &entry{Type: storageLexeme, Lexeme: word}}
+		prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: target, Record: function.Record})
+		for i, input := range node.Inputs {
+			token := node.InputTokens[i]
+			argument := definitionReferenceArgument(input.Key)
+			argument.source = statement.source.Span
+			noun := newLexeme("noun")
+			if err := noun.reLabel(string(token.rawBytes)); err != nil {
+				return true, err
+			}
+			parameter := &record{ID: input.Key, Type: "lexeme.noun.generic", Value: &entry{Type: storageLexeme, Lexeme: noun}, definitionArgument: &argument}
+			c.reserveFunctionParameter(statement, token)
+			prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: token, Record: parameter})
+		}
+		prepared.functions = append(prepared.functions, function)
+		return true, nil
 	}
 	value := initEntry("Function", storageApplicative)
 	value.Applicative.Function.Source = function

@@ -41,9 +41,6 @@ func (out *Outline) BuildSubOutline(name string, outlineType string) Outline {
 	if outlineType == "Service" {
 		result.Services = []OutlineEntry{entry}
 	}
-	for i := range result.Objects {
-		result.Objects[i] = out.Objects[i]
-	}
 	for _, object := range out.GetEntryObjects(entry, outlineType) {
 		for i := range result.Objects {
 			if result.Objects[i].Name == object.Name {
@@ -54,19 +51,21 @@ func (out *Outline) BuildSubOutline(name string, outlineType string) Outline {
 	return result
 }
 
+func (out *Outline) entries(entryType string) []OutlineEntry {
+	switch entryType {
+	case "Service":
+		return out.Services
+	case "Class":
+		return out.Classes
+	}
+	return nil
+}
+
 func (out *Outline) getChildren(entryName string, entryType string) []OutlineEntry {
 	children := []OutlineEntry{}
-	if entryType == "Service" {
-		for _, obj := range out.Services {
-			if obj.Parent == entryName {
-				children = append(children, obj)
-			}
-		}
-	} else if entryType == "Class" {
-		for _, obj := range out.Classes {
-			if obj.Parent == entryName {
-				children = append(children, obj)
-			}
+	for _, entry := range out.entries(entryType) {
+		if entry.Parent == entryName {
+			children = append(children, entry)
 		}
 	}
 	return children
@@ -84,12 +83,8 @@ func (out *Outline) GetEntryObjects(entry OutlineEntry, entryType string) []Obje
 		obj = out.GetObject(dObj)
 		reObjects = append(reObjects, obj)
 	}
-	children := out.getChildren(entry.Name, entryType)
-	for _, child := range children {
-		if child.Parent == entry.Name {
-			childObjs := out.GetEntryObjects(child, entryType)
-			reObjects = append(reObjects, childObjs...)
-		}
+	for _, child := range out.getChildren(entry.Name, entryType) {
+		reObjects = append(reObjects, out.GetEntryObjects(child, entryType)...)
 	}
 	return reObjects
 }
@@ -107,13 +102,7 @@ func (out *Outline) GetObject(name string) Object {
 
 // GetEntry from Outline
 func (out *Outline) GetEntry(name string, entryType string) OutlineEntry {
-	var entries []OutlineEntry
-	if entryType == "Service" {
-		entries = out.Services
-	} else if entryType == "Class" {
-		entries = out.Classes
-	}
-	for _, entry := range entries {
+	for _, entry := range out.entries(entryType) {
 		if entry.Name == name {
 			return entry
 		}
@@ -175,35 +164,40 @@ type CompiledClass struct {
 }
 
 func (cc *CompiledClass) Link() {
+	cc.Content, cc.ContentMap, cc.Dependencies, cc.EnvDependencies = linkSourceMembers(cc.structureVersion, cc.members, cc.Objects, cc.SubClasses, cc.Content, cc.ContentMap, cc.Dependencies, cc.EnvDependencies)
+}
+
+func linkSourceMembers(version string, members []sourceMember, objects []CompiledObject, classes []CompiledClass, content [][]byte, paths, dependencies, environment []string) ([][]byte, []string, []string, []string) {
 	appendObject := func(co CompiledObject) {
-		cc.Content = append(cc.Content, co.Content)
-		cc.ContentMap = append(cc.ContentMap, co.Name)
-		cc.Dependencies = append(cc.Dependencies, co.Dependencies...)
-		cc.EnvDependencies = append(cc.EnvDependencies, co.EnvDependencies...)
+		content = append(content, co.Content)
+		paths = append(paths, co.Name)
+		dependencies = append(dependencies, co.Dependencies...)
+		environment = append(environment, co.EnvDependencies...)
 	}
 	appendClass := func(child CompiledClass) {
 		child.Link()
-		cc.Content = append(cc.Content, child.Content...)
-		cc.ContentMap = append(cc.ContentMap, child.ContentMap...)
-		cc.Dependencies = append(cc.Dependencies, child.Dependencies...)
-		cc.EnvDependencies = append(cc.EnvDependencies, child.EnvDependencies...)
+		content = append(content, child.Content...)
+		paths = append(paths, child.ContentMap...)
+		dependencies = append(dependencies, child.Dependencies...)
+		environment = append(environment, child.EnvDependencies...)
 	}
-	if cc.structureVersion == "2" {
-		for _, member := range cc.members {
+	if version == "2" {
+		for _, member := range members {
 			if member.Kind == "Object" {
-				appendObject(cc.Objects[member.Index])
+				appendObject(objects[member.Index])
 			} else {
-				appendClass(cc.SubClasses[member.Index])
+				appendClass(classes[member.Index])
 			}
 		}
-		return
+		return content, paths, dependencies, environment
 	}
-	for _, object := range cc.Objects {
+	for _, object := range objects {
 		appendObject(object)
 	}
-	for _, child := range cc.SubClasses {
+	for _, child := range classes {
 		appendClass(child)
 	}
+	return content, paths, dependencies, environment
 }
 
 // Assemble a Class
@@ -285,35 +279,7 @@ type CompiledService struct {
 }
 
 func (cs *CompiledService) Link() {
-	appendObject := func(co CompiledObject) {
-		cs.Content = append(cs.Content, co.Content)
-		cs.ContentMap = append(cs.ContentMap, co.Name)
-		cs.Dependencies = append(cs.Dependencies, co.Dependencies...)
-		cs.EnvDependencies = append(cs.EnvDependencies, co.EnvDependencies...)
-	}
-	appendClass := func(child CompiledClass) {
-		child.Link()
-		cs.Content = append(cs.Content, child.Content...)
-		cs.ContentMap = append(cs.ContentMap, child.ContentMap...)
-		cs.Dependencies = append(cs.Dependencies, child.Dependencies...)
-		cs.EnvDependencies = append(cs.EnvDependencies, child.EnvDependencies...)
-	}
-	if cs.structureVersion == "2" {
-		for _, member := range cs.members {
-			if member.Kind == "Object" {
-				appendObject(cs.Objects[member.Index])
-			} else {
-				appendClass(cs.Classes[member.Index])
-			}
-		}
-		return
-	}
-	for _, object := range cs.Objects {
-		appendObject(object)
-	}
-	for _, child := range cs.Classes {
-		appendClass(child)
-	}
+	cs.Content, cs.ContentMap, cs.Dependencies, cs.EnvDependencies = linkSourceMembers(cs.structureVersion, cs.members, cs.Objects, cs.Classes, cs.Content, cs.ContentMap, cs.Dependencies, cs.EnvDependencies)
 }
 
 // Assemble a Service
@@ -362,20 +328,21 @@ func (s *Service) Assemble(meta MetaDict, segSys SegmentalSystem) (CompiledServi
 	return cService, nil
 }
 
+func outlinedObjects(sentences []Sentence, outline Outline) []Object {
+	objects := BuildObjects(sentences)
+	for index := range objects {
+		objects[index].Location = outline.GetObject(objects[index].Name).Location
+	}
+	return objects
+}
+
 func (s *Service) BuildClass(text Text) {
 	re := Class{
 		Name:    text.Name,
 		Meta:    text.Context.GetDict("Meta"),
 		Outline: s.Outline.BuildSubOutline(text.Name, "Class"),
 	}
-	re.Objects = BuildObjects(text.Sentences)
-	upObjs := []Object{}
-	for _, tobj := range re.Objects {
-		obk := re.Outline.GetObject(tobj.Name)
-		tobj.Location = obk.Location
-		upObjs = append(upObjs, tobj)
-	}
-	re.Objects = upObjs
+	re.Objects = outlinedObjects(text.Sentences, re.Outline)
 	s.Classes = append(s.Classes, re)
 }
 
@@ -431,14 +398,7 @@ func (a *App) BuildService(chap Chapter) {
 		Meta:     chap.Context.GetDict("Meta"),
 		Outline:  a.Outline.BuildSubOutline(chap.Name, "Service"),
 	}
-	newService.Objects = BuildObjects(chap.Sentences)
-	upObjs := []Object{}
-	for _, tobj := range newService.Objects {
-		obk := newService.Outline.GetObject(tobj.Name)
-		tobj.Location = obk.Location
-		upObjs = append(upObjs, tobj)
-	}
-	newService.Objects = upObjs
+	newService.Objects = outlinedObjects(chap.Sentences, newService.Outline)
 	for _, text := range chap.Texts {
 		newService.BuildClass(text)
 	}

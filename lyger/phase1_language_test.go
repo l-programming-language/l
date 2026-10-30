@@ -248,12 +248,12 @@ func phase1ReceiverShape(t *testing.T, f *observedSourceFile, wantAwait bool) {
 	main := f.function(t, "main")
 	runs := 0
 	for _, call := range nativetest.RustCalls(main.Body) {
-		if call.Name == "run" && call.Receiver == "runtime" {
+		if call.Name == "runtime_run" {
 			runs++
 		}
 	}
 	if runs != 1 {
-		t.Fatalf("entry point has %d supervised runtime.run calls, want one", runs)
+		t.Fatalf("entry point has %d supervised runtime_run calls, want one", runs)
 	}
 }
 
@@ -724,8 +724,14 @@ func phase1LanguageCase(t *testing.T, id string) {
 		r := phase1Require(t, phase1Example(t, 1), nil)
 		_, children := phase1Generated(t, r)
 		for name, f := range children {
-			if phase1Calls(f, "Println") != 1 {
-				t.Fatalf("%s child body lost Println", name)
+			literals := 0
+			for _, token := range f.function(t, "main").Body {
+				if text, err := nativetest.DecodeRustLiteral(token.Text); err == nil && text == "child" {
+					literals++
+				}
+			}
+			if literals != 1 {
+				t.Fatalf("%s child entry contains %d source payloads; want one", name, literals)
 			}
 			for _, token := range f.Tokens {
 				if text, err := nativetest.DecodeRustLiteral(token.Text); err == nil && strings.Contains(text, "continued|") {

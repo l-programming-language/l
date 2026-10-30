@@ -47,12 +47,16 @@ export function validateStdlib(index, pages, semanticEntries) {
   for (const [language, entries] of Object.entries(index.languages).sort()) {
     for (const [key, entry] of Object.entries(entries).sort()) {
       if (!/^[a-z0-9-]+$/.test(language) || !/^[a-z0-9-]+$/.test(key) || !entry.entry || !entry.dictionary) throw new Error(`Invalid indexed dictionary: ${language}/${key}`);
+      const reviewed = semanticEntries.filter((x) => x.kind === 'stdlib-export' && x.sources.includes(entry.entry));
+      if (reviewed.some((x) => !['namespace', 'public', 'private'].includes(x.visibility))) throw new Error(`Missing reviewed export visibility for ${language}/${key}.`);
+      if (reviewed.some((x) => x.visibility === 'namespace' && x.support === 'internal')) {
+        if (reviewed.some((x) => x.support !== 'internal')) throw new Error(`Internal dictionary ${language}/${key} has conflicting public documentation classifications.`);
+        continue;
+      }
       const route = `/docs/stdlib/${language}/${key}/`;
       const page = pages.find((p) => p.route === route);
       if (!page) throw new Error(`Unclassified indexed dictionary ${language}/${key}: author its documentation and add ${route} to content-map.json.`);
-      const reviewed = semanticEntries.filter((x) => x.kind === 'stdlib-export' && x.sources.includes(entry.entry));
       if (!reviewed.length) throw new Error(`Missing reviewed export inventory for ${language}/${key}.`);
-      if (reviewed.some((x) => !['namespace', 'public', 'private'].includes(x.visibility))) throw new Error(`Missing reviewed export visibility for ${language}/${key}.`);
       dictionaries.push({ language, key, ...entry, route, source: page.source, exports: reviewed.filter((x) => x.visibility === 'public').map((x) => x.name) });
     }
   }
@@ -176,7 +180,7 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
       const link = sourceURL(root, example.source, identity);
       const runtimeFailure = example.classification === 'runnable' && Number.isInteger(example.expectedExit) && example.expectedExit !== 0;
       const label = runtimeFailure ? 'Complete program · expected runtime failure' : { runnable: 'Complete program', 'compile-only': 'Compile-only example', invalid: 'Expected compilation failure', fragment: 'Fragment' }[example.classification];
-      add(node, `${fence}${example.lang ?? example.language ?? 'l'} title="${sourceLabel}"\n${code}${code.endsWith('\n') ? '' : '\n'}${fence}\n\n**${label}.** Source: ${link ? `[${sourceLabel}](${link}${sourceFragment})` : `\`${sourceLabel}\``}.${displayNote}\n\n<details>\n<summary>Example evidence</summary>\n\n${example.description} Validation record: **${example.validation}**. [About these records](/docs/contributing/evidence/).\n\n</details>`);
+      add(node, `${fence}${example.lang ?? example.language ?? 'l'} title="${sourceLabel}"\n${code}${code.endsWith('\n') ? '' : '\n'}${fence}\n\n<div data-pagefind-ignore>\n\n**${label}.** Source: ${link ? `[${sourceLabel}](${link}${sourceFragment})` : `\`${sourceLabel}\``}.${displayNote}\n\n<details>\n<summary>Example evidence</summary>\n\n${example.description} **${example.validation}**. [Evidence guide](/docs/contributing/evidence/).\n\n</details>\n\n</div>`);
       continue;
     }
     if (node.type.endsWith('Reference')) {
@@ -207,6 +211,6 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
   const source = sourceURL(root, page.source, identity);
   const edit = source && !page.generated && identity.channel === 'production' ? source.replace(`/blob/${identity.docsCommit}/`, '/edit/main/') : false;
   const metadata = { ...authored, title: page.title, description: page.description, slug: page.route.slice(1, -1), editUrl: edit, sourcePath: page.source, documentRole: page.role, generatedReference: page.generated };
-  const attribution = `\n\n---\n\n${page.generated ? '**Generated reference.** Refresh the canonical snapshot; do not edit its website projection.' : '**Canonical source:**'} ${source ? `[${page.source}](${source})` : `\`${page.source}\``}.${identity.dirty && source ? ' Source links show the committed base; this local checkout contains changes.' : ''}\n`;
+  const attribution = `\n\n<div data-pagefind-ignore>\n\n---\n\n${page.generated ? '**Generated reference:**' : '**Canonical source:**'} ${source ? `[${page.source}](${source})` : `\`${page.source}\``}.${identity.dirty && source ? ' Source links show the committed base; this local checkout contains changes.' : ''}\n\n</div>\n`;
   return `---\n${yaml(metadata)}---\n\n${text.trim()}${attribution}`;
 }

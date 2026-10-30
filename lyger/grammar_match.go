@@ -105,17 +105,28 @@ func buildGrammarPrefix(rule *grammeme, caseType string, tokens *[]*token, build
 	return err
 }
 
+// A speculative failure retains its cause without rendering a discarded branch.
+type grammarRuleError struct {
+	part  string
+	cause error
+}
+
+func (e grammarRuleError) Error() string { return e.part + ": " + e.cause.Error() }
+func (e grammarRuleError) Unwrap() error { return e.cause }
+
 // Each optional element commits only after success. Grammar matching cannot mutate bindings.
+// Callbacks borrow the candidate during their call and must not retain its address.
 func applyGrammarRule[T any](target *T, rule string, clone func(T) T,
 	grammatical func(*T, grammarTerm) error,
 	lexical func(*T, grammarTerm) error,
 	typed func(*T, grammarTerm) error) error {
+	var candidate T
 	for _, part := range splitGramRule(rule) {
 		term, err := decodeGrammarTerm(part)
 		if err != nil {
 			return err
 		}
-		candidate := clone(*target)
+		candidate = clone(*target)
 		switch term.Kind {
 		case termGrammar, termCase:
 			if term.Family == familyStatement {
@@ -145,15 +156,16 @@ func applyGrammarRule[T any](target *T, rule string, clone func(T) T,
 			if term.Optional {
 				continue
 			}
-			return fmt.Errorf("%s: %w", part, err)
+			return grammarRuleError{part, err}
 		}
 		*target = candidate
 	}
 	return nil
 }
 
-// Evaluate every alternative from the same state. Prefer the longest valid prefix;
-// equal matches use sorted case names so map iteration cannot change the parse.
+// Evaluate alternatives from the same state, preferring the longest valid prefix.
+// Sorted names break ties; a complete prefix cannot be beaten by any later case.
+// As in applyGrammarRule, callbacks borrow the candidate without retaining it.
 func selectGrammarCase[T any](target *T, cases map[string]string, clone func(T) T,
 	build func(*T, string) error, remaining func(*T) []*token,
 	setCase func(*T, string), tokens []*token) error {
@@ -165,29 +177,37 @@ func selectGrammarCase[T any](target *T, cases map[string]string, clone func(T) 
 	base := clone(*target)
 	bestCount := -1
 	var best T
-	var failures []string
-	var causes []error
+	// Successful alternatives need no diagnostics from rejected branches.
+	// Retain their causes and source position, and render only if all fail.
+	type failure struct {
+		name     string
+		err      error
+		next     *token
+		position bool
+	}
+	var rejected []failure
+	var candidate T
 	for _, name := range names {
-		candidate := clone(base)
+		candidate = clone(base)
 		if err := build(&candidate, cases[name]); err != nil {
-			failure := name + ": " + err.Error()
+			detail := failure{name: name, err: err, position: true}
 			if suffix := remaining(&candidate); len(suffix) > 0 {
-				failure += fmt.Sprintf("; remaining token %q", suffix[0].rawBytes)
-			} else {
-				failure += "; at end of statement"
+				detail.next = suffix[0]
 			}
-			failures = append(failures, failure)
-			causes = append(causes, err)
+			rejected = append(rejected, detail)
 			continue
 		}
 		prefix, err := grammarPrefix(tokens, remaining(&candidate))
 		if err != nil {
-			failures = append(failures, name+": "+err.Error())
-			causes = append(causes, err)
+			rejected = append(rejected, failure{name: name, err: err})
 			continue
 		}
 		if len(prefix) > bestCount {
 			setCase(&candidate, name)
+			if len(prefix) == len(tokens) {
+				*target = candidate
+				return nil
+			}
 			best, bestCount = candidate, len(prefix)
 		}
 	}
@@ -195,7 +215,21 @@ func selectGrammarCase[T any](target *T, cases map[string]string, clone func(T) 
 		*target = best
 		return nil
 	}
-	message := fmt.Sprintf("no grammar case matches (%s)", strings.Join(failures, "; "))
+	failures := make([]string, 0, len(rejected))
+	causes := make([]error, 0, len(rejected))
+	for _, detail := range rejected {
+		message := detail.name + ": " + detail.err.Error()
+		if detail.position {
+			if detail.next != nil {
+				message += fmt.Sprintf("; remaining token %q", detail.next.rawBytes)
+			} else {
+				message += "; at end of statement"
+			}
+		}
+		failures = append(failures, message)
+		causes = append(causes, detail.err)
+	}
+	message := "no grammar case matches (" + strings.Join(failures, "; ") + ")"
 	if len(causes) == 0 {
 		return lerrors.Syntax.Errorf("%s", message)
 	}

@@ -11,14 +11,16 @@ import (
 //
 //go:embed lexicon/eng/grammar.json lexicon/eng/vocabulary.json
 //go:embed builtins/eng/core.l
+//go:embed builtins/runtime/eng/*.l builtins/runtime/support.aml builtins/runtime/support.json
 //go:embed builtins/operations/rust/process-build.def builtins/operations/rust/process-run.def
 //go:embed builtins/operations/rust/process-stop.def builtins/operations/rust/process-await.def
 //go:embed builtins/operations/rust/process-finish-continuation.def
 //go:embed stdlib/index.json stdlib/eng/io/dictionary.l
+//go:embed stdlib/eng/storage/dictionary.l
 //go:embed builtins/segments/consonants/*.lu builtins/segments/vowels/*.lu
 //go:embed builtins/templates/config/config.lu builtins/templates/install/cargo.lu
 //go:embed builtins/templates/operate/start.lu builtins/templates/operate/stop.lu
-//go:embed builtins/templates/runtime/main.lu builtins/templates/runtime/runtime.lu
+//go:embed builtins/templates/runtime/main.lu builtins/templates/runtime/host.lu
 //go:embed builtins/templates/runtime/process_unix.lu builtins/templates/runtime/process_other.lu
 var resources embed.FS
 

@@ -51,18 +51,21 @@ func prepareSourceHeaders(app *App, includeRuntime bool, workspace *WorkspaceRun
 			return lerrors.InvalidInput.Errorf("duplicate Object identity %q at source path %s", object.Name, objectSourcePath(object))
 		}
 		objects[object.Name] = object
-		_, suffix, literal, err := prepareSourceFile(object.Sentence, &app.SegmentalSystem)
+		prepared := &sourceFileAnalysis{}
+		var err error
+		prepared.contents, prepared.extension, prepared.literal, err = prepareSourceFile(object.Sentence, &app.SegmentalSystem, prepared)
 		if err != nil {
 			return sourceObjectError(object.Name, err)
 		}
-		object.sourcePath = object.Location + object.Name + "." + suffix
+		object.prepared = prepared
+		object.sourcePath = object.Location + object.Name + "." + prepared.extension
 		if object.Location == "" {
 			object.sourcePath = "/" + object.sourcePath
 		}
 		if err := validateBundlePath(object.sourcePath); err != nil {
 			return err
 		}
-		object.header.literal = literal
+		object.header.literal = prepared.literal
 		return nil
 	}); err != nil {
 		return err
@@ -220,15 +223,14 @@ func prepareSourceHeaders(app *App, includeRuntime bool, workspace *WorkspaceRun
 		if object.header.literal {
 			return nil
 		}
-		imports, err := objectImports(object.Sentence, &app.SegmentalSystem)
-		if err != nil {
-			return err
+		if object.prepared.importErr != nil {
+			return object.prepared.importErr
 		}
 		seen := map[string]bool{}
 		for _, line := range object.header.Imports {
 			seen[line] = true
 		}
-		for _, line := range imports {
+		for _, line := range object.prepared.imports {
 			if !seen[line] {
 				object.header.Imports = append(object.header.Imports, line)
 				seen[line] = true
@@ -304,7 +306,7 @@ func libraryOnlyTargets(targets []preparedSourceTarget) bool {
 	return len(targets) == 1 && targets[0].Kind == "lib"
 }
 
-func objectImports(sentence Sentence, system *SegmentalSystem) ([]string, error) {
+func glyphImports(glyph *Glyph, restore *strings.Replacer) ([]string, error) {
 	var imports []string
 	var walk func(*Glyph, *strings.Replacer) error
 	walk = func(glyph *Glyph, restore *strings.Replacer) error {
@@ -328,20 +330,8 @@ func objectImports(sentence Sentence, system *SegmentalSystem) ([]string, error)
 		}
 		return nil
 	}
-	for _, word := range sentence.Words {
-		for _, syllable := range word.Syllables {
-			masked, restore, err := maskNativeValues([]byte(syllable.Name))
-			if err != nil {
-				return nil, err
-			}
-			glyph, err := system.initializeGlyphChecked(masked, nil, nil)
-			if err != nil {
-				return nil, err
-			}
-			if err := walk(&glyph, restore); err != nil {
-				return nil, err
-			}
-		}
+	if err := walk(glyph, restore); err != nil {
+		return nil, err
 	}
 	return imports, nil
 }

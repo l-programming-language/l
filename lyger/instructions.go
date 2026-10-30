@@ -11,6 +11,8 @@ import (
 // instruction is an ordered outer-program effect. Calls retain their source
 // declaration and synchronous expansion; no instruction executes during compile.
 type instruction struct {
+	Application        *clauseGram
+	Constructor        *constructionNode
 	Key                *instructionValue
 	Kind               instructionKind
 	Source             SourceSpan
@@ -39,7 +41,7 @@ type instruction struct {
 // compile-time value. Runtime distinguishes conditional assignments and member
 // reads from literal values; Output's bytes are never trimmed or normalized.
 type instructionValue struct {
-	Fields      []runtimeField
+	Atom        *DefinitionArgument
 	RuntimeType runtimeTypeRef
 	Elements    []*instructionValue
 	Key         *instructionValue
@@ -193,6 +195,14 @@ func instructionMember(owner *instructionValue, member *token) (*instructionValu
 }
 
 func (b *instructionBuilder) nominalValue(noun *token, tokens []*token, ctx instructionContext) (*instructionValue, error) {
+	if ctx.function != nil && ctx.function.Native {
+		argument, err := argumentFromToken(noun)
+		if err != nil {
+			return nil, err
+		}
+		argument.source = ctx.statement.source.Span
+		return &instructionValue{Kind: operandLiteral, Atom: &argument, Token: noun}, nil
+	}
 	if noun != nil && (noun.binding != nil || noun.isDeclare()) {
 		return b.tokenValue(noun, ctx)
 	}
@@ -307,6 +317,33 @@ func (b *instructionBuilder) clauses(clauses []*clauseGram, ctx instructionConte
 
 func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) ([]*instruction, error) {
 	site := registrationSite{subject: clause.subject, predicate: clause.predicate, clause: clause}
+	if ctx.function != nil && ctx.function.Native {
+		var current *instruction
+		if clause.subject != nil && clause.subject.noun != nil && clause.subject.noun.isDeclare() {
+			rec := b.semantics.Subjects[clause.subject.noun]
+			if rec == nil {
+				return nil, lerrors.UnresolvedReference.Errorf("source declaration has no canonical binding")
+			}
+			if rec.staticConstructor != nil {
+				current = ctx.newInstruction(instructionAssign)
+				current.Constructor = rec.staticConstructor
+			}
+		} else if !site.isAlias() && !site.isDescriptor() {
+			current = ctx.newInstruction(instructionCall)
+			current.Application, current.Synchronous = clause, true
+			if clause.verb == nil || clause.verb.binding == nil {
+				return nil, lerrors.UnresolvedReference.Errorf("source operation has no definition")
+			}
+			if ctx.function.bindsReturn(clause.verb) {
+				current.Kind = instructionReturn
+			}
+		}
+		following, err := b.clauses(clause.clauses, ctx)
+		if current != nil {
+			return append([]*instruction{current}, following...), err
+		}
+		return following, err
+	}
 	if clause.predicate != nil && clause.subject != nil {
 		return b.passiveDeclaration(clause.subject, clause.predicate, ctx)
 	}
@@ -602,25 +639,21 @@ func (b *instructionBuilder) conditional(conditional *conditionalGram, ctx instr
 	if len(conditional.tokens) > 0 {
 		current.SourceToken = conditional.tokens[0]
 	}
-	for _, condition := range conditional.conditions {
-		term, err := b.condition(condition, ctx)
-		if err != nil {
-			return nil, err
-		}
-		if current.Condition == nil {
-			current.Condition = term
-		} else {
-			return nil, lerrors.Unsupported.Errorf("multiple condition joins need an explicit instruction operator")
-		}
-	}
-	if current.Condition == nil {
+	if len(conditional.conditions) == 0 {
 		return nil, lerrors.Internal.Errorf("conditional has no parsed condition")
+	}
+	if len(conditional.conditions) > 1 {
+		return nil, lerrors.Unsupported.Errorf("multiple condition joins need an explicit instruction operator")
+	}
+	var err error
+	current.Condition, err = b.condition(conditional.conditions[0], ctx)
+	if err != nil {
+		return nil, err
 	}
 	branchContext := ctx
 	if current.Condition.Operator == "has" {
 		branchContext.owner = current.Condition.Left
 	}
-	var err error
 	current.Then, err = b.clauses(conditional.orderedClauses(), branchContext)
 	return current, err
 }
@@ -648,7 +681,7 @@ func (b *instructionBuilder) statement(statement *lStatement, ctx instructionCon
 					return nil, false, err
 				}
 			case "conditional.else":
-				if branch == nil || len(branch.Else) > 0 {
+				if branch == nil || branch.ElseStatement != nil {
 					return nil, false, lerrors.Syntax.Errorf("else has no unmatched conditional")
 				}
 				var err error
@@ -676,7 +709,7 @@ func (b *instructionBuilder) statement(statement *lStatement, ctx instructionCon
 		for _, clause := range predicate.clauses {
 			if clause.subject != nil && clause.subject.noun != nil && clause.subject.noun.isDeclare() {
 				rec := b.semantics.Subjects[clause.subject.noun]
-				if rec == nil || (b.captures[rec] == nil && (rec.Value.Runtime == nil || b.semantics.Aliases[rec] != nil)) {
+				if rec == nil || (b.captures[rec] == nil && (rec.Value.Runtime == nil && rec.staticConstructor == nil || b.semantics.Aliases[rec] != nil)) {
 					following, err := b.clauses(clause.clauses, ctx)
 					if err != nil {
 						return nil, false, err
@@ -838,8 +871,10 @@ func buildInstructions(statements []*lStatement, scopes *scopePlan, semantics *s
 	if err := b.prepareCaptures(); err != nil {
 		return nil, err
 	}
-	for _, function := range semantics.Functions {
-		function.Body = nil
+	for _, ordered := range scopes.Ordered {
+		if function := ordered.Scope.function; function != nil {
+			function.Body = nil
+		}
 	}
 	var result []*instruction
 	var previous *instruction
@@ -885,7 +920,7 @@ func buildInstructions(statements []*lStatement, scopes *scopePlan, semantics *s
 			continue
 		}
 		if otherwise {
-			if previous == nil || previous.Kind != instructionIf || previousStatement == nil || previous.Source.Path != ordered.Source.Path || previous.Source.Paragraph != ordered.Source.Paragraph || len(previous.Else) > 0 {
+			if previous == nil || previous.Kind != instructionIf || previousStatement == nil || previousStatement.source.Span.Path != statement.source.Span.Path || previousStatement.source.Span.Paragraph != statement.source.Span.Paragraph || previous.ElseStatement != nil {
 				return nil, ordered.Source.wrapError(lerrors.Syntax.Errorf("otherwise has no preceding unmatched conditional in this source paragraph"))
 			}
 			previous.Else, previous.ElseStatement = instructions, statement
@@ -922,6 +957,10 @@ func (ctx instructionContext) invocationSite() *lStatement {
 }
 
 func (b *instructionBuilder) passiveDeclaration(subject *subjectGram, predicate *predicateGram, ctx instructionContext) ([]*instruction, error) {
+	if ctx.function != nil && ctx.function.Native {
+		clause := &clauseGram{subject: subject, predicate: predicate, clauses: predicate.clauses}
+		return b.clause(clause, ctx)
+	}
 	var instructions []*instruction
 	if event, err := b.declarationInstruction(registrationSite{subject: subject, predicate: predicate}, ctx); err != nil || event != nil {
 		if err != nil {

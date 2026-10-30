@@ -145,7 +145,7 @@ func TestParagraphPublicationRejectedAliasKeepsExistingGraph(t *testing.T) {
 		t.Fatalf("duplicate public alias error = %v", compilation.Error)
 	}
 	origin, alias := compilation.Memory["origin"], compilation.Memory["Alias"]
-	if origin == nil || alias == nil || len(compilation.Semantics.Aliases) != 1 || compilation.Semantics.Aliases[alias] != origin {
+	if origin == nil || alias == nil || testProgramAliasCount(compilation) != 1 || compilation.Semantics.Aliases[alias] != origin {
 		t.Fatalf("rejected alias changed the existing alias graph: %v", compilation.Semantics.Aliases)
 	}
 	subjects, declarations, _ := testProgramSemanticCounts(compilation)

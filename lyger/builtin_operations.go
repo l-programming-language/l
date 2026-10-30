@@ -86,7 +86,7 @@ func validateBuiltinProcessTemplate(template *DefinitionTemplate, operation buil
 	bindings := map[string]DefinitionArgument{
 		"Receiver":   {Kind: "Syllable", Text: "receiver"},
 		"Invocation": {Kind: "Syllable", Text: "invocation"},
-		"Body":       {Kind: "Syllable", Text: "W^BOD^E{|Statement: ~{}~|}"},
+		"Body":       {Kind: "Syllable", Text: "W"},
 	}
 	instance, err := template.Instantiate(bindings)
 	if err != nil {
@@ -153,7 +153,7 @@ func (invocation builtinProcessInvocation) name() string {
 	return fmt.Sprintf("lInvocation%d", invocation.index)
 }
 
-type builtinProcessBody struct{ statements []string }
+type builtinProcessBody struct{ definition DefinitionInstance }
 
 type builtinProcessOperands struct {
 	receiver   *builtinProcessReceiver
@@ -185,7 +185,8 @@ func (catalog *builtinProcessCatalog) instantiate(operation builtinProcessOperat
 			if operands.body == nil {
 				return nil, template.failure(lerrors.Internal.Errorf("Body requires a composed continuation"))
 			}
-			expression = orchestrationOperation(operands.body.statements)
+			bindings[slot] = DefinitionArgument{Kind: "Definition", Definition: &operands.body.definition}
+			continue
 		}
 		// The generic renderer only receives checked compiler operands after
 		// the private signature has enforced their distinct roles.
@@ -199,6 +200,28 @@ func (catalog *builtinProcessCatalog) instantiate(operation builtinProcessOperat
 }
 
 func builtinProcessExpressions(template *DefinitionTemplate, instance DefinitionInstance) ([]string, error) {
+	if len(instance.before) > 0 {
+		var expressions []string
+		for _, step := range definitionSteps(instance) {
+			selected, err := builtinProcessExpressions(template, step)
+			if err != nil {
+				return nil, err
+			}
+			expressions = append(expressions, selected...)
+		}
+		return expressions, nil
+	}
+	if instance.sequence != nil {
+		var expressions []string
+		for _, child := range instance.sequence {
+			selected, err := builtinProcessExpressions(template, child)
+			if err != nil {
+				return nil, err
+			}
+			expressions = append(expressions, selected...)
+		}
+		return expressions, nil
+	}
 	if instance.Words == nil {
 		return []string{instance.Expression}, nil
 	}
@@ -206,4 +229,13 @@ func builtinProcessExpressions(template *DefinitionTemplate, instance Definition
 		return nil, template.failure(lerrors.InvalidConfiguration.Errorf("builtin process composition requires one ordered word"))
 	}
 	return append([]string(nil), instance.Words[0]...), nil
+}
+
+func definitionSteps(instance DefinitionInstance) []DefinitionInstance {
+	var steps []DefinitionInstance
+	for _, prior := range instance.before {
+		steps = append(steps, definitionSteps(prior)...)
+	}
+	instance.before = nil
+	return append(steps, instance)
 }

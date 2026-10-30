@@ -14,7 +14,7 @@ For example:
 
 <!-- example:imports-indexed-member -->
 
-This imports the public member from the registered IO dictionary and binds a local alias. It does not search for a neighboring `io` directory or `io.l`, nor does it expose private Log/Logger helpers. Importing the dictionary itself retains a namespace instead of flattening all members into the program.
+This imports the public member from the registered IO dictionary and binds a local alias. It does not search for a neighboring `io` directory or `io.l`, nor does it expose private rendering and writing helpers. Importing the dictionary itself retains a namespace instead of flattening all members into the program.
 
 The index validates duplicate JSON keys, safe resource paths, format, actual entry files, and consistent dictionary identity. An unknown key is an unresolved dictionary; an unsupported provider-style name reports its bounded unsupported-provider diagnostic. There is no package download or unrestricted remote dependency resolver hidden in Use.
 
@@ -38,7 +38,7 @@ The companion `helpers.l` contains:
 
 <!-- example:file-import-helper -->
 
-The first import resolves `helpers.l` beside `main.l`, loads its declarations, and aliases the selected Greeting member. The second sentence aliases Display from the now-known LocalTools namespace. `Display Greeting` expands to Show and emits `local hello|` without adding a newline. The existing CLI witness records those exact bytes; it has not been rerun here. Keep both source files together when trying the complete example.
+The first import resolves `helpers.l` beside `main.l` and aliases Greeting. The second aliases Display from LocalTools. `Display Greeting` expands to Show and emits `local hello|` without a newline. Keep both files together.
 
 An include can also occur inside an App-led continuation without discarding its owning paragraph:
 
@@ -48,7 +48,7 @@ The included `continuation.l` supplies:
 
 <!-- example:imports-continuation-body -->
 
-At the include position, `snapshot` still names the caller's local output snapshot. The included statements show it and the imported `marker`, before the caller's following Show. The source origins and physical paragraph identities of the two files remain distinct; a pronoun in the included file cannot borrow an antecedent from the caller. This complete source pair has frontend and native-runtime witnesses. Its retained expected stdout is `before-await|imported\nfrom-import|imported\nafter-await|`, not a result measured during the documentation update.
+At the include position, `snapshot` still names the caller's local output snapshot. The included statements show it and `marker` before the caller's following Show. The files retain separate paragraph identities; a pronoun in the included file cannot borrow an antecedent from the caller. Expected stdout is `before-await|imported\nfrom-import|imported\nafter-await|`.
 
 ## Cycles, duplicates, and visibility
 
@@ -60,11 +60,11 @@ Two imports that attempt incompatible declarations in one scope can collide. Cas
 
 <!-- example:imports-private-helper -->
 
-The Print import is valid, but the final name is unresolved: Log belongs to the dictionary's private lexical root. The [existing distribution test](../../lyger/distribution_frontend_test.go) checks this rejection for both Log and Logger after a complete App program. This shortened documentation fragment is inspected against that test; it is not a separately executed negative fixture. Import the documented public member instead of depending on a helper's implementation spelling.
+The Print import is valid, but Write is unresolved because it belongs to the dictionary's private lexical root. The [distribution test](../../lyger/distribution_frontend_test.go) checks this boundary for Write and Discard.
 
 ## Source units and generated layout
 
-The compiler distinguishes builtin, program, and dictionary source units from individual file occurrences. An explicit file include remains in its importing unit. Source origins carry identity and content hashes for diagnostics and ownership; absolute local paths are implementation provenance and should not be invented in portable site output.
+The compiler distinguishes builtin, program, and dictionary source units from individual file occurrences. An explicit include remains in its importing unit and retains source provenance for diagnostics and ownership.
 
 Apps project executable units and their additional constructed Services project libraries. Standalone Service declarations produce no workspace units. Objects are files and Classes are recursive module/source groups; this layout does not introduce runtime lifetimes or lexical paragraph scopes.
 
@@ -72,9 +72,7 @@ App publication retains version-1 manifests. App-constructed library targets hav
 
 ## Adding a standard library
 
-The public standard-library section follows every actual language/key entry in `stdlib/index.json`. The current IO documentation is one member of that catalog, not a special-case architecture. A future indexed dictionary requires reviewed export/visibility evidence and authored reference content before it is classified as supported.
-
-The index can mechanically establish available dictionary keys and source entry paths. It cannot establish semantic exports, overloads, effects, or private-helper visibility. Those are reviewed mappings tied to actual frontend resolution witnesses and source hashes. See the [standard-library catalog](../stdlib/index.md#catalog-maintenance) for the documentation contract.
+The [public catalog](../stdlib/index.md) excludes internal implementation dictionaries. For registry and documentation requirements, see [contributing documentation](../contributing/documentation.md#update-coverage-and-snapshots).
 
 ## Sources and witnesses
 

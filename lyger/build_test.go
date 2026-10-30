@@ -131,6 +131,16 @@ func nativeObserverProject(t *testing.T, generated map[string][]byte) string {
 	for path, data := range generated {
 		files["generated/"+path] = bytes.Clone(data)
 	}
+	if runtime, ok := files["generated/src/runtime.rs"]; ok {
+		api, err := os.ReadFile("../testdata/phase1/runtime/api.rs.txt")
+		if err != nil {
+			t.Fatal(err)
+		}
+		// The generated bundle is built unchanged before the observer. Only its
+		// test project receives forwarding methods and dependency injection hooks.
+		files["generated/src/runtime_api.rs"] = api
+		files["generated/src/runtime.rs"] = append(runtime, []byte("\n#[cfg(test)]\ninclude!(\"runtime_api.rs\");\n")...)
+	}
 	return nativetest.Materialize(t, files)
 }
 func buildNativeHelper(t *testing.T) string {

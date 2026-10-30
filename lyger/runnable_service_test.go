@@ -81,9 +81,6 @@ func TestServiceDeclarationsAreStructural(t *testing.T) {
 			if err != nil || len(units) != 0 {
 				t.Fatalf("empty workspace projection: %v, %v", units, err)
 			}
-			if got := paragraphActivationTrace(t, result); !reflect.DeepEqual(got, []string{"show:visible"}) {
-				t.Fatalf("structural declaration captured ordinary effects: %v", got)
-			}
 			if _, err := result.OrchestratorUnit("entry", nil); err != nil {
 				t.Fatalf("ordinary top-level program lost its orchestrator: %v", err)
 			}

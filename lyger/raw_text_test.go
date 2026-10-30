@@ -3,10 +3,8 @@ package Lyger
 import (
 	"bytes"
 	"context"
-	"os"
 	"os/exec"
 	"reflect"
-	"strings"
 	"testing"
 	"time"
 
@@ -38,23 +36,6 @@ func TestDefinitionRawTextLiteral(t *testing.T) {
 	}
 }
 
-func sourceLogTemplate(t *testing.T) *DefinitionTemplate {
-	t.Helper()
-	source, err := os.ReadFile("../stdlib/eng/io/dictionary.l")
-	if err != nil {
-		t.Fatal(err)
-	}
-	first, last := bytes.IndexByte(source, '`'), bytes.LastIndexByte(source, '`')
-	if first == -1 || last <= first {
-		t.Fatal("source-defined Log is missing its native definition")
-	}
-	template, err := ParseDefinitionTemplate(source[first:last+1], SourceSpan{Path: "stdlib/eng/io/dictionary.l"})
-	if err != nil {
-		t.Fatal(err)
-	}
-	return template
-}
-
 func runRawTextBundle(t *testing.T, bundle Logiceme.Executable) []byte {
 	t.Helper()
 	binary := buildActualBundle(t, bundle, "Worker", false, "")
@@ -73,74 +54,39 @@ func TestSourceLogPreservesRawText(t *testing.T) {
 	raw := []byte{'A', 0xff, 'B', 0x80, 'C'}
 	source := append([]byte("Use IO's Print from `io` as \"Print\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints `"), raw...)
 	source = append(source, []byte("`.\nThe App Prints 1000000.\n")...)
+	want := append(bytes.Clone(raw), []byte("\n1e+06\n")...)
+	for _, payload := range [][]byte{{'a', 0xff, 'b'}, []byte("雪|~"), []byte("retained"), []byte("once")} {
+		source = append(source, []byte("The App Prints `")...)
+		source = append(source, payload...)
+		source = append(source, []byte("`.\n")...)
+		want = append(want, payload...)
+		want = append(want, '\n')
+	}
+	source = append(source, []byte("The App Prints false.\n")...)
+	want = append(want, []byte("false\n")...)
+	if got := runSourceIO(t, source, "raw-text.l"); !bytes.Equal(got, want) {
+		t.Fatalf("source-defined IO changed scalar bytes: got %x; want %x", got, want)
+	}
+}
+
+func runSourceIO(t *testing.T, source []byte, path string) []byte {
+	t.Helper()
 	before := bytes.Clone(source)
-	result, err := NewLygerService(phase1Options(t)).Compile(source, "raw-text.l")
+	result, err := NewLygerService(phase1Options(t)).Compile(source, path)
 	if err != nil {
 		t.Fatal(err)
 	}
 	units, err := result.ApplicationUnits()
 	if err != nil || len(units) != 1 {
-		t.Fatalf("raw Text application units: %v", err)
+		t.Fatalf("IO application units: %v", err)
 	}
 	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{})
 	recordBundle(t, bundle)
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := append(bytes.Clone(raw), []byte("\n1e+06\n")...)
-	if got := runRawTextBundle(t, bundle); !bytes.Equal(got, want) {
-		t.Fatalf("source-defined IO changed scalar bytes: got %x; want %x", got, want)
-	}
 	if !bytes.Equal(source, before) {
-		t.Fatal("source-defined IO changed raw input bytes")
+		t.Fatal("IO compilation changed source input")
 	}
-}
-
-func TestSourceLogTypedDispatch(t *testing.T) {
-	logger := sourceLogTemplate(t)
-	var body []string
-	for _, argument := range []DefinitionArgument{
-		{Kind: "Text", Text: string([]byte{'a', 0xff, 'b'})},
-		{Kind: "Text", Text: "雪|~"},
-		{Kind: "Number", Text: "1e6"},
-		{Kind: "Truth", Text: "false"},
-		{Kind: "Null"},
-	} {
-		instance, err := logger.Instantiate(map[string]DefinitionArgument{"Output": argument})
-		if err != nil {
-			t.Fatal(err)
-		}
-		body = append(body, instance.Expression)
-	}
-	// Instantiate the real source-defined native block around a native expression
-	// to observe exactly-once evaluation and borrowing independently of L's scalar
-	// argument encoder. No generated source is modified after Evaluate.
-	prototype, err := os.ReadFile("../stdlib/eng/io/dictionary.l")
-	if err != nil {
-		t.Fatal(err)
-	}
-	first, last := bytes.IndexByte(prototype, '`'), bytes.LastIndexByte(prototype, '`')
-	for _, expression := range []string{`owner`, `{ count += 1; String::from("once") }`} {
-		template, err := ParseDefinitionTemplate([]byte(strings.Replace(string(prototype[first:last+1]), "<@Output|Thing@>", expression, 1)), SourceSpan{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		instance, err := template.Instantiate(nil)
-		if err != nil {
-			t.Fatal(err)
-		}
-		body = append(body, instance.Expression)
-	}
-	body = append([]string{`BOD^E{|Statement: ~let owner = String::from("retained"); let mut count = 0;~|}`}, body...)
-	body = append(body, `BOD^E{|Statement: ~assert_eq!(owner, "retained"); assert_eq!(count, 1);~|}`)
-	document := `<PROGRAM><STRUCTURE><BOOK "Worker"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`" + `</S|><|S|>` + "`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(" + strings.Join(body, "*") + ")`" + `</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`
-	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate([]byte(document), Logiceme.GenerationOptions{})
-	recordBundle(t, bundle)
-	if err != nil {
-		t.Fatal(err)
-	}
-	want := append([]byte{'a', 0xff, 'b'}, []byte("\n雪|~\n1e+06\nfalse\n<nil>\nretained\nonce\n")...)
-	if got := runRawTextBundle(t, bundle); !bytes.Equal(got, want) {
-		t.Fatalf("typed native IO changed scalar bytes: got %x; want %x", got, want)
-	}
+	return runRawTextBundle(t, bundle)
 }

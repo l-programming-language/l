@@ -1,38 +1,13 @@
 package Lyger
 
-// op is an AML structure type abstracting an Operation to generate source code for
-type op struct {
-	ID          string
-	Prefix      string
-	Type        string
-	Operands    []string
-	Operator    string
-	Postfix     string
-	AML         map[string]string // {"open": "Op{", "close": "}Op"}
-	Compilation []byte
-}
+// These structural payloads retain distinct pointer identities. Operation and
+// property bindings live in selected definitions, not a second AML schema here.
+type op struct{ _ byte }
+type prop struct{ _ byte }
 
-// prop is an AML structure type abstracting a Property to generate source code for
-type prop struct {
-	ID          string
-	Key         string
-	Type        string
-	Value       string
-	StructTags  string
-	AML         map[string]string // {"open": "Prop{", "close": "}Prop"}
-	Compilation []byte
-}
-
-// funct is an AML structure type abstracting a Function to generate source code for
+// funct retains the resolved source declaration behind a Function value.
 type funct struct {
-	Source      *sourceFunction
-	ID          string
-	Key         string
-	Inputs      []*prop
-	Outputs     []string
-	Receiver    *prop
-	AML         map[string]string // {"open": "Func{", "close": "}Func"}
-	Compilation []byte
+	Source *sourceFunction
 }
 
 // def encapsulates and structures logeme definitions associated with Attributes and Objects
@@ -40,8 +15,6 @@ type def struct {
 	ID          string
 	Text        string
 	Type        string // Syllable (`XY`), Word (`[X, Y]`), Sentence (`[[X],[Y]]`)
-	AML         map[string]string
-	Params      map[string]string
 	Compilation []byte
 }
 

@@ -4,10 +4,31 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
 )
+
+func TestCIParallelismFitsHost(t *testing.T) {
+	for _, tc := range []struct{ cpus, want int }{{1, 1}, {2, 2}, {3, 3}, {4, 4}, {8, 4}} {
+		t.Run(strconv.Itoa(tc.cpus), func(t *testing.T) {
+			if got := ciParallelism(tc.cpus); got != tc.want {
+				t.Fatalf("%d CPUs: parallelism=%d, want %d", tc.cpus, got, tc.want)
+			}
+		})
+	}
+}
+
+func TestCommandCapsInheritedParallelism(t *testing.T) {
+	t.Setenv("GOMAXPROCS", "8")
+	r := runner{root: t.TempDir(), directory: t.TempDir()}
+	output, err := r.command("parallelism", time.Second, nil, "/bin/sh", "-c", `printf '%s' "$GOMAXPROCS"`)
+	want := strconv.Itoa(ciParallelism(runtime.NumCPU()))
+	if err != nil || string(output) != want {
+		t.Fatalf("child GOMAXPROCS=%q, want %s: %v", output, want, err)
+	}
+}
 
 func TestCommandPreservesFailureAndBothStreams(t *testing.T) {
 	r := runner{root: t.TempDir(), directory: t.TempDir()}

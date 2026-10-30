@@ -10,7 +10,7 @@ Add the source to `website/content-map.json` with `source`, `route`, `title`, `d
 
 Use `sidebar: false` for pages reached through a section index or footer. They retain their routes, search entries and source attribution.
 
-Mark a mechanical reference as generated and point its source attribution at the reviewed snapshot and inputs. An edit link must never invite readers to edit the ignored Starlight projection. Preserve the four existing maintained guide paths and useful anchors.
+Mark mechanical references as generated and attribute their reviewed snapshots and inputs. Edit links must target canonical sources, never the ignored Starlight projection. Preserve existing public routes and useful anchors.
 
 Run the content check after renaming or deleting a page. The preparation pipeline updates only files it owns; authored landing-page content is not a cleanup target. Private manifests, reports and audit maintenance data are not public routes unless deliberately represented by an authored reader-facing explanation.
 
@@ -62,4 +62,4 @@ Root `VERSION` supplies the embedded compiler version and local documentation la
 
 Use the curated vector logo geometry and theme variants. Diagrams need nearby explanatory prose, especially because their visible labels are outlined paths. Use system fonts, Starlight controls and the small L theme layer; do not activate the asset pack's alternate theme, navigation or copy scripts.
 
-Semantic review manifests use schema 2: each manifest records a source hash once, and its entries identify dependencies through `sources`. Refreshing a hash requires reviewing every dependent classification. Generated inventory/coverage snapshots share repeated explanations and attribution through `notes` and `evidenceSets` catalogs, referenced by per-entry indices; `referenceEntries` expands them without losing attribution.
+Semantic review manifests use schema 3: each manifest records a source hash once, and its entries identify dependencies through `sources`. Refreshing a hash requires reviewing every dependent classification. The generated coverage snapshot also retains the complete mechanical inventory, with its input fingerprints separate from reviewed semantic hashes. Its `notes`, `evidenceSets` and `classifications` catalogs share repeated fields; `referenceEntries` expands them without losing attribution.

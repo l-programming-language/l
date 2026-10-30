@@ -13,20 +13,21 @@ import (
 
 // token contains the parsed contents information for a lexical word of LStatement,
 type token struct {
-	rawBytes     []byte // []byte(key)
-	tType        string // prepositions.consignment.associative.root / type / primitive,
-	category     string // POS type (noun, verb, etc.),
-	subCategory  string // vocab type, i.e. primitive, structure, applicative, etc...
-	class        string // vocab sub-type, i.e. () (text, app, number, etc.), or structure type (list, etc...)
-	abstract     bool   // concrete if false
-	conjoined    bool   // if rawBytes ended with a comma
-	defined      bool   // if true token is user defined word aka id, if false token is a built in word
-	mem          *entry // raw data value
-	gram         *grammar
-	binding      *tokenBinding
-	bindingError error
-	scope        *lexicalScope
-	rangeError   error // Provisional primitive failure until names resolve.
+	rawBytes           []byte // []byte(key)
+	tType              string // prepositions.consignment.associative.root / type / primitive,
+	category           string // POS type (noun, verb, etc.),
+	subCategory        string // vocab type, i.e. primitive, structure, applicative, etc...
+	class              string // vocab sub-type, i.e. () (text, app, number, etc.), or structure type (list, etc...)
+	abstract           bool   // concrete if false
+	conjoined          bool   // if rawBytes ended with a comma
+	defined            bool   // if true token is user defined word aka id, if false token is a built in word
+	mem                *entry // raw data value
+	gram               *grammar
+	binding            *tokenBinding
+	pendingDeclaration *token
+	bindingError       error
+	scope              *lexicalScope
+	rangeError         error // Provisional primitive failure until names resolve.
 }
 
 // isPossessive returns whether the token is possessive or now
@@ -108,8 +109,7 @@ func (t *token) restoreLiteral(cache map[string][]byte) error {
 
 // getCase returns the case of the token, i.e. appropriative.active
 func (t *token) getCase() string {
-	splitType := strings.Split(t.tType, ".")
-	subType := strings.Join(splitType[1:], ".")
+	_, subType, _ := strings.Cut(t.tType, ".")
 	subType = strings.Replace(subType, ".root", "", 1)
 	return subType
 }
@@ -122,7 +122,7 @@ func (t *token) getPOS(trim bool) string {
 	if t.tType == "nouns.NotFound.possessive" {
 		return "unknown"
 	}
-	rawPOS := strings.Split(t.tType, ".")[0]
+	rawPOS, _, _ := strings.Cut(t.tType, ".")
 	if trim {
 		return trimSuffix(rawPOS, "s")
 	}
@@ -224,6 +224,7 @@ func newToken(rawBytes []byte, gram *grammar) *token {
 
 // lexicon structures the Lyger keyword lexicon
 type lexicon struct {
+	lookupIndex  map[string]map[string]map[string]lexeme
 	Nouns        map[string]lexeme `json:"nouns,omitempty"`
 	Verbs        map[string]lexeme `json:"verbs,omitempty"`
 	Adjectives   map[string]lexeme `json:"adjectives,omitempty"`
@@ -241,25 +242,25 @@ func (l *lexicon) scanLex(tBytes []byte, lType string) (lexeme, string) {
 		var isPossessive bool
 		owner, possessive := possessiveOwner(string(tBytes))
 		isPossessive, tBytes = possessive, []byte(owner)
-		reLexeme, lCat := checkLexemeMap(tBytes, l.Nouns)
+		reLexeme, lCat := l.scanMap(tBytes, lType, l.Nouns)
 		if isPossessive && lCat != "NotFound" {
 			lCat = lCat + ".possessive"
 		}
 		return reLexeme, lCat
 	case "Verbs":
-		return checkLexemeMap(tBytes, l.Verbs)
+		return l.scanMap(tBytes, lType, l.Verbs)
 	case "Adjectives":
-		return checkLexemeMap(tBytes, l.Adjectives)
+		return l.scanMap(tBytes, lType, l.Adjectives)
 	case "Adverbs":
-		return checkLexemeMap(tBytes, l.Adverbs)
+		return l.scanMap(tBytes, lType, l.Adverbs)
 	case "Prepositions":
-		return checkLexemeMap(tBytes, l.Prepositions)
+		return l.scanMap(tBytes, lType, l.Prepositions)
 	case "Articles":
-		return checkLexemeMap(tBytes, l.Articles)
+		return l.scanMap(tBytes, lType, l.Articles)
 	case "Conjunctions":
-		return checkLexemeMap(tBytes, l.Conjunctions)
+		return l.scanMap(tBytes, lType, l.Conjunctions)
 	case "Evaluations":
-		return checkLexemeMap(tBytes, l.Evaluations)
+		return l.scanMap(tBytes, lType, l.Evaluations)
 	default:
 		return lexeme{}, "Error"
 	}

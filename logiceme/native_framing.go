@@ -18,7 +18,9 @@ type nativeValueMask struct {
 }
 
 func newNativeValueMask(input []byte) *nativeValueMask {
-	prefix := "RUSTNATIVE" + strings.ReplaceAll(GenerateUuid(), "-", "") + "VALUE"
+	// Tokens are checked against all caller bytes; UUID length is not an
+	// identity contract. Short prefixes avoid expanding large word catalogues.
+	prefix := "N" + GenerateUuid()[:8]
 	for bytes.Contains(input, []byte(prefix)) {
 		prefix += "X"
 	}
@@ -29,6 +31,11 @@ func newNativeValueMask(input []byte) *nativeValueMask {
 // colons, backticks, and tag-like text are ordinary bytes inside the value.
 func nativeValueEnd(input []byte, start int) (int, error) {
 	for i := start; i < len(input); i++ {
+		next := bytes.IndexByte(input[i:], '~')
+		if next < 0 {
+			break
+		}
+		i += next
 		if bytes.HasPrefix(input[i:], []byte("~, ")) || bytes.HasPrefix(input[i:], []byte("~|}")) {
 			return i, nil
 		}
@@ -40,7 +47,7 @@ func (m *nativeValueMask) values(input []byte) ([]byte, error) {
 	var masked bytes.Buffer
 	cursor := 0
 	for offset := 0; offset < len(input); {
-		if bytes.HasPrefix(input[offset:], []byte("/*|")) {
+		if input[offset] == '/' && bytes.HasPrefix(input[offset:], []byte("/*|")) {
 			end, err := framedCommentEnd(input, offset)
 			if err != nil {
 				return nil, err
@@ -48,7 +55,7 @@ func (m *nativeValueMask) values(input []byte) ([]byte, error) {
 			offset = end
 			continue
 		}
-		if !bytes.HasPrefix(input[offset:], []byte(": ~")) {
+		if input[offset] != ':' || !bytes.HasPrefix(input[offset:], []byte(": ~")) {
 			offset++
 			continue
 		}
@@ -205,7 +212,7 @@ func restoreBookNativeValues(book *Book, restore *strings.Replacer) {
 // validation to ScanBook and the existing syllable/glyph pipeline.
 func framedWordEnd(content []byte, start int) (int, error) {
 	for i := start + len("<|W|>"); i < len(content); i++ {
-		if bytes.HasPrefix(content[i:], []byte("/*|")) {
+		if content[i] == '/' && bytes.HasPrefix(content[i:], []byte("/*|")) {
 			end, err := framedCommentEnd(content, i)
 			if err != nil {
 				return 0, err
@@ -213,7 +220,7 @@ func framedWordEnd(content []byte, start int) (int, error) {
 			i = end - 1
 			continue
 		}
-		if bytes.HasPrefix(content[i:], []byte(": ~")) {
+		if content[i] == ':' && bytes.HasPrefix(content[i:], []byte(": ~")) {
 			end, err := nativeValueEnd(content, i+len(": ~"))
 			if err != nil {
 				return 0, err
@@ -221,7 +228,7 @@ func framedWordEnd(content []byte, start int) (int, error) {
 			i = end
 			continue
 		}
-		if bytes.HasPrefix(content[i:], []byte("</W|>")) {
+		if content[i] == '<' && bytes.HasPrefix(content[i:], []byte("</W|>")) {
 			return i + len("</W|>"), nil
 		}
 	}

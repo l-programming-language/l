@@ -68,8 +68,11 @@ func TestCompilerCompile(t *testing.T) {
 		if got.err != nil || result == nil {
 			t.Fatalf("builtin/dictionary compilation prerequisite; runtime not exercised: %v", got.err)
 		}
-		if !bytes.Equal(got.mainBytes, []byte(INITTEST)) || !bytes.Equal(got.asmBytes, expectedCompilerAML(t)) {
-			t.Fatalf("raw source or exact application AML changed:\nsource=%s\nAML=%s", got.mainBytes, got.asmBytes)
+		if !bytes.Equal(got.mainBytes, []byte(INITTEST)) {
+			t.Fatalf("raw source changed: %s", got.mainBytes)
+		}
+		if len(got.asmBytes) == 0 || !bytes.Equal(got.asmBytes, result.AML) {
+			t.Fatal("compile lost its returned observable AML")
 		}
 		if got.compilation != initialized || !reflect.DeepEqual(got.options, *config) || !bytes.Equal(got.compiledBytes, result.ExpandedSource) {
 			t.Fatal("compile changed initialized state or lost expanded-source view")

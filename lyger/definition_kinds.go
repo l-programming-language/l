@@ -83,6 +83,8 @@ func (k valueType) DefinitionArgKind() (definitionArgKind, bool) {
 		return definitionArgNumber, true
 	case valueTruth:
 		return definitionArgTruth, true
+	case valueNull:
+		return definitionArgNull, true
 	default:
 		return definitionArgInvalid, false
 	}

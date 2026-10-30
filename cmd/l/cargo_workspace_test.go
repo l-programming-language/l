@@ -177,20 +177,21 @@ func TestCLICompilesRuntimeAsWorkspaceLibrary(t *testing.T) {
 	if err != nil || string(actual) != libraryRoot {
 		t.Fatalf("runtime library root = %q, %v", actual, err)
 	}
-	for _, name := range []string{"runtime", "process_unix", "process_other"} {
-		want, err := os.ReadFile(filepath.Join(root, "builtins/templates/runtime", name+".lu"))
+	for name, asset := range map[string]string{"runtime/host.rs": "host", "process_unix.rs": "process_unix", "process_other.rs": "process_other"} {
+		want, err := os.ReadFile(filepath.Join(root, "builtins/templates/runtime", asset+".lu"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := os.ReadFile(filepath.Join(workspace, "support/runtime/src", name+".rs"))
+		got, err := os.ReadFile(filepath.Join(workspace, "support/runtime/src", name))
 		if err != nil || !bytes.Equal(got, want) {
-			t.Fatalf("shared runtime changed canonical %s bytes: %v", name, err)
+			t.Fatalf("shared runtime changed selected %s bytes: %v", name, err)
 		}
-	}
-	for _, name := range []string{"runtime.rs", "process_unix.rs", "process_other.rs"} {
 		if _, err := os.Stat(filepath.Join(workspace, "orchestrator/src", name)); !os.IsNotExist(err) {
 			t.Fatalf("orchestrator retained inline runtime %s: %v", name, err)
 		}
+	}
+	if _, err := os.Stat(filepath.Join(workspace, "orchestrator/src/runtime.rs")); !os.IsNotExist(err) {
+		t.Fatalf("orchestrator retained inline runtime: %v", err)
 	}
 	out, diagnostics, err = runRuntimeCommand(t, entry, project, nil)
 	if err != nil || string(out) != "Hello World!\n" || len(diagnostics) != 0 {

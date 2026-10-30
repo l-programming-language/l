@@ -59,7 +59,7 @@ func TestFunctionMemberSentence(t *testing.T) {
 func TestFunctionReturnUsesBoundMember(t *testing.T) {
 	c := executableTestResult(t, memberResolutionSource{main: identityFunction}).Compilation
 	for _, function := range c.Semantics.Functions {
-		if function.Template == nil || function.Return == nil || function.ReturnTemplate == nil {
+		if function.Definition == nil || function.Return == nil || function.Invoke == nil {
 			t.Fatal("Function lost its source definitions")
 		}
 		if len(function.Body) != 1 || function.Body[0].Kind != instructionReturn || function.Body[0].SourceToken.binding.Record != function.Return {
@@ -117,7 +117,7 @@ func TestFunctionReturnAliasesKeepSelectedDefinition(t *testing.T) {
 					t.Fatal("aliased return lost its Function binding")
 				}
 				bound, err := canonicalRecord(function.Body[0].SourceToken.binding.Record, c.Semantics.Aliases)
-				if err != nil || bound != function.Return || function.ReturnTemplate != function.Members["Return"] {
+				if err != nil || bound != function.Return {
 					t.Fatalf("aliased return changed selected definition: %v", err)
 				}
 			}

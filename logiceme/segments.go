@@ -166,6 +166,7 @@ type Featural struct {
 }
 
 type SegmentalSystem struct {
+	templateCases    map[string]*segmentCases
 	fileMeta         MetaDict
 	itemVisibility   string
 	initializeConfig bool
@@ -256,14 +257,18 @@ type Glyph struct {
 }
 
 // DetermineSegTags Glyph bytes
-func (g *Glyph) DetermineSegTags(seg Segment) Segment {
-	selected := "Default"
+func (g *Glyph) segmentSelection() string {
 	if g.Determinant.Symbol == "E" {
-		selected = "E"
-	} else if g.Determinant.Symbol != "" {
-		selected = g.Determinant.getSegmentName()
+		return "E"
 	}
-	seg.Tags = ParseSegmentTags(seg.Tags, g.Meta, selected, true)
+	if g.Determinant.Symbol != "" {
+		return g.Determinant.getSegmentName()
+	}
+	return "Default"
+}
+
+func (g *Glyph) DetermineSegTags(seg Segment) Segment {
+	seg.Tags = ParseSegmentTags(seg.Tags, g.Meta, g.segmentSelection(), true)
 	return seg
 }
 
@@ -403,17 +408,8 @@ func (g *Glyph) validateSelectedCase(vowel Segment) error {
 	if executionShape && (len(g.Vowels) != 1 || g.Consonant.Symbol != "") {
 		return lerrors.Unsupported.Errorf("unsupported Execution glyph %s: execution forms require one vowel and no terminal consonant", glyphForm(g))
 	}
-	selected := "Default"
-	if g.Determinant.Symbol == "E" {
-		selected = "E"
-	} else if g.Determinant.Symbol != "" {
-		selected = g.Determinant.getSegmentName()
-	}
-	tags := vowel.Tags
-	if len(tags) == 0 {
-		tags = CompileMainTags(vowel.Content)
-	}
-	if len(ParseSegmentTags(tags, g.Meta, selected, false)) > 0 {
+	selected := g.segmentSelection()
+	if vowel.hasTemplateCase(g.SegmentalSystem, selected) {
 		return nil
 	}
 	switch glyphForm(g) {
@@ -427,8 +423,7 @@ func (g *Glyph) validateSelectedCase(vowel Segment) error {
 func ParseMetaInserts(definition []byte) ([]byte, [][]string) {
 	var varManager [][]string
 	if bytes.Contains(definition, []byte("{|")) && bytes.Contains(definition, []byte("|}")) {
-		varsParser, _ := LoadRegex("MetaDefs", "") //nolint:errcheck // LoadRegex returns a compiled built-in expression and a nil error.
-		parsedBytes := varsParser.Parse(definition)
+		parsedBytes := metaInsertFrames(definition)
 		for _, parsedByte := range parsedBytes {
 			varUuid := GenerateUuid()
 			varUuid = strings.Replace(varUuid, "-", "", -1)
@@ -441,6 +436,25 @@ func ParseMetaInserts(definition []byte) ([]byte, [][]string) {
 		}
 	}
 	return definition, varManager
+}
+
+// Match the existing non-greedy MetaDefs framing without regexp scratch space
+// proportional to the complete composition. Replacement order remains separate.
+func metaInsertFrames(definition []byte) [][]byte {
+	var frames [][]byte
+	for {
+		start := bytes.Index(definition, []byte("{|"))
+		if start < 0 {
+			return frames
+		}
+		end := bytes.Index(definition[start+2:], []byte("|}"))
+		if end < 0 {
+			return frames
+		}
+		end += start + 4
+		frames = append(frames, definition[start:end])
+		definition = definition[end:]
+	}
 }
 
 // ParseGlyphExpressions parses the glyph expressions wrapped in () and replaces with a uuid placeholder string
@@ -498,18 +512,46 @@ func (ss *SegmentalSystem) InitializeGlyph(definition []byte, valVars [][]string
 }
 
 func (ss *SegmentalSystem) initializeGlyphChecked(definition []byte, valVars [][]string, expVars [][]string) (Glyph, error) {
+	name := string(definition)
+	bound, values := ParseMetaInserts(definition)
+	bound, groups := ParseGlyphExpressions(bound)
+	bindings := glyphBindings{values: make(map[string]string, len(values)), groups: make(map[string]string, len(expVars)+len(groups))}
+	for _, value := range values {
+		bindings.values[value[0]] = value[1]
+	}
+	bindings.orderedValues = append(valVars, values...)
+	if len(valVars) != 0 || len(expVars) != 0 {
+		// Explicit public substitution lists retain their ordered replacement
+		// semantics; ordinary parsed metadata uses exact placeholder lookup.
+		bindings.orderedGroups = append(expVars, groups...)
+		bindings.external = true
+	}
+	for _, group := range append(expVars, groups...) {
+		key := "|" + group[0] + "|"
+		if _, present := bindings.groups[key]; !present {
+			bindings.groups[key] = group[1]
+		}
+	}
+	return ss.initializeBoundGlyph(bound, name, &bindings)
+}
+
+// Bind placeholders once per source tree. Descendants contain references to
+// these bindings, so rescanning them and searching every sibling's metadata is
+// both redundant and quadratic for large composed Functions.
+type glyphBindings struct {
+	values, groups map[string]string
+	orderedValues  [][]string
+	orderedGroups  [][]string
+	external       bool
+}
+
+func (ss *SegmentalSystem) initializeBoundGlyph(definition []byte, name string, bindings *glyphBindings) (Glyph, error) {
 	var seg Segment
-	var varValManager, varExpManager [][]string
-	reGlyph := Glyph{Name: string(definition), Type: "Simple", SegmentalSystem: ss, Meta: MetaDict{}}
-	definition, varValManager = ParseMetaInserts(definition)
-	valVars = append(valVars, varValManager...)
+	reGlyph := Glyph{Name: name, Type: "Simple", SegmentalSystem: ss, Meta: MetaDict{}}
 	inputCount := 0
 	input := false
 	inputStr := ""
-	definition, varExpManager = ParseGlyphExpressions(definition)
-	expVars = append(expVars, varExpManager...)
-	splitDefinition := bytes.Split(definition, []byte("^"))
-	curDef := splitDefinition[0]
+	curDef, nextDef, hasChildren := bytes.Cut(definition, []byte("^"))
 	for ind, b := range curDef {
 		if string(b) == "{" {
 			if input {
@@ -568,31 +610,41 @@ func (ss *SegmentalSystem) initializeGlyphChecked(definition []byte, valVars [][
 			}
 		}
 	}
-	if len(splitDefinition) > 1 {
-		nextDefContent := string(bytes.Join(splitDefinition[1:], []byte("^")))
-		children := [][]byte{[]byte(nextDefContent)}
-		if strings.HasPrefix(nextDefContent, "|") {
+	if hasChildren {
+		children := [][]byte{nextDef}
+		if bytes.HasPrefix(nextDef, []byte("|")) {
 			// Expand only this group's placeholder; nested groups own their delimiters.
-			exp := []byte(nextDefContent)
-			for _, variable := range expVars {
-				if nextDefContent == "|"+variable[0]+"|" {
-					exp = []byte(variable[1])
-					break
-				}
+			exp := nextDef
+			if group, found := bindings.groups[string(nextDef)]; found {
+				exp = []byte(group)
 			}
 			children = bytes.Split(exp, []byte("*"))
 		}
-		for _, child := range children {
-			glyph, err := ss.initializeGlyphChecked(child, valVars, expVars)
+		for i, child := range children {
+			var glyph Glyph
+			var err error
+			if bindings.external {
+				glyph, err = ss.initializeGlyphChecked(child, bindings.orderedValues, bindings.orderedGroups)
+			} else {
+				glyph, err = ss.initializeBoundGlyph(child, string(child), bindings)
+			}
 			if err != nil {
 				return reGlyph, err
+			}
+			if i == 0 {
+				reGlyph.Conjoinments = make([]Glyph, 0, len(children))
 			}
 			reGlyph.Type = "Complex"
 			reGlyph.Conjoinments = append(reGlyph.Conjoinments, glyph)
 		}
 	}
-	valInput := InsertGlyphVals([]byte(reGlyph.InputString), valVars)
-	reGlyph.InputString = string(valInput)
+	if bindings.external {
+		reGlyph.InputString = string(InsertGlyphVals([]byte(reGlyph.InputString), bindings.orderedValues))
+	} else if value, found := bindings.values[reGlyph.InputString]; found {
+		reGlyph.InputString = value
+	} else if reGlyph.InputString != "" {
+		reGlyph.InputString = string(InsertGlyphVals([]byte(reGlyph.InputString), bindings.orderedValues))
+	}
 	for _, vowel := range reGlyph.Vowels {
 		if err := reGlyph.validateSelectedCase(vowel); err != nil {
 			return reGlyph, err
@@ -610,6 +662,12 @@ func (ss *SegmentalSystem) AddLogiceme(segment Segment, load bool, resources fs.
 	}
 	if d, ok := segmentDefinitionFor(segment.Symbol); ok && (d.family == "Vowel" || d.family == "Consonant") {
 		*d.slot(ss) = segment
+		if load {
+			if ss.templateCases == nil {
+				ss.templateCases = make(map[string]*segmentCases)
+			}
+			ss.templateCases[segment.Symbol] = parsedSegmentCases.load(segment.Content)
+		}
 	}
 	return nil
 }

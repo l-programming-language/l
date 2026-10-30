@@ -3,12 +3,8 @@ package Lyger
 import "github.com/l-programming-language/l/lerrors"
 
 func (p *orchestrationPlanner) runtimeOperand(source *instructionValue, flow orchestrationFlow) (*orchestrationValue, error) {
-	p.plan.RuntimeValues = true
 	result := &orchestrationValue{Source: source, Type: source.Type, RuntimeType: source.RuntimeType, Access: orchestrationAccessOwned}
 	p.registerRuntimeType(source.RuntimeType)
-	for _, field := range source.Fields {
-		p.registerRuntimeType(field.Type)
-	}
 	for _, element := range source.Elements {
 		value, err := p.value(element, flow)
 		if err != nil {
@@ -32,7 +28,7 @@ func (p *orchestrationPlanner) runtimeOperand(source *instructionValue, flow orc
 		switch result.Owner.Type {
 		case valueList, valueBytes:
 			keyType = valueNumber
-		case valueMap, valueInstance:
+		case valueMap:
 			keyType = valueText
 		case valuePointer, valueThing:
 		default:
@@ -53,7 +49,7 @@ func (p *orchestrationPlanner) runtimeOperand(source *instructionValue, flow orc
 				return nil, lerrors.TypeMismatch.Errorf("List element type mismatch")
 			}
 		}
-	case valueMap, valueInstance, valueNull:
+	case valueMap, valueNull:
 	case valuePointer, valueThing:
 	case valueBytes, valueText, valueError:
 		if result.Elements[0].Type != valueText && result.Elements[0].Type != valueBytes {
@@ -88,7 +84,7 @@ func (p *orchestrationPlanner) runtimeUpdate(source *instruction, flow orchestra
 		if result.Key != nil && result.Key.Type != valueNumber {
 			return nil, lerrors.TypeMismatch.Errorf("List index requires Number")
 		}
-	case valueMap, valueInstance:
+	case valueMap:
 		if result.Key == nil || result.Key.Type != valueText {
 			return nil, lerrors.TypeMismatch.Errorf("field key requires Text")
 		}
@@ -116,10 +112,8 @@ func (p *orchestrationPlanner) registerRuntimeType(typ runtimeTypeRef) {
 	if p.plan.Identities == nil {
 		p.plan.Identities = make(map[*record]uint64)
 	}
-	for _, identity := range []*record{typ.Identity, typ.Definition} {
-		if identity != nil && p.plan.Identities[identity] == 0 {
-			p.plan.Identities[identity] = uint64(len(p.plan.Identities) + 1)
-		}
+	if typ.Definition != nil && p.plan.Identities[typ.Definition] == 0 {
+		p.plan.Identities[typ.Definition] = uint64(len(p.plan.Identities) + 1)
 	}
 	if typ.Element != nil {
 		p.registerRuntimeType(*typ.Element)

@@ -32,6 +32,23 @@ type MetaDict struct {
 	Metas []*MetaObj    `json:"metas,omitempty"`
 }
 
+func (r MetaDict) clone() MetaDict {
+	r.Index.Keys = append(r.Index.Keys[:0:0], r.Index.Keys...)
+	r.Index.Indexes = append(r.Index.Indexes[:0:0], r.Index.Indexes...)
+	if r.Metas != nil {
+		values := make([]MetaObj, len(r.Metas))
+		metas := make([]*MetaObj, len(r.Metas))
+		for index, meta := range r.Metas {
+			if meta != nil {
+				values[index] = *meta
+				metas[index] = &values[index]
+			}
+		}
+		r.Metas = metas
+	}
+	return r
+}
+
 type metaGetReturn struct {
 	metaVal   string
 	metaType  string
@@ -113,33 +130,20 @@ func (r *MetaDict) LoadJSON(keyStr string, jsonStr string) {
 	}
 }
 
-func regParse(regStr string, contentStr string) [][]byte {
-	reg := regexp.MustCompile(regStr)
-	res := reg.FindAll([]byte(contentStr), -1)
-	return res
+var metadataForms = []struct {
+	kind    string
+	pattern *regexp.Regexp
+}{
+	{"MetaDict", regexp.MustCompile(`\'\{\|((?:.*?\r?\n?)*)\|\}\'`)},
+	{"Array", regexp.MustCompile(`\'\[((?:.*?\r?\n?)*)\]\'`)},
+	{"String", regexp.MustCompile(`\~((?:.*?\r?\n?)*)\~`)},
 }
 
 func determineMetaType(varStr string) string {
-	//Check if Dict
-	// '{| |}'
-	regStr := `\'\{\|((?:.*?\r?\n?)*)\|\}\'`
-	check := regParse(regStr, varStr)
-	if len(check) > 0 {
-		return "MetaDict"
-	}
-	//Check if Array
-	// '[| |]'
-	regStr = `\'\[((?:.*?\r?\n?)*)\]\'`
-	check = regParse(regStr, varStr)
-	if len(check) > 0 {
-		return "Array"
-	}
-	//Check if String
-	// ~ ~
-	regStr = `\~((?:.*?\r?\n?)*)\~`
-	check = regParse(regStr, varStr)
-	if len(check) > 0 {
-		return "String"
+	for _, form := range metadataForms {
+		if form.pattern.MatchString(varStr) {
+			return form.kind
+		}
 	}
 	//Check if Integer
 	varStr = strings.Trim(varStr, "|")
@@ -164,8 +168,7 @@ func determineMetaType(varStr string) string {
 func cacheSubMetas(str string) (string, []string, []string) {
 	subMetas := []string{}
 	subs := []string{}
-	regStr := `\'\{\|((?:.*?\r?\n?)*)\|\}\'`
-	parsedSubMetas := regParse(regStr, str)
+	parsedSubMetas := metadataForms[0].pattern.FindAll([]byte(str), -1)
 	processBytes := []byte(str)
 	for ind, parsedSubMeta := range parsedSubMetas {
 		subMetas = append(subMetas, string(parsedSubMeta))
@@ -255,20 +258,14 @@ func (r *MetaDict) Load(metaString string) error {
 }
 
 // get Internal MetaData Method to get a metaVal, metaKey pair
-func (r *MetaDict) get(metaKey string) *metaGetReturn {
-	inKeys := r.Index.Keys
-	metaVal := "NotFound"
-	metaType := "NotFound"
-	metaIndex := 0
-	for ind, inKey := range inKeys {
+func (r *MetaDict) get(metaKey string) metaGetReturn {
+	for ind, inKey := range r.Index.Keys {
 		if inKey == metaKey {
-			metaIndex = r.Index.Indexes[ind]
-			metaVal = r.Metas[metaIndex].Value
-			metaType = r.Metas[metaIndex].Type
-			break
+			index := r.Index.Indexes[ind]
+			return metaGetReturn{r.Metas[index].Value, r.Metas[index].Type, index}
 		}
 	}
-	return &(metaGetReturn{metaVal, metaType, metaIndex})
+	return metaGetReturn{"NotFound", "NotFound", 0}
 }
 
 // Get MetaDict MetaObj
@@ -296,9 +293,9 @@ func (r *MetaDict) GetMetas() []*MetaObj {
 
 // GetMetaData Get All MetaObjs Data
 func (r *MetaDict) GetMetaData() []MetaObj {
-	reMeta := []MetaObj{}
-	for _, metaPointer := range r.Metas {
-		reMeta = append(reMeta, *metaPointer)
+	reMeta := make([]MetaObj, len(r.Metas))
+	for index, metaPointer := range r.Metas {
+		reMeta[index] = *metaPointer
 	}
 	return reMeta
 }

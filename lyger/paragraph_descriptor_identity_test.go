@@ -81,7 +81,7 @@ func TestParagraphDescriptorNominalConstructionIdentity(t *testing.T) {
 				t.Fatal("descriptor alias changed its canonical function or wrapper")
 			}
 			units, err := (&CompilationResult{Compilation: compilation}).ApplicationUnits()
-			if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`(&&LPrintValue(&("Hello World!"))).l_print();`)) {
+			if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`Inputs: ~&["Hello World!"]&~`)) {
 				t.Fatalf("canonical nominal failed to produce the source-defined App body: %v", err)
 			}
 		})
@@ -96,7 +96,7 @@ func TestParagraphDescriptorNativeTargetControl(t *testing.T) {
 		t.Fatal("native App target did not retain its constructor")
 	}
 	units, err := (&CompilationResult{Compilation: compilation}).ApplicationUnits()
-	if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`(&&LPrintValue(&("Hello World!"))).l_print();`)) {
+	if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`Inputs: ~&["Hello World!"]&~`)) {
 		t.Fatalf("native target did not produce its original body: %v", err)
 	}
 }

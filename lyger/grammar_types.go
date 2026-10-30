@@ -6,6 +6,14 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
+// Lexical fields are optional. Build their association set directly instead of
+// sorting them into a temporary token slice and then constructing the same set.
+func selectLexicalTokens(groups ...[]*token) tokenSelection {
+	selected := selectTokens(groups...)
+	delete(selected, nil)
+	return selected
+}
+
 // grammeme is the base structure of any Grammar in L
 type grammeme struct {
 	ID        string            `json:"id,omitempty"`
@@ -50,14 +58,9 @@ type conditionGram struct {
 	gram         *grammar
 }
 
-// getLexTokens returns a slice of tokens used by the lex fields of conditionGram
-func (sb *conditionGram) getLexTokens() []*token {
-	return selectTokens(sb.prepositions, []*token{sb.article, sb.adverb, sb.verb}).ordered(sb.tokens)
-}
-
 // getUnassociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *conditionGram) getUnassociatedTokens() []*token {
-	selected := selectTokens(sb.getLexTokens()) // reduce lexical tokens before grammatical reductions
+	selected := selectLexicalTokens(sb.prepositions, []*token{sb.article, sb.adverb, sb.verb})
 	for _, c := range sb.values {
 		selected.add(c.tokens...)
 	}
@@ -192,14 +195,9 @@ func (conditional *conditionalGram) orderedClauses() []*clauseGram {
 	return conditional.clauses
 }
 
-// getLexTokens returns a slice of tokens used by the lex fields of conditionalGram
-func (sb *conditionalGram) getLexTokens() []*token {
-	return selectTokens(sb.evaluations, sb.conjunctions, []*token{sb.adverb}).ordered(sb.tokens)
-}
-
 // getUnassociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *conditionalGram) getUnassociatedTokens() []*token {
-	selected := selectTokens(sb.getLexTokens()) // reduce lexical tokens before grammatical reductions
+	selected := selectLexicalTokens(sb.evaluations, sb.conjunctions, []*token{sb.adverb})
 	if sb.clause != nil {
 		selected.add(sb.clause.tokens...)
 	}
@@ -428,14 +426,9 @@ func (sb *valueGram) loadTyping(sType string) error {
 	return (grammarTyping{&sb.sType, &sb.gType, &sb.cType}).load(sType, familyValue, grammarCaseInferred)
 }
 
-// getLexTokens returns a slice of tokens used by the lex fields of valueGram
-func (sb *valueGram) getLexTokens() []*token {
-	return selectTokens(sb.adjectives, []*token{sb.article, sb.noun}).ordered(sb.tokens)
-}
-
 // getUnassociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *valueGram) getUnassociatedTokens() []*token {
-	return selectTokens(sb.getLexTokens()).remaining(sb.tokens) // reduce lexical tokens before grammatical reductions
+	return selectLexicalTokens(sb.adjectives, []*token{sb.article, sb.noun}).remaining(sb.tokens)
 }
 
 // typeSwitch inits associates tokens to valueGram fields based on the decoded type pattern and token order
@@ -545,7 +538,7 @@ func (sb *subjectGram) getLexTokens() []*token {
 
 // getUnassociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *subjectGram) getUnassociatedTokens() []*token {
-	selected := selectTokens(sb.getLexTokens()) // reduce lexical tokens before grammatical reductions
+	selected := selectLexicalTokens(sb.adjectives, []*token{sb.article, sb.noun})
 	if sb.phrase != nil {
 		selected.add(sb.phrase.tokens...)
 	}
@@ -554,7 +547,7 @@ func (sb *subjectGram) getUnassociatedTokens() []*token {
 
 // getAssociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *subjectGram) getAssociatedTokens(update bool) []*token {
-	selected := selectTokens(sb.getLexTokens())
+	selected := selectLexicalTokens(sb.adjectives, []*token{sb.article, sb.noun})
 	if sb.phrase != nil {
 		selected.add(sb.phrase.tokens...)
 	}
@@ -670,11 +663,6 @@ type objectGram struct {
 	name       *valueGram
 }
 
-// getLexTokens returns a slice of tokens used by the lex fields of objectGram
-func (sb *objectGram) getLexTokens() []*token {
-	return selectTokens(sb.adjectives, []*token{sb.article, sb.noun}).ordered(sb.tokens)
-}
-
 // loadTyping parses sType into gType (grammar type) and cType (case type)
 func (sb *objectGram) loadTyping(sType string) error {
 	return (grammarTyping{&sb.sType, &sb.gType, &sb.cType}).load(sType, familyObject, grammarCaseInferred)
@@ -682,7 +670,7 @@ func (sb *objectGram) loadTyping(sType string) error {
 
 // getUnassociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *objectGram) getUnassociatedTokens() []*token {
-	selected := selectTokens(sb.getLexTokens()) // reduce lexical tokens before grammatical reductions
+	selected := selectLexicalTokens(sb.adjectives, []*token{sb.article, sb.noun})
 	if sb.clause != nil {
 		selected.add(sb.clause.tokens...)
 	}
@@ -721,6 +709,14 @@ func (sb *objectGram) lexSwitch(term grammarTerm) error {
 	case term.Kind == termLexical && term.POS == posArticle:
 		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.article, lexicalMatchClass)
 	case term.Kind == termIdentifier:
+		// A callable keeps the same optional pre-nominal name as other named
+		// objects, while its enclosing rule still owns the explicit signature.
+		available := sb.getUnassociatedTokens()
+		if sb.cType == "callable" && len(available) > 0 && isText(available[0].rawBytes) {
+			if err := buildGrammarChild(&sb.name, initValueGram, "value.text", available, sb.gram); err != nil {
+				return err
+			}
+		}
 		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.noun, lexicalMatchClass)
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Object Lex Type: "+term.className())
@@ -839,11 +835,6 @@ func (sb *phraseGram) subTypeSwitch() string {
 	return ""
 }
 
-// getLexTokens returns a slice of tokens used by the lex fields of phraseGram
-func (sb *phraseGram) getLexTokens() []*token {
-	return selectTokens(sb.prepositions, sb.conjunctions).ordered(sb.tokens)
-}
-
 // loadTyping parses sType into gType (grammar type) and cType (case type)
 func (sb *phraseGram) loadTyping(sType string) error {
 	typing := grammarTyping{&sb.sType, &sb.gType, &sb.cType}
@@ -863,7 +854,7 @@ func (sb *phraseGram) loadTyping(sType string) error {
 
 // getUnassociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *phraseGram) getUnassociatedTokens() []*token {
-	selected := selectTokens(sb.getLexTokens()) // reduce lexical tokens before grammatical reductions
+	selected := selectLexicalTokens(sb.prepositions, sb.conjunctions)
 	if sb.subject != nil {
 		selected.add(sb.subject.tokens...)
 	}
@@ -1111,14 +1102,9 @@ func (sb *clauseGram) loadTyping(sType string) error {
 	return lerrors.Syntax.Errorf("clause typing error: verb type incorrect")
 }
 
-// getLexTokens returns a slice of tokens used by the lex fields of clauseGram
-func (sb *clauseGram) getLexTokens() []*token {
-	return selectTokens(sb.adverbs, sb.prepositions, []*token{sb.verb}, sb.conjunctions).ordered(sb.tokens)
-}
-
 // getUnassociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *clauseGram) getUnassociatedTokens() []*token {
-	selected := selectTokens(sb.getLexTokens()) // reduce lexical tokens before grammatical reductions
+	selected := selectLexicalTokens(sb.adverbs, sb.prepositions, []*token{sb.verb}, sb.conjunctions)
 	if sb.subject != nil {
 		selected.add(sb.subject.tokens...)
 	}
@@ -1254,7 +1240,8 @@ func (sb *clauseGram) buildProcess(casedStr string) error {
 func (sb *clauseGram) caseBuild() error {
 	cases := sb.rule.Cases
 	if strings.HasPrefix(sb.gType, "clause.generic.") && sb.gType != "clause.generic.passive" {
-		if sb.verb != nil && ((sb.verb.binding != nil && sb.verb.binding.Record.isFunction()) || sb.verb.isFunctionReturn()) {
+		zeroWord := sb.verb != nil && sb.verb.binding != nil && sb.verb.binding.Record.Value != nil && sb.verb.binding.Record.Value.Lexeme != nil && len(sb.verb.binding.Record.Value.Lexeme.Inputs) == 0 && len(sb.getUnassociatedTokens()) == 0
+		if sb.verb != nil && ((sb.verb.binding != nil && sb.verb.binding.Record.isFunction()) || sb.verb.isFunctionReturn() && !sb.verb.inNativeFunction() || zeroWord) {
 			cases = map[string]string{"callable": cases["callable"]}
 		} else {
 			cases = withoutGrammarCase(cases, "callable")
@@ -1305,14 +1292,9 @@ type predicateGram struct {
 	conjunctions []*token
 }
 
-// getLexTokens returns a slice of tokens used by the lex fields of predicateGram
-func (sb *predicateGram) getLexTokens() []*token {
-	return selectTokens([]*token{sb.conjunction, sb.verb, sb.adverb}, sb.conjunctions).ordered(sb.tokens)
-}
-
 // getUnassociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *predicateGram) getUnassociatedTokens() []*token {
-	selected := selectTokens(sb.getLexTokens()) // reduce lexical tokens before grammatical reductions
+	selected := selectLexicalTokens([]*token{sb.conjunction, sb.verb, sb.adverb}, sb.conjunctions)
 	if sb.obj != nil {
 		selected.add(sb.obj.tokens...)
 	}

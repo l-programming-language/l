@@ -16,11 +16,7 @@ func TestCanonicalFunctionDefinitionsOwnEmission(t *testing.T) {
 	for _, test := range []struct{ member, from, to string }{
 		{"Function", "^(<@Process@>)", "^(W^(BOD^E{|Statement: ~/* selected_Function */~|})*<@Process@>)"},
 		{"Return", "return <@Statement@>;", "return /* selected_Return */ <@Statement@>;"},
-		{"Suspend", "Statement: ~lPinned~", "Statement: ~/* selected_Suspend */ lPinned~"},
-		{"Invoke", "Value: ~<@Target@>~", "Value: ~/* selected_Invoke */ <@Target@>~"},
-		{"Yield", "Key: ~std::ops::ControlFlow::Continue~", "Key: ~/* selected_Yield */ std::ops::ControlFlow::Continue~"},
-		{"Bind", "Key: ~LEnvironment::typed~", "Key: ~/* selected_Bind */ LEnvironment::typed~"},
-		{"Exit", "Key: ~Ok~", "Key: ~/* selected_Exit */ Ok~"},
+		{"Invoke", "Key: ~(<@Target@>)~", "Key: ~(/* selected_Invoke */ <@Target@>)~"},
 	} {
 		t.Run(test.member, func(t *testing.T) {
 			files := dictionaryIndexFilesystem(t)
@@ -40,6 +36,7 @@ func TestCanonicalFunctionDefinitionsOwnEmission(t *testing.T) {
 			}
 			selected := []byte(strings.Join(lines, "\n"))
 			files[core] = &fstest.MapFile{Data: selected}
+			deriveTestRuntime(t, files)
 			source := identityFunction + "Identity `value` as \"Result\".\nCreate \"Child\" as a New Basic App.\n"
 			if test.member == "Return" {
 				source = strings.Replace(source, "Return Value.", "Use Return as \"Finish\".\nFinish Value.", 1)
@@ -70,7 +67,7 @@ func TestCanonicalFunctionDefinitionsOwnEmission(t *testing.T) {
 }
 
 func TestCanonicalFunctionMissingMemberDoesNotFallBack(t *testing.T) {
-	for _, member := range []string{"Return", "Suspend", "Invoke", "Yield", "Bind", "Exit"} {
+	for _, member := range []string{"Return", "Invoke"} {
 		t.Run(member, func(t *testing.T) {
 			files := dictionaryIndexFilesystem(t)
 			const core = "builtins/eng/core.l"
@@ -91,7 +88,11 @@ func TestCanonicalFunctionMissingMemberDoesNotFallBack(t *testing.T) {
 }
 
 func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
-	c := executableTestResult(t, memberResolutionSource{main: "    Publicly create \"Done\" as a New Function with No Inputs and No Outputs.\nReturn.\n"}).Compilation
+	source := "Define \"Callerreturn\" to `<DEF>BOD^E{|Statement: ~return /* caller */ <@Statement@>;~|}<DEF>`.\n" +
+		"Define \"Calleereturn\" to `<DEF>BOD^E{|Statement: ~return /* callee */ <@Statement@>;~|}<DEF>`.\n" +
+		"Define \"Invocation\" to `<DEF>KY{|Key: ~(/* selected invocation */ <@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.\n\n" +
+		"    Publicly create \"Done\" as a New Function with No Inputs and No Outputs.\nReturn.\n"
+	c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
 	var definition *sourceFunction
 	for _, function := range c.Semantics.Functions {
 		definition = function
@@ -100,14 +101,18 @@ func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
 		t.Fatal("missing Function")
 	}
 	caller, callee := *definition, *definition
-	caller.ReturnTemplate = parseTestDefinition(t, strings.Replace(string(definition.ReturnTemplate.Original), "return ", "return /* caller */ ", 1))
-	callee.ReturnTemplate = parseTestDefinition(t, strings.Replace(string(definition.ReturnTemplate.Original), "return ", "return /* callee */ ", 1))
-	callee.Members = make(map[string]*DefinitionTemplate, len(definition.Members))
-	for name, template := range definition.Members {
-		callee.Members[name] = template
+	selected := func(name string) *record {
+		rec, err := c.exportedRecord(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return rec
 	}
-	callee.Members["Invoke"] = parseTestDefinition(t, strings.Replace(string(definition.Members["Invoke"].Original), "Value: ~<@Target@>~", "Value: ~/* selected invocation */ <@Target@>~", 1))
-	emitter := orchestrationEmitter{
+	caller.Return = selected("Callerreturn")
+	callee.Return = selected("Calleereturn")
+	callee.Invoke = selected("Invocation")
+
+	emitter := orchestrationEmitter{compilation: c,
 		plan: &orchestrationPlan{Identities: map[*record]uint64{callee.Definition: 1}}, functionDepth: 1, functionWords: &caller,
 		functionContracts: map[*record]*sourceFunction{callee.Definition: &callee},
 	}

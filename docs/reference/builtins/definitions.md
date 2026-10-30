@@ -10,7 +10,7 @@ Process has forms Process, Processes, Processive, and Processing. Its native def
 <DEF>W^<@Definitions|Syllables@><DEF>
 ```
 
-A Process collects existing instantiated definition expressions. It is not an OS process handle; App invocations own those. Processing a source-defined Logger in IO is an application-body composition, not a direct runtime launch instruction.
+A Process collects existing instantiated definition expressions. It is not an OS process handle; App invocations own those. Processing a source-defined rendering or writing operation in IO is an application-body composition, not a direct runtime launch instruction.
 
 ## Function
 
@@ -30,8 +30,6 @@ Return completes that invocation; Exit terminates the enclosing program. Neither
 
 Objective describes any Function by wrapping its existing definition in a grouped native source word containing A and the Function. It preserves the input definition and grouping; it does not clone its runtime semantics or infer additional function arguments.
 
-The source-native grouping is explicitly represented as JSON arrays within the framed definition. Treat it as escaped code in documentation, not HTML/AML to be reparsed by the page renderer.
-
 ## Main
 
 Main is a New Adjective describing Service, Object, or Function. Its ordered refinements compose:
@@ -50,8 +48,6 @@ Main does not grant standalone Service execution. A standalone declaration is st
 
 Basic describes a Generic App with a New Main Service using a Process. It is the composition behind `Create "Hello" as a New Basic App.` The App's source actions supply its body; the orchestrator separately controls launch and output.
 
-Basic is implicit; copying its declaration into a project bootstrap is unnecessary and can alter canonical identity or collide with existing definitions. Custom descriptors can compose equivalent supported structure while retaining their own declaration identity; they must obey constructor target and parameter rules.
-
 ## Failures and visibility
 
 Descriptor target mismatch, a missing constructor rule, recursive descriptor expansion, malformed slots, unsupported signatures, and inaccessible captures reject at their respective semantic boundaries. Aliases preserve canonical descriptor identity. Public/Publicly controls publication independently of New/Generic construction.
@@ -60,4 +56,4 @@ Static references retain definition-site bindings. Runtime captures retain their
 
 ## Sources and witnesses
 
-Sources: [core source](../../../builtins/eng/core.l), [descriptors](../../../lyger/semantics.go), [construction](../../../lyger/construction.go), and [native definition interface](../../../lyger/definition.go). Witnesses: [construction](../../../lyger/construction_test.go), [definitions](../../../lyger/definition_test.go), [descriptor identity](../../../lyger/paragraph_descriptor_identity_test.go), [capture](../../../lyger/paragraph_capture_architecture_test.go), and [Service boundary tests](../../../lyger/runnable_service_test.go).
+Sources: [core source](../../../builtins/eng/core.l), [descriptors](../../../lyger/semantics.go), [construction](../../../lyger/construction.go), and [native definition interface](../../../lyger/definition_bindings.go). Witnesses: [construction](../../../lyger/construction_test.go), [definitions](../../../lyger/definition_test.go), [descriptor identity](../../../lyger/paragraph_descriptor_identity_test.go), [capture](../../../lyger/paragraph_capture_architecture_test.go), and [Service boundary tests](../../../lyger/runnable_service_test.go).

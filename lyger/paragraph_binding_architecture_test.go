@@ -71,7 +71,7 @@ func paragraphBindingUses(t *testing.T, compilation *Compilation, spelling strin
 }
 
 // A test-owned native definition gives namespace/nominal tests distinct source
-// declarations without depending on IO's intentionally private Log/Logger.
+// declarations without depending on IO's intentionally private implementation words.
 const paragraphAnnounce = "Define \"Announce|-s|-d|-ing|-r\" to `<DEF>BOD^E{|Statement: ~::std::println!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n"
 
 func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {

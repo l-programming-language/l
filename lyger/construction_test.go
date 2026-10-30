@@ -23,15 +23,15 @@ func constructionTestCompilation(t *testing.T) *Compilation {
 }
 
 type constructionShape struct {
-	Nominal, Name, Definition string
-	EmptyInputs, EmptyOutputs bool
-	Parameters, Wrappers      []string
-	Children                  []constructionShape
+	Nominal, Name, Definition     string
+	InputsDefined, OutputsDefined bool
+	Parameters, Wrappers          []string
+	Children                      []constructionShape
 }
 
 func constructionTestShape(t *testing.T, node *constructionNode) constructionShape {
 	t.Helper()
-	shape := constructionShape{Nominal: node.Nominal, Name: node.Name, EmptyInputs: node.EmptyInputs, EmptyOutputs: node.EmptyOutputs}
+	shape := constructionShape{Nominal: node.Nominal, Name: node.Name, InputsDefined: node.InputsDefined, OutputsDefined: node.OutputsDefined}
 	if node.Definition != nil {
 		shape.Definition = node.Definition.ID
 	}
@@ -177,7 +177,7 @@ func TestConstructionFunctionSlotsRequireDeclaredParameters(t *testing.T) {
 	construction := compilation.Semantics.Constructions[0]
 	var findDefinition func(*constructionNode) *constructionNode
 	findDefinition = func(node *constructionNode) *constructionNode {
-		if node.Definition != nil && node.EmptyInputs && node.EmptyOutputs {
+		if node.Definition != nil && node.InputsDefined && node.OutputsDefined {
 			return node
 		}
 		for _, child := range node.Children {

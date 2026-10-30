@@ -284,7 +284,7 @@ func TestParagraphsDemoCompiles(t *testing.T) {
 	if !reflect.DeepEqual(apps, []string{"HelloWorldApp1", "HelloWorldApp2"}) || len(compilation.Program.Books) != 2 {
 		t.Fatalf("paragraph App construction order = %v; want both demo Apps", apps)
 	}
-	for _, text := range []string{`(&&LPrintValue(&("Hello World!"))).l_print();`, `(&&LPrintValue(&("Hello Again World!"))).l_print();`} {
+	for _, text := range []string{`Inputs: ~&["Hello World!"]&~`, `Inputs: ~&["Hello Again World!"]&~`} {
 		if !bytes.Contains(compilation.ASMBytes, []byte(text)) || !bytes.Contains(compilation.Program.BackendBytes, []byte(text)) {
 			t.Errorf("application AML lost paragraph body %s", text)
 		}

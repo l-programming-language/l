@@ -97,11 +97,12 @@ func (s scopedStatement) subjectBefore(at *token) *token {
 }
 
 type scopePlan struct {
-	Root         *lexicalScope
-	environments map[sourceParagraphKey]*lexicalScope
-	declarations map[*token]*scopeDeclaration
-	Ordered      []scopedStatement
-	Pronouns     map[*token]pronounBinding
+	Root           *lexicalScope
+	environments   map[sourceParagraphKey]*lexicalScope
+	declarations   map[*token]*scopeDeclaration
+	memberBindings map[*record]*recordBindingIndex
+	Ordered        []scopedStatement
+	Pronouns       map[*token]pronounBinding
 }
 
 type scopedSubject struct {
@@ -233,6 +234,13 @@ func planSourceScopes(statements []*lStatement, memory map[string]*record, occur
 		}
 		key := sourceParagraphKey{statement.source.occurrence, source.Path, source.Paragraph}
 		environment := plan.environment(statement.source)
+		if environment.isParagraph() && source.Start == environment.source.Start {
+			for _, tok := range statement.tokens {
+				if tok.hasRole("noun", "functional.inflective") || tok.hasRole("noun", "functional.deflective") {
+					environment.callableHeader = statement
+				}
+			}
+		}
 		for _, tok := range statement.tokens {
 			tok.scope = environment
 		}
@@ -301,4 +309,15 @@ func (t *token) nativeRole() (nativeRole, bool) {
 		return roleInvalid, false
 	}
 	return parseNativeRole(lex.Type)
+}
+
+// Native signatures bind source objects, including composed constructors. The
+// runtime Function value grammar separately owns ordered values/result labels.
+func (t *token) inNativeFunction() bool {
+	for scope := t.scope; scope != nil; scope = scope.parent {
+		if scope.function != nil {
+			return scope.function.Native
+		}
+	}
+	return false
 }

@@ -358,7 +358,7 @@ func assertParagraphDemoVisibility(t *testing.T, name, path string, compilation 
 			}
 		}
 		for _, value := range []string{"First local", "Second local"} {
-			if !bytes.Contains(compilation.ASMBytes, []byte(fmt.Sprintf("(&&LPrintValue(&(%q))).l_print();", value))) {
+			if !bytes.Contains(compilation.ASMBytes, []byte(fmt.Sprintf("Inputs: ~&[%q]&~", value))) {
 				t.Errorf("local definitions lost their own captured Text %q", value)
 			}
 		}

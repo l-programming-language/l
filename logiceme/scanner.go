@@ -21,28 +21,30 @@ type Regex struct {
 
 func LoadRegex(reType string, reSub string) (Regex, error) {
 	reString := ""
+	// One non-greedy dot-all span preserves multiline interiors and the first
+	// closing delimiter without nested repetition work on large compositions.
 	// ||` and `||
 	if reType == "Comment" {
 		// Handles /*| and |*\
-		reString = `\/\*\|((?:.*?\r?\n?)*)\|\*\\`
+		reString = `\/\*\|(?s:(.*?))\|\*\\`
 	} else if reType == "Array" {
 		// Update to handle |[ and ]|
-		reString = `\|\[((?:.*?\r?\n?)*)\]\|`
+		reString = `\|\[(?s:(.*?))\]\|`
 	} else if reType == "Hashmap" {
 		// Update to handle |{ and }|
-		reString = `\|\{((?:.*?\r?\n?)*)\}\|`
+		reString = `\|\{(?s:(.*?))\}\|`
 	} else if reType == "Tag" {
 		// <TAG </TAG>
-		reString = `\<` + reSub + `((?:.*?\r?\n?)*)\<\/` + reSub + `\>`
+		reString = `\<` + reSub + `(?s:(.*?))\<\/` + reSub + `\>`
 	} else if reType == "Variable" {
 		// " ">
-		reString = `\"((?:.*?\r?\n?)*)\"\>`
+		reString = `\"(?s:(.*?))\"\>`
 	} else if reType == "Word" {
 		// <|W|> </W|>
-		reString = `\<\|W\|\>((?:.*?\r?\n?)*)\<\/W\|\>`
+		reString = `\<\|W\|\>(?s:(.*?))\<\/W\|\>`
 	} else if reType == "Syllable" {
 		// <|S|> </S|>
-		reString = `\<\|S\|\>((?:.*?\r?\n?)*)\<\/S\|\>`
+		reString = `\<\|S\|\>(?s:(.*?))\<\/S\|\>`
 	} else if reType == "Count" {
 		// <|S|>X(
 		reString = `^(\<\|S\|\>[-]?\d\()`
@@ -51,19 +53,19 @@ func LoadRegex(reType string, reSub string) (Regex, error) {
 		reString = `(\)[-]?\d\<\/S\|\>)$`
 	} else if reType == "MetaDefs" {
 		// {| |}
-		reString = `\{\|((?:.*?\r?\n?)*)\|\}`
+		reString = `\{\|(?s:(.*?))\|\}`
 	} else if reType == "GlyphExps" {
 		// ( )
-		reString = `\(((?:.*?\r?\n?)*)\)`
+		reString = `\((?s:(.*?))\)`
 	} else if reType == "Structs" {
 		// Op{ }Op
-		reString = reSub + `\{((?:.*?\r?\n?)*)\}` + reSub
+		reString = reSub + `\{(?s:(.*?))\}` + reSub
 	} else if reType == "StructArray" {
 		// &[ and ]&
-		reString = `\&\[((?:.*?\r?\n?)*)\]\&`
+		reString = `\&\[(?s:(.*?))\]\&`
 	} else if reType == "StructHashmap" {
 		// #[ and ]#
-		reString = `\#\[((?:.*?\r?\n?)*)\]\#`
+		reString = `\#\[(?s:(.*?))\]\#`
 	}
 	regex := Regex{String: reString, Type: reType}
 	regex.Reg = regexp.MustCompile(reString)
@@ -132,8 +134,14 @@ type DefinitionStore struct {
 }
 
 func RestoreDefinitionBytes(ds []DefinitionStore, contentBytes []byte) []byte {
+	if len(ds) != 0 {
+		contentBytes = bytes.Clone(contentBytes)
+	}
 	for _, definition := range ds {
-		contentBytes = bytes.Replace(contentBytes, definition.StandIn, definition.Raw, 1)
+		//nolint:staticcheck // S1017: Replace copies on a miss; the upfront clone preserves ownership without per-definition copies.
+		if bytes.Contains(contentBytes, definition.StandIn) {
+			contentBytes = bytes.Replace(contentBytes, definition.StandIn, definition.Raw, 1)
+		}
 	}
 	return contentBytes
 }

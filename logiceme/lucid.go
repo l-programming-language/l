@@ -347,8 +347,12 @@ func RecursiveSubTagParser(tagExpressionStr string, tagMeta *TagMeta) []*SubTag 
 }
 
 func injectMetaConjoinments(tag *LucidTag, m MetaDict) *LucidTag {
+	return injectConjoinments(tag, m, false)
+}
+
+func injectConjoinments(tag *LucidTag, m MetaDict, freshTree bool) *LucidTag {
 	curExpStr := tag.Expressions[2].ExpressionString
-	for _, mo := range m.GetMetaData() {
+	for _, mo := range m.Metas {
 		if mo.Type == "Conjoinment" {
 			var key string
 			var val string
@@ -392,15 +396,21 @@ func injectMetaConjoinments(tag *LucidTag, m MetaDict) *LucidTag {
 			curExpStr = strings.Replace(curExpStr, key, val, -1)
 		}
 	}
+	// Owned parsed trees already match an unchanged body. Public callers may
+	// have edited the body independently, so preserve their reparsing behavior.
+	if !freshTree || curExpStr != tag.Expressions[2].ExpressionString {
+		tag.Expressions[2].ExpressionSubTags = RecursiveSubTagParser(curExpStr, tag.Expressions[2].TagMeta)
+	}
 	tag.Expressions[2].ExpressionString = curExpStr
-	// Body rewrites change child replacement strings too. Keep the parsed
-	// child tree aligned with the exact source the interpreter will render.
-	tag.Expressions[2].ExpressionSubTags = RecursiveSubTagParser(curExpStr, tag.Expressions[2].TagMeta)
 	return tag
 }
 
 // ParseSegmentTags - parses out cases and sub-cases of LucidTags
 func ParseSegmentTags(tags []*LucidTag, m MetaDict, segType string, headers bool) []*LucidTag {
+	return parseSegmentTags(tags, m, segType, headers, false)
+}
+
+func parseSegmentTags(tags []*LucidTag, m MetaDict, segType string, headers, freshTree bool) []*LucidTag {
 	var reTags []*LucidTag
 	checkStr := `if Type == "` + segType + `"`
 	for _, tag := range tags {
@@ -415,7 +425,7 @@ func ParseSegmentTags(tags []*LucidTag, m MetaDict, segType string, headers bool
 				reTags = append(reTags, tag)
 			}
 		} else if cond.ExpressionString == checkStr {
-			tag = injectMetaConjoinments(tag, m)
+			tag = injectConjoinments(tag, m, freshTree)
 			reTags = append(reTags, tag)
 		}
 	}

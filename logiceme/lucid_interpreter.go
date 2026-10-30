@@ -1066,17 +1066,17 @@ func (li *LucidInterpreter) Interpret() {
 // Resolve only occurrences in the template, never marker-like bytes supplied
 // by a native fragment or an already interpreted child.
 func (li *LucidInterpreter) interpretNativeLiteral(source string) string {
+	if !strings.Contains(source, "[|") {
+		return source
+	}
 	var out strings.Builder
 	cursor := 0
-	for _, variable := range lucidParser(source, "ExpressionVar") {
-		offset := strings.Index(source[cursor:], variable)
-		if offset < 0 {
-			continue
-		}
-		start := cursor + offset
+	for _, span := range nativeVariables.load(source) {
+		start, end := span.start, span.end
+		variable := source[start:end]
 		out.WriteString(source[cursor:start])
 		out.WriteString(li.interpretExpressionVars([]string{variable}, variable))
-		cursor = start + len(variable)
+		cursor = end
 	}
 	out.WriteString(source[cursor:])
 	return out.String()

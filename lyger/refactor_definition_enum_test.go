@@ -85,13 +85,14 @@ func TestRefactorDefinitionValueTypeMapping(t *testing.T) {
 		{valueText, definitionArgText},
 		{valueNumber, definitionArgNumber},
 		{valueTruth, definitionArgTruth},
+		{valueNull, definitionArgNull},
 	} {
 		if actual, ok := tc.value.DefinitionArgKind(); !ok || actual != tc.want {
 			t.Errorf("%s definition kind = %s/%v, want %s", tc.value, actual, ok, tc.want)
 		}
 	}
 	for value := valueInvalid; value < valueTypeCount; value++ {
-		if value == valueText || value == valueNumber || value == valueTruth {
+		if value == valueText || value == valueNumber || value == valueTruth || value == valueNull {
 			continue
 		}
 		if actual, ok := value.DefinitionArgKind(); ok || actual != definitionArgInvalid {

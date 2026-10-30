@@ -30,7 +30,6 @@ func TestRefactorSourceTypeWhitelist(t *testing.T) {
 		{"dIcTiOnArY", "Dictionary", "Iterative"},
 		{"Pointer", "Pointer", "Primitive"},
 		{"Map", "Map", "Iterative"},
-		{"Instance", "Instance", "Applicative"},
 		{"Function", "Unknown", "Unknown"},
 		{"Property", "Unknown", "Unknown"},
 		{"Operation", "Unknown", "Unknown"},

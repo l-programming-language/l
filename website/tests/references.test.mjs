@@ -135,6 +135,10 @@ test('fresh snapshots and complete meaningful coverage pass from a no-Git fixtur
   assert.ok(coverage.entries.some((entry) => entry.id === 'grammar:statement:passive'));
   assert.ok(coverage.entries.some((entry) => entry.id === 'lucid-invalid:forms-invalid/bad.aml.txt'));
   assert.match(coverage.description, /no language execution/);
+  for (const [key, value] of Object.entries(generated)) {
+    if (!['entries', 'schemaVersion', 'notes', 'evidenceSets', 'classifications'].includes(key)) assert.deepEqual(coverage[key], value);
+  }
+  await assert.rejects(fs.access(path.join(root, 'docs/_generated/inventory.json')), { code: 'ENOENT' });
 });
 
 test('changing a reviewed grammar or vocabulary dependency fails before snapshot refresh', async (t) => {
@@ -211,6 +215,25 @@ test('coverage snapshot drift is reported without overwriting it in check mode',
   await write(root, 'docs/_meta/coverage.json', forged);
   await assert.rejects(references({ root }), /Coverage snapshot is stale/);
   assert.equal(await fs.readFile(path.join(root, 'docs/_meta/coverage.json'), 'utf8'), forged);
+});
+
+test('coverage detects mechanical input changes when rendered references are unchanged', async (t) => {
+  const { root } = await fixture(t);
+  const source = 'logiceme/testdata/lucid/forms-invalid/bad.aml.txt';
+  const original = await references({ root, write: true });
+  const before = await generateReferences(root);
+  const snapshot = path.join(root, 'docs/_meta/coverage.json');
+  const saved = await fs.readFile(snapshot, 'utf8');
+  await fs.appendFile(path.join(root, source), '\nchanged malformed input\n');
+  const after = await generateReferences(root);
+  assert.deepEqual(after.files, before.files);
+  assert.notEqual(after.inventory.inputs[source], original.inputs[source]);
+  await assert.rejects(references({ root }), /Coverage snapshot is stale/);
+  assert.equal(await fs.readFile(snapshot, 'utf8'), saved);
+  await references({ root, write: true });
+  const refreshed = JSON.parse(await fs.readFile(snapshot, 'utf8'));
+  assert.equal(refreshed.inputs[source], sha256(await fs.readFile(path.join(root, source))));
+  assert.equal(Object.hasOwn(refreshed.sourceHashes, source), false);
 });
 
 test('semantic source hashes require review of changed library and segment meanings', async (t) => {

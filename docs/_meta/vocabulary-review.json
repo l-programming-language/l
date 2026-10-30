@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "sourceHashes": {
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-    "lyger/instructions.go": "230b1a93cdf475156264b6531262072cc0a3f6599a2b26883c45f91355a7b3a6",
-    "lyger/orchestration_functions.go": "f13b92c9caf1c1d3c77105c2a69785e55a16ba88e3ca73347fd925ede99041fc",
-    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
-    "lyger/source_functions.go": "aea627402c886b8289eda7da8318637c744f2f7029781106d419b5a7d9e9a8c1",
-    "lyger/utilities.go": "2e9aa1197bb2a1f8569dc2e668b8a1219d4812384d5a8cb365d41a270fa280b0"
+    "lyger/function_composition.go": "b1cc7002bf7a5f8ea20cf977bc9f94da30ebf4e57ba6fb6bd80e7600b55b63b6",
+    "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
+    "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
+    "lyger/source_functions.go": "9e19b22b4d6614c38160528e67e7c426b8c1b5a658bd16be4073336957ee0fbf",
+    "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6"
   },
   "entries": {
     "nouns.it": {
@@ -61,13 +61,13 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "topic": "null",
       "support": "supported",
-      "notes": "Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states."
+      "notes": "Explicit Null initializes an absence value; Show renders null. It is distinct from an unassigned slot and internal None/Unknown states."
     },
     "nouns.thing": {
       "doc": "docs/spec/values.md#thing",
       "topic": "thing",
       "support": "partial",
-      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element, shape and callable identities. No implicit coercion or dynamic arithmetic."
+      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate element types and callable identities. No implicit coercion or dynamic arithmetic."
     },
     "nouns.text": {
       "doc": "docs/spec/values.md#text",
@@ -187,7 +187,7 @@
       "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "topic": "Collection operations",
       "support": "partial",
-      "notes": "Put appends to a List, stores Map/Instance fields or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries."
+      "notes": "Put appends to a List, stores Map values or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries."
     },
     "verbs.locative": {
       "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
@@ -247,7 +247,7 @@
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization."
     },
     "verbs.terminative": {
       "doc": "docs/spec/control-flow.md#exit-and-return",

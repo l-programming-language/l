@@ -3,12 +3,10 @@
 package Logiceme
 
 import (
-	"io/fs"
 	"os"
 	"path/filepath"
 	"testing"
 
-	distribution "github.com/l-programming-language/l"
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 )
 
@@ -28,12 +26,8 @@ func buildErrorRuntime(t *testing.T, source string, observed bool) string {
 		"src/ownership.rs": read("../testdata/phase1/runtime/ownership.rs.txt"),
 		"src/main.rs":      []byte(source),
 	}
-	for _, name := range []string{"runtime", "process_unix"} {
-		data, err := fs.ReadFile(distribution.Files(), "builtins/templates/runtime/"+name+".lu")
-		if err != nil {
-			t.Fatal(err)
-		}
-		files["src/"+name+".rs"] = data
+	for name, data := range runtimeSourceFiles(t) {
+		files[name] = data
 	}
 	cache, err := filepath.Abs("../.harness/cache/rust-empty-error-runtime")
 	if err != nil {

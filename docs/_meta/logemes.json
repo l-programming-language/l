@@ -5,7 +5,7 @@
   ],
   "executedStages": [],
   "sourceHashes": {
-    "builtins/README.md": "84af82bef5776cc5240d452a88c7d5cce5e6af34ec08b17e61986fa7672d189e",
+    "builtins/README.md": "3f0865288ba3db13d96b9242ccdb3676c297f7dd8c1a0437fe519581e48cac2e",
     "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
     "builtins/segments/consonants/define.lu": "d2b292d8fd284d677f7866cb7ae745adef00cb9ca6b3d92c92ec609e36de2899",
@@ -25,9 +25,14 @@
     "builtins/segments/vowels/iteration.lu": "6321d1948be328cdcbe2a520bbf5263043f774eccb4759e7dfe930397ac06af4",
     "builtins/segments/vowels/operation.lu": "4b439302f6c59f3eea42df4be91e788b50739c19ad290d1448f493e591699824",
     "logiceme/glyph_metadata_validation.go": "7ad22b69af7b2b17f13285676fa0957ece073714dca1f3c6a5b12f9d44a0ae0c",
-    "logiceme/glyph_prepare.go": "092b15d38cce7b045c1a17c313e2a7256ad3400091f9d6d366151858d2e49021",
-    "logiceme/glyph_roles.go": "ebc293803656702784d9380ab1c0dd5d0a29161d19898c9abd0f3138190dcdae",
-    "logiceme/segments.go": "93432a8e201fa5ae444c06d4fbd533aec5264f2a9bf930a2f0e8c82c278733a7"
+    "logiceme/glyph_prepare.go": "42b316c2a4bd1b5ca5feec2b274becd2844e9583762c1af79faa3cf90734440e",
+    "logiceme/glyph_render.go": "299b68c52e473d28473f180be1d23ea330881bcb4c62e833729f946dd6fb615c",
+    "logiceme/glyph_roles.go": "7fff2384971f7caa0ef572fe51e8e5b3ef8886652a98144cb1ab273945099c0f",
+    "logiceme/lucid.go": "c70058815dcf9518d6c7a3cedeaa012e0c203742c9536b8a0af0584af7f91fbb",
+    "logiceme/lucid_interpreter.go": "5026306d05519f289d05e6e9a20baf8274ea94ea99ced817e26fe81eaea45f17",
+    "logiceme/segment_case_clone.go": "bd199296a249db44d2a594fd29a21656fb7fa15861adcb502272a2ad602720bb",
+    "logiceme/segment_cases.go": "ad3f50c82c8747cb17234668e0501d4b76063dc53fc4c1528d4473fe586ef11f",
+    "logiceme/segments.go": "de380d45b7ba7ce74e72c23ad9455f6258a5f79ae2f90811ef1ab50f0d5c8c3a"
   },
   "entries": [
     {
@@ -386,7 +391,9 @@
       "sources": [
         "builtins/README.md",
         "logiceme/glyph_roles.go",
-        "logiceme/glyph_metadata_validation.go"
+        "logiceme/glyph_metadata_validation.go",
+        "logiceme/lucid_interpreter.go",
+        "logiceme/lucid.go"
       ],
       "witnesses": [
         "logiceme/lucid_generation_test.go"
@@ -611,7 +618,10 @@
         "logiceme/glyph_prepare.go",
         "logiceme/glyph_metadata_validation.go",
         "builtins/README.md",
-        "logiceme/segments.go"
+        "logiceme/segments.go",
+        "logiceme/segment_cases.go",
+        "logiceme/glyph_render.go",
+        "logiceme/segment_case_clone.go"
       ],
       "witnesses": [
         "logiceme/lucid_future_test.go",
@@ -621,7 +631,8 @@
         "logiceme/testdata/lucid/future-infer.aml.txt",
         "logiceme/testdata/lucid/future-borrow-escape.aml.txt",
         "logiceme/testdata/lucid/future-move-reuse.aml.txt",
-        "logiceme/glyph_expression_occurrence_test.go"
+        "logiceme/glyph_expression_occurrence_test.go",
+        "logiceme/segment_cases_test.go"
       ],
       "notes": "CV constructs one unscheduled future; local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing; this adds no async-FW modifier or Function dispatcher.",
       "evidence": "static-inspection; existing-witness-not-run"

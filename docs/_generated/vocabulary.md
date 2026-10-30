@@ -251,8 +251,8 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 | <a id="vocabulary-note-3"></a>3 | Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries. |
 | <a id="vocabulary-note-4"></a>4 | Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API. |
 | <a id="vocabulary-note-5"></a>5 | This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target. |
-| <a id="vocabulary-note-6"></a>6 | Explicit Null initializes an absence value and prints null. It is distinct from an unassigned slot and from internal None/Unknown states. |
-| <a id="vocabulary-note-7"></a>7 | Explicit Thing boundaries retain concrete runtime types; typed reads validate full element, shape and callable identities. No implicit coercion or dynamic arithmetic. |
+| <a id="vocabulary-note-6"></a>6 | Explicit Null initializes an absence value; Show renders null. It is distinct from an unassigned slot and internal None/Unknown states. |
+| <a id="vocabulary-note-7"></a>7 | Explicit Thing boundaries retain concrete runtime types; typed reads validate element types and callable identities. No implicit coercion or dynamic arithmetic. |
 | <a id="vocabulary-note-8"></a>8 | The configured text root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |
 | <a id="vocabulary-note-9"></a>9 | The configured number root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |
 | <a id="vocabulary-note-10"></a>10 | The configured byte root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API. |
@@ -264,7 +264,7 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 | <a id="vocabulary-note-16"></a>16 | A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior. |
 | <a id="vocabulary-note-17"></a>17 | Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion. |
 | <a id="vocabulary-note-18"></a>18 | Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. |
-| <a id="vocabulary-note-19"></a>19 | Put appends to a List, stores Map/Instance fields or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries. |
+| <a id="vocabulary-note-19"></a>19 | Put appends to a List, stores Map values or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries. |
 | <a id="vocabulary-note-20"></a>20 | Place replaces a List element at a checked Number index or a keyed runtime field. Required target/key/value types are checked. |
 | <a id="vocabulary-note-21"></a>21 | The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API. |
 | <a id="vocabulary-note-22"></a>22 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. |

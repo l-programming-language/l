@@ -26,7 +26,7 @@ Apps run as separate OS processes while the orchestrator preserves ordered sourc
 | `lexicon/eng` | Configured lexical roots, inflections, grammatical structures and cases |
 | `lyger` | Source preparation, vocabulary, grammar, bindings, types, ownership/activation analysis and AML composition |
 | `logiceme` | AML interpretation, glyph/template evaluation, callable declaration rendering, support assembly and linking |
-| `builtins/eng` and `stdlib/eng` | English L source definitions with native Rust bodies and source-defined construction descriptors |
+| `builtins/eng` and `stdlib/eng` | English L source compositions, small native leaves and construction descriptors |
 | `builtins/operations/rust` | Typed builtin process-operation compositions selected by the frontend |
 | `builtins/segments` and `builtins/templates` | Frozen Rust templates with reviewed composition amendments and retained Cargo/configuration/runtime support assets; the maintained Lucid suite defines verified scope |
 
@@ -55,14 +55,19 @@ override is useful for development. Resource files stay in their native JSON, L
 and template formats, and generated programs do not depend on them at runtime.
 
 `builtins/<configured-language>/core.l` supplies the implicit builtin unit.
-The current [English Rust core](../builtins/eng/core.l) contains Process,
-Function/Return, Objective, Main, Basic, Start and Execute. The program and
-dictionary units inherit this builtin scope. Start/Execute lower through their
-ordinary source definitions. The standard `io` dictionary exports IO.Print,
-while its Log/Logger implementation is private. The version-1
-[dictionary index](../stdlib/index.json) selects
-`stdlib/eng/io/dictionary.l` for `eng/io`; the compiler has no IO-specific
-lookup or Print lowering. Adding an indexed dictionary never adds implicit words.
+The [core](../builtins/eng/core.l) supplies foundational words and imports the
+[Storage dictionary](../stdlib/eng/storage/dictionary.l) privately. Programs and
+dictionaries inherit core words; they do not inherit Storage's implementation
+namespace. Ordinary source Functions, locals, descriptors and invocation words
+compose storage behavior. Selected declarations carry only their required source
+dependencies into AML.
+
+The [dictionary index](../stdlib/index.json) also selects IO and private support
+dictionaries. IO.Print composes typed rendering with byte output. IO and Runtime
+select the same [Formatting Function](../builtins/runtime/eng/number.l). Runtime lifecycle, error and capture policy lives in
+[builtins/runtime/eng](../builtins/runtime/eng); its generated, fingerprinted AML
+is rendered by Logiceme with the same frozen logemes. Host adapters retain OS and
+async access. Adding an indexed dictionary never makes its words implicit.
 
 Build, Run, Stop and Await retain their semantic operation identities. The
 [private builtin catalog](../lyger/builtin_operations.go) loads their process
@@ -75,7 +80,6 @@ The catalog belongs to one compilation,
 validates its complete inputs, and adds no public definition-slot or glyph field.
 Start and Execute still accept `any App` through their existing source signatures.
 
-Rust core and IO preserve the source-defined vocabulary and composition; Return punctuation and the native print expression use Rust syntax. These L-source directories are distinct from the backend assets. Rust definition encoding preserves typed slots and native framing; the source-defined print body dispatches native byte Text, finite Number formatting and other scalar Display values, with an added newline and panic on write failure. It evaluates its input once and remains synchronous; the compiler has no vocabulary-specific print path. See the [Rust library contract](../builtins/README.md#l-source-library-counterparts).
 
 The [basic demo](../demo/basic/main.l) imports IO.Print, creates a Basic App, executes it, and shows its raw output. Tests execute that source directly. Controlled process fixtures use explicit test-owned companion definitions without copying the language foundation. Basic construction and backend generation retain their existing semantic assertions.
 
@@ -152,7 +156,7 @@ and root/Public App names remain unchanged.
 
 Qualified static members take precedence over native runtime members. Concrete owners use their canonical member tables; native type namespaces use qualified lookup in the token's lexical environment, including unresolved local reservations. Native reads require an actual App and the configured lexical role (`functional.deflective` or `functional.error`); a bare type namespace permits static definitions but does not create an invocation. Each native use retains its lexical metadata and a fresh runtime reference. Deferred Output Text takes that annotation from its actual RHS operand. Instruction lowering uses the same ownership rules; local action arguments never fall back to paragraph/global symbols.
 
-Definition framing is structural: one complete outer marker pair, optionally inside complete backticks, surrounds an encoded body. The shared [framing helper](../lyger/definition.go) does not decode or validate template glyphs. Source Text requires the quoted form to classify as a definition; ordinary Text with interior/unmatched markers remains exact. Expanded display and explicit template parsing decode once at their respective boundaries, while lexeme storage preserves encoding and quote presence. Explicit parsing still accepts markerless internal templates and rejects malformed/empty/nested definitions. When a Text scalar becomes a Rust expression, shared quoting protects backend delimiters, metadata separators, repeated spaces, and Lucid openers with Rust escapes. Definition arguments (including Text in Thing slots) and orchestration use that boundary; literal storage, source rendering, raw definitions, and completed AML are not rewritten. Orchestration retains its additional glyph escapes. L slot labels and type labels accept dotted identifiers whose components start with a Unicode letter or underscore and continue with Unicode letters, digits or underscores. Native language keywords do not restrict these L labels; Rust identifiers embedded in native definitions use their separate native validation boundary.
+Definition framing is structural: one complete outer marker pair, optionally inside complete backticks, surrounds an encoded body. The shared [framing helper](../lyger/definition_bindings.go) does not decode or validate template glyphs. Source Text requires the quoted form to classify as a definition; ordinary Text with interior/unmatched markers remains exact. Expanded display and explicit template parsing decode once at their respective boundaries, while lexeme storage preserves encoding and quote presence. Explicit parsing still accepts markerless internal templates and rejects malformed/empty/nested definitions. When a Text scalar becomes a Rust expression, shared quoting protects backend delimiters, metadata separators, repeated spaces, and Lucid openers with Rust escapes. Definition arguments (including Text in Thing slots) and orchestration use that boundary; literal storage, source rendering, raw definitions, and completed AML are not rewritten. Orchestration retains its additional glyph escapes. L slot labels and type labels accept dotted identifiers whose components start with a Unicode letter or underscore and continue with Unicode letters, digits or underscores. Native language keywords do not restrict these L labels; Rust identifiers embedded in native definitions use their separate native validation boundary.
 
 Grammar includes value/subject/object roles, phrases, clauses, conditions, predicates, and statements. Its JSON notation expresses optional/repeated items and alternative cases; Go code implements their interpretation. Vocabulary localization remains partial because grammar loading and semantic type names retain English-specific logic. Import operators follow the loaded root-form lexical roles: associative verb, objective preposition, and declarative preposition. Import aliases remove only the original file clause, retaining configured operator spelling, owner punctuation, identifier quoting, and source attribution. Possessive suffix recognition is case-insensitive without changing owner bytes.
 
@@ -172,7 +176,7 @@ The current CLI tests distinguish five views:
 
 ## Application structure and execution
 
-The structural mapping is Program to books, App to Book, Service to Chapter, recursive Class to Text, and Object/source file to Sentence. [Construction nodes](../lyger/construction.go), [typed definition instantiation](../lyger/definition.go), and [lowering](../lyger/lowering.go) retain source-defined descriptors. [Source hierarchy lowering](../lyger/source_hierarchy.go) traverses each ordered Class/Object child exactly once; [program.go](../lyger/program.go) publishes the complete graph only after both AML views render. Populated Classes select StructureVersion 2 with direct child Dimensions and immediate Class Parent. Ordinary flat construction retains its source order; Rust workspace topology is a separate projection. Class membership never creates a lexical scope or runtime activation. Feature is not a built-in L value type or an AML hierarchy level.
+The structural mapping is Program to books, App to Book, Service to Chapter, recursive Class to Text, and Object/source file to Sentence. [Construction nodes](../lyger/construction.go), [typed definition instantiation](../lyger/definition_bindings.go), and [lowering](../lyger/lowering.go) retain source-defined descriptors. [Source hierarchy lowering](../lyger/source_hierarchy.go) traverses each ordered Class/Object child exactly once; [program.go](../lyger/program.go) publishes the complete graph only after both AML views render. Populated Classes select StructureVersion 2 with direct child Dimensions and immediate Class Parent. Ordinary flat construction retains its source order; Rust workspace topology is a separate projection. Class membership never creates a lexical scope or runtime activation. Feature is not a built-in L value type or an AML hierarchy level.
 
 Application defaults are `rust`, version `0.0.0`, directory `/src`, and Host `http://127.0.0.1`. Source declarations determine names and bodies. Descriptors retain typed parameters and reject expansion cycles. A Function's embedded `Func` structure identifies its constructor; lowering must instantiate that selected definition. Renaming its source word must not select another implementation.
 
@@ -198,7 +202,7 @@ The checked grammar loader validates [configured rule references](../lyger/gramm
 
 [Application units](../lyger/application_units.go) preserve the source graph: each App owns a binary, its additional Services become libraries, Classes become modules, and Objects remain files. Standalone Services create no package, process or continuation. Raw AML retains independent library/bin targets. Programs without Apps still use the orchestrator with an empty generation manifest.
 
-The [typed plan](../lyger/orchestration_plan.go) resolves storage, captures, definite assignment and transfers before AML generation. Functions bind invocation verbs and instantiate their selected builtin definitions for construction, suspension, invocation and returns. Lyger supplies resolved signature/value atoms; Logiceme renders callable syntax. Generated bodies stay composed, and authored native leaves remain opaque.
+The [typed plan](../lyger/orchestration_plan.go) resolves storage, captures, definite assignment and transfers before AML generation. Functions bind invocation verbs and compose their selected construction, invocation and Return definitions with private source storage/suspension words. Lyger supplies resolved signature/value atoms; Logiceme renders callable syntax. Generated bodies stay composed, and authored native leaves remain opaque.
 
 A Function stores its retained environment and a typed native function pointer. Its boxed future borrows the program context and returns a typed result tuple or program Exit. Invocation preserves the callable; arguments/results snapshot ordinary values, share Pointer targets and box concrete values when Thing is required. Function types include canonical constructor identity: incompatible contracts reject, including extraction from erased storage. Aliases preserve that identity. A composed Return must belong to the enclosing Function's constructor.
 
@@ -210,65 +214,36 @@ Both compiler services accept the same resource filesystem; explicit providers h
 
 ## AML and logeme protocol
 
-`Logiceme.NewLogicemeService(resources).Evaluate(documentBytes)` returns an `Executable` with `ByteArrays`, `MapArrays`, `DependencyArrays` and `EnvDepArrays`. Evaluation scans tagged input, compiles document structure, assembles glyph/template output, then links source files and imports. Every AML book becomes a separate Cargo project; the caller owns building and execution.
+`Logiceme.NewLogicemeService(resources).Evaluate(documentBytes)` returns an
+`Executable` containing ordered source bytes, paths and dependency metadata.
+Each AML book becomes a Cargo project; building and execution belong to the caller.
+`Evaluate` generates Rust and accepts only `IncludeRuntime`. The CLI's separate
+workspace bridge follows the [runtime selection contract](cli-build.md#source-generation-and-native-builds).
 
-`Evaluate` generates Rust and accepts only the `IncludeRuntime` option. L, Lyger and Logiceme remain Go implementations. This is an AML source-generation API; the frontend/CLI separately owns building and execution. The 18 Rust segments remain frozen after reviewed amendments; the [Rust reference](../builtins/README.md) distinguishes their implemented composition contracts from retained but incomplete integration.
+The [AML guide](../logiceme/AML.md) owns framing, topology, metadata, library
+visibility and support assembly. AML is a custom protocol: preserve backticks,
+literal bytes and source ownership. Host-file AML reads remain independent of
+resource-provider selection. The [logical alphabet](../builtins/LOGEMES.md)
+defines the nine letter pairs and composition operators; the [Rust reference](../builtins/README.md)
+defines their bounded implementation contracts, including glyph-local lifetime
+and generic inputs. The eighteen segment templates remain frozen.
 
-The Rust renderer separates initialization records from executable cases, dispatches parsed primitive calls, prepares existing Func/Prop/Op records and forwards ordered category collections through explicit aliases. A renders its package comment and collected `use` imports. Standalone EA retains exact file contents. The [Lucid suite](../logiceme/testdata/lucid/README.md) preserves exact composition scenarios covering scoped selection, iteration, declaration, invocation, callable, trait, empty-composition, keyed-pattern and generic/lifetime witnesses. It compares every returned artifact exactly and compiles both expected and actual projects; its [dated ledger](../logiceme/testdata/lucid/FAILURES.md) records counts and results separately from runtime claims. Three future-composition cases also execute their generated programs; broader runtime behavior belongs to supervised frontend/runtime tests. Generated deployment scripts remain unexecuted.
+The Lucid scanner recognizes `(/`, optional space/tab/CR/newline, then `={`.
+Each subtag requires three complete `={...}=` expressions and closing `/)`;
+nested tags count separately. Original slices preserve literal bytes. Incomplete
+recognized tags produce contextual asset errors through `Evaluate`; the
+extraction-only API returns no slices. Complete openers remain reserved, without
+an additional native quote parser or escape convention.
 
-Rust supports optional glyph-local `Lifetimes` and `GenericTypes` String inputs through existing cases: FW/HY/MY declare parameters, while Y and named KY apply arguments. Templates own the conditional angle-bracket or turbofish punctuation. Callers supply native list interiors, and Rust checks their legality. These inputs are not inherited Class/Object defaults or fields inside Func/Prop/Op records; see the [input contract](../builtins/README.md#lifetime-and-generic-inputs).
-
-Version-2 recursive Classes, Object roots, module descriptors and Service crate targets are integrated through compiler-owned structural header and workspace assembly. A retains its frozen package-comment/import convention; the compiler supplies module, visibility and startup boundaries without adding template interfaces. Library-only bundles omit executable support and reject executable configuration/runtime options. Focused tests compile actual generated libraries against independent consumers. See [current integration limits](../builtins/README.md#current-integration-limits). Leftover advanced preparation/validation entries are not the frozen template inventory, and neither their presence nor old matrix results certify a feature.
-
-| Tagged unit | Meaning |
-| --- | --- |
-| Book | Application |
-| Chapter | Service |
-| Text | Recursive Class; source-file membership, not runtime scope |
-| Sentence | Object/source file |
-| Word | Collection of syllables |
-| Syllable | Composed glyph expression |
-
-The `PROGRAM`, `STRUCTURE`, `OUTLINE`, `JSON`, `SETTINGS` and `CONTENT` records must agree on hierarchy and output locations. This is a custom tagged format, not general Markdown or XML. JSON supplies application/component metadata; settings carry key/value/type records. Syllables require literal backticks, for example:
-
-```text
-<|W|>
-<|S|>`A`</S|>
-<|S|>`FW{|Key: ~main~|}^W^BOD^E{|Statement: ~::std::println!("Hello World!");~|}`</S|>
-</W|>
-```
-
-That fragment still needs the surrounding book, outline, service and sentence. `{|...|}` contains metadata; `^` composes glyphs, parentheses group expressions and `*` separates grouped siblings. Func, Prop and Op encode structured signatures, properties and operators.
-
-| Content category | Action |
-| --- | --- |
-| A Declaration | B Declare |
-| E Calculation | D Calculate |
-| I Evaluation | G Evaluate |
-| O Definition | F Define |
-| U Description | H Describe |
-| V Execution | C Execute |
-| W Operation | K Operate |
-| X Iteration | P Iterate |
-| Y Instantiation | M Instantiate |
-
-A fixed typed backend table registers the 18 segment templates, including Execute/Execution; their presence in backend templates does not add L concurrency syntax. `EA` supports literal file contents. Child glyphs compile first, and parent templates consume their output by category. Linking gathers dependency/import metadata; recursive source composition is the purpose of the backend's scalar/vector/matrix terminology.
-
-Lucid uses conditions, repeated regions and substitutions:
-
-```text
-{|/|-{tags: Meta.Tags}--{if Type == "Default"}--{template body}-|/|}
-(/={tags: Meta.Tags}=={for Operation in Conjoinments.Operations}=={[|Operation|]}=/)
-[|Meta.Key|]
-[|Conjoinments.Operation|]
-```
-
-The shared scanner in `logiceme/lucid.go` recognizes a subtag at `(/`, optional space/tab/CR/newline, then `={`. Each tag needs three complete `={...}=` expressions and closing `/)`; nested tags count their own expressions. Original slices preserve Unicode, whitespace and ordinary delimiter fragments. Incomplete recognized tags return contextual asset errors through Evaluate. The extraction-only API retains its slice-only signature and returns no slices on a scanner error. Complete openers remain reserved; there is no additional native quote parser or escape convention.
-
-Backend linking can add Rust configuration modules, initialization calls, Cargo manifests and setup/start/stop scripts. These scripts are generated artifacts; native build and acceptance never execute them. The typed generation option adds runtime support only for the synthetic orchestrator. Public Evaluate retains default source-bundle behavior. Host-file AML reads remain host-file operations, independently of embedded resource loading.
+The [backend architecture](../logiceme/ARCHITECTURE.md) locates scanning,
+preparation, interpretation and linking. The [Lucid suite](../logiceme/testdata/lucid/README.md)
+records exact-generation and native-compilation obligations plus three bounded
+future-execution checks. Its dated results do not establish broader runtime
+behavior; supervised process evidence belongs to the [runtime ledger](../testdata/integration/IMPLEMENTATION.md).
+Generated deployment scripts remain unexecuted.
 
 ## Runtime test boundary
 
 The generated runtime uses per-runtime dependencies, never mutable global injection. `Runtime::new()` initializes real OS operations and streams. Synchronized invocation snapshots expose immutable result state rather than a live capture buffer. Concurrent internal observers share one result, one OS Wait owner and one continuation claim; this adds no L concurrency syntax.
 
-Native drivers compile the actual production runtime templates and wrap real Start/Wait/process-group signaling/capture only at named fault or barrier points. Checkpoints run outside locks held across callbacks: `pre-start` follows allocation and precedes readiness/admission, including refused attempts; `successful-start` follows Start success and secured ownership; `captured-stop-target` follows stable invocation selection and precedes signaling; `pre-publication` follows reaping/capture/group cleanup and precedes final publication. The [test-local receiver contract](../testdata/phase1/runtime/contract.md) defines the private interface. Drivers compile the unchanged production Rust templates; fixture expectations never substitute for the runtime.
+Native drivers compile the actual generated runtime and host adapters, wrapping real Start/Wait/process-group signaling/capture only at named fault or barrier points. Checkpoints run outside locks held across callbacks: `pre-start` follows allocation and precedes readiness/admission, including refused attempts; `successful-start` follows Start success and secured ownership; `captured-stop-target` follows stable invocation selection and precedes signaling; `pre-publication` follows reaping/capture/group cleanup and precedes final publication. The [test-local receiver contract](../testdata/phase1/runtime/contract.md) defines the private interface. Fixture expectations never substitute for production runtime code.

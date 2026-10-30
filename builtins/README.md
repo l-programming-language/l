@@ -33,50 +33,38 @@ and independent expectations require explicit authorization for changes.
 
 ## L source library counterparts
 
-The [Rust core](eng/core.l) and
-[Rust IO dictionary](../stdlib/eng/io/dictionary.l) are the embedded L
-source library. These files are distinct from the native segment/support assets
-in this directory. Lyger's implicit builtin lookup and the version-1 dictionary
-index select them. Natural-language selection and source-unit/dictionary
-ownership remain independent of native generation.
+The [core](eng/core.l) supplies the small implicit vocabulary: Process, Function,
+its Invoke and Return members, construction descriptors, Retain, Start and
+Execute. Start composes Build then Run; Execute composes Start then Await.
+Both retain their `any App` signatures.
 
-The source definitions preserve vocabulary, inflections, declaration order, typed
-placeholders and logeme composition. Start still composes Build then Run;
-Execute composes Start then Await. Both retain their `any App` signatures.
-Process, Function, Objective, Main, Basic,
-IO and IO.Print retain their source-defined composition. Native leaves include:
+The privately imported [Storage dictionary](../stdlib/eng/storage/dictionary.l)
+composes storage, copying, checking and capture operations from source Functions
+and small native leaves. Selected definitions carry their declaration dependencies;
+there is no unconditional helper aggregate. Storage's names do not become global
+builtin words. Source Functions supply their own invocation words, use normal
+local declarations and Return, and retain canonical declaration ownership.
 
-| Definition | Rust counterpart |
-| --- | --- |
-| Function.Return | Composes BOD/E around the bound return expression; source result types are checked before instantiation. |
-| Log | Keeps BOD/E and `Output\|Thing`. A block-local native dispatcher writes byte-capable Text directly, formats finite Number with L's binary64 contract, and uses a fixed-format Display fallback for other scalar values. IO.Print still composes Process with its dictionary-private Logger. |
+[IO.Print](../stdlib/eng/io/dictionary.l) composes the operand's selected Render
+member with Write. Text retains exact bytes; Number uses the same
+[source formatter](runtime/eng/number.l) as the runtime. Write holds stdout's lock,
+writes the value and one LF, and reports write failure through the App's native
+failure boundary. Its leaves perform individual host operations; no native
+formatting dispatcher or duplicated formatter remains.
 
-The source-defined IO body evaluates and borrows its operand once. Text output
-uses a locked stdout writer so arbitrary bytes survive, including invalid UTF-8;
-it appends one newline. Valid UTF-8 scalar slots retain their native string
-literal representation. Invalid UTF-8 scalar slots use byte literals; a developer's
-native consumer that specifically requires `&str` must resolve that type boundary
-explicitly, rather than receive silently replaced bytes.
+Native source Function signatures use existing Func/Props metadata. The frontend
+`Type` slot binds a native type atom or selected source type declaration; `Atoms`
+binds ordered scalar/reference arguments. `Label` declares a result identifier;
+nested constructions bind that result once before their consumer. Assignment
+targets remain references. These frontend roles add no AML fields or logeme
+interfaces. Native and ordinary Function bodies share instruction lowering.
 
-Finite Number output retains shortest binary64 digits, the established notation
-thresholds, signed exponents and midpoint rounding. The source-local pure
-formatter mirrors the orchestrator runtime formatter; differential native tests
-cover both contexts. This bounded duplication keeps ordinary Apps independent
-of the lifecycle runtime and avoids adding a compiler-only print operation or a
-new library word.
-
-Output remains synchronous, may block, and panics on native IO failure. The
-Display fallback uses a fixed `"{}"` format so user text is never format syntax.
-There is no automatic async wrapper, scheduling, cloning or rewriting of arbitrary
-native formatting expressions in developer definitions.
-
-Lyger encodes Rust text/type inputs and emits Rust AML/output paths. Native
-lifetime and raw-identifier framing remains byte-preserving. An explicit
-DefinitionArgument Null in a Thing/Null slot becomes a local typed display atom
-that prints `<nil>`; it does not infer an Option/pointer type or create a general
-nil-coercion contract. The source library adds no vocabulary or standard-library
-surface. The [implementation evidence](../testdata/integration/IMPLEMENTATION.md)
-separates frontend/runtime evidence from the maintained backend corpus.
+Runtime policy is authored in [L source](runtime/eng/dictionary.l). Run
+`scripts/l-go run ./tools/composition` after changing its dependencies, then
+`scripts/l-go run ./tools/composition --check` to verify the derived AML,
+fingerprints and selection index. The [CLI contract](../docs/cli-build.md#source-generation-and-native-builds)
+defines runtime selection and provider behavior. Logiceme consumes complete AML,
+not L source or private frontend plans.
 
 ## Typed builtin process implementations
 
@@ -729,17 +717,17 @@ Raw AML library targets and explicit native consumers retain this library-only c
 
 ## Support assets and verification
 
-The eight support assets have responsibilities separate from the eighteen
-segment templates:
+Support resources have responsibilities separate from the eighteen segment templates:
 
-| Template | Intended responsibility |
+| Resource | Responsibility |
 | --- | --- |
 | [config/config.lu](templates/config/config.lu) | Startup configuration. |
 | [install/cargo.lu](templates/install/cargo.lu) | Cargo manifest. |
 | [operate/start.lu](templates/operate/start.lu) | Native build and launch script. |
 | [operate/stop.lu](templates/operate/stop.lu) | Explicit-PID stop script. |
 | [runtime/main.lu](templates/runtime/main.lu) | Runtime entry and shutdown. |
-| [runtime/runtime.lu](templates/runtime/runtime.lu) | App/invocation lifecycle support. |
+| [runtime/host.lu](templates/runtime/host.lu) | Host process, async and trait adapters. |
+| [runtime/support.aml](runtime/support.aml), [support.json](runtime/support.json) | Derived runtime composition, source fingerprints and selection index. |
 | [runtime/process_unix.lu](templates/runtime/process_unix.lu) | Unix process support. |
 | [runtime/process_other.lu](templates/runtime/process_other.lu) | Unsupported-platform reporting. |
 
@@ -751,13 +739,9 @@ cover process launch, streams, continuation ownership and cleanup. See the
 [implementation evidence](../testdata/integration/IMPLEMENTATION.md) for
 observed outcomes.
 
-Use the [suite reference](../logiceme/testdata/lucid/README.md) for complete
-commands, Rust 1.98.1/edition 2024, retained locks, separate expected/actual native
-compilation and artifact reporting. Communication uses Tokio =1.53.1 with rt/sync features; selection cases add
-macros through a separate manifest and retained initial lockfile. Iteration reuses
-the existing plain and rt/sync manifest/lock variants without a new dependency.
-Keep the three-minute subprocess and thirty-minute stage
-limits. Generated actual files are compiled without repair or substitution.
+The [suite guide](../logiceme/testdata/lucid/README.md#run-and-retain-evidence)
+owns commands, pins, locks and artifact reporting. Compile generated files without
+repair or substitution; preserve the [validation budgets](../docs/development-harness.md#validation-budgets).
 
 Preserve shared interpreter regressions and L/Lyger integration checks.
 The [acceptance guide](../docs/development-harness.md) owns the full repository

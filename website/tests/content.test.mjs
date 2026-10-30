@@ -113,7 +113,7 @@ test('source inclusions safely fence braces, backticks and tags and retain bytes
   const tree = parseMarkdown(output.replace(/^---\n[\s\S]*?\n---\n/, ''));
   assert.equal(tree.children.filter((node) => node.type === 'code').length, 1);
   assert.equal(tree.children.find((node) => node.type === 'code').value, code.trimEnd());
-  assert.match(output, /existing-witness-not-run/);
+  assert.match(output, /<div data-pagefind-ignore>[\s\S]*existing-witness-not-run[\s\S]*<\/div>/);
   assert.match(output, /\*\*Fragment\.\*\* Source:/);
   assert.match(output, /<summary>Example evidence<\/summary>[\s\S]*existing-witness-not-run[\s\S]*<\/details>/);
   assert.equal(await fs.readFile(path.join(root, 'examples/path with spaces.l'), 'utf8'), code);
@@ -222,7 +222,7 @@ test('frontmatter source ownership is canonical and generated references have no
   assert.equal(metadata.sourcePath, 'docs/start.md');
   assert.equal(metadata.editUrl, false);
   assert.equal(metadata.generatedReference, true);
-  assert.match(output, /Refresh the canonical snapshot/);
+  assert.match(output, /<div data-pagefind-ignore>[\s\S]*Generated reference:[\s\S]*docs\/start.md[\s\S]*<\/div>/);
 });
 
 test('a second indexed dictionary requires both a dedicated page and reviewed public exports', () => {
@@ -241,6 +241,14 @@ test('a second indexed dictionary requires both a dedicated page and reviewed pu
   assert.deepEqual(validateStdlib(index, pages, entries).map((row) => [row.key, row.exports]), [
     ['extra', ['Extra.Value']], ['io', ['IO.Print']],
   ]);
+});
+
+test('reviewed internal dictionaries retain coverage without becoming public catalog entries', () => {
+  const index = { format: 1, languages: { eng: { support: { entry: 'stdlib/eng/support.l', dictionary: 'Support' } } } };
+  const entries = [{ kind: 'stdlib-export', visibility: 'namespace', support: 'internal', sources: ['stdlib/eng/support.l'] }];
+  assert.deepEqual(validateStdlib(index, [], entries), []);
+  entries.push({ kind: 'stdlib-export', visibility: 'public', support: 'supported', sources: ['stdlib/eng/support.l'] });
+  assert.throws(() => validateStdlib(index, [], entries), /conflicting public documentation classifications/);
 });
 
 test('portable containment and safe files reject traversal and external symlinks', async (t) => {

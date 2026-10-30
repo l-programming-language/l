@@ -82,7 +82,7 @@ func (b *instructionBuilder) declarationInstruction(site registrationSite, ctx i
 	if rec == nil {
 		return nil, nil
 	}
-	if function := b.semantics.Functions[rec]; function != nil && function.Header == ctx.statement {
+	if function := b.semantics.Functions[rec]; function != nil && !function.Native && function.Header == ctx.statement {
 		current := ctx.newInstruction(instructionFunction)
 		current.Function = function
 		current.Target = &instructionValue{Kind: operandSymbol, Type: valueFunction, RuntimeType: function.signature(), Record: rec, ID: rec.ID, Runtime: true}

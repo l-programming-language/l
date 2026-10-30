@@ -25,7 +25,7 @@ func observeBundleMain(t *testing.T, b Logiceme.Executable) *observedSourceFile 
 }
 
 func observedMethodName(name string) string {
-	aliases := map[string]string{"Await": "wait", "Build": "build", "Run": "run", "Stop": "stop", "Output": "output", "Error": "error", "Show": "show", "Fail": "fail", "ClaimContinuation": "claim_continuation", "FinishContinuation": "finish_continuation", "Finish": "finish", "Shutdown": "shutdown", "SetSource": "set_source", "Println": "println"}
+	aliases := map[string]string{"Await": "app_wait", "Build": "app_build", "Run": "app_run", "Stop": "app_stop", "Output": "app_output", "Error": "app_error", "Show": "runtime_show", "Fail": "runtime_fail", "ClaimContinuation": "invocation_claim", "FinishContinuation": "invocation_finish", "Finish": "runtime_finish", "Shutdown": "runtime_shutdown", "SetSource": "app_set_source"}
 	if value, ok := aliases[name]; ok {
 		return value
 	}

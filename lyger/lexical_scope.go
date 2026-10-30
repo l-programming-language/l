@@ -11,13 +11,17 @@ import (
 // lexicalScope owns bindings, independently of physical paragraph pronouns and
 // runtime activation. The root records map is Compilation.Memory itself.
 type lexicalScope struct {
-	kind         scopeKind
-	unit         *SourceUnit
-	parent       *lexicalScope
-	function     *sourceFunction
-	records      map[string]*record
-	declarations []*scopeDeclaration
-	source       SourceSpan
+	kind                scopeKind
+	unit                *SourceUnit
+	parent              *lexicalScope
+	function            *sourceFunction
+	callableHeader      *lStatement
+	records             map[string]*record
+	bindings            *recordBindingIndex
+	declarations        []*scopeDeclaration
+	reservations        map[string][]*scopeDeclaration
+	indexedDeclarations int
+	source              SourceSpan
 }
 
 type scopeKind uint8
@@ -28,6 +32,17 @@ const (
 	lexicalDictionary
 	lexicalParagraph
 )
+
+// An explicit callable signature determines how its paragraph declarations bind.
+// Its body waits for semantic publication, including forward constructor members.
+func (s *lexicalScope) waitsForHeader(statement *lStatement) bool {
+	for ; s != nil; s = s.parent {
+		if s.callableHeader != nil && s.callableHeader != statement {
+			return true
+		}
+	}
+	return false
+}
 
 func (s *lexicalScope) isParagraph() bool { return s != nil && s.kind == lexicalParagraph }
 func (s *lexicalScope) unitRoot() *lexicalScope {
@@ -64,46 +79,63 @@ func (s *lexicalScope) lookupLocal(raw []byte) (*tokenBinding, lookupState, erro
 	// This is inheritance, not activation: program/dictionary unit roots
 	// also reserve their local words before looking in the builtin parent.
 	if s.parent != nil {
-		for _, declaration := range s.declarations {
-			if declaration.Record == nil && declaration.matches(raw) {
+		for _, declaration := range s.reserved(raw) {
+			if declaration.Record == nil {
 				return nil, lookupPending, nil
 			}
 		}
 	}
-	binding, err := resolveTokenBinding(raw, s.records)
+	records := s.records
+	if s.bindings != nil {
+		records = s.bindings.words[newBindingQuery(raw).word]
+	}
+	binding, err := resolveTokenBinding(raw, records)
 	if err != nil || binding == nil {
 		return nil, lookupAbsent, err
 	}
 	return binding, lookupFound, nil
 }
 
-func (d *scopeDeclaration) matches(raw []byte) bool {
-	word := newBindingQuery(raw).word
+// Source labels and owners stay fixed while their records are published. Index
+// their surface forms once, but inspect the live reservation on every lookup;
+// a pending local must still shadow an inherited word until publication.
+func (s *lexicalScope) reserved(raw []byte) []*scopeDeclaration {
+	if s.reservations == nil {
+		s.reservations = make(map[string][]*scopeDeclaration)
+	}
+	for _, declaration := range s.declarations[s.indexedDeclarations:] {
+		for _, word := range declaration.surfaceForms() {
+			s.reservations[word] = append(s.reservations[word], declaration)
+		}
+	}
+	s.indexedDeclarations = len(s.declarations)
+	return s.reservations[newBindingQuery(raw).word]
+}
+
+func (d *scopeDeclaration) surfaceForms() []string {
+	prefix := ""
 	if d.Owner != nil {
-		// Instance members use their owner's table. Native type namespaces
+		// Owned members use their owner's table. Native type namespaces
 		// instead reserve the qualified form in the lexical environment.
 		name, _ := possessiveOwner(string(d.Owner.rawBytes))
 		kind, _ := checkType([]byte(name))
-		prefix := strings.ToLower(kind) + "."
-		if kind == "Unknown" || !strings.HasPrefix(word, prefix) {
-			return false
+		if kind == "Unknown" {
+			return nil
 		}
-		word = strings.TrimPrefix(word, prefix)
+		prefix = strings.ToLower(kind) + "."
 	}
 	label, err := strconv.Unquote(string(d.Token.rawBytes))
 	if err != nil {
-		return false
+		return nil
 	}
 	parts := strings.Split(strings.ToLower(label), "|")
-	if parts[0] == word {
-		return true
-	}
+	forms := []string{prefix + parts[0]}
 	for _, fix := range parts[1:] {
-		if strings.HasPrefix(fix, "-") && processLexFix(parts[0], fix, "postfix") == word {
-			return true
+		if strings.HasPrefix(fix, "-") {
+			forms = append(forms, prefix+processLexFix(parts[0], fix, "postfix"))
 		}
 	}
-	return false
+	return forms
 }
 
 // prepareEnvironments runs before any binding. Import sites can introduce an

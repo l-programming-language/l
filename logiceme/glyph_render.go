@@ -8,29 +8,47 @@ import (
 )
 
 func glyphInputSource(g *Glyph) string {
-	s := g.InputString
-	for i := range g.Conjoinments {
-		s += " " + glyphInputSource(&g.Conjoinments[i])
+	var source strings.Builder
+	var appendInputs func(*Glyph)
+	appendInputs = func(glyph *Glyph) {
+		source.WriteString(glyph.InputString)
+		for i := range glyph.Conjoinments {
+			source.WriteByte(' ')
+			appendInputs(&glyph.Conjoinments[i])
+		}
 	}
-	return s
+	appendInputs(g)
+	return source.String()
 }
 func (g *Glyph) compiledChildGroups() []CompiledConjoinment {
-	var out []CompiledConjoinment
-	add := func(k string, contents [][]byte, plural bool) {
-		out = append(out, CompiledConjoinment{Key: k, Type: k, Contents: contents, Plural: plural, Index: -1})
-	}
+	out := make([]CompiledConjoinment, 0, 18)
 	for _, typ := range []string{"Declaration", "Calculation", "Evaluation", "Definition", "Description", "Operation", "Iteration", "Instantiation", "Execution"} {
-		var values [][]byte
-		for i := range g.Conjoinments {
-			c := &g.Conjoinments[i]
-			if c.Type == typ {
-				values = append(values, c.Content)
-			}
-		}
-		add(typ+"s", values, true)
-		add(typ, values, false)
+		group, _ := g.compiledChildGroup(typ + "s")
+		out = append(out, group)
+		group.Key, group.Type, group.Plural = typ, typ, false
+		out = append(out, group)
 	}
 	return out
+}
+
+// A primitive sees only the categories forwarded by its selected vowel. Build
+// those records directly instead of allocating every singular/plural category
+// before discarding the unforwarded ones.
+func (g *Glyph) compiledChildGroup(name string) (CompiledConjoinment, bool) {
+	typ := strings.TrimSuffix(name, "s")
+	switch typ {
+	case "Declaration", "Calculation", "Evaluation", "Definition", "Description", "Operation", "Iteration", "Instantiation", "Execution":
+	default:
+		return CompiledConjoinment{}, false
+	}
+	group := CompiledConjoinment{Key: name, Type: name, Plural: name != typ, Index: -1}
+	for i := range g.Conjoinments {
+		child := &g.Conjoinments[i]
+		if child.Type == typ {
+			group.Contents = append(group.Contents, child.Content)
+		}
+	}
+	return group, true
 }
 
 // functionalArgumentData projects the wrapper's explicit argument boundary onto
@@ -38,11 +56,8 @@ func (g *Glyph) compiledChildGroups() []CompiledConjoinment {
 // generic path, while child collections are visible only under forwarded names.
 // Argument sources are read from the caller snapshot, so alias order cannot
 // mutate a later argument or leak back into the glyph's prepared state.
-func (g *Glyph) functionalArgumentData(params []Parameter, available []CompiledConjoinment) (DataCompilation, error) {
-	var meta MetaDict
-	for _, value := range g.Meta.GetMetaData() {
-		meta.SetAdd(value.Key, value.Value, value.Type)
-	}
+func (g *Glyph) functionalArgumentData(params []Parameter) (DataCompilation, error) {
+	meta := g.Meta.clone()
 	var children []CompiledConjoinment
 	seen := map[string]bool{}
 	for _, param := range params {
@@ -70,22 +85,12 @@ func (g *Glyph) functionalArgumentData(params []Parameter, available []CompiledC
 				meta.Add(value.Key, value.Value, value.Type)
 			}
 		case "Conjoinments":
-			child := CompiledConjoinment{Key: param.Key, Type: param.SubType, Plural: param.Plural, Index: -1}
-			found := false
-			for _, candidate := range available {
-				if candidate.Key != param.SubType {
-					continue
-				}
-				// Keep the source category; only Key is exposed to the callee.
-				child.Plural = candidate.Plural
-				child.DeterminantType = candidate.DeterminantType
-				child.Contents = append([][]byte(nil), candidate.Contents...)
-				found = true
-				break
-			}
+			child, found := g.compiledChildGroup(param.SubType)
 			if !found {
 				return DataCompilation{}, lerrors.InvalidConfiguration.Errorf("Rust functional argument %s has unknown conjoinment source %s", param.Key, param.SubType)
 			}
+			// Keep the source category; only Key is exposed to the callee.
+			child.Key = param.Key
 			children = append(children, child)
 			if param.Key != param.SubType {
 				kind := "Conjoinment"
@@ -149,8 +154,7 @@ func (g *Glyph) compilePreparedGlyph() error {
 		return e
 	}
 	vowel := g.Vowels[0]
-	vowel.Tags = CompileMainTags(vowel.Content)
-	vowel = g.DetermineSegTags(vowel)
+	vowel.Tags = parseSegmentTags(vowel.selectedTemplateTags(g.SegmentalSystem, g.segmentSelection(), true), g.Meta, g.segmentSelection(), true, true)
 	var cases []*LucidTag
 	for _, candidate := range vowel.Tags {
 		switch candidate.Expressions[1].ExpressionString {
@@ -165,7 +169,7 @@ func (g *Glyph) compilePreparedGlyph() error {
 	}
 	tag := cases[0]
 	body := tag.Expressions[2]
-	data := DataCompilation{Conjoinments: g.compiledChildGroups(), Meta: g.Meta, SegmentalSystem: g.SegmentalSystem}
+	data := DataCompilation{Meta: g.Meta, SegmentalSystem: g.SegmentalSystem}
 	var prefix, suffix string
 	if body.ExpressionOutput != "Variable" && body.ExpressionOutput != "SubTags" {
 		call := strings.TrimSpace(body.ExpressionString)
@@ -176,7 +180,7 @@ func (g *Glyph) compilePreparedGlyph() error {
 		prefix, suffix = body.ExpressionString[:start], body.ExpressionString[start+len(call):]
 		_, params, selector := g.StartFunctional(call)
 		var err error
-		data, err = g.functionalArgumentData(params, data.Conjoinments)
+		data, err = g.functionalArgumentData(params)
 		if err != nil {
 			return err
 		}
@@ -205,11 +209,13 @@ func (g *Glyph) compilePreparedGlyph() error {
 		}
 		callee := *g
 		callee.Meta = data.Meta
-		tags := callee.FunctionalTags(primitive.Content, selector)
+		tags := parseSegmentTags(primitive.selectedTemplateTags(callee.SegmentalSystem, selector, false), callee.Meta, selector, false, true)
 		if len(tags) == 0 {
 			return lerrors.InvalidConfiguration.Errorf("Rust primitive %s missing case %s", primitive.Name, selector)
 		}
 		tag = tags[0]
+	} else {
+		data.Conjoinments = g.compiledChildGroups()
 	}
 	// Source topology owns visibility at this already identified item boundary.
 	// Native leaves and nested/local items are never inspected or rewritten.

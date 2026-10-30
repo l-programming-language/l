@@ -214,13 +214,11 @@ known pinned runtime dependency rows, rejecting conflicting supplied rows. The
 assembler does not resolve crate versions, retry builds, translate Go source or
 infer dependencies from `use` statements.
 
-The CLI's `EvaluateWorkspaceEntry` coordinator bridge returns the composed
-entry and a separate compiler-owned runtime library. It selects the runtime
-import before rendering the entry header, then links the existing entry wrapper
-at its known assembly boundary. The library copies the selected runtime/process
-assets unchanged. The coordinator allocates its package identity and relative
-dependency path; neither becomes AML metadata. Ordinary `Evaluate` and
-`IncludeRuntime` retain their inline-runtime bundle contract.
+The CLI's `EvaluateWorkspaceEntry` bridge renders the entry and a separate
+runtime library under the [runtime selection contract](../docs/cli-build.md#source-generation-and-native-builds).
+It selects the runtime import before rendering the header, then links the entry
+wrapper. Allocated package identities and dependency paths stay outside AML
+metadata. Ordinary `Evaluate`/`IncludeRuntime` retain inline-runtime bundles.
 
 The runtime wrapper supplies configuration startup before creating Tokio and
 executes the composed future through Runtime supervision. Plain composed entries

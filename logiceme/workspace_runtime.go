@@ -19,7 +19,9 @@ type WorkspaceRuntime struct {
 // EvaluateWorkspaceEntry assembles one composed Rust entry and its separate
 // runtime library. Evaluate and GenerationOptions retain their inline-runtime
 // source-bundle contract. The coordinator owns the enclosing workspace/layout.
-func (ls *LogicemeService) EvaluateWorkspaceEntry(jit []byte, runtime WorkspaceRuntime) (entry, support Executable, err error) {
+// Optional libraries are fully framed AML, consumed as ordinary library books;
+// the allocated runtime library replaces the canonical full-support composition.
+func (ls *LogicemeService) EvaluateWorkspaceEntry(jit []byte, runtime WorkspaceRuntime, libraries ...[]byte) (entry, support Executable, err error) {
 	if ls == nil || ls.resources == nil {
 		return Executable{}, Executable{}, lerrors.InvalidConfiguration.Errorf("source generator configuration is required")
 	}
@@ -30,7 +32,18 @@ func (ls *LogicemeService) EvaluateWorkspaceEntry(jit []byte, runtime WorkspaceR
 	if err != nil {
 		return Executable{}, Executable{}, fmt.Errorf("load source generator: %w", err)
 	}
-	templates, err := loadSupportTemplates(ls.resources, true)
+	if len(libraries) > 1 {
+		return Executable{}, Executable{}, lerrors.InvalidInput.Errorf("workspace entry accepts one runtime library")
+	}
+	templates, err := loadSupportAssets(ls.resources, true)
+	if err != nil {
+		return Executable{}, Executable{}, err
+	}
+	if len(libraries) == 0 {
+		templates["runtime/runtime.rs"], err = loadRuntimeComposition(ls.resources, templates)
+	} else {
+		templates["runtime/runtime.rs"], err = generateRuntimeComposition(libraries[0], system, templates, runtime.Package)
+	}
 	if err != nil {
 		return Executable{}, Executable{}, err
 	}
@@ -69,8 +82,8 @@ func workspaceRuntimeLibrary(name string, templates map[string][]byte) (Executab
 	}
 	return Executable{
 		Name:             name,
-		MapArrays:        [][]string{{"/src/lib.rs", "/src/runtime.rs", "/src/process_unix.rs", "/src/process_other.rs", "/Cargo.toml"}},
-		ByteArrays:       [][][]byte{{[]byte(root), bytes.Clone(templates["runtime/runtime.lu"]), bytes.Clone(templates["runtime/process_unix.lu"]), bytes.Clone(templates["runtime/process_other.lu"]), cargo}},
+		MapArrays:        [][]string{{"/src/lib.rs", "/src/runtime.rs", "/src/runtime/host.rs", "/src/process_unix.rs", "/src/process_other.rs", "/Cargo.toml"}},
+		ByteArrays:       [][][]byte{{[]byte(root), bytes.Clone(templates["runtime/runtime.rs"]), bytes.Clone(templates["runtime/host.lu"]), bytes.Clone(templates["runtime/process_unix.lu"]), bytes.Clone(templates["runtime/process_other.lu"]), cargo}},
 		DependencyArrays: [][]string{dependencies},
 		EnvDepArrays:     [][]string{nil},
 	}, nil

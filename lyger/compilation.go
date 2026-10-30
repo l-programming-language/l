@@ -1,6 +1,7 @@
 package Lyger
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 
@@ -9,28 +10,33 @@ import (
 
 // Compilation organizes the pre-assembled structure of an L program as it is recursively pre-processed
 type Compilation struct {
-	Gram              *grammar
-	MainBytes         []byte
-	MainPath          string
-	RootDir           string
-	CompiledBytes     []byte
-	ASMBytes          []byte
-	Memory            map[string]*record
-	TextCache         map[string][]byte
-	Statements        []*lStatement
-	ProcStatements    []*lStatement
-	Program           *Program
-	Error             error
-	Prepared          *PreparedSource
-	SourceStatements  []SourceStatement
-	SourcePaths       []string
-	SourceOccurrences []sourceOccurrence
-	SourceUnits       []*SourceUnit
-	SourceOrigins     []SourceOrigin
-	Semantics         *semanticProgram
-	Scope             *scopePlan
-	ExpandedBytes     []byte
-	builtinProcesses  *builtinProcessCatalog
+	definitionTemporaries []int
+	definitionReserved    map[string]bool
+	definitionStatements  int
+	definitionValues      map[*DefinitionInstance]bool
+	Gram                  *grammar
+	MainBytes             []byte
+	MainPath              string
+	RootDir               string
+	CompiledBytes         []byte
+	ASMBytes              []byte
+	Memory                map[string]*record
+	TextCache             map[string][]byte
+	Statements            []*lStatement
+	ProcStatements        []*lStatement
+	Program               *Program
+	Error                 error
+	Prepared              *PreparedSource
+	SourceStatements      []SourceStatement
+	SourcePaths           []string
+	SourceOccurrences     []sourceOccurrence
+	SourceUnits           []*SourceUnit
+	SourceOrigins         []SourceOrigin
+	Semantics             *semanticProgram
+	Scope                 *scopePlan
+	ExpandedBytes         []byte
+	builtinProcesses      *builtinProcessCatalog
+	nativeDeclarations    map[*record]bool
 }
 
 // newCompilation returns a newly created Compilation struct
@@ -96,6 +102,7 @@ func (c *Compilation) preProcess() {
 
 // build recursively checks for import statements in the L code and builds up CompiledBytes if found using builder
 func (c *Compilation) build() {
+	defer c.Gram.lex.indexLookups()()
 	b := newPreparedBuilder(c.Prepared, c.Gram)
 	if err := b.process(); err != nil {
 		c.checkError(fmt.Errorf("expand %s: %w", c.MainPath, err))
@@ -112,6 +119,7 @@ func (c *Compilation) build() {
 
 // scan tokenize & scan the grammar/lexicon of Compilation statements
 func (c *Compilation) scan() {
+	defer c.Gram.lex.indexLookups()()
 	var isErr bool
 	p := newParser(c.CompiledBytes)
 	for index, stmtBytes := range p.parseStatements() {
@@ -146,10 +154,8 @@ candidates:
 		}
 		// Include root reservations here without changing root lookup/replacement.
 		for scope := tok.scope; scope != nil; scope = scope.parent {
-			for _, declaration := range scope.declarations {
-				if declaration.matches(tok.rawBytes) {
-					continue candidates
-				}
+			if len(scope.reserved(tok.rawBytes)) != 0 {
+				continue candidates
 			}
 		}
 		return tok.rangeError
@@ -162,7 +168,13 @@ func (c *Compilation) buildMemory() {
 	for len(c.ProcStatements) > 0 {
 		var pending []*lStatement
 		progress := false
+		var unresolved *lStatement
+		var unresolvedError error
 		for _, statement := range c.ProcStatements {
+			if len(statement.tokens) > 0 && statement.tokens[0].scope.waitsForHeader(statement) {
+				pending = append(pending, statement)
+				continue
+			}
 			ready, err := c.dictionaryImportReady(statement)
 			if err == nil && ready {
 				ready, err = c.resolver().bindStatementMembers(statement)
@@ -192,13 +204,43 @@ func (c *Compilation) buildMemory() {
 			if c.checkStatementError(statement, "resolve literals", statement.uncacheLiterals(c.TextCache)) {
 				return
 			}
-			if c.checkStatementError(statement, "register statement", c.registerStatement(statement)) {
+			err = c.registerStatement(statement)
+			if errors.Is(err, lerrors.UnresolvedReference) {
+				pending = append(pending, statement)
+				if unresolved == nil {
+					unresolved, unresolvedError = statement, err
+				}
+				continue
+			}
+			if c.checkStatementError(statement, "register statement", err) {
 				return
+			}
+			if len(statement.tokens) > 0 {
+				if scope := statement.tokens[0].scope; scope != nil && scope.callableHeader == statement {
+					scope.callableHeader = nil
+				}
+			}
+			for _, tok := range statement.tokens {
+				if tok.pendingDeclaration == nil {
+					continue
+				}
+				state, err := c.resolver().bindToken(tok)
+				if err == nil && (state != lookupFound || tok.binding.Record != c.Semantics.Subjects[tok.pendingDeclaration]) {
+					err = lerrors.UnresolvedReference.Errorf("same-statement declaration %s was not published", tok.rawBytes)
+				}
+				if c.checkStatementError(statement, "bind declaration", err) {
+					return
+				}
+				tok.pendingDeclaration = nil
 			}
 			progress = true
 		}
 		c.ProcStatements = pending
 		if !progress {
+			if unresolved != nil {
+				c.checkStatementError(unresolved, "register statement", unresolvedError)
+				return
+			}
 			if err := c.validateDictionaryExports(); err != nil {
 				c.checkStatementError(pending[0], "dictionary export", err)
 				return
@@ -228,6 +270,7 @@ func (c *Compilation) analyze() {
 		c.checkError(err)
 		return
 	}
+	defer c.Scope.indexBindings()()
 	c.ProcStatements = append([]*lStatement{}, c.Statements...)
 	// 1) determine each c.Statement type (i.e. IMPERATIVE.CREATE.VERB) with Subject and Predicate Tokens (LProcess E.1)
 	//		1.A) Any statement with an unknown is set aside.

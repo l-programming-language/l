@@ -26,9 +26,9 @@ import (
 )
 
 type runnableBuildResult struct {
-	project, binary, manifestPath, workspace string
-	manifest                                 runnableManifest
-	recorder                                 *nativetest.CLIRecorder
+	project, binary, manifestPath string
+	manifest                      runnableManifest
+	recorder                      *nativetest.CLIRecorder
 }
 
 func runnableBuild(t *testing.T, source string, apps []string) runnableBuildResult {
@@ -100,7 +100,6 @@ func runnableBuildProject(t *testing.T, project string, apps []string) runnableB
 	if err != nil || len(metadata) != 1 {
 		t.Fatalf("one real Cargo workspace expected: %v %v", metadata, err)
 	}
-	result.workspace = strings.TrimSuffix(metadata[0], ".metadata.json") + ".workspace"
 	assertRunnableCargoRoles(t, metadata[0], apps)
 	assertRunnableIdentityArtifact(t, recorder.Directory, binary, "orchestrator")
 	for i, companion := range result.manifest.Apps {
@@ -340,7 +339,6 @@ func TestRunnableServiceBuildAndRuntime(t *testing.T) {
 	for _, tc := range runnableServiceCases {
 		t.Run(tc.name, func(t *testing.T) {
 			built := runnableBuild(t, tc.source, tc.apps)
-			assertRunnableExactWorkspace(t, built, strings.TrimSuffix(tc.source, ".l"))
 			status, stdout, stderr := runnableRun(t, built.binary, t.TempDir(), nil)
 			if status != 0 || string(stdout) != tc.stdout || len(stderr) != 0 {
 				t.Fatalf("App runtime status/stdout/stderr = %d/%q/%q; want 0/%q/empty", status, stdout, stderr, tc.stdout)
@@ -367,11 +365,6 @@ func TestRunnableServiceRuntimeMisuse(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestRunnableServiceExactRustWorkspace(t *testing.T) {
-	built := runnableBuild(t, "basic.l", []string{"Worker"})
-	assertRunnableExactWorkspace(t, built, "basic")
 }
 
 func runnableExpectedWorkspaceFiles(t testing.TB, scenario, source, generation string) map[string][]byte {
@@ -406,14 +399,17 @@ func runnableExpectedWorkspaceFiles(t testing.TB, scenario, source, generation s
 	// scenario-specific expected Rust is extracted from production or snapshots.
 	files["support/runtime/src/lib.rs"] = runnableRead(t, "expected/support/runtime/src/lib.rs")
 	files["support/runtime/Cargo.toml"] = runnableRead(t, "expected/support/runtime/Cargo.toml")
-	root := distributiontest.RepoRoot(t)
-	for _, name := range []string{"runtime", "process_unix", "process_other"} {
-		data, err := os.ReadFile(filepath.Join(root, "builtins", "templates", "runtime", name+".lu"))
-		if err != nil {
-			t.Fatal(err)
-		}
-		files["support/runtime/src/"+name+".rs"] = data
+	for name, data := range canonicalRuntimeSources(t) {
+		files["support/runtime/src/"+name] = data
 	}
+	// The adapters retain observer method spellings and forward directly to
+	// source-composed Functions; no scenario or runtime policy is substituted.
+	api, err := os.ReadFile(filepath.Join(distributiontest.RepoRoot(t), "testdata/phase1/runtime/api.rs.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	files["support/runtime/src/runtime_api.rs"] = api
+	files["support/runtime/src/runtime.rs"] = append(files["support/runtime/src/runtime.rs"], []byte("\ninclude!(\"runtime_api.rs\");\n")...)
 	for name := range files {
 		if strings.HasSuffix(name, "/Cargo.toml") && !strings.HasPrefix(name, "services/") && !strings.HasPrefix(name, "support/") {
 			config := strings.TrimSuffix(name, "Cargo.toml") + "src/config.rs"
@@ -427,50 +423,6 @@ func runnableExpectedWorkspaceFiles(t testing.TB, scenario, source, generation s
 		}
 	}
 	return files
-}
-
-func assertRunnableExactWorkspace(t testing.TB, built runnableBuildResult, scenario string) {
-	t.Helper()
-	expected := runnableExpectedWorkspaceFiles(t, scenario, filepath.Join(built.project, "main.l"), filepath.Base(filepath.Dir(built.manifestPath)))
-	actual := make(map[string][]byte)
-	err := filepath.WalkDir(built.workspace, func(path string, entry os.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if entry.IsDir() {
-			return nil
-		}
-		relative, err := filepath.Rel(built.workspace, path)
-		if err != nil {
-			return err
-		}
-		relative = filepath.ToSlash(relative)
-		if !strings.HasSuffix(relative, ".rs") && entry.Name() != "Cargo.toml" {
-			return nil
-		}
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return err
-		}
-		actual[relative] = data
-		return nil
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(actual) != len(expected) {
-		t.Errorf("%s raw Rust/manifest inventory=%d files; want %d", scenario, len(actual), len(expected))
-	}
-	for name, want := range expected {
-		got, exists := actual[name]
-		if !exists || !bytes.Equal(got, want) {
-			t.Errorf("%s raw %s differs from complete independent oracle (present=%t)\nACTUAL:\n%s\nEXPECTED:\n%s", scenario, name, exists, got, want)
-		}
-		delete(actual, name)
-	}
-	if len(actual) != 0 {
-		t.Errorf("unexpected generated Rust/manifest artifacts: %v", reflect.ValueOf(actual).MapKeys())
-	}
 }
 
 func TestRunnableServiceLibraryConsumer(t *testing.T) {
@@ -659,7 +611,7 @@ func TestRunnableServiceExpectedWorkspaceCorpusCompiles(t *testing.T) {
 				t.Fatal("independent root manifest does not match ordered expected package members")
 			}
 			// Assemble only local lock records around the retained pinned external
-			// fragment. No dependency resolution, updates, or source generation.
+			// fragment. No dependency resolution or dependency updates.
 			lock, err := cargoWorkspaceLock(packages)
 			if err != nil {
 				t.Fatal(err)

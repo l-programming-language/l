@@ -7,7 +7,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -22,6 +21,27 @@ import (
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 	"github.com/l-programming-language/l/internal/testsupport/phase1"
 )
+
+// runtimeSourceFiles evaluates the selected production AML. The extra API
+// include is confined to native test projects and contains no runtime policy.
+func runtimeSourceFiles(t testing.TB) map[string][]byte {
+	t.Helper()
+	templates, err := loadSupportTemplates(distribution.Files(), true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	api, err := os.ReadFile("../testdata/phase1/runtime/api.rs.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	runtime := append(bytes.Clone(templates["runtime/runtime.rs"]), []byte("\ninclude!(\"runtime_api.rs\");\n")...)
+	return map[string][]byte{
+		"src/runtime.rs":      runtime,
+		"src/runtime_api.rs":  api,
+		"src/runtime/host.rs": bytes.Clone(templates["runtime/host.lu"]),
+		"src/process_unix.rs": bytes.Clone(templates["runtime/process_unix.lu"]),
+	}
+}
 
 func runtimeFixture(t testing.TB, observed bool, sourceOverride ...string) (string, nativetest.BuildResult) {
 	t.Helper()
@@ -43,12 +63,8 @@ func runtimeFixture(t testing.TB, observed bool, sourceOverride ...string) (stri
 	if len(sourceOverride) != 0 {
 		files["src/main.rs"] = read(sourceOverride[0])
 	}
-	for _, name := range []string{"runtime", "process_unix"} {
-		b, e := fs.ReadFile(distribution.Files(), "builtins/templates/runtime/"+name+".lu")
-		if e != nil {
-			t.Fatal(e)
-		}
-		files["src/"+name+".rs"] = b
+	for name, data := range runtimeSourceFiles(t) {
+		files[name] = data
 	}
 	project := nativetest.Materialize(t, files)
 	cache, e := filepath.Abs("../.harness/cache/rust-runtime-parity")
@@ -78,7 +94,7 @@ func runtimeFixture(t testing.TB, observed bool, sourceOverride ...string) (stri
 			t.Fatal(e)
 		}
 	}
-	for _, name := range []string{"runtime", "process_unix"} {
+	for _, name := range []string{"runtime", "runtime/host", "process_unix", "runtime_api"} {
 		got := read(filepath.Join(project, "src", name+".rs"))
 		if !bytes.Equal(got, files["src/"+name+".rs"]) {
 			t.Fatal("runtime asset changed during compilation")
@@ -270,11 +286,11 @@ func TestRuntimeGenerationParity(t *testing.T) {
 				t.Fatal(e)
 			}
 			nativetest.RecordBundle(t, "runtime-enabled", withRuntime)
-			if len(withRuntime.MapArrays) != 1 || len(withRuntime.MapArrays[0]) != len(plain.MapArrays[0])+3 {
+			if len(withRuntime.MapArrays) != 1 || len(withRuntime.MapArrays[0]) != len(plain.MapArrays[0])+4 {
 				t.Fatalf("runtime support count: %v", withRuntime.MapArrays)
 			}
 			count := len(plain.MapArrays[0])
-			if !reflect.DeepEqual(withRuntime.MapArrays[0][:count], plain.MapArrays[0]) || !reflect.DeepEqual(withRuntime.MapArrays[0][count:], []string{location + "runtime.rs", location + "process_unix.rs", location + "process_other.rs"}) {
+			if !reflect.DeepEqual(withRuntime.MapArrays[0][:count], plain.MapArrays[0]) || !reflect.DeepEqual(withRuntime.MapArrays[0][count:], []string{location + "runtime.rs", location + "runtime/host.rs", location + "process_unix.rs", location + "process_other.rs"}) {
 				t.Errorf("runtime support order/locations changed: %v", withRuntime.MapArrays[0])
 			}
 			if !reflect.DeepEqual(withRuntime.DependencyArrays, plain.DependencyArrays) || !reflect.DeepEqual(withRuntime.EnvDepArrays, plain.EnvDepArrays) {
@@ -287,11 +303,12 @@ func TestRuntimeGenerationParity(t *testing.T) {
 				}
 				files[path] = withRuntime.ByteArrays[0][i]
 			}
-			for _, name := range []string{"runtime", "process_unix", "process_other"} {
-				want, e := fs.ReadFile(distribution.Files(), "builtins/templates/runtime/"+name+".lu")
-				if e != nil {
-					t.Fatal(e)
-				}
+			templates, err := loadSupportTemplates(distribution.Files(), true)
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, name := range []string{"runtime", "runtime/host", "process_unix", "process_other"} {
+				want := runtimeSupportSource(templates, name)
 				if !bytes.Equal(files[location+name+".rs"], want) {
 					t.Errorf("runtime provenance: %s", name)
 				}

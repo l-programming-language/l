@@ -17,11 +17,15 @@ func functionContractSource(t *testing.T) string {
 	if err != nil {
 		t.Fatal(err)
 	}
+	const invocation = "Key: ~(<@Target@>)~"
+	if strings.Count(string(core), invocation) != 1 {
+		t.Fatal("constructor contract fixture requires the selected Function invocation")
+	}
 	var words []string
 	for _, line := range strings.Split(string(core), "\n") {
 		if strings.HasPrefix(line, `Define "Function`) || strings.HasPrefix(line, `Define any Function's`) {
 			line = strings.Replace(line, "Function", "Routine", 1)
-			words = append(words, strings.ReplaceAll(line, "Value: ~<@Target@>~", "Value: ~/* selected Routine */ <@Target@>~"))
+			words = append(words, strings.ReplaceAll(line, invocation, "Key: ~(/* selected Routine */ <@Target@>)~"))
 		}
 	}
 	return strings.Join(words, "\n") + "\n\n" + identityFunction +
@@ -46,12 +50,11 @@ func TestFunctionConstructorContractRejectsStaticSubstitution(t *testing.T) {
 }
 
 var functionContractReads = map[string]string{
-	"Thing":    "Define \"saved\" as a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved.\n",
-	"List":     "Define \"saved\" as a New List of a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved at 0.\n",
-	"Map":      "Define \"saved\" as a New Map of Thing.\nPut Other in saved as `key`.\nDefine \"Selected\" as a New Identity from saved at `key`.\n",
-	"Pointer":  "Define \"saved\" as a New Pointer of a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved.\n",
-	"Instance": "\"Holder\" is a New Adjective describing any Instance.\nIt describes a Generic Instance with a `callback` Thing.\nDefine \"saved\" as a New Holder Instance.\nPut Other in saved as `callback`.\nDefine \"Selected\" as a New Identity from saved at `callback`.\n",
-	"result":   functionSource("Select", "", "Thing", "Define \"boxed\" as a New Thing of Other.\nReturn boxed.") + "Select as \"saved\".\nDefine \"Selected\" as a New Identity from saved.\n",
+	"Thing":   "Define \"saved\" as a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved.\n",
+	"List":    "Define \"saved\" as a New List of a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved at 0.\n",
+	"Map":     "Define \"saved\" as a New Map of Thing.\nPut Other in saved as `key`.\nDefine \"Selected\" as a New Identity from saved at `key`.\n",
+	"Pointer": "Define \"saved\" as a New Pointer of a New Thing of Other.\nDefine \"Selected\" as a New Identity from saved.\n",
+	"result":  functionSource("Select", "", "Thing", "Define \"boxed\" as a New Thing of Other.\nReturn boxed.") + "Select as \"saved\".\nDefine \"Selected\" as a New Identity from saved.\n",
 }
 
 func TestFunctionConstructorContractRuntimeReads(t *testing.T) {

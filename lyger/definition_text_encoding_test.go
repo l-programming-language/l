@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"reflect"
 	"strconv"
-	"strings"
 	"testing"
 
 	Logiceme "github.com/l-programming-language/l/logiceme"
@@ -97,20 +96,8 @@ func TestDefinitionTextEncodingBindings(t *testing.T) {
 func definitionTextMainCalls(t *testing.T, bundle Logiceme.Executable, function string) []string {
 	t.Helper()
 	file := observeBundleMain(t, bundle)
-	entry := "main"
-	method := function
-	if strings.Contains(function, ".") {
-		parts := strings.Split(function, ".")
-		method = parts[len(parts)-1]
-	}
-	if method == "Show" || method == "show" {
-		entry = "l_main"
-	}
-	method = observedMethodName(method)
-	fn := file.function(t, entry)
-	if method == "l_print" {
-		return ioTextArguments(t, fn.Body)
-	}
+	method := observedMethodName(function)
+	fn := file.function(t, "main")
 	var values []string
 	for _, call := range nativetest.RustCalls(fn.Body) {
 		if call.Name != method {
@@ -149,94 +136,30 @@ func definitionTextMainCalls(t *testing.T, bundle Logiceme.Executable, function 
 	return values
 }
 
-// Canonical IO dispatches one borrowed native value. Check the actual selected
-// receiver and evaluation count; inspecting its fallback println body alone
-// would not establish which user payload is printed.
-func ioTextArguments(t *testing.T, body []nativetest.RustToken) []string {
-	t.Helper()
-	var values []string
-	dispatches := 0
-	fallbacks := 0
-	for _, call := range nativetest.RustCalls(body) {
-		if call.At > 0 && body[call.At-1].Text == "fn" {
-			continue // A local trait/impl declaration does not invoke its method.
-		}
-		if call.Name == "println" {
-			fallbacks++
-			if len(call.Args) != 2 || nativetest.RustTokensText(call.Args[0]) != `"{}"` || nativetest.RustTokensText(call.Args[1]) != "self.0" {
-				t.Fatal("IO Print added a print outside its typed fallback")
-			}
-		}
-		if call.Name == "l_print" {
-			dispatches++
-			if len(call.Args) != 0 {
-				t.Fatal("IO Print dispatch must not add arguments")
-			}
-		}
-		if call.Name != "LPrintValue" {
-			continue
-		}
-		if len(call.Args) != 1 || len(call.Args[0]) != 4 {
-			t.Fatal("IO Print must borrow exactly one parenthesized native Text literal")
-		}
-		arg := call.Args[0]
-		if arg[0].Text != "&" || arg[1].Text != "(" || arg[3].Text != ")" {
-			t.Fatal("IO Print changed the borrowed Text operand")
-		}
-		value, err := nativetest.DecodeRustLiteral(arg[2].Text)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if !strings.Contains(nativetest.RustTokensText(body), "(&&LPrintValue(&("+arg[2].Text+"))).l_print()") {
-			t.Fatal("IO Print literal is not the selected dispatch receiver")
-		}
-		values = append(values, value)
-	}
-	if dispatches != len(values) || fallbacks != dispatches {
-		t.Fatal("IO Print changed dispatch or payload evaluation count")
-	}
-	return values
-}
-
 func TestDefinitionTextEncodingGeneratedLiterals(t *testing.T) {
 	root, err := filepath.Abs("..")
 	if err != nil {
 		t.Fatal(err)
 	}
 	backend := Logiceme.NewLogicemeService(os.DirFS(root))
-	result := executableTestResult(t, memberResolutionFixture(t))
-	companions := executableTestCompanions(result)
 	for _, tc := range definitionTextEncodingCases {
-		for _, mode := range []string{"definition", "orchestrator"} {
-			t.Run(mode+"/"+tc.name, func(t *testing.T) {
-				defer func() {
-					if recovered := recover(); recovered != nil {
-						t.Errorf("Text generation panicked: %v", recovered)
-					}
-				}()
-				var document []byte
-				function := "println"
-				if mode == "definition" {
-					template := parseTestDefinition(t, `<DEF>BOD^E{|Statement: ~::std::println!("{}", <@Value|Thing@>);~|}<DEF>`)
-					instance := bindTestDefinition(t, template, map[string]DefinitionArgument{"Value": {Kind: "Text", Text: tc.text}})
-					document = []byte(`<PROGRAM><STRUCTURE><BOOK "TextEncoding"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`</S|><|S|>`FW{|Key: ~main~|}^W^" + instance.Expression + "`</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>")
-				} else {
-					result.Compilation.Semantics.Instructions = []*instruction{{Kind: instructionShow, Value: &instructionValue{Kind: operandLiteral, Type: valueText, Literal: &primitive{Type: valueText, Text: strconv.Quote(tc.text)}}}}
-					unit, err := result.OrchestratorUnit("entry", companions)
-					if err != nil {
-						t.Fatal(err)
-					}
-					document, function = unit.BackendAML, "runtime.show"
+		t.Run("definition/"+tc.name, func(t *testing.T) {
+			defer func() {
+				if recovered := recover(); recovered != nil {
+					t.Errorf("Text generation panicked: %v", recovered)
 				}
-				bundle, err := backend.Evaluate(document, Logiceme.GenerationOptions{IncludeRuntime: false})
-				recordBundle(t, bundle)
-				if err != nil {
-					t.Fatal(err)
-				}
-				if actual := definitionTextMainCalls(t, bundle, function); !reflect.DeepEqual(actual, []string{tc.text}) {
-					t.Fatalf("generated %s Text = %q; want %q", function, actual, tc.text)
-				}
-			})
-		}
+			}()
+			template := parseTestDefinition(t, `<DEF>BOD^E{|Statement: ~::std::println!("{}", <@Value|Thing@>);~|}<DEF>`)
+			instance := bindTestDefinition(t, template, map[string]DefinitionArgument{"Value": {Kind: "Text", Text: tc.text}})
+			document := []byte(`<PROGRAM><STRUCTURE><BOOK "TextEncoding"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`</S|><|S|>`FW{|Key: ~main~|}^W^" + instance.Expression + "`</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>")
+			bundle, err := backend.Evaluate(document, Logiceme.GenerationOptions{IncludeRuntime: false})
+			recordBundle(t, bundle)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if actual := definitionTextMainCalls(t, bundle, "println"); !reflect.DeepEqual(actual, []string{tc.text}) {
+				t.Fatalf("generated println Text = %q; want %q", actual, tc.text)
+			}
+		})
 	}
 }

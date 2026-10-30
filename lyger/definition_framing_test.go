@@ -88,8 +88,8 @@ func TestDefinitionNativeIdentifierBoundary(t *testing.T) {
 	}
 }
 
-func TestDefinitionNullIsTypedDisplayAtom(t *testing.T) {
-	const want = `{ struct LNull; impl ::core::fmt::Display for LNull { fn fmt(&self, formatter: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result { formatter.write_str("<nil>") } } LNull }`
+func TestDefinitionNullIsTypedAtom(t *testing.T) {
+	const want = `()`
 	for _, kind := range []string{"Thing", "Null"} {
 		template := parseTestDefinition(t, `<DEF>E{|Statement: ~<@Value|`+kind+`@>~|}<DEF>`)
 		instance, err := template.Instantiate(map[string]DefinitionArgument{"Value": {Kind: "Null"}})
@@ -109,28 +109,9 @@ func TestDefinitionNullIsTypedDisplayAtom(t *testing.T) {
 }
 
 func TestDefinitionNullCompleteApplication(t *testing.T) {
-	writer := parseTestDefinition(t, `<DEF>BOD^E{|Statement: ~::std::println!("{}", <@Value|Thing@>);~|}<DEF>`)
-	instance, err := writer.Instantiate(map[string]DefinitionArgument{"Value": {Kind: "Null"}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	document := `<PROGRAM><STRUCTURE><BOOK "Worker"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`" + `</S|><|S|>` + "`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^" + instance.Expression + "`" + `</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`
-	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate([]byte(document), Logiceme.GenerationOptions{})
-	recordBundle(t, bundle)
-	if err != nil {
-		t.Fatal(err)
-	}
-	binary := buildActualBundle(t, bundle, "Worker", false, "")
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	command := exec.CommandContext(ctx, binary)
-	var stdout, stderr bytes.Buffer
-	command.Stdout, command.Stderr = &stdout, &stderr
-	if err := command.Run(); err != nil {
-		t.Fatalf("Null application: %v: %s", err, stderr.Bytes())
-	}
-	if stdout.String() != "<nil>\n" || stderr.Len() != 0 {
-		t.Fatalf("Null output: stdout=%q stderr=%q", stdout.Bytes(), stderr.Bytes())
+	source := []byte("Use IO's Print from `io`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints Null.\n")
+	if got := runSourceIO(t, source, "null-io.l"); !bytes.Equal(got, []byte("<nil>\n")) {
+		t.Fatalf("Null output: %q", got)
 	}
 }
 

@@ -73,7 +73,7 @@ func TestCoordinatedRegistrationAliasesKeepTheirOwnSources(t *testing.T) {
 					t.Errorf("%s must alias its own operand %s: record=%v error=%v", pair[0], pair[1], alias, err)
 				}
 			}
-			if len(compilation.Semantics.Aliases) != 2 || len(compilation.Semantics.Apps) != 2 {
+			if testProgramAliasCount(compilation) != 2 || len(compilation.Semantics.Apps) != 2 {
 				t.Fatal("alias registration omitted a binding or duplicated an application")
 			}
 		})
@@ -246,7 +246,7 @@ func TestCoordinatedRegistrationLaterFailureRollsBackEarlierMetadata(t *testing.
 					t.Fatal("rejected batch changed existing values or published its earlier binding")
 				}
 				subjects, declarations, descriptors := testProgramSemanticCounts(compilation)
-				if len(compilation.Semantics.Aliases) != 0 || descriptors != 0 || len(compilation.Semantics.Apps) != 1 || subjects != 2 || declarations != 2 || len(statement.records) != 0 {
+				if testProgramAliasCount(compilation) != 0 || descriptors != 0 || len(compilation.Semantics.Apps) != 1 || subjects != 2 || declarations != 2 || len(statement.records) != 0 {
 					t.Fatal("rejected batch changed alias, descriptor, App, or provenance relationships")
 				}
 				for _, declaration := range prepared.declarations {
@@ -423,7 +423,27 @@ func TestCoordinatedRegistrationTrailingDescriptorConstructs(t *testing.T) {
 		t.Fatal("descriptor declaration/refinement provenance was merged or synthesized")
 	}
 	units, err := (&CompilationResult{Compilation: compilation}).ApplicationUnits()
-	if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`(&&LPrintValue(&("Hello World!"))).l_print();`)) {
+	if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`"Hello World!"`)) {
 		t.Fatalf("source descriptor did not construct its App body: %v", err)
+	}
+	body, err := compilation.lowerAppBody(compilation.Semantics.Apps[0])
+	if err != nil || len(body) != 1 {
+		t.Fatalf("source descriptor lost its selected body: %+v, %v", body, err)
+	}
+	dependencies, err := definitionClosure(body...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	selected := map[string]bool{"Text.Render": false, "Write": false}
+	for _, dependency := range dependencies {
+		declaration := compilation.Semantics.Declarations[dependency.definition]
+		if _, required := selected[dependency.Symbol]; required && declaration != nil && declaration.source.Unit.Dictionary == "IO" {
+			selected[dependency.Symbol] = true
+		}
+	}
+	for name, retained := range selected {
+		if !retained {
+			t.Errorf("App body did not retain the selected IO definition %s", name)
+		}
 	}
 }

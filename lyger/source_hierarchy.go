@@ -35,6 +35,7 @@ func (c *Compilation) lowerSourceMembers(nodes []*constructionNode, body []Defin
 		case "object":
 			obj := newRootObject(node.Name)
 			file := &sentence{Name: node.Name, Type: "Object"}
+			var dependencies []DefinitionInstance
 			for _, function := range node.Children {
 				if function == nil {
 					return nil, nil, lerrors.InvalidInput.Errorf("object %q has a nil function", node.Name)
@@ -43,18 +44,16 @@ func (c *Compilation) lowerSourceMembers(nodes []*constructionNode, body []Defin
 				if err != nil {
 					return nil, nil, fmt.Errorf("lower object %q: %w", node.Name, err)
 				}
-				words := instance.Words
-				if len(words) == 0 {
-					words = [][]string{{instance.Expression}}
-				}
-				for _, syllables := range words {
-					word := &w{Type: "Word"}
-					for _, expression := range syllables {
-						word.Syllables = append(word.Syllables, &s{Type: "Syllable", CompiledBytes: []byte(expression)})
-					}
-					file.Words = append(file.Words, word)
-				}
+				appendDefinitionWords(file, instance)
+				dependencies = append(dependencies, instance.Dependencies...)
 				obj.Attributes = append(obj.Attributes, &attribute{ID: function.Name, Definition: &def{ID: function.Name, Text: instance.Expression, Type: "Function", Compilation: []byte(instance.Expression)}})
+			}
+			selected, err := definitionClosure(dependencies...)
+			if err != nil {
+				return nil, nil, err
+			}
+			for _, dependency := range selected {
+				appendDefinitionWords(file, dependency)
 			}
 			members = append(members, sourceMember{Object: obj})
 			contents = append(contents, amlSourceMember{Sentence: file})
@@ -88,6 +87,22 @@ func (c *Compilation) lowerSourceMembers(nodes []*constructionNode, body []Defin
 		delete(active, node)
 	}
 	return members, contents, nil
+}
+
+// Source-owned grouping is preserved for both selected declarations and their
+// dependencies. No native body or alternative source wrapper is synthesized.
+func appendDefinitionWords(file *sentence, definition DefinitionInstance) {
+	words := definition.Words
+	if len(words) == 0 {
+		words = [][]string{{definition.Expression}}
+	}
+	for _, expressions := range words {
+		word := &w{Type: "Word"}
+		for _, expression := range expressions {
+			word.Syllables = append(word.Syllables, &s{Type: "Syllable", CompiledBytes: []byte(expression)})
+		}
+		file.Words = append(file.Words, word)
+	}
 }
 
 // orderedSourceMembers keeps older flat internal callers valid while making an

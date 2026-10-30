@@ -34,16 +34,16 @@ func TestRefactorDescriptorMergeRetainsOrderedIndependentRelations(t *testing.T)
 	left, right := &descriptorRule{}, &descriptorRule{}
 	parameter := &objectGram{}
 	definition := &record{ID: "sourceDefinition"}
-	dst := &constructionNode{Nominal: "sourceNominal", Name: "original", Children: []*constructionNode{first}, Wrappers: []*descriptorRule{left}, EmptyInputs: true}
-	src := &constructionNode{Name: "replacement", Definition: definition, Children: []*constructionNode{second}, Wrappers: []*descriptorRule{right}, Parameters: []*objectGram{parameter}, EmptyOutputs: true}
+	dst := &constructionNode{Nominal: "sourceNominal", Name: "original", Children: []*constructionNode{first}, Wrappers: []*descriptorRule{left}, InputsDefined: true}
+	src := &constructionNode{Name: "replacement", Definition: definition, Children: []*constructionNode{second}, Wrappers: []*descriptorRule{right}, Parameters: []*objectGram{parameter}, OutputsDefined: true}
 	dst.mergeDescriptor(src)
-	if dst.Nominal != "sourceNominal" || dst.Name != "replacement" || dst.Definition != definition || !dst.EmptyInputs || !dst.EmptyOutputs {
+	if dst.Nominal != "sourceNominal" || dst.Name != "replacement" || dst.Definition != definition || !dst.InputsDefined || !dst.OutputsDefined {
 		t.Fatal("descriptor merge changed nominal identity or lost independent flags")
 	}
 	if len(dst.Children) != 2 || dst.Children[0] != first || dst.Children[1] != second || len(dst.Wrappers) != 2 || dst.Wrappers[0] != left || dst.Wrappers[1] != right || len(dst.Parameters) != 1 || dst.Parameters[0] != parameter {
 		t.Fatal("descriptor merge reordered additive relations")
 	}
-	if src.EmptyInputs || len(src.Children) != 1 || src.Children[0] != second || len(src.Wrappers) != 1 {
+	if src.InputsDefined || len(src.Children) != 1 || src.Children[0] != second || len(src.Wrappers) != 1 {
 		t.Fatal("merge mutated the descriptor source")
 	}
 }

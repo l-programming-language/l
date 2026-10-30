@@ -18,7 +18,7 @@ Pronouns such as `it` are nouns, not another value type. The configured vocabula
 | Source | How the word becomes available |
 | --- | --- |
 | Language roots | The embedded English lexicon supplies words such as Create, App, New, and As, with their grammatical roles and inflections. |
-| Builtin definitions | Embedded L source supplies Start, Execute, Process, Function, Function.Return, Objective, Main, and Basic automatically; no `Use` is needed. |
+| Builtin definitions | The [source-defined foundation](../reference/builtins/index.md#source-defined-facilities) is available without `Use`. |
 | User-defined words | A program defines words by composing existing actions, construction rules, or logeme sequences. They follow the declaring scope. |
 | Imported dictionary words | A `Use` statement introduces an exported word, such as IO.Print. Bundling the standard library does not make its exports implicit. |
 

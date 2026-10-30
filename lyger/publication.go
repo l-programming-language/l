@@ -100,20 +100,18 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 		if destination == nil {
 			destination = c.Scope.Root
 		}
+		rejectDuplicate := stmt.source.imported == nil && (destination.isParagraph() || destination.kind == lexicalDictionary || declaration.Visibility == visibilityPublic)
 		var prior *record
-		for name, existing := range destination.records {
-			if strings.EqualFold(name, id) {
-				prior = existing
-				break
-			}
-		}
 		for _, candidate := range pending {
-			if candidate.destination == destination && strings.EqualFold(candidate.staged.ID, id) {
+			if rejectDuplicate && candidate.destination == destination && strings.EqualFold(candidate.staged.ID, id) {
 				prior = candidate.declaration.Record
 				break
 			}
 		}
-		for _, existing := range destination.records {
+		for name, existing := range destination.records {
+			if rejectDuplicate && prior == nil && strings.EqualFold(name, id) {
+				prior = existing
+			}
 			previous := c.Semantics.Declarations[existing]
 			priorImport := previous != nil && previous.source != nil && previous.source.imported != nil
 			if stmt.source.imported == nil && !priorImport {
@@ -145,7 +143,7 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 			}
 		}
 
-		if prior != nil && stmt.source.imported == nil && (destination.isParagraph() || destination.kind == lexicalDictionary || declaration.Visibility == visibilityPublic) {
+		if prior != nil {
 			if source := c.Semantics.Declarations[prior]; source != nil && source.source != nil {
 				return lerrors.DuplicateDeclaration.Errorf("duplicate declaration %s (previous declaration at %s:%d:%d)", id, source.source.Span.Path, source.source.Span.Start.Line, source.source.Span.Start.Column)
 			}
@@ -176,7 +174,13 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 		c.Semantics.Descriptors[descriptor.Record] = descriptor
 	}
 	for _, function := range prepared.functions {
-		c.Semantics.Functions[function.Record] = function
+		if function.Native && function.Constructor.Name == "" {
+			function.Constructor.Name = sourceModuleName(strings.ToLower(function.Record.ID))
+		}
+		function.Record.function = function
+		if !function.Native {
+			c.Semantics.Functions[function.Record] = function
+		}
 		function.Scope.function = function
 	}
 	return nil
@@ -189,15 +193,19 @@ func (p declarationPublication) commit(c *Compilation, stmt *lStatement) {
 		c.Semantics.Aliases[rec] = p.declaration.Alias
 	}
 	id := rec.ID
-	p.destination.records[id] = rec
+	p.destination.storeBinding(id, rec)
 	if p.declaration.Visibility == visibilityPublic && p.destination != p.reservation.Scope {
-		p.reservation.Scope.records[id] = rec
+		p.reservation.Scope.storeBinding(id, rec)
 	}
 	if p.owner != nil {
+		rec.declarationOwner = p.owner
 		if p.owner.members == nil {
 			p.owner.members = make(map[string]*record)
 		}
 		p.owner.members[id] = rec
+		if index := c.Scope.memberBindings[p.owner]; index != nil {
+			index.store(id, rec)
+		}
 	}
 	if p.value.Type == valueDictionary && c.Semantics.Aliases[rec] == nil {
 		p.value.Data.(*dictionary).ID = id //nolint:errcheck // Declaration preparation validates the tagged payload before this atomic commit.

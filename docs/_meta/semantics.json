@@ -5,55 +5,63 @@
   ],
   "executedStages": [],
   "sourceHashes": {
-    "builtins/eng/core.l": "352a1b0b4f2df98d164bdf04ab86def6478234d302f6c2e45ad86362712633c8",
-    "docs/cli-build.md": "6f8e150591f7a1347cce5c5d1c4e1e810a2bbc71f67c007593d0ad9acfa558c8",
+    "builtins/eng/core.l": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
+    "builtins/runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
+    "builtins/runtime/eng/foundations.l": "3f21a1e80f4249af50a48d35149f2144b00fa3c448eae1a3ab465b97b6044fd7",
+    "builtins/runtime/eng/number.l": "7d9f41f3990343b3ec6c63f5b03ca4762c5fab7207641d20515327ff71012f2b",
+    "docs/cli-build.md": "1610aca679670fd07d05cdce15142e5136df7fb20dcbabf65f73ec4e779324e6",
     "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
+    "logiceme/logiceme_service.go": "0452128b7476dcd377bbceb6e96268498777e1bc4a15331994cff0f87c139bbb",
+    "logiceme/runtime_composition.go": "24f443bd4fba2d87f7031c1acf3e39d02657c6fe4fb368449ac6a193ffe9b0b7",
     "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
-    "lyger/binding.go": "d9cfe48702fa909c7f5a083a35e59417202c23bc41b408ac33028b879f24ba33",
-    "lyger/builder.go": "5888114b3e4068d85014bd8b8c2b3bf0041f922fef7822c20f3797e079734554",
-    "lyger/builtin_operations.go": "6b5f4d4c34d2a4ad11b13a6f14f6a4fd77c629d7a7937a9309cc561ca79ce938",
-    "lyger/construction.go": "4462bf8ddcc940d085e92f11fa951371caff1720f6c0ee22d5f8f1e921b501b6",
-    "lyger/definition.go": "402154e7a42582927883a61954859ac5c05c11d4fad2aa6d85e91056ecc34cba",
-    "lyger/grammar.go": "a6ec88acca64421c18f229395f39b4f9f5c5e03feca1c630fa64916a3f1e7f3b",
+    "lyger/binding.go": "be5070f9f04486c61ecae6e832ac09e85339df355b3eb2a4f157e553f4ac1b87",
+    "lyger/builder.go": "4ac944a308bb7f0e940013c32488a2cbb89f450de2fec15e1b7558c33c004845",
+    "lyger/builtin_operations.go": "2f025da178c6f59db2aa098f90d83cd81fd3e28e1d5cf50b71330a73a923e376",
+    "lyger/construction.go": "2d2461bf4d9ea601248b0a162954039c6625a60c93a2eddb62e52505e12e7f24",
+    "lyger/definition_bindings.go": "c239e4939718346ed7db8b7677167f3a8fdcad97da3b0001afd1dbd20cf4377c",
+    "lyger/entry_composition.go": "561579d280ba920406d3f38b0c96aa8ffe324eca0be7877071783340d8f23214",
+    "lyger/execution_composition.go": "db693560633b7b611eaf85955db65f5c4244f6692b3b08965efe7ceec1cda2e0",
+    "lyger/function_composition.go": "b1cc7002bf7a5f8ea20cf977bc9f94da30ebf4e57ba6fb6bd80e7600b55b63b6",
+    "lyger/function_definitions.go": "ffcc74f3c577d20a4155b032595834a0e446b03066e720e588f1f6968f2c845c",
+    "lyger/grammar.go": "5879aa138ee902f20463aa57ee5fe470c848b2f0ede945417d8487c8253b4f02",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
-    "lyger/grammar_match.go": "bb6700a68686d2d88457df89053d38298c2230b3cc324c2f662e41665c2a5d53",
-    "lyger/grammar_terms.go": "971ca62c1f1a07b3528300302545ef5212d2c5cc30f3d39d27f506b5e0e8c30e",
-    "lyger/grammar_types.go": "0b5f68eee4eec3d5763a29479683ed258143ad241f389b08182449aa4370eb77",
-    "lyger/instruction_captures.go": "d0ff0ee3d439fb491dcb7b03e5455faf85d14a2f26a3b93e5f526f4b6c78925f",
-    "lyger/instructions.go": "230b1a93cdf475156264b6531262072cc0a3f6599a2b26883c45f91355a7b3a6",
+    "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
+    "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
+    "lyger/grammar_types.go": "c57ca69f9748e991cd757cf567ee45c996ab57da9699afbef57fb6ac31970f1e",
+    "lyger/instruction_captures.go": "04f088e7411621e8a9261626485903aa426b574b1bd6dd0e16881a1dbc26006d",
+    "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
     "lyger/ir_kinds.go": "d552e2cd21079344f25317d13aec439bb665d269678a879169ac065b45058a79",
-    "lyger/lexical_scope.go": "5bad4be8d5dd5fba403b2b56ade33e1a3b74cefaef83a7fd2db67c9c03684c83",
+    "lyger/lexical_scope.go": "2d2690c205ef1da8e1868a10d57eeb222018172fda7da9de76c0dc9c84c78288",
     "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
-    "lyger/lexicon.go": "f5e19a1e702b87ae564521b1389d0b647e9525d57a680f49419452aab6c83bd8",
-    "lyger/native_encoding.go": "19785ba3dd27e613fa7a35ec5a60fef78a087743b965124087d535416c7aaa0a",
-    "lyger/orchestration_capture_emit.go": "a6c0155bf6948e434e303a108bc19fff493adb3ef4d1469f5ea79e39cb01ce75",
+    "lyger/lexicon.go": "e6c61d41351f3116573742fbe107f87de188c9b36e0b6fc0cb14a8b74e60c2c7",
+    "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
+    "lyger/lowering.go": "28dc70d4430c83d708361bff5c69d0f09d4ebe86cdc184dddba1e1cb6db1102d",
     "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
-    "lyger/orchestration_emit.go": "01435407fafcd88b3dd564bb3237345a27ac89f1364c727e8cf1cb933b948a43",
-    "lyger/orchestration_functions.go": "f13b92c9caf1c1d3c77105c2a69785e55a16ba88e3ca73347fd925ede99041fc",
-    "lyger/orchestration_plan.go": "82887b2646fcc51bab55a97c6ccf6e504bd992ba9e21f06bc1fc8655be949a8d",
-    "lyger/orchestration_program.go": "2384e9b51b00d1abaff9c3f17a6be198c366fc0177efdd5bf0fe818903d5d5f0",
-    "lyger/program_runtime.go": "a5459e008c9233e9786b44cc7475fc6a1e7479141c01849b240d33b774f0a5ed",
-    "lyger/publication.go": "6ecc4e84b0428d14aa5ea402d478ea1a7607c2f4fa19e123462251ed333dcc17",
+    "lyger/orchestration_plan.go": "5a9fbaa1d0e0eaf132720b960db17a216a11c65e90cf2ddb79e039200dc9ac0d",
+    "lyger/publication.go": "9ead493a6787b091e7f86e21d43a2b08cf7d19c6d790a02c829990c4c800a298",
     "lyger/registration.go": "2ef2c5f1d08897b7754d16bf56b8a0ff069a17c2f6171985e6374150de8ca4d5",
-    "lyger/runtime_values.go": "0299dc9895f29ab358763466e58e6b2a59e20c0c7dc1009cdb88e8de3e6332bf",
-    "lyger/runtime_values.rs": "277fbc8c71f50e49e3ff89709a2f0e6f4ef0edf74453854f882a171e0ce7f97e",
-    "lyger/runtime_values_emit.go": "9ffc587b5dd63e10d90bc013af7b86c25b6076e3cb23fa3b7a6b7002b779b04c",
-    "lyger/runtime_values_plan.go": "81c3ad15087143c8cc43f42e4704c8c5147d0690298dd3ac18ef7814f68a8c13",
-    "lyger/runtime_values_source.go": "b8671c3277c7793dc71c89091129da69c5b6842c310192db7dac95039281e716",
-    "lyger/scope.go": "90539a132dd1b8695f6a273a63da33776a38612ace8ff92e45b2e0b7e1f3649a",
-    "lyger/semantic_resolution.go": "a8e9eb4140547b6e488b5869ed73b7754181d3296918900c51c989d09df2e3f8",
-    "lyger/semantics.go": "5ddc61918206d280737b0998706eb8b4feb2c4b9180bd7a175b505825df77346",
-    "lyger/source_functions.go": "aea627402c886b8289eda7da8318637c744f2f7029781106d419b5a7d9e9a8c1",
-    "lyger/source_topology.go": "81c7cb6e966f8f859396c572e72ff124cf95c90244ad597cb44e6b52db5e8fdb",
+    "lyger/runtime_types.go": "4334d0bc85798b5afac5fa32ba1dd33dc1b95e887a707e5e6f3995a635e363fc",
+    "lyger/runtime_value_words.go": "ce9dde35894efd49f03b1374720c784303b0f00eba6a8f8d37d290b01db536bf",
+    "lyger/runtime_values_plan.go": "91ff1b5e9143c06fd85f883a2130a06abb10a7777b4d534b99625f6c35536671",
+    "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
+    "lyger/scope.go": "c8fdbeb575b95e77f5785072ff8b15ad070af862033e48acd07346c0c980fdef",
+    "lyger/semantic_resolution.go": "21f4b08ca04bed3f0247ed0a458d93685138cac538f3e6554ee41dbf249f3cee",
+    "lyger/semantics.go": "cdbd1b22d181b3026ddfd97d73dd5a13567d8a9b60da56822b423d49a73be383",
+    "lyger/source_body.go": "41cbf8f1711709cfdc86ceec733a495c027c03b9b3dd60c0f6d7ee9376f336b0",
+    "lyger/source_functions.go": "9e19b22b4d6614c38160528e67e7c426b8c1b5a658bd16be4073336957ee0fbf",
     "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
-    "lyger/types.go": "ccefcec0547794da4a35f9f58ad00131b5dab02808d4dbb910eef39102f951eb",
-    "lyger/utilities.go": "2e9aa1197bb2a1f8569dc2e668b8a1219d4812384d5a8cb365d41a270fa280b0",
-    "lyger/value_kinds.go": "c58424bedff22327c0557efd0e4b4b3cc0ff2ba4a6ab4f642e0f2177025ed8aa",
+    "lyger/source_units_topology.go": "eb006bc1866daab6eba15a67c0e35b8c2bee94a15328927d388e54789c002ff5",
+    "lyger/storage_words.go": "c22cd50d27415e75bed937d40fa469736d2963d7376144af2c2d124d61fabcfc",
+    "lyger/types.go": "8d1c5403e26386b560c2bad36d8e5b3aaed28174708f46dda470f572fcf75859",
+    "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
+    "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
     "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
+    "lyger/word_values.go": "f30788b00ce62cdcd39658bab21aa2df228889a25c914263277a8b136d2d361b",
     "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
-    "stdlib/eng/io/dictionary.l": "40f07155226ddb60830dc847829f071d2e26c5fed240210ded1a80ee6c269e1f",
-    "stdlib/index.json": "62d7bf930b6775b148ccda973921fedd4bf3d42837e47f825409d7e52cfa41f1"
+    "stdlib/eng/io/dictionary.l": "0aee928628163ae6deebcf061cb7a61680cb4da36177202694e739062ca56d82",
+    "stdlib/eng/storage/dictionary.l": "5d658412b1684a59d585ef6139302cf5dbd3a3458eaf2e78df06d40ce6ff57e2",
+    "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4"
   },
   "entries": [
     {
@@ -68,11 +76,12 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go",
+        "lyger/literal_atoms.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/definition_bindings.go",
         "lyger/grammar.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_types.go"
       ],
       "witnesses": [
         "lyger/raw_text_test.go",
@@ -93,10 +102,11 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/literal_atoms.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/definition_bindings.go",
+        "lyger/runtime_types.go"
       ],
       "witnesses": [
         "lyger/definition_number_test.go",
@@ -118,10 +128,11 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/literal_atoms.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/definition_bindings.go",
+        "lyger/runtime_types.go"
       ],
       "witnesses": [
         "lyger/orchestrator_test.go",
@@ -139,17 +150,18 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
         "lyger/runtime_transfer_test.go",
         "lyger/runtime_type_boundaries_test.go"
       ],
-      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types, shape identities and callable signatures. No implicit coercion or dynamic arithmetic.",
+      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types and callable signatures. No implicit coercion or dynamic arithmetic.",
       "evidence": "static-inspection; existing-witness-not-run"
     },
     {
@@ -164,8 +176,10 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/native_encoding.go",
-        "lyger/definition.go"
+        "lyger/literal_atoms.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -183,10 +197,11 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -205,10 +220,11 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -229,10 +245,12 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "builtins/eng/core.l",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -251,10 +269,11 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -340,7 +359,7 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/source_topology.go"
+        "lyger/source_units_topology.go"
       ],
       "witnesses": [
         "lyger/recursive_classes_test.go"
@@ -359,7 +378,7 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/source_topology.go"
+        "lyger/source_units_topology.go"
       ],
       "witnesses": [
         "lyger/recursive_classes_test.go"
@@ -397,7 +416,7 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/definition_test.go"
@@ -413,14 +432,17 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
         "builtins/eng/core.l",
-        "lyger/definition.go",
+        "lyger/definition_bindings.go",
         "lyger/source_functions.go",
-        "lyger/orchestration_functions.go",
-        "lyger/runtime_values.go",
-        "lyger/orchestration_program.go",
-        "lyger/program_runtime.go",
+        "lyger/function_composition.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "lyger/storage_words.go",
         "lyger/binding.go",
-        "lyger/scope.go"
+        "lyger/scope.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/function_definitions.go",
+        "lyger/lowering.go"
       ],
       "witnesses": [
         "lyger/source_functions_test.go",
@@ -432,7 +454,8 @@
         "lyger/function_composition_test.go",
         "lyger/function_scope_regression_test.go",
         "lyger/function_transfer_regression_test.go",
-        "lyger/function_contract_regression_test.go"
+        "lyger/function_contract_regression_test.go",
+        "lyger/nested_definition_test.go"
       ],
       "notes": "Functions bind typed invocation verbs and private bodies. Signatures include canonical constructor identity; aliases preserve it and incompatible transfers reject. Emission uses selected builtin/logeme definitions.",
       "evidence": "static-inspection; existing-witness-not-run"
@@ -449,7 +472,7 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -469,7 +492,7 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -563,8 +586,9 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -638,8 +662,9 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -659,8 +684,9 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -807,8 +833,11 @@
         "lyger/value_kinds.go",
         "lyger/types.go",
         "lyger/source_functions.go",
-        "lyger/orchestration_functions.go",
-        "lyger/runtime_values.go"
+        "lyger/function_composition.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "builtins/eng/core.l",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/source_functions_test.go"
@@ -862,8 +891,9 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -901,8 +931,9 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -976,8 +1007,10 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "builtins/eng/core.l",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -1099,7 +1132,8 @@
       "support": "supported",
       "doc": "docs/reference/builtins/lifecycle.md#show",
       "sources": [
-        "lyger/orchestration_emit.go",
+        "lyger/execution_composition.go",
+        "lyger/entry_composition.go",
         "docs/cli-build.md"
       ],
       "witnesses": [
@@ -1115,7 +1149,8 @@
       "support": "supported",
       "doc": "docs/reference/builtins/lifecycle.md#exit",
       "sources": [
-        "lyger/orchestration_emit.go",
+        "lyger/execution_composition.go",
+        "lyger/entry_composition.go",
         "lyger/instructions.go",
         "docs/cli-build.md"
       ],
@@ -1170,13 +1205,17 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go",
+        "lyger/source_body.go",
+        "lyger/function_definitions.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
-        "lyger/construction_test.go"
+        "lyger/construction_test.go",
+        "lyger/scoped_definition_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Native metadata Functions can bind ordered source operations through directive compositions; locals retain their enclosing Function scope."
     },
     {
       "id": "builtin:function",
@@ -1188,14 +1227,17 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go",
+        "lyger/definition_bindings.go",
         "lyger/source_functions.go",
-        "lyger/orchestration_functions.go"
+        "lyger/function_composition.go",
+        "lyger/function_definitions.go",
+        "lyger/lowering.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
-        "lyger/function_composition_test.go"
+        "lyger/function_composition_test.go",
+        "lyger/nested_definition_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "The canonical Function definition supplies composed signatures and Process bodies for source declarations and constructed Objects."
@@ -1210,17 +1252,21 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go",
+        "lyger/definition_bindings.go",
         "lyger/source_functions.go",
-        "lyger/orchestration_functions.go",
+        "lyger/function_composition.go",
         "lyger/binding.go",
-        "lyger/scope.go"
+        "lyger/scope.go",
+        "lyger/function_definitions.go",
+        "lyger/lowering.go",
+        "lyger/instructions.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
         "lyger/function_composition_test.go",
-        "lyger/function_contract_regression_test.go"
+        "lyger/function_contract_regression_test.go",
+        "lyger/nested_definition_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "Return retains its definition-site member through word expansion; different constructor contracts reject. Output counts and types remain checked."
@@ -1235,7 +1281,7 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
@@ -1253,7 +1299,7 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
@@ -1272,7 +1318,7 @@
       "sources": [
         "builtins/eng/core.l",
         "lyger/construction.go",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
@@ -1307,7 +1353,7 @@
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/semantics.go",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go"
       ],
       "witnesses": [
         "lyger/definition_test.go"
@@ -1446,13 +1492,14 @@
         "lyger/ir_kinds.go",
         "lyger/instructions.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values_emit.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_value_words.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
       ],
-      "notes": "Typed updates append/replace List elements, write Map/Instance fields or replace a Pointer target. Destination kind, keys, element/field types and managed ownership cycles are checked.",
+      "notes": "Typed updates append/replace List elements, write Map values or replace a Pointer target. Destination kind, keys, element types and managed ownership cycles are checked.",
       "evidence": "static-inspection; existing-witness-not-run"
     },
     {
@@ -1468,13 +1515,14 @@
         "lyger/ir_kinds.go",
         "lyger/instructions.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values_emit.go",
-        "lyger/runtime_values.rs"
+        "lyger/runtime_value_words.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
       ],
-      "notes": "Typed updates append/replace List elements, write Map/Instance fields or replace a Pointer target. Destination kind, keys, element/field types and managed ownership cycles are checked.",
+      "notes": "Typed updates append/replace List elements, write Map values or replace a Pointer target. Destination kind, keys, element types and managed ownership cycles are checked.",
       "evidence": "static-inspection; existing-witness-not-run"
     },
     {
@@ -1581,14 +1629,17 @@
         "stdlib/index.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go",
+        "lyger/lowering.go",
+        "lyger/function_definitions.go"
       ],
       "witnesses": [
         "lyger/configured_import_test.go",
         "lyger/raw_text_test.go",
-        "lyger/io_numeric_test.go"
+        "lyger/io_numeric_test.go",
+        "lyger/nested_definition_test.go"
       ],
-      "notes": "Reviewed sole public member of current eng/io dictionary. Forms Print/Prints/Printed/Printing/Printer. Log/Logger remain private dependencies; no regex-derived visibility.",
+      "notes": "IO.Print composes the operand's selected Render member with Write; implementation dependencies retain their private owners.",
       "evidence": "static-inspection; existing-witness-not-run",
       "dictionary": {
         "lexicon": "eng",
@@ -1605,12 +1656,12 @@
       "argumentRoles": [
         "Output (Thing)"
       ],
-      "effect": "Writes the resolved scalar through the private Log/Logger implementation and appends LF; no L return value is declared."
+      "effect": "Writes the selected typed rendering and appends LF; no L return value is declared."
     },
     {
-      "id": "stdlib-internal:eng:io:Log",
+      "id": "stdlib-internal:eng:io:output",
       "kind": "stdlib-export",
-      "name": "Log / Logger",
+      "name": "Render / Write",
       "role": "implementation",
       "support": "internal",
       "doc": "docs/stdlib/eng/io.md#public-and-private-names",
@@ -1623,7 +1674,7 @@
         "lyger/dictionary_ownership_test.go",
         "lyger/dictionary_dependency_capture_test.go"
       ],
-      "notes": "Private native-backed implementation required by IO.Print, not an importable public member.",
+      "notes": "Private source Functions and small host operations selected by IO.Print, not additional imported API.",
       "evidence": "static-inspection; existing-witness-not-run",
       "dictionary": {
         "lexicon": "eng",
@@ -1698,11 +1749,14 @@
       "sources": [
         "lexicon/eng/grammar.json",
         "lexicon/eng/vocabulary.json",
-        "lyger/definition.go"
+        "lyger/definition_bindings.go",
+        "lyger/source_body.go",
+        "lyger/lowering.go"
       ],
       "witnesses": [
         "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
+        "lyger/grammar_consumption_test.go",
+        "lyger/scoped_definition_test.go"
       ],
       "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
       "evidence": "static-inspection; existing-witness-not-run"
@@ -1778,7 +1832,9 @@
         "lyger/instructions.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values_emit.go"
+        "lyger/runtime_value_words.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -1946,10 +2002,11 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -1971,49 +2028,9 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
-        "lyger/runtime_values.go"
-      ],
-      "witnesses": [
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Internal representation tag; executable source semantics are defined by the linked runtime type contract.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "type:instance",
-      "kind": "type",
-      "name": "Instance",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/applicational-types.md#instances",
-      "sources": [
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lyger/runtime_values.go",
-        "lyger/runtime_values_source.go",
-        "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
-      ],
-      "witnesses": [
-        "lyger/runtime_values_test.go",
-        "lyger/runtime_transfer_test.go",
-        "lyger/runtime_type_boundaries_test.go",
-        "lyger/runtime_lifetime_test.go"
-      ],
-      "notes": "A canonical descriptor fixes the runtime field schema and identity. Ordinary fields snapshot; Pointer targets remain shared. Unknown, absent and incorrectly typed fields reject.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "value-tag:Instance",
-      "kind": "value-tag",
-      "name": "Instance",
-      "role": "implementation",
-      "support": "internal",
-      "doc": "docs/spec/applicational-types.md#instances",
-      "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go",
-        "lyger/runtime_values.go"
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -2031,10 +2048,11 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lyger/runtime_values.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "lyger/runtime_values.rs"
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -2053,8 +2071,8 @@
       "sources": [
         "lyger/instruction_captures.go",
         "lyger/orchestration_captures.go",
-        "lyger/orchestration_capture_emit.go",
-        "lyger/runtime_values.rs"
+        "lyger/storage_words.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/orchestration_captures_test.go",
@@ -2064,6 +2082,78 @@
       ],
       "notes": "Activation-specific environments snapshot ordinary captures and retain shared Pointer targets. Actual arguments evaluate once in caller scope before callee entry; copies retain environments until last-owner release. App-process capture transport is not inferred.",
       "evidence": "static-inspection; existing-witness-not-run"
+    },
+    {
+      "id": "stdlib-internal:eng:storage",
+      "kind": "stdlib-export",
+      "name": "Storage",
+      "role": "implementation",
+      "support": "internal",
+      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/storage/dictionary.l"
+      ],
+      "witnesses": [
+        "lyger/private_dictionary_test.go",
+        "lyger/definition_export_test.go"
+      ],
+      "notes": "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "visibility": "namespace"
+    },
+    {
+      "id": "stdlib-internal:eng:runtime",
+      "kind": "stdlib-export",
+      "name": "Runtime",
+      "role": "implementation",
+      "support": "internal",
+      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "sources": [
+        "stdlib/index.json",
+        "builtins/runtime/eng/dictionary.l",
+        "logiceme/runtime_composition.go",
+        "logiceme/logiceme_service.go"
+      ],
+      "witnesses": [
+        "lyger/private_dictionary_test.go",
+        "lyger/definition_export_test.go"
+      ],
+      "notes": "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "runtime"
+      },
+      "visibility": "namespace"
+    },
+    {
+      "id": "stdlib-internal:eng:format",
+      "kind": "stdlib-export",
+      "name": "Formatting",
+      "role": "implementation",
+      "support": "internal",
+      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "sources": [
+        "stdlib/index.json",
+        "builtins/runtime/eng/number.l",
+        "builtins/runtime/eng/foundations.l"
+      ],
+      "witnesses": [
+        "lyger/format_dictionary_test.go",
+        "lyger/io_numeric_test.go"
+      ],
+      "notes": "IO and Runtime select one canonical formatting Function and its source-owned dependencies; importing IO does not load process supervision.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "format"
+      },
+      "visibility": "namespace"
     }
   ]
 }

@@ -331,7 +331,7 @@ func (t grammarTerm) className() string {
 	return ""
 }
 
-func decodeGrammarTerm(raw string) (grammarTerm, error) {
+func parseGrammarTerm(raw string) (grammarTerm, error) {
 	term := grammarTerm{Raw: raw, Kind: termUnknown}
 	name := raw
 	if strings.HasSuffix(name, "*") {

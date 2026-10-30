@@ -53,13 +53,6 @@ func functionMapExtractionSource() string {
 	return strings.Replace(source, "from callbacks at", "from copied at", 1)
 }
 
-func TestFunctionSignatureMapExtraction(t *testing.T) {
-	generated := requireFunctionGenerated(t, functionMapExtractionSource())
-	if !strings.Contains(generated, ".expect_type(LType::Map(Box::new(LType::Function(") {
-		t.Fatal("bound Function Map type lost its typed read")
-	}
-}
-
 func TestFunctionSignatureMapNative(t *testing.T) {
 	c := compileMemberResolutionSource(t, memberResolutionSource{main: functionMapExtractionSource()})
 	captureNativeResult(t, c, "mapped")

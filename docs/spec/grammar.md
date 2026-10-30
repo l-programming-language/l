@@ -69,7 +69,7 @@ The ten phrase families are generic, directive, declarative, locative, objective
 
 Declarative `as` relates a subject to a type, value, definition, or alias. Directive `for` introduces action composition. Utilization `to` connects a native-backed definition or imperative use. Associative `with` composes described child structures; `using` comes from source-defined inflection and supplies parameters. Dependency `from` selects a dictionary or explicit source provider in supported import forms.
 
-Locative `at`, inflective `in`, and related collection phrases are recognizable grammar. They do not establish implemented runtime collection operations. A phrase's support follows its owning action and semantic lowering, not the English preposition alone.
+Locative `at` and inflective `in` participate in [collection updates and typed reads](collections-and-categories.md). A phrase's meaning follows its owning action, not the preposition alone.
 
 ### Compose an action with `for`
 
@@ -79,7 +79,7 @@ These two builtin declarations use a directive phrase:
 
 `for` introduces the action body. `Building`, `Running`, `Starting`, and `Awaiting` are applicative verb forms in that body; `any App` declares the argument, and `it` refers to it. The source conjunction `and then` separates the actions. The bars inside each quoted label declare inflections; they are unrelated to the grammar JSON's sequence notation. These definitions are implicitly loaded already, so do not redeclare them in a program.
 
-Other prepositions in the examples have different jobs: `from` and `as` in the basic program's Use sentence select the IO dictionary and local alias. The [Main descriptor example](lexical-types.md#describe-with-an-adjective) shows `of`, `with`, and `using` in Function/Object/Service construction. The presence of `at` or `in` in a grammar rule does not authorize a guessed list-indexing expression; [Lists](collections-and-categories.md#lists) documents that boundary.
+In the basic program, `from` and `as` select the IO dictionary and local alias. The [Main descriptor example](lexical-types.md#describe-with-an-adjective) uses `of`, `with`, and `using` in Function/Object/Service construction.
 
 ## Clauses and grammatical forms
 
@@ -97,7 +97,7 @@ Most action families have imperative, active, passive, and applicative clauses. 
 | Interruptive | Stop | Request termination without join |
 | Observative | Show | Write supported value bytes to outer output |
 | Terminative | Exit | Terminate the whole program |
-| Expansive / locative | Put / Place | Recognized collection forms; general execution not established |
+| Expansive / locative | Put / Place | Supported collection insertion and replacement |
 | Receptive / reductive | Get / Take | Recognized collection forms; general execution not established |
 | Inflective / deflective | Import / Export | Configured roots; not replacements for supported Use import syntax |
 | Generic | Source-defined word | Depends on bound typed definition/action |
@@ -136,9 +136,9 @@ Source order is retained after expansion. A sequence of native unary lifecycle o
 
 ## Vocabulary reference
 
-Nouns include pronouns, Input/Output/Error, List/Map/Dictionary, Instance, Null/Thing/Text/Number/Byte/Truth/Pointer, native Func/Prop/Op concepts, Definition/Attribute, and Object/Class/Service/App. The adjective entries are Public, New, and Generic. Adverbs are Publicly, Not, Less, Greater, and Then. Prepositions are as/of/at/with/in/out/by/from/to/than/for. Articles are any/no/a/the, conjunctions and/or, and evaluations if/else/otherwise/while.
+Nouns include pronouns, Input/Output/Error, List/Map/Dictionary, Null/Thing/Text/Number/Byte/Truth/Pointer, native Func/Prop/Op concepts, Definition/Attribute, and Object/Class/Service/App. The adjective entries are Public, New, and Generic. Adverbs are Publicly, Not, Less, Greater, and Then. Prepositions are as/of/at/with/in/out/by/from/to/than/for. Articles are any/no/a/the, conjunctions and/or, and evaluations if/else/otherwise/while.
 
-Builtin source adds Start, Execute, Process, Function, Return, Objective, Main, and Basic. Standard-library words such as Print require import. Adding a word to vocabulary is not equivalent to implementing a new primitive instruction, and source-defined extensibility is not unrestricted natural-language interpretation.
+The [source-defined builtins](../reference/builtins/index.md#source-defined-facilities) are implicit. Standard-library words such as Print require import. New words compose existing definitions; vocabulary recognition alone does not implement an action.
 
 ## Sources and witnesses
 

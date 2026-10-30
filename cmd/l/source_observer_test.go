@@ -41,48 +41,25 @@ func observeCalls(tokens []nativetest.RustToken) []nativetest.RustCall {
 	return out
 }
 
-func observedPrinted(t *testing.T, body []nativetest.RustToken) []string {
+// Observe the exact source value independently of the selected Print definition's
+// generated helper names or native implementation. Runtime observers cover output.
+func observedText(t *testing.T, body []nativetest.RustToken, expected string) int {
 	t.Helper()
-	var values []string
-	dispatches := 0
-	fallbacks := 0
-	for _, call := range observeCalls(body) {
-		if call.Name == "println" {
-			fallbacks++
-			if len(call.Args) != 2 || nativetest.RustTokensText(call.Args[0]) != `"{}"` || nativetest.RustTokensText(call.Args[1]) != "self.0" {
-				t.Fatal("IO Print added a print outside its typed fallback")
-			}
-		}
-		if call.Name == "l_print" {
-			dispatches++
-			if len(call.Args) != 0 {
-				t.Fatal("IO Print dispatch must not add arguments")
-			}
-		}
-		if call.Name != "LPrintValue" {
+	position := -1
+	for i, token := range body {
+		value, err := nativetest.DecodeRustLiteral(token.Text)
+		if err != nil || value != expected {
 			continue
 		}
-		if len(call.Args) != 1 || len(call.Args[0]) != 4 {
-			t.Fatal("IO Print must borrow exactly one parenthesized native Text literal")
+		if position >= 0 {
+			t.Fatalf("source Text %q occurs more than once in the entry body", expected)
 		}
-		arg := call.Args[0]
-		if arg[0].Text != "&" || arg[1].Text != "(" || arg[3].Text != ")" {
-			t.Fatal("IO Print changed the borrowed Text operand")
-		}
-		text, e := nativetest.DecodeRustLiteral(arg[2].Text)
-		if e != nil {
-			t.Fatal(e)
-		}
-		want := "(&&LPrintValue(&(" + arg[2].Text + "))).l_print()"
-		if !strings.Contains(nativetest.RustTokensText(body), want) {
-			t.Fatal("IO Print literal is not the selected dispatch receiver")
-		}
-		values = append(values, text)
+		position = i
 	}
-	if dispatches != len(values) || fallbacks != dispatches {
-		t.Fatal("IO Print changed dispatch or payload evaluation count")
+	if position < 0 {
+		t.Fatalf("entry body lost source Text %q", expected)
 	}
-	return values
+	return position
 }
 
 func observedUnitOutput(tokens []nativetest.RustToken) bool {

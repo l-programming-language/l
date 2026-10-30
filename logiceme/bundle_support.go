@@ -132,11 +132,11 @@ func (p *Program) linkBundleSupport(templates map[string][]byte, includeRuntime 
 			}...)
 		}
 		if includeRuntime && i == 0 && workspace == nil {
-			for _, name := range []string{"runtime", "process_unix", "process_other"} {
+			for _, name := range []string{"runtime", "runtime/host", "process_unix", "process_other"} {
 				files = append(files, struct {
 					name    string
 					content []byte
-				}{path.Join(mainDirectory, name+".rs"), bytes.Clone(templates["runtime/"+name+".lu"])})
+				}{path.Join(mainDirectory, name+".rs"), bytes.Clone(runtimeSupportSource(templates, name))})
 			}
 		}
 		for _, file := range files {
@@ -269,4 +269,14 @@ func runtimeDependencies(supplied []string) ([]string, error) {
 
 func shellQuoted(value string) string {
 	return "'" + strings.ReplaceAll(value, "'", "'\"'\"'") + "'"
+}
+
+func runtimeSupportSource(templates map[string][]byte, name string) []byte {
+	if name == "runtime" {
+		return templates["runtime/runtime.rs"]
+	}
+	if name == "runtime/host" {
+		return templates["runtime/host.lu"]
+	}
+	return templates["runtime/"+name+".lu"]
 }

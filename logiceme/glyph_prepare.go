@@ -10,14 +10,11 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-// A role projection references original ordered children. Native slices contain
-// only supplied atoms or prepared signatures; executable behavior stays composed.
+// A role projection references original ordered children; executable behavior
+// stays composed and native rendering consumes the prepared metadata.
 type glyphPlan struct {
 	input      map[string]string
 	slots      map[string][]int
-	atoms      map[string][]string
-	role       string
-	statement  bool
 	visibility string
 	lowered    *Glyph
 }
@@ -84,9 +81,6 @@ func (g *Glyph) hasSourceMeta(k string) bool {
 func (g *Glyph) appendChildSlot(k string, indices ...int) {
 	g.plan.slots[k] = append(g.plan.slots[k], indices...)
 }
-func (g *Glyph) appendNativeAtoms(k string, values ...string) {
-	g.plan.atoms[k] = append(g.plan.atoms[k], values...)
-}
 func (g *Glyph) childIndices(typ string) []int {
 	var out []int
 	for i := range g.Conjoinments {
@@ -100,24 +94,17 @@ func (g *Glyph) childCount(typ string) int { return len(g.childIndices(typ)) }
 func isNativeIdentifier(s string) bool {
 	return regexp.MustCompile(`^(r#)?[A-Za-z_][A-Za-z0-9_]*$`).MatchString(s) && s != "_"
 }
-func inputKeys(m map[string]string) []string {
-	if v, ok := m["Keys"]; ok {
+func inputList(m map[string]string, singular, plural string) []string {
+	if v, ok := m[plural]; ok {
 		return readNativeList(v)
 	}
-	if v, ok := m["Key"]; ok {
+	if v, ok := m[singular]; ok {
 		return []string{v}
 	}
 	return nil
 }
-func inputValues(m map[string]string) []string {
-	if v, ok := m["Values"]; ok {
-		return readNativeList(v)
-	}
-	if v, ok := m["Value"]; ok {
-		return []string{v}
-	}
-	return nil
-}
+func inputKeys(m map[string]string) []string   { return inputList(m, "Key", "Keys") }
+func inputValues(m map[string]string) []string { return inputList(m, "Value", "Values") }
 func nativeTuple(v []string) string {
 	if len(v) == 1 {
 		return v[0]
@@ -140,7 +127,7 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 	}
 	form := glyphForm(g)
 	g.Type = g.Vowels[0].getSegmentName()
-	g.plan = &glyphPlan{input: m, slots: map[string][]int{}, atoms: map[string][]string{}, role: ctx.role}
+	g.plan = &glyphPlan{input: m, slots: map[string][]int{}}
 	if ctx.parent == "" && (form == "FW" || form == "HY" || form == "MY") {
 		g.plan.visibility = g.SegmentalSystem.itemVisibility
 	}
@@ -151,10 +138,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 	for _, k := range strings.Fields("Key Type Parameter Relation Shape AssignTarget Iterable Index RangeArity Default Lifetimes GenericTypes") {
 		g.Meta.SetAdd(k, "Void", "String")
 	}
-	for _, k := range strings.Fields("Parameters Requirements TypeValue Value Values Bodies Body Tail Fields Methods Targets Arguments Atom Prefix Constructor Subject Bounds Binder Predicates Payload Pattern Guard Arms Conditions Future Selection Step Initializer Condition Updates Statements Terminators Operands") {
-		g.plan.slots[k] = nil
-	}
-
 	for _, v := range g.SegmentalSystem.fileMeta.GetMetaData() {
 		g.Meta.SetAdd(v.Key, v.Value, v.Type)
 	}
@@ -184,24 +167,11 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 	g.setSourceMeta("PayloadRole", strconv.FormatBool(ctx.role == "payload"))
 	g.setSourceMeta("BodyEnd", "")
 	g.setSourceMeta("SelectionGuard", strconv.FormatBool(ctx.role == "selection"))
-	if _, ok := m["Deferred"]; ok {
-		return lerrors.Unsupported.Errorf("Rust %s: Deferred is unsupported; Rust has no deferred execution operation", form)
+	if v, ok := m["Mutable"]; ok && v != "True" && v != "False" {
+		return invalidGlyph(g, "Mutable must be True or False")
 	}
-	if v, ok := m["Mutable"]; ok {
-		if v != "True" && v != "False" {
-			return invalidGlyph(g, "Mutable must be True or False")
-		}
-		if !(form == "BA" || form == "BO" || strings.HasSuffix(form, "OB") || form == "OB") {
-			return invalidGlyph(g, "Mutable only applies to newly declared simple bindings")
-		}
-	}
-	if v, ok := m["Capture"]; ok {
-		if v != "Infer" && v != "Move" {
-			return invalidGlyph(g, "Capture must be Infer or Move")
-		}
-		if form != "CV" && form != "FW" && form != "FWC" {
-			return invalidGlyph(g, "Capture requires an anonymous callable or future")
-		}
+	if v, ok := m["Capture"]; ok && v != "Infer" && v != "Move" {
+		return invalidGlyph(g, "Capture must be Infer or Move")
 	}
 	g.setSourceMeta("CaptureKeyword", "")
 	if m["Capture"] == "Move" {
@@ -315,12 +285,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 				return invalidGlyph(g, "declaration or const parameter requires a type")
 			}
 			g.setSourceMeta("Binding", keys[0])
-			for _, k := range keys {
-				if m["Mutable"] == "True" && k != "_" {
-					k = "mut " + k
-				}
-				g.appendNativeAtoms("Bindings", k)
-			}
 			if e := one("Instantiation", "TypeValue", false); e != nil {
 				return e
 			}
@@ -329,9 +293,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 			}
 			if m["Type"] != "" && len(g.plan.slots["TypeValue"]) > 0 {
 				return invalidGlyph(g, "native and composed type are exclusive")
-			}
-			if ctx.role != "parameter" {
-				g.plan.statement = false
 			}
 		}
 	case "OG", "DOG":
@@ -417,7 +378,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 		default:
 			return invalidGlyph(g, "execution binding requires exactly one CV or DV value")
 		}
-		g.plan.statement = true
 	case "O", "OB", "FO", "FOB", "KO", "KOB", "DO", "DOB", "GO", "GOB", "MO", "MOB":
 		keys := inputKeys(m)
 		if len(keys) == 0 {
@@ -449,7 +409,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 			if len(vals) == 0 {
 				return invalidGlyph(g, "definition requires an explicit value")
 			}
-			g.appendNativeAtoms("Values", nativeTuple(vals))
 		} else {
 			typ := map[byte]string{'F': "Declaration", 'K': "Operation", 'D': "Calculation", 'G': "Evaluation", 'M': "Instantiation"}[form[0]]
 			if e := one(typ, "Values", true); e != nil {
@@ -470,9 +429,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 			g.setSourceMeta("DeclareKeyword", "")
 		}
 		if m["Parameter"] != "" {
-			if !binding || ctx.role != "parameter" {
-				return invalidGlyph(g, "parameter default must be an explicit binding definition")
-			}
 			if m["Parameter"] == "Lifetime" {
 				return invalidGlyph(g, "lifetime parameters cannot have defaults")
 			}
@@ -494,13 +450,11 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 				}
 			}
 		}
-		g.plan.statement = true
 	case "BOD", "BOK", "BOH", "BOG", "BOM", "BOP", "BOC":
 		typ := map[byte]string{'D': "Calculation", 'K': "Operation", 'H': "Description", 'G': "Evaluation", 'M': "Instantiation", 'P': "Iteration", 'C': "Execution"}[form[2]]
 		if e := one(typ, "Value", true); e != nil {
 			return e
 		}
-		g.plan.statement = true
 	case "HOB":
 		if e := one("Description", "Pattern", true); e != nil {
 			return e
@@ -509,7 +463,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 			return e
 		}
 		roles[g.plan.slots["Pattern"][0]] = "pattern"
-		g.plan.statement = true
 	case "E":
 		if _, ok := m["Statement"]; !ok {
 			return invalidGlyph(g, "Calculation requires Statement")
@@ -542,9 +495,7 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 		if len(ids) > 0 && len(op.Operands) > 0 {
 			return invalidGlyph(g, "native and composed operands are exclusive")
 		}
-		if len(ids) == 0 {
-			g.appendNativeAtoms("Operands", op.Operands...)
-		} else {
+		if len(ids) > 0 {
 			all("Calculation", "Operands", "expression")
 		}
 		for _, o := range ops {
@@ -665,13 +616,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 			g.Conjoinments = append([]Glyph{prologue}, g.Conjoinments...)
 		}
 		all("Operation", "Bodies", "body")
-		for _, i := range g.plan.slots["Bodies"] {
-			end := ""
-			if glyphForm(&g.Conjoinments[i]) == "DW" {
-				end = "\n"
-			}
-			g.appendNativeAtoms("BodyEnds", end)
-		}
 		if form == "HW" && len(g.plan.slots["Bodies"]) > 0 {
 			return invalidGlyph(g, "signature cannot have a body")
 		}
@@ -712,7 +656,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 			if len(g.Conjoinments) != 0 {
 				return invalidGlyph(g, "native and composed future operands are exclusive")
 			}
-			g.appendNativeAtoms("Value", key)
 		} else {
 			if len(g.Conjoinments) != 1 {
 				return invalidGlyph(g, "await requires exactly one future operand")
@@ -730,7 +673,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 		}
 		sources := 0
 		if m["Key"] != "" {
-			g.appendNativeAtoms("Value", m["Key"])
 			sources++
 		}
 		for i := range g.Conjoinments {
@@ -795,26 +737,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 		for _, i := range g.plan.slots["Body"] {
 			if glyphForm(&g.Conjoinments[i]) == "DW" {
 				g.setSourceMeta("BodyEnd", "\n")
-			}
-		}
-	}
-	if form == "U" && m["Shape"] == "Record" {
-		for _, i := range g.plan.slots["Fields"] {
-			c := &g.Conjoinments[i]
-			end := ",\n"
-			if c.plan.input["Shape"] == "Atom" {
-				end = ""
-			}
-			g.appendNativeAtoms("FieldEnds", end)
-		}
-	}
-	if form == "W" {
-		for _, i := range g.plan.slots["Statements"] {
-			c := &g.Conjoinments[i]
-			if c.plan.statement {
-				g.appendNativeAtoms("Terminators", ";\n")
-			} else {
-				g.appendNativeAtoms("Terminators", "")
 			}
 		}
 	}

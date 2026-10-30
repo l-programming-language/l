@@ -13,6 +13,16 @@ func canonicalTestOptions() Options {
 	return Options{Language: "eng", AssetRoot: "..", Resources: os.DirFS("..")}
 }
 
+func compileDefinitionSource(t *testing.T, source, name string) *Compilation {
+	t.Helper()
+	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), name)
+	c.Make()
+	if c.Error != nil {
+		t.Fatal(c.Error)
+	}
+	return c
+}
+
 // Tests of user-file inclusion compare that projection explicitly; the complete
 // compilation also contains implicit builtin and imported dictionary units.
 func testPhysicalStatements(root string, statements []SourceStatement) []SourceStatement {
@@ -78,6 +88,19 @@ func testProgramSemanticCounts(c *Compilation) (subjects, declarations, descript
 		}
 	}
 	return
+}
+
+func testProgramAliasCount(c *Compilation) int {
+	count := 0
+	for alias := range c.Semantics.Aliases {
+		source := c.Semantics.Declarations[alias]
+		// Unattributed aliases still count: a failed publication must not hide
+		// a partially registered edge merely because it lost provenance.
+		if source == nil || source.source == nil || source.source.Unit == nil || source.source.Unit.Kind == SourceProgram {
+			count++
+		}
+	}
+	return count
 }
 
 func assertFrontendResources(t *testing.T, c *Compilation) {

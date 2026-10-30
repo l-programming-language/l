@@ -151,9 +151,22 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 	if err != nil {
 		return "", fmt.Errorf("lower orchestrator: %w", err)
 	}
+	runtimePackage := runtimePackageName(entryPackage, packageNames)
+	imports, err := c.log.ReadImports(unit.BackendAML)
+	if err != nil {
+		return "", fmt.Errorf("read orchestrator imports: %w", err)
+	}
+	library, err := generated.Compilation.RuntimeLibrary(runtimePackage, imports)
+	if err != nil {
+		return "", fmt.Errorf("select runtime library: %w", err)
+	}
+	var selected [][]byte
+	if library != nil {
+		selected = append(selected, library)
+	}
 	orchestrator, runtimeSupport, err := c.log.EvaluateWorkspaceEntry(unit.BackendAML, Logiceme.WorkspaceRuntime{
-		Package: runtimePackageName(entryPackage, packageNames), RelativeDirectory: "../support/runtime",
-	})
+		Package: runtimePackage, RelativeDirectory: "../support/runtime",
+	}, selected...)
 	if err != nil {
 		return "", fmt.Errorf("generate orchestrator: %w", err)
 	}

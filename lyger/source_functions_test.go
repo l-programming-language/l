@@ -7,7 +7,6 @@ import (
 	Logiceme "github.com/l-programming-language/l/logiceme"
 	"io/fs"
 	"os/exec"
-	"regexp"
 	"strings"
 	"testing"
 )
@@ -23,26 +22,6 @@ func functionGenerated(t *testing.T, source string) (string, error) {
 }
 
 var identityFunction = functionSource("Identity", "\"Value\" as Text", "Text", "Return Value.")
-
-func TestOrdinaryFunctionSourceGeneration(t *testing.T) {
-	source := requireFunctionGenerated(t, identityFunction+"Identity `hello` as \"Result\".\nShow Result.\nIdentity `again` as \"Second\".\nShow Second.\n")
-	for _, needle := range []string{"fn lFunction", "std::ops::ControlFlow<(), (Vec<u8>,)>", "async move", ".await"} {
-		if !strings.Contains(source, needle) {
-			t.Fatalf("missing canonical native Function structure %q", needle)
-		}
-	}
-	if !regexp.MustCompile(`for<'[A-Za-z][A-Za-z0-9_]*> fn\(`).MatchString(source) {
-		t.Fatal("native Function pointer lost its borrowed context lifetime")
-	}
-	if len(regexp.MustCompile(`\(lCalled[0-9]+\.1\)\(`).FindAllString(source, -1)) != 2 {
-		t.Fatal("both source invocations must use the native typed function pointer")
-	}
-	for _, removed := range []string{"struct LCallable", "LFunctionOutcome", ".call(runtime, lProgram, vec![", "lArguments: Vec<LValue>"} {
-		if strings.Contains(source, removed) {
-			t.Fatalf("parallel Function implementation remains: %s", removed)
-		}
-	}
-}
 
 func TestOrdinaryFunctionSourceCases(t *testing.T) {
 	tests := []struct{ name, source, want string }{

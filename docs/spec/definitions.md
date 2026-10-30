@@ -66,9 +66,14 @@ A body may be one expression, a JSON string array representing a word, or an arr
 | Syllables | Ordered expressions with preserved cardinality |
 | Props | Typed native property records |
 | Texts | Ordered native type/output text collection |
+| Type | Native type atom or selected source type declaration, retaining its dependency |
+| Atoms | Ordered scalar/name/reference arguments; never an executable body |
+| Label | Validated result identifier, distinct from an assignment target |
 | Definition | Instantiated definition with identity and grouping |
 
-Thing slots bind supported scalars without converting everything to strings; this Log body specifically requires Text for its Rust `.as_bytes()` call. Changing Thing to Props would request property records, not parse Text into them. Ordinary stored source-call arguments currently lower Text, Number and Truth; the public Go DefinitionArgument interface supports the wider table.
+Native Thing slots accept Text, Number, Truth and Null without converting them to strings; this Log body requires Text for `.as_bytes()`. Ordinary source actions also accept supported collection and Pointer arguments, preserving [value ownership](values.md#conversion-and-aliasing-boundaries).
+
+Type, Atoms and Label are frontend roles using existing AML metadata. Nested constructors bind results once, in operand order, before the consuming word; composition slots retain their selected definitions. Native and ordinary Functions share body lowering and bind their own invocation words. Dependencies retain canonical source ownership.
 
 Unknown kinds, incompatible types, missing bindings, invalid native names and malformed compositions reject. Text receives protected native quoting around AML/logeme delimiters; explicit native fragments retain target-dependent meaning.
 
@@ -84,4 +89,4 @@ Objective's nested array preserves one word containing A and Function. It is nat
 
 ## Sources and witnesses
 
-Sources: [core](../../builtins/eng/core.l), [parser/encoder](../../lyger/definition.go), [argument kinds](../../lyger/definition_kinds.go), [construction](../../lyger/construction.go), [actions](../../lyger/instructions.go), [lexical forms](../../lyger/lexical_types.go), [Rust inputs](../../builtins/README.md). Witnesses: [composition](../../lyger/definition_test.go), [framing](../../lyger/definition_framing_test.go), [slot names](../../lyger/definition_slot_names_test.go), [actions](../../lyger/action_definition_test.go), [descriptor identity](../../lyger/paragraph_descriptor_identity_test.go), [local definitions](../../demo/paragraphs/local-definitions.l).
+Sources: [core](../../builtins/eng/core.l), [parser/encoder](../../lyger/definition_bindings.go), [argument kinds](../../lyger/definition_kinds.go), [construction](../../lyger/construction.go), [actions](../../lyger/instructions.go), [lexical forms](../../lyger/lexical_types.go), [Rust inputs](../../builtins/README.md). Witnesses: [composition](../../lyger/definition_test.go), [framing](../../lyger/definition_framing_test.go), [slot names](../../lyger/definition_slot_names_test.go), [actions](../../lyger/action_definition_test.go), [descriptor identity](../../lyger/paragraph_descriptor_identity_test.go), [local definitions](../../demo/paragraphs/local-definitions.l).
