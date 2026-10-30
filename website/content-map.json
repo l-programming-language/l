@@ -563,7 +563,7 @@
     {
       "source": "docs/architecture.md",
       "route": "/docs/internals/architecture/",
-      "title": "Architecture of `l`",
+      "title": "Architecture of L",
       "description": "Source ownership and the compiler pipeline from L to native programs.",
       "section": "Internals",
       "order": 10,

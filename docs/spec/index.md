@@ -25,7 +25,7 @@ The [builtin reference](../reference/builtins/index.md) documents implicit words
 
 ## Role, support, and evidence
 
-Tables distinguish executable behavior, recognized but incomplete forms, and internal representations. Example labels identify **runnable**, **compile-only**, **invalid**, or **fragment** source; runnable examples may intentionally fail. Existing test evidence is not a new execution result. The [evidence guide](../contributing/evidence.md) explains these labels.
+Tables distinguish executable behavior, recognized but incomplete forms, and internal representations. The [evidence guide](../contributing/evidence.md) explains example labels and verification stages.
 
 Code blocks marked `l` contain L; `rust` contains native fragments; `text` may contain grammar notation or AML. Native Rust syntax inside a definition does not become ordinary L syntax.
 
