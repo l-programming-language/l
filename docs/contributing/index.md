@@ -20,4 +20,4 @@ Check built pages, links, navigation, and search in light and dark themes and at
 
 ## Deployment is separate
 
-Pull requests run documentation checks. Manual release workflows are implemented, but publication remains disabled. [Deployment instructions](../../website/DEPLOYMENT.md) define activation, matching native-release verification, and recovery.
+Pull requests run documentation checks without publishing. [Deployment instructions](../../website/DEPLOYMENT.md) define manual releases from main, matching native-release verification, and recovery.

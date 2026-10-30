@@ -103,16 +103,16 @@ before execution. Weekly Dependabot updates review action pins; tool versions
 remain separate explicit updates. This
 workflow validates code and does not publish releases or deploy applications.
 
-The separate [manual release workflow](../.github/workflows/release.yml) is
-implemented but publication is disabled by the committed
-[release policy](../website/ci-templates/release-policy.json). An explicitly
+The separate [manual release workflow](../.github/workflows/release.yml) follows
+the committed [release policy](../website/ci-templates/release-policy.json). An explicitly
 authorized dispatch validates the captured main SHA on four native targets,
 preserving this full gate on each. Per-target packaging and clean-home installer
 smoke checks add distribution evidence; they do not replace canonical acceptance.
-The release installer prepares only user-build dependencies, not the CI bootstrap.
+The matching documentation is tested before native and docs assets are published
+together in an immutable release. The installer prepares only user-build
+dependencies, not the CI bootstrap.
 No merge or tag event publishes binaries or documentation. See the
-[activation and recovery guide](../website/DEPLOYMENT.md); remote settings and the
-first release remain separate maintainer operations.
+[activation and recovery guide](../website/DEPLOYMENT.md) for maintainer procedures.
 
 Additional pull-request workflows provide separately visible checks:
 
@@ -127,8 +127,8 @@ Additional pull-request workflows provide separately visible checks:
   Node dependencies and Chromium, then runs the complete website verification
   aggregate: deployment guard, reference freshness, content/type checks, unit
   tests, static build/output checks, and browser tests. It runs for every PR
-  regardless of changed paths and supports manual dispatch. Website publishing
-  remains disabled; see [website development](../website/README.md).
+  regardless of changed paths and supports manual dispatch. These checks never
+  publish; see [website development](../website/README.md).
 - [PR issue link](../.github/workflows/pr-issue.yml) verifies a tracking line such
   as `Closes #123` or `Refs #123` against an accessible GitHub Issue. It also runs
   when the PR description changes, without checking out or executing its code.

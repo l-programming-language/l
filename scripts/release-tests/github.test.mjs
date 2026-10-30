@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { checkContext, guard, ensureTag, uploadOnce, requiresMacOSSigning, verifyPublicationSigning, publishVerifiedAssets } from '../release/github.mjs';
+import { checkContext, guard, ensureTag, uploadOnce, requiresMacOSSigning, verifyPublicationSigning, publishVerifiedAssets, publishAssetSet } from '../release/github.mjs';
 
 const sha = 'a'.repeat(40);
 const policy = { repository: 'example/l', productionBranch: 'main', publicationEnabled: true, nativePublisher: { workflowId: 42, workflowPath: '.github/workflows/release.yml' }, targets: ['darwin-arm64', 'darwin-amd64', 'linux-arm64', 'linux-amd64'] };
@@ -105,41 +105,47 @@ test('asset retries accept matching bytes but never replace or append to publish
   assert.equal(uploaded, false);
 });
 
-function publicationFixture() {
+function publicationFixture(snapshot = false) {
   const manifest = { repository: 'example/l', languageCommit: sha, languageVersion: '0.0.1', tag: 'v0.0.1' };
+  const docsCommit = snapshot ? 'b'.repeat(40) : sha;
+  const identity = snapshot
+    ? { tag: `docs-v0.0.1-${docsCommit}`, commit: docsCommit, name: 'Documentation snapshot', prerelease: true, latest: false, body: 'Documentation for L v0.0.1.' }
+    : { tag: manifest.tag, commit: sha, prerelease: false, latest: true };
   const names = [
-    ...policy.targets.map((target) => `l_0.0.1_${target.replace('-', '_')}.tar.gz`),
-    'install-release.sh', 'checksums.txt', 'public-release.json', `l-native-release-${sha}.json`, `l-native-release-${sha}.zip`,
+    ...(snapshot ? [] : [...policy.targets.map((target) => `l_0.0.1_${target.replace('-', '_')}.tar.gz`),
+      'install-release.sh', 'checksums.txt', 'public-release.json', `l-native-release-${sha}.json`, `l-native-release-${sha}.zip`]),
+    ...['tar.gz', 'promotion.json', 'native.json'].map((suffix) => `docs-${docsCommit}.${suffix}`),
   ];
   const files = new Map(names.map((name) => [name, Buffer.from(`verified fixture ${name}`)]));
-  const state = { tag: null, release: null, assets: [], calls: [], uploaded: [], failUpload: null, private: false };
+  const state = { tag: null, release: null, assets: [], calls: [], uploaded: [], failUpload: null, private: false, immutableEnabled: true };
   const api = async (path, options = {}) => {
     assert.equal(options.token, 'automatic-token-fixture');
     assert(path.startsWith('/repos/example/l'), `Unexpected cross-repository or App request: ${path}`);
     state.calls.push({ path, ...options });
     const method = options.method || 'GET';
     if (path === '/repos/example/l') return { full_name: 'example/l', private: state.private };
-    if (path === '/repos/example/l/git/ref/tags/v0.0.1') return state.tag;
+    if (path === `/repos/example/l/git/ref/tags/${identity.tag}`) return state.tag;
     if (path === '/repos/example/l/git/refs' && method === 'POST') {
-      assert.deepEqual(options.body, { ref: 'refs/tags/v0.0.1', sha });
+      assert.deepEqual(options.body, { ref: `refs/tags/${identity.tag}`, sha: identity.commit });
       assert.equal(state.tag, null);
-      return state.tag = { object: { type: 'commit', sha } };
+      return state.tag = { object: { type: 'commit', sha: identity.commit } };
     }
-    if (path === '/repos/example/l/releases/tags/v0.0.1') return state.release;
+    if (path === `/repos/example/l/releases/tags/${identity.tag}`) return state.release;
     if (path === '/repos/example/l/releases?per_page=100&page=1') return state.release ? [state.release] : [];
     if (path === '/repos/example/l/releases' && method === 'POST') {
-      assert.equal(options.body.target_commitish, sha);
-      assert.equal(options.body.tag_name, 'v0.0.1');
+      assert.equal(options.body.target_commitish, identity.commit);
+      assert.equal(options.body.tag_name, identity.tag);
       assert.equal(options.body.draft, true);
-      assert.equal(options.body.prerelease, false);
+      assert.equal(options.body.prerelease, identity.prerelease);
       assert.equal(state.release, null);
-      return state.release = { id: 9, draft: true, prerelease: false, tag_name: 'v0.0.1' };
+      return state.release = { id: 9, draft: true, prerelease: identity.prerelease, tag_name: identity.tag };
     }
     if (path === '/repos/example/l/releases/9/assets?per_page=100&page=1') return [...state.assets];
     if (path === '/repos/example/l/releases/9' && method === 'PATCH') {
-      assert.deepEqual(options.body, { draft: false, make_latest: 'true' });
+      assert.deepEqual(options.body, { draft: false, make_latest: String(identity.latest) });
       assert.deepEqual(state.assets.map((asset) => asset.name).sort(), names.toSorted());
       state.release.draft = false;
+      state.release.immutable = state.immutableEnabled;
       return state.release;
     }
     assert.fail(`Unexpected GitHub operation: ${method} ${path}`);
@@ -157,7 +163,7 @@ function publicationFixture() {
     state.uploaded.push(name);
     return { ok: true, json: async () => asset };
   };
-  return { manifest, files, state, options: { token: 'automatic-token-fixture', api, upload } };
+  return { manifest, identity, files, state, options: { token: 'automatic-token-fixture', api, upload } };
 }
 
 test('one source release receives every verified asset before publication using only its workflow token', async () => {
@@ -167,11 +173,11 @@ test('one source release receives every verified asset before publication using 
   assert.equal(f.state.calls.filter((call) => call.path === '/repos/example/l/git/refs').length, 1);
   assert.equal(f.state.calls.filter((call) => call.path === '/repos/example/l/releases').length, 1);
   assert.equal(f.state.calls.filter((call) => call.method === 'PATCH').length, 1);
-  assert.equal(f.state.uploaded.length, 9);
+  assert.equal(f.state.uploaded.length, 12);
   const writes = f.state.calls.filter((call) => call.method).length;
   await publishVerifiedAssets('example/l', f.manifest, f.files, f.options);
   assert.equal(f.state.calls.filter((call) => call.method).length, writes);
-  assert.equal(f.state.uploaded.length, 9);
+  assert.equal(f.state.uploaded.length, 12);
 });
 
 test('a partial upload remains a draft and retries reuse matching original assets', async () => {
@@ -183,8 +189,8 @@ test('a partial upload remains a draft and retries reuse matching original asset
   f.state.failUpload = null;
   await publishVerifiedAssets('example/l', f.manifest, f.files, f.options);
   assert.equal(f.state.release.draft, false);
-  assert.equal(f.state.uploaded.length, 9);
-  assert.equal(new Set(f.state.uploaded).size, 9);
+  assert.equal(f.state.uploaded.length, 12);
+  assert.equal(new Set(f.state.uploaded).size, 12);
 });
 
 test('publication rejects private repositories, moved source tags and changed retry bytes', async () => {
@@ -200,5 +206,75 @@ test('publication rejects private repositories, moved source tags and changed re
   await publishVerifiedAssets('example/l', changed.manifest, changed.files, changed.options);
   changed.files.set('install-release.sh', Buffer.from('changed retry bytes'));
   await assert.rejects(publishVerifiedAssets('example/l', changed.manifest, changed.files, changed.options), /Existing asset differs/);
-  assert.equal(changed.state.uploaded.length, 9);
+  assert.equal(changed.state.uploaded.length, 12);
+});
+
+
+test('initial publication refuses missing documentation before contacting GitHub', async () => {
+  for (const suffix of ['tar.gz', 'promotion.json', 'native.json']) {
+    const f = publicationFixture();
+    f.files.delete(`docs-${sha}.${suffix}`);
+    await assert.rejects(publishVerifiedAssets('example/l', f.manifest, f.files, f.options), /requires all sealed documentation assets/);
+    assert.equal(f.state.calls.length, 0);
+    assert.equal(f.state.uploaded.length, 0);
+  }
+});
+
+test('a failed documentation upload keeps the combined native release private until retry completes', async () => {
+  const f = publicationFixture();
+  f.state.failUpload = `docs-${sha}.promotion.json`;
+  await assert.rejects(publishVerifiedAssets('example/l', f.manifest, f.files, f.options), /Asset upload failed/);
+  assert.equal(f.state.release.draft, true);
+  assert.equal(f.state.uploaded.length, 10);
+  assert.equal(f.state.calls.filter((call) => call.method === 'PATCH').length, 0);
+  f.state.failUpload = null;
+  await publishVerifiedAssets('example/l', f.manifest, f.files, f.options);
+  assert.equal(f.state.release.draft, false);
+  assert.equal(f.state.release.immutable, true);
+  assert.equal(f.state.uploaded.length, 12);
+  assert.equal(new Set(f.state.uploaded).size, 12);
+});
+
+test('unexpected draft assets prevent publication rather than being silently retained or deleted', async () => {
+  const f = publicationFixture();
+  f.state.tag = { object: { type: 'commit', sha } };
+  f.state.release = { id: 9, draft: true, prerelease: false, tag_name: 'v0.0.1' };
+  f.state.assets.push({ name: 'unexpected.txt', state: 'uploaded', digest: `sha256:${'0'.repeat(64)}` });
+  await assert.rejects(publishVerifiedAssets('example/l', f.manifest, f.files, f.options), /Draft asset inventory differs/);
+  assert.equal(f.state.release.draft, true);
+  assert(!f.state.calls.some((call) => ['PATCH', 'DELETE'].includes(call.method)));
+});
+
+test('publication verifies GitHub immutability without administrator access and rejects mutable releases', async () => {
+  const disabled = publicationFixture();
+  disabled.state.immutableEnabled = false;
+  await assert.rejects(publishVerifiedAssets('example/l', disabled.manifest, disabled.files, disabled.options), /Published release must be immutable/);
+  assert(!disabled.state.calls.some((call) => call.path.endsWith('/immutable-releases')));
+  const mutable = publicationFixture();
+  await publishVerifiedAssets('example/l', mutable.manifest, mutable.files, mutable.options);
+  mutable.state.release.immutable = false;
+  const writes = mutable.state.calls.filter((call) => call.method).length;
+  await assert.rejects(publishVerifiedAssets('example/l', mutable.manifest, mutable.files, mutable.options), /Existing published release is not immutable/);
+  assert.equal(mutable.state.calls.filter((call) => call.method).length, writes);
+});
+
+test('documentation snapshots are immutable non-latest prereleases without native release mutation', async () => {
+  const f = publicationFixture(true);
+  await publishAssetSet('example/l', f.identity, f.files, f.options);
+  assert.equal(f.state.release.tag_name, `docs-v0.0.1-${'b'.repeat(40)}`);
+  assert.equal(f.state.tag.object.sha, 'b'.repeat(40));
+  assert.equal(f.state.release.prerelease, true);
+  assert.equal(f.state.release.draft, false);
+  assert.equal(f.state.release.immutable, true);
+  assert.equal(f.state.uploaded.length, 3);
+  assert(f.state.uploaded.every((name) => name.startsWith(`docs-${'b'.repeat(40)}.`)));
+  const publication = f.state.calls.filter((call) => call.method === 'PATCH');
+  assert.equal(publication.length, 1);
+  assert.deepEqual(publication[0].body, { draft: false, make_latest: 'false' });
+  assert(!f.state.calls.some((call) => call.path.endsWith('/tags/v0.0.1')));
+  assert.deepEqual(f.state.calls.filter((call) => call.path.endsWith('/git/refs')).map((call) => call.body), [{ ref: `refs/tags/${f.identity.tag}`, sha: f.identity.commit }]);
+  const writes = f.state.calls.filter((call) => call.method).length;
+  await publishAssetSet('example/l', f.identity, f.files, f.options);
+  assert.equal(f.state.calls.filter((call) => call.method).length, writes);
+  assert.equal(f.state.uploaded.length, 3);
 });

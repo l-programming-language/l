@@ -34,6 +34,7 @@ function verifyReadOnlyChecks(value, text, name) {
 
 const releaseWorkflows = ['release.yml', 'docs-release-pages.yml', 'docs-recover-pages.yml'];
 const publicationGuard = 'node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true';
+const needs = (job) => [job?.needs].flat().filter(Boolean).sort().join(',');
 
 export function verifyReleaseWorkflow(value, name, policy) {
   if (!policy || !value?.on || !value.jobs) fail(`Website deployment automation is active without a reviewed policy: ${name}`);
@@ -45,12 +46,20 @@ export function verifyReleaseWorkflow(value, name, policy) {
   if (policy.publicationEnabled && (!Number.isSafeInteger(policy.nativePublisher?.workflowId) || policy.nativePublisher.workflowId < 1 || policy.nativePublisher.workflowPath !== '.github/workflows/release.yml')) fail('Enabled publication lacks registered publisher');
   if (!value.permissions || Object.values(value.permissions).some((p) => !['read', 'none'].includes(p))) fail(`Release default permissions must be read-only: ${name}`);
   if (value.concurrency?.['cancel-in-progress'] !== false || !value.concurrency.group) fail(`Release concurrency must preserve active publication: ${name}`);
+  if (name === 'release.yml') {
+    const docs = value.jobs.documentation;
+    if (docs?.uses !== './.github/workflows/docs-release-pages.yml' || needs(docs) !== 'preflight,seal' || docs?.if !== "needs.preflight.outputs.publish == 'true'" || docs?.with?.mode !== 'release' || docs?.with?.native_artifact_id !== '${{ needs.seal.outputs.artifact_id }}') fail('Native release must pass sealed proof to documentation before publication');
+  } else if (name === 'docs-release-pages.yml') {
+    if (needs(value.jobs.publish) !== 'prepare' || needs(value.jobs.deploy) !== 'prepare,publish') fail('Documentation must seal before publication and publish before deployment');
+    if (Object.values(value.jobs.prepare?.permissions || {}).includes('write')) fail('Documentation preparation cannot publish');
+  }
   for (const [id, job] of Object.entries(value.jobs)) {
     if (job.uses) {
-      if (name !== 'release.yml' || job.uses !== './.github/workflows/docs-release-pages.yml' || !job.needs) fail(`Unexpected reusable release job: ${name}/${id}`);
+      if (name !== 'release.yml' || id !== 'documentation' || job.uses !== './.github/workflows/docs-release-pages.yml') fail(`Unexpected reusable release job: ${name}/${id}`);
       continue;
     }
     const writes = Object.values(job.permissions || {}).some((permission) => permission === 'write');
+    if (name === 'release.yml' && writes) fail('Native publication belongs after documentation sealing in the reusable workflow');
     if (name !== 'release.yml' || writes) {
       const steps = job.steps || [], guardIndex = steps.findIndex((step) => step.run?.trim() === publicationGuard);
       if (guardIndex < 0) fail(`Missing publication authorization: ${name}/${id}`);

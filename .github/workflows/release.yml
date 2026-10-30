@@ -1,7 +1,7 @@
 name: Release L
 
-# Manual only. The committed publicationEnabled:false policy and unregistered
-# publisher block every production path until a separate activation review.
+# Manual only. Committed policy, registered workflow identity, main and human
+# Maintain/Admin authorization guard every production path.
 on:
   workflow_dispatch:
     inputs:
@@ -253,45 +253,10 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  publish:
-    name: Publish native release
+  documentation:
+    name: Publish release and deploy matching documentation
     if: needs.preflight.outputs.publish == 'true'
     needs: [preflight, seal]
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    environment: release-publication
-    permissions:
-      contents: write
-      actions: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ needs.preflight.outputs.sha }}
-          persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version-file: website/.node-version
-      - name: Reauthorize publication, including failed-job reruns
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
-        with:
-          artifact-ids: ${{ needs.seal.outputs.artifact_id }}
-          path: ${{ runner.temp }}/native
-          merge-multiple: true
-      - name: Publish the original verified bytes in this repository
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          NATIVE_ARTIFACT_ID: ${{ needs.seal.outputs.artifact_id }}
-        run: |
-          node scripts/release/github.mjs download-proof --policy website/ci-templates/release-policy.json --artifact-id "$NATIVE_ARTIFACT_ID" --output "$RUNNER_TEMP/native.zip"
-          node scripts/release/github.mjs publish --policy website/ci-templates/release-policy.json --native "$RUNNER_TEMP/native" --archive "$RUNNER_TEMP/native.zip" --artifact-id "$NATIVE_ARTIFACT_ID"
-
-  documentation:
-    name: Deploy matching documentation
-    if: needs.preflight.outputs.publish == 'true'
-    needs: [preflight, seal, publish]
     permissions:
       contents: write
       actions: read
