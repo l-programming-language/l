@@ -13,16 +13,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	distribution "github.com/l-programming-language/l"
 	Lyger "github.com/l-programming-language/l/lyger"
 )
 
 const runtimeSource = "builtins/runtime/eng/dictionary.l"
-
-type manifest struct {
-	Version int               `json:"version"`
-	SHA256  string            `json:"sha256"`
-	Sources map[string]string `json:"sources"`
-}
 
 func main() {
 	check := flag.Bool("check", false, "verify the committed composition without writing")
@@ -73,11 +68,11 @@ func generate(root string) ([]byte, []byte, error) {
 	if c.Error != nil {
 		return nil, nil, c.Error
 	}
-	aml, err := c.ComposeLibrary("Runtime", "runtime")
+	aml, selection, err := c.ComposeRuntimeLibrary()
 	if err != nil {
 		return nil, nil, err
 	}
-	metadata := manifest{Version: 1, SHA256: fingerprint(aml), Sources: make(map[string]string)}
+	metadata := distribution.RuntimeComposition{Version: 1, SHA256: fingerprint(aml), Sources: make(map[string]string), Selection: selection}
 	for _, origin := range c.SourceOrigins {
 		name := origin.Name
 		if filepath.IsAbs(name) {

@@ -71,9 +71,24 @@ func (c *Compilation) recordDefinition(rec *record) (*DefinitionTemplate, *objec
 }
 
 func definitionArguments(template *DefinitionTemplate, args []DefinitionArgument) (map[string]DefinitionArgument, error) {
+	return bindDefinitionArguments(template, args, nil, nil)
+}
+
+// Explicit operands fill the selected signature's open slots; named operands
+// remain available through source constructors and are marked only when used.
+func bindDefinitionArguments(template *DefinitionTemplate, args []DefinitionArgument, named map[string]DefinitionArgument, used map[string]bool) (map[string]DefinitionArgument, error) {
 	bindings := make(map[string]DefinitionArgument)
 	next := 0
 	for _, slot := range template.Slots {
+		if used != nil && len(args) < len(template.Slots) {
+			if argument, exists := named[slot.Name]; exists {
+				bindings[slot.Name], used[slot.Name] = argument, true
+				continue
+			}
+			if len(args) == 0 {
+				continue // Instantiate reports the missing named parameter.
+			}
+		}
 		if slot.Type == "Atoms" {
 			bindings[slot.Name] = definitionAtomListArgument(args[next:]...)
 			next = len(args)
@@ -130,6 +145,12 @@ func (c *Compilation) instantiateCall(rec *record, args []DefinitionArgument, ac
 }
 
 func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionInstance, error) {
+	return c.instantiateSourceCall(rec, args, nil, nil, active, dynamic)
+}
+
+// Named and positional calls share selected definitions, cycle detection and
+// source expansion. Only the binding of caller operands differs.
+func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgument, named map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool) (DefinitionInstance, error) {
 	rec, err := canonicalRecord(rec, c.Semantics.Aliases)
 	if err != nil {
 		return DefinitionInstance{}, err
@@ -141,6 +162,25 @@ func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgume
 		return DefinitionInstance{}, lerrors.Unsupported.Errorf("runtime value %s cannot be captured by an App body", rec.ID)
 	}
 	if function := rec.function; function != nil && function.Native {
+		if used != nil && len(args) == 0 {
+			args = make([]DefinitionArgument, len(function.Constructor.Inputs))
+			for i, input := range function.Constructor.Inputs {
+				found := false
+				for name, argument := range named {
+					if !strings.EqualFold(name, input.Key) {
+						continue
+					}
+					if found {
+						return DefinitionInstance{}, lerrors.InvalidInput.Errorf("ambiguous argument for %s", input.Key)
+					}
+					found = true
+					args[i], used[name] = argument, true
+				}
+				if !found {
+					return DefinitionInstance{}, lerrors.InvalidInput.Errorf("missing argument for %s", input.Key)
+				}
+			}
+		}
 		return c.invokeFunctionDefinition(function, args, active, dynamic)
 	}
 	if active[rec] {
@@ -153,7 +193,7 @@ func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgume
 		return DefinitionInstance{}, err
 	}
 	if template != nil {
-		bindings, err := definitionArguments(template, args)
+		bindings, err := bindDefinitionArguments(template, args, named, used)
 		if err != nil {
 			return DefinitionInstance{}, fmt.Errorf("%s: %w", rec.ID, err)
 		}
@@ -163,12 +203,26 @@ func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgume
 		return instance, err
 	}
 	if object != nil {
+		if used != nil {
+			return c.instantiateNamedObject(object, named, used, active, args...)
+		}
 		instance, forwarded, err := c.instantiateStaticObject(object, args, active, dynamic)
 		if err == nil && len(args) > 0 && !forwarded {
 			err = lerrors.InvalidInput.Errorf("%s received %d unused arguments", rec.ID, len(args))
 		}
 		instance.Symbol, instance.definition = rec.ID, rec
 		return instance, err
+	}
+	if used != nil {
+		if len(args) > 0 {
+			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("constructor %s requires a declared parameter signature", rec.ID)
+		}
+		return c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
+			instance, _, err := c.instantiateSourceAction(action, active, dynamic, func(object *objectGram) (DefinitionArgument, bool, error) {
+				return c.namedObjectArgument(object, named, used, active)
+			})
+			return instance, err
+		})
 	}
 	var before []DefinitionInstance
 	for _, ordered := range c.Scope.Ordered {
@@ -276,6 +330,12 @@ func (c *Compilation) composeSourceActions(rec *record, invoke func(*clauseGram)
 // instantiateStaticAction is shared by directive expansion and typed native
 // Function bodies. It resolves operands at their authored lexical scope.
 func (c *Compilation) instantiateStaticAction(action *clauseGram, inherited []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionInstance, bool, error) {
+	return c.instantiateSourceAction(action, active, dynamic, func(object *objectGram) (DefinitionArgument, bool, error) {
+		return c.staticObjectArgument(object, inherited, active, dynamic)
+	})
+}
+
+func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynamic map[*record]bool, operand func(*objectGram) (DefinitionArgument, bool, error)) (DefinitionInstance, bool, error) {
 	if action.verb == nil || action.verb.binding == nil {
 		return DefinitionInstance{}, false, lerrors.UnresolvedReference.Errorf("source operation has no definition")
 	}
@@ -283,7 +343,7 @@ func (c *Compilation) instantiateStaticAction(action *clauseGram, inherited []De
 	var ledger []DefinitionBinding
 	used := false
 	for _, object := range action.orderedObjects() {
-		argument, forwarded, err := c.staticObjectArgument(object, inherited, active, dynamic)
+		argument, forwarded, err := operand(object)
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}

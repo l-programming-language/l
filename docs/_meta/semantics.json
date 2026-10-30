@@ -13,7 +13,7 @@
     "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "logiceme/logiceme_service.go": "0452128b7476dcd377bbceb6e96268498777e1bc4a15331994cff0f87c139bbb",
-    "logiceme/runtime_composition.go": "431b74d2985b4abfb6bf3cdcc2c305461b455748b498a9092cf4970cd4c09368",
+    "logiceme/runtime_composition.go": "24f443bd4fba2d87f7031c1acf3e39d02657c6fe4fb368449ac6a193ffe9b0b7",
     "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
     "lyger/binding.go": "be5070f9f04486c61ecae6e832ac09e85339df355b3eb2a4f157e553f4ac1b87",
     "lyger/builder.go": "4ac944a308bb7f0e940013c32488a2cbb89f450de2fec15e1b7558c33c004845",
@@ -36,7 +36,7 @@
     "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
     "lyger/lexicon.go": "e6c61d41351f3116573742fbe107f87de188c9b36e0b6fc0cb14a8b74e60c2c7",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
-    "lyger/lowering.go": "db0a7e5fcfb301a1d8bc50ef5bdfc0da61cf2cbeff5986ed5f478d4d4ec0e8d0",
+    "lyger/lowering.go": "28dc70d4430c83d708361bff5c69d0f09d4ebe86cdc184dddba1e1cb6db1102d",
     "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
     "lyger/orchestration_plan.go": "5a9fbaa1d0e0eaf132720b960db17a216a11c65e90cf2ddb79e039200dc9ac0d",
     "lyger/publication.go": "9ead493a6787b091e7f86e21d43a2b08cf7d19c6d790a02c829990c4c800a298",
@@ -60,7 +60,7 @@
     "lyger/word_values.go": "f30788b00ce62cdcd39658bab21aa2df228889a25c914263277a8b136d2d361b",
     "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
     "stdlib/eng/io/dictionary.l": "0aee928628163ae6deebcf061cb7a61680cb4da36177202694e739062ca56d82",
-    "stdlib/eng/storage/dictionary.l": "cf0ee58ef2c747dedcc127c81e64510b8d5c515505dc1df355b230eec75e7839",
+    "stdlib/eng/storage/dictionary.l": "5d658412b1684a59d585ef6139302cf5dbd3a3458eaf2e78df06d40ce6ff57e2",
     "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4"
   },
   "entries": [

@@ -133,152 +133,53 @@ func validateDefinitionArguments(rec *record, arguments map[string]DefinitionArg
 	return nil
 }
 
-// Named arguments remain typed data through nested source constructions. Each
-// selected leaf consumes only its declared slots; the enclosing composition
-// validates that no caller argument was silently discarded.
-func namedDefinitionBindings(template *DefinitionTemplate, arguments map[string]DefinitionArgument, used map[string]bool) map[string]DefinitionArgument {
-	bindings := make(map[string]DefinitionArgument, len(template.Slots))
-	for _, slot := range template.Slots {
-		if argument, exists := arguments[slot.Name]; exists {
-			bindings[slot.Name] = argument
-			used[slot.Name] = true
-		}
-	}
-	return bindings
+func (c *Compilation) instantiateNamedDefinition(rec *record, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
+	return c.instantiateSourceCall(rec, values, arguments, used, active, nil)
 }
 
-func (c *Compilation) instantiateNamedDefinition(rec *record, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool) (DefinitionInstance, error) {
-	rec, err := canonicalRecord(rec, c.Semantics.Aliases)
-	if err != nil {
-		return DefinitionInstance{}, err
-	}
-	if rec == nil {
-		return DefinitionInstance{}, lerrors.Internal.Errorf("definition has no canonical record")
-	}
-	if function := rec.function; function != nil && function.Native {
-		values := make([]DefinitionArgument, len(function.Constructor.Inputs))
-		for i, input := range function.Constructor.Inputs {
-			found := false
-			for name, argument := range arguments {
-				if !strings.EqualFold(name, input.Key) {
-					continue
-				}
-				if found {
-					return DefinitionInstance{}, lerrors.InvalidInput.Errorf("ambiguous argument for %s", input.Key)
-				}
-				found = true
-				values[i] = argument
-				used[name] = true
-			}
-			if !found {
-				return DefinitionInstance{}, lerrors.InvalidInput.Errorf("missing argument for %s", input.Key)
-			}
-		}
-		return c.invokeFunctionDefinition(function, values, active, nil)
-	}
-	if active[rec] {
-		return DefinitionInstance{}, lerrors.Cycle.Errorf("recursive definition invocation: %s", rec.ID)
-	}
-	active[rec] = true
-	defer delete(active, rec)
-	template, object, err := c.recordDefinition(rec)
-	if err != nil {
-		return DefinitionInstance{}, err
-	}
-	if template != nil {
-		bound, err := c.instantiateTemplate(template, namedDefinitionBindings(template, arguments, used))
-		bound.Symbol, bound.definition = rec.ID, rec
-		return bound, err
-	}
-	if object != nil {
-		return c.instantiateNamedObject(object, arguments, used, active)
-	}
-	return c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
-		var values []DefinitionArgument
-		var ledger []DefinitionBinding
-		var dependencies []DefinitionInstance
-		for _, object := range action.orderedObjects() {
-			child, err := c.instantiateNamedObject(object, arguments, used, active)
-			if err != nil {
-				return DefinitionInstance{}, err
-			}
-			values = append(values, DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &child})
-			ledger = append(ledger, child.Bindings...)
-			dependencies = append(dependencies, child.Dependencies...)
-		}
-		instance, err := c.instantiateStaticCall(action.verb.binding.Record, values, active, nil)
-		instance.Bindings = append(ledger, instance.Bindings...)
-		instance.Dependencies = append(dependencies, instance.Dependencies...)
-		return instance, err
-	})
-}
-
-func (c *Compilation) instantiateNamedObject(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool) (DefinitionInstance, error) {
+func (c *Compilation) instantiateNamedObject(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
 	node, err := c.constructObject(object, make(map[*descriptorRule]bool))
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	local := arguments
-	localUsed := used
 	if len(node.Arguments) > 0 {
-		var values []DefinitionArgument
+		if len(values) > 0 {
+			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s received %d unused arguments", node.Nominal, len(values))
+		}
 		for _, parameter := range node.Arguments {
-			value, _, err := c.definitionOperand(parameter, active, nil, func(child *objectGram) (DefinitionInstance, bool, error) {
-				instance, err := c.instantiateNamedObject(child, arguments, used, active)
-				return instance, false, err
-			})
+			value, _, err := c.namedObjectArgument(parameter, arguments, used, active)
 			if err != nil {
 				return DefinitionInstance{}, err
 			}
 			values = append(values, value)
 		}
-		template, err := c.recordTemplate(node.Definition)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		if function := node.Definition.function; function != nil && function.Native {
-			return c.invokeFunctionDefinition(function, values, active, nil)
-		}
-		if template == nil {
-			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("constructor %s requires a declared parameter signature", node.Nominal)
-		}
-		parameters := *template
-		if len(values) < len(template.Slots) {
-			parameters.Slots = nil
-			for _, slot := range template.Slots {
-				if _, inherited := arguments[slot.Name]; !inherited {
-					parameters.Slots = append(parameters.Slots, slot)
-				}
-			}
-		}
-		local, err = definitionArguments(&parameters, values)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		for _, slot := range template.Slots {
-			if _, supplied := local[slot.Name]; !supplied {
-				if value, inherited := arguments[slot.Name]; inherited {
-					local[slot.Name], used[slot.Name] = value, true
-				}
-			}
-		}
-		localUsed = make(map[string]bool)
 	}
-	return c.instantiateNamedConstruction(node, local, localUsed, active)
+	return c.instantiateNamedConstruction(node, arguments, used, active, values...)
 }
 
-func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local map[string]DefinitionArgument, localUsed map[string]bool, active map[*record]bool) (DefinitionInstance, error) {
+func (c *Compilation) namedObjectArgument(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool) (DefinitionArgument, bool, error) {
+	return c.definitionOperand(object, active, nil, func(child *objectGram) (DefinitionInstance, bool, error) {
+		instance, err := c.instantiateNamedObject(child, arguments, used, active)
+		return instance, false, err
+	})
+}
+
+func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local map[string]DefinitionArgument, localUsed map[string]bool, active map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
 	wrappers, selected, err := constructionTemplates(node)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
 	var instance DefinitionInstance
 	if selected < 0 {
-		instance, err = c.instantiateNamedDefinition(node.Definition, local, localUsed, active)
+		instance, err = c.instantiateNamedDefinition(node.Definition, local, localUsed, active, values...)
 		selected = len(wrappers)
 	} else {
 		wrapper := wrappers[selected]
-		instance, err = c.instantiateTemplate(wrapper, namedDefinitionBindings(wrapper, local, localUsed))
+		bindings, bindErr := bindDefinitionArguments(wrapper, values, local, localUsed)
+		if bindErr != nil {
+			return DefinitionInstance{}, bindErr
+		}
+		instance, err = c.instantiateTemplate(wrapper, bindings)
 	}
 	if err != nil {
 		return DefinitionInstance{}, err

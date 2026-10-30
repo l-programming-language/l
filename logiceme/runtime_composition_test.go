@@ -11,6 +11,7 @@ import (
 	"testing"
 	"testing/fstest"
 
+	distribution "github.com/l-programming-language/l"
 	"github.com/l-programming-language/l/lerrors"
 )
 
@@ -35,7 +36,7 @@ func compositionResources(t *testing.T, value string) fstest.MapFS {
 	const sourcePath = "builtins/runtime/eng/number.l"
 	source := []byte("source-owned composition " + value)
 	aml := []byte(`<PROGRAM><STRUCTURE><BOOK "support"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src","StructureVersion":"2"}}</JSON><JSON>{"Services":[{"Name":"library","Location":"/src/","GenericObjects":["runtime"],"Target":{"Kind":"lib","Name":"support","Root":"runtime","Primary":false}}]}</JSON><JSON>{"Objects":[{"Name":"runtime","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "library"><SENTENCE "runtime"><|W|><|S|>` + "`A`" + `</S|><|S|>` + "`FW{|Key: ~identity~, Outputs: ~&[u8]&~|}^W^BOD^E{|Statement: ~return " + value + ";~|}`" + `</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`)
-	manifest, err := json.Marshal(runtimeComposition{Version: 1, SHA256: compositionHash(aml), Sources: map[string]string{sourcePath: compositionHash(source)}})
+	manifest, err := json.Marshal(distribution.RuntimeComposition{Version: 1, SHA256: compositionHash(aml), Sources: map[string]string{sourcePath: compositionHash(source)}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +93,7 @@ func TestRuntimeCompositionRejectsStaleInputs(t *testing.T) {
 func TestRuntimeCompositionRequiresLibraryTarget(t *testing.T) {
 	files := compositionResources(t, "7")
 	files["builtins/runtime/support.aml"].Data = bytes.Replace(files["builtins/runtime/support.aml"].Data, []byte(`"Kind":"lib"`), []byte(`"Kind":"bin"`), 1)
-	var manifest runtimeComposition
+	var manifest distribution.RuntimeComposition
 	if err := json.Unmarshal(files["builtins/runtime/support.json"].Data, &manifest); err != nil {
 		t.Fatal(err)
 	}

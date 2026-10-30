@@ -33,7 +33,7 @@ Define Runtime's "Shared" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::s
 Define Runtime's "Weak" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::sync::Arc::downgrade~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Mutex" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::sync::Mutex::new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Ascend|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~upgrade~, Receiver: ~<@Value@>~|}<DEF>`.
-Define Runtime's "Retain|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::sync::Arc::clone~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
+Use Storage.App.Retain as Runtime's "Retain".
 Define Runtime's Handle's "Content" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^Y{|Key: ~Runtime~, Props: ~&[Prop{Key: inner, Value: <@Inner@>}Prop]&~|}<DEF>`.
 Define Runtime's App's "Parent" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.runtime~|}<DEF>`.
 Define Runtime's App's "Admission" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.state~|}<DEF>`.
@@ -161,7 +161,7 @@ Define Runtime's "Subscribe|-s|-d|--ing|--er" to `<DEF>MOB{|Key: ~<@Name|Label@>
 Define Runtime's "Current" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~borrow~, Receiver: ~<@Value@>~|}<DEF>`.
 Define Runtime's "Value" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~*<@Reference@>~|}<DEF>`.
 Define Runtime's "Change|-s|-d|--ing|-r" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~changed~, Receiver: ~<@Value@>~|}<DEF>`.
-Define Runtime's "Repeat|-s|-ed|-ing|-er" to `<DEF>BOP^X^(<@Body@>)<DEF>`.
+Create Runtime's "Repeat|-s|-ed|-ing|-er" for Processing a New Storage's Loop of any Process.
 Define Runtime's "Halt|-s|-ed|-ing|-er" to `<DEF>BOG^GI^(E{|Statement: ~<@Condition@>~|}*W^(BOD^E{|Statement: ~break;~|})*E{|Statement: ~Void~|}*W)<DEF>`.
 Define Runtime's Invocation's "Done" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.done~|}<DEF>`.
 
@@ -369,7 +369,7 @@ Return Unit.
 
 Define Runtime's Invocation's "Capture" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&mut <@Value@>.snapshot~|}<DEF>`.
 Define Runtime's Invocation's "Publication" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~crate::runtime::host::Checkpoint::PrePublication~|}<DEF>`.
-Define Runtime's Invocation's "Notify|--ies|--ied|-ing|--ier" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~send_replace~, Receiver: ~<@Sender@>~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
+Use Runtime.Notify as Runtime's Invocation's "Notify".
 
     Publicly create Runtime's Invocation's "Publish|-es|-ed|-ing|-er" as a Generic `invocation_publish` Function with Inputs of "value" as `&std::sync::Arc<Invocation>` and "snapshot" as `Snapshot` and Outputs of `()`.
 Create "Dependencies" as a New Runtime's Invocation's Dependencies of Value.

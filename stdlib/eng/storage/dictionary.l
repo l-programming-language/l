@@ -11,13 +11,13 @@ It describes any Storage's Iteration as `<DEF>BOP^X{|Iterable: ~<@Values@>~, Key
 It describes any Storage's Applier as `<DEF>MOB{|Key: ~outcome~|}^KY{|Key: ~<@Action@>~, Inputs: ~&[key, item, <@Context@>]&~|}<DEF>`.
 Define Storage's "Discard|-s|-ed|-ing|-er" to `<DEF>OB{|Key: ~_~, Value: ~<@Value@>~|}<DEF>`.
 Create Storage's "Traverse|-s|-d|--ing|--er" for Processing a New Storage's Iteration of any Thing and a New Process of a New Storage's Applier of any Thing and any Thing.
-Define Storage's "Closure" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}<DEF>`.
+Define Storage's "Binding|-s" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}<DEF>`.
+Use Storage.Binding as Storage's "Closure".
 Define Storage's Closure's "Environment" as `<DEF>MOB{|Key: ~<@Name@>Environment~|}^KY{|Key: ~<@Copy@>~, Inputs: ~&[&<@Name@>.0]&~|}<DEF>`.
 Define Storage's Closure's "Context" as `<DEF>OB{|Key: ~<@Name@>Context~, Value: ~&<@Context@>~|}<DEF>`.
 Define Storage's "Await|-s|-ed|-ing|-er" to `<DEF>COB{|Key: ~<@Name@>Outcome~|}^DV^(<@Invocation@>)<DEF>`.
 Define Storage's "Outcome" as `<DEF>GOB{|Key: ~<@Name@>Result~|}^GI{|Key: ~<@Name@>Outcome?~|}^(E{|Statement: ~std::ops::ControlFlow::Continue(value)~|}*W^(BOD^E{|Statement: ~value~|})*E{|Statement: ~std::ops::ControlFlow::Break(())~|}*<@Exit@>)<DEF>`.
 Create Storage's "Invoke|-s|-d|--ing|--er" for Processing a New Storage's Closure, a New Storage's Closure's Environment, a New Storage's Closure's Context, a New Storage's Awaiter, and a New Storage's Outcome.
-Define Storage's "Binding|-s" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}<DEF>`.
 Define Storage's "Mutable" as a New Adjective describing any Storage's Binding.
 It describes any Storage's Binding as `<DEF>OB{|Key: ~mut <@Name|Label@>~, Value: ~<@Value@>~|}<DEF>`.
 Define Storage's "Comparison|-s" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: <@Operator@>, Operands: &[<@Left@>, <@Right@>]&}Op]&~|}<DEF>`.

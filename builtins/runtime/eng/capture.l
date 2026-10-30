@@ -33,16 +33,19 @@ Return a New Runtime's Capture's Content of a New Runtime's Error's Message and 
 Create "Bytes" as a New Runtime's Capture's Output of a New Runtime's Capture's Bytes of Value.
 Return a New Pair of Bytes and a New Runtime's Capture's Error of Value.
 
+    Create Runtime's Capture's "Explain|-s|-ed|-ing|-er" as a Generic Function with Inputs of "errors" as `&mut Option<Error>` and "error" as `std::io::Error` and Outputs of `bool`.
+Return a New Runtime's Capture's Failer of Errors and a New Runtime's Error's Explainer of `capture application stream` and Error.
+
     Create Runtime's Capture's "Receive|-s|-d|--ing|-r" as a Generic Function with Inputs of "destination" as `&mut (dyn std::io::Write + Send)` and "buffer" as `&[u8]` and "errors" as `&mut Option<Error>` and "read" as `std::io::Result<usize>` and Outputs of `bool`.
 Create "Readfailed" as a New Runtime's Fault of Read.
-If Readfailed, Create "Failure" as a New Runtime's Failure of Read and then Create "Error" as a New Contents of Failure and `failed stream read` and then Create "Context" as a New Runtime's Error's Explainer of `capture application stream` and Error and then Create "Complete" as a New Runtime's Capture's Failer of Errors and Context and then Return Complete.
+If Readfailed, Create "Failure" as a New Runtime's Failure of Read and then Create "Error" as a New Contents of Failure and `failed stream read` and then Create "Complete" as a New Runtime's Capture's Explainer of Errors and Error and then Return Complete.
 Create "Count" as a New Storage's Optional of Read.
 Create "Size" as a New Contents of Count and `successful stream read`.
 Create "Zero" as a New Indexed Integer of 0.
 If Size is Zero, Return true.
 Create "Written" as a New Runtime's Capture's Writer of Destination, Buffer, and Size.
 Create "Writefailed" as a New Runtime's Fault of Written.
-If Writefailed, Create "Writefailure" as a New Runtime's Failure of Written and then Create "Writeerror" as a New Contents of Writefailure and `failed stream write` and then Create "Writecontext" as a New Runtime's Error's Explainer of `capture application stream` and Writeerror and then Create "Finished" as a New Runtime's Capture's Failer of Errors and Writecontext and then Return Finished.
+If Writefailed, Create "Writefailure" as a New Runtime's Failure of Written and then Create "Writeerror" as a New Contents of Writefailure and `failed stream write` and then Create "Finished" as a New Runtime's Capture's Explainer of Errors and Writeerror and then Return Finished.
 Return false.
 
     Create Runtime's Capture's "Timeout" as a Generic Pending Function with Inputs of "until" as `Option<tokio::time::Instant>` and Outputs of `impl std::future::Future<Output=()> + Send`.
