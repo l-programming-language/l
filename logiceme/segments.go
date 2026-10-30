@@ -550,12 +550,12 @@ func (ss *SegmentalSystem) initializeBoundGlyph(definition []byte, name string, 
 	reGlyph := Glyph{Name: name, Type: "Simple", SegmentalSystem: ss, Meta: MetaDict{}}
 	inputCount := 0
 	input := false
-	inputStr := ""
+	var inputStr strings.Builder
 	curDef, nextDef, hasChildren := bytes.Cut(definition, []byte("^"))
 	for ind, b := range curDef {
 		if string(b) == "{" {
 			if input {
-				inputStr = inputStr + string(b)
+				inputStr.WriteRune(rune(b))
 			} else {
 				input = true
 			}
@@ -565,14 +565,14 @@ func (ss *SegmentalSystem) initializeBoundGlyph(definition []byte, name string, 
 			if input {
 				if inputCount == 0 {
 					input = false
-					reGlyph.InputString = inputStr
-					inputStr = ""
+					reGlyph.InputString = inputStr.String()
+					inputStr.Reset()
 				} else {
-					inputStr = inputStr + string(b)
+					inputStr.WriteRune(rune(b))
 				}
 			}
 		} else if input {
-			inputStr = inputStr + string(b)
+			inputStr.WriteRune(rune(b))
 		} else {
 			sType := DetermineSegmentType(string(b))
 			if len(sType) != 3 {

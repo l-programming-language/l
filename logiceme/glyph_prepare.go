@@ -41,6 +41,16 @@ func (n *generatedNames) fresh(base string) string {
 
 var supportedGlyphForms = strings.Fields("A EA BA DA KA HA GA MA PA E DE GE CE ME I GI CI BI MI HI O OB OC OG CO COB FO FOB KO KOB BO BOD BOK BOH BOG BOM BOP BOC DO DOB DOC DOG GO GOB MO MOB HOB PO U MU FU BU W FW BW FWC HW DW X CX Y KY KYC MY HY FY DY V MV DV CV")
 var unsupportedGlyphForms = map[string]string{"FA": "BA Parameter: List", "DU": "BA or an explicit O default", "FI": "U Relation: Requirements", "DI": "U Relation: Bounds", "CY": "DY in an expression role", "BY": "MO associated equality", "GY": "HY Shape: Sum", "KU": "FU with a U payload", "HU": "FU with a U payload", "PI": "U Shape: Positional", "KI": "U Shape: Record", "GU": "U Shape: Field", "HO": "HOB", "CW": "FWC", "MW": "FW inside FY/MY"}
+var nativeIdentifier = regexp.MustCompile(`^(r#)?[A-Za-z_][A-Za-z0-9_]*$`)
+
+// Prepared glyphs own their metadata; only the immutable defaults are shared.
+var defaultGlyphMeta = func() MetaDict {
+	var meta MetaDict
+	for _, key := range strings.Fields("Key Type Parameter Relation Shape AssignTarget Iterable Index RangeArity Default Lifetimes GenericTypes") {
+		meta.SetAdd(key, "Void", "String")
+	}
+	return meta
+}()
 
 func validateGlyphForm(g *Glyph) error {
 	f := glyphForm(g)
@@ -92,7 +102,7 @@ func (g *Glyph) childIndices(typ string) []int {
 }
 func (g *Glyph) childCount(typ string) int { return len(g.childIndices(typ)) }
 func isNativeIdentifier(s string) bool {
-	return regexp.MustCompile(`^(r#)?[A-Za-z_][A-Za-z0-9_]*$`).MatchString(s) && s != "_"
+	return nativeIdentifier.MatchString(s) && s != "_"
 }
 func inputList(m map[string]string, singular, plural string) []string {
 	if v, ok := m[plural]; ok {
@@ -134,10 +144,7 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 	if err := validateGlyphMetadata(g, ctx); err != nil {
 		return err
 	}
-	g.Meta = MetaDict{}
-	for _, k := range strings.Fields("Key Type Parameter Relation Shape AssignTarget Iterable Index RangeArity Default Lifetimes GenericTypes") {
-		g.Meta.SetAdd(k, "Void", "String")
-	}
+	g.Meta = defaultGlyphMeta.clone()
 	for _, v := range g.SegmentalSystem.fileMeta.GetMetaData() {
 		g.Meta.SetAdd(v.Key, v.Value, v.Type)
 	}

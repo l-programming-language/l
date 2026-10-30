@@ -154,16 +154,8 @@ func (g *Glyph) compilePreparedGlyph() error {
 		return e
 	}
 	vowel := g.Vowels[0]
-	vowel.Tags = parseSegmentTags(vowel.selectedTemplateTags(g.SegmentalSystem, g.segmentSelection(), true), g.Meta, g.segmentSelection(), true, true)
-	var cases []*LucidTag
-	for _, candidate := range vowel.Tags {
-		switch candidate.Expressions[1].ExpressionString {
-		case "Headers", "Inputs":
-			// Initialization declarations are never executable source bodies.
-		default:
-			cases = append(cases, candidate)
-		}
-	}
+	// Initialization declarations are not executable source bodies.
+	cases := parseSegmentTags(vowel.selectedTemplateTags(g.SegmentalSystem, g.segmentSelection(), false), g.Meta, g.segmentSelection(), false, true)
 	if len(cases) != 1 {
 		return lerrors.InvalidConfiguration.Errorf("Rust vowel %s missing case for %s", vowel.Name, glyphForm(g))
 	}
