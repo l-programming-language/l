@@ -12945,7 +12945,7 @@
     "lyger/binding.go": "be5070f9f04486c61ecae6e832ac09e85339df355b3eb2a4f157e553f4ac1b87",
     "lyger/scope.go": "c8fdbeb575b95e77f5785072ff8b15ad070af862033e48acd07346c0c980fdef",
     "lyger/function_definitions.go": "ffcc74f3c577d20a4155b032595834a0e446b03066e720e588f1f6968f2c845c",
-    "lyger/lowering.go": "5307308f745b72ee8b67f7064d839daf00dbfeea1ac7b46946ec3c85bad80629",
+    "lyger/lowering.go": "db0a7e5fcfb301a1d8bc50ef5bdfc0da61cf2cbeff5986ed5f478d4d4ec0e8d0",
     "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
     "lyger/semantics.go": "cdbd1b22d181b3026ddfd97d73dd5a13567d8a9b60da56822b423d49a73be383",
     "docs/cli-build.md": "6f8e150591f7a1347cce5c5d1c4e1e810a2bbc71f67c007593d0ad9acfa558c8",
@@ -12963,7 +12963,7 @@
     "lyger/runtime_value_words.go": "ce9dde35894efd49f03b1374720c784303b0f00eba6a8f8d37d290b01db536bf",
     "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
     "stdlib/eng/io/dictionary.l": "0aee928628163ae6deebcf061cb7a61680cb4da36177202694e739062ca56d82",
-    "lyger/lexical_scope.go": "388e783d196bf0ded6706642689eb59f6e640eb404f1432074fa0b079b165bcc",
+    "lyger/lexical_scope.go": "2d2690c205ef1da8e1868a10d57eeb222018172fda7da9de76c0dc9c84c78288",
     "lyger/grammar_types.go": "c57ca69f9748e991cd757cf567ee45c996ab57da9699afbef57fb6ac31970f1e",
     "lyger/lexicon.go": "e6c61d41351f3116573742fbe107f87de188c9b36e0b6fc0cb14a8b74e60c2c7",
     "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
@@ -12998,11 +12998,11 @@
     "logiceme/glyph_metadata_validation.go": "7ad22b69af7b2b17f13285676fa0957ece073714dca1f3c6a5b12f9d44a0ae0c",
     "logiceme/lucid_interpreter.go": "5026306d05519f289d05e6e9a20baf8274ea94ea99ced817e26fe81eaea45f17",
     "logiceme/lucid.go": "c70058815dcf9518d6c7a3cedeaa012e0c203742c9536b8a0af0584af7f91fbb",
-    "logiceme/glyph_prepare.go": "e143a0e0e7338f775973becbfb9ff6b6d083265915b0c83caa889396fc469981",
+    "logiceme/glyph_prepare.go": "42b316c2a4bd1b5ca5feec2b274becd2844e9583762c1af79faa3cf90734440e",
     "logiceme/segments.go": "de380d45b7ba7ce74e72c23ad9455f6258a5f79ae2f90811ef1ab50f0d5c8c3a",
     "logiceme/segment_cases.go": "ad3f50c82c8747cb17234668e0501d4b76063dc53fc4c1528d4473fe586ef11f",
-    "logiceme/glyph_render.go": "7c2273fce13a7faa161a5a4a80f5bd1ae00503b2f0253448dcfe29043ecffc85",
-    "logiceme/segment_case_clone.go": "a182522b1eda6bf025db241a5367900031abaa5fdff3ff2a3c247a3d4f584319"
+    "logiceme/glyph_render.go": "299b68c52e473d28473f180be1d23ea330881bcb4c62e833729f946dd6fb615c",
+    "logiceme/segment_case_clone.go": "bd199296a249db44d2a594fd29a21656fb7fa15861adcb502272a2ad602720bb"
   },
   "description": "Static coverage and existing witnesses; no language execution during website validation."
 }

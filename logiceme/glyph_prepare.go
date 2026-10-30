@@ -94,24 +94,17 @@ func (g *Glyph) childCount(typ string) int { return len(g.childIndices(typ)) }
 func isNativeIdentifier(s string) bool {
 	return regexp.MustCompile(`^(r#)?[A-Za-z_][A-Za-z0-9_]*$`).MatchString(s) && s != "_"
 }
-func inputKeys(m map[string]string) []string {
-	if v, ok := m["Keys"]; ok {
+func inputList(m map[string]string, singular, plural string) []string {
+	if v, ok := m[plural]; ok {
 		return readNativeList(v)
 	}
-	if v, ok := m["Key"]; ok {
+	if v, ok := m[singular]; ok {
 		return []string{v}
 	}
 	return nil
 }
-func inputValues(m map[string]string) []string {
-	if v, ok := m["Values"]; ok {
-		return readNativeList(v)
-	}
-	if v, ok := m["Value"]; ok {
-		return []string{v}
-	}
-	return nil
-}
+func inputKeys(m map[string]string) []string   { return inputList(m, "Key", "Keys") }
+func inputValues(m map[string]string) []string { return inputList(m, "Value", "Values") }
 func nativeTuple(v []string) string {
 	if len(v) == 1 {
 		return v[0]
@@ -174,24 +167,11 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 	g.setSourceMeta("PayloadRole", strconv.FormatBool(ctx.role == "payload"))
 	g.setSourceMeta("BodyEnd", "")
 	g.setSourceMeta("SelectionGuard", strconv.FormatBool(ctx.role == "selection"))
-	if _, ok := m["Deferred"]; ok {
-		return lerrors.Unsupported.Errorf("Rust %s: Deferred is unsupported; Rust has no deferred execution operation", form)
+	if v, ok := m["Mutable"]; ok && v != "True" && v != "False" {
+		return invalidGlyph(g, "Mutable must be True or False")
 	}
-	if v, ok := m["Mutable"]; ok {
-		if v != "True" && v != "False" {
-			return invalidGlyph(g, "Mutable must be True or False")
-		}
-		if !(form == "BA" || form == "BO" || strings.HasSuffix(form, "OB") || form == "OB") {
-			return invalidGlyph(g, "Mutable only applies to newly declared simple bindings")
-		}
-	}
-	if v, ok := m["Capture"]; ok {
-		if v != "Infer" && v != "Move" {
-			return invalidGlyph(g, "Capture must be Infer or Move")
-		}
-		if form != "CV" && form != "FW" && form != "FWC" {
-			return invalidGlyph(g, "Capture requires an anonymous callable or future")
-		}
+	if v, ok := m["Capture"]; ok && v != "Infer" && v != "Move" {
+		return invalidGlyph(g, "Capture must be Infer or Move")
 	}
 	g.setSourceMeta("CaptureKeyword", "")
 	if m["Capture"] == "Move" {
@@ -449,9 +429,6 @@ func prepareGlyph(g *Glyph, ctx glyphContext, names *generatedNames) error {
 			g.setSourceMeta("DeclareKeyword", "")
 		}
 		if m["Parameter"] != "" {
-			if !binding || ctx.role != "parameter" {
-				return invalidGlyph(g, "parameter default must be an explicit binding definition")
-			}
 			if m["Parameter"] == "Lifetime" {
 				return invalidGlyph(g, "lifetime parameters cannot have defaults")
 			}

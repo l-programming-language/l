@@ -34,10 +34,10 @@ const (
 )
 
 // An explicit callable signature determines how its paragraph declarations bind.
-// Constant-only locals must not commit while that header awaits a forward type.
+// Its body waits for semantic publication, including forward constructor members.
 func (s *lexicalScope) waitsForHeader(statement *lStatement) bool {
 	for ; s != nil; s = s.parent {
-		if s.callableHeader != nil && s.callableHeader != statement && s.callableHeader.sGram == nil {
+		if s.callableHeader != nil && s.callableHeader != statement {
 			return true
 		}
 	}

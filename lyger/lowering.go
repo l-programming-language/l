@@ -32,32 +32,42 @@ func (c *Compilation) definitionSite(rec *record) (*lStatement, *registrationSit
 }
 
 func (c *Compilation) recordTemplate(rec *record) (*DefinitionTemplate, error) {
+	template, _, err := c.recordDefinition(rec)
+	return template, err
+}
+
+// Literal leaves and source constructions select the same authored site once.
+func (c *Compilation) recordDefinition(rec *record) (*DefinitionTemplate, *objectGram, error) {
 	rec, err := canonicalRecord(rec, c.Semantics.Aliases)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if rec == nil {
-		return nil, lerrors.Internal.Errorf("definition reference has no record")
+		return nil, nil, lerrors.Internal.Errorf("definition reference has no record")
 	}
 	source, site, err := c.definitionSite(rec)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if source == nil {
-		return nil, lerrors.Internal.Errorf("definition %s has no source declaration", rec.ID)
+		return nil, nil, lerrors.Internal.Errorf("definition %s has no source declaration", rec.ID)
 	}
 	if site == nil {
-		return nil, lerrors.Internal.Errorf("definition %s has no source declaration site", rec.ID)
+		return nil, nil, lerrors.Internal.Errorf("definition %s has no source declaration site", rec.ID)
 	}
 	literal, err := site.literal()
 	if err != nil || literal == nil {
-		return nil, err
+		object := site.valueObject()
+		if object != nil && object.noun != nil && object.noun.binding != nil && c.Semantics.Declarations[object.noun.binding.Record] != nil {
+			return nil, object, err
+		}
+		return nil, nil, err
 	}
 	template, err := ParseDefinitionTemplate(literal.rawBytes, source.source.Span)
 	if err == nil {
 		template.dependencies, err = c.declarationDependencies(rec)
 	}
-	return template, err
+	return template, nil, err
 }
 
 func definitionArguments(template *DefinitionTemplate, args []DefinitionArgument) (map[string]DefinitionArgument, error) {
@@ -138,7 +148,7 @@ func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgume
 	}
 	active[rec] = true
 	defer delete(active, rec)
-	template, err := c.recordTemplate(rec)
+	template, object, err := c.recordDefinition(rec)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
@@ -152,9 +162,7 @@ func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgume
 		instance.definition = rec
 		return instance, err
 	}
-	if object, err := c.definitionObject(rec); err != nil {
-		return DefinitionInstance{}, err
-	} else if object != nil {
+	if object != nil {
 		instance, forwarded, err := c.instantiateStaticObject(object, args, active, dynamic)
 		if err == nil && len(args) > 0 && !forwarded {
 			err = lerrors.InvalidInput.Errorf("%s received %d unused arguments", rec.ID, len(args))
@@ -775,18 +783,4 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 	}
 	instance.Dependencies = append(instance.Dependencies, node.Dependencies...)
 	return instance, nil
-}
-
-// definitionObject returns the authored construction of a source-defined noun.
-// Directive bodies and literal leaves retain their existing expansion paths.
-func (c *Compilation) definitionObject(rec *record) (*objectGram, error) {
-	_, site, err := c.definitionSite(rec)
-	if err != nil || site == nil {
-		return nil, err
-	}
-	object := site.valueObject()
-	if object != nil && object.noun != nil && object.noun.binding != nil && c.Semantics.Declarations[object.noun.binding.Record] != nil {
-		return object, nil
-	}
-	return nil, nil
 }

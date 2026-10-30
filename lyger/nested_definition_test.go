@@ -14,11 +14,7 @@ func TestNestedDefinitionOperands(t *testing.T) {
 		"    Publicly create \"Echo|-es|-ed|-ing|-er\" as a Generic Function with Inputs of \"value\" as `&std::sync::atomic::AtomicUsize` and Outputs of `usize`.\nReturn a New Counter of Value.\n\n" +
 		"Use Echo as \"Relay\".\n\n" +
 		"    Publicly create \"Result\" as a Generic Function with Inputs of \"__l_nested_0\" as `&std::sync::atomic::AtomicUsize` and Outputs of `usize`.\nCreate \"Previous\" as a New Holder of a New Relay of __l_nested_0.\nReturn a New Holder of a New Relay of __l_nested_0.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "nested.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "nested.l")
 	definition, err := c.ComposeDefinition("Result")
 	if err != nil {
 		t.Fatal(err)

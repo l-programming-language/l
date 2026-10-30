@@ -20,11 +20,11 @@ const builtinProcessDirectory = "builtins/operations/rust/"
 // slots belong to the private compiler binder, not the public argument API.
 func builtinProcessDefinitions() map[string]string {
 	return map[string]string{
-		"build":               `<DEF>MOB{|Key: ~lProcessResult~|}^KY{|Key: ~runtime::app_build~, Inputs: ~&[&<@Receiver@>]&~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>`,
-		"run":                 `<DEF>MOB{|Key: ~lProcessResult~|}^KY{|Key: ~runtime::app_run~, Inputs: ~&[&<@Receiver@>]&~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>`,
-		"stop":                `<DEF>MOB{|Key: ~lProcessFuture~|}^KY{|Key: ~runtime::app_stop~, Inputs: ~&[&<@Receiver@>]&~|}*COB{|Key: ~lProcessResult~|}^DV{|Key: ~lProcessFuture~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>`,
-		"await":               `<DEF>[["MOB{|Key: ~lProcessFuture~|}^KY{|Key: ~runtime::app_wait~, Inputs: ~&[&<@Receiver@>]&~|}*COB{|Key: ~lProcessResult~|}^DV{|Key: ~lProcessFuture~|}*OB{|Key: ~<@Invocation@>~, Value: ~lProcessResult?~|}", "MOB{|Key: ~lProcessClaim~|}^KY{|Key: ~runtime::invocation_claim~, Inputs: ~&[&<@Invocation@>]&~|}*OB{|Key: ~lProcessClaimed~, Value: ~lProcessClaim?~|}*BOG^GI^(E{|Statement: ~lProcessClaimed~|}*<@Body@>)"]]<DEF>`,
-		"finish-continuation": `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~runtime::invocation_finish~, Inputs: ~&[&<@Invocation@>]&~|}<DEF>`,
+		"build":               `<DEF>MOB{|Key: ~lProcessResult~|}^KY{|Key: ~runtime::app_build~, Imports: ~&[runtime::app_build as _]&~, Inputs: ~&[&<@Receiver@>]&~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>`,
+		"run":                 `<DEF>MOB{|Key: ~lProcessResult~|}^KY{|Key: ~runtime::app_run~, Imports: ~&[runtime::app_run as _]&~, Inputs: ~&[&<@Receiver@>]&~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>`,
+		"stop":                `<DEF>MOB{|Key: ~lProcessFuture~|}^KY{|Key: ~runtime::app_stop~, Imports: ~&[runtime::app_stop as _]&~, Inputs: ~&[&<@Receiver@>]&~|}*COB{|Key: ~lProcessResult~|}^DV{|Key: ~lProcessFuture~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>`,
+		"await":               `<DEF>[["MOB{|Key: ~lProcessFuture~|}^KY{|Key: ~runtime::app_wait~, Imports: ~&[runtime::app_wait as _]&~, Inputs: ~&[&<@Receiver@>]&~|}*COB{|Key: ~lProcessResult~|}^DV{|Key: ~lProcessFuture~|}*OB{|Key: ~<@Invocation@>~, Value: ~lProcessResult?~|}", "MOB{|Key: ~lProcessClaim~|}^KY{|Key: ~runtime::invocation_claim~, Imports: ~&[runtime::invocation_claim as _]&~, Inputs: ~&[&<@Invocation@>]&~|}*OB{|Key: ~lProcessClaimed~, Value: ~lProcessClaim?~|}*BOG^GI^(E{|Statement: ~lProcessClaimed~|}*<@Body@>)"]]<DEF>`,
+		"finish-continuation": `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~runtime::invocation_finish~, Imports: ~&[runtime::invocation_finish as _]&~, Inputs: ~&[&<@Invocation@>]&~|}<DEF>`,
 	}
 }
 
@@ -311,12 +311,12 @@ func TestBuiltinProcessLogemeAppParity(t *testing.T) {
 	t.Run("literal lifecycle glyph sequence", func(t *testing.T) {
 		_, unit, _ := builtinProcessRequire(t, distribution.Files(), builtinProcessSource)
 		ordered := []string{
-			`KY{|Key: ~runtime::app_build~, Inputs: ~&[&lApp0]&~|}`,
-			`KY{|Key: ~runtime::app_run~, Inputs: ~&[&lApp0]&~|}`,
-			`KY{|Key: ~runtime::app_stop~, Inputs: ~&[&lApp0]&~|}`,
-			`KY{|Key: ~runtime::app_wait~, Inputs: ~&[&lApp0]&~|}`,
-			`KY{|Key: ~runtime::invocation_claim~, Inputs: ~&[&lInvocation0]&~|}`,
-			`BOG^GI^(E{|Statement: ~lProcessClaimed~|}*W^MOB{|Key: ~_~|}^KY{|Key: ~runtime::invocation_finish~, Inputs: ~&[&lInvocation0]&~|})`,
+			`KY{|Key: ~runtime::app_build~, Imports: ~&[runtime::app_build as _]&~, Inputs: ~&[&lApp0]&~|}`,
+			`KY{|Key: ~runtime::app_run~, Imports: ~&[runtime::app_run as _]&~, Inputs: ~&[&lApp0]&~|}`,
+			`KY{|Key: ~runtime::app_stop~, Imports: ~&[runtime::app_stop as _]&~, Inputs: ~&[&lApp0]&~|}`,
+			`KY{|Key: ~runtime::app_wait~, Imports: ~&[runtime::app_wait as _]&~, Inputs: ~&[&lApp0]&~|}`,
+			`KY{|Key: ~runtime::invocation_claim~, Imports: ~&[runtime::invocation_claim as _]&~, Inputs: ~&[&lInvocation0]&~|}`,
+			`BOG^GI^(E{|Statement: ~lProcessClaimed~|}*W^MOB{|Key: ~_~|}^KY{|Key: ~runtime::invocation_finish~, Imports: ~&[runtime::invocation_finish as _]&~, Inputs: ~&[&lInvocation0]&~|})`,
 		}
 		rest := string(unit.BackendAML)
 		for _, expected := range ordered {

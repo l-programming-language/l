@@ -1396,7 +1396,7 @@
     },
     {
       "path": "lyger/builtin_operations_contract_test.go",
-      "sha256": "cccfe52f43053970c58b3ac29986b10fbdc80c9e22393e33ea63193d67cd89fd"
+      "sha256": "570c17aeaafebfeba850d3764b83c23c3861efce8b58344ba23f4d6162db5b8d"
     },
     {
       "path": "lyger/runnable_service_test.go",

@@ -11,11 +11,7 @@ func TestSourceCompositionBindsEachConstructor(t *testing.T) {
 	source := "Define \"Emit|-s|-ted|-ting|-ter\" to `<DEF>BOD^E{|Statement: ~println!(\"{}\", <@Value|Text@>);~|}<DEF>`.\n" +
 		"Create \"Report|-s|-ed|-ing|-er\" for Processing a New Emitter of `first` and then Processing a New Emitter of `second`.\n" +
 		"Define \"Worker\" as a New Basic App.\nThe App Reports.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "composition.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "composition.l")
 	body, err := c.lowerAppBody(c.Semantics.Apps[0])
 	if err != nil {
 		t.Fatal(err)
@@ -49,11 +45,7 @@ func TestSourceCompositionBindsEachConstructor(t *testing.T) {
 func TestSourceCompositionConstructsNativeFunction(t *testing.T) {
 	source := "Define \"Echo|-es|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~return <@Value@>;~|}<DEF>`.\n" +
 		"Create \"Produce|-s|-d|--ing|--er\" for Processing a Generic `identity` Function of a New `value` Echoer with Inputs of \"value\" as `f64` and Outputs of `f64`.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "signature.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "signature.l")
 	instance, err := c.ComposeDefinition("Produce")
 	if err != nil {
 		t.Fatal(err)
@@ -67,11 +59,7 @@ func TestSourceCompositionConstructsNativeFunction(t *testing.T) {
 func TestStaticFunctionOwnsInvocation(t *testing.T) {
 	source := "    Publicly create \"Echo|-es|-ed|-ing|-er\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n" +
 		"Create \"Supply|-s|-ed|-ing|-er\" for Processing a New Echoer of 2.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "static.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "static.l")
 	declaration, err := c.ComposeDefinition("Echo")
 	if err != nil {
 		t.Fatal(err)
@@ -95,11 +83,7 @@ func TestStaticFunctionOwnsInvocation(t *testing.T) {
 func TestStaticFunctionBindsLocalConstructor(t *testing.T) {
 	source := "Define \"Subtract|-s|-ed|-ing|-or\" to `<DEF>DOB{|Key: ~<@Name@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: -, Operands: &[<@Left@>, <@Right@>]&}Op]&~|}<DEF>`.\n\n" +
 		"    Publicly create \"Reduce|-s|-d|--ing|--er\" as a Generic Function with Inputs of \"left\" as `f64` and \"right\" as `f64` and Outputs of `f64`.\nCreate \"Final\" as a New Subtractor of Left and Right.\nReturn Final.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "locals.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "locals.l")
 	definition, err := c.ComposeDefinition("Reduce")
 	if err != nil {
 		t.Fatal(err)
@@ -112,11 +96,7 @@ func TestStaticFunctionBindsLocalConstructor(t *testing.T) {
 func TestScopedStaticFunctionBindsLocalConstructor(t *testing.T) {
 	source := "Define \"Storage\" as a New Dictionary.\nDefine \"Subtract|-s|-ed|-ing|-or\" to `<DEF>DOB{|Key: ~<@Name@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: -, Operands: &[<@Left@>, <@Right@>]&}Op]&~|}<DEF>`.\n\n" +
 		"    Publicly create Storage's \"Reduce|-s|-d|--ing|--er\" as a Generic `native_reduce` Function with Inputs of \"left\" as `f64` and \"right\" as `f64` and Outputs of `f64`.\nCreate \"Result\" as a New Subtractor of Left and Right.\nReturn Result.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "locals.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "locals.l")
 	definition, err := c.ComposeDefinition("Storage.Reduce")
 	if err != nil {
 		t.Fatal(err)
@@ -128,22 +108,14 @@ func TestScopedStaticFunctionBindsLocalConstructor(t *testing.T) {
 
 func TestStaticFunctionBranchComposition(t *testing.T) {
 	source := "    Publicly create \"Choose|-s|--ing|--r\" as a Generic Function with Inputs of \"flag\" as `bool` and \"left\" as `f64` and \"right\" as `f64` and Outputs of `f64`.\nIf Flag, Return Left, else Return Right.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "branch.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "branch.l")
 	testNativeDefinitionLibrary(t, c, "Choose", "branch", `#[path="src/branch.rs"] mod generated; fn main(){assert_eq!(generated::choose(true,1.0,2.0),1.0);assert_eq!(generated::choose(false,1.0,2.0),2.0);}`)
 }
 
 func TestStaticSignatureOwnsSelectedTypeDeclaration(t *testing.T) {
 	source := "Define \"Carrier\" as `<DEF>HY{|Key: ~NativeCarrier~, Props: ~&[]&~|}<DEF>`.\n\n" +
 		"    Publicly create \"Preserve|-s|-d|--ing|--er\" as a Generic Function with Inputs of \"value\" as Carrier and Outputs of Carrier.\nReturn Value.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "types.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "types.l")
 	definition, err := c.ComposeDefinition("Preserve")
 	if err != nil {
 		t.Fatal(err)
@@ -161,11 +133,7 @@ func TestStaticFunctionReferenceOwnsDeclaration(t *testing.T) {
 	source := "Define \"Hold|-s|---eld|-ing|-er\" to `<DEF>OB{|Key: ~<@Name@>~, Value: ~<@Value@>~|}<DEF>`.\n\n" +
 		"    Publicly create \"Echo|-es|-ed|-ing|-er\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n" +
 		"    Publicly create \"Provide|-s|-d|--ing|--er\" as a Generic Function with No Inputs and Outputs of `fn(f64) -> f64`.\nCreate \"Callback\" as a New Holder of Echoer.\nReturn Callback.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "references.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "references.l")
 	definition, err := c.ComposeDefinition("Provide")
 	if err != nil {
 		t.Fatal(err)
@@ -182,11 +150,7 @@ func TestStaticFunctionReferenceOwnsDeclaration(t *testing.T) {
 func TestStaticFunctionConditionalDeclaration(t *testing.T) {
 	source := "Define \"Hold|-s|---eld|-ing|-er\" to `<DEF>OB{|Key: ~<@Name@>~, Value: ~<@Value@>~|}<DEF>`.\n\n" +
 		"    Publicly create \"Choose|-s|--ing|--r\" as a Generic Function with Inputs of \"flag\" as `bool` and \"value\" as `f64` and Outputs of `f64`.\nIf Flag, Create \"Result\" as a New Holder of Value and then Return Result.\nReturn Value.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "conditional.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "conditional.l")
 	definition, err := c.ComposeDefinition("Choose")
 	if err != nil {
 		t.Fatal(err)
@@ -200,11 +164,7 @@ func TestSourceSequenceComposesWithoutNesting(t *testing.T) {
 	source := "Define \"Emit|-s|-ted|-ting|-ter\" to `<DEF>BOD^E{|Statement: ~println!(\"{}\", <@Value|Text@>);~|}<DEF>`.\n" +
 		"Create \"Report|-s|-ed|-ing|-er\" for Processing a New Emitter of `first` and then Processing a New Emitter of `second`.\n\n" +
 		"    Publicly create \"Notice\" as a Generic Function with No Inputs and Outputs of `()`.\nReport.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "sequence.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "sequence.l")
 	aml, err := c.ComposeLibrary("Notice", "sequence")
 	if err != nil {
 		t.Fatal(err)
@@ -226,11 +186,7 @@ func TestSourceSequenceComposesWithoutNesting(t *testing.T) {
 func TestStaticFunctionDescriptorOwnsLocalTypeInputs(t *testing.T) {
 	source := "\"Borrowing\" describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, Lifetimes: ~'a~, GenericTypes: ~T: 'a~|}^(<@Process@>)<DEF>`.\n\n" +
 		"    Publicly create \"Preserve\" as a Generic Borrowing Function with Inputs of \"value\" as `&'a T` and Outputs of `&'a T`.\nReturn Value.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "generic.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "generic.l")
 	aml, err := c.ComposeLibrary("Preserve", "generic")
 	if err != nil {
 		t.Fatal(err)
@@ -255,11 +211,7 @@ func TestSourceTypeSlotRetainsSelectedDeclaration(t *testing.T) {
 	source := "Define \"Carrier\" as `<DEF>HY{|Key: ~NativeCarrier~, Props: ~&[]&~|}<DEF>`.\n" +
 		"Define \"Buffer\" as `<DEF>MOB{|Key: ~<@Name@>~, Type: ~Vec<<@Element|Type@>>~|}^KY{|Key: ~Vec::new~|}<DEF>`.\n\n" +
 		"    Publicly create \"Collect\" as a Generic Function with No Inputs and Outputs of `Vec<NativeCarrier>`.\nCreate \"Result\" as a New Buffer of Carrier.\nReturn Result.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "type-slot.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "type-slot.l")
 	aml, err := c.ComposeLibrary("Collect", "typed")
 	if err != nil {
 		t.Fatal(err)
@@ -315,11 +267,7 @@ func TestSourceNativeDeclarationOwnsConstituentTypes(t *testing.T) {
 		"Define \"Layout\" as `<DEF>HY{|Key: ~Container~, Props: ~&[Prop{Key: value, Type: Option<<@Type|Type@>>}Prop]&~|}<DEF>`.\n" +
 		"Define \"Container\" as a New Layout of Value.\n\n" +
 		"    Publicly create \"Keep|-s|--ept|-ing|-er\" as a Generic Function with Inputs of \"value\" as Container and Outputs of Container.\nReturn Value.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "types.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "types.l")
 	declaration, err := c.ComposeDefinition("Keep")
 	if err != nil {
 		t.Fatal(err)

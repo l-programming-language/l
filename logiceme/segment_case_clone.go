@@ -12,17 +12,7 @@ func (copying segmentTagCopy) metadata(original *TagMeta) *TagMeta {
 		return found
 	}
 	result := *original
-	result.AppMeta.Index.Keys = append(original.AppMeta.Index.Keys[:0:0], original.AppMeta.Index.Keys...)
-	result.AppMeta.Index.Indexes = append(original.AppMeta.Index.Indexes[:0:0], original.AppMeta.Index.Indexes...)
-	if original.AppMeta.Metas != nil {
-		result.AppMeta.Metas = make([]*MetaObj, len(original.AppMeta.Metas))
-		for index, original := range original.AppMeta.Metas {
-			if original != nil {
-				entry := *original
-				result.AppMeta.Metas[index] = &entry
-			}
-		}
-	}
+	result.AppMeta = original.AppMeta.clone()
 	copying[original] = &result
 	return &result
 }

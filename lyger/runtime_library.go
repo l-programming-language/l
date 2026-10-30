@@ -31,44 +31,26 @@ func (r *CompilationResult) RuntimeLibrary(name string, imports []string) ([]byt
 	if library.Error != nil {
 		return nil, library.Error
 	}
-	owner, err := library.exportedRecord("Runtime")
+	complete, err := library.composeExports("Runtime")
 	if err != nil {
 		return nil, err
 	}
-	roots, err := library.publicExports(owner, make(map[*record]bool))
+	required, err := library.composeExports("Runtime.Host")
 	if err != nil {
 		return nil, err
 	}
-	host, err := library.exportedRecord("Runtime.Host")
-	if err != nil {
-		return nil, err
-	}
-	required, err := library.publicExports(host, make(map[*record]bool))
-	if err != nil {
-		return nil, err
-	}
-	functions := make(map[string]*record)
-	var complete []DefinitionInstance
-	for _, root := range roots {
-		root, err = canonicalRecord(root, library.Semantics.Aliases)
-		if err != nil {
-			return nil, err
-		}
-		definition, err := library.composeExport(root)
-		if err != nil {
-			return nil, err
-		}
-		complete = append(complete, definition)
-		if root.function != nil {
-			functions[root.function.Constructor.Name] = root
+	functions := make(map[string]DefinitionInstance)
+	for _, definition := range complete {
+		if function := definition.definition.function; function != nil {
+			functions[function.Constructor.Name] = definition
 		}
 	}
 	for _, name := range imports {
 		if !strings.HasPrefix(name, "runtime::") {
 			continue
 		}
-		root := functions[strings.TrimSuffix(strings.TrimPrefix(name, "runtime::"), " as _")]
-		if root == nil {
+		root, exists := functions[strings.TrimSuffix(strings.TrimPrefix(name, "runtime::"), " as _")]
+		if !exists {
 			return nil, nil
 		}
 		required = append(required, root)
@@ -85,14 +67,7 @@ func (r *CompilationResult) RuntimeLibrary(name string, imports []string) ([]byt
 			selected = append(selected, definition)
 		}
 	}
-	for _, root := range required {
-		definition, err := library.composeExport(root)
-		if err != nil {
-			return nil, err
-		}
-		selected = append(selected, definition)
-	}
-	selected, err = definitionClosure(selected...)
+	selected, err = definitionClosure(append(selected, required...)...)
 	if err != nil {
 		return nil, err
 	}

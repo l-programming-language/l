@@ -215,6 +215,11 @@ func (c *Compilation) buildMemory() {
 			if c.checkStatementError(statement, "register statement", err) {
 				return
 			}
+			if len(statement.tokens) > 0 {
+				if scope := statement.tokens[0].scope; scope != nil && scope.callableHeader == statement {
+					scope.callableHeader = nil
+				}
+			}
 			for _, tok := range statement.tokens {
 				if tok.pendingDeclaration == nil {
 					continue

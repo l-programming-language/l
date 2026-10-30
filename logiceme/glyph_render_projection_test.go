@@ -20,13 +20,25 @@ func TestForwardedChildProjectionPreservesGroups(t *testing.T) {
 	if _, found := glyph.compiledChildGroup("Unknowns"); found {
 		t.Fatal("unknown child category was accepted")
 	}
+	glyph.Meta.Add("First", "same", "String")
+	glyph.Meta.Add("Second", "same", "SourceString")
 	data, err := glyph.functionalArgumentData([]Parameter{
+		{Key: "First", Type: "Meta", SubType: "Second"},
+		{Key: "Second", Type: "Meta", SubType: "First"},
 		{Key: "Values", Type: "Conjoinments", SubType: "Calculations"},
 		{Key: "Absent", Type: "Conjoinments", SubType: "Declaration"},
 		{Key: "Empty", Type: "Conjoinments", SubType: "Declarations"},
 	})
 	if err != nil {
 		t.Fatal(err)
+	}
+	if data.Meta.Get("First").Type != "SourceString" || data.Meta.Get("Second").Type != "String" {
+		t.Fatalf("forwarded metadata lost its caller snapshot: %+v", data.Meta)
+	}
+	data.Meta.Metas[0].Value = "changed"
+	data.Meta.Index.Keys[0] = "changed"
+	if glyph.Meta.GetVal("First") != "same" || glyph.Meta.Get("First").Type != "String" {
+		t.Fatal("forwarded metadata aliases its caller")
 	}
 	if len(data.Conjoinments) != 3 || data.Conjoinments[0].Key != "Values" ||
 		data.Conjoinments[0].Type != "Calculations" || !data.Conjoinments[0].Plural ||

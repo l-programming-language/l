@@ -22,19 +22,11 @@ func glyphInputSource(g *Glyph) string {
 }
 func (g *Glyph) compiledChildGroups() []CompiledConjoinment {
 	out := make([]CompiledConjoinment, 0, 18)
-	add := func(k string, contents [][]byte, plural bool) {
-		out = append(out, CompiledConjoinment{Key: k, Type: k, Contents: contents, Plural: plural, Index: -1})
-	}
 	for _, typ := range []string{"Declaration", "Calculation", "Evaluation", "Definition", "Description", "Operation", "Iteration", "Instantiation", "Execution"} {
-		var values [][]byte
-		for i := range g.Conjoinments {
-			c := &g.Conjoinments[i]
-			if c.Type == typ {
-				values = append(values, c.Content)
-			}
-		}
-		add(typ+"s", values, true)
-		add(typ, values, false)
+		group, _ := g.compiledChildGroup(typ + "s")
+		out = append(out, group)
+		group.Key, group.Type, group.Plural = typ, typ, false
+		out = append(out, group)
 	}
 	return out
 }
@@ -65,10 +57,7 @@ func (g *Glyph) compiledChildGroup(name string) (CompiledConjoinment, bool) {
 // Argument sources are read from the caller snapshot, so alias order cannot
 // mutate a later argument or leak back into the glyph's prepared state.
 func (g *Glyph) functionalArgumentData(params []Parameter) (DataCompilation, error) {
-	var meta MetaDict
-	for _, value := range g.Meta.Metas {
-		meta.SetAdd(value.Key, value.Value, value.Type)
-	}
+	meta := g.Meta.clone()
 	var children []CompiledConjoinment
 	seen := map[string]bool{}
 	for _, param := range params {

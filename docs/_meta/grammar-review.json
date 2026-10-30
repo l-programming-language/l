@@ -11,7 +11,7 @@
     "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
     "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
-    "lyger/lowering.go": "5307308f745b72ee8b67f7064d839daf00dbfeea1ac7b46946ec3c85bad80629",
+    "lyger/lowering.go": "db0a7e5fcfb301a1d8bc50ef5bdfc0da61cf2cbeff5986ed5f478d4d4ec0e8d0",
     "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
     "lyger/semantic_resolution.go": "21f4b08ca04bed3f0247ed0a458d93685138cac538f3e6554ee41dbf249f3cee",
     "lyger/source_body.go": "41cbf8f1711709cfdc86ceec733a495c027c03b9b3dd60c0f6d7ee9376f336b0",

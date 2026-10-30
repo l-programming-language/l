@@ -32,7 +32,7 @@ func (c *Compilation) nativeDeclaration(rec *record) (string, *DefinitionInstanc
 	}
 	c.nativeDeclarations[rec] = true
 	defer delete(c.nativeDeclarations, rec)
-	template, err := c.recordTemplate(rec)
+	template, object, err := c.recordDefinition(rec)
 	if err != nil {
 		return "", nil, err
 	}
@@ -42,8 +42,6 @@ func (c *Compilation) nativeDeclaration(rec *record) (string, *DefinitionInstanc
 			return "", nil, nil
 		}
 		declaration, err = template.Instantiate(nil)
-	} else if object, objectErr := c.definitionObject(rec); objectErr != nil {
-		return "", nil, objectErr
 	} else if object != nil {
 		node, err := c.constructObject(object, make(map[*descriptorRule]bool))
 		if err != nil {

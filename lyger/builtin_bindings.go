@@ -181,7 +181,7 @@ func (c *Compilation) instantiateNamedDefinition(rec *record, arguments map[stri
 	}
 	active[rec] = true
 	defer delete(active, rec)
-	template, err := c.recordTemplate(rec)
+	template, object, err := c.recordDefinition(rec)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
@@ -190,9 +190,7 @@ func (c *Compilation) instantiateNamedDefinition(rec *record, arguments map[stri
 		bound.Symbol, bound.definition = rec.ID, rec
 		return bound, err
 	}
-	if object, err := c.definitionObject(rec); err != nil {
-		return DefinitionInstance{}, err
-	} else if object != nil {
+	if object != nil {
 		return c.instantiateNamedObject(object, arguments, used, active)
 	}
 	return c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
@@ -332,13 +330,9 @@ func (c *Compilation) callableTemplate(rec *record, active map[*record]bool) (*D
 	}
 	active[rec] = true
 	defer delete(active, rec)
-	template, err := c.recordTemplate(rec)
-	if err != nil || template != nil {
+	template, object, err := c.recordDefinition(rec)
+	if err != nil || template != nil || object == nil {
 		return template, err
-	}
-	object, err := c.definitionObject(rec)
-	if err != nil || object == nil {
-		return nil, err
 	}
 	node, err := c.constructObject(object, make(map[*descriptorRule]bool))
 	if err != nil {

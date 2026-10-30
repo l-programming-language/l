@@ -134,8 +134,14 @@ type DefinitionStore struct {
 }
 
 func RestoreDefinitionBytes(ds []DefinitionStore, contentBytes []byte) []byte {
+	if len(ds) != 0 {
+		contentBytes = bytes.Clone(contentBytes)
+	}
 	for _, definition := range ds {
-		contentBytes = bytes.Replace(contentBytes, definition.StandIn, definition.Raw, 1)
+		//nolint:staticcheck // S1017: Replace copies on a miss; the upfront clone preserves ownership without per-definition copies.
+		if bytes.Contains(contentBytes, definition.StandIn) {
+			contentBytes = bytes.Replace(contentBytes, definition.StandIn, definition.Raw, 1)
+		}
 	}
 	return contentBytes
 }

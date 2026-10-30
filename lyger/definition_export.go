@@ -74,6 +74,21 @@ func (c *Compilation) ComposeLibrary(name, filename string) ([]byte, error) {
 	if err := validateAMLName(filename); err != nil {
 		return nil, err
 	}
+	declarations, err := c.composeExports(name)
+	if err != nil {
+		return nil, err
+	}
+	if len(declarations) == 0 {
+		return nil, lerrors.InvalidInput.Errorf("Dictionary %s has no public source declarations", name)
+	}
+	definitions, err := definitionClosure(declarations...)
+	if err != nil {
+		return nil, err
+	}
+	return renderLibrary(filename, filename, definitions)
+}
+
+func (c *Compilation) composeExports(name string) ([]DefinitionInstance, error) {
 	rec, err := c.exportedRecord(name)
 	if err != nil {
 		return nil, err
@@ -86,11 +101,7 @@ func (c *Compilation) ComposeLibrary(name, filename string) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		if len(roots) == 0 {
-			return nil, lerrors.InvalidInput.Errorf("Dictionary %s has no public source declarations", name)
-		}
 	}
-
 	var declarations []DefinitionInstance
 	for _, root := range roots {
 		definition, err := c.composeExport(root)
@@ -99,11 +110,7 @@ func (c *Compilation) ComposeLibrary(name, filename string) ([]byte, error) {
 		}
 		declarations = append(declarations, definition)
 	}
-	definitions, err := definitionClosure(declarations...)
-	if err != nil {
-		return nil, err
-	}
-	return renderLibrary(filename, filename, definitions)
+	return declarations, nil
 }
 
 func renderLibrary(name, filename string, definitions []DefinitionInstance) ([]byte, error) {
@@ -125,6 +132,9 @@ func renderLibrary(name, filename string, definitions []DefinitionInstance) ([]b
 func (c *Compilation) publicExports(owner *record, active map[*record]bool) ([]*record, error) {
 	if active[owner] {
 		return nil, lerrors.Cycle.Errorf("recursive public namespace %s", owner.ID)
+	}
+	if len(owner.members) == 0 {
+		return nil, nil
 	}
 	active[owner] = true
 	defer delete(active, owner)

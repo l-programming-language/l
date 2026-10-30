@@ -7,11 +7,7 @@ import (
 )
 
 func TestComposedSourceFormalBindings(t *testing.T) {
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte("Use Storage from `storage`.\nCreate \"Repeat|-s|-ed|-ing|-er\" for Processing a New Storage's Discarder of any Text and then Processing a New Storage's Discarder of it.\n"), "formal.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, "Use Storage from `storage`.\nCreate \"Repeat|-s|-ed|-ing|-er\" for Processing a New Storage's Discarder of any Text and then Processing a New Storage's Discarder of it.\n", "formal.l")
 	rec, err := c.exportedRecord("Repeat")
 	if err != nil {
 		t.Fatal(err)
@@ -35,11 +31,7 @@ func TestComposedSourceFormalEvaluatesValueOnce(t *testing.T) {
 		"Create \"Repeat|-s|-ed|-ing|-er\" for Processing a New Storage's Discarder of any Thing and then Processing a New Storage's Discarder of it.\n\n" +
 		"    Publicly create \"Tick|-s|-ed|-ing|-er\" as a Generic Function with Inputs of \"value\" as `&std::cell::Cell<f64>` and Outputs of `f64`.\nCreate \"Before\" as a New Current of Value.\nCreate \"After\" as a New Next of Before.\nUpdate Value and After.\nReturn After.\n\n" +
 		"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `&std::cell::Cell<f64>` and Outputs of `f64`.\nRepeat a New Ticker of Value.\nReturn a New Current of Value.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "formal-once.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "formal-once.l")
 	testNativeDefinitionLibrary(t, c, "Exercise", "formal", `#[path="src/formal.rs"] mod generated; fn main() { let value = std::cell::Cell::new(0.0); assert_eq!(generated::exercise(&value), 1.0); }`)
 }
 
@@ -61,11 +53,7 @@ func TestComposedTraversalBehavior(t *testing.T) {
 		}
 		source.WriteString(variant.ending + "\n")
 	}
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source.String()), "traversal.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source.String(), "traversal.l")
 	testNativeDefinitionLibrary(t, c, "Checks", "traversal", `#[path="src/traversal.rs"] mod generated;
 fn visit(value: &u64, seen: &mut Vec<u64>) { seen.push(*value); }
 fn pair(key: &u64, value: &u64, seen: &mut Vec<u64>) { seen.extend([*key, *value]); }
@@ -88,10 +76,6 @@ fn main() {
 func TestComposedProcessAliasPreservesBody(t *testing.T) {
 	source := "Use Process as \"Sequence\".\nCreate \"Perform|-s|-ed|-ing|-er\" for Processing any Sequence.\n\n" +
 		"    Publicly create \"Exercise\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\nPerform a New Process for Returning 7.\n"
-	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "process-alias.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
+	c := compileDefinitionSource(t, source, "process-alias.l")
 	testNativeDefinitionLibrary(t, c, "Exercise", "process_alias", `#[path="src/process_alias.rs"] mod generated; fn main() { assert_eq!(generated::exercise(), 7.0); }`)
 }
