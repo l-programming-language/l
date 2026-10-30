@@ -12998,10 +12998,10 @@
     "logiceme/glyph_metadata_validation.go": "7ad22b69af7b2b17f13285676fa0957ece073714dca1f3c6a5b12f9d44a0ae0c",
     "logiceme/lucid_interpreter.go": "5026306d05519f289d05e6e9a20baf8274ea94ea99ced817e26fe81eaea45f17",
     "logiceme/lucid.go": "c70058815dcf9518d6c7a3cedeaa012e0c203742c9536b8a0af0584af7f91fbb",
-    "logiceme/glyph_prepare.go": "42b316c2a4bd1b5ca5feec2b274becd2844e9583762c1af79faa3cf90734440e",
-    "logiceme/segments.go": "de380d45b7ba7ce74e72c23ad9455f6258a5f79ae2f90811ef1ab50f0d5c8c3a",
+    "logiceme/glyph_prepare.go": "5d4af178224267de8d0e42525f52cd35ec4d1f4a32d74fd385397b029c0656a8",
+    "logiceme/segments.go": "840aeebfcf50706a085ba335d93567449b550a3b6782040d71b4b481f34459a4",
     "logiceme/segment_cases.go": "ad3f50c82c8747cb17234668e0501d4b76063dc53fc4c1528d4473fe586ef11f",
-    "logiceme/glyph_render.go": "299b68c52e473d28473f180be1d23ea330881bcb4c62e833729f946dd6fb615c",
+    "logiceme/glyph_render.go": "52410ec7fbef5ee4bc90910b12eb8a16bb84069bed7a94548fdfc890815ce216",
     "logiceme/segment_case_clone.go": "bd199296a249db44d2a594fd29a21656fb7fa15861adcb502272a2ad602720bb"
   },
   "description": "Static coverage and existing witnesses; no language execution during website validation."
