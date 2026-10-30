@@ -1,5 +1,4 @@
 Define Runtime's "Supervision" as a New Dictionary.
-Define Runtime's "Reborrow" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&mut *<@Value@>~|}<DEF>`.
 Define Runtime's Supervision's "Waiter" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~wait~, Receiver: ~<@Dependencies@>~, Inputs: ~&[<@Child@>]&~|}<DEF>`.
 Define Runtime's Supervision's "Close|-s|-d|--ing|-r" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~close~, Receiver: ~<@Value@>~|}<DEF>`.
 Define Runtime's Supervision's "Read|-s|-|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~try_recv~, Receiver: ~<@Value@>~|}<DEF>`.
@@ -16,10 +15,10 @@ Return a New Success of a New Nothing.
 
     Create Runtime's Supervision's "Poll|-s|-ed|-ing|-er" as a Generic Pending `supervision_poll` Function with Inputs of "wait" as `&mut crate::runtime::host::Wait<'_>` and "requests" as `&mut tokio::sync::mpsc::UnboundedReceiver<tokio::sync::oneshot::Sender<Result<()>>>` and "pid" as `Option<u32>` and "result" as `&mut Option<std::io::Result<std::process::ExitStatus>>` and Outputs of `impl std::future::Future<Output = bool> + Send`.
 Create "Incoming" as a New Runtime's Receiver of Requests.
-Create "Borrowed" as a New Runtime's Reborrow of Wait.
+Create "Borrowed" as a New Storage.Editable Storage's Reference of Wait.
 Create "Ready" as a New Runtime's Completion of a New Runtime's Racer of Borrowed and Incoming.
 Create "Waited" as a New Runtime's Valid of Ready.
-If Waited, Create "Primary" as a New Runtime's Capture's Success of Ready and then Runtime.Replace Result and Primary and then Return true.
+If Waited, Create "Primary" as a New Storage's Optional of Ready and then Runtime.Replace Result and Primary and then Return true.
 Create "Received" as a New Runtime's Rejecter of Ready.
 Create "Available" as a New Presence of Received.
 If Available, Create "Reply" as a New Contents of Received and `pending leader request` and then Create "Replyresult" as a New Runtime's Supervision's Terminator of Pid and then Runtime.Supervision.Discard Reply and Replyresult and then Return false.
@@ -98,26 +97,16 @@ Return a New Present of a New Runtime's Error's Attacher of Fault and Bytes.
 Create "Child" as a New Mutable Binding of Process.
 Create "Stdout" as a New Runtime's Supervision's Stdout of Child.
 Create "Stderr" as a New Runtime's Supervision's Stderr of Child.
-Create "Deadline" as a New Runtime's Invocation's Notification of Value.
-Create "Outputdeadline" as a New Runtime's Subscriber of Deadline.
-Create "Errordeadline" as a New Runtime's Subscriber of Deadline.
+Create "Reference" as a New Storage's Borrower of Value.
+Create "Out" as a New Runtime's Capture's Follower of Reference, Stdout, and a New Runtime's Supervision's Output.
+Create "Err" as a New Runtime's Capture's Follower of Reference, Stderr, and a New Runtime's Supervision's Error.
 Create "Dependencies" as a New Runtime's Invocation's Dependencies of Value.
-Create "Outputdependencies" as a New Runtime's Retainer of Dependencies.
-Create "Errordependencies" as a New Runtime's Retainer of Dependencies.
-Create "Output" as a New Runtime's Supervision's Output.
-Create "Error" as a New Runtime's Supervision's Error.
-Create "Out" as a New Runtime's Spawner of a New Runtime's Capture's Reader of Stdout, Outputdeadline, Outputdependencies, and Output.
-Create "Failure" as a New Runtime's Capture's Reader of Stderr, Errordeadline, Errordependencies, and Error.
-Create "Err" as a New Runtime's Spawner of Failure.
 Create "Pid" as a New Runtime's Supervision's Identity of Child.
 Create "Mutableref" as a New Storage.Editable Storage's Borrower of Child.
 Create "Wait" as a New Runtime's Supervision's Waiter of Dependencies and Mutableref.
 Create "Waited" as a New Runtime's Completion of a New Runtime's Supervision's Awaiter of Wait, Requests, and Pid.
 Create "Now" as a New Runtime's Now.
-Create "Delay" as a New Runtime's Duration of a New Unsigned Integer of 2.
-Create "Limit" as a New Sum of Now and Delay.
-Create "Reference" as a New Storage's Borrower of Value.
-Create "Bounded" as a New Runtime's Invocation's Bounder of Reference and Limit.
+Create "Bounded" as a New Runtime's Invocation's Bounder of Reference and a New Sum of Now and a New Runtime's Duration of a New Unsigned Integer of 2.
 Create "Outcompleted" as a New Runtime's Completion of Out.
 Create "Errcompleted" as a New Runtime's Completion of Err.
 Create "Outputcapture" as a New Runtime's Capture's Joiner of Outcompleted and `stdout`.
@@ -128,7 +117,7 @@ Create "Errors" as a New First of Errorcapture.
 Create "Errerror" as a New Second of Errorcapture.
 Create "Cleanup" as a New Runtime's Failure of a New Runtime's Completion of a New Runtime's Invocation's Terminator of Reference and true.
 Create "Available" as a New Presence of Cleanup.
-If Available, Create "Cleanupref" as a New Runtime's Borrower of Cleanup and then Create "Fault" as a New Contents of Cleanupref and `present cleanup error` and then Create "Copied" as a New Runtime's Error's Copier of Fault and then Create "Recorded" as a New Runtime's Invocation's Recorder of Reference and Copied.
+If Available, Create "Cleanupref" as a New Storage's Referrer of Cleanup and then Create "Fault" as a New Contents of Cleanupref and `present cleanup error` and then Create "Copied" as a New Runtime's Error's Copier of Fault and then Create "Recorded" as a New Runtime's Invocation's Recorder of Reference and Copied.
 Create "Retained" as a New Storage's Borrower of Owner.
 Create "Finished" as a New Runtime's Supervision's Completer of Reference, Retained, Waited, Bytes, Errors, Outerror, Errerror, and Cleanup.
 Return a New Nothing.

@@ -28,11 +28,9 @@ Create "Path" as a New Runtime's App's Path of Value.
 Create "Blank" as a New Runtime's Vacancy of a New Runtime's Path's Empty of Path.
 Create "Parts" as a New Runtime's Path's Parts of Path.
 Create "Relative" as a New Runtime's Path's Checker of Parts and Runtime's Path's Admitter.
-Create "Invalid" as a New Equality of Relative and false.
-Create "Rejected" as a New Runtime's Either of Blank and Invalid.
+Create "Rejected" as a New Storage's Alternative of Blank and a New Equality of Relative and false.
 If Rejected, Create "Description" as a New Runtime's Path's Description of Path and then Create "Text" as a New Runtime's Text of Description and then Create "Fault" as a New Runtime's Error's Describer of Text and then Create "Rejectedvalue" as a New Failure of Fault and then Return Rejectedvalue.
-Create "Copied" as a New Storage's Copier of a New Runtime's Directory of a New Runtime's Reference of Owner.
-Create "Parent" as a New Storage.Checked Storage's Binding of Copied.
+Create "Parent" as a New Storage.Checked Storage's Binding of a New Storage's Copier of a New Runtime's Directory of a New Runtime's Reference of Owner.
 Create "Joined" as a New Runtime's Path's Joiner of Parent and Path.
 Create "Inspected" as a New Runtime's Path's Inspector of a New Storage's Borrower of Joined.
 Create "Failed" as a New Runtime's Fault of Inspected.
@@ -55,8 +53,7 @@ If Empty, Create "Plain" as a New Runtime's Error's Describer of Message and the
 Return a New Runtime's Error's Describer of a New Runtime's Text of a New Runtime's Context of Copied and Message.
 
     Create Runtime's App's "Explain|-s|-ed|-ing|-er" as a Generic `app_misuse` Function with Inputs of "value" as `&App` and "owner" as `&Runtime` and "message" as `&str` and Outputs of Runtime's Error.
-Create "Wrapped" as a New Present of a New Runtime's App's Describer of Value and Message.
-Return a New Runtime's Failer of Owner and Wrapped.
+Return a New Runtime's Failer of Owner and a New Present of a New Runtime's App's Describer of Value and Message.
 
     Publicly create Runtime's App's "Build|-s|---ilt|-ing|-er" as a Generic `app_build` Function with Inputs of "value" as `&App` and Outputs of `Result<()>`.
 Create "Borrowed" as a New Storage's Borrower of a New Storage.Checked Storage's Binding of a New Runtime's App's Owner of Value.
@@ -100,8 +97,7 @@ Return a New Failure of a New Runtime's App's Explainer of Value, Borrowed, and 
     Create Runtime's App's "Select|-s|-ed|-ing|-or" as a Generic `app_selection` Function with Inputs of "value" as `&App` and Outputs of `(Option<std::sync::Arc<Invocation>>, Option<Error>)`.
 Create "Guard" as a New Locker of a New Runtime's App's Admission of Value.
 Create "Invocation" as a New Storage's Copier of a New Runtime's App's Preference of Guard.
-Create "Copied" as a New Storage's Copier of a New Runtime's App's Fault of Guard.
-Return a New Pair of Invocation and Copied.
+Return a New Pair of Invocation and a New Storage's Copier of a New Runtime's App's Fault of Guard.
 
     Publicly create Runtime's App's "Inspect|-s|-ed|-ing|-or" as a Generic `app_error` Function with Inputs of "value" as `&App` and Outputs of `Result<Option<Error>>`.
 Create "State" as a New Runtime's App's Selector of Value.
@@ -118,6 +114,12 @@ Return a New Success of a New Absent.
 Define Runtime's "Checkpoint" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~crate::runtime::host::Checkpoint::CapturedStopTarget~|}<DEF>`.
 Define Runtime's Checkpoint's "Enter|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~checkpoint~, Receiver: ~<@Dependencies@>~, Inputs: ~&[<@Event@>, <@Invocation@>]&~|}<DEF>`.
 Define Runtime's "Race|-s|-d|--ing|-r" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::runtime::host::race~, Inputs: ~&[<@First@>, <@Second@>]&~|}<DEF>`.
+
+    Create Runtime's Invocation's "Observe|-s|-d|--ing|--er" as a Generic Function with Inputs of "value" as `&std::sync::Arc<Invocation>` and "event" as `crate::runtime::host::Checkpoint` and Outputs of `()`.
+Create "Dependencies" as a New Runtime's Invocation's Dependencies of Value.
+Create "Retained" as a New Runtime's Retainer of Value.
+Runtime.Checkpoint.Enter Dependencies, Event, and Retained.
+Return a New Nothing.
 
     Create Runtime's App's "Resolve|-s|-d|--ing|-r" as a Generic `app_resolve` Function with Inputs of "value" as `&App` and "invocation" as `&std::sync::Arc<Invocation>` and "failure" as `Option<Error>` and Outputs of `()`.
 Create "Unit" as a New Nothing.
@@ -143,10 +145,7 @@ Create "Available" as a New Presence of Optional.
 If Available is false, Create "Fault" as a New Runtime's App's Explainer of Value, Borrowed, and `Stop requires an invocation` and then Create "Rejected" as a New Failure of Fault and then Return Rejected.
 Create "Invocation" as a New Contents of Optional and `present stop invocation`.
 Create "Reference" as a New Storage's Borrower of Invocation.
-Create "Retained" as a New Runtime's Retainer of Reference.
-Create "Dependencies" as a New Runtime's Authority of a New Runtime's Reference of Owner.
-Create "Event" as a New Runtime's Checkpoint.
-Runtime.Checkpoint.Enter Dependencies, Event, and Retained.
+Create "Observed" as a New Runtime's Invocation's Observer of Reference and a New Runtime's Checkpoint.
 Create "Stopped" as a New Runtime's Completion of a New Runtime's Invocation's Terminator of Reference and false.
 Create "Failed" as a New Runtime's Fault of Stopped.
 If Failed, Create "Error" as a New Runtime's Rejecter of Stopped and then Create "Recordedfault" as a New Present of Error and then Create "Recorded" as a New Runtime's App's Resolver of Value, Reference, and Recordedfault.
@@ -165,12 +164,10 @@ Create "Reference" as a New Storage's Borrower of Invocation.
 Create "Inner" as a New Runtime's Reference of Owner.
 Create "Receiver" as a New Mutable Binding of a New Runtime's Subscriber of a New Runtime's Inner's Cancellation of Inner.
 Create "Cancelled" as a New Runtime's Waiter of a New Storage.Editable Storage's Borrower of Receiver.
-Create "Completed" as a New Runtime's Invocation's Completer of Reference.
-Create "Stopped" as a New Runtime's Valid of a New Runtime's Completion of a New Runtime's Racer of Cancelled and Completed.
+Create "Stopped" as a New Runtime's Valid of a New Runtime's Completion of a New Runtime's Racer of Cancelled and a New Runtime's Invocation's Completer of Reference.
 If Stopped, Create "Reason" as a New Runtime's Error's Canceller and then Create "Aborted" as a New Failure of Reason and then Return Aborted.
 Create "Accepted" as a New Storage.Checked Storage's Binding of a New Runtime's Checker of Borrowed.
-Create "Missing" as a New Absent.
-Create "Selected" as a New Runtime's App's Resolver of Value, Reference, and Missing.
+Create "Selected" as a New Runtime's App's Resolver of Value, Reference, and a New Absent.
 Return a New Success of Invocation.
 
 Define Runtime's App's "Store" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&mut <@Value@>.invocation~|}<DEF>`.
@@ -182,8 +179,7 @@ Define Runtime's "Duration" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~toki
 Create "Locked" as a New Locker of a New Runtime's Admission of a New Runtime's Reference of Value.
 Create "Guard" as a New Mutable Binding of Locked.
 Create "Previous" as a New Runtime's Ordinal of Guard.
-Create "One" as a New Unsigned Integer of 1.
-Create "Next" as a New Sum of Previous and One.
+Create "Next" as a New Sum of Previous and a New Unsigned Integer of 1.
 Create "Target" as a New Runtime's Advance of Guard.
 Runtime.Replace Target and Next.
 Return Next.
@@ -198,8 +194,7 @@ Create "Inner" as a New Runtime's Reference of Owner.
 Create "Weak" as a New Runtime's Weak of Inner.
 Create "Retained" as a New Runtime's Retainer of a New Runtime's Authority of Inner.
 Create "Delay" as a New Runtime's Duration of a New Unsigned Integer of 2.
-Create "Pid" as a New Absent.
-Create "Allocated" as a New Runtime's Invocation's Allocator of App, Weak, Sequence, Retained, Delay, and Pid.
+Create "Allocated" as a New Runtime's Invocation's Allocator of App, Weak, Sequence, Retained, Delay, and a New Absent.
 Create "Invocation" as a New First of Allocated.
 Create "Receiver" as a New Second of Allocated.
 Create "Reference" as a New Storage's Borrower of Invocation.
@@ -263,8 +258,11 @@ Define Runtime's Snapshot's "Empty" as `<DEF>MOB{|Key: ~<@Name|Label@>~, Type: ~
 Create "Output" as a New Runtime's Snapshot's Empty.
 Create "Stderr" as a New Runtime's Snapshot's Empty.
 Create "Fault" as a New Present of Error.
-Create "Status" as a New Absent.
-Return a New Runtime's Snapshot's Content of Output, Stderr, Fault, and Status.
+Return a New Runtime's Snapshot's Content of Output, Stderr, Fault, and a New Absent.
+
+    Create Runtime's Invocation's "Reject|-s|-ed|-ing|-er" as a Generic Function with Inputs of "value" as `&std::sync::Arc<Invocation>` and "error" as `Error` and Outputs of `()`.
+Create "Published" as a New Runtime's Invocation's Publisher of Value and a New Runtime's Snapshot's Rejecter of Error.
+Return a New Nothing.
 
     Create Runtime's Invocation's "Identify|--ies|--ied|-ing|--ier" as a Generic `invocation_set_pid` Function with Inputs of "value" as `&Invocation` and "pid" as `Option<u32>` and Outputs of `()`.
 Create "Result" as a New Runtime's Invocation's Locker of a New Runtime's Invocation's Gate of Value.
@@ -280,29 +278,24 @@ Create "Invocation" as a New First of Allocated.
 Create "Receiver" as a New Second of Allocated.
 Create "Reference" as a New Storage's Borrower of Invocation.
 Create "Inner" as a New Runtime's Reference of Owner.
-Create "Dependencies" as a New Runtime's Authority of Inner.
-Create "Before" as a New Runtime's App's Before.
-Create "Retained" as a New Runtime's Retainer of Reference.
-Runtime.Checkpoint.Enter Dependencies, Before, and Retained.
+Create "Observed" as a New Runtime's Invocation's Observer of Reference and a New Runtime's App's Before.
 Create "Admission" as a New Mutable Binding of a New Locker of a New Runtime's Admission of Inner.
 Create "Allowed" as a New Runtime's Admitter of a New Storage's Borrower of Admission.
-If Allowed is false, Dispose Admission and then Create "Cancelled" as a New Runtime's Error's Canceller and then Create "Cancelledsnapshot" as a New Runtime's Snapshot's Rejecter of Cancelled and then Create "Cancellationpublished" as a New Runtime's Invocation's Publisher of Reference and Cancelledsnapshot and then Create "Fault" as a New Runtime's Error's Canceller and then Create "Rejected" as a New Failure of Fault and then Return Rejected.
+If Allowed is false, Dispose Admission and then Create "Cancelled" as a New Runtime's Invocation's Rejecter of Reference and a New Runtime's Error's Canceller and then Create "Rejected" as a New Failure of a New Runtime's Error's Canceller and then Return Rejected.
 Create "Launched" as a New Runtime's App's Launcher of Value and Borrowed.
 Create "Failed" as a New Runtime's Fault of Launched.
-If Failed, Dispose Admission and then Dispose Receiver and then Create "Reason" as a New Runtime's Rejecter of Launched and then Create "Snapshot" as a New Runtime's Snapshot's Rejecter of Reason and then Create "Published" as a New Runtime's Invocation's Publisher of Reference and Snapshot.
-Otherwise, Create "Child" as a New Contents of Launched and `launched application child` and then Create "Mutableref" as a New Runtime's Mutable of Admission and then Create "Supervised" as a New Runtime's App's Superviser of Reference, Child, Receiver, Mutableref, and Borrowed and then Dispose Admission and then Create "After" as a New Runtime's App's Progress and then Create "Copied" as a New Runtime's Retainer of Reference and then Runtime.Checkpoint.Enter Dependencies, After, and Copied.
+If Failed, Dispose Admission and then Dispose Receiver and then Create "Published" as a New Runtime's Invocation's Rejecter of Reference and a New Runtime's Rejecter of Launched.
+Otherwise, Create "Child" as a New Contents of Launched and `launched application child` and then Create "Mutableref" as a New Storage.Editable Storage's Reference of Admission and then Create "Supervised" as a New Runtime's App's Superviser of Reference, Child, Receiver, Mutableref, and Borrowed and then Dispose Admission and then Create "Notified" as a New Runtime's Invocation's Observer of Reference and a New Runtime's App's Progress.
 Create "Checked" as a New Runtime's Checker of Borrowed.
 Create "Accepted" as a New Storage.Checked Storage's Binding of Checked.
 Return a New Success of Invocation.
 
     Create Runtime's App's "Supervise|-s|-d|--ing|-r" as a Generic `app_supervise` Function with Inputs of "value" as `&std::sync::Arc<Invocation>` and "child" as `tokio::process::Child` and "receiver" as `tokio::sync::mpsc::UnboundedReceiver<tokio::sync::oneshot::Sender<Result<()>>>` and "admission" as `&mut RuntimeState` and "owner" as `&Runtime` and Outputs of `()`.
-Create "Pid" as a New Runtime's Supervision's Identity of Child.
-Create "Identified" as a New Runtime's Invocation's Identifier of Value and Pid.
+Create "Identified" as a New Runtime's Invocation's Identifier of Value and a New Runtime's Supervision's Identity of Child.
 Create "Sequence" as a New Runtime's Invocation's Sequence of Value.
 Create "Stored" as a New Runtime's Retainer of Value.
 Create "Processes" as a New Runtime's App's Processes of Admission.
 Runtime.App.Insert Processes, Sequence, and Stored.
 Create "Supervisor" as a New Runtime's Retainer of Value.
-Create "Ownercopy" as a New Runtime's Copier of Owner.
-Create "Spawned" as a New Runtime's Spawner of a New Runtime's Invocation's Superviser of Supervisor, Child, Receiver, and Ownercopy.
+Create "Spawned" as a New Runtime's Spawner of a New Runtime's Invocation's Superviser of Supervisor, Child, Receiver, and a New Runtime's Copier of Owner.
 Return a New Nothing.

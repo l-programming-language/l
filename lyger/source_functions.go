@@ -10,24 +10,21 @@ type functionParameter struct {
 	Type   runtimeTypeRef
 }
 type sourceFunction struct {
-	Native         bool
-	Constructor    *constructionNode
-	Invoke         *record
-	aliases        map[*record]*record
-	Definition     *record
-	Template       *DefinitionTemplate
-	Return         *record
-	ReturnTemplate *DefinitionTemplate
-	Members        map[string]*DefinitionTemplate
-	Word           *lexeme
-	Record         *record
-	Header         *lStatement
-	Scope          *lexicalScope
-	Inputs         []functionParameter
-	Outputs        []runtimeTypeRef
-	Body           []*instruction
-	Captures       []*instructionValue
-	CaptureCalls   []*record
+	Native       bool
+	Constructor  *constructionNode
+	Invoke       *record
+	aliases      map[*record]*record
+	Definition   *record
+	Return       *record
+	Word         *lexeme
+	Record       *record
+	Header       *lStatement
+	Scope        *lexicalScope
+	Inputs       []functionParameter
+	Outputs      []runtimeTypeRef
+	Body         []*instruction
+	Captures     []*instructionValue
+	CaptureCalls []*record
 }
 
 func (f *sourceFunction) bindsReturn(tok *token) bool {
@@ -139,10 +136,10 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 			native = native || typ.cType == "text" || name != ""
 		}
 	}
-	if !native && object.cType != "callable" {
+	if !native && object.cType != "callable" && (object.phrase == nil || object.phrase.gType != "phrase.signature") {
 		return false, nil
 	}
-	template, err := c.recordTemplate(object.noun.binding.Record)
+	template, err := c.callableTemplate(object.noun.binding.Record, make(map[*record]bool))
 	if err != nil {
 		return true, err
 	}
@@ -174,37 +171,34 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 	if err != nil {
 		return true, err
 	}
-	function := &sourceFunction{Native: native, aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition, Template: template, Word: word, Members: make(map[string]*DefinitionTemplate)}
+	function := &sourceFunction{Native: native, aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition, Word: word}
 	for _, name := range []string{"Return", "Invoke"} {
 		binding, _, err := c.resolver().lookupMember(definition, []byte(name))
 		if err != nil {
 			return true, err
 		}
 		if binding == nil {
-			if native {
-				return true, lerrors.InvalidInput.Errorf("Function constructor has no %s definition", name)
-			}
-			continue
-		}
-		function.Members[name], err = c.recordTemplate(binding.Record)
-		if err != nil {
-			return true, err
+			return true, lerrors.UnresolvedReference.Errorf("Function constructor has no %s definition", name)
 		}
 		if name == "Return" {
-			function.Return, function.ReturnTemplate = binding.Record, function.Members[name]
+			function.Return = binding.Record
 		} else {
 			function.Invoke = binding.Record
 		}
 	}
+	constructor := *object
+	if !native {
+		constructor.phrase = nil // Runtime signatures are resolved below; descriptors still belong to the constructor.
+	}
+	node, err := c.constructObject(&constructor, make(map[*descriptorRule]bool))
+	if err != nil {
+		return true, err
+	}
+	function.Constructor = node
 	if native {
-		node, err := c.constructObject(object, make(map[*descriptorRule]bool))
-		if err != nil {
-			return true, err
-		}
 		if !node.InputsDefined || !node.OutputsDefined {
 			return true, lerrors.InvalidInput.Errorf("Function requires an explicit signature")
 		}
-		function.Constructor = node
 		function.Record = &record{ID: word.Root, Type: "lexeme.verb.generic", Value: &entry{Type: storageLexeme, Lexeme: word}}
 		prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: target, Record: function.Record})
 		for i, input := range node.Inputs {

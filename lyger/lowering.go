@@ -8,6 +8,29 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
+// definitionSite identifies one authored declaration for both literal and source
+// constructions. Aliases are resolved by callers before selecting that site.
+func (c *Compilation) definitionSite(rec *record) (*lStatement, *registrationSite, error) {
+	source := c.Semantics.Declarations[rec]
+	if source == nil {
+		return nil, nil, nil
+	}
+	sites, err := source.sGram.registrationSites()
+	if err != nil {
+		return nil, nil, err
+	}
+	for _, site := range sites {
+		target, err := site.target()
+		if err != nil {
+			return nil, nil, err
+		}
+		if c.Semantics.Subjects[target] == rec {
+			return source, &site, nil
+		}
+	}
+	return source, nil, nil
+}
+
 func (c *Compilation) recordTemplate(rec *record) (*DefinitionTemplate, error) {
 	rec, err := canonicalRecord(rec, c.Semantics.Aliases)
 	if err != nil {
@@ -16,36 +39,25 @@ func (c *Compilation) recordTemplate(rec *record) (*DefinitionTemplate, error) {
 	if rec == nil {
 		return nil, lerrors.Internal.Errorf("definition reference has no record")
 	}
-	source := c.Semantics.Declarations[rec]
-	if source == nil {
-		return nil, lerrors.Internal.Errorf("definition %s has no source declaration", rec.ID)
-	}
-	sites, err := source.sGram.registrationSites()
+	source, site, err := c.definitionSite(rec)
 	if err != nil {
 		return nil, err
 	}
-	for _, site := range sites {
-		target, err := site.target()
-		if err != nil {
-			return nil, err
-		}
-		if c.Semantics.Subjects[target] != rec {
-			continue
-		}
-		literal, err := site.literal()
-		if err != nil {
-			return nil, err
-		}
-		if literal == nil {
-			return nil, nil
-		}
-		template, err := ParseDefinitionTemplate(literal.rawBytes, source.source.Span)
-		if err == nil {
-			template.dependencies, err = c.declarationDependencies(rec)
-		}
-		return template, err
+	if source == nil {
+		return nil, lerrors.Internal.Errorf("definition %s has no source declaration", rec.ID)
 	}
-	return nil, lerrors.Internal.Errorf("definition %s has no source declaration site", rec.ID)
+	if site == nil {
+		return nil, lerrors.Internal.Errorf("definition %s has no source declaration site", rec.ID)
+	}
+	literal, err := site.literal()
+	if err != nil || literal == nil {
+		return nil, err
+	}
+	template, err := ParseDefinitionTemplate(literal.rawBytes, source.source.Span)
+	if err == nil {
+		template.dependencies, err = c.declarationDependencies(rec)
+	}
+	return template, err
 }
 
 func definitionArguments(template *DefinitionTemplate, args []DefinitionArgument) (map[string]DefinitionArgument, error) {
@@ -135,7 +147,7 @@ func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgume
 		if err != nil {
 			return DefinitionInstance{}, fmt.Errorf("%s: %w", rec.ID, err)
 		}
-		instance, err := template.Instantiate(bindings)
+		instance, err := c.instantiateTemplate(template, bindings)
 		instance.Symbol = rec.ID
 		instance.definition = rec
 		return instance, err
@@ -149,6 +161,37 @@ func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgume
 		}
 		instance.Symbol, instance.definition = rec.ID, rec
 		return instance, err
+	}
+	var before []DefinitionInstance
+	for _, ordered := range c.Scope.Ordered {
+		if ordered.Statement != c.Semantics.Declarations[rec] || len(ordered.Arguments) == 0 {
+			continue
+		}
+		if len(args) != len(ordered.Arguments) {
+			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("source action requires %d arguments, got %d", len(ordered.Arguments), len(args))
+		}
+		process, err := c.builtinRecord("Process")
+		if err != nil {
+			return DefinitionInstance{}, err
+		}
+		args = append([]DefinitionArgument(nil), args...)
+		for index, formal := range ordered.Arguments {
+			typ, err := c.resolver().reference(formal.Token)
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			if typ == process {
+				continue
+			}
+			argument, err := c.atomArgument(args[index])
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			var steps []DefinitionInstance
+			args[index], steps = argument.boundResult()
+			before = append(before, steps...)
+		}
+		break
 	}
 	forwarded := false
 	resultSymbol := ""
@@ -171,6 +214,7 @@ func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgume
 	if len(args) > 0 && !forwarded {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s received %d unused arguments", rec.ID, len(args))
 	}
+	bound.before = append(before, bound.before...)
 	bound.Symbol, bound.definition = resultSymbol, resultDefinition
 	return bound, nil
 }
@@ -230,8 +274,8 @@ func (c *Compilation) instantiateStaticAction(action *clauseGram, inherited []De
 	var arguments []DefinitionArgument
 	var ledger []DefinitionBinding
 	used := false
-	for index, object := range action.orderedObjects() {
-		argument, forwarded, err := c.definitionCallArgument(action.verb.binding.Record, nil, index, object, inherited, active, dynamic)
+	for _, object := range action.orderedObjects() {
+		argument, forwarded, err := c.staticObjectArgument(object, inherited, active, dynamic)
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}
@@ -256,52 +300,36 @@ func (c *Compilation) instantiateStaticAction(action *clauseGram, inherited []De
 	return instance, used, nil
 }
 
-// Only atom-taking slots require a nested operation's result. Composition
-// slots retain its selected definition, and Type slots retain declaration identity.
-func (c *Compilation) definitionCallArgument(rec *record, template *DefinitionTemplate, position int, object *objectGram, inherited []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionArgument, bool, error) {
-	rec, err := canonicalRecord(rec, c.Semantics.Aliases)
-	if err != nil {
-		return DefinitionArgument{}, false, err
-	}
-	argument, used, err := c.staticObjectArgument(object, inherited, active, dynamic)
-	if err != nil || argument.Definition == nil {
-		return argument, used, err
-	}
-	atom := rec.function != nil && rec.function.Native
-	if !atom {
-		if template == nil {
-			var err error
-			template, err = c.recordTemplate(rec)
-			if err != nil {
-				return DefinitionArgument{}, false, err
-			}
-		}
-		if template != nil {
-			for index, slot := range template.Slots {
-				if index == position || index < position && slot.Type == "Atoms" {
-					atom = template.metadataSlots[slot.Name] && (slot.Type == "" || slot.Type == "Atoms")
-					break
-				}
-			}
-		}
-	}
-	if atom && argument.Definition.result == nil {
-		name := c.definitionLabel()
-		bound, err := c.instantiateDescribedBuiltin("Storage.Binding", []string{"Storage.Produced"}, map[string]DefinitionArgument{"Name": definitionReferenceArgument(name), "Value": argument})
-		if err != nil {
-			return DefinitionArgument{}, false, err
-		}
-		result := definitionReferenceArgument(name)
-		result.source = c.operandSource(object.noun)
-		bound.result = &result
-		argument.Definition = &bound
-	}
-	return argument, used, nil
-}
-
 // The same operand rules serve source directives, constructors and App bodies.
 // Only selected source definitions compose operations; other operands stay atoms.
 func (c *Compilation) staticObjectArgument(object *objectGram, inherited []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionArgument, bool, error) {
+	if object != nil && object.noun != nil {
+		target := object.noun
+		if pronoun, exists := c.Scope.Pronouns[target]; exists && pronoun.Kind == scopeActionArgument {
+			target = pronoun.TargetToken
+		}
+		for _, ordered := range c.Scope.Ordered {
+			for index, formal := range ordered.Arguments {
+				if formal.Token != target {
+					continue
+				}
+				if len(inherited) != len(ordered.Arguments) {
+					return DefinitionArgument{}, false, lerrors.InvalidInput.Errorf("source action requires %d arguments, got %d", len(ordered.Arguments), len(inherited))
+				}
+				argument := inherited[index]
+				if kind, _ := parseDefinitionArgKindExact(argument.Kind); kind >= definitionArgText && kind <= definitionArgNull && argument.reference == "" {
+					name, err := nominalType(formal.Token)
+					if err != nil {
+						return DefinitionArgument{}, false, err
+					}
+					if _, err := argument.renderFor(DefinitionSlot{Type: name}); err != nil {
+						return DefinitionArgument{}, false, err
+					}
+				}
+				return argument, true, nil
+			}
+		}
+	}
 	return c.definitionOperand(object, active, dynamic, func(child *objectGram) (DefinitionInstance, bool, error) {
 		return c.instantiateStaticObject(child, inherited, active, dynamic)
 	})
@@ -416,24 +444,15 @@ func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inhe
 	if err != nil {
 		return DefinitionInstance{}, false, err
 	}
-	operandTemplate := template
-	wrappers, selected, err := constructionTemplates(node)
-	if err != nil {
-		return DefinitionInstance{}, false, err
-	}
-	if selected >= 0 {
-		operandTemplate = wrappers[selected]
-	}
 	arguments := inherited
 	forwarded := len(node.Arguments) == 0
+	if template != nil && len(template.Slots) == 0 && len(node.Arguments) == 0 {
+		arguments, forwarded = nil, false
+	}
 	if len(node.Arguments) > 0 {
 		arguments = nil
-		for index, parameter := range node.Arguments {
-			position := index
-			if node.Name != "" && node.Definition.function == nil {
-				position++
-			}
-			argument, used, err := c.definitionCallArgument(node.Definition, operandTemplate, position, parameter, inherited, active, dynamic)
+		for _, parameter := range node.Arguments {
+			argument, used, err := c.staticObjectArgument(parameter, inherited, active, dynamic)
 			if err != nil {
 				return DefinitionInstance{}, false, err
 			}
@@ -455,7 +474,9 @@ func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inhe
 		if len(arguments) != 1 {
 			return DefinitionInstance{}, false, lerrors.InvalidInput.Errorf("Function constructor must own one body composition")
 		}
-		instance, err = c.instantiateFunctionConstructor(node, arguments[0], false, active)
+		constructor := *node
+		constructor.Arguments = nil // The explicit body was composed above.
+		instance, err = c.instantiateFunctionConstructor(&constructor, arguments[0], false, active)
 		return instance, forwarded, err
 	} else if function := node.Definition.function; function != nil && function.Native {
 		instance, err = c.invokeFunctionDefinition(function, arguments, active, dynamic)
@@ -504,7 +525,7 @@ func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inhe
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}
-		instance, err = wrapper.Instantiate(bindings)
+		instance, err = c.instantiateTemplate(wrapper, bindings)
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}
@@ -675,12 +696,19 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 	if node.Definition == nil {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("function %s has no definition", node.Name)
 	}
-	template, err := c.recordTemplate(node.Definition)
+	template, err := c.callableTemplate(node.Definition, make(map[*record]bool))
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
 	if template == nil || !template.IsFunction() {
 		return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s does not define a function structure", node.Nominal)
+	}
+	wrappers, selected, err := constructionTemplates(node)
+	if err != nil {
+		return DefinitionInstance{}, err
+	}
+	if selected >= 0 {
+		template = wrappers[selected]
 	}
 	if node.Name == "" || !node.InputsDefined || !node.OutputsDefined {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("function constructor requires name and explicit signature")
@@ -689,13 +717,22 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	remaining := 0
+	remaining, supplied := 0, 0
 	for _, slot := range template.Slots {
 		if _, signature := bindings[slot.Name]; signature {
 			continue
 		}
 		if slot.Type != "" {
-			return DefinitionInstance{}, lerrors.Unsupported.Errorf("unsupported function slot %s: %s", slot.Name, slot.Type)
+			if slot.Type != "Type" || supplied >= len(node.Arguments) {
+				return DefinitionInstance{}, lerrors.Unsupported.Errorf("unsupported or unbound function slot %s: %s", slot.Name, slot.Type)
+			}
+			argument, _, err := c.staticObjectArgument(node.Arguments[supplied], nil, active, nil)
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			bindings[slot.Name] = argument
+			supplied++
+			continue
 		}
 		if declared {
 			matched := false
@@ -704,14 +741,30 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 				if err != nil {
 					return DefinitionInstance{}, err
 				}
-				matched = matched || strings.EqualFold(nominal, slot.Name) && object.noun.binding != nil
+				if strings.EqualFold(nominal, slot.Name) && object.noun.binding != nil {
+					matched = true
+					if supplied < len(node.Arguments) && node.Arguments[supplied] == object {
+						supplied++
+					}
+				}
 			}
 			if !matched {
 				return DefinitionInstance{}, lerrors.InvalidInput.Errorf("function slot %s has no declared constructor parameter", slot.Name)
 			}
 		}
+		if !declared && supplied < len(node.Arguments) {
+			argument, _, err := c.staticObjectArgument(node.Arguments[supplied], []DefinitionArgument{body}, active, nil)
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			body = argument
+			supplied++
+		}
 		bindings[slot.Name] = body
 		remaining++
+	}
+	if supplied != len(node.Arguments) {
+		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("Function constructor received %d unused arguments", len(node.Arguments)-supplied)
 	}
 	if !declared && remaining != 1 {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("Function constructor must own one body composition")
@@ -727,26 +780,13 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 // definitionObject returns the authored construction of a source-defined noun.
 // Directive bodies and literal leaves retain their existing expansion paths.
 func (c *Compilation) definitionObject(rec *record) (*objectGram, error) {
-	source := c.Semantics.Declarations[rec]
-	if source == nil {
-		return nil, nil
-	}
-	sites, err := source.sGram.registrationSites()
-	if err != nil {
+	_, site, err := c.definitionSite(rec)
+	if err != nil || site == nil {
 		return nil, err
 	}
-	for _, site := range sites {
-		target, err := site.target()
-		if err != nil {
-			return nil, err
-		}
-		if c.Semantics.Subjects[target] != rec {
-			continue
-		}
-		object := site.valueObject()
-		if object != nil && object.noun != nil && object.noun.binding != nil && c.Semantics.Declarations[object.noun.binding.Record] != nil {
-			return object, nil
-		}
+	object := site.valueObject()
+	if object != nil && object.noun != nil && object.noun.binding != nil && c.Semantics.Declarations[object.noun.binding.Record] != nil {
+		return object, nil
 	}
 	return nil, nil
 }

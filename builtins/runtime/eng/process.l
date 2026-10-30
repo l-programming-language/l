@@ -11,13 +11,17 @@ Publicly define Runtime's "Invocation" as `<DEF>HY{|Key: ~Invocation~, Props: ~&
 Define Runtime's Invocation's "State" as `<DEF>HY{|Key: ~InvocationState~, Props: ~&[Prop{Key: snapshot, Type: Option<Snapshot>}Prop, Prop{Key: claim, Type: u8}Prop]&~|}<DEF>`.
 Define Runtime's Invocation's "Group" as `<DEF>HY{|Key: ~GroupState~, Props: ~&[Prop{Key: pid, Type: Option<u32>}Prop, Prop{Key: cleaned, Type: bool}Prop, Prop{Key: termination_deadline, Type: Option<tokio::time::Instant>}Prop]&~|}<DEF>`.
 
+Define Runtime's "Future" as `<DEF>COB{|Key: ~<@Name|Label@>~|}^CV{|Capture: ~Move~|}^(<@Process@>)<DEF>`.
+Define Runtime's "Pin|-s|-ned|-ning|-ner" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~Box::pin~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
+Define Runtime's "Output" as a New Adjective describing any Runtime's Pinner.
+It describes any Runtime's Pinner as `<DEF>MOB{|Key: ~<@Name|Label@>~, Type: ~crate::runtime::host::Output~|}^KY{|Key: ~Box::pin~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define "Pending" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^W^(COB{|Key: ~pending~|}^CV{|Capture: ~Move~|}^(<@Process@>)*MOB{|Key: ~pinned~|}^KY{|Key: ~Box::pin~, Inputs: ~&[pending]&~|}*BOD^E{|Statement: ~pinned~|})<DEF>`.
+It describes a Generic Function of a New Process of a New Function's Returner of a New Runtime's Pinner of a New Runtime's Future of any Process.
 Define Runtime's "Completion" as `<DEF>COB{|Key: ~<@Name|Label@>~|}^DV{|Key: ~<@Future@>~|}<DEF>`.
 Define "Dispose|-s|-d|--ing|--er" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~std::mem::drop~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
-Define "Success" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~Ok~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
-Define "Failure" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~Err~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
-Define "Nothing" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~()~|}<DEF>`.
+Use Storage.Success as "Success".
+Use Storage.Rejection as "Failure".
+Use Storage.Nothing as "Nothing".
 Define "Lock|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::runtime::host::lock~, Inputs: ~&[&<@Value@>]&~|}<DEF>`.
 
 Define Runtime's "Reference" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.inner~|}<DEF>`.
@@ -25,7 +29,6 @@ Define Runtime's "Admission" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Valu
 Define Runtime's "Stopping" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>.stopping~|}<DEF>`.
 Define Runtime's "Finalized" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>.finalized~|}<DEF>`.
 Define Runtime's "Selected" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~is_some~, Receiver: ~<@Value@>.terminal~|}<DEF>`.
-Define Runtime's "Either" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: ||, Operands: &[<@Left@>, <@Right@>]&}Op]&~|}<DEF>`.
 Define Runtime's "Shared" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::sync::Arc::new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Weak" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::sync::Arc::downgrade~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Mutex" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::sync::Mutex::new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
@@ -44,8 +47,8 @@ Define Runtime's "Empty" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~String:
 Create "Stopping" as a New Runtime's Stopping of State.
 Create "Selected" as a New Runtime's Selected of State.
 Create "Finalized" as a New Runtime's Finalized of State.
-Create "Terminating" as a New Runtime's Either of Stopping and Selected.
-Create "Stopped" as a New Runtime's Either of Terminating and Finalized.
+Create "Terminating" as a New Storage's Alternative of Stopping and Selected.
+Create "Stopped" as a New Storage's Alternative of Terminating and Finalized.
 Return a New Equality of Stopped and false.
 
     Publicly create Runtime's "Check|-s|-ed|-ing|-er" as a Generic `runtime_check` Function with Inputs of "value" as `&Runtime` and Outputs of `Result<()>`.
@@ -71,12 +74,9 @@ Define Runtime's Invocation's "Available" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^
 Define Runtime's Invocation's "Phase" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>.claim~|}<DEF>`.
 Define Runtime's Invocation's "Mark" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&mut <@Value@>.claim~|}<DEF>`.
 Define Runtime's "Byte" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: as, Operands: &[<@Value@>, u8]&}Op]&~|}<DEF>`.
-Define Runtime's "Borrow|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~as_ref~, Receiver: ~<@Value@>~|}<DEF>`.
 Define Runtime's "Fault" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~is_err~, Receiver: ~<@Value@>~|}<DEF>`.
-Define Runtime's "Fallible" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~T, E~|}^(<@Process@>)<DEF>`.
 
-    Create Runtime's "Reject|-s|-ed|-ing|-er" as a Generic Runtime.Fallible `reject_result` Function with Inputs of "value" as `std::result::Result<T, E>` and Outputs of `E`.
+    Create Runtime's "Reject|-s|-ed|-ing|-er" as a Generic Storage.Fallible `reject_result` Storage.Routine with Inputs of "value" as `std::result::Result<T, E>` and Outputs of `E`.
 Create "Optional" as a New Runtime's Failure of Value.
 Return a New Contents of Optional and `checked error result`.
 
@@ -100,9 +100,7 @@ If Allowed is false, Create "Cancellation" as a New Runtime's Error's Canceller 
 Create "Guard" as a New Mutable Binding of a New Locker of a New Runtime's Invocation's Admission of Value.
 Create "Available" as a New Runtime's Invocation's Available of Guard.
 Create "Claim" as a New Runtime's Invocation's Phase of Guard.
-Create "Zero" as a New Runtime's Byte of 0.
-Create "Unused" as a New Equality of Claim and Zero.
-Create "Ready" as a New Agreement of Available and Unused.
+Create "Ready" as a New Agreement of Available and a New Equality of Claim and a New Runtime's Byte of 0.
 If Ready is false, Create "Absent" as a New Success of false and then Return Absent.
 Create "One" as a New Runtime's Byte of 1.
 Create "Target" as a New Runtime's Invocation's Mark of Guard.
@@ -225,24 +223,19 @@ Return a New Failure of a New Runtime's Error's Describer of `orchestrator has n
 
     Create Runtime's "Initialize|-s|-d|--ing|-r" as a Generic `runtime_state` Function with No Inputs and Outputs of Runtime's State.
 Create "Owned" as a New Runtime's Map.
-Create "Errors" as a New Runtime's Map.
-Return a New Runtime's Initial of Owned and Errors.
+Return a New Runtime's Initial of Owned and a New Runtime's Map.
 
-Define Runtime's "Copyable" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~T: Clone~|}^(<@Process@>)<DEF>`.
 
-    Create Runtime's "Observe|-s|-d|--ing|-r" as a Generic Runtime.Copyable `observe` Function with Inputs of "receiver" as `&tokio::sync::watch::Receiver<T>` and Outputs of `T`.
-Return a New Storage's Copier of a New Runtime's Contents of a New Runtime's Current of Receiver.
+    Create Runtime's "Observe|-s|-d|--ing|-r" as a Generic Storage.Cloneable `observe` Storage.Routine with Inputs of "receiver" as `&tokio::sync::watch::Receiver<T>` and Outputs of `T`.
+Return a New Storage's Copier of a New Storage's Reference of a New Runtime's Current of Receiver.
 
 Define Runtime's "Native" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~crate::runtime::host::NativeDependencies~|}<DEF>`.
 Define Runtime's "Dependencies" as `<DEF>MOB{|Key: ~<@Name|Label@>~, Type: ~std::sync::Arc<dyn crate::runtime::host::Dependencies>~|}^KY{|Key: ~std::sync::Arc::new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Stdout" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~tokio::io::stdout~|}<DEF>`.
 Define Runtime's "Stderr" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~tokio::io::stderr~|}<DEF>`.
-Define Runtime's "Pin|-s|-ned|-ning|-ner" to `<DEF>MOB{|Key: ~<@Name|Label@>~, Type: ~crate::runtime::host::Output~|}^KY{|Key: ~Box::pin~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Spawn|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~tokio::spawn~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Receive|-s|-d|--ing|-r" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~recv~, Receiver: ~<@Value@>~|}<DEF>`.
 Define Runtime's "Task" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.signals~|}<DEF>`.
-Define Runtime's "Mutable" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&mut *<@Value@>~|}<DEF>`.
 Define Runtime's "Authority" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.dependencies~|}<DEF>`.
 Define Runtime's "Signal" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::runtime::host::TerminalRequest::Signal~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Enter|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~terminal_entered~, Receiver: ~<@Dependencies@>~, Inputs: ~&[<@Request@>]&~|}<DEF>`.
@@ -290,8 +283,7 @@ Define Runtime's "Modifier" as `<DEF>KOB{|Key: ~<@Name|Label@>~|}^BW{|Inputs: ~&
 Define Runtime's "Amend|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~send_modify~, Receiver: ~<@Sender@>~, Inputs: ~&[<@Modifier@>]&~|}<DEF>`.
 
     Create Runtime's "Revise|-s|-d|--ing|-r" as a Generic `revise_deadline` Function with Inputs of "sender" as `&tokio::sync::watch::Sender<Option<tokio::time::Instant>>` and "deadline" as `tokio::time::Instant` and Outputs of `()`.
-Create "Closure" as a New Runtime's Modifier of Runtime's Limiter and Deadline.
-Return a New Runtime's Amender of Sender and Closure.
+Return a New Runtime's Amender of Sender and a New Runtime's Modifier of Runtime's Limiter and Deadline.
 
     Create Runtime's "Normalize|-s|-d|--ing|-r" as a Generic `normalize_signal` Function with Inputs of "value" as `std::io::Result<()>` and Outputs of `std::io::Result<()>`.
 Create "Valid" as a New Runtime's Valid of Value.
@@ -316,11 +308,9 @@ Return a New Nothing.
 
     Create Runtime's Invocation's "Signal|-s|-ed|-ing|-er" as a Generic Pending `invocation_signal` Function with Inputs of "value" as `&Invocation` and "last" as `bool` and Outputs of `std::pin::Pin<Box<dyn std::future::Future<Output = std::io::Result<()>> + Send + '_>>`.
 Create "Unit" as a New Nothing.
-Create "Locked" as a New Runtime's Completion of a New Runtime's Awaiter of a New Runtime's Invocation's Gate of Value.
-Create "Guard" as a New Mutable Binding of Locked.
+Create "Guard" as a New Mutable Binding of a New Runtime's Completion of a New Runtime's Awaiter of a New Runtime's Invocation's Gate of Value.
 Create "Cleaned" as a New Runtime's Invocation's Cleaned of Guard.
-Create "Completed" as a New Presence of a New Runtime's Invocation's Reader of Value.
-Create "Done" as a New Runtime's Either of Cleaned and Completed.
+Create "Done" as a New Storage's Alternative of Cleaned and a New Presence of a New Runtime's Invocation's Reader of Value.
 If Done, Create "Acceptedvalue" as a New Success of Unit and then Return Acceptedvalue.
 Create "Optional" as a New Runtime's Invocation's Pid of Guard.
 Create "Available" as a New Presence of Optional.
@@ -332,11 +322,9 @@ Create "Target" as a New Runtime's Group of Pid.
 Create "Signal" as a New Runtime's Kill.
 Create "Result" as a New Runtime's Normalizer of a New Runtime's Sender of Dependencies, Target, and Signal.
 Create "Valid" as a New Runtime's Valid of Result.
-Create "Initial" as a New Equality of Last and false.
-Create "Accepted" as a New Agreement of Valid and Initial.
+Create "Accepted" as a New Agreement of Valid and a New Equality of Last and false.
 Create "Set" as a New Presence of a New Runtime's Invocation's Deadline of Guard.
-Create "Missing" as a New Equality of Set and false.
-Create "Needed" as a New Agreement of Accepted and Missing.
+Create "Needed" as a New Agreement of Accepted and a New Equality of Set and false.
 If Needed, Create "Delay" as a New Runtime's Invocation's Delay of Value and then Create "Deadline" as a New Sum of Attempted and Delay and then Create "Wrapped" as a New Present of Deadline and then Create "Limit" as a New Runtime's Invocation's Limit of Guard and then Runtime.Replace Limit and Wrapped and then Create "Bounded" as a New Runtime's Invocation's Bounder of Value and Deadline.
 If Last, Create "Finaldeadline" as a New Runtime's Invocation's Deadline of Guard and then Create "Finaltask" as a New Runtime's Bounder of Pid, Result, and Finaldeadline and then Create "Finalresult" as a New Runtime's Completion of Finaltask and then Create "Seal" as a New Runtime's Invocation's Seal of Guard and then Runtime.Replace Seal and true and then Return Finalresult.
 Return Result.

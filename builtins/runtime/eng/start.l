@@ -24,7 +24,7 @@ Return Unit.
 
     Create Runtime's "Attach|-es|-ed|-ing|-er" as a Generic `runtime_attach` Function with Inputs of "value" as `&Runtime` and "task" as `tokio::task::JoinHandle<()>` and Outputs of `()`.
 Create "Locked" as a New Locker of a New Runtime's Task of a New Runtime's Reference of Value.
-Create "Reference" as a New Runtime's Mutable of a New Mutable Binding of Locked.
+Create "Reference" as a New Storage.Editable Storage's Reference of a New Mutable Binding of Locked.
 Create "Retained" as a New Present of Task.
 Runtime.Replace Reference and Retained.
 Return a New Nothing.
@@ -41,6 +41,6 @@ Return a New Success of Handle.
 
     Publicly create Runtime's "Open|-s|-ed|-ing|-er" as a Generic `runtime_new` Function with No Inputs and Outputs of `Result<Runtime>`.
 Create "Dependencies" as a New Runtime's Dependencies of a New Runtime's Native.
-Create "Output" as a New Runtime's Pinner of a New Runtime's Stdout.
-Create "Error" as a New Runtime's Pinner of a New Runtime's Stderr.
+Create "Output" as a New Runtime.Output Runtime's Pinner of a New Runtime's Stdout.
+Create "Error" as a New Runtime.Output Runtime's Pinner of a New Runtime's Stderr.
 Return a New Runtime's Installer of Dependencies, Output, and Error.

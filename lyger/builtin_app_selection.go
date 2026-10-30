@@ -13,7 +13,7 @@ type builtinAppCase struct {
 
 // Selection binds native names only. Retention, identity comparison, conditional
 // execution and failure are owned by the selected source definitions.
-func (e *orchestrationEmitter) composeAppSelection(name string, value *orchestrationValue, target string, cases []builtinAppCase, returned *DefinitionTemplate) ([]string, error) {
+func (e *orchestrationEmitter) composeAppSelection(name string, value *orchestrationValue, target string, cases []builtinAppCase, returned *record) ([]string, error) {
 	if value == nil || value.Type != valueApp {
 		return nil, lerrors.TypeMismatch.Errorf("App selection requires an App")
 	}
@@ -26,7 +26,7 @@ func (e *orchestrationEmitter) composeAppSelection(name string, value *orchestra
 	if err != nil {
 		return nil, err
 	}
-	result, err := returned.Instantiate(map[string]DefinitionArgument{"Statement": definitionReferenceArgument(name + "Result")})
+	result, err := e.compilation.instantiateDefinition(returned, map[string]DefinitionArgument{"Statement": definitionReferenceArgument(name + "Result")})
 	if err != nil {
 		return nil, err
 	}

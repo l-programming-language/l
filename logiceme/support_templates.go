@@ -11,7 +11,7 @@ import (
 	"unicode/utf8"
 )
 
-func loadSupportTemplates(resources fs.FS, includeRuntime bool) (map[string][]byte, error) {
+func loadSupportAssets(resources fs.FS, includeRuntime bool) (map[string][]byte, error) {
 	names := []string{"config/config.lu", "install/cargo.lu", "operate/start.lu", "operate/stop.lu"}
 	if includeRuntime {
 		names = append(names, "runtime/main.lu", "runtime/host.lu", "runtime/process_unix.lu", "runtime/process_other.lu")
@@ -28,6 +28,14 @@ func loadSupportTemplates(resources fs.FS, includeRuntime bool) (map[string][]by
 			return nil, fmt.Errorf("load Rust support template %s: %w", asset, err)
 		}
 		result[name] = content
+	}
+	return result, nil
+}
+
+func loadSupportTemplates(resources fs.FS, includeRuntime bool) (map[string][]byte, error) {
+	result, err := loadSupportAssets(resources, includeRuntime)
+	if err != nil {
+		return nil, err
 	}
 	if includeRuntime {
 		runtime, err := loadRuntimeComposition(resources, result)

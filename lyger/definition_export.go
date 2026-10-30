@@ -70,7 +70,6 @@ func (c *Compilation) composeExport(rec *record) (DefinitionInstance, error) {
 
 // ComposeLibrary serializes a selected source composition and its declaration
 // dependencies through the same AML renderer used by application compilation.
-// The returned library contains no runtime support and no frontend side channel.
 func (c *Compilation) ComposeLibrary(name, filename string) ([]byte, error) {
 	if err := validateAMLName(filename); err != nil {
 		return nil, err
@@ -91,27 +90,32 @@ func (c *Compilation) ComposeLibrary(name, filename string) ([]byte, error) {
 			return nil, lerrors.InvalidInput.Errorf("Dictionary %s has no public source declarations", name)
 		}
 	}
-	var selected []DefinitionInstance
+
+	var declarations []DefinitionInstance
 	for _, root := range roots {
 		definition, err := c.composeExport(root)
 		if err != nil {
 			return nil, err
 		}
-		selected = append(selected, definition)
+		declarations = append(declarations, definition)
 	}
-	definitions, err := definitionClosure(selected...)
+	definitions, err := definitionClosure(declarations...)
 	if err != nil {
 		return nil, err
 	}
+	return renderLibrary(filename, filename, definitions)
+}
+
+func renderLibrary(name, filename string, definitions []DefinitionInstance) ([]byte, error) {
 	file := &sentence{Name: filename, Words: []*w{{Syllables: []*s{{CompiledBytes: []byte("A")}}}}}
 	for _, definition := range definitions {
 		appendDefinitionWords(file, definition)
 	}
 	library := newRootService("library")
-	library.Target = &sourceTarget{Kind: "lib", Name: filename, Root: filename}
+	library.Target = &sourceTarget{Kind: "lib", Name: name, Root: filename}
 	library.Objects = []*object{newRootObject(filename)}
-	app := &App{ID: filename, Meta: appMetadata(filename), Services: []*service{library}}
-	program := &Program{Apps: []*App{app}, Books: []*book{{Name: filename, Chapters: []*chapter{{Name: "library", sentences: []*sentence{file}}}}}}
+	app := &App{ID: name, Meta: appMetadata(name), Services: []*service{library}}
+	program := &Program{Apps: []*App{app}, Books: []*book{{Name: name, Chapters: []*chapter{{Name: "library", sentences: []*sentence{file}}}}}}
 	if err := program.Make(); err != nil {
 		return nil, err
 	}

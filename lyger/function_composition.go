@@ -185,10 +185,10 @@ func (e *orchestrationEmitter) functionOperation(function *sourceFunction, membe
 		if member == "Exit" {
 			name = "lExit"
 		}
-		if function.ReturnTemplate == nil {
+		if function.Return == nil {
 			return nil, lerrors.InvalidConfiguration.Errorf("Function requires its Return composition")
 		}
-		returned, err := function.ReturnTemplate.Instantiate(map[string]DefinitionArgument{"Statement": definitionReferenceArgument(name)})
+		returned, err := e.compilation.instantiateDefinition(function.Return, map[string]DefinitionArgument{"Statement": definitionReferenceArgument(name)})
 		if err != nil {
 			return nil, err
 		}
@@ -271,11 +271,11 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		if err != nil {
 			return nil, err
 		}
-		if contract.Members["Invoke"] == nil {
+		if contract.Invoke == nil {
 			return nil, lerrors.InvalidConfiguration.Errorf("Function requires its Invoke composition")
 		}
 		invoked := append([]DefinitionArgument{definitionReferenceArgument(name + "Context"), definitionReferenceArgument(name + "Environment")}, arguments...)
-		invocation, err := contract.Members["Invoke"].Instantiate(map[string]DefinitionArgument{
+		invocation, err := e.compilation.instantiateDefinition(contract.Invoke, map[string]DefinitionArgument{
 			"Target": definitionReferenceArgument(name + ".1"), "Arguments": definitionAtomListArgument(invoked...),
 		})
 		if err != nil {
@@ -397,20 +397,10 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 	if err != nil {
 		return nil, err
 	}
-	signature, err := function.Source.Template.signatureArguments(name, inputs, []string{output})
-	if err != nil {
-		return nil, err
-	}
-	for _, slot := range function.Source.Template.Slots {
-		if _, present := signature[slot.Name]; present {
-			continue
-		}
-		if slot.Type != "" {
-			return nil, lerrors.Unsupported.Errorf("unsupported Function body slot %s", slot.Name)
-		}
-		signature[slot.Name] = DefinitionArgument{Kind: "Definition", Definition: &suspended}
-	}
-	definition, err := function.Source.Template.Instantiate(signature)
+	node := *function.Source.Constructor
+	node.Name, node.InputsDefined, node.OutputsDefined = name, true, true
+	node.Inputs, node.Outputs = inputs, []string{output}
+	definition, err := e.compilation.instantiateFunctionConstructor(&node, DefinitionArgument{Kind: "Definition", Definition: &suspended}, false, make(map[*record]bool))
 	if err != nil {
 		return nil, err
 	}

@@ -116,7 +116,7 @@ func runtimeCompositionKey(manifest, aml []byte, system SegmentalSystem, templat
 	return sha256.Sum256(fingerprints)
 }
 
-func generateRuntimeComposition(aml []byte, system SegmentalSystem, templates map[string][]byte) ([]byte, error) {
+func generateRuntimeComposition(aml []byte, system SegmentalSystem, templates map[string][]byte, names ...string) ([]byte, error) {
 	scanner, err := loadScannerBytes(aml)
 	if err != nil {
 		return nil, fmt.Errorf("read composed runtime: %w", err)
@@ -127,9 +127,13 @@ func generateRuntimeComposition(aml []byte, system SegmentalSystem, templates ma
 	if len(scanner.Program.Books) != 1 || len(scanner.Program.Books[0].Outline.Services) != 1 {
 		return nil, lerrors.InvalidConfiguration.Errorf("composed runtime requires one library target")
 	}
-	target := scanner.Program.Books[0].Outline.Services[0].Target
+	book := scanner.Program.Books[0]
+	target := book.Outline.Services[0].Target
 	if target == nil || target.Kind != "lib" || target.Root != "runtime" || target.Primary {
 		return nil, lerrors.InvalidConfiguration.Errorf("composed runtime requires a sole library target rooted at runtime")
+	}
+	if len(names) == 1 && (book.Name != names[0] || target.Name != names[0]) {
+		return nil, lerrors.InvalidConfiguration.Errorf("composed runtime must use its allocated package %s", names[0])
 	}
 	bundle, err := evaluateScannedSource(scanner, system, templates, false, nil)
 	if err != nil {

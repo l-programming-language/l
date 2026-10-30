@@ -1,1 +1,1 @@
-<DEF>MOB{|Key: ~lProcessFuture~|}^KY{|Key: ~runtime::app_stop~, Inputs: ~&[&<@Receiver@>]&~|}*COB{|Key: ~lProcessResult~|}^DV{|Key: ~lProcessFuture~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>
+<DEF>MOB{|Key: ~lProcessFuture~|}^KY{|Key: ~runtime::app_stop~, Imports: ~&[runtime::app_stop as _]&~, Inputs: ~&[&<@Receiver@>]&~|}*COB{|Key: ~lProcessResult~|}^DV{|Key: ~lProcessFuture~|}*OB{|Key: ~_~, Value: ~lProcessResult?~|}<DEF>

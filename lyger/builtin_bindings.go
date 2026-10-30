@@ -73,12 +73,18 @@ func (c *Compilation) instantiateBuiltin(name string, arguments map[string]Defin
 }
 
 func (c *Compilation) instantiateDescribedBuiltin(name string, descriptors []string, arguments map[string]DefinitionArgument) (DefinitionInstance, error) {
-	if len(c.definitionTemporaries) == 0 {
-		defer c.definitionScope()()
-	}
 	rec, err := c.builtinRecord(name)
 	if err != nil {
 		return DefinitionInstance{}, err
+	}
+	return c.instantiateDefinition(rec, arguments, descriptors...)
+}
+
+// Selected definitions share named expansion, including Function members and
+// private dictionary operations with source-owned construction descriptors.
+func (c *Compilation) instantiateDefinition(rec *record, arguments map[string]DefinitionArgument, descriptors ...string) (DefinitionInstance, error) {
+	if len(c.definitionTemporaries) == 0 {
+		defer c.definitionScope()()
 	}
 	used := make(map[string]bool)
 	node := &constructionNode{Definition: rec, Nominal: rec.ID}
@@ -115,12 +121,16 @@ func (c *Compilation) instantiateDescribedBuiltin(name string, descriptors []str
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
+	return bound, validateDefinitionArguments(rec, arguments, used)
+}
+
+func validateDefinitionArguments(rec *record, arguments map[string]DefinitionArgument, used map[string]bool) error {
 	for name := range arguments {
 		if !used[name] {
-			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("definition %s received unused argument %s", rec.ID, name)
+			return lerrors.InvalidInput.Errorf("definition %s received unused argument %s", rec.ID, name)
 		}
 	}
-	return bound, nil
+	return nil
 }
 
 // Named arguments remain typed data through nested source constructions. Each
@@ -176,9 +186,14 @@ func (c *Compilation) instantiateNamedDefinition(rec *record, arguments map[stri
 		return DefinitionInstance{}, err
 	}
 	if template != nil {
-		bound, err := template.Instantiate(namedDefinitionBindings(template, arguments, used))
+		bound, err := c.instantiateTemplate(template, namedDefinitionBindings(template, arguments, used))
 		bound.Symbol, bound.definition = rec.ID, rec
 		return bound, err
+	}
+	if object, err := c.definitionObject(rec); err != nil {
+		return DefinitionInstance{}, err
+	} else if object != nil {
+		return c.instantiateNamedObject(object, arguments, used, active)
 	}
 	return c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
 		var values []DefinitionArgument
@@ -229,9 +244,25 @@ func (c *Compilation) instantiateNamedObject(object *objectGram, arguments map[s
 		if template == nil {
 			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("constructor %s requires a declared parameter signature", node.Nominal)
 		}
-		local, err = definitionArguments(template, values)
+		parameters := *template
+		if len(values) < len(template.Slots) {
+			parameters.Slots = nil
+			for _, slot := range template.Slots {
+				if _, inherited := arguments[slot.Name]; !inherited {
+					parameters.Slots = append(parameters.Slots, slot)
+				}
+			}
+		}
+		local, err = definitionArguments(&parameters, values)
 		if err != nil {
 			return DefinitionInstance{}, err
+		}
+		for _, slot := range template.Slots {
+			if _, supplied := local[slot.Name]; !supplied {
+				if value, inherited := arguments[slot.Name]; inherited {
+					local[slot.Name], used[slot.Name] = value, true
+				}
+			}
 		}
 		localUsed = make(map[string]bool)
 	}
@@ -249,7 +280,7 @@ func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local
 		selected = len(wrappers)
 	} else {
 		wrapper := wrappers[selected]
-		instance, err = wrapper.Instantiate(namedDefinitionBindings(wrapper, local, localUsed))
+		instance, err = c.instantiateTemplate(wrapper, namedDefinitionBindings(wrapper, local, localUsed))
 	}
 	if err != nil {
 		return DefinitionInstance{}, err
@@ -257,7 +288,7 @@ func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local
 	for i := selected - 1; i >= 0; i-- {
 		wrapper := wrappers[i]
 		bindings := map[string]DefinitionArgument{wrapper.Slots[0].Name: {Kind: definitionArgDefinition.String(), Definition: &instance}}
-		instance, err = wrapper.Instantiate(bindings)
+		instance, err = c.instantiateTemplate(wrapper, bindings)
 		if err != nil {
 			return DefinitionInstance{}, err
 		}
@@ -289,21 +320,107 @@ func constructionTemplates(node *constructionNode) ([]*DefinitionTemplate, int, 
 	return wrappers, selected, nil
 }
 
-func (c *Compilation) builtinMemberDefinition(owner, member string) (*DefinitionTemplate, error) {
-	rec, err := c.builtinRecord(owner)
+// Callable structure follows authored constructors. This borrows the selected
+// leaf's signature; executable expansion still traverses the original words.
+func (c *Compilation) callableTemplate(rec *record, active map[*record]bool) (*DefinitionTemplate, error) {
+	rec, err := canonicalRecord(rec, c.Semantics.Aliases)
 	if err != nil {
 		return nil, err
 	}
-	binding, _, err := c.resolver().lookupMember(rec, []byte(member))
+	if active[rec] {
+		return nil, lerrors.Cycle.Errorf("recursive constructor %s", rec.ID)
+	}
+	active[rec] = true
+	defer delete(active, rec)
+	template, err := c.recordTemplate(rec)
+	if err != nil || template != nil {
+		return template, err
+	}
+	object, err := c.definitionObject(rec)
+	if err != nil || object == nil {
+		return nil, err
+	}
+	node, err := c.constructObject(object, make(map[*descriptorRule]bool))
 	if err != nil {
 		return nil, err
 	}
-	if binding == nil {
-		return nil, lerrors.InvalidConfiguration.Errorf("builtin definition %s has no %s member", owner, member)
+	template, err = c.callableTemplate(node.Definition, active)
+	if err != nil || template == nil || !template.IsFunction() {
+		return nil, err
 	}
-	template, err := c.recordTemplate(binding.Record)
-	if err == nil && template == nil {
-		err = lerrors.InvalidConfiguration.Errorf("builtin member %s.%s has no logeme definition", owner, member)
+	wrappers, selected, err := constructionTemplates(node)
+	if err != nil {
+		return nil, err
 	}
-	return template, err
+	if selected >= 0 {
+		template = wrappers[selected]
+	}
+	bound := *template
+	bound.Slots = nil
+	supplied := 0
+	for _, slot := range template.Slots {
+		if slot.Type == "Type" && supplied < len(node.Arguments) {
+			supplied++
+			continue
+		}
+		bound.Slots = append(bound.Slots, slot)
+	}
+	return &bound, nil
+}
+
+// Value-taking metadata receives a named result, never a nested executable
+// composition. The selected Binding definition owns the operation and storage.
+func (c *Compilation) atomArgument(argument DefinitionArgument) (DefinitionArgument, error) {
+	if argument.atoms != nil {
+		atoms := append([]DefinitionArgument(nil), (*argument.atoms)...)
+		for index, value := range atoms {
+			var err error
+			atoms[index], err = c.atomArgument(value)
+			if err != nil {
+				return DefinitionArgument{}, err
+			}
+		}
+		return definitionAtomListArgument(atoms...), nil
+	}
+	if argument.Definition == nil || argument.Definition.result != nil {
+		return argument, nil
+	}
+	if c.definitionValues[argument.Definition] {
+		return DefinitionArgument{}, lerrors.Cycle.Errorf("value binding must consume its operand composition")
+	}
+	if c.definitionValues == nil {
+		c.definitionValues = make(map[*DefinitionInstance]bool)
+	}
+	c.definitionValues[argument.Definition] = true
+	defer delete(c.definitionValues, argument.Definition)
+	name := c.definitionLabel()
+	bound, err := c.instantiateDescribedBuiltin("Storage.Binding", []string{"Storage.Produced"}, map[string]DefinitionArgument{"Name": definitionReferenceArgument(name), "Value": argument})
+	if err != nil {
+		return DefinitionArgument{}, err
+	}
+	result := definitionReferenceArgument(name)
+	result.source = argument.source
+	bound.result = &result
+	argument.Definition = &bound
+	return argument, nil
+}
+
+func (c *Compilation) instantiateTemplate(template *DefinitionTemplate, arguments map[string]DefinitionArgument) (DefinitionInstance, error) {
+	if len(c.definitionTemporaries) == 0 {
+		defer c.definitionScope()()
+	}
+	bindings := make(map[string]DefinitionArgument, len(arguments))
+	for name, argument := range arguments {
+		bindings[name] = argument
+	}
+	for _, slot := range template.Slots {
+		if template.metadataSlots[slot.Name] && (slot.Type == "" || slot.Type == "Atoms") {
+			argument, err := c.atomArgument(bindings[slot.Name])
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			bindings[slot.Name] = argument
+		}
+	}
+	return template.Instantiate(bindings)
 }

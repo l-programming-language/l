@@ -45,12 +45,20 @@ func (c *Compilation) invokeFunctionDefinition(function *sourceFunction, args []
 	var before []DefinitionInstance
 	args = append([]DefinitionArgument(nil), args...)
 	for index, argument := range args {
+		argument, err := c.atomArgument(argument)
+		if err != nil {
+			return DefinitionInstance{}, err
+		}
 		var steps []DefinitionInstance
 		args[index], steps = argument.boundResult()
 		before = append(before, steps...)
 	}
-	target := definitionReferenceArgument(function.Constructor.Name)
-	invocation, err := c.instantiateNamedDefinition(function.Invoke, map[string]DefinitionArgument{"Target": target, "Arguments": definitionAtomListArgument(args...)}, make(map[string]bool), active)
+	bindings := map[string]DefinitionArgument{"Target": definitionReferenceArgument(function.Constructor.Name), "Arguments": definitionAtomListArgument(args...)}
+	used := make(map[string]bool)
+	invocation, err := c.instantiateNamedDefinition(function.Invoke, bindings, used, active)
+	if err == nil {
+		err = validateDefinitionArguments(function.Invoke, bindings, used)
+	}
 	if err != nil {
 		return DefinitionInstance{}, err
 	}

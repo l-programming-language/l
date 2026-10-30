@@ -24,15 +24,15 @@ func (c *Compilation) futureEntry(name, output string, body []string) (Definitio
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	returned, err := c.builtinMemberDefinition("Function", "Return")
+	result, err := c.instantiateBuiltin("Function.Return", map[string]DefinitionArgument{"Statement": definitionReferenceArgument("lEntryFuture")})
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	result, err := returned.Instantiate(map[string]DefinitionArgument{"Statement": definitionReferenceArgument("lEntryFuture")})
+	returned, err := builtinProcessExpressions(&DefinitionTemplate{Span: result.Span}, result)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	operation, err := c.processDefinition([]string{future.Expression, result.Expression})
+	operation, err := c.processDefinition(append([]string{future.Expression}, returned...))
 	if err != nil {
 		return DefinitionInstance{}, err
 	}

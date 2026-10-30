@@ -1,1 +1,1 @@
-<DEF>MOB{|Key: ~_~|}^KY{|Key: ~runtime::invocation_finish~, Inputs: ~&[&<@Invocation@>]&~|}<DEF>
+<DEF>MOB{|Key: ~_~|}^KY{|Key: ~runtime::invocation_finish~, Imports: ~&[runtime::invocation_finish as _]&~, Inputs: ~&[&<@Invocation@>]&~|}<DEF>

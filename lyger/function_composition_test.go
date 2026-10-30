@@ -88,7 +88,11 @@ func TestCanonicalFunctionMissingMemberDoesNotFallBack(t *testing.T) {
 }
 
 func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
-	c := executableTestResult(t, memberResolutionSource{main: "    Publicly create \"Done\" as a New Function with No Inputs and No Outputs.\nReturn.\n"}).Compilation
+	source := "Define \"Callerreturn\" to `<DEF>BOD^E{|Statement: ~return /* caller */ <@Statement@>;~|}<DEF>`.\n" +
+		"Define \"Calleereturn\" to `<DEF>BOD^E{|Statement: ~return /* callee */ <@Statement@>;~|}<DEF>`.\n" +
+		"Define \"Invocation\" to `<DEF>KY{|Key: ~(/* selected invocation */ <@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.\n\n" +
+		"    Publicly create \"Done\" as a New Function with No Inputs and No Outputs.\nReturn.\n"
+	c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
 	var definition *sourceFunction
 	for _, function := range c.Semantics.Functions {
 		definition = function
@@ -97,13 +101,17 @@ func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
 		t.Fatal("missing Function")
 	}
 	caller, callee := *definition, *definition
-	caller.ReturnTemplate = parseTestDefinition(t, strings.Replace(string(definition.ReturnTemplate.Original), "return ", "return /* caller */ ", 1))
-	callee.ReturnTemplate = parseTestDefinition(t, strings.Replace(string(definition.ReturnTemplate.Original), "return ", "return /* callee */ ", 1))
-	callee.Members = make(map[string]*DefinitionTemplate, len(definition.Members))
-	for name, template := range definition.Members {
-		callee.Members[name] = template
+	selected := func(name string) *record {
+		rec, err := c.exportedRecord(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return rec
 	}
-	callee.Members["Invoke"] = parseTestDefinition(t, strings.Replace(string(definition.Members["Invoke"].Original), "Key: ~(<@Target@>)~", "Key: ~(/* selected invocation */ <@Target@>)~", 1))
+	caller.Return = selected("Callerreturn")
+	callee.Return = selected("Calleereturn")
+	callee.Invoke = selected("Invocation")
+
 	emitter := orchestrationEmitter{compilation: c,
 		plan: &orchestrationPlan{Identities: map[*record]uint64{callee.Definition: 1}}, functionDepth: 1, functionWords: &caller,
 		functionContracts: map[*record]*sourceFunction{callee.Definition: &callee},

@@ -1,5 +1,16 @@
 Create "Storage" as a Dictionary.
-Define Storage's "Traverse|-s|-d|--ing|--er" to `<DEF>BOP^X{|Iterable: ~<@Values@>~, Key: ~item~, RangeArity: ~1~|}^W^MOB{|Key: ~_~|}^KY{|Key: ~<@Action@>~, Inputs: ~&[item, <@Context@>]&~|}<DEF>`.
+Define Storage's "Routine" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~<@Types|Type@>~|}^(<@Process@>)<DEF>`.
+Use Function's Return as Storage.Routine's "Return".
+Use Function's Invoke as Storage.Routine's "Invoke".
+Define Storage's "Lending" as a New Adjective describing any Storage's Routine.
+It describes any Storage's Routine as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~<@Types|Type@>~, Lifetimes: ~<@Lifetimes|Type@>~|}^(<@Process@>)<DEF>`.
+Define Storage's "Iteration" as `<DEF>BOP^X{|Iterable: ~<@Values@>~, Key: ~item~, RangeArity: ~1~|}^(<@Body@>)<DEF>`.
+Define Storage's "Apply|--ies|--ied|-ying|--ier" to `<DEF>MOB{|Key: ~outcome~|}^KY{|Key: ~<@Action@>~, Inputs: ~&[item, <@Context@>]&~|}<DEF>`.
+Define Storage's "Indexed" as a New Adjective describing any Storage's Iteration or Storage's Applier.
+It describes any Storage's Iteration as `<DEF>BOP^X{|Iterable: ~<@Values@>~, Key: ~item~, Index: ~key~, RangeArity: ~2~|}^(<@Body@>)<DEF>`.
+It describes any Storage's Applier as `<DEF>MOB{|Key: ~outcome~|}^KY{|Key: ~<@Action@>~, Inputs: ~&[key, item, <@Context@>]&~|}<DEF>`.
+Define Storage's "Discard|-s|-ed|-ing|-er" to `<DEF>OB{|Key: ~_~, Value: ~<@Value@>~|}<DEF>`.
+Create Storage's "Traverse|-s|-d|--ing|--er" for Processing a New Storage's Iteration of any Thing and a New Process of a New Storage's Applier of any Thing and any Thing.
 Define Storage's "Closure" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}<DEF>`.
 Define Storage's Closure's "Environment" as `<DEF>MOB{|Key: ~<@Name@>Environment~|}^KY{|Key: ~<@Copy@>~, Inputs: ~&[&<@Name@>.0]&~|}<DEF>`.
 Define Storage's Closure's "Context" as `<DEF>OB{|Key: ~<@Name@>Context~, Value: ~&<@Context@>~|}<DEF>`.
@@ -95,8 +106,8 @@ Return a New Storage.Produced Binding of a New Function's Invoker of Renderer an
 Define Storage's List's "Content" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^Y{|Key: ~LList~, Props: ~&[Prop{Key: element, Value: <@Element@>}Prop, Prop{Key: values, Value: <@Values@>}Prop]&~|}<DEF>`.
 Define Storage's Layout's "List" as `<DEF>HY{|Key: ~LList~, Props: ~&[Prop{Key: element, Type: Vec<u64>}Prop, Prop{Key: values, Type: Vec<<@Value|Type@>>}Prop]&~|}<DEF>`.
 Define Storage's "List" as a New Storage's Layout's List of Storage's Value.
-Define Storage's List's "Element" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.element~|}<DEF>`.
-Define Storage's List's "Values" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.values~|}<DEF>`.
+Use Storage.Pointer.Element as Storage.List's "Element".
+Use Storage.Environment.Values as Storage.List's "Values".
 Define Storage's Vector's "Buffer" as `<DEF>MOB{|Key: ~mut <@Name|Label@>: Vec<<@Type|Type@>>~|}^KY{|Key: ~Vec::new~|}<DEF>`.
 Define Storage's "Editable" as a New Adjective describing any Storage's Borrower, Storage's Reader, or Storage's Reference.
 It describes any Storage's Borrower as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&mut <@Value@>~|}<DEF>`.
@@ -120,11 +131,11 @@ Return a New Storage's List's Content of Signature and Values.
 Define Storage's Map's "Content" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^Y{|Key: ~LMap~, Props: ~&[Prop{Key: element, Value: <@Element@>}Prop, Prop{Key: values, Value: <@Values@>}Prop]&~|}<DEF>`.
 Define Storage's Layout's "Map" as `<DEF>HY{|Key: ~LMap~, Props: ~&[Prop{Key: element, Type: Vec<u64>}Prop, Prop{Key: values, Type: std::collections::BTreeMap<Vec<u8>, <@Value|Type@>>}Prop]&~|}<DEF>`.
 Define Storage's "Map" as a New Storage's Layout's Map of Storage's Value.
-Define Storage's Map's "Element" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.element~|}<DEF>`.
+Use Storage.Pointer.Element as Storage.Map's "Element".
 Define Storage's Map's "Entries" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~iter~, Receiver: ~<@Value@>.values~|}<DEF>`.
 Define Storage's Map's "Buffer" as `<DEF>MOB{|Key: ~mut <@Name|Label@>: std::collections::BTreeMap<<@Key|Type@>, <@Value|Type@>>~|}^KY{|Key: ~std::collections::BTreeMap::new~|}<DEF>`.
 Define Storage's "Insert|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~insert~, Receiver: ~<@Collection@>~, Inputs: ~&[<@Key@>, <@Value@>]&~|}<DEF>`.
-Define Storage's "Enumerate|-s|-d|--ing|--or" to `<DEF>BOP^X{|Iterable: ~<@Values@>~, Key: ~item~, Index: ~key~, RangeArity: ~2~|}^W^MOB{|Key: ~_~|}^KY{|Key: ~<@Action@>~, Inputs: ~&[key, item, <@Context@>]&~|}<DEF>`.
+Create Storage's "Enumerate|-s|-d|--ing|--or" for Processing a New Storage.Indexed Storage's Iteration of any Thing and a New Process of a New Storage.Indexed Storage's Applier of any Thing and any Thing.
 
     Publicly create Storage's Map's "Collect|-s|-ed|-ing|-or" as a Generic Function with Inputs of "key" as `&Vec<u8>` and "value" as `&LValue` and "collection" as `&mut std::collections::BTreeMap<Vec<u8>, LValue>` and Outputs of `Option<LValue>`.
 Create "Copied" as a New Storage's Value's Copier of Value.
@@ -140,43 +151,43 @@ Create "Context" as a New Storage.Editable Storage's Borrower of Values.
 Storage.Enumerate Entries and Storage's Map's Collector and Context.
 Return a New Storage's Map's Content of Signature and Values.
 
-Define Storage's "Polymorphic" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~T~|}^(<@Process@>)<DEF>`.
-Define Storage's "Permanent" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~T: 'static~|}^(<@Process@>)<DEF>`.
-Define Storage's "Fallible" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~T, E~|}^(<@Process@>)<DEF>`.
-Define Storage's "Referenced" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~T: 'static~, Lifetimes: ~'a~|}^(<@Process@>)<DEF>`.
-Define Storage's "Failure" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::error_new_text~, Inputs: ~&[<@Message@>]&~|}<DEF>`.
+Define Storage's "Polymorphic" as a New Adjective describing any Storage's Routine.
+It describes a Generic Storage's Routine of `T`.
+Define Storage's "Permanent" as a New Adjective describing any Storage's Routine.
+It describes a Generic Storage's Routine of `T: 'static`.
+Define Storage's "Fallible" as a New Adjective describing any Storage's Routine.
+It describes a Generic Storage's Routine of `T, E`.
+Define Storage's "Referenced" as a New Adjective describing any Storage's Routine.
+It describes a Generic Storage.Lending Storage's Routine of `T: 'static` and `'a`.
+Define Storage's "Failure" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::error_new_text~, Imports: ~&[runtime::error_new_text as _]&~, Inputs: ~&[<@Message@>]&~|}<DEF>`.
 Define Storage's "Demand|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~ok_or~, Receiver: ~<@Value@>~, Inputs: ~&[<@Failure@>]&~|}<DEF>`.
 Define Storage's "Optional" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~ok~, Receiver: ~<@Value@>~|}<DEF>`.
 Define Storage's "Projection" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~downcast_ref~, Receiver: ~<@Value@>~|}<DEF>`.
 Define Storage's "Shared" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::rc::Rc::new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Storage's "Success" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~Ok~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 
-    Publicly create Storage's "Require|-s|-d|--ing|--er" as a Generic Storage.Polymorphic `l_required` Function with Inputs of "value" as `Option<T>` and "message" as `&str` and Outputs of `runtime::Result<T>`.
+    Publicly create Storage's "Require|-s|-d|--ing|--er" as a Generic Storage.Polymorphic `l_required` Storage.Routine with Inputs of "value" as `Option<T>` and "message" as `&str` and Outputs of `runtime::Result<T>`.
 Create "Failure" as a New Storage's Failure of Message.
 Return a New Storage's Demander of Value and Failure.
 
-    Publicly create Storage's "Accept|-s|-ed|-ing|-er" as a Generic Storage.Fallible `l_borrowed` Function with Inputs of "value" as `Result<T, E>` and "message" as `&str` and Outputs of `runtime::Result<T>`.
+    Publicly create Storage's "Accept|-s|-ed|-ing|-er" as a Generic Storage.Fallible `l_borrowed` Storage.Routine with Inputs of "value" as `Result<T, E>` and "message" as `&str` and Outputs of `runtime::Result<T>`.
 Create "Optional" as a New Storage's Optional of Value.
 Return a New Storage's Requirer of Optional and Message.
 
-    Publicly create Storage's "Project|-s|-ed|-ing|-or" as a Generic Storage.Referenced `l_project` Function with Inputs of "value" as `&'a dyn std::any::Any` and "message" as `&str` and Outputs of `runtime::Result<&'a T>`.
+    Publicly create Storage's "Project|-s|-ed|-ing|-or" as a Generic Storage.Referenced `l_project` Storage.Routine with Inputs of "value" as `&'a dyn std::any::Any` and "message" as `&str` and Outputs of `runtime::Result<&'a T>`.
 Create "Projected" as a New Storage's Projection of Value.
 Return a New Storage's Requirer of Projected and Message.
 
-    Publicly create Storage's "Resolve|-s|-d|--ing|--er" as a Generic Storage.Polymorphic Function with Inputs of "value" as `runtime::Result<&T>` and "copy" as `fn(&T) -> T` and Outputs of `runtime::Result<T>`.
+    Publicly create Storage's "Resolve|-s|-d|--ing|--er" as a Generic Storage.Polymorphic Storage.Routine with Inputs of "value" as `runtime::Result<&T>` and "copy" as `fn(&T) -> T` and Outputs of `runtime::Result<T>`.
 Create "Checked" as a New Storage.Checked Binding of Value.
 Create "Copied" as a New Storage.Produced Binding of a New Function's Invoker of Copy and Checked.
 Return a New Storage's Success of Copied.
 
-    Publicly create Storage's Value's "Wrap|-s|-ped|-ping|-per" as a Generic Storage.Permanent `l_value_wrap` Function with Inputs of "value" as `T` and "signature" as `Vec<u64>` and "renderer" as `fn(&dyn std::any::Any) -> runtime::Result<Vec<u8>>` and "visitor" as `fn(&dyn std::any::Any, usize, &mut std::collections::BTreeSet<usize>) -> runtime::Result<bool>` and Outputs of Storage's Value.
+    Publicly create Storage's Value's "Wrap|-s|-ped|-ping|-per" as a Generic Storage.Permanent `l_value_wrap` Storage.Routine with Inputs of "value" as `T` and "signature" as `Vec<u64>` and "renderer" as `fn(&dyn std::any::Any) -> runtime::Result<Vec<u8>>` and "visitor" as `fn(&dyn std::any::Any, usize, &mut std::collections::BTreeSet<usize>) -> runtime::Result<bool>` and Outputs of Storage's Value.
 Create "Data" as a New Storage's Shared of Value.
 Return a New Storage's Value's Content of Signature, Data, Renderer, and Visitor.
 
-    Publicly create Storage's Value's "Restore|-s|-d|--ing|--er" as a Generic Storage.Permanent `l_restore` Function with Inputs of "value" as `LValue` and "message" as `&str` and "snapshot" as `fn(&T) -> T` and Outputs of `runtime::Result<T>`.
+    Publicly create Storage's Value's "Restore|-s|-d|--ing|--er" as a Generic Storage.Permanent `l_restore` Storage.Routine with Inputs of "value" as `LValue` and "message" as `&str` and "snapshot" as `fn(&T) -> T` and Outputs of `runtime::Result<T>`.
 Create "Data" as a New Storage's Value's Data of Value.
 Create "Borrowed" as a New Storage's Referrer of Data.
 Create "Projected" as a New Storage's Projector of Borrowed and Message.
@@ -220,7 +231,7 @@ Create Storage's "Error" as a Dictionary.
 Create Storage's "Null" as a Dictionary.
 Create Storage's "App" as a Dictionary.
 Create Storage's "Function" as a Dictionary.
-Define Storage's Number's "Format" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::format_number~, Inputs: ~&[*<@Value@>]&~|}<DEF>`.
+Define Storage's Number's "Format" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::format_number~, Imports: ~&[runtime::format_number as _]&~, Inputs: ~&[*<@Value@>]&~|}<DEF>`.
 
     Publicly create Storage's Text's "Restore|-s|-d|--ing|--er" as a Generic Function with Inputs of "data" as `&dyn std::any::Any` and "message" as `&str` and Outputs of `runtime::Result<Vec<u8>>`.
 Create "Value" as a New Storage.Checked Binding of a New Storage's Annotation of `runtime::Result<&Vec<u8>>` and a New Storage's Projector of Data and Message.
@@ -268,10 +279,10 @@ Return a New Storage's Rejection of Failure.
 
 Define Storage's Function's "Environment" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.0~|}<DEF>`.
 Define Storage's Function's "Target" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>.1~|}<DEF>`.
-Define Storage's Function's "Copyable" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~T: Copy~|}^(<@Process@>)<DEF>`.
+Define Storage's Function's "Copyable" as a New Adjective describing any Storage's Routine.
+It describes a Generic Storage's Routine of `T: Copy`.
 
-    Publicly create Storage's Function's "Copy|--ies|--ied|-ing|--ier" as a Generic Storage.Function.Copyable `l_function_copy` Function with Inputs of "value" as `&(LEnvironment, T)` and Outputs of `(LEnvironment, T)`.
+    Publicly create Storage's Function's "Copy|--ies|--ied|-ing|--ier" as a Generic Storage.Function.Copyable `l_function_copy` Storage.Routine with Inputs of "value" as `&(LEnvironment, T)` and Outputs of `(LEnvironment, T)`.
 Create "Environment" as a New Storage's Function's Environment of Value.
 Create "Copied" as a New Storage's Environment's Copier of Environment.
 Create "Target" as a New Storage's Function's Target of Value.
@@ -282,7 +293,9 @@ Define Storage's "Verify|--ies|--ied|-ing|--ier" to `<DEF>OB{|Key: ~_~, Value: ~
 Define Storage's "Get|-s|--ot|-ting|-ter" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~get~, Receiver: ~<@Collection@>~, Inputs: ~&[<@Index@>]&~|}<DEF>`.
 Define Storage's "Locate|-s|-d|--ing|--or" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~get_mut~, Receiver: ~<@Collection@>~, Inputs: ~&[<@Index@>]&~|}<DEF>`.
 Define Storage's "Replace|-s|-d|--ing|--er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::mem::replace~, Inputs: ~&[<@Target@>, <@Value@>]&~|}<DEF>`.
-Define Storage's "Inspect|-s|-ed|-ing|-or" to `<DEF>BOP^X{|Iterable: ~<@Values@>~, Key: ~item~, RangeArity: ~1~|}^W^(MOB{|Key: ~outcome~|}^KY{|Key: ~<@Action@>~, Inputs: ~&[item, <@Context@>]&~|}*OB{|Key: ~_~, Value: ~outcome?~|})<DEF>`.
+Define Storage's "Propagate|-s|-d|--ing|--or" to `<DEF>OB{|Key: ~_~, Value: ~outcome?~|}<DEF>`.
+Create Storage's "Examine|-s|-d|--ing|--er" for Processing a New Storage's Applier of any Thing and any Thing and then Processing a New Storage's Propagator.
+Create Storage's "Inspect|-s|-ed|-ing|-or" for Processing a New Storage's Iteration of any Thing and a New Process of a New Storage's Examiner of any Thing and any Thing.
 
     Publicly create Storage's "Validate|-s|-d|--ing|--or" as a Generic Function with Inputs of "valid" as `bool` and "message" as `&str` and Outputs of `runtime::Result<()>`.
 If Valid, Create "Unit" as a New Storage's Nothing and then Create "Success" as a New Storage's Success of Unit and then Return Success.
@@ -330,9 +343,8 @@ Return a New Storage's Success of List.
 
 Define Storage's List's "Editable" as a New Adjective describing any Storage's List's Values.
 It describes any Storage's List's Values as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&mut <@Value@>.values~|}<DEF>`.
-Define Storage's Map's "Values" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.values~|}<DEF>`.
-Define Storage's Map's "Editable" as a New Adjective describing any Storage's Map's Values.
-It describes any Storage's Map's Values as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&mut <@Value@>.values~|}<DEF>`.
+Use Storage.Environment.Values as Storage.Map's "Values".
+Use Storage.List.Editable as Storage.Map's "Editable".
 Define Storage's "Cell" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::cell::RefCell::new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 
     Publicly create Storage's Value's "Check|-s|-ed|-ing|-er" as a Generic Function with Inputs of "value" as `&LValue` and "expected" as `&[u64]` and "message" as `&str` and Outputs of `runtime::Result<()>`.
@@ -405,7 +417,7 @@ Define Storage's "Address" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::
 Define Storage's "History" as `<DEF>MOB{|Key: ~mut <@Name|Label@>~|}^KY{|Key: ~std::collections::BTreeSet::new~|}<DEF>`.
 Define Storage's "Remember|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~insert~, Receiver: ~<@Collection@>~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 
-    Publicly create Storage's "Identify|--ies|--ied|-ing|--ier" as a Generic Storage.Polymorphic Function with Inputs of "value" as `&std::rc::Rc<T>` and Outputs of `usize`.
+    Publicly create Storage's "Identify|--ies|--ied|-ing|--ier" as a Generic Storage.Polymorphic Storage.Routine with Inputs of "value" as `&std::rc::Rc<T>` and Outputs of `usize`.
 Create "Address" as a New Storage's Address of Value.
 Return a New Storage's Integral of Address and `usize`.
 
@@ -466,18 +478,18 @@ Define Storage's "Present" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~Some~
 Define Storage's "Absent" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~None~|}<DEF>`.
 Create Storage's "Slot" as a Dictionary.
 
-    Publicly create Storage's Slot's "Populate|-s|-d|--ing|--or" as a Generic Storage.Polymorphic Function with Inputs of "index" as `usize` and "values" as `&mut Vec<Option<T>>` and Outputs of `()`.
+    Publicly create Storage's Slot's "Populate|-s|-d|--ing|--or" as a Generic Storage.Polymorphic Storage.Routine with Inputs of "index" as `usize` and "values" as `&mut Vec<Option<T>>` and Outputs of `()`.
 Create "Missing" as a New Storage's Absent.
 Return a New Storage's Appender of Values and Missing.
 
-    Publicly create Storage's Slot's "Allocate|-s|-d|--ing|--or" as a Generic Storage.Polymorphic Function with Inputs of "count" as `usize` and Outputs of `std::cell::RefCell<Vec<Option<T>>>`.
+    Publicly create Storage's Slot's "Allocate|-s|-d|--ing|--or" as a Generic Storage.Polymorphic Storage.Routine with Inputs of "count" as `usize` and Outputs of `std::cell::RefCell<Vec<Option<T>>>`.
 Create "Values" as a New Storage's Vector's Buffer of `Option<T>`.
 Create "Indices" as a New Storage's Range of Count.
 Create "Context" as a New Storage.Editable Storage's Borrower of Values.
 Storage.Traverse Indices and Storage's Slot's Populator and Context.
 Return a New Storage's Cell of Values.
 
-    Publicly create Storage's Slot's "Read|-s||-ing|-er" as a Generic Storage.Polymorphic Function with Inputs of "slots" as `&std::cell::RefCell<Vec<Option<T>>>` and "index" as `usize` and "copy" as `fn(&T) -> T` and "borrowed" as `&str` and "missing" as `&str` and Outputs of `runtime::Result<T>`.
+    Publicly create Storage's Slot's "Read|-s||-ing|-er" as a Generic Storage.Polymorphic Storage.Routine with Inputs of "slots" as `&std::cell::RefCell<Vec<Option<T>>>` and "index" as `usize` and "copy" as `fn(&T) -> T` and "borrowed" as `&str` and "missing" as `&str` and Outputs of `runtime::Result<T>`.
 Create "Attempt" as a New Storage's Reader of Slots.
 Create "Values" as a New Storage.Checked Binding of a New Storage's Accepter of Attempt and Borrowed.
 Create "Found" as a New Storage's Getter of Values and Index.
@@ -486,7 +498,7 @@ Create "Referenced" as a New Storage's Referrer of Optional.
 Create "Initialized" as a New Storage's Requirer of Referenced and Missing.
 Return a New Storage's Resolver of Initialized and Copy.
 
-    Publicly create Storage's Slot's "Write|-s|----ote|--ing|-r" as a Generic Storage.Polymorphic Function with Inputs of "slots" as `&std::cell::RefCell<Vec<Option<T>>>` and "index" as `usize` and "value" as `T` and "borrowed" as `&str` and "missing" as `&str` and Outputs of `runtime::Result<()>`.
+    Publicly create Storage's Slot's "Write|-s|----ote|--ing|-r" as a Generic Storage.Polymorphic Storage.Routine with Inputs of "slots" as `&std::cell::RefCell<Vec<Option<T>>>` and "index" as `usize` and "value" as `T` and "borrowed" as `&str` and "missing" as `&str` and Outputs of `runtime::Result<()>`.
 Create "Attempt" as a New Storage.Editable Storage's Reader of Slots.
 Create "Checked" as a New Storage.Checked Binding of a New Storage's Accepter of Attempt and Borrowed.
 Create "Values" as a New Storage.Mutable Binding of Checked.
@@ -525,9 +537,11 @@ Return a New Storage's Slot's Writer of Slots, Index, Value, `program storage is
 Create "Slots" as a New Storage's Program's Actions of Program.
 Return a New Storage's Slot's Writer of Slots, Index, Value, `program actions are already borrowed`, and `program action index out of bounds`.
 
-Define Storage's "Search|-es|-ed|-ing|-er" to `<DEF>BOP^X{|Iterable: ~<@Values@>~, Key: ~item~, RangeArity: ~1~|}^W^(MOB{|Key: ~outcome~|}^KY{|Key: ~<@Action@>~, Inputs: ~&[item, <@Context@>]&~|}*OB{|Key: ~reached~, Value: ~outcome?~|}*BOG^GI^(E{|Statement: ~reached~|}*W^(<@Return@>)))<DEF>`.
-Define Storage's "Iterative" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~I: IntoIterator<Item = &'a LValue>~, Lifetimes: ~'a~|}^(<@Process@>)<DEF>`.
+Define Storage's "Decide|-s|-d|--ing|--er" to `<DEF>BOG^GI^(E{|Statement: ~outcome?~|}*W^(<@Return@>))<DEF>`.
+Create Storage's "Probe|-s|-d|--ing|--er" for Processing a New Storage's Applier of any Thing and any Thing and then Processing a New Storage's Decider of any Process.
+Create Storage's "Search|-es|-ed|-ing|-er" for Processing a New Storage's Iteration of any Thing and a New Process of a New Storage's Prober of any Thing, any Thing, and any Process.
+Define Storage's "Iterative" as a New Adjective describing any Storage's Routine.
+It describes a Generic Storage.Lending Storage's Routine of `I: IntoIterator<Item = &'a LValue>` and `'a`.
 Define Storage's Value's "Target" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Context@>.0~|}<DEF>`.
 Define Storage's Value's "History" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&mut *<@Context@>.1~|}<DEF>`.
 Define Storage's Map's "Children" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~values~, Receiver: ~<@Value@>.values~|}<DEF>`.
@@ -538,7 +552,7 @@ Create "Target" as a New Storage's Value's Target of Context.
 Create "Seen" as a New Storage's Value's History of Context.
 Return a New Storage's Value's Reacher of Value, Target, and Seen.
 
-    Publicly create Storage's Value's "Search|-es|-ed|-ing|-er" as a Generic Storage.Iterative Function with Inputs of "values" as `I` and "target" as `usize` and "seen" as `&mut std::collections::BTreeSet<usize>` and Outputs of `runtime::Result<bool>`.
+    Publicly create Storage's Value's "Search|-es|-ed|-ing|-er" as a Generic Storage.Iterative Storage.Routine with Inputs of "values" as `I` and "target" as `usize` and "seen" as `&mut std::collections::BTreeSet<usize>` and Outputs of `runtime::Result<bool>`.
 Create "Pair" as a New Storage's Tuple of Target and Seen.
 Create "State" as a New Storage.Mutable Binding of Pair.
 Create "Context" as a New Storage.Editable Storage's Borrower of State.
@@ -575,13 +589,14 @@ Return a New Storage's Value's Searcher of Children, Target, and Seen.
 Create "Value" as a New Storage.Checked Binding of a New Storage's Annotation of `runtime::Result<&LEnvironment>` and a New Storage's Projector of Data and `expected Environment`.
 Return a New Storage's Environment's Reacher of Value, Target, and Seen.
 
-    Publicly create Storage's Function's "Reach|-es|-ed|-ing|-er" as a Generic Storage.Permanent `l_reach_function` Function with Inputs of "data" as `&dyn std::any::Any` and "target" as `usize` and "seen" as `&mut std::collections::BTreeSet<usize>` and Outputs of `runtime::Result<bool>`.
+    Publicly create Storage's Function's "Reach|-es|-ed|-ing|-er" as a Generic Storage.Permanent `l_reach_function` Storage.Routine with Inputs of "data" as `&dyn std::any::Any` and "target" as `usize` and "seen" as `&mut std::collections::BTreeSet<usize>` and Outputs of `runtime::Result<bool>`.
 Create "Value" as a New Storage.Checked Binding of a New Storage's Annotation of `runtime::Result<&(LEnvironment, T)>` and a New Storage's Projector of Data and `Function type mismatch`.
 Create "Environment" as a New Storage's Function's Environment of Value.
 Return a New Storage's Environment's Reacher of Environment, Target, and Seen.
 
 Define Storage's "Pair|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~zip~, Receiver: ~<@Left@>~, Inputs: ~&[<@Right@>]&~|}<DEF>`.
-Define Storage's "Audit|-s|-ed|-ing|-or" to `<DEF>BOP^X{|Iterable: ~<@Values@>~, Key: ~item~, Index: ~key~, RangeArity: ~2~|}^W^(MOB{|Key: ~outcome~|}^KY{|Key: ~<@Action@>~, Inputs: ~&[key, item, <@Context@>]&~|}*OB{|Key: ~_~, Value: ~outcome?~|})<DEF>`.
+Create Storage's "Review|-s|-ed|-ing|-er" for Processing a New Storage.Indexed Storage's Applier of any Thing and any Thing and then Processing a New Storage's Propagator.
+Create Storage's "Audit|-s|-ed|-ing|-or" for Processing a New Storage.Indexed Storage's Iteration of any Thing and a New Process of a New Storage's Reviewer of any Thing and any Thing.
 
     Publicly create Storage's Environment's "Check|-s|-ed|-ing|-er" as a Generic Function with Inputs of "expected" as `&Vec<u64>` and "value" as `&LValue` and "message" as `&str` and Outputs of `runtime::Result<()>`.
 Return a New Storage's Value's Checker of Value, Expected, and Message.
@@ -682,11 +697,11 @@ Create "Value" as a New Storage.Checked Binding of a New Storage's Pointer's Rea
 Create "Borrowed" as a New Storage's Borrower of Value.
 Return a New Storage's Value's Formatter of Borrowed.
 
-Define Storage's "Cloneable" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~T: Clone~|}^(<@Process@>)<DEF>`.
+Define Storage's "Cloneable" as a New Adjective describing any Storage's Routine.
+It describes a Generic Storage's Routine of `T: Clone`.
 Define Storage's "Specialize|-s|-d|--ing|--er" to `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Function@>::<<@Type|Type@>>~|}<DEF>`.
 
-    Publicly create Storage's "Clone|-s|-d|--ing|--er" as a Generic Storage.Cloneable Function with Inputs of "value" as `&T` and Outputs of `T`.
+    Publicly create Storage's "Clone|-s|-d|--ing|--er" as a Generic Storage.Cloneable Storage.Routine with Inputs of "value" as `&T` and Outputs of `T`.
 Return a New Storage's Copier of Value.
 
 Define Storage's "Future" as `<DEF>COB{|Key: ~<@Name|Label@>~|}^CV{|Capture: ~Move~|}^(<@Body@>)<DEF>`.
@@ -703,7 +718,7 @@ Create Storage's Function's "Exit|-s|-ed|-ing|-er" for Processing a New Storage'
 Define Storage's Function's "Capture" as `<DEF>MOB{|Key: ~<@Name@>Environment~|}^(<@Environment@>)<DEF>`.
 Define Storage's Function's "Pair" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~(<@Name|Label@>Environment?, <@Function@> as <@Type@>)~|}<DEF>`.
 Create Storage's Function's "Bind|-s|---ound|-ing|-er" for Processing a New Storage's Function's Capture and a New Storage's Function's Pair.
-Define Storage's Rejection's "Error" as `<DEF>MOB{|Key: ~<@Name@>Error~|}^KY{|Key: ~runtime::error_new_text~, Inputs: ~&[<@Message|Text@>]&~|}<DEF>`.
+Define Storage's Rejection's "Error" as `<DEF>MOB{|Key: ~<@Name@>Error~|}^KY{|Key: ~runtime::error_new_text~, Imports: ~&[runtime::error_new_text as _]&~, Inputs: ~&[<@Message|Text@>]&~|}<DEF>`.
 Define Storage's Rejection's "Result" as `<DEF>MOB{|Key: ~<@Name@>Result~|}^KY{|Key: ~Err~, Inputs: ~&[<@Name@>Error]&~|}<DEF>`.
 Create Storage's "Reject|-s|-ed|-ing|-or" for Processing a New Storage's Rejection's Error, a New Storage's Rejection's Result, and a New Storage's Function's Return.
 
@@ -716,10 +731,10 @@ Define Storage's "Loop" as `<DEF>BOP^X^(<@Body@>)<DEF>`.
 Define Storage's Function's "Stop" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::ops::ControlFlow::Break~, Inputs: ~&[()]&~|}<DEF>`.
 Define Storage's "Literal" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value|Thing@>~|}<DEF>`.
 
-Define Storage's "Lent" as a New Adjective describing any Function.
-It describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~T~, Lifetimes: ~'a~|}^(<@Process@>)<DEF>`.
+Define Storage's "Lent" as a New Adjective describing any Storage's Routine.
+It describes a Generic Storage.Lending Storage's Routine of `T` and `'a`.
 
-    Publicly create Storage's "Access|-es|-ed|-ing|-or" as a Generic Storage.Lent Function with Inputs of "value" as `&'a Option<T>` and "message" as `&str` and Outputs of `runtime::Result<&'a T>`.
+    Publicly create Storage's "Access|-es|-ed|-ing|-or" as a Generic Storage.Lent Storage.Routine with Inputs of "value" as `&'a Option<T>` and "message" as `&str` and Outputs of `runtime::Result<&'a T>`.
 Create "Optional" as a New Storage's Referrer of Value.
 Return a New Storage's Requirer of Optional and Message.
 
@@ -750,20 +765,20 @@ Create "Retained" as a New Storage's App's Retainer of Borrowed.
 Return a New Storage's Success of Retained.
 
 Define Storage's App's "Path" as `<DEF>MOB{|Key: ~<@Name@>Path~|}^KY{|Key: ~std::path::PathBuf::from~, Inputs: ~&[<@Path|Text@>]&~|}<DEF>`.
-Define Storage's App's "Handle" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::runtime_app~, Inputs: ~&[runtime, <@Name|Label@>Path]&~|}<DEF>`.
+Define Storage's App's "Handle" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::runtime_app~, Imports: ~&[runtime::runtime_app as _]&~, Inputs: ~&[runtime, <@Name|Label@>Path]&~|}<DEF>`.
 Create Storage's App's "Create|-s|-d|--ing|--or" for Processing a New Storage's App's Path and a New Storage's App's Handle.
 Define Storage's App's "Source" as `<DEF>MOB{|Key: ~lAppSource~|}^KY{|Key: ~String::from~, Inputs: ~&[<@Source|Text@>]&~|}<DEF>`.
-Define Storage's App's "Attribution" as `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~runtime::app_set_source~, Inputs: ~&[&<@App@>, lAppSource]&~|}<DEF>`.
+Define Storage's App's "Attribution" as `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~runtime::app_set_source~, Imports: ~&[runtime::app_set_source as _]&~, Inputs: ~&[&<@App@>, lAppSource]&~|}<DEF>`.
 Create Storage's App's "Attribute|-s|-d|--ing|--or" for Processing a New Storage's App's Source and a New Storage's App's Attribution.
-Define Storage's App's "Output" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::app_output~, Inputs: ~&[&<@App@>]&~|}<DEF>`.
-Define Storage's App's "Error" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::app_error~, Inputs: ~&[&<@App@>]&~|}<DEF>`.
-Define Storage's Error's "Create|-s|-d|--ing|--or" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::error_new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
-Define Storage's "Show|-s|-ed|-ing|-er" to `<DEF>COB{|Key: ~<@Name|Label@>~|}^DV^KY{|Key: ~runtime::runtime_show~, Inputs: ~&[runtime, &<@Value@>]&~|}<DEF>`.
-Define Storage's Program's "Failure" as `<DEF>MOB{|Key: ~<@Name@>Error~|}^KY{|Key: ~runtime::runtime_fail~, Inputs: ~&[runtime, <@Value@>]&~|}<DEF>`.
+Define Storage's App's "Output" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::app_output~, Imports: ~&[runtime::app_output as _]&~, Inputs: ~&[&<@App@>]&~|}<DEF>`.
+Define Storage's App's "Error" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::app_error~, Imports: ~&[runtime::app_error as _]&~, Inputs: ~&[&<@App@>]&~|}<DEF>`.
+Define Storage's Error's "Create|-s|-d|--ing|--or" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::error_new~, Imports: ~&[runtime::error_new as _]&~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
+Define Storage's "Show|-s|-ed|-ing|-er" to `<DEF>COB{|Key: ~<@Name|Label@>~|}^DV^KY{|Key: ~runtime::runtime_show~, Imports: ~&[runtime::runtime_show as _]&~, Inputs: ~&[runtime, &<@Value@>]&~|}<DEF>`.
+Define Storage's Program's "Failure" as `<DEF>MOB{|Key: ~<@Name@>Error~|}^KY{|Key: ~runtime::runtime_fail~, Imports: ~&[runtime::runtime_fail as _]&~, Inputs: ~&[runtime, <@Value@>]&~|}<DEF>`.
 Define Storage's Program's "Rejection" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~Err~, Inputs: ~&[<@Name|Label@>Error]&~|}<DEF>`.
 Create Storage's Program's "Fail|-s|-ed|-ing|-er" for Processing a New Storage's Program's Failure and a New Storage's Program's Rejection.
 
 Create Storage's "Entry" as a Dictionary.
 Define Storage's Entry's "Future" as `<DEF>MOB{|Key: ~lObservedFuture~|}^KY{|Key: ~l_main~, Inputs: ~&[runtime]&~|}<DEF>`.
-Define Storage's Entry's "Outcome" as `<DEF>COB{|Key: ~lObservedStatus~|}^DV^KY{|Key: ~runtime::runtime_run~, Inputs: ~&[runtime, lObservedFuture]&~|}<DEF>`.
+Define Storage's Entry's "Outcome" as `<DEF>COB{|Key: ~lObservedStatus~|}^DV^KY{|Key: ~runtime::runtime_run~, Imports: ~&[runtime::runtime_run as _]&~, Inputs: ~&[runtime, lObservedFuture]&~|}<DEF>`.
 Create Storage's Entry's "Observe|-s|-d|--ing|--er" for Processing a New Storage's Entry's Future, a New Storage's Entry's Outcome, and a New Storage's Function's Return.

@@ -110,21 +110,17 @@ func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact
 	if err != nil {
 		return BuildUnit{}, err
 	}
-	returned, err := r.Compilation.builtinMemberDefinition("Function", "Return")
-	if err != nil {
-		return BuildUnit{}, err
-	}
-	result, err := returned.Instantiate(map[string]DefinitionArgument{"Statement": definitionReferenceArgument("lCompleted")})
+	result, err := emitter.returned("lCompleted")
 	if err != nil {
 		return BuildUnit{}, err
 	}
 	body = append(body, completed...)
-	body = append(body, result.Expression)
+	body = append(body, result...)
 	function, err := r.Compilation.futureEntry("l_main", "runtime::Result<()>", body)
 	if err != nil {
 		return BuildUnit{}, err
 	}
-	observedReturn, err := returned.Instantiate(map[string]DefinitionArgument{"Statement": definitionReferenceArgument("lObservedStatus")})
+	observedReturn, err := r.Compilation.instantiateBuiltin("Function.Return", map[string]DefinitionArgument{"Statement": definitionReferenceArgument("lObservedStatus")})
 	if err != nil {
 		return BuildUnit{}, err
 	}
@@ -480,15 +476,7 @@ func (e *orchestrationEmitter) instructions(body []*orchestrationInstruction) ([
 }
 
 func (e *orchestrationEmitter) returned(value string) ([]string, error) {
-	template, err := e.compilation.builtinMemberDefinition("Function", "Return")
-	if err != nil {
-		return nil, err
-	}
-	bound, err := template.Instantiate(map[string]DefinitionArgument{"Statement": definitionReferenceArgument(value)})
-	if err != nil {
-		return nil, err
-	}
-	return builtinProcessExpressions(template, bound)
+	return e.word("Function.Return", map[string]DefinitionArgument{"Statement": definitionReferenceArgument(value)})
 }
 
 func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([]string, error) {

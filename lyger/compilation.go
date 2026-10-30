@@ -1,6 +1,7 @@
 package Lyger
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 
@@ -12,6 +13,7 @@ type Compilation struct {
 	definitionTemporaries []int
 	definitionReserved    map[string]bool
 	definitionStatements  int
+	definitionValues      map[*DefinitionInstance]bool
 	Gram                  *grammar
 	MainBytes             []byte
 	MainPath              string
@@ -166,6 +168,8 @@ func (c *Compilation) buildMemory() {
 	for len(c.ProcStatements) > 0 {
 		var pending []*lStatement
 		progress := false
+		var unresolved *lStatement
+		var unresolvedError error
 		for _, statement := range c.ProcStatements {
 			if len(statement.tokens) > 0 && statement.tokens[0].scope.waitsForHeader(statement) {
 				pending = append(pending, statement)
@@ -200,7 +204,15 @@ func (c *Compilation) buildMemory() {
 			if c.checkStatementError(statement, "resolve literals", statement.uncacheLiterals(c.TextCache)) {
 				return
 			}
-			if c.checkStatementError(statement, "register statement", c.registerStatement(statement)) {
+			err = c.registerStatement(statement)
+			if errors.Is(err, lerrors.UnresolvedReference) {
+				pending = append(pending, statement)
+				if unresolved == nil {
+					unresolved, unresolvedError = statement, err
+				}
+				continue
+			}
+			if c.checkStatementError(statement, "register statement", err) {
 				return
 			}
 			for _, tok := range statement.tokens {
@@ -220,6 +232,10 @@ func (c *Compilation) buildMemory() {
 		}
 		c.ProcStatements = pending
 		if !progress {
+			if unresolved != nil {
+				c.checkStatementError(unresolved, "register statement", unresolvedError)
+				return
+			}
 			if err := c.validateDictionaryExports(); err != nil {
 				c.checkStatementError(pending[0], "dictionary export", err)
 				return

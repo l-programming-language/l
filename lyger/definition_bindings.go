@@ -381,6 +381,10 @@ func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument)
 		if err != nil {
 			return DefinitionInstance{}, t.failure(fmt.Errorf("parameter %q: %w", slot.Name, err))
 		}
+		// Only exact identity rendering preserves the operand's structural proof.
+		if child := argument.Definition; child != nil && value == child.Expression && len(t.parts) == 3 && t.parts[0].text == "" && t.parts[1].slot != nil && t.parts[1].slot.Name == slot.Name && t.parts[2].text == "" {
+			instance.sequence, instance.result = child.sequence, child.result
+		}
 		values[slot.Name] = value
 		instance.Dependencies = append(instance.Dependencies, argument.dependencies...)
 		binding := DefinitionBinding{Slot: slot, Kind: argument.Kind, Emitted: value}

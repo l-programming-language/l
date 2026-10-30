@@ -105,11 +105,11 @@ func (e *orchestrationEmitter) processInstruction(current *orchestrationInstruct
 		}
 		cases = append(cases, builtinAppCase{canonical: canonical, body: body})
 	}
-	var returned *DefinitionTemplate
+	var returned *record
 	if e.functionWords != nil {
-		returned = e.functionWords.ReturnTemplate
+		returned = e.functionWords.Return
 	} else {
-		returned, err = e.compilation.builtinMemberDefinition("Function", "Return")
+		returned, err = e.compilation.builtinRecord("Function.Return")
 		if err != nil {
 			return nil, err
 		}
