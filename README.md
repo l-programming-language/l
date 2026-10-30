@@ -5,8 +5,8 @@
 L is a human-readable programming language with applications as values. It
 compiles to native programs for macOS and Linux; Apps run in separate OS processes.
 
-**Early development:** binary releases are not available yet, and publication
-remains disabled. Backward compatibility is not guaranteed before `v1.0.0`.
+**Early development:** backward compatibility is not guaranteed before `v1.0.0`.
+Releases are published manually; merging into main does not release L.
 
 ## A first program
 
@@ -27,35 +27,39 @@ of the syntax and execution steps.
 
 ## Try L
 
-Until binary releases are available, build the compiler from source using
-Go **1.27.3**, pinned in [.go-version](.go-version). Follow the
-[installation guide](docs/cli/installation.md) to clone the repository and prepare
-the native build prerequisites: C/linker tools, rustup with Rust **1.98.1**, and
-the locked Rust dependency cache. Initial setup requires internet access.
-
-`install.sh` requires Bash and builds only the L compiler; it does not prepare
-Rust or its dependencies. After completing prerequisite setup, run from the
-repository root:
+Check [GitHub Releases](https://github.com/l-programming-language/l/releases) for
+published macOS/Linux binaries (ARM64 and x86-64). Once `v0.0.1` is published,
+download its installer:
 
 ```sh
-bash ./install.sh
-./bin/l build ./demo/basic/main.l
-./demo/basic/main
+curl --fail --location --proto '=https' --tlsv1.2 \
+  https://github.com/l-programming-language/l/releases/download/v0.0.1/install-release.sh \
+  --output install-release.sh
 ```
 
-Output:
+Inspect the script, then install L and its pinned Rust dependencies:
 
-```text
-Hello World!
+```sh
+bash ./install-release.sh --version 0.0.1 --with-toolchain
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+l --version
 ```
 
-Building and running are separate steps. Keep `main` and its `main.apps/`
-directory together when moving the program. Running the generated program
-requires neither L nor the Go/Rust toolchains.
+Keep that `PATH` in your shell configuration. Native C/linker tools are required;
+pre-1.0 macOS binaries are unsigned. The [installation guide](docs/cli/installation.md)
+covers prerequisites, macOS approval and building L from source when a binary
+release is unavailable. Binary installation needs neither Go nor a source checkout.
 
-The compiler embeds its language resources, so `bin/l` can be moved independently
-or placed on your `PATH`. See the [CLI guide](docs/cli/build.md) for build options
-and output locations.
+Save the example as `main.l`, then build and run it:
+
+```sh
+l build main.l
+./main
+```
+
+Output is `Hello World!` followed by a newline. Keep `main` and `main.apps/`
+together when moving the program. Running the result requires neither L nor the
+Go/Rust toolchains. See the [CLI guide](docs/cli/build.md) for build options.
 
 ## Learn more
 

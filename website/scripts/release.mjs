@@ -150,12 +150,12 @@ export function validateNativeShape(manifest) {
 
 // These observations must come from authenticated GitHub API calls in production.
 // They are injectable only to unit-test policy, never as CLI JSON authority.
-export function verifyProducer(manifest, policy, observations) {
+function verifyNativeProducer(manifest, policy, observations) {
   validateNativeShape(manifest);
   validateTargetPolicy(manifest, policy);
   const publisher = policy.nativePublisher;
   assert(publisher && Number.isSafeInteger(publisher.workflowId) && publisher.workflowPath, 'Native release publisher is not configured; production activation is blocked');
-  const { run, job, artifact, release, tagCommit, downloadedArchiveSha256 } = observations;
+  const { run, job, artifact, downloadedArchiveSha256 } = observations;
   assert(run.repository?.full_name === manifest.repository && manifest.repository === policy.repository, 'Producer repository mismatch');
   assert(run.workflow_id === publisher.workflowId && run.path === publisher.workflowPath, 'Native producer is not the approved workflow identity');
   assert(run.id === manifest.producer.runId && run.run_attempt === manifest.producer.runAttempt && run.head_sha === manifest.languageCommit && run.head_branch === policy.productionBranch, 'Native producer revision/ref mismatch');
@@ -163,8 +163,23 @@ export function verifyProducer(manifest, policy, observations) {
   verifyProducerJob(manifest, run, job);
   assert(artifact.name === `l-native-release-${manifest.languageCommit}` && artifact.workflow_run?.id === run.id && artifact.workflow_run?.head_sha === manifest.languageCommit, 'Native artifact provenance is missing or stale');
   assert(DIGEST.test(downloadedArchiveSha256) && artifact.digest === `sha256:${downloadedArchiveSha256}`, 'Native artifact archive identity mismatch');
+}
+
+export function verifyPendingProducer(manifest, policy, observations, env) {
+  verifyNativeProducer(manifest, policy, observations);
+  assert(manifest.schemaVersion === 2 && observations.job.name === 'Seal native release', 'Pending native proof requires the canonical sealing job');
+  assert(env.GITHUB_REPOSITORY === policy.repository && env.GITHUB_REF === 'refs/heads/main' && env.GITHUB_EVENT_NAME === 'workflow_dispatch', 'Pending native proof requires a manual main release');
+  assert(manifest.producer.runId === Number(env.GITHUB_RUN_ID) && manifest.producer.runAttempt <= Number(env.GITHUB_RUN_ATTEMPT) && manifest.languageCommit === env.GITHUB_SHA, 'Pending native proof must belong to this release dispatch');
+  assert(observations.run.path === '.github/workflows/release.yml' && observations.artifact.expired === false, 'Pending native proof must come from the registered live release artifact');
+  return true;
+}
+
+export function verifyProducer(manifest, policy, observations) {
+  verifyNativeProducer(manifest, policy, observations);
+  const { artifact, release, tagCommit } = observations;
   assert(release.tag_name === manifest.tag && release.draft === false && tagCommit === manifest.languageCommit, 'Release/tag does not identify the native source revision');
   assert(release.prerelease === false, 'Production requires a non-prerelease language release');
+  if (manifest.schemaVersion === 2) assert(release.immutable === true, 'Production requires an immutable language release');
   const proof = release.assets?.find((x) => x.name === `${artifact.name}.zip`);
   assert(proof?.state === 'uploaded' && proof.digest === artifact.digest, 'Durable native validation archive is missing from release');
   const identity = release.assets?.find((x) => x.name === `${artifact.name}.json`);
@@ -224,7 +239,10 @@ export function planRelease({ mode, docsCommit, languageCommit, version, current
   assert(SHA.test(docsCommit) && SHA.test(languageCommit) && VERSION.test(version) && tag === `v${version}`, 'Release planning requires immutable commits, VERSION and tag');
   assert(dirty === false && DIGEST.test(currentFingerprint) && FINGERPRINT.test(sourceFingerprint), 'Production source must be clean and fingerprinted');
   if (mode === 'release') assert(docsCommit === languageCommit, 'Initial release docs and language must share a revision');
-  else assert(currentFingerprint === releasedFingerprint, 'Language inputs changed; a docs-only correction requires a new language release decision');
+  else {
+    assert(docsCommit !== languageCommit, 'A docs correction requires a distinct documentation revision');
+    assert(currentFingerprint === releasedFingerprint, 'Language inputs changed; a docs-only correction requires a new language release decision');
+  }
   return { languageVersion: version, languageCommit, docsCommit, docsRevision: docsCommit, channel: 'production', dirty: false, sourceFingerprint, releaseFingerprint: currentFingerprint };
 }
 
@@ -305,6 +323,25 @@ async function download(url, output) {
   return bytes;
 }
 
+export function documentationTag({ languageVersion, languageCommit, docsCommit }) {
+  assert(VERSION.test(languageVersion) && SHA.test(languageCommit) && SHA.test(docsCommit), 'Documentation storage requires exact source identities');
+  return docsCommit === languageCommit ? `v${languageVersion}` : `docs-v${languageVersion}-${docsCommit}`;
+}
+
+async function tagCommit(repository, tag) {
+  let object = (await github(`/repos/${repository}/git/ref/tags/${encodeURIComponent(tag)}`)).object;
+  for (let depth = 0; object.type === 'tag' && depth < 8; depth++) object = (await github(`/repos/${repository}/git/tags/${object.sha}`)).object;
+  assert(object.type === 'commit', 'Release tag does not resolve to a commit');
+  return object.sha;
+}
+
+async function documentationRelease(policy, identity) {
+  const tag = documentationTag(identity), release = await github(`/repos/${policy.repository}/releases/tags/${tag}`);
+  assert(release.tag_name === tag && release.draft === false && release.immutable === true && release.prerelease === (identity.docsCommit !== identity.languageCommit), 'Documentation requires its published immutable archive release');
+  assert(await tagCommit(policy.repository, tag) === identity.docsCommit, 'Documentation archive tag identifies a different revision');
+  return release;
+}
+
 async function fetchCurrent(policy) {
   assertPublicationPolicy(policy);
   const deployments = await github(`/repos/${policy.repository}/deployments?environment=github-pages&per_page=30`);
@@ -320,7 +357,7 @@ async function fetchCurrent(policy) {
   // Recovery runs can execute trusted workflow code from a newer commit while
   // promoting an older exact artifact; the deployed content owns docsCommit.
   assert(SHA.test(version.docsCommit) && VERSION.test(version.languageVersion), 'Production identity lacks immutable source identity');
-  const release = await github(`/repos/${policy.repository}/releases/tags/v${version.languageVersion}`);
+  const release = await documentationRelease(policy, version);
   const asset = release.assets?.find((x) => x.name === `docs-${version.docsCommit}.promotion.json`);
   assert(asset && /^sha256:[a-f0-9]{64}$/.test(asset.digest), 'Production promotion manifest is missing from its release');
   const raw = await fetch(asset.url, { headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/octet-stream' } });
@@ -332,42 +369,47 @@ async function fetchCurrent(policy) {
   return current;
 }
 
-async function publishDocs(policy, manifest, archive, nativePath, manifestPath) {
-  assertPublicationPolicy(policy);
-  const { guard } = await import('../../scripts/release/github.mjs');
-  await guard({ policy });
+export async function documentationFiles(manifest, archive, nativePath, manifestPath) {
   assert(manifest.channel === 'production' && SHA.test(manifest.docsCommit), 'Only sealed production artifacts can be published');
-  const native = JSON.parse(await readFile(nativePath, 'utf8'));
-  assert(sha256(stableJSON(native)) === manifest.nativeManifestSha256, 'Native identity changed before publication');
-  const release = await github(`/repos/${policy.repository}/releases/tags/${native.tag}`);
-  assert(!release.draft && !release.prerelease, 'Native release has not been published');
-  await verifyReleasedAuthority(policy, native, release);
-  const prefix = `docs-${manifest.docsCommit}`;
-  for (const [name, file] of [[`${prefix}.tar.gz`, archive], [`${prefix}.promotion.json`, manifestPath], [`${prefix}.native.json`, nativePath]]) {
-    const bytes = await readFile(file), digest = `sha256:${sha256(bytes)}`;
-    if (file === archive) assert(digest === `sha256:${manifest.siteArchiveSha256}`, 'Sealed archive changed');
-    const existing = release.assets.find((x) => x.name === name);
-    if (existing) { assert(existing.digest === digest && existing.state === 'uploaded', `Existing release asset differs: ${name}`); continue; }
-    const url = release.upload_url.replace(/\{.*$/, '') + `?name=${encodeURIComponent(name)}`;
-    assert(url.startsWith('https://uploads.github.com/repos/'), 'Unexpected release upload endpoint');
-    const result = await fetch(url, { method: 'POST', headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, 'Content-Type': 'application/octet-stream' }, body: bytes });
-    assert(result.ok, `Release asset publication failed: ${result.status} ${name}`);
-    const asset = await result.json(); assert(asset.digest === digest && asset.state === 'uploaded', `Uploaded release asset identity mismatch: ${name}`);
+  const files = new Map(), prefix = `docs-${manifest.docsCommit}`;
+  for (const [suffix, file, expected] of [
+    ['tar.gz', archive, manifest.siteArchiveSha256],
+    ['promotion.json', manifestPath, sha256(stableJSON(manifest))],
+    ['native.json', nativePath, manifest.nativeManifestSha256],
+  ]) {
+    const bytes = await readFile(file);
+    assert(sha256(bytes) === expected, `Sealed documentation changed: ${suffix}`);
+    files.set(`${prefix}.${suffix}`, bytes);
   }
+  return files;
+}
+
+async function publishDocs(policy, manifest, archive, nativePath, manifestPath, root) {
+  assertPublicationPolicy(policy);
+  const { guard, publishAssetSet } = await import('../../scripts/release/github.mjs');
+  await guard({ policy });
+  assert(root && manifest.mode === 'docs-correction' && manifest.docsCommit === process.env.GITHUB_SHA && manifest.docsCommit !== manifest.languageCommit, 'Docs correction requires a distinct captured documentation revision');
+  const native = JSON.parse(await readFile(nativePath, 'utf8'));
+  await verifyPromotion(manifest, { root, archive, nativeManifest: native });
+  const release = await github(`/repos/${policy.repository}/releases/tags/${native.tag}`);
+  await verifyReleasedAuthority(policy, native, release);
+  assert(sourceFingerprintAt(process.env.GITHUB_WORKSPACE, manifest.docsCommit) === native.releaseFingerprint && manifest.releaseFingerprint === native.releaseFingerprint, 'Docs correction changed release-relevant source');
+  await publishAssetSet(policy.repository, { tag: documentationTag(manifest), commit: manifest.docsCommit,
+    name: `Documentation for ${native.tag} (${manifest.docsCommit})`, prerelease: true, latest: false,
+    body: `Immutable documentation snapshot for L ${native.tag}. Compiler downloads remain on the language release.` }, await documentationFiles(manifest, archive, nativePath, manifestPath));
 }
 
 async function verifyReleasedAuthority(policy, native, release) {
   validateNativeShape(native);
   validateTargetPolicy(native, policy);
   assert(policy.nativePublisher && native.repository === policy.repository, 'Native publisher/repository is not configured');
+  assert(release.tag_name === native.tag && release.draft === false && release.prerelease === false && release.immutable === true, 'Native authority requires a published immutable language release');
   const identity = release.assets.find((x) => x.name === `l-native-release-${native.languageCommit}.json`);
   assert(identity?.state === 'uploaded' && identity.digest === `sha256:${sha256(stableJSON(native))}`, 'Native manifest is not the published release identity');
   const [run, job] = await Promise.all([github(`/repos/${policy.repository}/actions/runs/${native.producer.runId}/attempts/${native.producer.runAttempt}`), github(`/repos/${policy.repository}/actions/jobs/${native.producer.jobId}`)]);
   assert(run.workflow_id === policy.nativePublisher.workflowId && run.path === policy.nativePublisher.workflowPath && run.head_sha === native.languageCommit && (native.schemaVersion === 2 ? ['workflow_dispatch'] : ['push', 'workflow_dispatch']).includes(run.event) && run.head_branch === policy.productionBranch, 'Native producer is untrusted or failed');
   verifyProducerJob(native, run, job);
-  let object = (await github(`/repos/${policy.repository}/git/ref/tags/${native.tag}`)).object;
-  for (let depth = 0; object.type === 'tag' && depth < 8; depth++) object = (await github(`/repos/${policy.repository}/git/tags/${object.sha}`)).object;
-  assert(object.type === 'commit' && object.sha === native.languageCommit, 'Native language tag moved');
+  assert(await tagCommit(policy.repository, native.tag) === native.languageCommit, 'Native language tag moved');
   for (const item of native.artifacts) assert(release.assets.some((x) => x.name === item.releaseAsset && x.digest === `sha256:${item.sha256}` && x.state === 'uploaded'), 'Native artifact identity changed');
 }
 
@@ -375,8 +417,9 @@ async function downloadPromotion(policy, tag, docsCommit, output) {
   assertPublicationPolicy(policy);
   assert(policy.nativePublisher, 'Native release publisher is not configured; production activation is blocked');
   assert(SHA.test(docsCommit) && tag.startsWith('v') && VERSION.test(tag.slice(1)), 'Recovery requires an immutable docs SHA and real release tag');
-  const release = await github(`/repos/${policy.repository}/releases/tags/${tag}`);
-  assert(!release.draft && !release.prerelease, 'Recovery requires a published production release');
+  const nativeRelease = await github(`/repos/${policy.repository}/releases/tags/${tag}`);
+  const languageCommit = await tagCommit(policy.repository, tag);
+  const release = await documentationRelease(policy, { languageVersion: tag.slice(1), languageCommit, docsCommit });
   await mkdir(output);
   for (const [suffix, filename] of [['.tar.gz', 'site.tar.gz'], ['.promotion.json', 'promotion.json'], ['.native.json', 'native-release.json']]) {
     const asset = release.assets.find((x) => x.name === `docs-${docsCommit}${suffix}`);
@@ -386,25 +429,30 @@ async function downloadPromotion(policy, tag, docsCommit, output) {
   }
   const manifest = JSON.parse(await readFile(resolve(output, 'promotion.json'))), native = JSON.parse(await readFile(resolve(output, 'native-release.json')));
   validateNativeShape(native);
-  assert(manifest.docsCommit === docsCommit && native.tag === tag && native.repository === policy.repository && sha256(stableJSON(native)) === manifest.nativeManifestSha256, 'Recovery identity does not match requested release');
-  await verifyReleasedAuthority(policy, native, release);
+  assert(manifest.docsCommit === docsCommit && manifest.languageCommit === languageCommit && native.tag === tag && native.repository === policy.repository && sha256(stableJSON(native)) === manifest.nativeManifestSha256, 'Recovery identity does not match requested release');
+  await verifyReleasedAuthority(policy, native, nativeRelease);
   assert(sha256(await readFile(resolve(output, 'site.tar.gz'))) === manifest.siteArchiveSha256, 'Recovery site archive differs from sealed artifact');
 }
 
-async function observationsFor(manifest, artifactId, archive) {
+async function verifyNativeAuthority(manifest, policy, artifactId, archive, mode) {
+  assert(['release', 'docs-correction'].includes(mode), 'Native authority requires an explicit release mode');
   assert(/^\d+$/.test(String(artifactId)), 'An immutable native artifact ID is required');
   const base = `/repos/${manifest.repository}`;
-  const [run, job, artifact, release, ref] = await Promise.all([
+  const [run, job, artifact] = await Promise.all([
     github(`${base}/actions/runs/${manifest.producer.runId}/attempts/${manifest.producer.runAttempt}`),
     github(`${base}/actions/jobs/${manifest.producer.jobId}`),
     github(`${base}/actions/artifacts/${artifactId}`),
-    github(`${base}/releases/tags/${encodeURIComponent(manifest.tag)}`),
-    github(`${base}/git/ref/tags/${encodeURIComponent(manifest.tag)}`),
   ]);
-  let object = ref.object;
-  for (let depth = 0; object.type === 'tag' && depth < 8; depth++) object = (await github(`${base}/git/tags/${object.sha}`)).object;
-  assert(object.type === 'commit', 'Release tag does not resolve to a commit');
-  return { run, job, artifact, release, tagCommit: object.sha, downloadedArchiveSha256: sha256(await readFile(archive)) };
+  const observations = { run, job, artifact, downloadedArchiveSha256: sha256(await readFile(archive)) };
+  if (mode === 'release') {
+    const { guard } = await import('../../scripts/release/github.mjs');
+    const current = await guard({ policy });
+    assert(current.path === policy.nativePublisher.workflowPath, 'Initial documentation must run inside the registered native workflow');
+    return verifyPendingProducer(manifest, policy, observations, process.env);
+  }
+  observations.release = await github(`${base}/releases/tags/${encodeURIComponent(manifest.tag)}`);
+  observations.tagCommit = await tagCommit(manifest.repository, manifest.tag);
+  return verifyProducer(manifest, policy, observations);
 }
 
 export async function authenticatedReleaseIdentity({ root, policyPath, manifestPath, artifacts, artifactId, archive, mode, sourceFingerprint }) {
@@ -414,7 +462,7 @@ export async function authenticatedReleaseIdentity({ root, policyPath, manifestP
   const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
   await verifyNativeArchive(archive, artifacts, manifestPath);
   await verifyNativeEvidence(manifest, artifacts);
-  verifyProducer(manifest, policy, await observationsFor(manifest, artifactId, archive), process.env.GITHUB_RUN_ID);
+  await verifyNativeAuthority(manifest, policy, artifactId, archive, mode);
   const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
   const version = (await readFile(resolve(root, 'VERSION'), 'utf8')).trim();
   const dirty = execFileSync('git', ['status', '--porcelain'], { cwd: root, encoding: 'utf8' }).trim() !== '';
@@ -435,14 +483,23 @@ async function main() {
   const json = async (path) => { assert(path, 'Missing required file argument'); return JSON.parse(await readFile(path, 'utf8')); };
   if (command === 'download-native') {
     const policy = assertPublicationPolicy(await json(options.policy)); assert(/^\d+$/.test(options['artifact-id']), 'Invalid native artifact ID');
+    assert(['release', 'docs-correction'].includes(options.mode), 'Native download requires an explicit release mode');
     const artifact = await github(`/repos/${policy.repository}/actions/artifacts/${options['artifact-id']}`);
     assert(/^l-native-release-[a-f0-9]{40}$/.test(artifact.name), 'Artifact is not a native release proof');
-    const version = (await readFile(resolve(options.root || '..', 'VERSION'), 'utf8')).trim();
-    assert(VERSION.test(version), 'Native archive requires real VERSION');
-    const release = await github(`/repos/${policy.repository}/releases/tags/v${version}`);
-    const proof = release.assets?.find((x) => x.name === `${artifact.name}.zip`);
-    assert(proof?.digest === artifact.digest, 'Durable native archive does not match immutable workflow artifact');
-    const bytes = await download(proof.url, options.output);
+    let url;
+    if (options.mode === 'release') {
+      assert(artifact.expired === false, 'Native proof artifact has expired');
+      url = `https://api.github.com/repos/${policy.repository}/actions/artifacts/${options['artifact-id']}/zip`;
+    } else {
+      const version = (await readFile(resolve(options.root || '..', 'VERSION'), 'utf8')).trim();
+      assert(VERSION.test(version), 'Native archive requires real VERSION');
+      const release = await github(`/repos/${policy.repository}/releases/tags/v${version}`);
+      assert(release.draft === false && release.prerelease === false && release.immutable === true, 'Docs correction requires a published immutable native release');
+      const proof = release.assets?.find((x) => x.name === `${artifact.name}.zip`);
+      assert(proof?.state === 'uploaded' && proof.digest === artifact.digest, 'Durable native archive differs from the original workflow artifact');
+      url = proof.url;
+    }
+    const bytes = await download(url, options.output);
     assert(`sha256:${sha256(bytes)}` === artifact.digest, 'Downloaded native archive digest mismatch');
   } else if (command === 'download-promotion') {
     await downloadPromotion(await json(options.policy), options.tag, options['docs-commit'], options.output);
@@ -451,8 +508,8 @@ async function main() {
     assert(policy.nativePublisher, 'Native release publisher is not configured; production activation is blocked');
     await verifyNativeArchive(options.archive, options.artifacts, options.manifest);
     await verifyNativeEvidence(manifest, options.artifacts);
-    verifyProducer(manifest, policy, await observationsFor(manifest, options['artifact-id'], options.archive), process.env.GITHUB_RUN_ID);
-    console.log('Verified native producer, published artifacts and canonical validation evidence');
+    await verifyNativeAuthority(manifest, policy, options['artifact-id'], options.archive, options.mode);
+    console.log('Verified native producer, archive authority and canonical validation evidence');
   } else if (command === 'extract-native') {
     const files = readArtifactZip(await readFile(options.archive));
     await mkdir(options.output); // Must be new: never overwrite another artifact tree.
@@ -486,7 +543,7 @@ async function main() {
     const policy = await json(options.policy);
     await writeFile(options.output, stableJSON(await fetchCurrent(policy)));
   } else if (command === 'publish-docs') {
-    await publishDocs(await json(options.policy), await json(options.manifest), options.archive, options.native, options.manifest);
+    await publishDocs(await json(options.policy), await json(options.manifest), options.archive, options.native, options.manifest, options.dist);
   } else if (command === 'postdeploy') {
     const policy = await json(options.policy), expected = await json(options.manifest);
     const current = await fetchCurrent(policy);

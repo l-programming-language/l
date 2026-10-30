@@ -1,5 +1,5 @@
 name: L documentation recovery
-# Publication remains blocked by release-policy.json. Recovery never rebuilds.
+# Recovery requires committed publication authority and never rebuilds.
 on:
   workflow_dispatch:
     inputs:

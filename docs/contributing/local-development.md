@@ -46,4 +46,4 @@ Compiler bootstrap and expensive native validation follow the [temporary validat
 npm run examples:verify -- --compiler /absolute/path/to/l --id basic
 ```
 
-This checks approved examples, not arbitrary Markdown fences or the full acceptance gate. Documentation CI runs website checks on pull requests. The legacy-named `ci:verify-disabled` command validates approved manual release paths and publication authorization. Publication remains disabled by committed policy; activation and recovery are covered in [deployment](../../website/DEPLOYMENT.md).
+This checks approved examples, not arbitrary Markdown fences or the full acceptance gate. Documentation CI runs website checks on pull requests. The legacy-named `ci:verify-disabled` command validates approved manual release paths and publication authorization. Publication requires an authorized manual dispatch from main; see [deployment](../../website/DEPLOYMENT.md) for activation and recovery.

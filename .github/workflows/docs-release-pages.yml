@@ -1,5 +1,5 @@
 name: L documentation release
-# Publication remains blocked by release-policy.json until a separate reviewed activation.
+# Manual publication requires the committed policy and authenticated native release.
 on:
   workflow_call:
     inputs:
@@ -14,13 +14,13 @@ on:
   workflow_dispatch:
     inputs:
       native_artifact_id:
-        description: Immutable artifact ID from an already successful native release
+        description: Immutable native artifact ID from a published language release
         required: true
         type: string
       mode:
         description: Release identity relationship
         type: choice
-        options: [release, docs-correction]
+        options: [docs-correction]
         default: docs-correction
 permissions:
   contents: read
@@ -72,9 +72,9 @@ jobs:
           echo "DOCS_RELEASE_MANIFEST=$RUNNER_TEMP/native/native-release.json" >> "$GITHUB_ENV"
       - name: Verify native release and exact canonical validation evidence
         run: |
-          node scripts/release.mjs download-native --policy ci-templates/release-policy.json --artifact-id "$DOCS_NATIVE_ARTIFACT_ID" --output "$DOCS_NATIVE_ARCHIVE"
+          node scripts/release.mjs download-native --policy ci-templates/release-policy.json --artifact-id "$DOCS_NATIVE_ARTIFACT_ID" --output "$DOCS_NATIVE_ARCHIVE" --mode "$DOCS_RELEASE_MODE"
           node scripts/release.mjs extract-native --archive "$DOCS_NATIVE_ARCHIVE" --output "$DOCS_RELEASE_ARTIFACTS"
-          node scripts/release.mjs verify-native --policy ci-templates/release-policy.json --artifact-id "$DOCS_NATIVE_ARTIFACT_ID" --archive "$DOCS_NATIVE_ARCHIVE" --manifest "$DOCS_RELEASE_MANIFEST" --artifacts "$DOCS_RELEASE_ARTIFACTS"
+          node scripts/release.mjs verify-native --policy ci-templates/release-policy.json --artifact-id "$DOCS_NATIVE_ARTIFACT_ID" --archive "$DOCS_NATIVE_ARCHIVE" --manifest "$DOCS_RELEASE_MANIFEST" --artifacts "$DOCS_RELEASE_ARTIFACTS" --mode "$DOCS_RELEASE_MODE"
           node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
       - name: Build and validate once against authenticated release identity
@@ -105,8 +105,8 @@ jobs:
   publish:
     needs: prepare
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    environment: documentation-publication
+    timeout-minutes: 20
+    environment: ${{ inputs.mode == 'release' && 'release-publication' || 'documentation-publication' }}
     permissions:
       contents: write
       actions: read
@@ -130,15 +130,30 @@ jobs:
           artifact-ids: ${{ needs.prepare.outputs.artifact_id }}
           path: ${{ runner.temp }}/sealed
           merge-multiple: true
-      - name: Reject stale publication and retain immutable release assets
+      - name: Verify tested archive and reject stale publication
         working-directory: website
         env:
           GITHUB_TOKEN: ${{ github.token }}
           MODE: ${{ inputs.mode }}
         run: |
+          mkdir "$RUNNER_TEMP/site"
+          tar -xzf "$RUNNER_TEMP/sealed/site.tar.gz" --no-same-owner -C "$RUNNER_TEMP/site"
+          node scripts/release.mjs verify-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --dist "$RUNNER_TEMP/site" --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$RUNNER_TEMP/sealed/native-release.json"
           node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
           node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --root ..
-          node scripts/release.mjs publish-docs --policy ci-templates/release-policy.json --manifest "$RUNNER_TEMP/sealed/promotion.json" --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$RUNNER_TEMP/sealed/native-release.json"
+      - name: Publish every asset in one immutable release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          MODE: ${{ inputs.mode }}
+          NATIVE_ARTIFACT_ID: ${{ inputs.native_artifact_id }}
+        run: |
+          if [[ "$MODE" == release ]]; then
+            node website/scripts/release.mjs download-native --policy website/ci-templates/release-policy.json --artifact-id "$NATIVE_ARTIFACT_ID" --output "$RUNNER_TEMP/native.zip" --mode release
+            node website/scripts/release.mjs extract-native --archive "$RUNNER_TEMP/native.zip" --output "$RUNNER_TEMP/native"
+            node scripts/release/github.mjs publish --policy website/ci-templates/release-policy.json --native "$RUNNER_TEMP/native" --archive "$RUNNER_TEMP/native.zip" --artifact-id "$NATIVE_ARTIFACT_ID" --docs "$RUNNER_TEMP/sealed" --dist "$RUNNER_TEMP/site"
+          else
+            node website/scripts/release.mjs publish-docs --policy website/ci-templates/release-policy.json --manifest "$RUNNER_TEMP/sealed/promotion.json" --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$RUNNER_TEMP/sealed/native-release.json" --dist "$RUNNER_TEMP/site"
+          fi
 
   deploy:
     needs: [prepare, publish]
@@ -172,18 +187,21 @@ jobs:
           artifact-ids: ${{ needs.prepare.outputs.artifact_id }}
           path: ${{ runner.temp }}/sealed
           merge-multiple: true
-      - name: Verify original archive and current production baseline
+      - name: Verify published archive and current production baseline
         working-directory: website
         env:
           GITHUB_TOKEN: ${{ github.token }}
           MODE: ${{ inputs.mode }}
         run: |
-          node --input-type=module -e 'import fs from "node:fs";import {sha256} from "./scripts/release.mjs";const dir=process.env.RUNNER_TEMP+"/sealed/";const m=JSON.parse(fs.readFileSync(dir+"promotion.json"));if(sha256(fs.readFileSync(dir+"site.tar.gz"))!==m.siteArchiveSha256)throw Error("Archive changed");'
+          tag=$(node -e 'const m=require(process.env.RUNNER_TEMP+"/sealed/promotion.json");process.stdout.write("v"+m.languageVersion)')
+          docs=$(node -e 'const m=require(process.env.RUNNER_TEMP+"/sealed/promotion.json");process.stdout.write(m.docsCommit)')
+          node scripts/release.mjs download-promotion --policy ci-templates/release-policy.json --tag "$tag" --docs-commit "$docs" --output "$RUNNER_TEMP/published"
+          cmp "$RUNNER_TEMP/sealed/promotion.json" "$RUNNER_TEMP/published/promotion.json"
           mkdir "$RUNNER_TEMP/site"
-          tar -xzf "$RUNNER_TEMP/sealed/site.tar.gz" --no-same-owner -C "$RUNNER_TEMP/site"
-          node scripts/release.mjs verify-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --dist "$RUNNER_TEMP/site" --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$RUNNER_TEMP/sealed/native-release.json"
+          tar -xzf "$RUNNER_TEMP/published/site.tar.gz" --no-same-owner -C "$RUNNER_TEMP/site"
+          node scripts/release.mjs verify-promotion --manifest "$RUNNER_TEMP/published/promotion.json" --dist "$RUNNER_TEMP/site" --archive "$RUNNER_TEMP/published/site.tar.gz" --native "$RUNNER_TEMP/published/native-release.json"
           node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
-          node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --root ..
+          node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/published/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --root ..
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
         with:
           path: ${{ runner.temp }}/site
@@ -193,4 +211,4 @@ jobs:
         working-directory: website
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/release.mjs postdeploy --policy ci-templates/release-policy.json --manifest "$RUNNER_TEMP/sealed/promotion.json"
+        run: node scripts/release.mjs postdeploy --policy ci-templates/release-policy.json --manifest "$RUNNER_TEMP/published/promotion.json"

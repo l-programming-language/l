@@ -109,7 +109,7 @@ async function downloadAuthenticated(url, token) {
   return Buffer.from(await response.arrayBuffer());
 }
 
-async function ensureDraft(repo, tag, commit, token, api = githubAPI) {
+async function ensureDraft(repo, tag, commit, token, api, { name, prerelease, body }) {
   const base = `/repos/${repo}`;
   let release = await api(`${base}/releases/tags/${encodeURIComponent(tag)}`, { token, allow404: true });
   // The tag endpoint can omit drafts; list drafts before creating another one.
@@ -118,8 +118,8 @@ async function ensureDraft(repo, tag, commit, token, api = githubAPI) {
     release = releases.find((item) => item.tag_name === tag);
     if (release || releases.length < 100) break;
   }
-  if (!release) release = await api(`${base}/releases`, { method: 'POST', token, body: { tag_name: tag, target_commitish: commit, name: `L ${tag}`, draft: true, prerelease: false, body: `L ${tag}. See the attached installation instructions, checksums, and release manifest.` } });
-  assert(!release.prerelease, 'Existing release is a prerelease');
+  if (!release) release = await api(`${base}/releases`, { method: 'POST', token, body: { tag_name: tag, target_commitish: commit, name, draft: true, prerelease, body } });
+  assert(release.tag_name === tag && release.prerelease === prerelease, 'Existing release identity or prerelease state differs');
   return release;
 }
 
@@ -148,20 +148,41 @@ export async function uploadOnce(repo, release, name, bytes, token, api = github
 // without publishing, downloading credentials, or replacing existing asset bytes.
 export async function publishVerifiedAssets(repo, manifest, files, { token = process.env.GITHUB_TOKEN, api = githubAPI, upload = fetch } = {}) {
   assert(repo === manifest.repository && SHA.test(manifest.languageCommit) && VERSION.test(manifest.languageVersion) && manifest.tag === `v${manifest.languageVersion}`, 'Release destination or source identity differs');
+  for (const suffix of ['tar.gz', 'promotion.json', 'native.json']) assert(files.has(`docs-${manifest.languageCommit}.${suffix}`), 'Initial release requires all sealed documentation assets before publication');
+  return publishAssetSet(repo, { tag: manifest.tag, commit: manifest.languageCommit, name: `L ${manifest.tag}`, prerelease: false, latest: true,
+    body: `L ${manifest.tag}. See the attached installation instructions, checksums, and release manifest.\n\nInstall from your terminal: download install-release.sh, inspect it, then run bash install-release.sh --version ${manifest.languageVersion} --with-toolchain.\n\nDocumentation: https://ldocs.org` }, files, { token, api, upload });
+}
+
+// Initial releases and docs snapshots use the same draft-only asset transaction.
+// Never finalize an incomplete or contaminated draft, or mutate a public asset.
+export async function publishAssetSet(repo, identity, files, { token = process.env.GITHUB_TOKEN, api = githubAPI, upload = fetch } = {}) {
+  const { tag, commit, latest } = identity;
+  assert(REPO.test(repo) && SHA.test(commit) && /^[A-Za-z0-9_.-]+$/.test(tag) && typeof latest === 'boolean' && typeof identity.prerelease === 'boolean' && files.size > 0, 'Invalid release transaction');
   const repository = await api(`/repos/${repo}`, { token });
   assert(repository.full_name === repo && repository.private === false, 'Release publication requires this source repository to be public');
-  await ensureTag(repo, manifest.tag, manifest.languageCommit, token, api);
-  const release = await ensureDraft(repo, manifest.tag, manifest.languageCommit, token, api);
+  // Repository immutability is a maintainer-checked dispatch prerequisite:
+  // reading that setting requires Administration, which GITHUB_TOKEN lacks.
+  // The release response below must independently confirm immutable publication.
+  await ensureTag(repo, tag, commit, token, api);
+  const release = await ensureDraft(repo, tag, commit, token, api, identity);
+  assert(release.draft || release.immutable === true, 'Existing published release is not immutable');
   for (const [name, bytes] of files) await uploadOnce(repo, release, name, bytes, token, api, upload);
-  // Complete one draft before exposure. Retries reuse its original matching
-  // assets; neither a source tag nor a published native asset is overwritten.
-  if (release.draft) await api(`/repos/${repo}/releases/${release.id}`, { method: 'PATCH', token, body: { draft: false, make_latest: 'true' } });
-  return release;
+  const assets = [];
+  for (let page = 1; ; page++) {
+    const batch = await api(`/repos/${repo}/releases/${release.id}/assets?per_page=100&page=${page}`, { token });
+    assets.push(...batch); if (batch.length < 100) break;
+  }
+  assert.deepEqual(assets.map((item) => item.name).sort(), [...files.keys()].sort(), 'Draft asset inventory differs from the complete release');
+  for (const asset of assets) assert(asset.state === 'uploaded' && asset.digest === `sha256:${digest(files.get(asset.name))}`, 'Release asset changed before finalization');
+  const published = release.draft ? await api(`/repos/${repo}/releases/${release.id}`, { method: 'PATCH', token, body: { draft: false, make_latest: String(latest) } }) : release;
+  assert(published.draft === false && published.immutable === true, 'Published release must be immutable');
+  return published;
 }
 
 async function publish(policy, options) {
   await guard({ policy });
-  const { verifyNativeArchive, verifyNativeEvidence } = await import('../../website/scripts/release.mjs');
+  const { verifyNativeArchive, verifyNativeEvidence, verifyPromotion, documentationFiles } = await import('../../website/scripts/release.mjs');
+  assert(options.docs && options.dist, 'Initial publication requires the sealed, tested documentation bundle');
   const nativeDir = resolve(options.native), manifestPath = resolve(nativeDir, 'native-release.json');
   const manifest = JSON.parse(await readFile(manifestPath));
   assert(manifest.schemaVersion === 2 && manifest.repository === policy.repository && manifest.languageCommit === process.env.GITHUB_SHA, 'Native identity mismatch');
@@ -195,6 +216,11 @@ async function publish(policy, options) {
     assert(!files.has(name), 'Native proof asset collides with a download');
     files.set(name, bytes);
   }
+  const docs = resolve(options.docs), promotion = JSON.parse(await readFile(resolve(docs, 'promotion.json')));
+  assert(promotion.mode === 'release' && promotion.docsCommit === manifest.languageCommit && promotion.docsCommit === process.env.GITHUB_SHA, 'Initial documentation must match the captured native source');
+  await verifyPromotion(promotion, { root: options.dist, archive: resolve(docs, 'site.tar.gz'), nativeManifest: manifest });
+  const docsFiles = await documentationFiles(promotion, resolve(docs, 'site.tar.gz'), resolve(docs, 'native-release.json'), resolve(docs, 'promotion.json'));
+  for (const [name, bytes] of docsFiles) { assert(!files.has(name), 'Documentation asset collides with native release'); files.set(name, bytes); }
   await publishVerifiedAssets(policy.repository, manifest, files);
 }
 

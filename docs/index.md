@@ -2,7 +2,7 @@
 
 L is a human-readable language with applications as values. It builds native programs for macOS and Linux.
 
-**Binary releases are not available yet; publication remains disabled.** Start with [installation](cli/installation.md), then [build your first program](guide/first-program.md) and follow the [guide](guide/index.md).
+Start with [installation](cli/installation.md), then [build your first program](guide/first-program.md) and follow the [guide](guide/index.md).
 
 ## Choose a starting point
 

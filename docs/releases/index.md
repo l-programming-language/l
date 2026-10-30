@@ -1,10 +1,10 @@
 # Releases and source identity
 
-**Publication is disabled; the first binary release is not available yet.**
+Releases are published manually from main after native validation, installer checks and documentation tests. Binaries and their matching docs archive are published together in an immutable release; Pages deployment follows. Merging a change does not publish a release.
 
 ## Download L
 
-Follow [installation](../cli/installation.md) to build from source now or install a binary once releases are available in [GitHub Releases](https://github.com/l-programming-language/l/releases).
+Check [GitHub Releases](https://github.com/l-programming-language/l/releases) for published versions. Follow [installation](../cli/installation.md) for the terminal installer or the source-build fallback; the v0.0.1 download commands work after that release is published.
 
 ## Versioning and compatibility
 
@@ -16,4 +16,4 @@ Backward compatibility is **not guaranteed before `v1.0.0`**. Read the release n
 
 `/version.json` identifies the language version/commit, documentation revision, channel, and source fingerprint. Local previews are labeled **Local**; source links identify their committed base. A fingerprint identifies content, not a passing test result.
 
-Maintainers can find publication and recovery procedures in the [deployment guide](../../website/DEPLOYMENT.md).
+Docs-only corrections use separate immutable `docs-vVERSION-<SHA>` snapshots. These GitHub prereleases contain documentation, leave the language release untouched, and never become the latest installer release. Maintainers can find publication and recovery procedures in the [deployment guide](../../website/DEPLOYMENT.md).

@@ -127,7 +127,7 @@
       "source": "docs/cli/installation.md",
       "route": "/docs/cli/installation/",
       "title": "Install L",
-      "description": "Build L from source and prepare the native toolchain; release installation is not yet available.",
+      "description": "Install a released macOS/Linux binary or build L from source and prepare native dependencies.",
       "section": "Learn L",
       "order": -1,
       "role": "explanatory",
