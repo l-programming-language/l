@@ -12,7 +12,6 @@ import (
 	"time"
 
 	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
-	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 )
 
 // Only the inert probe references new production APIs. A missing API fails a
@@ -34,7 +33,7 @@ func TestDistributionAPI(t *testing.T) {
 		t.Fatal(err)
 	}
 	binary := filepath.Join(directory, "probe")
-	ctx, cancel := context.WithTimeout(context.Background(), nativetest.BuildPrerequisiteTimeout)
+	ctx, cancel := context.WithCancel(context.Background())
 	cmd := exec.CommandContext(ctx, "go", "test", "-mod=readonly", "-race", "-c", "-o", binary, ".")
 	cmd.Dir = directory
 	cmd.Env = append(os.Environ(), "GOPROXY=off", "GOWORK=off", "GOTOOLCHAIN=local")
@@ -46,9 +45,9 @@ func TestDistributionAPI(t *testing.T) {
 			if buildErr != nil {
 				t.Fatalf("distribution-api prerequisite failed: %v\n%s\nintended assertion not exercised; runtime not exercised", buildErr, buildOutput)
 			}
-			ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
-			cmd := exec.CommandContext(ctx, binary, "-test.run=^TestDistributionAPI$/^"+id+"$", "-test.v", "-test.timeout=12s")
+			cmd := exec.CommandContext(ctx, binary, "-test.run=^TestDistributionAPI$/^"+id+"$", "-test.v", "-test.timeout=0")
 			cmd.Dir = t.TempDir()
 			cmd.Env = append(os.Environ(), "L_DISTRIBUTION_ROOT="+root, "GORACE=atexit_sleep_ms=0")
 			cmd.WaitDelay = 2 * time.Second

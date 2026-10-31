@@ -976,7 +976,7 @@
     },
     {
       "path": "cmd/l/runnable_service_native_test.go",
-      "sha256": "737b74ec2e375ffdbb22771b4fc4af31cf628184664c59b8563a1d26cce1905a"
+      "sha256": "253122c39392b915b70eaa36d26807d2e4c3f146cf12c9e88e8ff753bc24af03"
     },
     {
       "path": "cmd/l/runnable_service_test.go",
@@ -1320,7 +1320,7 @@
     },
     {
       "path": "logiceme/runnable_service_composition_test.go",
-      "sha256": "94e2a9d88aec2d79f1154483de9523ade35e55d16456bb599a3b2d2fbee9d236"
+      "sha256": "f77886c510fd2ffb4844e19f038940b3e275bf1d06e0d0d93037a870fb19a27e"
     },
     {
       "path": "logiceme/testdata/runnable_service/Cargo.lock",

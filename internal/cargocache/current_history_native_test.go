@@ -79,7 +79,7 @@ func historyNativeSequence(t *testing.T, steps []historyNativeStep) {
 		if err := cargocache.Activate(inputs, target); err != nil {
 			t.Fatal(err)
 		}
-		stdout, _ := historyNativeCommand(t, nativetest.BuildPrerequisiteTimeout, tools.Cargo, inputs, nativetest.CleanEnvironment(tools.Rustc),
+		stdout, _ := historyNativeCommand(t, nativetest.BuildPrerequisite, tools.Cargo, inputs, nativetest.CleanEnvironment(tools.Rustc),
 			"build", "--workspace", "--frozen", "--message-format=json", "--manifest-path", filepath.Join(inputs, "Cargo.toml"), "--target", tools.Host, "--target-dir", target)
 		var executable string
 		foundLibrary := false
@@ -105,7 +105,7 @@ func historyNativeSequence(t *testing.T, steps []historyNativeStep) {
 		if executable == "" || foundLibrary != (step.library != "") {
 			t.Fatalf("step %d incomplete native artifact inventory: executable=%q library=%v\n%s", index, executable, foundLibrary, stdout)
 		}
-		output, diagnostics := historyNativeCommand(t, 5*time.Second, executable, inputs, nativetest.CleanEnvironment(tools.Rustc))
+		output, diagnostics := historyNativeCommand(t, nativetest.RuntimeExecution, executable, inputs, nativetest.CleanEnvironment(tools.Rustc))
 		want := "absent\n"
 		if step.library != "" {
 			want = step.value + ":" + filepath.Join(inputs, "support", step.library) + "\n"
@@ -116,9 +116,9 @@ func historyNativeSequence(t *testing.T, steps []historyNativeStep) {
 	}
 }
 
-func historyNativeCommand(t *testing.T, timeout time.Duration, executable, directory string, environment []string, args ...string) ([]byte, []byte) {
+func historyNativeCommand(t *testing.T, phase nativetest.CommandPhase, executable, directory string, environment []string, args ...string) ([]byte, []byte) {
 	t.Helper()
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := phase.Context(context.Background(), 5*time.Second)
 	defer cancel()
 	command := exec.CommandContext(ctx, executable, args...)
 	command.Dir, command.Env = directory, environment
@@ -128,7 +128,7 @@ func historyNativeCommand(t *testing.T, timeout time.Duration, executable, direc
 	var stdout, stderr bytes.Buffer
 	command.Stdout, command.Stderr = &stdout, &stderr
 	if err := command.Run(); err != nil {
-		t.Fatalf("native command failed (watchdog %s): %v; context=%v\nstdout=%s\nstderr=%s", timeout, err, ctx.Err(), stdout.Bytes(), stderr.Bytes())
+		t.Fatalf("%s command failed: %v; context=%v\nstdout=%s\nstderr=%s", phase, err, ctx.Err(), stdout.Bytes(), stderr.Bytes())
 	}
 	return stdout.Bytes(), stderr.Bytes()
 }

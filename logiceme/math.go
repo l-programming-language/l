@@ -21,7 +21,6 @@ type Tensor struct {
 // Compile a Tensor
 func (t *Tensor) Compile() error {
 	t.Content = nil
-	compiledDimensions := []Tensor{}
 	if t.Order == 1 && t.Type == "Scalar" {
 		// Compile Scalar Bytes
 		sylDef := Definitional{
@@ -36,12 +35,13 @@ func (t *Tensor) Compile() error {
 		t.Content = append(t.Content, sylDef.Content...)
 	} else {
 		// Recursively Compile SubTensors
-		for _, dimension := range t.Dimensions {
+		compiledDimensions := make([]Tensor, len(t.Dimensions))
+		for index, dimension := range t.Dimensions {
 			dimension.SegmentalSystem = t.SegmentalSystem
 			if err := dimension.Compile(); err != nil {
 				return err
 			}
-			compiledDimensions = append(compiledDimensions, dimension)
+			compiledDimensions[index] = dimension
 			t.Content = append(t.Content, dimension.Content...)
 		}
 		t.Dimensions = compiledDimensions

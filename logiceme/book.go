@@ -87,22 +87,22 @@ type Word struct {
 
 // Build Word
 func (w *Word) Build() {
-	syllables := []Syllable{}
+	syllables := make([]Syllable, len(w.Syllables))
 	wTensor := Tensor{
 		Name:        w.Name,
 		Type:        "Vector",
 		Subject:     []byte(w.Name),
 		SubjectType: "Word",
 		Order:       2,
-		Dimensions:  []Tensor{},
+		Dimensions:  make([]Tensor, len(w.Syllables)),
 		Count:       1,
 		Exponent:    1,
 		Polarity:    false,
 	}
-	for _, syllable := range w.Syllables {
+	for index, syllable := range w.Syllables {
 		syllable.Build()
-		wTensor.Dimensions = append(wTensor.Dimensions, syllable.Tensor)
-		syllables = append(syllables, syllable)
+		wTensor.Dimensions[index] = syllable.Tensor
+		syllables[index] = syllable
 	}
 	w.Syllables = syllables
 	w.Tensor = wTensor
@@ -200,22 +200,22 @@ func (s *Sentence) Link() {
 
 // Build Sentence
 func (s *Sentence) Compile() {
-	words := []Word{}
+	words := make([]Word, len(s.Words))
 	sTensor := Tensor{
 		Name:        s.Name,
 		Type:        "Matrix",
 		Subject:     []byte(s.Name),
 		SubjectType: "Sentence",
 		Order:       3,
-		Dimensions:  []Tensor{},
+		Dimensions:  make([]Tensor, len(s.Words)),
 		Count:       1,
 		Exponent:    1,
 		Polarity:    false,
 	}
-	for _, word := range s.Words {
+	for index, word := range s.Words {
 		word.Build()
-		sTensor.Dimensions = append(sTensor.Dimensions, word.Tensor)
-		words = append(words, word)
+		sTensor.Dimensions[index] = word.Tensor
+		words[index] = word
 	}
 	s.Words = words
 	s.Tensor = sTensor

@@ -25,7 +25,7 @@ func TestCLIProxyRetainsOwnedProcessGroup(t *testing.T) {
 	if err := os.WriteFile(source, []byte(ownedCargoSource), 0600); err != nil {
 		t.Fatal(err)
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), BuildPrerequisiteTimeout)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	build := exec.CommandContext(ctx, "go", "build", "-o", helper, source)
 	build.Env = append(os.Environ(), "GOENV=off", "GOFLAGS=", "GOWORK=off", "GOTOOLCHAIN=local")

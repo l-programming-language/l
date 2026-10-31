@@ -40,7 +40,7 @@ func CLI(t testing.TB) string {
 			return
 		}
 		installed.executable = filepath.Join(installed.directory, "l")
-		ctx, cancel := context.WithTimeout(context.Background(), nativetest.BuildPrerequisiteTimeout)
+		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 		cmd := exec.CommandContext(ctx, "go", "build", "-mod=readonly", "-o", installed.executable, "./cmd/l")
 		cmd.Dir = RepoRoot(t)

@@ -44,8 +44,7 @@ func runRuntimeCommand(t *testing.T, executable, directory string, environment [
 
 func runCommandWithTimeout(t *testing.T, phase nativetest.CommandPhase, executable, directory string, environment []string, args ...string) ([]byte, []byte, error) {
 	t.Helper()
-	timeout := phase.Timeout(20 * time.Second)
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := phase.Context(context.Background(), 20*time.Second)
 	defer cancel()
 	command := exec.CommandContext(ctx, executable, args...)
 	command.Dir = directory
@@ -54,7 +53,7 @@ func runCommandWithTimeout(t *testing.T, phase nativetest.CommandPhase, executab
 	command.Stdout, command.Stderr = &stdout, &stderr
 	err := command.Run()
 	if ctx.Err() != nil {
-		t.Fatalf("%s watchdog (%s): command %v timed out on %s/%s: %v", phase, timeout, args, runtime.GOOS, runtime.GOARCH, ctx.Err())
+		t.Fatalf("%s command %v canceled on %s/%s: %v", phase, args, runtime.GOOS, runtime.GOARCH, ctx.Err())
 	}
 	return stdout.Bytes(), stderr.Bytes(), err
 }

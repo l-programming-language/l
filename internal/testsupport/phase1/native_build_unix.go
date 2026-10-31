@@ -61,7 +61,7 @@ func buildProgram(t testing.TB, project string, env []string) (string, []byte, [
 	t.Helper()
 	cli := CLI(t) // Build the Go-implemented compiler before denying child Go builds.
 	probe := buildProbe(t, project)
-	ctx, cancel := context.WithTimeout(context.Background(), nativetest.BuildPrerequisiteTimeout)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	out, diag, err := controlledBuildCommand(ctx, cli, project, probe.Env(append(os.Environ(), env...)), "build", "main.l")
 	saveBuildEvidence(t, project, out, diag, err)

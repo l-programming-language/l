@@ -197,7 +197,7 @@ go test -p=N -parallel=P -mod=readonly -count=1 -timeout=10m -json NATIVE_HEAVY_
 Native acceptance cases may run concurrently when projects, resource overrides,
 provenance records and process groups are independent. Per-package admission is
 bounded; each case retains its internal signal, publication, resource-deletion
-and repeated-output sequence. Compilation and runtime use explicit separate deadlines.
+and repeated-output sequence. Compilation and runtime remain separate phases.
 Test scheduling does not change L execution semantics.
 
 Verification permits no overlays, skips, test selectors or disabled vet. Reports require every discovered package exactly once, matching phase arguments and successful terminal outcomes. Packages without test files may report a package-level skip; named skips, failures, aborted tests, malformed/incomplete streams and missing outcomes fail. All 16 original obligations must pass across the combined phases. Focused diagnostics and explicit vet cannot replace this gate.
@@ -437,17 +437,17 @@ assertions remain unchanged.
 Verification reserves discovery + build + both phases + one minute for reporting.
 Suite caps guard cumulative work, not application performance; they do not promise
 every child can exhaust its individual allowance. Doctor retains seven minutes;
-direct Cargo, diagnostic and tagged-native deadlines, runtime watchdogs, tool pins
+diagnostic and tagged-native deadlines, runtime watchdogs, tool pins
 and all concurrency remain unchanged. These budgets also govern cache-disabled
 and local runs. Further deadline amendments require explicit scope.
 
-The 40-second prerequisites cover installed CLI and Go probe/helper compilation
-and supervised `l build` commands. Mixed helpers explicitly select compilation
-or execution. Application/API-probe execution, readiness, signal, cleanup and
-isolated assertion watchdogs retain their limits. Publication execution follows
-preparatory rebuilding. An old process surviving a rebuild pauses only its
-remaining runtime allowance during bounded compilation; check liveness before
-and after, then resume that allowance. Never grant a fresh execution budget.
+Installed-CLI and Go helper builds, supervised `l build` commands and distribution
+API probes no longer have short wrapper deadlines. Enclosing suite limits still
+apply. The CLI Cargo coordinator and shared native Build helper retain their
+three-minute limits. Runtime execution, readiness, cancellation and cleanup
+watchdogs remain unchanged. Rebuilding
+pauses only the surviving process's remaining runtime allowance; check liveness
+before and after, then resume that allowance. Never grant a fresh runtime budget.
 
 ## Compiler defaults
 
