@@ -97,9 +97,9 @@ export async function ensureTag(repo, tag, commit, token, api = githubAPI) {
   assert(object.type === 'commit' && object.sha === commit, 'Existing source tag points to different bytes');
 }
 
-async function downloadAuthenticated(url, token) {
+async function downloadAuthenticated(url, token, accept = 'application/octet-stream') {
   assert(url.startsWith('https://api.github.com/'), 'Unexpected authenticated download URL');
-  let response = await fetch(url, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/octet-stream' }, redirect: 'manual', signal: AbortSignal.timeout(60000) });
+  let response = await fetch(url, { headers: { Authorization: `Bearer ${token}`, Accept: accept }, redirect: 'manual', signal: AbortSignal.timeout(60000) });
   if ([301, 302, 303, 307, 308].includes(response.status)) {
     const target = new URL(response.headers.get('location'));
     assert(target.protocol === 'https:' && (target.hostname.endsWith('.blob.core.windows.net') || target.hostname === 'release-assets.githubusercontent.com' || target.hostname.endsWith('.actions.githubusercontent.com')), 'Unexpected artifact storage redirect');
@@ -260,7 +260,7 @@ async function main() {
     await guard({ policy });
     assert(/^[1-9]\d*$/.test(options['artifact-id']), 'Invalid artifact ID');
     const artifact = await githubAPI(`/repos/${policy.repository}/actions/artifacts/${options['artifact-id']}`);
-    const bytes = await downloadAuthenticated(`https://api.github.com/repos/${policy.repository}/actions/artifacts/${options['artifact-id']}/zip`, process.env.GITHUB_TOKEN);
+    const bytes = await downloadAuthenticated(`https://api.github.com/repos/${policy.repository}/actions/artifacts/${options['artifact-id']}/zip`, process.env.GITHUB_TOKEN, 'application/vnd.github+json');
     assert(artifact.digest === `sha256:${digest(bytes)}`, 'Downloaded Actions artifact digest mismatch');
     await writeFile(options.output, bytes, { flag: 'wx' });
   } else if (command === 'publish') await publish(policy, options);

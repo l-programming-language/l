@@ -313,9 +313,9 @@ async function github(path) {
   return response.json();
 }
 
-async function download(url, output) {
+async function download(url, output, accept = 'application/octet-stream') {
   assert(url.startsWith('https://api.github.com/repos/') && process.env.GITHUB_TOKEN, 'Authenticated repository download required');
-  const response = await fetch(url, { headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/octet-stream' } });
+  const response = await fetch(url, { headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: accept } });
   assert(response.ok, `Artifact download failed: ${response.status}`);
   const bytes = Buffer.from(await response.arrayBuffer());
   assert(bytes.length <= 1024 ** 3, 'Artifact archive exceeds 1 GiB');
@@ -499,7 +499,7 @@ async function main() {
       assert(proof?.state === 'uploaded' && proof.digest === artifact.digest, 'Durable native archive differs from the original workflow artifact');
       url = proof.url;
     }
-    const bytes = await download(url, options.output);
+    const bytes = await download(url, options.output, options.mode === 'release' ? 'application/vnd.github+json' : undefined);
     assert(`sha256:${sha256(bytes)}` === artifact.digest, 'Downloaded native archive digest mismatch');
   } else if (command === 'download-promotion') {
     await downloadPromotion(await json(options.policy), options.tag, options['docs-commit'], options.output);

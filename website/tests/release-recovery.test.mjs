@@ -47,7 +47,7 @@ async function fixture(t, correction = false) {
   routes[`${base}/actions/jobs/11`] = { json: { id: 11, run_id: 10, run_attempt: 1, head_sha: languageCommit, status: 'completed', conclusion: 'success' } };
   const artifact = { name: `l-native-release-${languageCommit}`, digest: durable.digest, expired: false };
   routes[`${base}/actions/artifacts/20`] = { json: artifact };
-  routes[`${base}/actions/artifacts/20/zip`] = { bytes: proof.toString('base64') };
+  routes[`${base}/actions/artifacts/20/zip`] = { bytes: proof.toString('base64'), accept: 'application/vnd.github+json' };
   await writeFile(join(root, 'policy.json'), stableJSON(policy));
   await writeFile(join(root, 'VERSION'), '0.0.1\n');
   await writeFile(join(root, 'mock-fetch.mjs'), `
@@ -62,7 +62,7 @@ globalThis.fetch = async (url, options = {}) => {
   appendFileSync(process.env.RELEASE_TEST_CALLS, JSON.stringify(target.pathname + target.search) + '\\n');
   const entry = routes[target.pathname + target.search];
   assert(entry, 'Unexpected API request: ' + target.pathname + target.search);
-  assert.equal(headers.get('Accept'), entry.bytes === undefined ? 'application/vnd.github+json' : 'application/octet-stream');
+  assert.equal(headers.get('Accept'), entry.accept ?? (entry.bytes === undefined ? 'application/vnd.github+json' : 'application/octet-stream'));
   return new Response(entry.bytes === undefined ? JSON.stringify(entry.json) : Buffer.from(entry.bytes, 'base64'));
 };
 `);
