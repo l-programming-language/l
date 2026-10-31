@@ -10,7 +10,7 @@ Usage: bash install-release.sh [--version VERSION|latest] [--repository OWNER/RE
                               [--prefix DIRECTORY] [--with-toolchain|--binary-only]
                               [--from-dir DIRECTORY]
 
-Install the matching macOS/Linux binary into ~/.local/bin (or --prefix).
+Install the matching Apple Silicon macOS/Linux binary into ~/.local/bin (or --prefix).
 By default, prepare dependencies and ask before installing missing Rust tools.
 --with-toolchain permits installing missing Rust tools without a prompt.
 --binary-only installs just l; native builds still need the documented prerequisites.
@@ -55,6 +55,7 @@ fi
 
 case "$(uname -s)" in Darwin) release_os=darwin ;; Linux) release_os=linux ;; *) fail 'Supported systems are macOS and Linux' ;; esac
 case "$(uname -m)" in arm64|aarch64) release_arch=arm64 ;; x86_64|amd64) release_arch=amd64 ;; *) fail 'Supported CPUs are ARM64 and x86-64' ;; esac
+[[ "$release_os-$release_arch" != darwin-amd64 ]] || fail 'macOS releases require a native Apple Silicon (arm64) shell; Intel Macs are not supported'
 for release_command in curl tar sort awk cmp mktemp; do command -v "$release_command" >/dev/null 2>&1 || fail "Required command is missing: $release_command"; done
 if command -v sha256sum >/dev/null 2>&1; then
   digest() { sha256sum "$1" | awk '{print $1}'; }

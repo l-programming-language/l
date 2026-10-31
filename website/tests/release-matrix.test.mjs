@@ -1,10 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { assertPublicationPolicy, nativeTargets, sha256, stableJSON, validateNativeShape, verifyNativeEvidence, verifyProducer } from '../scripts/release.mjs';
 import { verifyReleaseWorkflow } from '../scripts/verify-disabled.mjs';
+import YAML from 'yaml';
+import { targets } from '../../scripts/release/package.mjs';
+
+test('release policy, packaging and both runner matrices require exactly the three supported targets', async () => {
+  const supported = ['darwin-arm64', 'linux-amd64', 'linux-arm64'];
+  const policy = JSON.parse(await readFile(new URL('../ci-templates/release-policy.json', import.meta.url)));
+  const workflow = YAML.parse(await readFile(new URL('../../.github/workflows/release.yml', import.meta.url), 'utf8'));
+  for (const inventory of [nativeTargets, targets, policy.targets, ...['native', 'installer'].map((job) => workflow.jobs[job].strategy.matrix.include.map((row) => row.target))]) {
+    assert.deepEqual([...inventory].sort(), supported);
+  }
+  assert.doesNotMatch(workflow.jobs.seal.steps.map((step) => step.run || '').join('\n'), /darwin-amd64/);
+});
 
 const SHA = 'a'.repeat(40), HASH = 'b'.repeat(64);
 function policy() {

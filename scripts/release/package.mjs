@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { sha256, stableJSON, sourceFingerprintAt, verifyNativeEvidence } from '../../website/scripts/release.mjs';
 import { inputInventory, fingerprints } from '../../website/scripts/provenance.mjs';
 
-export const targets = ['darwin-amd64', 'darwin-arm64', 'linux-amd64', 'linux-arm64'];
+export const targets = ['darwin-arm64', 'linux-amd64', 'linux-arm64'];
 export const archiveMembers = ['l', 'LICENSE', 'README.md', 'setup-release.sh', 'toolchain-version', 'dependencies/Cargo.toml', 'dependencies/Cargo.lock', 'dependencies/src/main.rs'];
 const stages = ['lint', 'acceptance', 'native'];
 const requiredCommands = { lint: ['gofmt', 'lint-config', 'golangci-ordinary', 'golangci-nativecompile', 'actionlint'], acceptance: ['doctor', 'verify'], native: ['nativecompile'] };

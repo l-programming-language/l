@@ -10,7 +10,7 @@ Native builds target the current host. Running a published L program requires ne
 
 ## Install a released binary
 
-Download the versioned installer for macOS or Linux on ARM64 or x86-64:
+Download the versioned installer for Apple Silicon macOS (ARM64) or Linux (ARM64 and x86-64). Releases do not currently support Intel macOS; contributions toward future support are welcome.
 
 ```sh
 curl --fail --location --proto '=https' --tlsv1.2 \

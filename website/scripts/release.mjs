@@ -13,7 +13,7 @@ const assert = (ok, message) => { if (!ok) throw new Error(message); };
 export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 export const stableJSON = (value) => JSON.stringify(value, null, 2) + '\n';
 
-export const nativeTargets = ['darwin-arm64', 'darwin-amd64', 'linux-arm64', 'linux-amd64'];
+export const nativeTargets = ['darwin-arm64', 'linux-arm64', 'linux-amd64'];
 
 // Local preparation is useful while publication is disabled. Every production
 // entry point, including direct helper invocation, must cross this boundary.
@@ -141,7 +141,7 @@ export function validateNativeShape(manifest) {
     }
   }
   if (manifest.schemaVersion === 2) {
-    assert(groups.length === nativeTargets.length && groups.map((x) => x.target).sort().join(',') === [...nativeTargets].sort().join(','), 'All four distinct native targets are required');
+    assert(groups.length === nativeTargets.length && groups.map((x) => x.target).sort().join(',') === [...nativeTargets].sort().join(','), 'All supported native targets are required');
     for (const target of nativeTargets) assert(manifest.artifacts.filter((x) => x.target === target).length === 1, `Exactly one native artifact is required: ${target}`);
     assert(manifest.artifacts.every((x) => x.target === 'all' || nativeTargets.includes(x.target)), 'Unknown native artifact target');
   }
