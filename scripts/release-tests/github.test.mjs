@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 import { checkContext, guard, ensureTag, uploadOnce, requiresMacOSSigning, verifyPublicationSigning, publishVerifiedAssets, publishAssetSet } from '../release/github.mjs';
 
 const sha = 'a'.repeat(40);
@@ -277,4 +282,50 @@ test('documentation snapshots are immutable non-latest prereleases without nativ
   await publishAssetSet('example/l', f.identity, f.files, f.options);
   assert.equal(f.state.calls.filter((call) => call.method).length, writes);
   assert.equal(f.state.uploaded.length, 3);
+});
+
+test('proof downloads negotiate Actions media and keep storage redirects unauthenticated', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'l-proof-download-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const proof = 'exact native proof bytes', hash = createHash('sha256').update(proof).digest('hex');
+  const routes = {
+    '/repos/example/l': { full_name: 'example/l', private: false },
+    '/repos/example/l/collaborators/maintainer/permission': { role_name: 'maintain', user: { type: 'User' } },
+    '/repos/example/l/collaborators/owner/permission': { role_name: 'admin', user: { type: 'User' } },
+    '/repos/example/l/actions/runs/12/attempts/2': run,
+    '/repos/example/l/actions/artifacts/20': { digest: `sha256:${hash}` },
+  };
+  const preload = join(root, 'fetch.mjs'), output = join(root, 'proof.zip');
+  await writeFile(join(root, 'policy.json'), JSON.stringify(policy));
+  await writeFile(preload, `
+import assert from 'node:assert/strict';
+const routes = ${JSON.stringify(routes)};
+globalThis.fetch = async (url, options = {}) => {
+  const target = new URL(url), headers = new Headers(options.headers);
+  assert.equal(options.method || 'GET', 'GET');
+  if (target.href === 'https://proof.blob.core.windows.net/native.zip') {
+    assert.equal(headers.has('Authorization'), false);
+    assert.equal(options.redirect, 'error');
+    return new Response(${JSON.stringify(proof)});
+  }
+  assert.equal(target.origin, 'https://api.github.com');
+  assert.equal(headers.get('Authorization'), 'Bearer fixture-token');
+  assert.equal(headers.get('Accept'), 'application/vnd.github+json');
+  if (target.pathname === '/repos/example/l/actions/artifacts/20/zip') {
+    assert.equal(options.redirect, 'manual');
+    return new Response(null, { status: 302, headers: { location: 'https://proof.blob.core.windows.net/native.zip' } });
+  }
+  assert(Object.hasOwn(routes, target.pathname), 'Unexpected API request: ' + target.pathname);
+  return Response.json(routes[target.pathname]);
+};
+`);
+  const script = fileURLToPath(new URL('../release/github.mjs', import.meta.url));
+  const result = spawnSync(process.execPath, ['--import', preload, script, 'download-proof',
+    '--policy', join(root, 'policy.json'), '--artifact-id', '20', '--output', output], {
+    cwd: root, encoding: 'utf8', timeout: 10000,
+    env: { ...process.env, ...env, NODE_OPTIONS: '', GITHUB_TOKEN: 'fixture-token' },
+  });
+  assert.equal(result.error, undefined, result.error?.message);
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(await readFile(output, 'utf8'), proof);
 });
