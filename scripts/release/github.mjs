@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const REPO = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const SHA = /^[a-f0-9]{40}$/;
 const VERSION = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
-const TARGETS = ['darwin-amd64', 'darwin-arm64', 'linux-amd64', 'linux-arm64'];
+const TARGETS = ['darwin-arm64', 'linux-amd64', 'linux-arm64'];
 const PATHS = ['.github/workflows/release.yml', '.github/workflows/docs-release-pages.yml', '.github/workflows/docs-recover-pages.yml'];
 const digest = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
@@ -200,7 +200,7 @@ async function publish(policy, options) {
   assert(artifact.name === `l-native-release-${manifest.languageCommit}` && artifact.workflow_run?.id === manifest.producer.runId && artifact.workflow_run.head_sha === manifest.languageCommit && artifact.digest === `sha256:${digest(archive)}`, 'Native proof archive authority mismatch');
   const publicBytes = await readFile(resolve(nativeDir, 'public-release.json')), publicManifest = JSON.parse(publicBytes);
   assert(publicManifest.sourceRepository === policy.repository && publicManifest.sourceCommit === manifest.languageCommit && publicManifest.version === manifest.languageVersion && publicManifest.tag === manifest.tag, 'Public provenance mismatch');
-  assert(publicManifest.artifacts.length === 5, 'Public release must contain four packages and installer');
+  assert(publicManifest.artifacts.length === TARGETS.length + 1, 'Public release must contain every supported package and installer');
   const distributables = [...publicManifest.artifacts, ...['public-release.json', 'checksums.txt'].map((name) => {
     const item = manifest.artifacts.find((entry) => entry.path === name); assert(item, `Missing public asset ${name}`); return { name, sha256: item.sha256 };
   })];

@@ -9,7 +9,7 @@ import { spawnSync } from 'node:child_process';
 import { checkContext, guard, ensureTag, uploadOnce, requiresMacOSSigning, verifyPublicationSigning, publishVerifiedAssets, publishAssetSet } from '../release/github.mjs';
 
 const sha = 'a'.repeat(40);
-const policy = { repository: 'example/l', productionBranch: 'main', publicationEnabled: true, nativePublisher: { workflowId: 42, workflowPath: '.github/workflows/release.yml' }, targets: ['darwin-arm64', 'darwin-amd64', 'linux-arm64', 'linux-amd64'] };
+const policy = { repository: 'example/l', productionBranch: 'main', publicationEnabled: true, nativePublisher: { workflowId: 42, workflowPath: '.github/workflows/release.yml' }, targets: ['darwin-arm64', 'linux-arm64', 'linux-amd64'] };
 const env = { GITHUB_REPOSITORY: 'example/l', GITHUB_REF: 'refs/heads/main', GITHUB_SHA: sha, GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_RUN_ID: '12', GITHUB_RUN_ATTEMPT: '2', GITHUB_ACTOR: 'maintainer', GITHUB_TRIGGERING_ACTOR: 'owner' };
 const run = { repository: { full_name: 'example/l' }, event: 'workflow_dispatch', head_branch: 'main', head_sha: sha, run_attempt: 2, workflow_id: 42, path: '.github/workflows/release.yml' };
 
@@ -27,11 +27,9 @@ test('publication permits unsigned pre-1.0 macOS packages but rejects them from 
     const signed = manifest(version);
     for (const item of signed.artifacts) if (item.target.startsWith('darwin-')) item.signing = 'developer-id';
     assert.doesNotThrow(() => verifyPublicationSigning(signed));
-    for (const target of ['darwin-arm64', 'darwin-amd64']) {
-      const unsigned = structuredClone(signed);
-      unsigned.artifacts.find((item) => item.target === target).signing = 'unsigned';
-      assert.throws(() => verifyPublicationSigning(unsigned), /Signing and notarization are required from 1.0.0/);
-    }
+    const unsigned = structuredClone(signed);
+    unsigned.artifacts.find((item) => item.target === 'darwin-arm64').signing = 'unsigned';
+    assert.throws(() => verifyPublicationSigning(unsigned), /Signing and notarization are required from 1.0.0/);
   }
   for (const signing of [undefined, 'ad-hoc']) {
     const invalid = manifest('0.0.1');
@@ -178,11 +176,11 @@ test('one source release receives every verified asset before publication using 
   assert.equal(f.state.calls.filter((call) => call.path === '/repos/example/l/git/refs').length, 1);
   assert.equal(f.state.calls.filter((call) => call.path === '/repos/example/l/releases').length, 1);
   assert.equal(f.state.calls.filter((call) => call.method === 'PATCH').length, 1);
-  assert.equal(f.state.uploaded.length, 12);
+  assert.equal(f.state.uploaded.length, 11);
   const writes = f.state.calls.filter((call) => call.method).length;
   await publishVerifiedAssets('example/l', f.manifest, f.files, f.options);
   assert.equal(f.state.calls.filter((call) => call.method).length, writes);
-  assert.equal(f.state.uploaded.length, 12);
+  assert.equal(f.state.uploaded.length, 11);
 });
 
 test('a partial upload remains a draft and retries reuse matching original assets', async () => {
@@ -194,8 +192,8 @@ test('a partial upload remains a draft and retries reuse matching original asset
   f.state.failUpload = null;
   await publishVerifiedAssets('example/l', f.manifest, f.files, f.options);
   assert.equal(f.state.release.draft, false);
-  assert.equal(f.state.uploaded.length, 12);
-  assert.equal(new Set(f.state.uploaded).size, 12);
+  assert.equal(f.state.uploaded.length, 11);
+  assert.equal(new Set(f.state.uploaded).size, 11);
 });
 
 test('publication rejects private repositories, moved source tags and changed retry bytes', async () => {
@@ -211,7 +209,7 @@ test('publication rejects private repositories, moved source tags and changed re
   await publishVerifiedAssets('example/l', changed.manifest, changed.files, changed.options);
   changed.files.set('install-release.sh', Buffer.from('changed retry bytes'));
   await assert.rejects(publishVerifiedAssets('example/l', changed.manifest, changed.files, changed.options), /Existing asset differs/);
-  assert.equal(changed.state.uploaded.length, 12);
+  assert.equal(changed.state.uploaded.length, 11);
 });
 
 
@@ -230,14 +228,14 @@ test('a failed documentation upload keeps the combined native release private un
   f.state.failUpload = `docs-${sha}.promotion.json`;
   await assert.rejects(publishVerifiedAssets('example/l', f.manifest, f.files, f.options), /Asset upload failed/);
   assert.equal(f.state.release.draft, true);
-  assert.equal(f.state.uploaded.length, 10);
+  assert.equal(f.state.uploaded.length, 9);
   assert.equal(f.state.calls.filter((call) => call.method === 'PATCH').length, 0);
   f.state.failUpload = null;
   await publishVerifiedAssets('example/l', f.manifest, f.files, f.options);
   assert.equal(f.state.release.draft, false);
   assert.equal(f.state.release.immutable, true);
-  assert.equal(f.state.uploaded.length, 12);
-  assert.equal(new Set(f.state.uploaded).size, 12);
+  assert.equal(f.state.uploaded.length, 11);
+  assert.equal(new Set(f.state.uploaded).size, 11);
 });
 
 test('unexpected draft assets prevent publication rather than being silently retained or deleted', async () => {

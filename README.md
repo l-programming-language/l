@@ -28,8 +28,8 @@ of the syntax and execution steps.
 ## Try L
 
 Check [GitHub Releases](https://github.com/l-programming-language/l/releases) for
-published macOS/Linux binaries (ARM64 and x86-64). Once `v0.0.1` is published,
-download its installer:
+Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64) binaries. Once `v0.0.1`
+is published, download its installer:
 
 ```sh
 curl --fail --location --proto '=https' --tlsv1.2 \

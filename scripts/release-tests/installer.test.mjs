@@ -101,6 +101,20 @@ test('toolchain setup fetches locked then verifies frozen, without changing sour
   assert.equal(await readFile(join(f.packageDir, 'dependencies/Cargo.lock'), 'utf8'), '# fixture retained lock\n');
 });
 
+test('Intel macOS is rejected before downloading or changing an existing installation', async (t) => {
+  const f = await fixture(t, { host: 'Darwin', arch: 'x86_64' });
+  await writeFile(join(f.prefix, 'l'), 'old installation');
+  await f.executable(join(f.tools, 'curl'), '#!/bin/sh\nprintf download >> "$INSTALLER_TEST_LOG"\nexit 1\n');
+  const result = f.install(['--binary-only']);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Intel Macs are not supported/);
+  const download = spawnSync('bash', [installer, '--version', f.version, '--prefix', f.prefix, '--binary-only'], { env: f.env, encoding: 'utf8', timeout: 10000 });
+  assert.notEqual(download.status, 0);
+  assert.match(download.stderr, /Intel Macs are not supported/);
+  assert.equal(await readFile(join(f.prefix, 'l'), 'utf8'), 'old installation');
+  await assert.rejects(readFile(f.env.INSTALLER_TEST_LOG), { code: 'ENOENT' });
+});
+
 test('noninteractive missing Rust and failed prerequisite setup leave existing binary intact', async (t) => {
   const f = await fixture(t);
   await writeFile(join(f.prefix, 'l'), 'old installation');

@@ -15,7 +15,7 @@ requested version must equal root `VERSION`; the source tag is `vVERSION` at
 that SHA. Merges and tag pushes do not publish anything.
 
 The native publisher runs preparation and canonical `scripts/l-check` on
-`darwin-arm64`, `darwin-amd64`, `linux-arm64`, and `linux-amd64`. It retains fresh
+`darwin-arm64`, `linux-arm64`, and `linux-amd64`. It retains fresh
 lint, acceptance, and tagged-native reports for every target. Full gates keep
 the existing pins, both unfiltered test phases, watchdogs and concurrency. A
 manual dry run prepares validation and packages without enabling publication.
@@ -178,9 +178,9 @@ language fingerprints determine the snapshot; the language release is untouched.
    Maintain/Admin dispatch remains required.
 3. Merge the reviewed activation with `publicationEnabled: true` and the numeric
    ID/path of the registered `release.yml` in the committed policy. Preserve all
-   four targets and manual-only triggers. Confirm `VERSION` is `0.0.1`, the tag
+   three targets and manual-only triggers. Confirm `VERSION` is `0.0.1`, the tag
    is unused, and the first production baseline satisfies the checks above.
-4. Dispatch a dry run on main and inspect all four native gates, packages and
+4. Dispatch a dry run on main and inspect all three native gates, packages and
    clean-home installer results:
 
    ```sh

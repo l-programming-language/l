@@ -74,7 +74,6 @@ jobs:
           - { target: linux-amd64, os: ubuntu-24.04 }
           - { target: linux-arm64, os: ubuntu-24.04-arm }
           - { target: darwin-arm64, os: macos-15 }
-          - { target: darwin-amd64, os: macos-15-intel }
     env:
       GOENV: 'off'
       GOFLAGS: ''
@@ -173,7 +172,6 @@ jobs:
           - { target: linux-amd64, os: ubuntu-24.04 }
           - { target: linux-arm64, os: ubuntu-24.04-arm }
           - { target: darwin-arm64, os: macos-15 }
-          - { target: darwin-amd64, os: macos-15-intel }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -240,7 +238,7 @@ jobs:
           PRODUCER_JOB: ${{ steps.producer.outputs.job_id }}
         run: |
           mkdir "$RUNNER_TEMP/targets"
-          for target in darwin-amd64 darwin-arm64 linux-amd64 linux-arm64; do
+          for target in darwin-arm64 linux-amd64 linux-arm64; do
             mv "$RUNNER_TEMP/downloaded/release-verified-$target" "$RUNNER_TEMP/targets/$target"
           done
           node scripts/release/package.mjs assemble --root "$GITHUB_WORKSPACE" --input "$RUNNER_TEMP/targets" --output "$RUNNER_TEMP/native" --job-id "$PRODUCER_JOB"

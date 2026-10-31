@@ -123,15 +123,15 @@ test('assembly binds all native reports and installer smoke while excluding priv
   }
   const manifest = await assemble({ root, input, output, jobId: '33', runId: '22', runAttempt: '1', repository: 'example/private-source' });
   assert.equal(manifest.schemaVersion, 2);
-  assert.equal(manifest.validation.targets.length, 4);
-  assert.equal(manifest.artifacts.length, 7);
-  assert.equal(manifest.evidence.length, 24);
+  assert.equal(manifest.validation.targets.length, 3);
+  assert.equal(manifest.artifacts.length, 6);
+  assert.equal(manifest.evidence.length, 18);
   const publicManifest = JSON.parse(await readFile(join(output, 'public-release.json')));
   assert.equal(publicManifest.sourceCommit, revision);
-  assert.equal(publicManifest.artifacts.length, 5);
+  assert.equal(publicManifest.artifacts.length, 4);
   assert.doesNotMatch(JSON.stringify(publicManifest), /evidence|private smoke|runId/);
   const checksumLines = (await readFile(join(output, 'checksums.txt'), 'utf8')).trim().split('\n');
-  assert.equal(checksumLines.length, 6);
+  assert.equal(checksumLines.length, 5);
   assert.equal(git('status', '--porcelain'), '');
   await writeFile(join(input, targets[0], 'install-release.sh'), '# untested replacement\n');
   await assert.rejects(assemble({ root, input, output: join(temporaryRoot, 'refused'), jobId: '33', runId: '22', runAttempt: '1', repository: 'example/private-source' }), /Installer exercised/);

@@ -42,7 +42,7 @@ export function verifyReleaseWorkflow(value, name, policy) {
   const allowed = name === 'docs-release-pages.yml' ? ['workflow_dispatch', 'workflow_call'] : ['workflow_dispatch'];
   if (!events.length || !events.includes('workflow_dispatch') || events.some((event) => !allowed.includes(event))) fail(`Release workflow must be manual-only: ${name}`);
   if (typeof policy.publicationEnabled !== 'boolean' || policy.productionBranch !== 'main' || policy.repository !== 'l-programming-language/l') fail('Invalid committed release policy');
-  if (!Array.isArray(policy.targets) || [...policy.targets].sort().join(',') !== [...nativeTargets].sort().join(',')) fail('Release policy must retain all four native targets');
+  if (!Array.isArray(policy.targets) || [...policy.targets].sort().join(',') !== [...nativeTargets].sort().join(',')) fail('Release policy must retain all supported native targets');
   if (policy.publicationEnabled && (!Number.isSafeInteger(policy.nativePublisher?.workflowId) || policy.nativePublisher.workflowId < 1 || policy.nativePublisher.workflowPath !== '.github/workflows/release.yml')) fail('Enabled publication lacks registered publisher');
   if (!value.permissions || Object.values(value.permissions).some((p) => !['read', 'none'].includes(p))) fail(`Release default permissions must be read-only: ${name}`);
   if (value.concurrency?.['cancel-in-progress'] !== false || !value.concurrency.group) fail(`Release concurrency must preserve active publication: ${name}`);
