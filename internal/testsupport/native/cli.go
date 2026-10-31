@@ -41,7 +41,7 @@ func artifactRecorderResult() (string, error) {
 			recorderError = err
 			return
 		}
-		ctx, cancel := context.WithTimeout(context.Background(), BuildPrerequisiteTimeout)
+		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 		cmd := exec.CommandContext(ctx, "go", "build", "-o", recorderPath, source)
 		cmd.Env = append(os.Environ(), "GOTOOLCHAIN=local", "GOWORK=off", "GOENV=off", "GOFLAGS=")

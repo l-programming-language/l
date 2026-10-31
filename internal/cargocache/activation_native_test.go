@@ -22,10 +22,7 @@ func TestActivationPreservesNextUnchangedCargoBuild(t *testing.T) {
 	})
 	target := filepath.Join(t.TempDir(), "target")
 	for index, wantFresh := range []bool{false, true} {
-		built := nativetest.Build(t, project, nativetest.BuildOptions{
-			TargetDir: target,
-			Timeout:   nativetest.BuildPrerequisiteTimeout,
-		})
+		built := nativetest.Build(t, project, nativetest.BuildOptions{TargetDir: target})
 		if built.Err != nil {
 			t.Fatalf("native build %d: %v\n%s", index, built.Err, built.Stderr)
 		}

@@ -234,7 +234,7 @@ func TestRunnableServicePrivateCompositionNative(t *testing.T) {
 					}
 					files := runnableServiceWorkspace(t, library, adapter)
 					project := nativetest.Materialize(t, files)
-					result := nativetest.Build(t, project, nativetest.BuildOptions{Timeout: nativetest.BuildPrerequisiteTimeout})
+					result := nativetest.Build(t, project, nativetest.BuildOptions{})
 					runnableServicePrivateDiagnostic(t, result)
 					for name, expected := range files {
 						actual, err := os.ReadFile(filepath.Join(project, filepath.FromSlash(name)))
@@ -291,7 +291,7 @@ func TestRunnableServiceCompositionNative(t *testing.T) {
 			}
 			files := runnableServiceWorkspace(t, library, adapter)
 			project := nativetest.Materialize(t, files)
-			result := nativetest.Build(t, project, nativetest.BuildOptions{Timeout: nativetest.BuildPrerequisiteTimeout})
+			result := nativetest.Build(t, project, nativetest.BuildOptions{})
 			t.Logf("%s native compilation command: %q; runtime not exercised", phase, result.Command)
 			if result.Err != nil {
 				t.Fatalf("%s Service adapter/library compilation: %v\nstdout:\n%s\nstderr:\n%s", phase, result.Err, result.Stdout, result.Stderr)

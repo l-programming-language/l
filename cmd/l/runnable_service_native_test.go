@@ -446,7 +446,7 @@ func TestRunnableServiceLibraryConsumer(t *testing.T) {
 	files["consumer/src/main.rs"] = []byte("fn main() { left::left::left(); }\n")
 	files["Cargo.lock"] = []byte(fmt.Sprintf("version = 4\n\n[[package]]\nname = %q\nversion = \"0.0.0\"\n\n[[package]]\nname = \"service_consumer\"\nversion = \"0.0.0\"\ndependencies = [%q]\n", generated.LibraryIDs[0], generated.LibraryIDs[0]))
 	project := nativetest.Materialize(t, files)
-	compiled := nativetest.Build(t, project, nativetest.BuildOptions{Timeout: nativetest.BuildPrerequisiteTimeout})
+	compiled := nativetest.Build(t, project, nativetest.BuildOptions{})
 	if compiled.Err != nil {
 		t.Fatalf("actual unmodified App-owned library does not link independently: %v\n%s", compiled.Err, compiled.Stderr)
 	}
@@ -556,7 +556,7 @@ func TestRunnableServiceExpectedRustCompiles(t *testing.T) {
 		"Cargo.lock":    []byte("version = 4\n\n[[package]]\nname = \"Worker\"\nversion = \"0.0.0\"\n"),
 	}
 	project := nativetest.Materialize(t, files)
-	result := nativetest.Build(t, project, nativetest.BuildOptions{Timeout: nativetest.BuildPrerequisiteTimeout})
+	result := nativetest.Build(t, project, nativetest.BuildOptions{})
 	if result.Err != nil {
 		t.Fatalf("independent expected Rust is invalid: %v\n%s", result.Err, result.Stderr)
 	}
@@ -618,7 +618,7 @@ func TestRunnableServiceExpectedWorkspaceCorpusCompiles(t *testing.T) {
 			}
 			files["Cargo.lock"] = lock
 			project := nativetest.Materialize(t, files)
-			compiled := nativetest.Build(t, project, nativetest.BuildOptions{Timeout: nativetest.BuildPrerequisiteTimeout})
+			compiled := nativetest.Build(t, project, nativetest.BuildOptions{})
 			if compiled.Err != nil {
 				t.Fatalf("independent complete expected Rust does not compile: %v\n%s", compiled.Err, compiled.Stderr)
 			}
@@ -771,7 +771,7 @@ func TestRunnableServiceConcurrentPublication(t *testing.T) {
 	completed := make(chan result, len(jobs))
 	for _, work := range jobs {
 		go func(work job) {
-			ctx, cancel := context.WithTimeout(context.Background(), nativetest.BuildPrerequisiteTimeout)
+			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 			cmd := exec.CommandContext(ctx, cli, "build", "--output-dir", output, "main.l")
 			cmd.Dir, cmd.Env = work.project, work.env

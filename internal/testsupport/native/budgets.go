@@ -1,10 +1,9 @@
 package native
 
-import "time"
-
-// BuildPrerequisiteTimeout bounds compilation performed by acceptance helpers.
-// It does not apply to application execution, readiness, or cleanup watchdogs.
-const BuildPrerequisiteTimeout = 40 * time.Second
+import (
+	"context"
+	"time"
+)
 
 // CommandPhase classifies a supervised command at its call site, independently
 // of its executable name or arguments.
@@ -15,17 +14,17 @@ const (
 	RuntimeExecution  CommandPhase = "runtime"
 )
 
-// Timeout preserves the caller's runtime contract while giving compilation its
-// separate budget. An unknown phase cannot silently receive a longer deadline.
-func (phase CommandPhase) Timeout(runtimeTimeout time.Duration) time.Duration {
+// Context preserves runtime watchdogs without imposing a short compilation
+// deadline. Both phases retain parent cancellation and owned-process cleanup.
+func (phase CommandPhase) Context(parent context.Context, runtimeTimeout time.Duration) (context.Context, context.CancelFunc) {
 	switch phase {
 	case BuildPrerequisite:
-		return BuildPrerequisiteTimeout
+		return context.WithCancel(parent)
 	case RuntimeExecution:
 		if runtimeTimeout <= 0 {
 			panic("runtime command requires a positive watchdog")
 		}
-		return runtimeTimeout
+		return context.WithTimeout(parent, runtimeTimeout)
 	default:
 		panic("unknown supervised command phase")
 	}

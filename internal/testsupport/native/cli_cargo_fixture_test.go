@@ -40,7 +40,7 @@ func controlledCargo(t testing.TB) string {
 		if controlledCargoError = os.WriteFile(source, []byte(controlledCargoSource), 0600); controlledCargoError != nil {
 			return
 		}
-		ctx, cancel := context.WithTimeout(context.Background(), BuildPrerequisiteTimeout)
+		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 		cmd := exec.CommandContext(ctx, "go", "build", "-o", controlledCargoPath, source)
 		cmd.Env = append(os.Environ(), "GOTOOLCHAIN=local", "GOWORK=off", "GOENV=off", "GOFLAGS=")
