@@ -74,7 +74,7 @@ The tag selects the released compiler source; use another release tag when neede
 
 ## Rust dependency preparation
 
-L uses rustup, Rust 1.98.1, and the retained Cargo dependencies. It invokes `cargo +1.98.1`, so standalone Cargo is insufficient. Release setup installs the minimal Rust toolchain without changing your default Rust toolchain, fetches locked dependencies, and checks that they resolve offline without changing the lockfile.
+L uses rustup, Rust 1.98.1, and the retained Cargo dependencies. It invokes `cargo +1.98.1`, so standalone Cargo is insufficient. Release setup installs the minimal Rust toolchain, fetches locked dependencies, and checks that they resolve offline without changing the lockfile. On a fresh rustup installation, release setup selects Rust 1.98.1 as the default toolchain.
 
 For binary installations, use the installer or extracted archive's setup script as described above. For source installations, the current preparation path is `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching checkout. This also prepares contributor tools and validation caches and can take several minutes; see the [development policy](../development-harness.md#temporary-validation-pause).
 
