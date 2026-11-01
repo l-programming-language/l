@@ -90,6 +90,21 @@ test('theme persistence, correct logos, copy controls and local cross-links', as
   await expect(page).toHaveURL('http://127.0.0.1:4321/docs/cli/');
 });
 
+test('installation command copies intact and its bootstrap is served unchanged', async ({ page, context, request }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/docs/cli/installation/');
+  const command = '(set -o pipefail; curl --proto \'=https\' --tlsv1.2 -fsSL https://ldocs.org/install.sh | sh) && . "$HOME/.local/share/l/env"';
+  await page.locator('.expressive-code .copy button').first().click();
+  expect((await page.evaluate(() => navigator.clipboard.readText())).trimEnd()).toBe(command);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+  const script = await request.get('/install.sh');
+  expect(script.status()).toBe(200);
+  expect(await script.body()).toEqual(await fs.readFile('public/install.sh'));
+  await page.getByRole('link', { name: 'download and inspect', exact: true }).click();
+  await expect(page).toHaveURL(/\/docs\/cli\/installation-options\/#download-and-inspect$/);
+});
+
 test('mobile navigation and visible keyboard focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/docs/spec/values/');

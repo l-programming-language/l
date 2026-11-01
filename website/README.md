@@ -16,9 +16,9 @@ The [verification recipe](../docs/contributing/local-development.md#check-the-bu
 
 Edit canonical prose under `docs/`, not generated website projections. [Authoring documentation](../docs/contributing/documentation.md) explains the content map, links, examples, and reference regeneration. [Architecture](ARCHITECTURE.md) describes projection and source ownership.
 
-## Explicitly opt-in language examples
+## Explicitly opt-in native checks
 
-Website commands do not run the compiler or native suites. The optional example verifier follows the [native validation policy](../docs/contributing/local-development.md#keep-native-work-opt-in).
+Routine `npm run verify:website` checks do not run the L compiler or native suites. The optional `examples:verify` command runs approved language examples, while `test:install` exercises the real released installer and a native program from a built local preview. Both require explicit authorization under the [native validation policy](../docs/contributing/local-development.md#keep-native-work-opt-in).
 
 ## Troubleshooting and archives
 

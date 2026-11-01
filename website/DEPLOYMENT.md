@@ -107,6 +107,17 @@ fingerprints. Changes outside
 `docs/` and `website/`, including workflows, release/install scripts, lockfiles and
 root README, remain release-relevant.
 
+The public `/install.sh` endpoint is served from the tested documentation archive.
+Its setup script selects a published stable language release, verifies its
+versioned installer, and delegates native installation to that retained script.
+Adding the endpoint in source does not make it available on `ldocs.org`; it
+becomes available only after the matching site archive is deployed. Changes that
+also update the root README remain release-relevant under the policy above and
+require a later native release rather than a docs-only correction. Until that
+deployment, published versioned installers remain available through GitHub
+Releases. Verify `/install.sh` alongside the deployed documentation identity
+before announcing the quick-install command.
+
 The tested `dist/` is sealed into an archive with the full file inventory,
 version-file hash and native-manifest hash. Initial publication stages these
 assets alongside every native asset in one draft, then publishes once:
