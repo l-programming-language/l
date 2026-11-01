@@ -102,12 +102,15 @@ test('schema two cannot trust a push publisher or a partial target policy', () =
 });
 
 function workflow() {
-  return { on: { workflow_dispatch: {} }, permissions: { contents: 'read' }, concurrency: { group: 'docs-production', 'cancel-in-progress': false }, jobs: { deploy: {
+  return { on: { workflow_dispatch: {} }, permissions: { contents: 'read' }, concurrency: { group: 'docs-production', 'cancel-in-progress': false }, jobs: { recover: {
     permissions: { pages: 'write', 'id-token': 'write' }, steps: [
       { uses: `actions/checkout@${SHA}`, with: { 'persist-credentials': false } },
       { uses: `actions/setup-node@${SHA}` },
       { run: 'node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true' },
-      { uses: `actions/deploy-pages@${SHA}` },
+      { id: 'plan', run: 'node scripts/release.mjs guard-promotion --output plan.json\n# Export checked action to GITHUB_OUTPUT' },
+      { uses: `actions/upload-pages-artifact@${SHA}`, if: "steps.plan.outputs.action == 'deploy'" },
+      { uses: `actions/deploy-pages@${SHA}`, if: "steps.plan.outputs.action == 'deploy'" },
+      { run: 'node scripts/release.mjs postdeploy --manifest promotion.json' },
     ],
   } } };
 }
@@ -117,10 +120,10 @@ test('approved manual workflows cannot bypass guards or publish before authoriza
   for (const mutate of [
     (w) => { w.on.push = {}; },
     (w) => { w.concurrency['cancel-in-progress'] = true; },
-    (w) => { w.jobs.deploy.steps[2].if = 'false'; },
-    (w) => { w.jobs.deploy.steps[2]['continue-on-error'] = true; },
-    (w) => { w.jobs.deploy.steps[2].run = 'echo disabled'; },
-    (w) => { w.jobs.deploy.steps.unshift({ run: 'gh release create bad' }); },
-    (w) => { w.jobs.deploy.steps[2]['working-directory'] = 'website'; },
+    (w) => { w.jobs.recover.steps[2].if = 'false'; },
+    (w) => { w.jobs.recover.steps[2]['continue-on-error'] = true; },
+    (w) => { w.jobs.recover.steps[2].run = 'echo disabled'; },
+    (w) => { w.jobs.recover.steps.unshift({ run: 'gh release create bad' }); },
+    (w) => { w.jobs.recover.steps[2]['working-directory'] = 'website'; },
   ]) { const w = workflow(); mutate(w); assert.throws(() => verifyReleaseWorkflow(w, 'docs-recover-pages.yml', policy())); }
 });

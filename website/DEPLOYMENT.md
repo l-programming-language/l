@@ -141,11 +141,20 @@ it out of the terminal installer's latest-language-release lookup. It is a docs
 archive, not a prerelease language version; native authority still comes from
 `vVERSION`.
 
-Before publication and again before deployment, the workflow reconciles a
-successful Pages deployment record, live `/version.json`, and the retained
-promotion manifest. First deployment requires no successful prior deployment and
-an HTTP 404 at `/version.json`; ambiguous or unavailable states reject. After
-deployment it verifies identity, homepage, specification, CLI and Pagefind routes.
+Before publication and again before deployment, the workflow reconciles the
+authenticated Pages deployment result, live `/version.json`, and the retained
+immutable promotion manifest. A deployment receipt must belong to a trusted
+manual workflow on main. The Pages result is separate from the environment job's
+status: the site can be live while that job is still running or its later checks
+have failed. First deployment requires no successful prior deployment and an HTTP
+404 at `/version.json`; ambiguous or unavailable states reject.
+
+After deployment, verification checks the current Pages result and compares live
+identity and representative route bytes with the sealed manifest. It never waits
+for its own environment job to become successful. Bounded retries allow HTTP
+content to propagate; an incorrect identity or unavailable route still fails
+when the retry budget is exhausted. The Pages deployment SHA identifies the
+workflow revision, which can differ from the archived docs SHA during recovery.
 
 ## Retry, rollback and corrections
 
@@ -155,7 +164,15 @@ intact. Dispatch recovery from main with `mode: retry`, the language tag, full d
 SHA, and current production digest. Recovery selects the language release for
 initial docs or the separate snapshot for a correction, then verifies the original
 archive and native authority without rebuilding. An already-live identical digest
-is idempotent; a changed current digest rejects a stale request.
+is idempotent; a changed current digest rejects a stale request. Recovery captures
+the promotion guard's decision: `verify` skips both Pages upload and deployment,
+while `deploy` promotes the retained archive. Both paths verify the live content.
+
+If Pages succeeded but the environment job failed during verification, recovery
+can reconcile the successful Pages receipt with the exact live release identity
+and immutable archive. It does not treat an arbitrary HTTP 200 as authority or
+replace that live baseline with `null`. Use the current archive digest and the
+original language tag and docs SHA; do not rebuild or replace published assets.
 
 For a retry before the first successful deployment, enter the literal text `null`
 for `expected_current_digest`. The workflow independently verifies that no
