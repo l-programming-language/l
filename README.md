@@ -27,9 +27,9 @@ of the syntax and execution steps.
 
 ## Try L
 
-Check [GitHub Releases](https://github.com/l-programming-language/l/releases) for
-Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64) binaries. Once `v0.0.1`
-is published, download its installer:
+[L v0.0.1](https://github.com/l-programming-language/l/releases/tag/v0.0.1) is
+available for Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64).
+Download its installer:
 
 ```sh
 curl --fail --location --proto '=https' --tlsv1.2 \
@@ -41,14 +41,14 @@ Inspect the script, then install L and its pinned Rust dependencies:
 
 ```sh
 bash ./install-release.sh --version 0.0.1 --with-toolchain
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH"
 l --version
 ```
 
 Keep that `PATH` in your shell configuration. Native C/linker tools are required;
 pre-1.0 macOS binaries are unsigned. The [installation guide](docs/cli/installation.md)
-covers prerequisites, macOS approval and building L from source when a binary
-release is unavailable. Binary installation needs neither Go nor a source checkout.
+covers setup and verification; [installation options](docs/cli/installation-options.md)
+cover macOS approval and source builds. Binary installation needs neither Go nor a source checkout.
 
 Save the example as `main.l`, then build and run it:
 

@@ -1,16 +1,14 @@
 # Install L
 
-Check [GitHub Releases](https://github.com/l-programming-language/l/releases) for published binaries, or use the [source-build fallback](#source-build-installation). The commands below pin `v0.0.1` and become available when that release is published.
+[L 0.0.1 is available](https://github.com/l-programming-language/l/releases/tag/v0.0.1) for Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64). The installer selects your platform and prepares the Rust tools needed to build L programs. You do not need Go or a compiler source checkout.
 
 ## Prerequisites
 
-Building L programs needs native C/linker tools: use Xcode Command Line Tools on macOS or your Linux distribution's development tools. Initial setup requires internet access. The binary installer can prepare [rustup](https://rust-lang.org/tools/install/), Rust 1.98.1 and the locked dependencies; L invokes `cargo +1.98.1`, so standalone Cargo is insufficient.
-
-Native builds target the current host. Running a published L program requires neither L nor Go/Rust toolchains.
+You need internet access and your system's [native build tools](installation-options.md#native-build-tools). If setup reports a missing C compiler or linker, follow those platform instructions and rerun the installer.
 
 ## Install a released binary
 
-Download the versioned installer for Apple Silicon macOS (ARM64) or Linux (ARM64 and x86-64). Releases do not currently support Intel macOS; contributions toward future support are welcome.
+In a Bash or Zsh terminal, download the installer:
 
 ```sh
 curl --fail --location --proto '=https' --tlsv1.2 \
@@ -18,50 +16,37 @@ curl --fail --location --proto '=https' --tlsv1.2 \
   --output install-release.sh
 ```
 
-Inspect the script, then run it:
+Inspect the downloaded script, then install L and its build dependencies:
 
 ```sh
 bash ./install-release.sh --version 0.0.1 --with-toolchain
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+```
+
+The installer verifies the download and installs `l` into `~/.local/bin`. It does not use `sudo` or edit your shell configuration.
+
+## Activate and check L
+
+Make L and its build tools available in this terminal:
+
+```sh
+export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH"
 l --version
 ```
 
-The installer selects the host archive, verifies its SHA-256 checksum, prepares dependencies, and installs `l` into `~/.local/bin`. Language resources are embedded; binary installation needs no Go or compiler source checkout. Add the `PATH` export to your shell configuration. The installer never edits profiles, uses sudo, or invokes a system package manager.
-
-| Option | Effect |
-| --- | --- |
-| `--with-toolchain` | Permit installing missing Rust tools. Otherwise interactive setup asks; noninteractive setup requires them to exist. |
-| `--binary-only` | Install only `l`, deferring native prerequisites. |
-| `--prefix DIRECTORY` | Choose the executable directory. |
-| `--version VERSION` | Pin a release; omission selects the latest normal release once for all assets. |
-| `--repository OWNER/REPO` | Intentionally select another repository's release. |
-
-Setup fetches locked dependencies and verifies frozen resolution without changing the default Rust toolchain. For a manually extracted archive, run `bash setup-release.sh --with-toolchain` with its setup files still alongside it.
-
-Upgrades replace the binary only after verification and requested setup succeed; failure preserves the existing installation. Read the [compatibility policy](../releases/index.md#versioning-and-compatibility) before upgrading.
-
-macOS releases below `v1.0.0` have no Developer ID signature or Apple notarization. macOS may block them or require approval, depending on download method and security settings. Follow [Apple's guidance](https://support.apple.com/102445) only after checking that you trust the source. Production macOS releases require signing and notarization from `v1.0.0` onward.
+The version should be `0.0.1`. Add the export line to your [shell startup file](installation-options.md#shell-setup) to keep L available in new terminals. If macOS blocks the binary, see [macOS approval](installation-options.md#macos-approval).
 
 ## First native build
 
-After dependency setup, [build your first program](../guide/first-program.md). The walkthrough covers saving a source file, compiling it, and running the result without a compiler source checkout.
+Next, [build your first program](../guide/first-program.md). The walkthrough takes you from a source file to a running program and confirms that native compilation works. Running the built program requires neither L nor Go/Rust tools.
 
-## Source-build installation
+## More installation options
 
-Source installation also needs Git and [Go](https://go.dev/doc/install) 1.27.3, pinned in [.go-version](../../.go-version).
+See [installation options](installation-options.md) for custom locations, version selection, upgrades, manual downloads, and supported platforms.
 
-```sh
-git clone https://github.com/l-programming-language/l.git
-cd l
-bash ./install.sh
-export PATH="$PWD/bin:$PATH"
-l --version
-```
+<a id="source-build-installation"></a>
 
-Check out the release's tag before building when you need a specific version. [install.sh](../../install.sh) verifies Go dependencies and builds the self-contained `bin/l` with `-mod=readonly`; it does not prepare Rust.
+To compile the L compiler yourself, follow [source-build installation](installation-options.md#source-build-installation).
 
-## Rust dependency preparation
+<a id="rust-dependency-preparation"></a>
 
-For source installation, run `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching checkout to download pinned tools and locked dependencies and compile their caches. This can take several minutes; see the [development policy](../development-harness.md#temporary-validation-pause).
-
-L's native compilation uses frozen, offline Cargo resolution. Installing Rust alone does not populate its dependency cache; preserve the retained locks rather than removing `--frozen`.
+For missing Rust tools or cached dependencies, see [dependency preparation](installation-options.md#rust-dependency-preparation).

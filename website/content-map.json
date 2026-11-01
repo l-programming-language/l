@@ -127,11 +127,22 @@
       "source": "docs/cli/installation.md",
       "route": "/docs/cli/installation/",
       "title": "Install L",
-      "description": "Install a released macOS/Linux binary or build L from source and prepare native dependencies.",
+      "description": "Install L on macOS or Linux, set up your terminal, and build your first program.",
       "section": "Learn L",
       "order": -1,
       "role": "explanatory",
       "generated": false
+    },
+    {
+      "source": "docs/cli/installation-options.md",
+      "route": "/docs/cli/installation-options/",
+      "title": "Installation options",
+      "description": "Platform requirements, shell setup, installer options, upgrades, and source builds.",
+      "section": "CLI",
+      "order": 1,
+      "role": "explanatory",
+      "generated": false,
+      "sidebar": false
     },
     {
       "source": "docs/cli/build.md",
