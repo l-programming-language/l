@@ -148,6 +148,9 @@ func resolveBuildCommand(command *buildCommand) (*cliData, compilerInitOptions, 
 }
 
 func run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
+	if len(args) > 0 && args[0] == "contracts" {
+		return runContracts(ctx, args[1:], stdout, stderr)
+	}
 	if len(args) == 1 && (args[0] == "--version" || args[0] == "-v") {
 		if _, err := fmt.Fprintln(stdout, distribution.Version()); err != nil {
 			return 1

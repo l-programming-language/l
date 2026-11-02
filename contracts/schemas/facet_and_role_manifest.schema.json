@@ -1,0 +1,1404 @@
+{
+  "$defs": {
+    "Atom": {
+      "additionalProperties": false,
+      "properties": {
+        "bool": {
+          "type": "boolean"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "number": {
+          "type": "integer"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "ConfigurationContribution": {
+      "additionalProperties": false,
+      "properties": {
+        "condition": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "facet": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "occurrence": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "value": {
+          "$ref": "#/$defs/Atom"
+        }
+      },
+      "required": [
+        "occurrence",
+        "facet",
+        "target",
+        "scope",
+        "kind",
+        "value",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "ContractTransformer": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "$ref": "#/$defs/Plan"
+        },
+        "callbacks": {
+          "additionalProperties": {
+            "$ref": "#/$defs/SymbolicActionContract"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "contributions": {
+          "items": {
+            "$ref": "#/$defs/ConfigurationContribution"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "demand": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Multiplicity"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "facets": {
+          "items": {
+            "$ref": "#/$defs/FacetSchema"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "frame": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FrameContract"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "profiles": {
+          "items": {
+            "$ref": "#/$defs/Profile"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "provides": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "requires": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "rules": {
+          "items": {
+            "$ref": "#/$defs/FacetRule"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "slots": {
+          "items": {
+            "$ref": "#/$defs/FacetSlot"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "unsupported_reflection": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "meaning",
+        "version",
+        "target",
+        "body",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "CostExpr": {
+      "additionalProperties": false,
+      "properties": {
+        "args": {
+          "items": {
+            "$ref": "#/$defs/CostExpr"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "kind": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "Effect": {
+      "additionalProperties": false,
+      "properties": {
+        "condition": {
+          "type": "string"
+        },
+        "definite": {
+          "type": "boolean"
+        },
+        "kind": {
+          "enum": [
+            "read",
+            "write",
+            "allocate",
+            "deallocate",
+            "release",
+            "io",
+            "spawn",
+            "transfer",
+            "wait",
+            "block",
+            "suspend",
+            "time",
+            "random",
+            "environment",
+            "foreign",
+            "panic",
+            "opaque",
+            "synchronize",
+            "replace",
+            "cleanup"
+          ],
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "phase": {
+          "enum": [
+            "",
+            "elaboration",
+            "construction",
+            "invocation",
+            "destruction",
+            "cleanup"
+          ],
+          "type": "string"
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        }
+      },
+      "required": [
+        "kind",
+        "resource",
+        "target",
+        "phase",
+        "definite",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "FacetRoleManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "facets": {
+          "items": {
+            "$ref": "#/$defs/FacetSchema"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "kind": {
+          "const": "facet_and_role_manifest"
+        },
+        "producer": {
+          "type": "string"
+        },
+        "roles": {
+          "items": {
+            "$ref": "#/$defs/RoleInterface"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "schema_version": {
+          "const": "1.1"
+        },
+        "transformers": {
+          "items": {
+            "$ref": "#/$defs/ContractTransformer"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "kind",
+        "producer",
+        "facets",
+        "roles"
+      ],
+      "type": "object"
+    },
+    "FacetRule": {
+      "additionalProperties": false,
+      "properties": {
+        "consequences": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "requires": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "when": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "when",
+        "requires",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "FacetSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_contributions": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "applicability": {
+          "$ref": "#/$defs/Predicate"
+        },
+        "cardinality": {
+          "type": "string"
+        },
+        "closure_point": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "values": {
+          "items": {
+            "$ref": "#/$defs/Atom"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "applicability",
+        "domain",
+        "cardinality",
+        "allowed_contributions",
+        "closure_point",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "FacetSlot": {
+      "additionalProperties": false,
+      "properties": {
+        "closed": {
+          "type": "boolean"
+        },
+        "facet": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        }
+      },
+      "required": [
+        "facet",
+        "target",
+        "scope",
+        "closed"
+      ],
+      "type": "object"
+    },
+    "FrameContract": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed": {
+          "items": {
+            "$ref": "#/$defs/TargetRef"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "phase": {
+          "enum": [
+            "",
+            "elaboration",
+            "construction",
+            "invocation",
+            "destruction",
+            "cleanup"
+          ],
+          "type": "string"
+        },
+        "preserves": {
+          "items": {
+            "$ref": "#/$defs/TargetRef"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        }
+      },
+      "required": [
+        "target",
+        "allowed",
+        "preserves",
+        "resource",
+        "scope",
+        "phase",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "Multiplicity": {
+      "additionalProperties": false,
+      "properties": {
+        "lower": {
+          "type": "integer"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "lower"
+      ],
+      "type": "object"
+    },
+    "MutationFacts": {
+      "additionalProperties": false,
+      "properties": {
+        "capacity_enough": {
+          "enum": [
+            "established",
+            "contradicted",
+            "unresolved"
+          ],
+          "type": "string"
+        },
+        "copy_on_write": {
+          "type": "boolean"
+        },
+        "nested_closed": {
+          "type": "boolean"
+        },
+        "nested_effects": {
+          "items": {
+            "$ref": "#/$defs/Effect"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "sharing": {
+          "enum": [
+            "established",
+            "contradicted",
+            "unresolved"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "copy_on_write",
+        "sharing",
+        "capacity_enough",
+        "nested_closed"
+      ],
+      "type": "object"
+    },
+    "NativeBoundary": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "implicit": {
+          "type": "boolean"
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "established",
+            "contradicted",
+            "unresolved"
+          ],
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "witness": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "target",
+        "origin",
+        "status",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "Node": {
+      "additionalProperties": false,
+      "properties": {
+        "callback": {
+          "type": "string"
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "cleanup": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "cleanup_outcomes": {
+          "items": {
+            "enum": [
+              "normal",
+              "returned_failure",
+              "guard_rejected",
+              "panic",
+              "abort",
+              "cancelled",
+              "process_failure"
+            ],
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "condition": {
+          "type": "string"
+        },
+        "costs": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResourceCost"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "count_symbol": {
+          "type": "string"
+        },
+        "effects": {
+          "items": {
+            "$ref": "#/$defs/Effect"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "else": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "final_owner": {
+          "enum": [
+            "established",
+            "contradicted",
+            "unresolved"
+          ],
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "sequence",
+            "branch",
+            "event",
+            "call",
+            "callback",
+            "native",
+            "guard",
+            "require",
+            "acquire",
+            "move",
+            "release",
+            "scope",
+            "repeat",
+            "mutation"
+          ],
+          "type": "string"
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "mutation_facts": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MutationFacts"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "native": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "outcome": {
+          "enum": [
+            "normal",
+            "returned_failure",
+            "guard_rejected",
+            "panic",
+            "abort",
+            "cancelled",
+            "process_failure"
+          ],
+          "type": "string"
+        },
+        "ownership": {
+          "type": "string"
+        },
+        "phase": {
+          "enum": [
+            "",
+            "elaboration",
+            "construction",
+            "invocation",
+            "destruction",
+            "cleanup"
+          ],
+          "type": "string"
+        },
+        "requires": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        },
+        "state_invariant": {
+          "type": "boolean"
+        },
+        "substitutions": {
+          "$ref": "#/$defs/Substitutions"
+        },
+        "suspension_safe": {
+          "type": "boolean"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "then": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "Origin": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {
+          "type": "integer"
+        },
+        "expansion": {
+          "items": {
+            "type": "integer"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "parent": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "start": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "source",
+        "start",
+        "end"
+      ],
+      "type": "object"
+    },
+    "Plan": {
+      "additionalProperties": false,
+      "properties": {
+        "callbacks": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Node"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "definitions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Node"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "entry": {
+          "$ref": "#/$defs/Node"
+        },
+        "native_closure": {
+          "items": {
+            "$ref": "#/$defs/NativeBoundary"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "residuals": {
+          "items": {
+            "$ref": "#/$defs/UnknownReason"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "entry"
+      ],
+      "type": "object"
+    },
+    "Predicate": {
+      "additionalProperties": false,
+      "properties": {
+        "args": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "kind": {
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "value": {
+          "$ref": "#/$defs/Atom"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "Profile": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "outcomes": {
+          "items": {
+            "enum": [
+              "normal",
+              "returned_failure",
+              "guard_rejected",
+              "panic",
+              "abort",
+              "cancelled",
+              "process_failure"
+            ],
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "scope": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "scope",
+        "target"
+      ],
+      "type": "object"
+    },
+    "ResourceCost": {
+      "additionalProperties": false,
+      "properties": {
+        "allocated": {
+          "$ref": "#/$defs/CostExpr"
+        },
+        "io": {
+          "$ref": "#/$defs/CostExpr"
+        },
+        "metadata_copied": {
+          "$ref": "#/$defs/CostExpr"
+        },
+        "model": {
+          "type": "string"
+        },
+        "net_live": {
+          "$ref": "#/$defs/CostExpr"
+        },
+        "payload_copied": {
+          "$ref": "#/$defs/CostExpr"
+        },
+        "peak_live": {
+          "$ref": "#/$defs/CostExpr"
+        },
+        "retained": {
+          "$ref": "#/$defs/CostExpr"
+        },
+        "work": {
+          "$ref": "#/$defs/CostExpr"
+        }
+      },
+      "required": [
+        "model",
+        "work",
+        "allocated",
+        "payload_copied",
+        "metadata_copied",
+        "io",
+        "net_live",
+        "peak_live",
+        "retained"
+      ],
+      "type": "object"
+    },
+    "ResourceRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "RoleInterface": {
+      "additionalProperties": false,
+      "properties": {
+        "capabilities": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "frame": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FrameContract"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "operations": {
+          "items": {
+            "$ref": "#/$defs/RoleOperation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "requires": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "operations",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "RoleOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "ensures": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "maximum_work": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "outcomes": {
+          "items": {
+            "enum": [
+              "normal",
+              "returned_failure",
+              "guard_rejected",
+              "panic",
+              "abort",
+              "cancelled",
+              "process_failure"
+            ],
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "profiles": {
+          "items": {
+            "$ref": "#/$defs/Profile"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "requires": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    },
+    "Substitutions": {
+      "additionalProperties": false,
+      "properties": {
+        "resources": {
+          "additionalProperties": {
+            "$ref": "#/$defs/ResourceRef"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "targets": {
+          "additionalProperties": {
+            "$ref": "#/$defs/TargetRef"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "values": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Atom"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "SymbolicActionContract": {
+      "additionalProperties": false,
+      "properties": {
+        "costs": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResourceCost"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effects": {
+          "items": {
+            "$ref": "#/$defs/Effect"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "effects_closed": {
+          "type": "boolean"
+        },
+        "ensures": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "outcomes": {
+          "items": {
+            "enum": [
+              "normal",
+              "returned_failure",
+              "guard_rejected",
+              "panic",
+              "abort",
+              "cancelled",
+              "process_failure"
+            ],
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "requires": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "effects_closed"
+      ],
+      "type": "object"
+    },
+    "TargetRef": {
+      "additionalProperties": false,
+      "properties": {
+        "generation": {
+          "type": "string"
+        },
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "",
+            "elaboration",
+            "construction",
+            "invocation",
+            "destruction",
+            "cleanup"
+          ],
+          "type": "string"
+        },
+        "root": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "root"
+      ],
+      "type": "object"
+    },
+    "UnknownReason": {
+      "additionalProperties": false,
+      "properties": {
+        "boundary": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "components": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "phase": {
+          "enum": [
+            "",
+            "elaboration",
+            "construction",
+            "invocation",
+            "destruction",
+            "cleanup"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "origin"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "l-contracts/1.1/facet_and_role_manifest",
+  "$ref": "#/$defs/FacetRoleManifest",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

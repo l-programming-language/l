@@ -82,7 +82,14 @@ func (c *Compilation) instantiateDescribedBuiltin(name string, descriptors []str
 
 // Selected definitions share named expansion, including Function members and
 // private dictionary operations with source-owned construction descriptors.
-func (c *Compilation) instantiateDefinition(rec *record, arguments map[string]DefinitionArgument, descriptors ...string) (DefinitionInstance, error) {
+func (c *Compilation) instantiateDefinition(rec *record, arguments map[string]DefinitionArgument, descriptors ...string) (result DefinitionInstance, resultErr error) {
+	if c.contractRecorder != nil {
+		defer func() {
+			if resultErr == nil {
+				c.contractRecorder.recordLowering(rec, result, arguments)
+			}
+		}()
+	}
 	if len(c.definitionTemporaries) == 0 {
 		defer c.definitionScope()()
 	}

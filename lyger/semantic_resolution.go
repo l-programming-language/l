@@ -13,6 +13,7 @@ import (
 type semanticResolver struct {
 	scopes    *scopePlan
 	semantics *semanticProgram
+	contracts *contractRecorder
 }
 
 type semanticOwner struct {
@@ -72,7 +73,7 @@ func (r semanticResolver) nominalIdentity(tok *token) (nominalIdentity, error) {
 }
 
 func (c *Compilation) resolver() semanticResolver {
-	return semanticResolver{scopes: c.Scope, semantics: c.Semantics}
+	return semanticResolver{scopes: c.Scope, semantics: c.Semantics, contracts: c.contractRecorder}
 }
 
 func canonicalRecord(rec *record, aliases map[*record]*record) (*record, error) {
@@ -102,6 +103,9 @@ func (r semanticResolver) lookup(tok *token) (*tokenBinding, lookupState, error)
 	for ; scope != nil; scope = scope.parent {
 		binding, state, err := scope.lookupLocal(tok.rawBytes)
 		if err != nil || state != lookupAbsent {
+			if r.contracts != nil && state == lookupFound && err == nil {
+				r.contracts.lookupReasons[tok] = "existing lexical scope: complete qualified query before owner-prefix traversal"
+			}
 			return binding, state, err
 		}
 		if function := scope.function; function != nil && function.Return != nil {
@@ -118,6 +122,9 @@ func (r semanticResolver) lookup(tok *token) (*tokenBinding, lookupState, error)
 				return nil, state, err
 			}
 			if state == lookupFound {
+				if r.contracts != nil {
+					r.contracts.lookupReasons[tok] = "existing longest visible owner prefix commits member lookup; no outer fallback"
+				}
 				return r.lookupMember(owner.Record, tok.rawBytes[dot+1:])
 			}
 		}

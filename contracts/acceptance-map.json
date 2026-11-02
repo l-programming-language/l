@@ -1,0 +1,2213 @@
+{
+  "catalog_version": "1.1",
+  "catalog": "acceptance-catalog.json",
+  "coverage_definition": "covered means mapped checks exercise the catalog requirement at its stated supported layer. It is not production native approval, complete source inference, or a release-gate pass. partial marks a remaining required observation. Execution outcomes are separate command records.",
+  "commands": {
+    "baseline": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go test -mod=readonly -count=1 -timeout=60s ./lyger -run '^(TestBindingPreservesStorageAndInstanceIdentity|TestBindingPreservesMorphologyAndDefinition|TestBindingQualifiedMembersAndAmbiguity|TestDescriptorAliasesRemainReferences|TestDictionaryImportsCannotCaptureCallerAddedMembers|TestConstructionDescriptorAliasesPreserveExpansion|TestConstructionRejectsDescriptorForDifferentTarget|TestParagraphDescriptorTargetDeclarationIdentity|TestPlanOwnershipAtValueBoundaries|TestPlanDefiniteAssignmentUsesContinuingPaths|TestPlanLifecycleEffects)$' -v",
+      "outcome": "passed",
+      "evidence": "exit 0; lyger 0.705s; docs/contracts-implementation.md baseline record",
+      "exit_code": 0
+    },
+    "handoff_integrity": {
+      "command": "python3 /Users/connorsanders/Downloads/L_Contracts_v1_1_Handoff/validate_handoff.py --strict-schema",
+      "outcome": "passed",
+      "evidence": "exit 0; handoff consistency only, not compiler tests or proof",
+      "exit_code": 0
+    },
+    "contracts_and_frontend": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local go test -mod=readonly -count=1 -timeout=60s ./contracts ./lyger -run '^(TestAcceptance|TestAdjective|TestLexical|TestFacet|TestFrame|TestProvider|TestRestricted|TestReference|TestRuntimeFrame|TestMetadata|TestNative|TestReport|TestExecuted|TestDocument|TestFailure|TestCleanup|TestAppProtocol|TestActivity|TestEvidence|TestSeparate|TestBinding|TestCache|TestLegacy|TestLogical|TestInference|TestResources|TestExplanation|TestContracts)'",
+      "outcome": "passed",
+      "evidence": "exit 0; contracts 0.232s; lyger 19.481s; typed/model and selected source regression checks, no generated Apps executed by inspection",
+      "exit_code": 0
+    },
+    "cli": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go test -mod=readonly -count=1 -timeout=60s ./cmd/l -run '^TestContracts' -v",
+      "outcome": "passed",
+      "evidence": "exit 0; cmd/l 2.728s (parent recorded execution)",
+      "exit_code": 0
+    },
+    "backend": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go test -mod=readonly -count=1 -timeout=60s ./logiceme -run '^TestContracts(Backend|Workspace)'",
+      "outcome": "passed",
+      "evidence": "exit 0; logiceme 0.306s (parent recorded execution)",
+      "exit_code": 0
+    },
+    "native_protocol": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local go test -mod=readonly -count=1 -timeout=10m ./logiceme -run '^TestContractsRuntimeProtocolCrossCheck$' -v",
+      "outcome": "passed",
+      "evidence": "exit 0; logiceme 3.191s; production runtime generation, native compilation and runtime checks separately logged by test (runtime agent execution)",
+      "exit_code": 0
+    },
+    "native_values": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local go test -mod=readonly -count=1 -timeout=10m ./lyger -run '^TestRuntimeValuesNative$/(snapshot-and-sharing|cycle-through-function|cycle-through-container)$' -v",
+      "outcome": "passed",
+      "evidence": "exit 0; lyger 3.687s; exact command/result recorded by frontend agent",
+      "exit_code": 0
+    },
+    "contracts_final": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local go test -mod=readonly -count=1 -timeout=60s ./contracts",
+      "outcome": "passed",
+      "evidence": "exit 0; contracts 0.263s; full contracts package including authoritative target-type regression; native production approval unchanged",
+      "exit_code": 0
+    },
+    "native_pointer": {
+      "command": "GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOCACHE=\"$PWD/.harness/cache/go-build\" go test -mod=readonly -count=1 -timeout=5m ./lyger -run '^TestContractsPointerBorrowAndMetadataNative$' -v",
+      "outcome": "passed",
+      "evidence": "exit 0; lyger 2.104s; separate actual generation/native compilation/runtime observations; bundle sha256 a3c870c5d8dd4c8e681ccf2c0b33b48d6b1dde247a42f52d418444a7b4ca35e0; no static native approval",
+      "exit_code": 0
+    },
+    "cli_build": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go build -mod=readonly -o .harness/bin/l-contracts ./cmd/l",
+      "outcome": "passed",
+      "evidence": "exit 0; public CLI binary built without executing generated Apps; rerun successfully with the same expected exit code after final release validation",
+      "exit_code": 0
+    },
+    "cli_inspect": {
+      "command": ".harness/bin/l-contracts contracts inspect --format json --output .harness/contracts-v1.1/inspect.json .harness/contracts-v1.1/pilot.l",
+      "outcome": "passed",
+      "evidence": "exit 0; .harness/contracts-v1.1/inspect.json; 92 native boundaries, transitive coverage unknown, executions=[]; rerun successfully with the same expected exit code after final release validation",
+      "exit_code": 0
+    },
+    "cli_check": {
+      "command": ".harness/bin/l-contracts contracts check --profile NoHeapAllocation --profile NoBlocking --profile NoExternalIO --profile NoPanic --profile OwnedLifecycle --report .harness/contracts-v1.1/check.json --output .harness/contracts-v1.1/check.txt .harness/contracts-v1.1/pilot.l",
+      "outcome": "failed",
+      "evidence": "exit 1 as required; all five enforced profiles unresolved; .harness/contracts-v1.1/check.json and check.txt; rerun successfully with the same expected exit code after final release validation",
+      "exit_code": 1
+    },
+    "cli_explain": {
+      "command": ".harness/bin/l-contracts contracts explain --binding binding-use:9f4cd9c21393a63520064435c67d19e063147208fd36982dfa92c8e1ac4d7155 --output .harness/contracts-v1.1/explain.txt .harness/contracts-v1.1/pilot.l",
+      "outcome": "passed",
+      "evidence": "exit 0; .harness/contracts-v1.1/explain.txt retains exact selected meaning/role/origins; rerun successfully with the same expected exit code after final release validation",
+      "exit_code": 0
+    },
+    "cli_dictionary": {
+      "command": ".harness/bin/l-contracts contracts verify-dictionary --report .harness/contracts-v1.1/dictionary.json --output .harness/contracts-v1.1/dictionary.txt io",
+      "outcome": "failed",
+      "evidence": "exit 1 as required; loading canonical dictionary declarations does not establish symbolic/native conformance; .harness/contracts-v1.1/dictionary.json and dictionary.txt; rerun successfully with the same expected exit code after final release validation",
+      "exit_code": 1
+    },
+    "final_applicability_regressions": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go test -mod=readonly -count=1 -timeout=90s ./contracts ./cmd/l -run '^(TestContractTrust|TestNativeRequirements|TestEvidence|TestReport|TestTarget|TestAdjective|TestReference|TestProvider)'",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": "contracts 0.335s; cmd/l 0.337s; actual target type consistency, explicit native applicability dependencies, conditional assumptions, and unidentified native configuration refusal"
+    },
+    "callback_omission_regression": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go test -mod=readonly -count=1 -timeout=60s ./contracts",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": "contracts 0.277s; omitted symbolic callback costs/outcomes remain unknown; independent positive nonblocking theorem preserved"
+    },
+    "release_bootstrap": {
+      "command": "scripts/l-ci bootstrap",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": ".harness/runs/ci-bootstrap-541648304/stage.json; authorized tool-cache access; pinned tools unchanged"
+    },
+    "release_final": {
+      "command": "scripts/l-check",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": "Final unchanged implementation source fingerprint 91445022a916ddbc5a60417eace9ff170c6b9b0cfea80455d9a665ad7eec608f. Reports: .harness/runs/ci-lint-1812429660/stage.json; .harness/runs/ci-acceptance-318679881/stage.json; .harness/runs/ci-native-3166192262/stage.json. Doctor 501 checks; protected integrity before/after true; all 16 original compiler-view records passed; 736 ordinary and 4457 native test/subtest records, zero failures. Includes complete tagged native compilation. macOS ARM64 only."
+    }
+  },
+  "cases": [
+    {
+      "id": "BASE-001",
+      "milestone": "M0",
+      "status": "covered",
+      "tests": [],
+      "command_ids": [
+        "baseline",
+        "handoff_integrity"
+      ],
+      "limitations": [
+        "Baseline commands establish their observed revision and scope only; release validation is recorded separately."
+      ]
+    },
+    {
+      "id": "BASE-002",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "lyger/contracts_integration_test.go",
+          "name": "TestContractsConfiguredNativeBindings"
+        },
+        {
+          "file": "lyger/contracts_integration_test.go",
+          "name": "TestContractsTrackA/BASE-002"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-003",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/acceptance_additional_test.go",
+          "name": "TestAcceptanceInstancesBASE003"
+        },
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsCanonicalSameNamedAppTargets"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-004",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/metadata_test.go",
+          "name": "TestMetadataStrictness/BASE-004"
+        },
+        {
+          "file": "contracts/target_interchange_test.go",
+          "name": "TestTargetIdentitySurvivesEmptyPathInterchange"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "final_applicability_regressions",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-005",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/metadata_test.go",
+          "name": "TestNativeNormalizationAndEvidenceSeparation/BASE-005"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-006",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/metadata_test.go",
+          "name": "TestNativeNormalizationAndEvidenceSeparation/BASE-006"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-007",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/metadata_test.go",
+          "name": "TestNativeNormalizationAndEvidenceSeparation/BASE-007"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-008",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/metadata_test.go",
+          "name": "TestReportSerializationDeterministic/BASE-008"
+        },
+        {
+          "file": "lyger/contracts_integration_test.go",
+          "name": "TestContractsOriginalTokenSpans"
+        },
+        {
+          "file": "lyger/contracts_integration_test.go",
+          "name": "TestContractsRepeatedSourceOrigins"
+        },
+        {
+          "file": "lyger/contracts_integration_test.go",
+          "name": "TestContractsTrackA/BASE-008"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-009",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "lyger/contracts_integration_test.go",
+          "name": "TestContractsTrackA/BASE-009"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-010",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE010SequenceFailure"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-011",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE011BranchAlternatives"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-012",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE012CallbackEffects"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-013",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE013OutcomeDemand"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-014",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/acceptance_additional_test.go",
+          "name": "TestAcceptanceCapturePhasesBASE014"
+        },
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE014Phases"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-015",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/acceptance_additional_test.go",
+          "name": "TestAcceptanceDemandDependenciesBASE015"
+        },
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE015DemandChange"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-016",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE016Aliases"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-017",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE017NativeUnknown"
+        },
+        {
+          "file": "contracts/target_interchange_test.go",
+          "name": "TestAdjectiveOmittedCallbackCostsAndOutcomesStayUnknown"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "callback_omission_regression",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-018",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE018UnsafeAcrossCallbackAndSuspend"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-019",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE019DestructorBlocking"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-020",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE020ConditionalFinalOwner"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-021",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/acceptance_additional_test.go",
+          "name": "TestAcceptanceUninitializedCleanupBASE021"
+        },
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE021ConditionalInitializationMoves"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-022",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE022AbortNoCleanup"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-023",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE023SharedMutationAndBASE024Growth"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-024",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE023SharedMutationAndBASE024Growth"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-025",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsBASE025SnapshotAndPointerProjection"
+        },
+        {
+          "file": "lyger/runtime_values_test.go",
+          "name": "TestRuntimeValuesNative/snapshot-and-sharing"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "native_values",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-026",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/acceptance_additional_test.go",
+          "name": "TestAcceptanceRecursiveDestructionBASE026"
+        },
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE026DestructorCostsAndFailures"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-027",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE027ApprovedConditionalProfile"
+        },
+        {
+          "file": "cmd/l/contracts_trust_test.go",
+          "name": "TestContractTrustRequiresCurrentApplicability"
+        },
+        {
+          "file": "cmd/l/contracts_trust_test.go",
+          "name": "TestContractTrustRequiresConcreteNativeConfiguration"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "final_applicability_regressions",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-028",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "cmd/l/contracts_test.go",
+          "name": "TestContractsCLI/BASE-028"
+        }
+      ],
+      "command_ids": [
+        "cli",
+        "cli_inspect",
+        "cli_check",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-029",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/acceptance_additional_test.go",
+          "name": "TestAcceptancePostEventDetectionBASE029"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-030",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE030StaleGuard"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-031",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE031OutcomeScopes"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-032",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE032RecursiveWidening"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-033",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/acceptance_additional_test.go",
+          "name": "TestAcceptanceCheckedArithmeticDomainBASE033"
+        },
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceBASE033ReturnedErrorNotIO"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-034",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/failure_test.go",
+          "name": "TestFailureFootprints/BASE-034"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-035",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/failure_test.go",
+          "name": "TestFailureFootprints/BASE-035"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-036",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/failure_test.go",
+          "name": "TestCleanupFailurePolicy/BASE-036-model"
+        },
+        {
+          "file": "logiceme/contracts_protocol_native_test.go",
+          "name": "TestContractsRuntimeProtocolCrossCheck/observed/BASE-036"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "native_protocol",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-037",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/failure_test.go",
+          "name": "TestFailureFootprints/BASE-037"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-038",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/protocol_test.go",
+          "name": "TestAppProtocolAlternativesAndAuthority/BASE-038"
+        },
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsSourceLifecycleTransitionsRetainOwnership"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-039",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/protocol_test.go",
+          "name": "TestAppProtocolAlternativesAndAuthority/BASE-039"
+        },
+        {
+          "file": "logiceme/contracts_protocol_native_test.go",
+          "name": "TestContractsRuntimeProtocolCrossCheck/observed/BASE-039-external-completion"
+        },
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsSourceLifecycleDoubleRunKeepsGuard"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "native_protocol",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-040",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/protocol_test.go",
+          "name": "TestAppProtocolAlternativesAndAuthority/BASE-040"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-041",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/protocol_test.go",
+          "name": "TestAppProtocolInvocationContinuationSemantics/BASE-041-model"
+        },
+        {
+          "file": "logiceme/contracts_protocol_native_test.go",
+          "name": "TestContractsRuntimeProtocolCrossCheck/BASE-041"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "native_protocol",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-042",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/protocol_test.go",
+          "name": "TestActivityOwnership/BASE-042"
+        },
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsSourceLifecycleTransitionsRetainOwnership"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-043",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/evidence_test.go",
+          "name": "TestEvidenceDependencies/BASE-043"
+        },
+        {
+          "file": "cmd/l/contracts_trust_test.go",
+          "name": "TestNativeRequirementsWithoutAdvertisedGuarantees"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "final_applicability_regressions",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-044",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/evidence_test.go",
+          "name": "TestEvidenceDependencies/BASE-044"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-045",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/evidence_test.go",
+          "name": "TestEvidenceDependencies/BASE-045"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-046",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/cache_test.go",
+          "name": "TestSeparateCacheBoundaries/BASE-046"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-047",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/cache_dependencies_test.go",
+          "name": "TestLogicalCacheAllSemanticDependencies/BASE-047"
+        },
+        {
+          "file": "contracts/cache_test.go",
+          "name": "TestSeparateCacheBoundaries/BASE-047"
+        },
+        {
+          "file": "cmd/l/contracts_trust_test.go",
+          "name": "TestContractTrustRequiresConcreteNativeConfiguration"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "final_applicability_regressions",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-048",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/BASE-048"
+        },
+        {
+          "file": "contracts/target_type_test.go",
+          "name": "TestAdjectiveAuthoritativeTargetTypeBASE048"
+        },
+        {
+          "file": "contracts/target_type_test.go",
+          "name": "TestAdjectiveGenericTargetType"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-049",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/cache_test.go",
+          "name": "TestLegacyIncompleteRecordRequiresRevalidation/BASE-049"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-050",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/BASE-050"
+        },
+        {
+          "file": "contracts/target_interchange_test.go",
+          "name": "TestAdjectiveOmittedCallbackCostsAndOutcomesStayUnknown"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "callback_omission_regression",
+        "release_final"
+      ],
+      "limitations": [
+        "Symbolic certification applies to explicit typed ContractTransformer bodies. Unadapted source descriptor bodies are reported instantiation_only/unresolved."
+      ]
+    },
+    {
+      "id": "BASE-051",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/BASE-051"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": [
+        "Symbolic certification applies to explicit typed ContractTransformer bodies. Unadapted source descriptor bodies are reported instantiation_only/unresolved."
+      ]
+    },
+    {
+      "id": "BASE-052",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/BASE-052"
+        },
+        {
+          "file": "contracts/target_type_test.go",
+          "name": "TestAdjectiveAuthoritativeTargetTypeBASE048"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": [
+        "Symbolic certification applies to explicit typed ContractTransformer bodies. Unadapted source descriptor bodies are reported instantiation_only/unresolved."
+      ]
+    },
+    {
+      "id": "BASE-053",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/BASE-053"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": [
+        "Symbolic certification applies to explicit typed ContractTransformer bodies. Unadapted source descriptor bodies are reported instantiation_only/unresolved."
+      ]
+    },
+    {
+      "id": "BASE-054",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/BASE-054"
+        },
+        {
+          "file": "lyger/contracts_integration_test.go",
+          "name": "TestContractsDictionaryDiscoveryDoesNotCertify"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "cli_dictionary",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-055",
+      "milestone": "M6",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/resources_test.go",
+          "name": "TestResourcesBASE055CumulativeVersusPeak"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-056",
+      "milestone": "M6",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/resources_test.go",
+          "name": "TestResourcesBASE056RetainedResults"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-057",
+      "milestone": "M6",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/resources_test.go",
+          "name": "TestResourcesBASE057EvolvingCallbackState"
+        },
+        {
+          "file": "contracts/target_interchange_test.go",
+          "name": "TestAdjectiveOmittedCallbackCostsAndOutcomesStayUnknown"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "callback_omission_regression",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "BASE-058",
+      "milestone": "M6",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsBASE058BASE059PointerNativeClosure"
+        },
+        {
+          "file": "lyger/contracts_pointer_native_test.go",
+          "name": "TestContractsPointerBorrowAndMetadataNative"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "native_pointer",
+        "release_final"
+      ],
+      "limitations": [
+        "Native observations are empirical compatibility checks, not approved quantitative contracts or universal conformance. Production costs and native strong guarantees remain unresolved without approved witnesses."
+      ]
+    },
+    {
+      "id": "BASE-059",
+      "milestone": "M6",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsBASE058BASE059PointerNativeClosure"
+        },
+        {
+          "file": "lyger/runtime_values_test.go",
+          "name": "TestRuntimeValuesNative/cycle-through-container"
+        },
+        {
+          "file": "lyger/runtime_values_test.go",
+          "name": "TestRuntimeValuesNative/cycle-through-function"
+        },
+        {
+          "file": "lyger/contracts_pointer_native_test.go",
+          "name": "TestContractsPointerBorrowAndMetadataNative"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "native_values",
+        "native_pointer",
+        "release_final"
+      ],
+      "limitations": [
+        "Native observations are empirical compatibility checks, not approved quantitative contracts or universal conformance. Production costs and native strong guarantees remain unresolved without approved witnesses."
+      ]
+    },
+    {
+      "id": "BASE-060",
+      "milestone": "M6",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "cmd/l/contracts_test.go",
+          "name": "TestContractsCLI"
+        },
+        {
+          "file": "logiceme/contracts_test.go",
+          "name": "TestContractsBackendPreflight"
+        },
+        {
+          "file": "logiceme/contracts_test.go",
+          "name": "TestContractsWorkspacePreflight"
+        },
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsClosureSurvivesTerminalSource"
+        },
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsRefreshIncludesFinalCoordinatorHelpers"
+        },
+        {
+          "file": "lyger/contracts_lowering_test.go",
+          "name": "TestContractsSevenPilotSelectionsRemainUnapproved"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "cli",
+        "backend",
+        "cli_build",
+        "cli_inspect",
+        "cli_check",
+        "cli_explain",
+        "cli_dictionary",
+        "release_final"
+      ],
+      "limitations": [
+        "Production native approvals remain empty. Selected helper inventory is transitive where explicit composition records expose it; opaque native internals remain unknown boundaries."
+      ]
+    },
+    {
+      "id": "LEX-001",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-001"
+        },
+        {
+          "file": "contracts/target_type_test.go",
+          "name": "TestReferenceAuthoritativeTargetType"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-002",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-002"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-003",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-003"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-004",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-004"
+        },
+        {
+          "file": "contracts/fragment_test.go",
+          "name": "TestReferenceUnresolvedAttachmentRetainsCandidates"
+        },
+        {
+          "file": "contracts/target_type_test.go",
+          "name": "TestReferenceAuthoritativeTargetType"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-005",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-005"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-006",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-006"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-007",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "lyger/contracts_integration_test.go",
+          "name": "TestContractsDefinitionSiteHelperShadow"
+        },
+        {
+          "file": "lyger/contracts_integration_test.go",
+          "name": "TestContractsTrackA/LEX-007"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-008",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-008"
+        },
+        {
+          "file": "contracts/fragment_test.go",
+          "name": "TestReferenceUnresolvedAttachmentRetainsCandidates"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-009",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-009"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-010",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-010"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-011",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-011"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-012",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-012"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-013",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-013"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-014",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-014"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-015",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-015"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-016",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-016"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-017",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-017"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-018",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-018"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-019",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-019"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-020",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-020"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-021",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-021"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-022",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-022"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-023",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFacetAcceptance/LEX-023"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-024",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFrameAcceptance/LEX-024"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-025",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFrameAcceptance/LEX-025"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-026",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFrameAcceptance/LEX-026"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-027",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFrameAcceptance/LEX-027"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-028",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/LEX-028"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-029",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/LEX-029"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-030",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestProviderAcceptance/LEX-030"
+        },
+        {
+          "file": "contracts/target_type_test.go",
+          "name": "TestProviderAuthoritativeTargetType"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-031",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/cache_test.go",
+          "name": "TestSeparateCacheBoundaries/LEX-031"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-032",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/LEX-032"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-033",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-033"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-034",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-034"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-035",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/cache_test.go",
+          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/LEX-035"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-036",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/cache_dependencies_test.go",
+          "name": "TestReferenceCacheCompetingCandidateBecomesApplicable/LEX-036"
+        },
+        {
+          "file": "contracts/cache_test.go",
+          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/LEX-036"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-037",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/cache_dependencies_test.go",
+          "name": "TestReferenceCacheRolePhraseAndPolicy/LEX-037"
+        },
+        {
+          "file": "contracts/cache_test.go",
+          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/LEX-037"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-038",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestLexicalAcceptance/LEX-038"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-039",
+      "milestone": "M6",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "cmd/l/contracts_test.go",
+          "name": "TestContractsCLI/LEX-039"
+        },
+        {
+          "file": "contracts/explain_test.go",
+          "name": "TestExplanationLEX039"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "cli",
+        "contracts_final",
+        "cli_explain",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "LEX-040",
+      "milestone": "M6",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "cmd/l/contracts_test.go",
+          "name": "TestContractsCLI/LEX-040"
+        }
+      ],
+      "command_ids": [
+        "cli",
+        "release_final"
+      ],
+      "limitations": [
+        "Track B is available only through explicit typed SelectReference fixtures; there is no source-facing experimental selector mode or migration decision."
+      ]
+    },
+    {
+      "id": "FALS-001",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceFALS001AllocationInjection"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "FALS-002",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/failure_test.go",
+          "name": "TestFailureFootprints/FALS-002"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "FALS-003",
+      "milestone": "M2",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/infer_test.go",
+          "name": "TestInferenceFALS003DestructorIO"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "FALS-004",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/evidence_test.go",
+          "name": "TestEvidenceDependencies/FALS-004"
+        },
+        {
+          "file": "cmd/l/contracts_trust_test.go",
+          "name": "TestContractTrustRequiresCurrentApplicability"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "final_applicability_regressions",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "FALS-005",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/cache_test.go",
+          "name": "TestCacheIntegrityAndImmutability/FALS-005"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "FALS-006",
+      "milestone": "M1",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/metadata_test.go",
+          "name": "TestMetadataStrictness/FALS-006"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "FALS-007",
+      "milestone": "M3",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/lexical_acceptance_test.go",
+          "name": "TestFrameAcceptance/FALS-007"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "FALS-008",
+      "milestone": "M4",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/cache_test.go",
+          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/FALS-008"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "FALS-009",
+      "milestone": "M5",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/adjective_acceptance_test.go",
+          "name": "TestAdjectiveAcceptance/FALS-009"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "FALS-010",
+      "milestone": "M6",
+      "status": "covered",
+      "tests": [
+        {
+          "file": "contracts/metadata_test.go",
+          "name": "TestExecutedEvidenceRequiresRecordedOperation/FALS-010"
+        }
+      ],
+      "command_ids": [
+        "contracts_and_frontend",
+        "contracts_final",
+        "release_final"
+      ],
+      "limitations": []
+    }
+  ]
+}

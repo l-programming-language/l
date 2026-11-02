@@ -103,6 +103,9 @@ func (c *Compilation) constructObject(obj *objectGram, active map[*descriptorRul
 				continue
 			}
 			matched = true
+			if c.contractRecorder != nil {
+				c.contractRecorder.descriptors = append(c.contractRecorder.descriptors, contractDescriptorUse{Token: adjective, Rule: rule, Target: node})
+			}
 			if rule.Template != nil {
 				node.Wrappers = append(node.Wrappers, rule)
 				continue
@@ -117,6 +120,9 @@ func (c *Compilation) constructObject(obj *objectGram, active map[*descriptorRul
 				return nil, err
 			}
 			node.mergeDescriptor(instance)
+			if c.contractRecorder != nil {
+				c.contractRecorder.rebaseConstruction(instance, node)
+			}
 		}
 		if !matched {
 			return nil, lerrors.Unsupported.Errorf("descriptor %s has no constructor for %s", descriptor.Record.ID, node.Nominal)
