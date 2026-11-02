@@ -2231,6 +2231,43 @@
         "scope": {
           "$ref": "#/$defs/ReportScope"
         },
+        "source_certificates": {
+          "items": {
+            "$ref": "#/$defs/SourceAdjectiveCertificate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "source_declarations": {
+          "items": {
+            "$ref": "#/$defs/SourceTransformerDeclaration"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "source_instantiations": {
+          "items": {
+            "$ref": "#/$defs/SourceAdjectiveInstantiation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "source_verification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceVerificationResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "summary": {
           "$ref": "#/$defs/DerivedSummary"
         },
@@ -2470,6 +2507,400 @@
       ],
       "type": "object"
     },
+    "SourceAdjectiveCertificate": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "$ref": "#/$defs/SourceShape"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "before": {
+          "$ref": "#/$defs/SourceShape"
+        },
+        "declaration_fingerprint": {
+          "type": "string"
+        },
+        "dependencies": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "environment": {
+          "type": "string"
+        },
+        "logical_obligations": {
+          "items": {
+            "$ref": "#/$defs/Obligation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "logical_status": {
+          "enum": [
+            "established",
+            "contradicted",
+            "unresolved"
+          ],
+          "type": "string"
+        },
+        "lowering_obligations": {
+          "items": {
+            "$ref": "#/$defs/Obligation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "projection_fingerprint": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "summary": {
+          "$ref": "#/$defs/DerivedSummary"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "target_nominal": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "meaning",
+        "target",
+        "target_nominal",
+        "version",
+        "scope",
+        "mode",
+        "projection_fingerprint",
+        "declaration_fingerprint",
+        "environment",
+        "dependencies",
+        "logical_status",
+        "logical_obligations",
+        "lowering_obligations",
+        "summary",
+        "before",
+        "after"
+      ],
+      "type": "object"
+    },
+    "SourceAdjectiveInstantiation": {
+      "additionalProperties": false,
+      "properties": {
+        "certificate_fingerprint": {
+          "type": "string"
+        },
+        "lowering_obligations": {
+          "items": {
+            "$ref": "#/$defs/Obligation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "obligations": {
+          "items": {
+            "$ref": "#/$defs/Obligation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "established",
+            "contradicted",
+            "unresolved"
+          ],
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        }
+      },
+      "required": [
+        "meaning",
+        "target",
+        "status",
+        "obligations",
+        "lowering_obligations",
+        "certificate_fingerprint"
+      ],
+      "type": "object"
+    },
+    "SourceParameter": {
+      "additionalProperties": false,
+      "properties": {
+        "formal": {
+          "type": "boolean"
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "ordinal": {
+          "type": "integer"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        }
+      },
+      "required": [
+        "meaning",
+        "origin",
+        "formal",
+        "ordinal"
+      ],
+      "type": "object"
+    },
+    "SourceShape": {
+      "additionalProperties": false,
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/$defs/SourceShape"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "children_closed": {
+          "type": "boolean"
+        },
+        "constructor": {
+          "type": "string"
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/SourceSignatureInput"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "inputs_defined": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "name_known": {
+          "type": "boolean"
+        },
+        "nominal": {
+          "type": "string"
+        },
+        "outputs": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "outputs_defined": {
+          "type": "boolean"
+        },
+        "parameters": {
+          "items": {
+            "$ref": "#/$defs/SourceParameter"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "parameters_known": {
+          "type": "boolean"
+        },
+        "signature_known": {
+          "type": "boolean"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "wrappers": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "wrappers_known": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "target",
+        "nominal",
+        "name_known",
+        "children_closed",
+        "inputs_defined",
+        "outputs_defined",
+        "signature_known",
+        "parameters_known",
+        "wrappers_known"
+      ],
+      "type": "object"
+    },
+    "SourceSignatureInput": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "type": "object"
+    },
+    "SourceTransformerDeclaration": {
+      "additionalProperties": false,
+      "properties": {
+        "frame": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FrameContract"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "profiles": {
+          "items": {
+            "$ref": "#/$defs/Profile"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "provides": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "requires": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "target_nominal": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "meaning",
+        "version",
+        "target_nominal",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "SourceVerificationResult": {
+      "additionalProperties": false,
+      "properties": {
+        "assurance": {
+          "type": "string"
+        },
+        "obligations": {
+          "items": {
+            "$ref": "#/$defs/Obligation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "scope": {
+          "type": "string"
+        },
+        "selected": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "established",
+            "contradicted",
+            "unresolved"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "assurance",
+        "scope",
+        "selected",
+        "status",
+        "obligations"
+      ],
+      "type": "object"
+    },
     "Substitutions": {
       "additionalProperties": false,
       "properties": {
@@ -2507,6 +2938,9 @@
       "additionalProperties": false,
       "properties": {
         "generation": {
+          "type": "string"
+        },
+        "nominal": {
           "type": "string"
         },
         "path": {

@@ -702,6 +702,9 @@
         "generation": {
           "type": "string"
         },
+        "nominal": {
+          "type": "string"
+        },
         "path": {
           "items": {
             "type": "string"

@@ -6,6 +6,164 @@ authority. The immutable [acceptance catalog](../contracts/acceptance-catalog.js
 contains 110 requirements; [local mappings](../contracts/acceptance-map.json)
 record actual implementation and execution states separately.
 
+## Source adjective adapter follow-up
+
+Starting revision: `94b9e969c15f17ede868049b10da4bddf01f6c15`, on
+`codex/docs-browser-tab-title`, with a clean worktree. This follow-up implements
+source-derived structural adjective verification. The earlier release evidence
+below describes the preceding revision, not this change.
+
+The adapter reuses resolved descriptor construction, including private
+definition-site bindings and ordered matching rules. Its symbolic scope is
+elaboration: constructor identity, names/signatures, child roles, forwarding and
+actual structural writes. Native template execution and callback invocation are
+separate obligations. Bodyless sidecar declarations state requirements and
+promises; they cannot provide the source implementation or its evidence.
+
+Current state: the supported source adapter, shared checker, public CLI and
+regressions are complete. Combined regressions and the full release gate passed
+on macOS ARM64. The user explicitly requested
+`scripts/l-ci bootstrap` and `scripts/l-check` despite the general validation
+pause. No protected inputs, locks or expected bytes are to be amended.
+
+Bootstrap initially failed because the sandbox prevented Rustup from creating
+its temporary file (`.harness/runs/ci-bootstrap-2016632020/stage.json`). The same
+`scripts/l-ci bootstrap` command passed with required tool-cache access
+(`.harness/runs/ci-bootstrap-4209624072/stage.json`). Tool pins and locks were
+unchanged.
+
+The eleven-test frontend baseline command recorded below was repeated before
+adapter changes and passed (exit 0, `lyger` 0.812s), including dictionary helper
+isolation, descriptor aliases, canonical target identity and typed ownership.
+This is focused baseline evidence; the prior revision's full gate is not reused
+as validation of the adapter.
+
+### Follow-up implementation and review
+
+- Shared constructor operations record typed writes even when a later write
+  restores the same value. Ordinary construction uses the same implementation;
+  analysis never parses generated Rust or changes the selected descriptor.
+- `SourceTransformerDeclaration` accepts structural requirements and promises,
+  with no authored body or evidence fields. The source projection version is
+  `l-source-structural/1`; the analyzer revision is `l-contracts-1.1/2`.
+- Source certificates, concrete instances and narrow verification scopes are
+  separate report records. Existing authored typed models remain conditional on
+  source conformance. Production native trust remains empty.
+- Child ordinals use the entire ordered child list. Signature, parameter and
+  wrapper counts require explicit empty-list premises where relevant. Actual
+  instances check immutable before-rule snapshots. Nested helper temporaries
+  use separate roots with generation `source-construction-delta`, so their role
+  paths cannot be confused with pre-existing roles on the final App.
+- Logical caching excludes native bytes and trust after binding revalidation;
+  concrete assurance includes current implementation dependencies, exact targets
+  and trust. Changed declarations are rechecked by `ReinferContracts`.
+- Dictionary APIs retain their existing entry point and add
+  `DictionaryVerificationOptions`/`VerifyDictionaryContractsWithOptions`.
+  The CLI adds explicit repeatable `--adjective` selection and
+  `--assurance symbolic`, preserving whole-dictionary implementation enforcement.
+- Independent review added regressions for template-only wrapper operations,
+  runtime promises smuggled through structural preconditions, inconsistent
+  implementation reports, overwritten writes, and intermediate target identity.
+  These defects were corrected before release validation, not accepted as
+  favorable assumptions. The five schemas were regenerated from the shared model.
+
+The new source tests cover standalone nontrivial certificates, frame rejection,
+incompatible canonical targets, existing children, dictionary-private helpers,
+aliases/order/repetition, signatures and Process forwarding, changed source and
+metadata, warm/cold cache boundaries, narrow CLI status and ordinary emitted-byte
+compatibility. Two initial test fixture attempts used descriptor export forms
+the current source grammar/provider does not expose; the fixture now exercises
+private dictionary adjective bodies through the existing dictionary loader.
+No source grammar or export policy was changed to accommodate that test.
+
+### Follow-up validation results
+
+The combined focused command passed with exit 0 (`contracts` 0.594s, `lyger`
+47.708s, `cmd/l` 6.051s):
+
+```sh
+GOCACHE="$PWD/.harness/cache/go-build" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go test -mod=readonly -count=1 -timeout=180s ./contracts ./lyger ./cmd/l -run '^(TestSource|TestContracts|TestAdjective|TestConstruction|TestParagraphDescriptor|TestDescriptorAliases)'
+```
+
+The first `scripts/l-check` attempt stopped at one `ineffassign` finding in the
+new structural fact helper (`.harness/runs/ci-lint-921015303/stage.json`). An
+unnecessary empty-slice initialization was removed without suppression. The
+complete command was rerun and exited **0**:
+
+| Stage | Outcome | Local report |
+| --- | --- | --- |
+| Workflow, formatting and both full-module lint profiles | Passed; zero issues | `.harness/runs/ci-lint-2341726828/stage.json` |
+| Doctor, build, discovery and both unfiltered acceptance phases | Passed | `.harness/runs/ci-acceptance-2568070462/stage.json` |
+| Complete tagged native compilation | Passed | `.harness/runs/ci-native-3045713287/stage.json` |
+
+All three stages used source identity
+`3cc80cc24fd7a64e854af9c9c27830420c5ae9b16623e9f8b1a80d464c8b741a`.
+The authoritative `verify.report.json` beside the acceptance stage records
+**768 ordinary and 4,489 native test/subtest results**, all passing. All 16
+original compiler-view records passed. Doctor completed 501 checks; protected
+integrity passed before and after. Source generation/frozen compositions,
+native runtime tests, and tagged native compilation remain distinct evidence.
+The tagged command is unchanged from the initial release command below.
+
+No environmental gate remains blocked. The initial sandboxed bootstrap failure
+was resolved by tool-cache access. This host run establishes no Linux result.
+Only this log and the acceptance ledger were updated after the final gate to
+record evidence; implementation code, tests and generated schemas were unchanged.
+After those ledger updates,
+`GOCACHE="$PWD/.harness/cache/go-build" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go test -mod=readonly -count=1 -timeout=60s ./contracts -run '^TestAcceptanceMappingIntegrity$'`
+passed (exit 0, 0.386s). `git diff --check` also passed.
+
+### Follow-up public commands
+
+The final CLI was explicitly built with:
+
+```sh
+GOCACHE="$PWD/.harness/cache/go-build" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go build -mod=readonly -o .harness/bin/l-source-adjectives ./cmd/l
+```
+
+Temporary `.harness/source-adjectives/dictionary.l` contains the standalone
+`Compact` source shown in the author guide. Its bodyless manifest requests the
+canonical `service[0]` role and preservation of the root name, conditional on an
+empty existing child list. `false-frame.json` instead requests preservation of
+the role actually constructed. These final-binary commands were executed:
+
+```sh
+.harness/bin/l-source-adjectives contracts inspect --format json --output .harness/source-adjectives/inspect.json .harness/source-adjectives/dictionary.l
+.harness/bin/l-source-adjectives contracts verify-dictionary --adjective source:dictionary.l:0 --assurance symbolic --manifest .harness/source-adjectives/source-contract.json --report .harness/source-adjectives/positive.json --output .harness/source-adjectives/positive.txt .harness/source-adjectives/dictionary.l
+.harness/bin/l-source-adjectives contracts verify-dictionary --adjective source:dictionary.l:0 --assurance symbolic --manifest .harness/source-adjectives/false-frame.json --report .harness/source-adjectives/negative.json --output .harness/source-adjectives/negative.txt .harness/source-adjectives/dictionary.l
+.harness/bin/l-source-adjectives contracts verify-dictionary --adjective source:dictionary.l:0 --manifest .harness/source-adjectives/source-contract.json --report .harness/source-adjectives/implementation.json --output .harness/source-adjectives/implementation.txt .harness/source-adjectives/dictionary.l
+.harness/bin/l-source-adjectives contracts inspect --format json --output .harness/source-adjectives/instance-inspect.json .harness/source-adjectives/instance.l
+.harness/bin/l-source-adjectives contracts explain --binding binding-use:28c160df9da9fca17be856d47c7c24357a95384f8cf1e99ce7e260c05303b392 --manifest .harness/source-adjectives/instance-contract.json --output .harness/source-adjectives/explain.txt .harness/source-adjectives/instance.l
+.harness/bin/l-source-adjectives contracts check --profile NoBlocking --manifest .harness/source-adjectives/instance-contract.json --report .harness/source-adjectives/check.json --output .harness/source-adjectives/check.txt .harness/source-adjectives/instance.l
+```
+
+Exit codes were **0, 0, 1, 1, 0, 0, 1** respectively. The positive theorem is
+established, the false frame is contradicted, and implementation/NoBlocking
+assurance remains unresolved. The standalone report enumerates 49 native
+boundaries; the instance report enumerates 51. Both retain unknown transitive
+closure and no executed-check records. No generated Apps were launched by these
+commands.
+
+The standalone rule meaning is
+`meaning:d115ec2164914ad15f2f1949521485950000bde8f559ba11fa3a212868d58fd3`.
+Its symbolic root is
+`symbolic-source-target:c5cfd5cc703b70c1fa87b0876874d9489f475e3584f63bdcb754c7033e6c4d9d`,
+with exact child role `service[0]`. The separate `instance.l` declaration has
+meaning `meaning:1386a59244694bb8a91f1a3826588bdad67488b832957653cea00367e74da2e0`
+and its actual App root is
+`construction:8b504738192265859715e44969ff29bc6be22c7274c1796bb801aad382a4a5ce`.
+The explanation records the symbolic premise, its concrete before-rule check,
+the same exact child role, and independent unresolved lowering obligations.
+
+The remaining limits are explicit: symbolic shape premises restrict append-only
+lists; formal-dependent target inspection is instantiation-only; Process
+forwarding proves no callback execution contract; and source topology does not
+certify native templates, captures, destruction, costs or effects. Production
+trust was not broadened. A next precision extension can project typed
+parameter/capture behavior into the existing callback/lifetime checker, without
+changing source resolution. Track A compatibility is green; Track B remains
+typed-only. Changes are local and uncommitted on the existing branch.
+
 ## Baseline
 
 - Starting revision: `23bd59d350c1b33ab5bce182000544c14a826197`.
@@ -231,7 +389,7 @@ callback costs and outcome coverage also remain unknown; a closed effect row
 does not supply a zero work bound or success-only execution. Independent
 nonblocking theorems remain available when their premises are established.
 
-## Final release validation
+## Initial v1.1 release validation (preceding revision)
 
 `scripts/l-ci bootstrap` passed as recorded above. The final `scripts/l-check`
 exited **0**. All three stages recorded the same unchanged source fingerprint:
@@ -262,15 +420,14 @@ and no hidden execution records. Only this documentation and the acceptance
 ledger were updated after the release run to record its outcome; implementation
 code and tests were unchanged.
 
-All supported milestone gates are complete. Remaining work is precision and
-assurance expansion: a source symbolic-body adapter, more complete
-capture/return ownership projection, explicit concrete native-environment
-identification, and independently reviewed native conformance witnesses. The
-next concrete extension is a source-body-to-symbolic-plan adapter that preserves
-definition-site bindings and checks one supported adjective against its declared
-target requirements. These limits remain visible obligations, not passing
-annotations. No Linux result, production native certification, commit or push
-is claimed.
+That release completed its supported typed milestones and identified source
+symbolic-body projection as the next extension. The follow-up at the top of this
+record implements the structural source fragment. More complete capture/return
+ownership projection, executable callback/template contracts, concrete native
+configuration and independently reviewed native witnesses remain separate
+precision and assurance work. These limits remain visible obligations, not
+passing annotations. Local validation establishes no Linux result or production
+native certification.
 
 ## Validation policy
 

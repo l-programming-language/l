@@ -16,6 +16,7 @@ l contracts check --profile NoHeapAllocation --profile NoBlocking --report check
 l contracts explain --binding OCCURRENCE_ID program.l
 l contracts explain --binding source:program.l:BYTE_OFFSET program.l
 l contracts verify-dictionary --report dictionary.json io
+l contracts verify-dictionary --adjective MEANING_OR_SOURCE:BYTE_OFFSET --assurance symbolic --manifest source-contracts.json --report adjective.json dictionary.l
 ```
 
 Use the exact occurrence ID or `origin.source:origin.start` selector from an
@@ -37,6 +38,58 @@ contradicted enforcement, and 2 for invalid invocation or metadata. Dictionary
 verification reports discovered definitions separately from symbolic
 certificates. Merely loading a source dictionary never certifies its bodies.
 
+`verify-dictionary` defaults to implementation assurance for the complete
+dictionary. Explicit `--assurance symbolic` requires one or more `--adjective`
+selectors. Each selector identifies one canonical rule meaning or its exact
+source-origin byte offset; ambiguous and missing selections reject. This mode
+checks only the selected definition-time structural obligations. Its report
+retains concrete instantiation and native obligations separately, so success is
+not a runtime guarantee. Options still precede the dictionary input. Whole-entry
+profiles cannot be combined with this narrower symbolic mode.
+
+## Source adjective bodies
+
+The source adapter observes the same resolved construction operations used by
+ordinary compilation. It supports canonical constructors, fixed names and
+literal signature atoms, ordered child roles, parameter forwarding, and
+structural writes and frames. Dictionary helpers retain their definition-site
+bindings. Every matching
+descriptor rule still applies in order; repeated constructions remain distinct.
+
+For example, the existing source grammar can express:
+
+```text
+"Compact" describes a Generic App with a New Main Service using any Process.
+```
+
+A symbolic check can establish its constructed roles and exact structural
+footprint without creating an App instance. Fixed child ordinals require an
+explicit premise about the complete existing child list. Concrete applications
+check that premise against the target immediately before the rule applies.
+Canonical nominal identity, rather than a displayed type name, determines
+target compatibility.
+
+Facet/role manifests can supply bodyless `source_transformers` declarations keyed
+by the selected rule's canonical meaning. Requirements and promised properties
+come from those declarations; the implementation plan, actual writes and source
+provenance come from the compiler. An authored `transformers` body remains a
+separate typed model and cannot stand in for the source implementation.
+
+Start with `inspect --format json` to obtain the rule meaning, canonical nominal
+domain, symbolic target, and unmet shape premises. Copy those identities into the
+declaration; do not invent IDs from adjective spelling. Structural promises use
+the reported shape fields: canonical nominal/constructor identity, names, exact
+child presence/counts, signatures, and ordered parameter/wrapper selections.
+Runtime effects, ownership, protocol and cost promises remain unsupported by this
+structural adapter even when repeated as preconditions.
+
+Source certificates separate the structural theorem from instantiation and
+lowering assurance. Native templates retain their ordered wrapper identity but
+their executable behavior remains opaque. Forwarding `Process` supplies a
+parameter, not an invocation-count, purity or cost proof. Unsupported target
+inspection remains instantiation-only. Structural source verification never
+establishes runtime `NoBlocking` or `NoHeapAllocation` by omitting native work.
+
 ## Typed analysis boundary
 
 The independent `contracts` Go package holds identities, restricted predicates,
@@ -49,6 +102,13 @@ inferred by parsing generated Rust.
 
 `LygerService.AnalyzeContracts` is additive to ordinary compilation and accepts
 separate analysis options. `ResolveContractBindings` exposes Track A records.
+`ContractAnalysisOptions.SourceTransformers` supplies bodyless source declarations;
+the result exposes compiler-derived projections, source certificates and concrete
+instantiations. `VerifyDictionaryContractsWithOptions` adds explicit canonical
+meaning selection and assurance scope through `DictionaryVerificationOptions`,
+while the existing dictionary API retains its default behavior. Session reuse
+revalidates bindings before logical reuse and checks current native dependencies
+again at concrete assurance boundaries.
 `PrepareContractGeneration` and `PrepareWorkspaceContractGeneration` expose
 backend preparation, an immutable inventory view, and one-shot source rendering.
 `VerifyInventory` detects a changed prepared inventory. Frontend-only analysis

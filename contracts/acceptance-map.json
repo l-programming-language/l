@@ -110,6 +110,60 @@
       "outcome": "passed",
       "exit_code": 0,
       "evidence": "Final unchanged implementation source fingerprint 91445022a916ddbc5a60417eace9ff170c6b9b0cfea80455d9a665ad7eec608f. Reports: .harness/runs/ci-lint-1812429660/stage.json; .harness/runs/ci-acceptance-318679881/stage.json; .harness/runs/ci-native-3166192262/stage.json. Doctor 501 checks; protected integrity before/after true; all 16 original compiler-view records passed; 736 ordinary and 4457 native test/subtest records, zero failures. Includes complete tagged native compilation. macOS ARM64 only."
+    },
+    "source_adapter_followup": {
+      "command": "GOCACHE=\"$PWD/.harness/cache/go-build\" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off go test -mod=readonly -count=1 -timeout=180s ./contracts ./lyger ./cmd/l -run '^(TestSource|TestContracts|TestAdjective|TestConstruction|TestParagraphDescriptor|TestDescriptorAliases)'",
+      "outcome": "passed",
+      "evidence": "contracts 0.594s; lyger 47.708s; cmd/l 6.051s. Source/bodyless metadata, declaration/instantiation, cache, alias/construction and existing contract regressions; access for test-owned native cache granted.",
+      "exit_code": 0
+    },
+    "source_adapter_bootstrap": {
+      "command": "scripts/l-ci bootstrap",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": ".harness/runs/ci-bootstrap-4209624072/stage.json; pinned tools unchanged. Initial sandboxed attempt .harness/runs/ci-bootstrap-2016632020/stage.json failed on Rustup tmp access, then resolved with required tool-cache access."
+    },
+    "source_adapter_release": {
+      "command": "scripts/l-check",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": "Source identity 3cc80cc24fd7a64e854af9c9c27830420c5ae9b16623e9f8b1a80d464c8b741a across .harness/runs/ci-lint-2341726828/stage.json, ci-acceptance-2568070462/stage.json and ci-native-3045713287/stage.json. Doctor 501 checks; protected integrity before/after true; all16 original test records pass; 768 ordinary and4489 native test/subtest records all pass; complete tagged native compilation passed. macOS ARM64 only. Initial lint attempt ci-lint-921015303 caught one ineffassign, fixed without suppression before full rerun. Only log/map updated after gate."
+    },
+    "source_cli_inspect": {
+      "command": ".harness/bin/l-source-adjectives contracts inspect --format json --output .harness/source-adjectives/inspect.json .harness/source-adjectives/dictionary.l",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": "Source definitions and unresolved compiler-derived certificates; no execution. Final CLI rebuilt after full release gate; reports contain no executed checks."
+    },
+    "source_cli_positive": {
+      "command": ".harness/bin/l-source-adjectives contracts verify-dictionary --adjective source:dictionary.l:0 --assurance symbolic --manifest .harness/source-adjectives/source-contract.json --report .harness/source-adjectives/positive.json --output .harness/source-adjectives/positive.txt .harness/source-adjectives/dictionary.l",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": "Established actual-source service[0] presence/canonical nominal and root-name frame under explicit empty-child premise; 49 native boundaries remain unresolved. Final CLI rebuilt after full release gate; reports contain no executed checks."
+    },
+    "source_cli_negative": {
+      "command": ".harness/bin/l-source-adjectives contracts verify-dictionary --adjective source:dictionary.l:0 --assurance symbolic --manifest .harness/source-adjectives/false-frame.json --report .harness/source-adjectives/negative.json --output .harness/source-adjectives/negative.txt .harness/source-adjectives/dictionary.l",
+      "outcome": "failed",
+      "exit_code": 1,
+      "evidence": "Expected enforcement failure: actual constructed service role contradicts preservation promise. Final CLI rebuilt after full release gate; reports contain no executed checks."
+    },
+    "source_cli_implementation": {
+      "command": ".harness/bin/l-source-adjectives contracts verify-dictionary --adjective source:dictionary.l:0 --manifest .harness/source-adjectives/source-contract.json --report .harness/source-adjectives/implementation.json --output .harness/source-adjectives/implementation.txt .harness/source-adjectives/dictionary.l",
+      "outcome": "failed",
+      "exit_code": 1,
+      "evidence": "Expected unresolved whole-dictionary implementation assurance despite established conditional source theorem. Final CLI rebuilt after full release gate; reports contain no executed checks."
+    },
+    "source_cli_explain": {
+      "command": ".harness/bin/l-source-adjectives contracts explain --binding binding-use:28c160df9da9fca17be856d47c7c24357a95384f8cf1e99ce7e260c05303b392 --manifest .harness/source-adjectives/instance-contract.json --output .harness/source-adjectives/explain.txt .harness/source-adjectives/instance.l",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": "Exact Compact rule, actual App target, service[0] role, source premise/instantiation and independent native lowering obligations. Final CLI rebuilt after full release gate; reports contain no executed checks."
+    },
+    "source_cli_check": {
+      "command": ".harness/bin/l-source-adjectives contracts check --profile NoBlocking --manifest .harness/source-adjectives/instance-contract.json --report .harness/source-adjectives/check.json --output .harness/source-adjectives/check.txt .harness/source-adjectives/instance.l",
+      "outcome": "failed",
+      "exit_code": 1,
+      "evidence": "Expected unresolved NoBlocking; actual source theorem/instance do not certify runtime behavior; 51 enumerated native boundaries, unknown transitive closure. Final CLI rebuilt after full release gate; reports contain no executed checks."
     }
   },
   "cases": [
@@ -120,7 +174,8 @@
       "tests": [],
       "command_ids": [
         "baseline",
-        "handoff_integrity"
+        "handoff_integrity",
+        "source_adapter_release"
       ],
       "limitations": [
         "Baseline commands establish their observed revision and scope only; release validation is recorded separately."
@@ -142,7 +197,8 @@
       ],
       "command_ids": [
         "contracts_and_frontend",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -163,7 +219,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -185,7 +242,8 @@
         "contracts_and_frontend",
         "contracts_final",
         "final_applicability_regressions",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -202,7 +260,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -219,7 +278,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -236,7 +296,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -265,7 +326,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -281,7 +343,8 @@
       ],
       "command_ids": [
         "contracts_and_frontend",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -298,7 +361,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -315,7 +379,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -332,7 +397,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -349,7 +415,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -370,7 +437,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -391,7 +459,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -408,7 +477,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -430,7 +500,8 @@
         "contracts_and_frontend",
         "contracts_final",
         "callback_omission_regression",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -447,7 +518,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -464,7 +536,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -481,7 +554,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -502,7 +576,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -519,7 +594,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -536,7 +612,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -553,7 +630,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -574,7 +652,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "native_values",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -595,7 +674,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -621,7 +701,8 @@
         "contracts_and_frontend",
         "contracts_final",
         "final_applicability_regressions",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -639,7 +720,8 @@
         "cli",
         "cli_inspect",
         "cli_check",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -656,7 +738,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -673,7 +756,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -690,7 +774,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -707,7 +792,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -728,7 +814,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -745,7 +832,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -762,7 +850,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -784,7 +873,8 @@
         "contracts_and_frontend",
         "native_protocol",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -801,7 +891,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -822,7 +913,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -848,7 +940,8 @@
         "contracts_and_frontend",
         "native_protocol",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -865,7 +958,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -887,7 +981,8 @@
         "contracts_and_frontend",
         "native_protocol",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -908,7 +1003,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -930,7 +1026,8 @@
         "contracts_and_frontend",
         "contracts_final",
         "final_applicability_regressions",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -947,7 +1044,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -964,7 +1062,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -981,7 +1080,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1007,7 +1107,8 @@
         "contracts_and_frontend",
         "contracts_final",
         "final_applicability_regressions",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1027,12 +1128,26 @@
         {
           "file": "contracts/target_type_test.go",
           "name": "TestAdjectiveGenericTargetType"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveActualInstanceUsesBeforeShape"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveExistingSourceChildRejectsOrdinalPremise"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveNestedHelperKeepsIntermediateTarget"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1049,7 +1164,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1065,16 +1181,27 @@
         {
           "file": "contracts/target_interchange_test.go",
           "name": "TestAdjectiveOmittedCallbackCostsAndOutcomesStayUnknown"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveStandaloneCertificateAndCompatibility"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveSignatureAndParameterForwarding"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "callback_omission_regression",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release",
+        "source_cli_positive"
       ],
       "limitations": [
-        "Symbolic certification applies to explicit typed ContractTransformer bodies. Unadapted source descriptor bodies are reported instantiation_only/unresolved."
+        "Source-derived certificates cover structural elaboration with explicit shape premises. Runtime callback effects/costs, captures and destruction retain typed-plan tests and separate unresolved native/lowering obligations. Forwarding Process does not prove callback invocation."
       ]
     },
     {
@@ -1085,15 +1212,26 @@
         {
           "file": "contracts/adjective_acceptance_test.go",
           "name": "TestAdjectiveAcceptance/BASE-051"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveDefinitionFrameRejection"
+        },
+        {
+          "file": "contracts/source_boundary_review_test.go",
+          "name": "TestSourceStructuralCertificateCannotSmuggleRuntimePromise"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release",
+        "source_cli_negative"
       ],
       "limitations": [
-        "Symbolic certification applies to explicit typed ContractTransformer bodies. Unadapted source descriptor bodies are reported instantiation_only/unresolved."
+        "Source-derived certificates cover structural elaboration with explicit shape premises. Runtime callback effects/costs, captures and destruction retain typed-plan tests and separate unresolved native/lowering obligations. Forwarding Process does not prove callback invocation."
       ]
     },
     {
@@ -1108,15 +1246,25 @@
         {
           "file": "contracts/target_type_test.go",
           "name": "TestAdjectiveAuthoritativeTargetTypeBASE048"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveCanonicalNominalAndMetadata"
+        },
+        {
+          "file": "contracts/source_adjectives_test.go",
+          "name": "TestSourceAdjectiveConcreteBeforeSnapshot"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": [
-        "Symbolic certification applies to explicit typed ContractTransformer bodies. Unadapted source descriptor bodies are reported instantiation_only/unresolved."
+        "Source-derived certificates cover structural elaboration with explicit shape premises. Runtime callback effects/costs, captures and destruction retain typed-plan tests and separate unresolved native/lowering obligations. Forwarding Process does not prove callback invocation."
       ]
     },
     {
@@ -1127,15 +1275,27 @@
         {
           "file": "contracts/adjective_acceptance_test.go",
           "name": "TestAdjectiveAcceptance/BASE-053"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveNativeWrapperOnlyAppends"
+        },
+        {
+          "file": "lyger/contracts_source_cache_test.go",
+          "name": "TestSourceAdjectiveCacheNativeAndTrust"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release",
+        "source_cli_implementation",
+        "source_cli_check"
       ],
       "limitations": [
-        "Symbolic certification applies to explicit typed ContractTransformer bodies. Unadapted source descriptor bodies are reported instantiation_only/unresolved."
+        "Source-derived certificates cover structural elaboration with explicit shape premises. Runtime callback effects/costs, captures and destruction retain typed-plan tests and separate unresolved native/lowering obligations. Forwarding Process does not prove callback invocation."
       ]
     },
     {
@@ -1156,7 +1316,8 @@
         "contracts_and_frontend",
         "contracts_final",
         "cli_dictionary",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1173,7 +1334,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1190,7 +1352,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1212,7 +1375,8 @@
         "contracts_and_frontend",
         "contracts_final",
         "callback_omission_regression",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1233,7 +1397,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "native_pointer",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": [
         "Native observations are empirical compatibility checks, not approved quantitative contracts or universal conformance. Production costs and native strong guarantees remain unresolved without approved witnesses."
@@ -1265,7 +1430,8 @@
         "contracts_and_frontend",
         "native_values",
         "native_pointer",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": [
         "Native observations are empirical compatibility checks, not approved quantitative contracts or universal conformance. Production costs and native strong guarantees remain unresolved without approved witnesses."
@@ -1310,7 +1476,8 @@
         "cli_check",
         "cli_explain",
         "cli_dictionary",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": [
         "Production native approvals remain empty. Selected helper inventory is transitive where explicit composition records expose it; opaque native internals remain unknown boundaries."
@@ -1333,7 +1500,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1350,7 +1518,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1367,7 +1536,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1392,7 +1562,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1409,7 +1580,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1426,7 +1598,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1442,11 +1615,21 @@
         {
           "file": "lyger/contracts_integration_test.go",
           "name": "TestContractsTrackA/LEX-007"
+        },
+        {
+          "file": "lyger/contracts_source_cache_test.go",
+          "name": "TestSourceAdjectiveDictionaryHelperIsolation"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveOrderedWritesAndDefinitionSiteHelper"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1467,7 +1650,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1479,12 +1663,22 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestLexicalAcceptance/LEX-009"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveCanonicalNominalAndMetadata"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveNestedHelperKeepsIntermediateTarget"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1501,7 +1695,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1518,7 +1713,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1535,7 +1731,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1552,7 +1749,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1569,7 +1767,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1586,7 +1785,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1603,7 +1803,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1620,7 +1821,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1637,7 +1839,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1654,7 +1857,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1671,7 +1875,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1688,7 +1893,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1705,7 +1911,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1722,7 +1929,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1734,12 +1942,18 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFrameAcceptance/LEX-024"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveDefinitionFrameRejection"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1751,12 +1965,18 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFrameAcceptance/LEX-025"
+        },
+        {
+          "file": "contracts/source_adjectives_test.go",
+          "name": "TestSourceStructuralFactInvalidation"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1773,7 +1993,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1790,7 +2011,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1802,12 +2024,26 @@
         {
           "file": "contracts/adjective_acceptance_test.go",
           "name": "TestAdjectiveAcceptance/LEX-028"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveOrderedWritesAndDefinitionSiteHelper"
+        },
+        {
+          "file": "contracts/source_adjectives_test.go",
+          "name": "TestSourceShapeKnownListsPreserveOrder"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveNestedHelperKeepsIntermediateTarget"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1824,7 +2060,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1845,7 +2082,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1857,12 +2095,22 @@
         {
           "file": "contracts/cache_test.go",
           "name": "TestSeparateCacheBoundaries/LEX-031"
+        },
+        {
+          "file": "contracts/source_adjectives_cache_test.go",
+          "name": "TestSourceCertificateCacheBoundaries"
+        },
+        {
+          "file": "lyger/contracts_source_cache_test.go",
+          "name": "TestSourceAdjectiveCacheNativeAndTrust"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1879,7 +2127,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1896,7 +2145,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1913,7 +2163,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1925,12 +2176,18 @@
         {
           "file": "contracts/cache_test.go",
           "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/LEX-035"
+        },
+        {
+          "file": "lyger/contracts_source_cache_test.go",
+          "name": "TestSourceAdjectiveCacheSourceAndRequirements"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1951,7 +2208,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1967,12 +2225,18 @@
         {
           "file": "contracts/cache_test.go",
           "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/LEX-037"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveCanonicalNominalAndMetadata"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -1989,7 +2253,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2005,6 +2270,18 @@
         {
           "file": "contracts/explain_test.go",
           "name": "TestExplanationLEX039"
+        },
+        {
+          "file": "cmd/l/contracts_source_test.go",
+          "name": "TestContractsSourceInstanceExplainAndWholeEntryCheck"
+        },
+        {
+          "file": "cmd/l/contracts_source_test.go",
+          "name": "TestContractsSourceExplanationKeepsSelectedRule"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveDictionarySelectedAssuranceAPI"
         }
       ],
       "command_ids": [
@@ -2012,7 +2289,10 @@
         "cli",
         "contracts_final",
         "cli_explain",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release",
+        "source_cli_explain"
       ],
       "limitations": []
     },
@@ -2024,11 +2304,17 @@
         {
           "file": "cmd/l/contracts_test.go",
           "name": "TestContractsCLI/LEX-040"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveStandaloneCertificateAndCompatibility"
         }
       ],
       "command_ids": [
         "cli",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": [
         "Track B is available only through explicit typed SelectReference fixtures; there is no source-facing experimental selector mode or migration decision."
@@ -2047,7 +2333,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2064,7 +2351,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2081,7 +2369,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2103,7 +2392,8 @@
         "contracts_and_frontend",
         "contracts_final",
         "final_applicability_regressions",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2120,7 +2410,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2137,7 +2428,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2149,12 +2441,18 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFrameAcceptance/FALS-007"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveDefinitionFrameRejection"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2166,12 +2464,18 @@
         {
           "file": "contracts/cache_test.go",
           "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/FALS-008"
+        },
+        {
+          "file": "lyger/contracts_source_cache_test.go",
+          "name": "TestSourceAdjectiveCacheSourceAndRequirements"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2183,12 +2487,18 @@
         {
           "file": "contracts/adjective_acceptance_test.go",
           "name": "TestAdjectiveAcceptance/FALS-009"
+        },
+        {
+          "file": "lyger/contracts_source_adjectives_test.go",
+          "name": "TestSourceAdjectiveOrderedWritesAndDefinitionSiteHelper"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_followup",
+        "source_adapter_release"
       ],
       "limitations": []
     },
@@ -2205,7 +2515,8 @@
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
-        "release_final"
+        "release_final",
+        "source_adapter_release"
       ],
       "limitations": []
     }

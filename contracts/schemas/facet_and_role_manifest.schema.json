@@ -313,6 +313,15 @@
         "schema_version": {
           "const": "1.1"
         },
+        "source_transformers": {
+          "items": {
+            "$ref": "#/$defs/SourceTransformerDeclaration"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "transformers": {
           "items": {
             "$ref": "#/$defs/ContractTransformer"
@@ -1213,6 +1222,67 @@
       ],
       "type": "object"
     },
+    "SourceTransformerDeclaration": {
+      "additionalProperties": false,
+      "properties": {
+        "frame": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FrameContract"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "profiles": {
+          "items": {
+            "$ref": "#/$defs/Profile"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "provides": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "requires": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "target_nominal": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "meaning",
+        "version",
+        "target_nominal",
+        "origin"
+      ],
+      "type": "object"
+    },
     "Substitutions": {
       "additionalProperties": false,
       "properties": {
@@ -1317,6 +1387,9 @@
       "additionalProperties": false,
       "properties": {
         "generation": {
+          "type": "string"
+        },
+        "nominal": {
           "type": "string"
         },
         "path": {

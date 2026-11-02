@@ -120,7 +120,7 @@ func entails(facts []Predicate, want Predicate, depth int) (Status, string) {
 			return Unresolved, "condition is undetermined"
 		}
 		return entails(facts, want.Args[1], depth+1)
-	case "eq", "type", "meaning", "present", "finite", "interval", "ownership", "escape", "protocol", "resource_equal", "resource_disjoint", "effect_contains", "effects_closed", "multiplicity", "cost_leq", "facet", "capability", "member":
+	case "eq", "type", "meaning", "present", "finite", "interval", "ownership", "escape", "protocol", "resource_equal", "resource_disjoint", "effect_contains", "effects_closed", "multiplicity", "cost_leq", "facet", "capability", "member", "source_children_empty", "source_signature_empty", "source_parameters_empty", "source_wrappers_empty":
 	default:
 		return Unresolved, "unsupported predicate: " + want.Kind
 	}

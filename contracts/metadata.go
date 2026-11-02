@@ -56,12 +56,13 @@ type NativeContractManifest struct {
 }
 
 type FacetRoleManifest struct {
-	SchemaVersion string                `json:"schema_version"`
-	Kind          string                `json:"kind"`
-	Producer      string                `json:"producer"`
-	Facets        []FacetSchema         `json:"facets"`
-	Roles         []RoleInterface       `json:"roles"`
-	Transformers  []ContractTransformer `json:"transformers,omitempty"`
+	SchemaVersion      string                         `json:"schema_version"`
+	Kind               string                         `json:"kind"`
+	Producer           string                         `json:"producer"`
+	Facets             []FacetSchema                  `json:"facets"`
+	Roles              []RoleInterface                `json:"roles"`
+	Transformers       []ContractTransformer          `json:"transformers,omitempty"`
+	SourceTransformers []SourceTransformerDeclaration `json:"source_transformers,omitempty"`
 }
 
 type TrustPolicyDocument struct {
@@ -173,6 +174,13 @@ func (manifest FacetRoleManifest) Validate() error {
 	}
 	if err := validateModelEnums(manifest); err != nil {
 		return err
+	}
+	sourceMeanings := make(map[MeaningKey]bool)
+	for _, declaration := range manifest.SourceTransformers {
+		if declaration.Meaning == "" || declaration.Version == "" || declaration.TargetNominal == "" || sourceMeanings[declaration.Meaning] {
+			return fmt.Errorf("source transformer requires unique canonical rule, version and nominal identity")
+		}
+		sourceMeanings[declaration.Meaning] = true
 	}
 	seen := make(map[string]bool)
 	for _, facet := range manifest.Facets {

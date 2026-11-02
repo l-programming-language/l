@@ -77,11 +77,15 @@ type ContractAnalysis struct {
 	Orchestrator         BuildUnit
 	Lifecycle            []contracts.AppProtocolState
 	LifecycleObligations []contracts.Obligation
+	SourceProjections    []contracts.SourceAdjectiveProjection
+	SourceCertificates   []contracts.SourceAdjectiveCertificate
+	SourceInstantiations []contracts.SourceAdjectiveInstantiation
 }
 
 type ContractAnalysisOptions struct {
-	Inference contracts.AnalysisOptions
-	Session   *contracts.Session
+	Inference          contracts.AnalysisOptions
+	Session            *contracts.Session
+	SourceTransformers []contracts.SourceTransformerDeclaration
 }
 
 // RefreshLoweringInventory includes helper choices made by subsequent real
@@ -160,6 +164,9 @@ func (ls *LygerService) AnalyzeContracts(source []byte, path string, options Con
 	lifecycle, lifecycleObligations := r.contractLifecycle(plan)
 	analysis := &ContractAnalysis{Compilation: result, Bindings: r.snapshot(), Plan: typed, Lowering: inventory, Orchestrator: entry, Lifecycle: lifecycle, LifecycleObligations: lifecycleObligations}
 	if err := inferContractAnalysis(analysis, options); err != nil {
+		return nil, err
+	}
+	if err := analysis.verifySourceContracts(options); err != nil {
 		return nil, err
 	}
 	return analysis, nil

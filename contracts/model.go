@@ -10,7 +10,7 @@ import (
 )
 
 const SchemaVersion = "1.1"
-const AnalyzerVersion = "l-contracts-1.1/1"
+const AnalyzerVersion = "l-contracts-1.1/2"
 const TrackAPolicy = "l-existing-resolution/1"
 const ReferencePolicy = "unique-applicable/1"
 
@@ -72,12 +72,13 @@ type MeaningIdentity struct {
 }
 
 type TargetRef struct {
-	Root       string   `json:"root"`
-	Path       []string `json:"path,omitempty"`
-	Type       string   `json:"type,omitempty"`
-	Phase      Phase    `json:"phase,omitempty"`
-	Generation string   `json:"generation,omitempty"`
-	Unknown    bool     `json:"unknown,omitempty"`
+	Root       string        `json:"root"`
+	Path       []string      `json:"path,omitempty"`
+	Type       string        `json:"type,omitempty"`
+	Nominal    DefinitionKey `json:"nominal,omitempty"`
+	Phase      Phase         `json:"phase,omitempty"`
+	Generation string        `json:"generation,omitempty"`
+	Unknown    bool          `json:"unknown,omitempty"`
 }
 
 func (t TargetRef) String() string {

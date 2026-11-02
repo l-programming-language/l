@@ -25,19 +25,22 @@ const contractsUsage = `Usage: l contracts inspect [--format text|json] [--outpu
        l contracts check --profile NAME [--profile NAME ...] [--report PATH] INPUT
        l contracts explain --binding OCCURRENCE_OR_SOURCE:BYTE_OFFSET INPUT
        l contracts verify-dictionary [--report PATH] DICTIONARY
+       l contracts verify-dictionary --assurance symbolic --adjective MEANING_OR_SOURCE:BYTE_OFFSET [--adjective ...] DICTIONARY
 Options precede input. Common options: --assets ROOT, --language eng,
 --manifest PATH (repeatable), --trust-policy PATH, --format text|json.
 These commands prepare source only; they never build or execute Apps.
 Track A preserves current resolution. Track B has no source-facing mode.
+Assurance defaults to implementation. Symbolic assurance checks only selected
+source adjective definitions; native/runtime assurance remains separate.
 `
 
 type contractsCommand struct {
-	Action, Input, Format, Output, Report, Binding, Assets, Language, Trust string
-	Profiles, Manifests                                                     []string
+	Action, Input, Format, Output, Report, Binding, Assets, Language, Trust, Assurance string
+	Profiles, Manifests, Adjectives                                                    []string
 }
 
 func parseContractsCommand(args []string) (contractsCommand, error) {
-	command := contractsCommand{Format: "text", Language: Lyger.DefaultLanguage}
+	command := contractsCommand{Format: "text", Language: Lyger.DefaultLanguage, Assurance: "implementation"}
 	if len(args) == 0 {
 		return command, fmt.Errorf("contracts requires a subcommand")
 	}
@@ -59,6 +62,14 @@ func parseContractsCommand(args []string) (contractsCommand, error) {
 	flags.StringVar(&command.Assets, "assets", "", "complete resource filesystem")
 	flags.StringVar(&command.Language, "language", Lyger.DefaultLanguage, "source language")
 	flags.StringVar(&command.Trust, "trust-policy", "", "explicit trust policy document")
+	flags.StringVar(&command.Assurance, "assurance", "implementation", "implementation or selected symbolic assurance")
+	flags.Func("adjective", "source adjective meaning or declaration source selector", func(value string) error {
+		if value == "" {
+			return fmt.Errorf("empty adjective selector")
+		}
+		command.Adjectives = append(command.Adjectives, value)
+		return nil
+	})
 	flags.Func("manifest", "additional metadata", func(value string) error {
 		if value == "" {
 			return fmt.Errorf("empty manifest path")
@@ -92,13 +103,28 @@ func parseContractsCommand(args []string) (contractsCommand, error) {
 	if command.Language == "" {
 		return command, fmt.Errorf("--language requires a nonempty value")
 	}
+	if command.Assurance != "implementation" && command.Assurance != "symbolic" {
+		return command, fmt.Errorf("unsupported assurance %q", command.Assurance)
+	}
+	if len(command.Adjectives) > 0 && command.Action != "verify-dictionary" {
+		return command, fmt.Errorf("--adjective is supported only by verify-dictionary")
+	}
+	if command.Assurance == "symbolic" {
+		if command.Action != "verify-dictionary" || len(command.Adjectives) == 0 {
+			return command, fmt.Errorf("symbolic assurance requires verify-dictionary and an explicit --adjective selection")
+		}
+		if len(command.Profiles) > 0 {
+			return command, fmt.Errorf("symbolic dictionary verification cannot enforce whole-entry --profile requirements; use contracts check")
+		}
+	}
 	return command, nil
 }
 
 type contractMetadata struct {
-	Native []contracts.DeclaredContract
-	Facets []contracts.FacetRoleManifest
-	Trust  contracts.TrustPolicyDocument
+	Native             []contracts.DeclaredContract
+	Facets             []contracts.FacetRoleManifest
+	SourceTransformers []contracts.SourceTransformerDeclaration
+	Trust              contracts.TrustPolicyDocument
 }
 
 type contractMetadataError struct{ error }
@@ -228,6 +254,18 @@ func loadContractMetadata(resources fs.FS, command contractsCommand) (contractMe
 					return result, err
 				}
 			}
+			for _, transformer := range typed.SourceTransformers {
+				if err := register("source transformer", string(transformer.Meaning), transformer); err != nil {
+					return result, err
+				}
+				duplicate := false
+				for _, existing := range result.SourceTransformers {
+					duplicate = duplicate || existing.Meaning == transformer.Meaning
+				}
+				if !duplicate {
+					result.SourceTransformers = append(result.SourceTransformers, transformer)
+				}
+			}
 			result.Facets = append(result.Facets, typed)
 		default:
 			return result, fmt.Errorf("--manifest accepts declarations, never reports, certificates or trust policies")
@@ -280,8 +318,9 @@ func runContracts(ctx context.Context, args []string, stdout, stderr io.Writer) 
 	}
 	var analysis *Lyger.ContractAnalysis
 	var dictionary *Lyger.DictionaryContractAnalysis
+	analysisOptions := Lyger.ContractAnalysisOptions{SourceTransformers: metadata.SourceTransformers}
 	if command.Action == "verify-dictionary" {
-		dictionary, err = service.VerifyDictionaryContracts(command.Input, Lyger.ContractAnalysisOptions{})
+		dictionary, err = service.VerifyDictionaryContracts(command.Input, analysisOptions)
 		if err == nil {
 			analysis = dictionary.Analysis
 		}
@@ -291,10 +330,20 @@ func runContracts(ctx context.Context, args []string, stdout, stderr io.Writer) 
 		if err != nil {
 			return contractsError(stderr, 1, err)
 		}
-		analysis, err = service.AnalyzeContracts(source, inputPath, Lyger.ContractAnalysisOptions{})
+		analysis, err = service.AnalyzeContracts(source, inputPath, analysisOptions)
 	}
 	if err != nil {
+		if errors.Is(err, Lyger.ErrSourceContractMetadata) {
+			return contractsError(stderr, 2, err)
+		}
 		return contractsError(stderr, 1, err)
+	}
+	var selectedAdjectives []contracts.MeaningKey
+	if dictionary != nil && len(command.Adjectives) > 0 {
+		selectedAdjectives, err = selectContractAdjectives(dictionary.Definitions, command.Adjectives)
+		if err != nil {
+			return contractsError(stderr, 2, err)
+		}
 	}
 	report, err := prepareContractReport(command, analysis, resources, metadata)
 	if err != nil {
@@ -308,6 +357,14 @@ func runContracts(ctx context.Context, args []string, stdout, stderr io.Writer) 
 		report.Definitions = dictionary.Definitions
 		report.Obligations = append(report.Obligations, dictionary.Obligations...)
 		report.Certificates = append(report.Certificates, dictionary.Certificates...)
+		report.SourceCertificates = dictionary.SourceCertificates
+		report.SourceInstantiations = dictionary.SourceInstantiations
+		if len(command.Adjectives) > 0 {
+			report.SourceVerification, err = selectedSourceVerification(report, command.Assurance, selectedAdjectives)
+			if err != nil {
+				return contractsError(stderr, 2, err)
+			}
+		}
 	}
 	if command.Action == "explain" {
 		var selected []contracts.ResolvedBinding
@@ -321,6 +378,7 @@ func runContracts(ctx context.Context, args []string, stdout, stderr io.Writer) 
 			return contractsError(stderr, 2, fmt.Errorf("no binding matches %q; use an occurrence ID or source:byte-offset from inspect", command.Binding))
 		}
 		report.Bindings = selected
+		report.SourceCertificates, report.SourceInstantiations = relevantSourceExplanations(report, selected)
 	}
 	data, err := contracts.EncodeDocument(report)
 	if err != nil {
@@ -358,11 +416,25 @@ func runContracts(ctx context.Context, args []string, stdout, stderr io.Writer) 
 		return 1
 	}
 	if command.Action == "verify-dictionary" {
+		if command.Assurance == "symbolic" {
+			if report.SourceVerification == nil || report.SourceVerification.Status != contracts.Established {
+				return 1
+			}
+			return 0
+		}
 		if !contracts.AllEstablished(report.Obligations) {
+			return 1
+		}
+		if report.SourceVerification != nil && report.SourceVerification.Status != contracts.Established {
 			return 1
 		}
 		for _, certificate := range report.Certificates {
 			if certificate.Status != contracts.Established {
+				return 1
+			}
+		}
+		for _, certificate := range report.SourceCertificates {
+			if certificate.LogicalStatus != contracts.Established || !contracts.AllEstablished(certificate.LoweringObligations) {
 				return 1
 			}
 		}
@@ -376,6 +448,129 @@ func contractsError(output io.Writer, status int, err error) int {
 		return status
 	}
 	return status
+}
+
+func selectContractAdjectives(definitions []contracts.DefinitionRecord, selectors []string) ([]contracts.MeaningKey, error) {
+	var selected []contracts.MeaningKey
+	seen := make(map[contracts.MeaningKey]bool)
+	for _, selector := range selectors {
+		matches := make(map[contracts.MeaningKey]bool)
+		for _, definition := range definitions {
+			if !definition.Descriptor {
+				continue
+			}
+			origin := definition.Origin.Source + ":" + strconv.Itoa(definition.Origin.Start)
+			if string(definition.Meaning) == selector || origin == selector {
+				matches[definition.Meaning] = true
+			}
+		}
+		if len(matches) != 1 {
+			return nil, fmt.Errorf("adjective selector %q matches %d canonical descriptor rules; use a unique meaning ID or declaration source:byte-offset from inspect", selector, len(matches))
+		}
+		for meaning := range matches {
+			if !seen[meaning] {
+				selected = append(selected, meaning)
+				seen[meaning] = true
+			}
+		}
+	}
+	return selected, nil
+}
+
+func selectedSourceVerification(report contracts.Report, assurance string, selected []contracts.MeaningKey) (*contracts.SourceVerificationResult, error) {
+	result := &contracts.SourceVerificationResult{Assurance: assurance, Scope: "source_elaboration", Selected: append([]contracts.MeaningKey(nil), selected...), Status: contracts.Established}
+	if len(selected) == 0 {
+		return nil, fmt.Errorf("source verification requires an explicit nonempty adjective selection")
+	}
+	setStatus := func(status contracts.Status) {
+		if status == contracts.Contradicted || result.Status == contracts.Established && status != contracts.Established {
+			result.Status = status
+		}
+	}
+	for _, meaning := range selected {
+		found := false
+		for _, certificate := range report.SourceCertificates {
+			if certificate.Meaning != meaning {
+				continue
+			}
+			if found {
+				return nil, fmt.Errorf("ambiguous compiler-derived source certificates for %s", meaning)
+			}
+			found = true
+			result.Obligations = append(result.Obligations, certificate.LogicalObligations...)
+			setStatus(certificate.LogicalStatus)
+		}
+		if !found {
+			setStatus(contracts.Unresolved)
+			id := contracts.StableID("missing-source-certificate", meaning)
+			result.Obligations = append(result.Obligations, contracts.Obligation{ID: id, Claim: contracts.Claim{ID: id, Predicate: contracts.Predicate{Kind: "source_projection", Subject: string(meaning)}, Scope: "source_elaboration", Phase: contracts.Elaboration}, Status: contracts.Unresolved, Reason: "selected declaration has no compiler-derived source certificate"})
+		}
+	}
+	if assurance != "symbolic" {
+		result.Scope = "whole_dictionary"
+		result.Obligations = append(result.Obligations, report.Obligations...)
+		for _, certificate := range report.Certificates {
+			setStatus(certificate.Status)
+			result.Obligations = append(result.Obligations, certificate.Obligations...)
+		}
+		for _, certificate := range report.SourceCertificates {
+			setStatus(certificate.LogicalStatus)
+			result.Obligations = append(result.Obligations, certificate.LogicalObligations...)
+			result.Obligations = append(result.Obligations, certificate.LoweringObligations...)
+		}
+	}
+	var obligations []contracts.Obligation
+	seen := make(map[string]bool)
+	for _, obligation := range result.Obligations {
+		setStatus(obligation.Status)
+		fingerprint := contracts.StableID("verification-obligation", obligation)
+		if !seen[fingerprint] {
+			obligations = append(obligations, obligation)
+			seen[fingerprint] = true
+		}
+	}
+	result.Obligations = obligations
+	return result, nil
+}
+
+func relevantSourceExplanations(report contracts.Report, bindings []contracts.ResolvedBinding) ([]contracts.SourceAdjectiveCertificate, []contracts.SourceAdjectiveInstantiation) {
+	meanings := make(map[contracts.MeaningKey]bool)
+	for _, binding := range bindings {
+		meanings[binding.Meaning] = true
+		exactRule := false
+		for _, certificate := range report.SourceCertificates {
+			exactRule = exactRule || certificate.Meaning == binding.Meaning
+		}
+		if exactRule {
+			continue
+		}
+		for _, definition := range report.Definitions {
+			if definition.Descriptor && definition.Definition == binding.Definition {
+				meanings[definition.Meaning] = true
+			}
+		}
+	}
+	var certificates []contracts.SourceAdjectiveCertificate
+	for _, certificate := range report.SourceCertificates {
+		if meanings[certificate.Meaning] {
+			certificates = append(certificates, certificate)
+		}
+	}
+	var instances []contracts.SourceAdjectiveInstantiation
+	for _, instance := range report.SourceInstantiations {
+		if !meanings[instance.Meaning] {
+			continue
+		}
+		for _, binding := range bindings {
+			actual := instance.Target
+			actual.Phase = binding.Target.Phase
+			if binding.Target.Unknown || binding.Target.Root == "" || contracts.TargetRelation(actual, binding.Target) == contracts.Established {
+				instances = append(instances, instance)
+				break
+			}
+		}
+	}
+	return certificates, instances
 }
 
 func sameContractPath(left, right string) bool {
@@ -404,6 +599,7 @@ func prepareContractReport(command contractsCommand, analysis *Lyger.ContractAna
 	report.Definitions = analysis.Bindings.Definitions
 	report.Lifecycle = analysis.Lifecycle
 	report.Declarations = metadata.Native
+	report.SourceDeclarations = metadata.SourceTransformers
 	// Collect backend inventories separately until all frontend composition is
 	// complete; OrchestratorUnit and RuntimeLibrary can select late helpers.
 	report.Lowering = contracts.LoweringInventory{Fingerprints: make(map[string]string)}
@@ -523,6 +719,20 @@ func prepareContractReport(command contractsCommand, analysis *Lyger.ContractAna
 		return report, err
 	}
 	report.Summary = analysis.Summary
+	report.SourceCertificates = analysis.SourceCertificates
+	report.SourceInstantiations = analysis.SourceInstantiations
+	for _, instance := range report.SourceInstantiations {
+		report.Obligations = append(report.Obligations, instance.Obligations...)
+		report.Obligations = append(report.Obligations, instance.LoweringObligations...)
+	}
+	for _, certificate := range report.SourceCertificates {
+		for _, declaration := range metadata.SourceTransformers {
+			if declaration.Meaning == certificate.Meaning {
+				report.Obligations = append(report.Obligations, certificate.LogicalObligations...)
+				break
+			}
+		}
+	}
 	known := make(map[contracts.MeaningKey]bool)
 	for _, binding := range report.Bindings {
 		known[binding.Meaning] = true
@@ -593,6 +803,31 @@ func prepareContractReport(command contractsCommand, analysis *Lyger.ContractAna
 func writeContractText(output io.Writer, report contracts.Report) error {
 	if _, err := fmt.Fprintf(output, "L Contracts %s — %s\nResolution: %s\nScope: %s (%s), %s\nCoverage: %s; native transitive closure: %s\n", report.SchemaVersion, report.Entry, report.ResolutionPolicy, report.Scope.Boundary, report.Scope.Platform, report.Scope.Target, report.Summary.Coverage, report.Lowering.TransitiveCoverage); err != nil {
 		return err
+	}
+	if verification := report.SourceVerification; verification != nil {
+		if _, err := fmt.Fprintf(output, "Source verification: %s assurance, %s scope, %s\n", verification.Assurance, verification.Scope, verification.Status); err != nil {
+			return err
+		}
+		for _, meaning := range verification.Selected {
+			if _, err := fmt.Fprintf(output, "  selected adjective: %s\n", meaning); err != nil {
+				return err
+			}
+		}
+		if verification.Assurance == "symbolic" {
+			if _, err := fmt.Fprintln(output, "Only selected source elaboration obligations determine this result. Native and runtime implementation assurance is reported separately below."); err != nil {
+				return err
+			}
+		}
+	}
+	for _, certificate := range report.SourceCertificates {
+		if _, err := fmt.Fprintf(output, "Source adjective %s: %s (%s, %s), target=%s nominal=%s\n", certificate.Meaning, certificate.LogicalStatus, certificate.Scope, certificate.Mode, certificate.Target.String(), certificate.TargetNominal); err != nil {
+			return err
+		}
+	}
+	for _, instance := range report.SourceInstantiations {
+		if _, err := fmt.Fprintf(output, "Source adjective instance %s: %s target=%s\n", instance.Meaning, instance.Status, instance.Target.String()); err != nil {
+			return err
+		}
 	}
 	for _, profile := range report.Profiles {
 		if _, err := fmt.Fprintf(output, "%s: %s\n", profile.Profile.Name, profile.Status); err != nil {

@@ -73,31 +73,35 @@ func (record ExecutionRecord) Validate() error {
 }
 
 type Report struct {
-	SchemaVersion       string                 `json:"schema_version"`
-	Kind                string                 `json:"kind"`
-	Producer            string                 `json:"producer"`
-	Entry               string                 `json:"entry"`
-	Revision            string                 `json:"revision,omitempty"`
-	ResolutionPolicy    string                 `json:"resolution_policy"`
-	Inputs              map[string]string      `json:"inputs"`
-	Bindings            []ResolvedBinding      `json:"bindings"`
-	ReferenceSelections []ReferenceSelection   `json:"reference_selections,omitempty"`
-	Definitions         []DefinitionRecord     `json:"definitions,omitempty"`
-	Targets             []TargetRef            `json:"targets"`
-	Declarations        []DeclaredContract     `json:"declarations,omitempty"`
-	Summary             DerivedSummary         `json:"summary"`
-	Lifecycle           []AppProtocolState     `json:"lifecycle,omitempty"`
-	Lowering            LoweringInventory      `json:"lowering"`
-	Obligations         []Obligation           `json:"obligations"`
-	Profiles            []ProfileResult        `json:"profiles,omitempty"`
-	Evidence            EvidenceGraph          `json:"evidence"`
-	NativeWitnesses     []NativeWitness        `json:"native_witnesses,omitempty"`
-	TrustPolicy         *TrustPolicy           `json:"trust_policy,omitempty"`
-	Assumptions         []string               `json:"assumptions,omitempty"`
-	Executions          []ExecutionRecord      `json:"executions,omitempty"`
-	Scope               ReportScope            `json:"scope"`
-	Configuration       *ConfigurationResult   `json:"configuration,omitempty"`
-	Certificates        []AdjectiveCertificate `json:"certificates,omitempty"`
+	SchemaVersion        string                         `json:"schema_version"`
+	Kind                 string                         `json:"kind"`
+	Producer             string                         `json:"producer"`
+	Entry                string                         `json:"entry"`
+	Revision             string                         `json:"revision,omitempty"`
+	ResolutionPolicy     string                         `json:"resolution_policy"`
+	Inputs               map[string]string              `json:"inputs"`
+	Bindings             []ResolvedBinding              `json:"bindings"`
+	ReferenceSelections  []ReferenceSelection           `json:"reference_selections,omitempty"`
+	Definitions          []DefinitionRecord             `json:"definitions,omitempty"`
+	Targets              []TargetRef                    `json:"targets"`
+	Declarations         []DeclaredContract             `json:"declarations,omitempty"`
+	Summary              DerivedSummary                 `json:"summary"`
+	Lifecycle            []AppProtocolState             `json:"lifecycle,omitempty"`
+	Lowering             LoweringInventory              `json:"lowering"`
+	Obligations          []Obligation                   `json:"obligations"`
+	Profiles             []ProfileResult                `json:"profiles,omitempty"`
+	Evidence             EvidenceGraph                  `json:"evidence"`
+	NativeWitnesses      []NativeWitness                `json:"native_witnesses,omitempty"`
+	TrustPolicy          *TrustPolicy                   `json:"trust_policy,omitempty"`
+	Assumptions          []string                       `json:"assumptions,omitempty"`
+	Executions           []ExecutionRecord              `json:"executions,omitempty"`
+	Scope                ReportScope                    `json:"scope"`
+	Configuration        *ConfigurationResult           `json:"configuration,omitempty"`
+	Certificates         []AdjectiveCertificate         `json:"certificates,omitempty"`
+	SourceCertificates   []SourceAdjectiveCertificate   `json:"source_certificates,omitempty"`
+	SourceDeclarations   []SourceTransformerDeclaration `json:"source_declarations,omitempty"`
+	SourceInstantiations []SourceAdjectiveInstantiation `json:"source_instantiations,omitempty"`
+	SourceVerification   *SourceVerificationResult      `json:"source_verification,omitempty"`
 }
 
 func NewReport(entry string) Report {
@@ -166,6 +170,67 @@ func (report Report) Validate() error {
 	}
 	obligations := append([]Obligation(nil), report.Obligations...)
 	obligations = append(obligations, report.Summary.Obligations...)
+	sourceDeclarations := make(map[MeaningKey]SourceTransformerDeclaration)
+	for _, declaration := range report.SourceDeclarations {
+		if declaration.Meaning == "" || declaration.Version == "" || declaration.TargetNominal == "" {
+			return fmt.Errorf("source declaration lacks canonical identity")
+		}
+		if _, exists := sourceDeclarations[declaration.Meaning]; exists {
+			return fmt.Errorf("duplicate source declaration %s", declaration.Meaning)
+		}
+		sourceDeclarations[declaration.Meaning] = declaration
+	}
+	for _, certificate := range report.SourceCertificates {
+		if declaration, exists := sourceDeclarations[certificate.Meaning]; exists && StableID("source-declaration", declaration) != certificate.DeclarationFingerprint {
+			return fmt.Errorf("source certificate declaration fingerprint is stale")
+		}
+		if certificate.Meaning == "" || certificate.Scope != "source_elaboration" || certificate.Version != SourceProjectionVersion || certificate.ProjectionFingerprint == "" || certificate.DeclarationFingerprint == "" {
+			return fmt.Errorf("source certificate lacks canonical provenance or explicit elaboration scope")
+		}
+		if certificate.Mode != "symbolic" && certificate.Mode != "instantiation_only" || certificate.LogicalStatus == Established && certificate.Mode != "symbolic" {
+			return fmt.Errorf("source certificate has unsupported mode or claims an instantiation-only symbolic success")
+		}
+		if certificate.LogicalStatus == Established && (len(certificate.LogicalObligations) == 0 || !AllEstablished(certificate.LogicalObligations)) {
+			return fmt.Errorf("source certificate hides unresolved logical obligations")
+		}
+		if certificate.LogicalStatus == Established && (certificate.Target.Unknown || certificate.Target.Root == "" || certificate.Target.Phase != Elaboration || certificate.TargetNominal == "" || certificate.Environment == "") {
+			return fmt.Errorf("source certificate success lacks an exact nominal elaboration target and binding environment")
+		}
+		obligations = append(obligations, certificate.LogicalObligations...)
+		obligations = append(obligations, certificate.LoweringObligations...)
+	}
+	for _, instance := range report.SourceInstantiations {
+		if instance.Status == Established && (len(instance.Obligations) == 0 || !AllEstablished(instance.Obligations)) {
+			return fmt.Errorf("source instantiation hides unresolved obligations")
+		}
+		obligations = append(obligations, instance.Obligations...)
+		obligations = append(obligations, instance.LoweringObligations...)
+	}
+	if verification := report.SourceVerification; verification != nil {
+		if verification.Assurance != "symbolic" && verification.Assurance != "implementation" || verification.Assurance == "symbolic" && verification.Scope != "source_elaboration" || verification.Assurance == "implementation" && verification.Scope != "whole_dictionary" {
+			return fmt.Errorf("unsupported source verification assurance or scope")
+		}
+		if verification.Status == Established && (len(verification.Selected) == 0 || len(verification.Obligations) == 0 || !AllEstablished(verification.Obligations)) {
+			return fmt.Errorf("source verification lacks selected established obligations")
+		}
+		if verification.Status == Established && verification.Assurance == "symbolic" {
+			for _, meaning := range verification.Selected {
+				found := false
+				for _, certificate := range report.SourceCertificates {
+					found = found || certificate.Meaning == meaning && certificate.LogicalStatus == Established
+				}
+				if !found {
+					return fmt.Errorf("symbolic verification names a missing or unestablished source certificate %s", meaning)
+				}
+			}
+		}
+		if verification.Status == Established && verification.Assurance == "implementation" {
+			if err := report.validateSourceImplementationAssurance(obligations); err != nil {
+				return err
+			}
+		}
+		obligations = append(obligations, verification.Obligations...)
+	}
 	for _, result := range report.Profiles {
 		if len(result.Obligations) == 0 {
 			return fmt.Errorf("profile result %s has no checked obligations", result.Profile.Name)
@@ -183,4 +248,53 @@ func (report Report) Validate() error {
 		}
 	}
 	return nil
+}
+
+func (report Report) validateSourceImplementationAssurance(obligations []Obligation) error {
+	if !AllEstablished(obligations) || len(report.Summary.Unknowns) != 0 || len(report.Lowering.Unknowns) != 0 || !sourceCompleteCoverage(report.Summary.Coverage) || !sourceCompleteCoverage(report.Lowering.BoundaryCoverage) || !sourceCompleteCoverage(report.Lowering.TransitiveCoverage) {
+		return fmt.Errorf("whole-dictionary implementation assurance hides unresolved analysis or native closure")
+	}
+	for _, boundary := range append(append([]NativeBoundary(nil), report.Summary.NativeBoundaries...), report.Lowering.Native...) {
+		if boundary.Status != Established {
+			return fmt.Errorf("whole-dictionary implementation assurance hides native boundary %s", boundary.ID)
+		}
+	}
+	for _, path := range report.Summary.Paths {
+		if len(path.Unknowns) != 0 || !AllEstablished(path.Obligations) {
+			return fmt.Errorf("whole-dictionary implementation assurance hides an unresolved execution path")
+		}
+		for _, boundary := range path.NativeBoundaries {
+			if boundary.Status != Established {
+				return fmt.Errorf("whole-dictionary implementation assurance hides path native boundary %s", boundary.ID)
+			}
+		}
+	}
+	for _, certificate := range report.SourceCertificates {
+		if certificate.LogicalStatus != Established {
+			return fmt.Errorf("whole-dictionary implementation assurance hides unresolved source certificate %s", certificate.Meaning)
+		}
+	}
+	for _, instance := range report.SourceInstantiations {
+		if instance.Status != Established {
+			return fmt.Errorf("whole-dictionary implementation assurance hides unresolved source instantiation %s", instance.Meaning)
+		}
+	}
+	for _, certificate := range report.Certificates {
+		if certificate.Status != Established || !AllEstablished(certificate.Obligations) {
+			return fmt.Errorf("whole-dictionary implementation assurance hides unresolved adjective certificate %s", certificate.Meaning)
+		}
+	}
+	for _, profile := range report.Profiles {
+		if profile.Status != Established || len(profile.Obligations) == 0 || !AllEstablished(profile.Obligations) {
+			return fmt.Errorf("whole-dictionary implementation assurance hides unresolved profile %s", profile.Profile.Name)
+		}
+	}
+	if report.Configuration != nil && !AllEstablished(report.Configuration.Obligations) {
+		return fmt.Errorf("whole-dictionary implementation assurance hides unresolved configuration")
+	}
+	return nil
+}
+
+func sourceCompleteCoverage(coverage Coverage) bool {
+	return coverage == Known || coverage == NotApplicable
 }

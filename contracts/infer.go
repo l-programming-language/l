@@ -525,6 +525,7 @@ func (a *inference) applyEvent(p *PathSummary, node Node) {
 		p.Effects = append(p.Effects, effect)
 		if effect.Kind == "write" || effect.Kind == "replace" || effect.Kind == "release" {
 			a.invalidate(p, effect.Resource)
+			a.invalidateStructural(p, effect.Target, string(effect.Kind))
 		}
 		if effect.Kind == "suspend" {
 			for _, owned := range p.Owned {
@@ -565,10 +566,21 @@ func (a *inference) invalidate(p *PathSummary, resource ResourceRef) {
 	p.Facts = facts
 }
 
+func (a *inference) invalidateStructural(p *PathSummary, target TargetRef, kind string) {
+	var facts []Predicate
+	for _, fact := range p.Facts {
+		if !structuralFactAffected(fact, target, kind) {
+			facts = append(facts, fact)
+		}
+	}
+	p.Facts = facts
+}
+
 func (a *inference) unknown(p *PathSummary, node Node, code, message string) {
 	p.Unknowns = append(p.Unknowns, UnknownReason{Code: code, Message: message, Boundary: node.Native, Origin: node.Origin, Phase: node.Phase, Components: []string{"effects", "outcomes", "ownership", "costs"}})
 	p.Resources = SequenceResources(p.Resources, UnknownResourceCost(message))
 	a.invalidate(p, ResourceRef{Unknown: true})
+	a.invalidateStructural(p, TargetRef{Unknown: true}, "unknown")
 	for _, owned := range p.Owned {
 		if owned.State == "owned" && (owned.Mode == "exclusive" || owned.Mode == "guard") {
 			p.Obligations = append(p.Obligations, Obligation{ID: StableID("unknown-interference", struct {
@@ -715,6 +727,7 @@ func (a *inference) applySummary(p PathSummary, summary DerivedSummary, sub Subs
 			for _, component := range unknown.Components {
 				if component == "effects" || component == "ownership" {
 					a.invalidate(&path, ResourceRef{Unknown: true})
+					a.invalidateStructural(&path, TargetRef{Unknown: true}, "unknown")
 				}
 			}
 		}
@@ -727,6 +740,7 @@ func (a *inference) applySummary(p PathSummary, summary DerivedSummary, sub Subs
 			path.Effects = append(path.Effects, effect)
 			if effect.Kind == "write" || effect.Kind == "replace" || effect.Kind == "release" {
 				a.invalidate(&path, effect.Resource)
+				a.invalidateStructural(&path, effect.Target, string(effect.Kind))
 			}
 		}
 		for _, fact := range tail.Facts {
@@ -760,6 +774,12 @@ func rebaseResource(resource ResourceRef, sub Substitutions) ResourceRef {
 func rebaseTarget(target TargetRef, sub Substitutions) TargetRef {
 	if mapped, ok := sub.Targets[target.Root]; ok {
 		mapped.Path = append(append([]string(nil), mapped.Path...), target.Path...)
+		// Substituting the enclosing attachment does not turn a child role into
+		// that enclosing type. The child's canonical nominal remains its own.
+		if len(target.Path) != 0 {
+			mapped.Type, mapped.Nominal = target.Type, target.Nominal
+		}
+		mapped.Unknown = mapped.Unknown || target.Unknown
 		return mapped
 	}
 	return target

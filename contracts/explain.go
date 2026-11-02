@@ -50,6 +50,22 @@ func ExplainReport(report Report) []Explanation {
 		obligations = append(obligations, certificate.Obligations...)
 		writes = append(writes, FootprintsFromEffects(certificate.Summary.Effects)...)
 	}
+	for _, certificate := range report.SourceCertificates {
+		result = append(result, Explanation{ID: certificate.ProjectionFingerprint, Kind: "source_logical_certificate", Status: certificate.LogicalStatus, Target: certificate.Target, Meaning: certificate.Meaning, Reason: "source elaboration " + certificate.Mode + " theorem; native implementation assurance remains separate", Dependencies: append([]string{certificate.DeclarationFingerprint, string(certificate.Environment)}, certificate.Assumptions...)})
+		obligations = append(obligations, certificate.LogicalObligations...)
+		obligations = append(obligations, certificate.LoweringObligations...)
+		writes = append(writes, FootprintsFromEffects(certificate.Summary.Effects)...)
+	}
+	for _, declaration := range report.SourceDeclarations {
+		for _, requirement := range declaration.Requires {
+			result = append(result, Explanation{ID: StableID("source-premise", requirement), Kind: "source_assumption", Status: Unresolved, Target: requirement.Target, Meaning: declaration.Meaning, Reason: "conditional source premise; must be checked against each concrete before-rule target", Requirement: requirement, Origins: []Origin{declaration.Origin}})
+		}
+	}
+	for _, instance := range report.SourceInstantiations {
+		result = append(result, Explanation{ID: instance.CertificateFingerprint, Kind: "source_instantiation", Status: instance.Status, Target: instance.Target, Meaning: instance.Meaning, Reason: "concrete before-rule requirements and structural writes checked; native assurance remains separate"})
+		obligations = append(obligations, instance.Obligations...)
+		obligations = append(obligations, instance.LoweringObligations...)
+	}
 	seen := make(map[string]bool)
 	for _, obligation := range obligations {
 		key := StableID("explanation-obligation", obligation)
@@ -108,6 +124,9 @@ func FormatExplanations(explanations []Explanation) string {
 		}
 		for _, origin := range explanation.Origins {
 			fmt.Fprintf(&output, "  origin=%s:%d-%d %s\n", origin.Source, origin.Start, origin.End, origin.Label)
+		}
+		for _, dependency := range explanation.Dependencies {
+			fmt.Fprintf(&output, "  dependency=%s\n", dependency)
 		}
 	}
 	return output.String()

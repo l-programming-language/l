@@ -125,5 +125,11 @@ func (analysis *ContractAnalysis) ReinferContracts(options ContractAnalysisOptio
 	if analysis == nil {
 		return fmt.Errorf("contract analysis is nil")
 	}
-	return inferContractAnalysis(analysis, options)
+	if err := inferContractAnalysis(analysis, options); err != nil {
+		return err
+	}
+	if options.SourceTransformers != nil {
+		return analysis.verifySourceContracts(options)
+	}
+	return nil
 }
