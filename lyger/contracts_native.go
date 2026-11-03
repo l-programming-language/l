@@ -228,7 +228,7 @@ func (r *contractRecorder) contractRepresentationDestruction(slot *orchestration
 	typ := r.contractRuntimeType(slot.RuntimeType)
 	meaning := contracts.MeaningKey(contracts.StableID("representation-destruction", typ))
 	resources := map[string]contracts.ResourceRef{"Value": contractStorageResource(target)}
-	use := contracts.NativeUse{Meaning: meaning, Name: "representation-destruction:" + slot.Type.String(), Target: target, Origin: origin, Phase: contracts.Destruction,
+	use := contracts.NativeUse{Meaning: meaning, Name: "representation-destruction:" + slot.Type.String(), Target: target, Origin: origin, Phase: contracts.Destruction, Boundary: "native_body",
 		Signature: &contracts.NativeSignature{Inputs: []string{slot.Type.String()}, Outputs: []string{}, InputTypes: []contracts.NativeType{typ}},
 		Implementation: contracts.StableID("selected-representation-implementation", struct {
 			Type   contracts.NativeType

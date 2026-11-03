@@ -92,7 +92,7 @@ func parseContractsCommand(args []string) (contractsCommand, error) {
 		return nil
 	})
 	flags.Func("profile", "required profile", func(value string) error {
-		if !contracts.SupportedProfile(value) && value != "OwnedLifecycle" && value != "PreservesOnFailure" {
+		if _, supported := contracts.LookupProfile(value); !supported {
 			return fmt.Errorf("unsupported profile %q", value)
 		}
 		command.Profiles = append(command.Profiles, value)
@@ -124,7 +124,8 @@ func parseContractsCommand(args []string) (contractsCommand, error) {
 		return command, fmt.Errorf("capture requires --output and cannot consume environment evidence, approve trust or enforce profiles")
 	}
 	for _, profile := range command.Profiles {
-		if profile == "PreservesOnFailure" {
+		descriptor, _ := contracts.LookupProfile(profile)
+		if descriptor.RequiresFootprint {
 			return command, fmt.Errorf("PreservesOnFailure requires --request-file with explicit footprint, observation and outcomes")
 		}
 	}
@@ -828,7 +829,7 @@ func prepareContractReport(command contractsCommand, analysis *Lyger.ContractAna
 	plan.Residuals = append(append([]contracts.UnknownReason(nil), plan.Residuals...), backendInventory.Unknowns...)
 	analysis.Plan, analysis.Lowering = plan, report.Lowering
 	report.NativeUses, report.Scopes = analysis.NativeUses, analysis.Scopes
-	inferenceOptions, err := prepareNativeApplications(&report, metadata)
+	inferenceOptions, nativeEvaluations, err := prepareNativeApplications(&report, metadata)
 	if err != nil {
 		return report, contractMetadataError{err}
 	}
@@ -888,35 +889,12 @@ func prepareContractReport(command contractsCommand, analysis *Lyger.ContractAna
 	}
 	report.Obligations = append(report.Obligations, report.Summary.Obligations...)
 	for _, name := range command.Profiles {
-		profile := contracts.Profile{Name: name, Version: contracts.SchemaVersion, Scope: "whole-region"}
-		var obligations []contracts.Obligation
-		switch name {
-		case "OwnedLifecycle":
-			obligations = analysis.CheckLifecycleProfile(profile)
-		case "PreservesOnFailure":
-			// No source syntax or CLI convention supplies an observable footprint.
-			// Use the same checker as typed clients so that the missing premise is
-			// diagnosed precisely rather than treating all errors as transactional.
-			obligations = contracts.CheckFailureSummaryProfile(report.Summary, profile, contracts.FailureFootprint{}, nil)
-		default:
-			obligations = contracts.CheckProfile(report.Summary, profile)
-		}
-		status := contracts.Established
-		for _, obligation := range obligations {
-			if obligation.Status == contracts.Contradicted {
-				status = contracts.Contradicted
-				break
-			}
-			if obligation.Status != contracts.Established {
-				status = contracts.Unresolved
-			}
-		}
-		report.Profiles = append(report.Profiles, contracts.ProfileResult{Profile: profile, Status: status, Obligations: obligations})
+		profile := contracts.Profile{Name: name, Version: contracts.SchemaVersion, Scope: "whole_region"}
+		obligations := checkContractProfile(analysis, report.Summary, profile, nil)
+		report.Profiles = append(report.Profiles, contracts.ProfileResult{Profile: profile, Status: resultStatus(obligations), Obligations: obligations})
 		report.Obligations = append(report.Obligations, obligations...)
 	}
-	if err := applyContractTrust(&report, metadata); err != nil {
-		return report, err
-	}
+	appendNativeEvaluations(&report, nativeEvaluations, metadata.Trust)
 	if err := applyContractRequests(&report, analysis, metadata, inferenceOptions); err != nil {
 		return report, contractMetadataError{err}
 	}

@@ -264,7 +264,7 @@ func TestContractsAnalysisIncludesLateHelpers(t *testing.T) {
 		t.Fatal("source-only orchestration preparation missing")
 	}
 	for _, name := range []string{"NoHeapAllocation", "NoBlocking"} {
-		obligations := contracts.CheckProfile(analysis.Summary, contracts.Profile{Name: name, Scope: "whole-region"})
+		obligations := contracts.CheckProfile(analysis.Summary, contracts.Profile{Name: name, Scope: "whole_region"})
 		if contracts.AllEstablished(obligations) {
 			t.Fatal("unapproved native closure established " + name)
 		}

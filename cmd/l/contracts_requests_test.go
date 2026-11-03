@@ -91,7 +91,7 @@ func newScopedNativeFixtureAssets(t *testing.T, profile, relation, assets string
 			f.manifest.Declarations = append(f.manifest.Declarations, declaration)
 			seen[use.Meaning] = true
 		}
-		for _, claim := range contracts.NativeComponentClaims(use, declaration, f.environment) {
+		for _, claim := range evaluateNativeUse(use, declaration, f.environment, contracts.TrustPolicy{}, nil, contracts.Unresolved).Components {
 			witness := contracts.NativeWitness{ID: "test-only:" + claim.Claim.ID, ClaimFingerprint: contracts.ClaimFingerprint(claim.Claim), ContractFingerprint: claim.Current.Contract, ImplementationFingerprint: claim.Current.Implementation, TargetFingerprint: claim.Current.Target, Dependencies: claim.Current.Dependencies, Authority: "fixture-author", Rationale: "Explicit test-only native assumption, never production approval", TestOnly: true}
 			f.trust.Witnesses = append(f.trust.Witnesses, witness)
 			f.trust.Policy.ApprovedWitnesses = append(f.trust.Policy.ApprovedWitnesses, witness.ID)
@@ -323,7 +323,7 @@ func TestScopedNativeCLIMultiOperationInvocation(t *testing.T) {
 			declarations[use.Meaning] = declaration
 			manifest.Declarations = append(manifest.Declarations, declaration)
 		}
-		for _, component := range contracts.NativeComponentClaims(use, declaration, environment) {
+		for _, component := range evaluateNativeUse(use, declaration, environment, contracts.TrustPolicy{}, nil, contracts.Unresolved).Components {
 			witness := contracts.NativeWitness{ID: "test-only:" + component.Claim.ID, ClaimFingerprint: contracts.ClaimFingerprint(component.Claim), ContractFingerprint: component.Current.Contract, ImplementationFingerprint: component.Current.Implementation, TargetFingerprint: component.Current.Target, Dependencies: component.Current.Dependencies, Authority: "test-only", Rationale: "Synthetic individually approved invocation component; no production approval", TestOnly: true}
 			trust.Witnesses = append(trust.Witnesses, witness)
 			trust.Policy.ApprovedWitnesses = append(trust.Policy.ApprovedWitnesses, witness.ID)

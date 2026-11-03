@@ -10,7 +10,7 @@ import (
 )
 
 const SchemaVersion = "1.1"
-const AnalyzerVersion = "l-contracts-1.1/3"
+const AnalyzerVersion = "l-contracts-1.1/4"
 const TrackAPolicy = "l-existing-resolution/1"
 const ReferencePolicy = "unique-applicable/1"
 

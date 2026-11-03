@@ -2,14 +2,6 @@ package contracts
 
 import "fmt"
 
-func SupportedProfile(name string) bool {
-	switch name {
-	case "NoHeapAllocation", "NoBlocking", "NoExternalIO", "NoPanic":
-		return true
-	}
-	return false
-}
-
 // CheckProfile is enforcement over the closed, outcome-sensitive summary.
 // Possible effects block assurance but do not constitute proven counterexamples.
 func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
@@ -18,9 +10,10 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 		claim.Scope = "whole_region"
 	}
 	base := Obligation{ID: claim.ID, Claim: claim, Status: Established, Reason: "closed modeled behavior satisfies the requested profile"}
-	if !SupportedProfile(profile.Name) {
+	descriptor, supported := LookupProfile(profile.Name)
+	if !supported || descriptor.ForbiddenEffect == "" || !descriptor.SupportsScope(profile.Scope) {
 		base.Status = Unresolved
-		base.Reason = "unsupported profile " + profile.Name
+		base.Reason = "unsupported effect profile or scope: " + profile.Name + " / " + profile.Scope
 		return []Obligation{base}
 	}
 	if len(summary.Paths) == 0 {
@@ -53,7 +46,7 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 				selectFinding(&base, Unresolved, "body requirement is not established: "+obligation.Reason, obligation.Origin)
 			}
 		}
-		if profile.Name == "NoPanic" && path.Outcome == Panic {
+		if descriptor.ForbiddenEffect == "panic" && path.Outcome == Panic {
 			status := Unresolved
 			if path.Reachable {
 				status = Contradicted
@@ -64,8 +57,7 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 			if profile.Scope == "body_only" && (effect.Phase == Construction || effect.Phase == Destruction || effect.Phase == Cleanup) {
 				continue
 			}
-			forbidden := profile.Name == "NoHeapAllocation" && effect.Kind == "allocate" || profile.Name == "NoBlocking" && effect.Kind == "block" || profile.Name == "NoExternalIO" && effect.Kind == "io" || profile.Name == "NoPanic" && effect.Kind == "panic"
-			if !forbidden {
+			if effect.Kind != descriptor.ForbiddenEffect {
 				continue
 			}
 			status := Unresolved
@@ -84,7 +76,7 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 			}
 			relevant := len(unknown.Components) == 0
 			for _, component := range unknown.Components {
-				relevant = relevant || component == "outcomes" || component == "effects" && !unknownExcludesProfile(unknown, profile.Name)
+				relevant = relevant || component == "outcomes" || component == "effects" && !unknownExcludesEffect(unknown, descriptor.ForbiddenEffect)
 			}
 			if relevant {
 				selectFinding(&base, Unresolved, unknown.Message, unknown.Origin)
@@ -100,8 +92,7 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 	return []Obligation{base}
 }
 
-func unknownExcludesProfile(unknown UnknownReason, profile string) bool {
-	kind := map[string]EffectKind{"NoHeapAllocation": "allocate", "NoBlocking": "block", "NoExternalIO": "io", "NoPanic": "panic"}[profile]
+func unknownExcludesEffect(unknown UnknownReason, kind EffectKind) bool {
 	for _, excluded := range unknown.ExcludedEffects {
 		if excluded == kind {
 			return true

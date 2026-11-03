@@ -165,7 +165,7 @@ type AnalysisOptions struct {
 	Aliases             []ResourcePair
 	Disjoint            []ResourcePair
 	NativeSummaries     map[string]DerivedSummary
-	NativeApplications  map[string]ApprovedNativeApplication
+	NativeApplications  map[string]NativeEvaluation
 	NativeWitnesses     map[string]string
 	ApprovedAssumptions map[string]bool
 }
@@ -285,7 +285,7 @@ func inferPlan(plan Plan, options AnalysisOptions, scopeNode string) (DerivedSum
 		Alternatives, Widen, Rounds int
 		Aliases, Disjoint           []ResourcePair
 		Native                      map[string]DerivedSummary
-		NativeApplications          map[string]ApprovedNativeApplication
+		NativeApplications          map[string]NativeEvaluation
 		Witnesses                   map[string]string
 		Approved                    map[string]bool
 	}{plan, AnalyzerVersion, options.MaxAlternatives, options.WidenAfter, options.MaxSCCRounds, options.Aliases, options.Disjoint, options.NativeSummaries, options.NativeApplications, options.NativeWitnesses, options.ApprovedAssumptions})

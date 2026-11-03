@@ -62,11 +62,15 @@ type StateRelation struct {
 	Evidence    []string        `json:"evidence,omitempty"`
 }
 
-// ApprovedNativeApplication is populated only by the evidence checker. Entry
-// requirements must still be checked against the current incoming path.
-type ApprovedNativeApplication struct {
+// NativeEvaluation separates conditional native approvals from actual entry
+// applicability. Inference and reporting consume this same per-use result.
+type NativeEvaluation struct {
 	Use                NativeUse
 	Requirements       []Predicate
+	Applicability      Obligation
+	Entry              Claim
+	Components         []NativeComponent
+	Guarantees         []NativeComponent
 	Summary            DerivedSummary
 	Evidence           []string
 	ContextFingerprint string

@@ -5,9 +5,11 @@
     "cmd/l/build.go": "cb8fc1fb73efe6080f8531bda5987a5e3be0f6c498c3461d1cc9b393eab1a0a7",
     "cmd/l/cargo.go": "1a970fca9701660e6a17ee855e68a6b107b72ed019a7760da8e36b1d09e5d24b",
     "cmd/l/command.go": "fc6e07ba875c7c41e62aec111a2efe12220c5aa19199c061ed3352513d551761",
-    "cmd/l/contracts.go": "de5304a1900b5d258b895dc4551da400bd415d4aea171ccba27b3be16ed13759",
-    "cmd/l/contracts_requests.go": "12fcea7b7b94634ade374cb91e63046533209660f41153ea65c28aa409fb3532",
-    "cmd/l/native_environment.go": "c0d0f721ecec4263ea77a626bc5b2e30f33feb2463a621f7d6045d0838cbdc00"
+    "cmd/l/contracts.go": "8f8eeb0395c39520bb935333f32a136d1d9a6cdb16d75d6960a4911abbcd4b75",
+    "cmd/l/contracts_requests.go": "c533cabc6990b8ea4e4631b13ab4607a5af69b09490842e0cf12beb0c3d6c8b0",
+    "cmd/l/native_environment.go": "c0d0f721ecec4263ea77a626bc5b2e30f33feb2463a621f7d6045d0838cbdc00",
+    "contracts/profiles.go": "b96ec8e4309c3b954fcb29f1b02ee2c4e5a68c29b9eaa5a1ec2baa30b4e4e96b",
+    "contracts/requests.go": "e340b959ca32e629d3ac538a5b6d3e3fb272b3dd254e291a730f991d3856143f"
   },
   "entries": [
     {
@@ -219,11 +221,16 @@
       "doc": "docs/contracts.md#check",
       "sources": [
         "cmd/l/command.go",
-        "cmd/l/contracts.go"
+        "cmd/l/contracts.go",
+        "contracts/profiles.go",
+        "contracts/requests.go",
+        "cmd/l/contracts_requests.go"
       ],
       "witnesses": [
         "cmd/l/contracts_test.go",
-        "cmd/l/contracts_source_test.go"
+        "cmd/l/contracts_source_test.go",
+        "contracts/profiles_test.go",
+        "cmd/l/contracts_profiles_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "Requires --profile or --request-file; checks whole entry by default or exact published scopes in explicit requests. Contradicted or unresolved controlling obligations return 1 without semantic fallback."
@@ -399,11 +406,15 @@
       "doc": "docs/contracts.md#check",
       "sources": [
         "cmd/l/command.go",
-        "cmd/l/contracts.go"
+        "cmd/l/contracts.go",
+        "contracts/profiles.go",
+        "contracts/requests.go"
       ],
       "witnesses": [
         "cmd/l/contracts_test.go",
-        "cmd/l/contracts_source_test.go"
+        "cmd/l/contracts_source_test.go",
+        "contracts/profiles_test.go",
+        "cmd/l/contracts_profiles_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "Repeatable supported whole-entry profiles; check requires these or --request-file. PreservesOnFailure requires an explicit request footprint. Whole-entry profiles reject in symbolic assurance mode."
@@ -566,10 +577,14 @@
       "sources": [
         "cmd/l/command.go",
         "cmd/l/contracts.go",
-        "cmd/l/contracts_requests.go"
+        "cmd/l/contracts_requests.go",
+        "contracts/profiles.go",
+        "contracts/requests.go"
       ],
       "witnesses": [
-        "cmd/l/contracts_requests_test.go"
+        "cmd/l/contracts_requests_test.go",
+        "contracts/profiles_test.go",
+        "cmd/l/contracts_profiles_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "Check-only versioned requests select whole_entry or exact published scopes; PreservesOnFailure requires a supported observation, nonempty exact resource footprint and failure outcomes. Every controlling obligation remains in the report."

@@ -179,7 +179,8 @@ func (report CleanupReport) Explanation() string {
 // runtime resource footprint. Structural target paths are not resource paths.
 func CheckFailureSummaryProfile(summary DerivedSummary, profile Profile, footprint FailureFootprint, disjoint []FailureResourcePair) []Obligation {
 	claim := Claim{ID: StableID("failure-profile", footprint), Predicate: Predicate{Kind: "preserves_failure", Subject: StableID("footprint", footprint)}, Target: profile.Target, Scope: profile.Scope, Outcomes: footprint.Outcomes, Assumptions: summary.Assumptions}
-	if profile.Name != "PreservesOnFailure" || len(footprint.Locations) == 0 || len(footprint.Outcomes) == 0 || footprint.Observation == "" {
+	descriptor, supported := LookupProfile(profile.Name)
+	if !supported || !descriptor.RequiresFootprint || !descriptor.SupportsScope(profile.Scope) || len(footprint.Locations) == 0 || len(footprint.Outcomes) == 0 || footprint.Observation == "" {
 		return []Obligation{{ID: claim.ID, Claim: claim, Status: Unresolved, Reason: "PreservesOnFailure requires an explicit runtime resource footprint, observation boundary and failure outcomes"}}
 	}
 	var results []Obligation

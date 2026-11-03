@@ -8,8 +8,15 @@ import (
 	Lyger "github.com/l-programming-language/l/lyger"
 )
 
-func prepareNativeApplications(report *contracts.Report, metadata contractMetadata) (contracts.AnalysisOptions, error) {
-	options := contracts.AnalysisOptions{NativeApplications: make(map[string]contracts.ApprovedNativeApplication)}
+func prepareNativeApplications(report *contracts.Report, metadata contractMetadata) (contracts.AnalysisOptions, []contracts.NativeEvaluation, error) {
+	options := contracts.AnalysisOptions{NativeApplications: make(map[string]contracts.NativeEvaluation)}
+	if metadata.Trust.Kind != "" {
+		if err := metadata.Trust.Validate(); err != nil {
+			return options, nil, err
+		}
+		report.TrustPolicy = &metadata.Trust.Policy
+		report.NativeWitnesses = append([]contracts.NativeWitness(nil), metadata.Trust.Witnesses...)
+	}
 	environment := contracts.NativeEnvironment{}
 	applicability, reason := contracts.Unresolved, "native environment evidence is missing; no external tools were executed"
 	if metadata.Environment != nil {
@@ -18,29 +25,20 @@ func prepareNativeApplications(report *contracts.Report, metadata contractMetada
 		applicability, reason = contracts.EnvironmentApplicability(environment, report.Inputs, report.Lowering.Fingerprints)
 		configuration, message, err := validateNativeEnvironmentConfiguration(environment)
 		if err != nil {
-			return options, err
+			return options, nil, err
 		}
 		if configuration != contracts.Established {
 			applicability, reason = configuration, message
 		}
 	}
 	report.Scope.Exclusions = append(report.Scope.Exclusions, reason)
-	for _, use := range report.NativeUses {
-		for _, declaration := range metadata.Native {
-			if use.Meaning != declaration.Meaning {
-				continue
-			}
-			application, components := contracts.ApproveNativeApplication(use, declaration, environment, metadata.Trust.Policy, metadata.Trust.Witnesses, applicability)
-			options.NativeApplications[use.ID] = application
-			report.NativeComponents = append(report.NativeComponents, components...)
-			for _, component := range components {
-				report.Evidence.Claims = append(report.Evidence.Claims, component.Claim)
-				report.Evidence.Nodes = append(report.Evidence.Nodes, contracts.EvidenceNode{ID: component.Claim.ID, Claim: component.Claim.ID, Kind: "native_assumption", Witness: component.Witness, Fingerprints: component.Current, Origin: use.Origin})
-				report.Obligations = append(report.Obligations, contracts.Obligation{ID: component.Claim.ID, Claim: component.Claim, Status: component.Status, Reason: component.Reason, Evidence: []string{component.Claim.ID}, Dependencies: []string{contracts.StableID("applicability", component.Current)}, Origin: use.Origin})
-			}
+	evaluations := contracts.EvaluateNativeUses(report.NativeUses, metadata.Native, environment, metadata.Trust.Policy, metadata.Trust.Witnesses, applicability, report.Lowering.Steps)
+	for _, evaluation := range evaluations {
+		if evaluation.Use.ID != "" {
+			options.NativeApplications[evaluation.Use.ID] = evaluation
 		}
 	}
-	return options, nil
+	return options, evaluations, nil
 }
 
 func resultStatus(obligations []contracts.Obligation) contracts.Status {
@@ -103,15 +101,8 @@ func applyContractRequests(report *contracts.Report, analysis *Lyger.ContractAna
 			if err := validateRequestFootprint(*request.Footprint, result.Scope, report.Scopes); err != nil {
 				return err
 			}
-			result.Obligations = append(result.Obligations, contracts.CheckFailureSummaryProfile(result.Summary, profile, *request.Footprint, nil)...)
-		} else if profile.Name == "OwnedLifecycle" {
-			if result.Scope != nil {
-				return fmt.Errorf("OwnedLifecycle requires whole_entry; invocation lifecycle projection is unsupported")
-			}
-			result.Obligations = append(result.Obligations, analysis.CheckLifecycleProfile(profile)...)
-		} else {
-			result.Obligations = append(result.Obligations, contracts.CheckProfile(result.Summary, profile)...)
 		}
+		result.Obligations = append(result.Obligations, checkContractProfile(analysis, result.Summary, profile, request.Footprint)...)
 		result.Status = resultStatus(result.Obligations)
 		for _, obligation := range result.Obligations {
 			result.Required = append(result.Required, obligation.ID)
@@ -121,6 +112,20 @@ func applyContractRequests(report *contracts.Report, analysis *Lyger.ContractAna
 	}
 	sort.Strings(report.Assumptions)
 	return nil
+}
+
+func checkContractProfile(analysis *Lyger.ContractAnalysis, summary contracts.DerivedSummary, profile contracts.Profile, footprint *contracts.FailureFootprint) []contracts.Obligation {
+	descriptor, _ := contracts.LookupProfile(profile.Name)
+	if descriptor.WholeEntryOnly {
+		return analysis.CheckLifecycleProfile(profile)
+	}
+	if descriptor.RequiresFootprint {
+		if footprint == nil {
+			footprint = &contracts.FailureFootprint{}
+		}
+		return contracts.CheckFailureSummaryProfile(summary, profile, *footprint, nil)
+	}
+	return contracts.CheckProfile(summary, profile)
 }
 
 func validateRequestFootprint(footprint contracts.FailureFootprint, selected *contracts.AnalysisScope, all []contracts.AnalysisScope) error {

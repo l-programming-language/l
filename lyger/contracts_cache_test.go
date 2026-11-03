@@ -131,7 +131,7 @@ func TestContractsNativeApplicationsSessionWarmCold(t *testing.T) {
 	environment := contracts.SealNativeEnvironment(contracts.NativeEnvironment{SchemaVersion: contracts.SchemaVersion, Kind: "native_environment", Producer: contracts.AnalyzerVersion, Version: "1", Method: "test-only", Host: "test-only", Target: "test-only", Compiler: "test-only", PanicPolicy: "test-only", Runtime: "test-only", Allocator: "test-only", Inputs: map[string]string{"source": "v1"}})
 	policy := contracts.TrustPolicy{Version: contracts.SchemaVersion, ID: "test-only:cache-policy", Authorities: []string{"test-only:authority"}, AllowTestOnly: true}
 	var witnesses []contracts.NativeWitness
-	for _, component := range contracts.NativeComponentClaims(use, declaration, environment) {
+	for _, component := range evaluateNativeUse(use, declaration, environment, contracts.TrustPolicy{}, nil, contracts.Unresolved).Components {
 		witness := contracts.NativeWitness{ID: "test-only:" + component.Claim.ID, ClaimFingerprint: contracts.ClaimFingerprint(component.Claim), ContractFingerprint: component.Current.Contract, ImplementationFingerprint: component.Current.Implementation, TargetFingerprint: component.Current.Target, Dependencies: component.Current.Dependencies, Authority: policy.Authorities[0], Rationale: "Synthetic cache regression assumption; no production approval", TestOnly: true}
 		witnesses = append(witnesses, witness)
 		policy.ApprovedWitnesses = append(policy.ApprovedWitnesses, witness.ID)
@@ -152,8 +152,8 @@ func TestContractsNativeApplicationsSessionWarmCold(t *testing.T) {
 			case "budget":
 				inference.MaxAlternatives = 1
 			}
-			application, _ := contracts.ApproveNativeApplication(use, declaration, currentEnvironment, currentPolicy, currentWitnesses, contracts.Established)
-			inference.NativeApplications = map[string]contracts.ApprovedNativeApplication{use.ID: application}
+			application := evaluateNativeUse(use, declaration, currentEnvironment, currentPolicy, currentWitnesses, contracts.Established)
+			inference.NativeApplications = map[string]contracts.NativeEvaluation{use.ID: application}
 			options := ContractAnalysisOptions{Session: session, Inference: inference}
 			warm, err := service.AnalyzeContracts(source, "/project/native-cache.l", options)
 			if err != nil {
@@ -198,4 +198,8 @@ func TestContractsNativeApplicationsSessionWarmCold(t *testing.T) {
 	if stats.Logical.Hits == 0 || stats.Implementation.Hits == 0 || stats.Implementation.Misses < 5 {
 		t.Fatalf("cache boundaries were not exercised: %+v", stats)
 	}
+}
+
+func evaluateNativeUse(use contracts.NativeUse, declaration contracts.DeclaredContract, environment contracts.NativeEnvironment, policy contracts.TrustPolicy, witnesses []contracts.NativeWitness, applicability contracts.Status) contracts.NativeEvaluation {
+	return contracts.EvaluateNativeUses([]contracts.NativeUse{use}, []contracts.DeclaredContract{declaration}, environment, policy, witnesses, applicability, nil)[0]
 }
