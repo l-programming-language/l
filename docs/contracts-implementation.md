@@ -171,8 +171,8 @@ typed-only. Changes are local and uncommitted on the existing branch.
 - Host: macOS ARM64. Go 1.27.3 and Python 3.11.9 available. Default Cargo is
   1.94.1; required Rust 1.98.1 is installed. Cached lint binaries exist but this
   observation does not establish their integrity or successful execution.
-- The handoff validator ran successfully:
-  `python3 /Users/connorsanders/Downloads/L_Contracts_v1_1_Handoff/validate_handoff.py --strict-schema`.
+- The handoff validator ran successfully with `--strict-schema`; the exact local
+  command is retained in the [acceptance mapping](../contracts/acceptance-map.json).
   This establishes package/schema/matrix consistency only, not compiler behavior.
 - Eleven existing frontend tests, including their subtests, passed with:
 

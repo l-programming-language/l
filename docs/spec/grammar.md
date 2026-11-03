@@ -4,7 +4,7 @@ The exact English grammar lives in `lexicon/eng/grammar.json`; the exact configu
 
 ## Inventory and authority
 
-The inspected English grammar has 96 rules and 266 named cases. Its categories are three NOUN rules, ten PHRASE rules, sixty-nine CLAUSE rules, one CONDITION rule, four CONDITIONAL rules, five PREDICATE rules, and four STATEMENT rules. The vocabulary has 72 entries across eight parts of speech. These counts describe the reviewed source snapshot; freshness checks must catch later changes.
+The inspected English grammar has 99 rules and 306 named cases. Its categories are three NOUN rules, thirteen PHRASE rules, sixty-nine CLAUSE rules, one CONDITION rule, four CONDITIONAL rules, five PREDICATE rules, and four STATEMENT rules. The vocabulary has 72 entries across eight parts of speech. These counts describe the reviewed source snapshot; freshness checks must catch later changes.
 
 The [complete rule and case inventory](../_generated/grammar.md) provides a stable entry for every configured recognizer, and the [vocabulary inventory](../_generated/vocabulary.md) retains each root, inflection, role, and handler description. These tables supplement the semantic explanations below.
 
@@ -65,11 +65,13 @@ The basic demo gives those grammatical roles a concrete meaning:
 
 ## Phrases
 
-The ten phrase families are generic, directive, declarative, locative, objective, inflective, associative, indicative, utilization, and dependency.
+The thirteen phrase families are generic, directive, declarative, locative, objective, inflective, associative, indicative, utilization, dependency, signature, arguments, and results.
 
 Declarative `as` relates a subject to a type, value, definition, or alias. Directive `for` introduces action composition. Utilization `to` connects a native-backed definition or imperative use. Associative `with` composes described child structures; `using` comes from source-defined inflection and supplies parameters. Dependency `from` selects a dictionary or explicit source provider in supported import forms.
 
 Locative `at` and inflective `in` participate in [collection updates and typed reads](collections-and-categories.md). A phrase's meaning follows its owning action, not the preposition alone.
+
+Signature phrases declare ordered Function inputs and outputs, argument phrases bind invocation operands, and result phrases name invocation outputs. These forms retain the [typed Function checks](applicational-types.md#functions-properties-and-operations) for counts, types, and assignment after invocation.
 
 ### Compose an action with `for`
 

@@ -117,7 +117,7 @@
       "source": "docs/cli/index.md",
       "route": "/docs/cli/",
       "title": "CLI overview",
-      "description": "Commands for building L programs and inspecting the compiler version.",
+      "description": "Commands for building L programs, inspecting contracts, and checking the compiler version.",
       "section": "CLI",
       "order": 0,
       "role": "explanatory",
@@ -171,6 +171,16 @@
       "description": "Resolve toolchain, compilation and program execution failures.",
       "section": "CLI",
       "order": 4,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/contracts.md",
+      "route": "/docs/cli/contracts/",
+      "title": "Contracts reference",
+      "description": "Inspect bindings, enforce contract profiles, and verify source adjectives with explicit assurance scopes.",
+      "section": "CLI",
+      "order": 5,
       "role": "explanatory",
       "generated": false
     },
@@ -600,6 +610,17 @@
       "order": 12,
       "role": "implementation",
       "generated": false
+    },
+    {
+      "source": "docs/contracts-implementation.md",
+      "route": "/docs/internals/contracts-implementation/",
+      "title": "Contracts implementation evidence",
+      "description": "Revision-specific contracts implementation progress, validation records, and supported scope.",
+      "section": "Internals",
+      "order": 13,
+      "role": "implementation",
+      "generated": false,
+      "sidebar": false
     },
     {
       "source": "logiceme/AML.md",

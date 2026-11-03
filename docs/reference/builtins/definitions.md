@@ -40,7 +40,7 @@ Main is a New Adjective describing Service, Object, or Function. Its ordered ref
 | Object | Generic `main` Object with a New Objective Main Function using a Process |
 | Service | Generic `main` Service with a New Main Object using a Process |
 
-These are ordinary source-defined descriptor rules. Aliases preserve their identity, and each construction selects the rule matching its target type.
+These are ordinary source-defined descriptor rules. Aliases preserve their identity, and each construction applies every rule matching its target in authored order. Main currently has one rule for each target above; repeated construction remains distinct.
 
 Main does not grant standalone Service execution. A standalone declaration is structural; standalone Service body effects and native process operations reject. Apps own executable identity through their construction.
 

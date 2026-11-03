@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "reviewPolicy": "Manually reviewed command/option surface from the current parser. A changed parser hash requires review of its behavior and documentation before this manifest is edited. references:generate never updates this approval hash. Aliases and flag-parser spelling variants are grouped with the corresponding option.",
   "sourceHashes": {
-    "cmd/l/command.go": "c6b04031528b51d3474fafa701093ecc5e7010359f4408eac767e1b88d94102f"
+    "cmd/l/command.go": "dcdbfd43fc8553ce00d0a8dbd4b7d0c2b55d1b1dff5b4088e42796a6f3c5d41e",
+    "cmd/l/contracts.go": "c29f91b7ad61db5b616fa9649f768b1652ea8f3843f6a4ab01254f2dc533587d"
   },
   "entries": [
     {
@@ -19,7 +20,7 @@
         "cmd/l/command_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "The only command; optional one source defaults to main.l."
+      "notes": "Build and publish; optional one source defaults to main.l."
     },
     {
       "id": "cli:--assets",
@@ -168,6 +169,330 @@
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "OS targeting follows v0.0.1; currently rejected."
+    },
+    {
+      "id": "cli:contracts",
+      "kind": "cli",
+      "name": "contracts",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#commands",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Source-only analysis command group; one required input after options. No Cargo build, publication, or App execution."
+    },
+    {
+      "id": "cli:contracts inspect",
+      "kind": "cli",
+      "name": "contracts inspect",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#inspect",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Inspection may succeed with unresolved obligations; it does not establish every reported property."
+    },
+    {
+      "id": "cli:contracts check",
+      "kind": "cli",
+      "name": "contracts check",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#check",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "At least one profile is required; contradicted or unresolved enforcement returns 1 without semantic fallback."
+    },
+    {
+      "id": "cli:contracts explain",
+      "kind": "cli",
+      "name": "contracts explain",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#explain",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "An occurrence or source-byte selector is required; no matching binding returns 2."
+    },
+    {
+      "id": "cli:contracts verify-dictionary",
+      "kind": "cli",
+      "name": "contracts verify-dictionary",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#verify-a-dictionary",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Defaults to implementation assurance for the entire dictionary; loading definitions is not certification."
+    },
+    {
+      "id": "cli:contracts --format",
+      "kind": "cli",
+      "name": "contracts --format",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#options-and-reports",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Select text or JSON display; default text. Other values reject."
+    },
+    {
+      "id": "cli:contracts --output",
+      "kind": "cli",
+      "name": "contracts --output",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#options-and-reports",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Write the display in its selected format to a file instead of stdout; cannot replace source input."
+    },
+    {
+      "id": "cli:contracts --report",
+      "kind": "cli",
+      "name": "contracts --report",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#options-and-reports",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Write an additional JSON report independently of display format; cannot replace source input."
+    },
+    {
+      "id": "cli:contracts --assets",
+      "kind": "cli",
+      "name": "contracts --assets",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#options-and-reports",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "One complete resource filesystem; missing optional metadata has no embedded fallback."
+    },
+    {
+      "id": "cli:contracts --language",
+      "kind": "cli",
+      "name": "contracts --language",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#options-and-reports",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Select source resources; default eng, explicit empty value rejects."
+    },
+    {
+      "id": "cli:contracts --manifest",
+      "kind": "cli",
+      "name": "contracts --manifest",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#options-and-reports",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Repeatable explicit manifests contribute records; conflicts reject rather than override by order."
+    },
+    {
+      "id": "cli:contracts --trust-policy",
+      "kind": "cli",
+      "name": "contracts --trust-policy",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#options-and-reports",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Explicit trust_policy document; declarations do not approve themselves and default native approval is empty."
+    },
+    {
+      "id": "cli:contracts --profile",
+      "kind": "cli",
+      "name": "contracts --profile",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#check",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Repeatable supported profile names; check requires at least one. Whole-entry profiles reject in symbolic assurance mode."
+    },
+    {
+      "id": "cli:contracts --binding",
+      "kind": "cli",
+      "name": "contracts --binding",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#explain",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Required for explain; matches exact occurrence identity or origin.source:origin.start."
+    },
+    {
+      "id": "cli:contracts --adjective",
+      "kind": "cli",
+      "name": "contracts --adjective",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#focused-symbolic-verification",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Repeatable, nonempty canonical rule meaning or declaration source-byte selector; dictionary-only and must resolve uniquely."
+    },
+    {
+      "id": "cli:contracts --assurance",
+      "kind": "cli",
+      "name": "contracts --assurance",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#focused-symbolic-verification",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Implementation is default. Symbolic requires explicit adjective selection and excludes whole-entry profiles; success leaves native assurance separate."
+    },
+    {
+      "id": "cli:contracts --help",
+      "kind": "cli",
+      "name": "contracts --help",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#commands",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Group help accepts --help/-h; subcommand FlagSet help is available before input. Displays usage with status 0."
+    },
+    {
+      "id": "cli:contracts --",
+      "kind": "cli",
+      "name": "contracts --",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#commands",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "End subcommand option parsing, including before an input beginning with a dash."
     }
   ]
 }

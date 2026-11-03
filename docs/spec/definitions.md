@@ -24,7 +24,7 @@ Quoted labels list bar-separated forms. Nouns use root/plural/descriptive/active
 
 ## Descriptors and constructors
 
-Descriptors bind nominal identities to ordered child-construction or wrapper rules. Same-named private declarations remain distinct; aliases preserve identity. Missing target constructors and recursive expansion reject.
+Descriptors bind nominal identities to ordered child-construction or wrapper rules. Every rule matching the target applies in authored order; wrapper order and repeated construction are preserved. Same-named private declarations remain distinct; aliases preserve identity. Missing target constructors and recursive expansion reject.
 
 <!-- example:local-definitions -->
 

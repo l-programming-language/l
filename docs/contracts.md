@@ -8,44 +8,113 @@ checking fails when a required fact is contradicted or unresolved.
 
 ## Commands
 
-Options precede the input, as with the existing CLI:
+Use `l contracts --help` or `l contracts -h` for contracts usage. Each analysis
+subcommand requires exactly one input. Options precede that input; use `--` to
+end option parsing before a filename beginning with a dash. No contracts command
+builds a Cargo workspace, publishes an executable, or launches an App.
+
+### Inspect
 
 ```sh
 l contracts inspect --format json --output report.json program.l
+```
+
+Inspection reports selected meanings, bindings, typed targets, source
+certificates, and unresolved obligations. Successful inspection does not require
+all reported properties to be established.
+
+### Check
+
+```sh
 l contracts check --profile NoHeapAllocation --profile NoBlocking --report check.json program.l
+```
+
+Checking requires at least one `--profile`. Repeat it to enforce several
+profiles over the whole selected entry and all modeled outcomes. Unknown or
+contradicted required properties fail checking. A profile does not select a
+different word or provider to obtain a passing result.
+
+### Explain
+
+```sh
 l contracts explain --binding OCCURRENCE_ID program.l
 l contracts explain --binding source:program.l:BYTE_OFFSET program.l
+```
+
+Explanation requires `--binding`. Use an exact occurrence ID or an
+`origin.source:origin.start` selector from an inspection report. Byte offsets
+refer to original source where available. Generated uses have parent origins and
+expansion ordinals. Reports retain definition identity, selected meaning,
+occurrence, role path, definition-site environment, use-site environment, and
+the existing resolver's selection reason. Aliases share meanings; separate
+applications and same-type roles remain distinct. A selector with no matching
+binding is an invocation error.
+
+### Verify a dictionary
+
+```sh
 l contracts verify-dictionary --report dictionary.json io
+```
+
+Dictionary input can name an indexed dictionary or a source dictionary file.
+Verification defaults to `--assurance implementation` for the complete dictionary.
+It reports discovered definitions separately from symbolic certificates. Merely
+loading a source dictionary never certifies its bodies. Whole-dictionary
+verification fails while required implementation or native obligations remain
+unresolved.
+
+### Focused symbolic verification
+
+```sh
 l contracts verify-dictionary --adjective MEANING_OR_SOURCE:BYTE_OFFSET --assurance symbolic --manifest source-contracts.json --report adjective.json dictionary.l
 ```
 
-Use the exact occurrence ID or `origin.source:origin.start` selector from an
-inspection report. Byte offsets refer to original source where available.
-Generated uses have parent origins and expansion ordinals. Reports retain
-definition identity, selected meaning, occurrence, role path, definition-site
-environment, use-site environment, and the existing resolver's selection reason.
-Aliases share meanings; separate applications and same-type roles remain distinct.
-
-Common options are `--language`, `--assets`, repeatable `--manifest`, and
-`--trust-policy`. `--assets` selects one complete resource provider; missing
-optional contract metadata does not trigger embedded metadata fallback. An
-optional `contracts/index.json` contains version `1.1` and a `manifests` array
-of resource-relative paths. Additional manifests contribute records; conflicting
-canonical declarations fail instead of overriding by load order.
-
-Exit status is 0 for successful inspection, 1 for failed analysis or unresolved/
-contradicted enforcement, and 2 for invalid invocation or metadata. Dictionary
-verification reports discovered definitions separately from symbolic
-certificates. Merely loading a source dictionary never certifies its bodies.
-
-`verify-dictionary` defaults to implementation assurance for the complete
-dictionary. Explicit `--assurance symbolic` requires one or more `--adjective`
+Explicit `--assurance symbolic` requires one or more repeatable `--adjective`
 selectors. Each selector identifies one canonical rule meaning or its exact
 source-origin byte offset; ambiguous and missing selections reject. This mode
 checks only the selected definition-time structural obligations. Its report
 retains concrete instantiation and native obligations separately, so success is
 not a runtime guarantee. Options still precede the dictionary input. Whole-entry
-profiles cannot be combined with this narrower symbolic mode.
+`--profile` requirements cannot be combined with this narrower symbolic mode.
+
+`--adjective` is supported only by `verify-dictionary`. With the default
+implementation assurance, selecting adjectives still retains whole-dictionary
+enforcement; use explicit symbolic assurance for the narrower check.
+
+## Options and reports
+
+All contracts subcommands use the following resource and report options:
+
+| Option | Behavior |
+| --- | --- |
+| `--format text\|json` | Select the displayed report format; default `text`. |
+| `--output PATH` | Write the displayed report to a file instead of stdout, using the selected format. |
+| `--report PATH` | Also write the structured JSON report, regardless of the displayed format. |
+| `--language LANGUAGE` | Select source resources; default `eng`. An explicit empty language rejects. |
+| `--assets ROOT` | Use one complete resource filesystem in place of embedded resources. |
+| `--manifest PATH` | Add a metadata manifest; repeat to contribute multiple manifests. |
+| `--trust-policy PATH` | Load an explicit trust-policy document; production native approval otherwise starts empty. |
+
+Report destinations must not replace the source input. Reports can be written
+before enforcement returns a failure status, so retain both the report and exit
+status when recording a check.
+
+`--assets` selects one complete resource provider; missing optional contract
+metadata does not trigger embedded metadata fallback. An optional
+`contracts/index.json` contains `schema_version` equal to `1.1` and a `manifests`
+array of resource-relative paths. Additional manifests contribute records;
+conflicting canonical declarations fail instead of overriding by load order.
+
+## Exit statuses
+
+| Status | Meaning |
+| --- | --- |
+| `0` | Successful inspection or explanation; successful enforcement at its reported scope; or displayed help. Inspection can still contain unknowns. |
+| `1` | Failed analysis or report IO, or required enforcement obligations that are contradicted or unresolved. |
+| `2` | Invalid invocation, selected metadata, or selector. |
+
+Symbolic verification returning `0` establishes only the selected structural
+obligations. Unresolved native assurance remains visible in its report.
 
 ## Source adjective bodies
 

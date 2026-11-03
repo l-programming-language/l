@@ -3,7 +3,8 @@
     "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
-    "cmd/l/command.go": "c6b04031528b51d3474fafa701093ecc5e7010359f4408eac767e1b88d94102f",
+    "cmd/l/command.go": "dcdbfd43fc8553ce00d0a8dbd4b7d0c2b55d1b1dff5b4088e42796a6f3c5d41e",
+    "cmd/l/contracts.go": "c29f91b7ad61db5b616fa9649f768b1652ea8f3843f6a4ab01254f2dc533587d",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
     "logiceme/lucid_generation_test.go": "67bef27205fcba5d5c53067eb5c68a67925bd0da03edca5f1de516df1f475a2a",
     "logiceme/testdata/lucid/templates.sha256.json": "d58dd55cf122abddc073a41259995c2bfb2d4e2639c41592f22bb4982378fa1a",
@@ -5521,12 +5522,156 @@
       "note": 158
     },
     {
+      "id": "cli:contracts",
+      "name": "contracts",
+      "doc": "docs/contracts.md#commands",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 159
+    },
+    {
+      "id": "cli:contracts inspect",
+      "name": "contracts inspect",
+      "doc": "docs/contracts.md#inspect",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 160
+    },
+    {
+      "id": "cli:contracts check",
+      "name": "contracts check",
+      "doc": "docs/contracts.md#check",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 161
+    },
+    {
+      "id": "cli:contracts explain",
+      "name": "contracts explain",
+      "doc": "docs/contracts.md#explain",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 162
+    },
+    {
+      "id": "cli:contracts verify-dictionary",
+      "name": "contracts verify-dictionary",
+      "doc": "docs/contracts.md#verify-a-dictionary",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 163
+    },
+    {
+      "id": "cli:contracts --format",
+      "name": "contracts --format",
+      "doc": "docs/contracts.md#options-and-reports",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 164
+    },
+    {
+      "id": "cli:contracts --output",
+      "name": "contracts --output",
+      "doc": "docs/contracts.md#options-and-reports",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 165
+    },
+    {
+      "id": "cli:contracts --report",
+      "name": "contracts --report",
+      "doc": "docs/contracts.md#options-and-reports",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 166
+    },
+    {
+      "id": "cli:contracts --assets",
+      "name": "contracts --assets",
+      "doc": "docs/contracts.md#options-and-reports",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 167
+    },
+    {
+      "id": "cli:contracts --language",
+      "name": "contracts --language",
+      "doc": "docs/contracts.md#options-and-reports",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 168
+    },
+    {
+      "id": "cli:contracts --manifest",
+      "name": "contracts --manifest",
+      "doc": "docs/contracts.md#options-and-reports",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 169
+    },
+    {
+      "id": "cli:contracts --trust-policy",
+      "name": "contracts --trust-policy",
+      "doc": "docs/contracts.md#options-and-reports",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 170
+    },
+    {
+      "id": "cli:contracts --profile",
+      "name": "contracts --profile",
+      "doc": "docs/contracts.md#check",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 171
+    },
+    {
+      "id": "cli:contracts --binding",
+      "name": "contracts --binding",
+      "doc": "docs/contracts.md#explain",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 172
+    },
+    {
+      "id": "cli:contracts --adjective",
+      "name": "contracts --adjective",
+      "doc": "docs/contracts.md#focused-symbolic-verification",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 173
+    },
+    {
+      "id": "cli:contracts --assurance",
+      "name": "contracts --assurance",
+      "doc": "docs/contracts.md#focused-symbolic-verification",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 174
+    },
+    {
+      "id": "cli:contracts --help",
+      "name": "contracts --help",
+      "doc": "docs/contracts.md#commands",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 175
+    },
+    {
+      "id": "cli:contracts --",
+      "name": "contracts --",
+      "doc": "docs/contracts.md#commands",
+      "classification": 8,
+      "evidenceSet": 4,
+      "note": 176
+    },
+    {
       "id": "lucid:future-composed",
       "name": "future-composed",
       "doc": "docs/_generated/lucid.md#lucid-future-composed",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 4
+      "evidenceSet": 5
     },
     {
       "id": "lucid:future-move",
@@ -5534,7 +5679,7 @@
       "doc": "docs/_generated/lucid.md#lucid-future-move",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 5
+      "evidenceSet": 6
     },
     {
       "id": "lucid:future-infer",
@@ -5542,7 +5687,7 @@
       "doc": "docs/_generated/lucid.md#lucid-future-infer",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 6
+      "evidenceSet": 7
     },
     {
       "id": "lucid:future-borrow-escape",
@@ -5550,7 +5695,7 @@
       "doc": "docs/_generated/lucid.md#lucid-future-borrow-escape",
       "expectedRustDiagnostic": "E0373",
       "classification": 11,
-      "evidenceSet": 7
+      "evidenceSet": 8
     },
     {
       "id": "lucid:future-move-reuse",
@@ -5558,7 +5703,7 @@
       "doc": "docs/_generated/lucid.md#lucid-future-move-reuse",
       "expectedRustDiagnostic": "E0382",
       "classification": 11,
-      "evidenceSet": 8
+      "evidenceSet": 9
     },
     {
       "id": "lucid:generics-functions",
@@ -5566,7 +5711,7 @@
       "doc": "docs/_generated/lucid.md#lucid-generics-functions",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 9
+      "evidenceSet": 10
     },
     {
       "id": "lucid:generics-records",
@@ -5574,7 +5719,7 @@
       "doc": "docs/_generated/lucid.md#lucid-generics-records",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 10
+      "evidenceSet": 11
     },
     {
       "id": "lucid:generics-traits",
@@ -5582,7 +5727,7 @@
       "doc": "docs/_generated/lucid.md#lucid-generics-traits",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 11
+      "evidenceSet": 12
     },
     {
       "id": "lucid:generics-calls",
@@ -5590,7 +5735,7 @@
       "doc": "docs/_generated/lucid.md#lucid-generics-calls",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 12
+      "evidenceSet": 13
     },
     {
       "id": "lucid:generics-late-bound-lifetime",
@@ -5598,7 +5743,7 @@
       "doc": "docs/_generated/lucid.md#lucid-generics-late-bound-lifetime",
       "expectedRustDiagnostic": "E0794",
       "classification": 11,
-      "evidenceSet": 13
+      "evidenceSet": 14
     },
     {
       "id": "lucid:generics-unused-parameters",
@@ -5606,7 +5751,7 @@
       "doc": "docs/_generated/lucid.md#lucid-generics-unused-parameters",
       "expectedRustDiagnostic": "E0392",
       "classification": 11,
-      "evidenceSet": 14
+      "evidenceSet": 15
     },
     {
       "id": "lucid:generics-argument-arity",
@@ -5614,7 +5759,7 @@
       "doc": "docs/_generated/lucid.md#lucid-generics-argument-arity",
       "expectedRustDiagnostic": "E0107",
       "classification": 11,
-      "evidenceSet": 15
+      "evidenceSet": 16
     },
     {
       "id": "lucid:keyed-conditionals",
@@ -5622,7 +5767,7 @@
       "doc": "docs/_generated/lucid.md#lucid-keyed-conditionals",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 16
+      "evidenceSet": 17
     },
     {
       "id": "lucid:keyed-nonexhaustive",
@@ -5630,7 +5775,7 @@
       "doc": "docs/_generated/lucid.md#lucid-keyed-nonexhaustive",
       "expectedRustDiagnostic": "E0004",
       "classification": 11,
-      "evidenceSet": 17
+      "evidenceSet": 18
     },
     {
       "id": "lucid:keyed-call-pattern",
@@ -5638,7 +5783,7 @@
       "doc": "docs/_generated/lucid.md#lucid-keyed-call-pattern",
       "expectedRustDiagnostic": "E0164",
       "classification": 11,
-      "evidenceSet": 18
+      "evidenceSet": 19
     },
     {
       "id": "lucid:empty-instantiations",
@@ -5646,7 +5791,7 @@
       "doc": "docs/_generated/lucid.md#lucid-empty-instantiations",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 19
+      "evidenceSet": 20
     },
     {
       "id": "lucid:trait-signature-outputs",
@@ -5654,7 +5799,7 @@
       "doc": "docs/_generated/lucid.md#lucid-trait-signature-outputs",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 20
+      "evidenceSet": 21
     },
     {
       "id": "lucid:callable-output-void",
@@ -5662,7 +5807,7 @@
       "doc": "docs/_generated/lucid.md#lucid-callable-output-void",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 21
+      "evidenceSet": 22
     },
     {
       "id": "lucid:callable-typed-flat",
@@ -5670,7 +5815,7 @@
       "doc": "docs/_generated/lucid.md#lucid-callable-typed-flat",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 22
+      "evidenceSet": 23
     },
     {
       "id": "lucid:callable-typed-record",
@@ -5678,7 +5823,7 @@
       "doc": "docs/_generated/lucid.md#lucid-callable-typed-record",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 23
+      "evidenceSet": 24
     },
     {
       "id": "lucid:callable-outputs",
@@ -5686,7 +5831,7 @@
       "doc": "docs/_generated/lucid.md#lucid-callable-outputs",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 24
+      "evidenceSet": 25
     },
     {
       "id": "lucid:closure-inline",
@@ -5694,7 +5839,7 @@
       "doc": "docs/_generated/lucid.md#lucid-closure-inline",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 25
+      "evidenceSet": 26
     },
     {
       "id": "lucid:closure-stored-capture",
@@ -5702,7 +5847,7 @@
       "doc": "docs/_generated/lucid.md#lucid-closure-stored-capture",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 26
+      "evidenceSet": 27
     },
     {
       "id": "lucid:callable-unit-mismatch",
@@ -5710,7 +5855,7 @@
       "doc": "docs/_generated/lucid.md#lucid-callable-unit-mismatch",
       "expectedRustDiagnostic": "E0308",
       "classification": 11,
-      "evidenceSet": 27
+      "evidenceSet": 28
     },
     {
       "id": "lucid:function-void-flat",
@@ -5718,7 +5863,7 @@
       "doc": "docs/_generated/lucid.md#lucid-function-void-flat",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 28
+      "evidenceSet": 29
     },
     {
       "id": "lucid:function-void-record",
@@ -5726,7 +5871,7 @@
       "doc": "docs/_generated/lucid.md#lucid-function-void-record",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 29
+      "evidenceSet": 30
     },
     {
       "id": "lucid:invocation-named",
@@ -5734,7 +5879,7 @@
       "doc": "docs/_generated/lucid.md#lucid-invocation-named",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 30
+      "evidenceSet": 31
     },
     {
       "id": "lucid:invocation-void",
@@ -5742,7 +5887,7 @@
       "doc": "docs/_generated/lucid.md#lucid-invocation-void",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 31
+      "evidenceSet": 32
     },
     {
       "id": "lucid:declaration-operation",
@@ -5750,7 +5895,7 @@
       "doc": "docs/_generated/lucid.md#lucid-declaration-operation",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 32
+      "evidenceSet": 33
     },
     {
       "id": "lucid:declaration-description",
@@ -5758,7 +5903,7 @@
       "doc": "docs/_generated/lucid.md#lucid-declaration-description",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 33
+      "evidenceSet": 34
     },
     {
       "id": "lucid:declaration-evaluation",
@@ -5766,7 +5911,7 @@
       "doc": "docs/_generated/lucid.md#lucid-declaration-evaluation",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 34
+      "evidenceSet": 35
     },
     {
       "id": "lucid:declaration-instantiation",
@@ -5774,7 +5919,7 @@
       "doc": "docs/_generated/lucid.md#lucid-declaration-instantiation",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 35
+      "evidenceSet": 36
     },
     {
       "id": "lucid:declaration-iteration",
@@ -5782,7 +5927,7 @@
       "doc": "docs/_generated/lucid.md#lucid-declaration-iteration",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 36
+      "evidenceSet": 37
     },
     {
       "id": "lucid:grouping",
@@ -5790,7 +5935,7 @@
       "doc": "docs/_generated/lucid.md#lucid-grouping",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 37
+      "evidenceSet": 38
     },
     {
       "id": "lucid:statements",
@@ -5798,7 +5943,7 @@
       "doc": "docs/_generated/lucid.md#lucid-statements",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 38
+      "evidenceSet": 39
     },
     {
       "id": "lucid:fields",
@@ -5806,7 +5951,7 @@
       "doc": "docs/_generated/lucid.md#lucid-fields",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 39
+      "evidenceSet": 40
     },
     {
       "id": "lucid:calculations",
@@ -5814,7 +5959,7 @@
       "doc": "docs/_generated/lucid.md#lucid-calculations",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 40
+      "evidenceSet": 41
     },
     {
       "id": "lucid:communication",
@@ -5822,7 +5967,7 @@
       "doc": "docs/_generated/lucid.md#lucid-communication",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 41
+      "evidenceSet": 42
     },
     {
       "id": "lucid:conditionals",
@@ -5830,7 +5975,7 @@
       "doc": "docs/_generated/lucid.md#lucid-conditionals",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 42
+      "evidenceSet": 43
     },
     {
       "id": "lucid:select-communication",
@@ -5838,7 +5983,7 @@
       "doc": "docs/_generated/lucid.md#lucid-select-communication",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 43
+      "evidenceSet": 44
     },
     {
       "id": "lucid:select-bindings",
@@ -5846,7 +5991,7 @@
       "doc": "docs/_generated/lucid.md#lucid-select-bindings",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 44
+      "evidenceSet": 45
     },
     {
       "id": "lucid:select-default-order",
@@ -5854,7 +5999,7 @@
       "doc": "docs/_generated/lucid.md#lucid-select-default-order",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 45
+      "evidenceSet": 46
     },
     {
       "id": "lucid:select-degenerate",
@@ -5862,7 +6007,7 @@
       "doc": "docs/_generated/lucid.md#lucid-select-degenerate",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 46
+      "evidenceSet": 47
     },
     {
       "id": "lucid:select-nesting-hygiene",
@@ -5870,7 +6015,7 @@
       "doc": "docs/_generated/lucid.md#lucid-select-nesting-hygiene",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 47
+      "evidenceSet": 48
     },
     {
       "id": "lucid:select-closed-receive",
@@ -5878,7 +6023,7 @@
       "doc": "docs/_generated/lucid.md#lucid-select-closed-receive",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 48
+      "evidenceSet": 49
     },
     {
       "id": "lucid:select-sync-context",
@@ -5886,7 +6031,7 @@
       "doc": "docs/_generated/lucid.md#lucid-select-sync-context",
       "expectedRustDiagnostic": "E0728",
       "classification": 11,
-      "evidenceSet": 49
+      "evidenceSet": 50
     },
     {
       "id": "lucid:select-borrow-conflict",
@@ -5894,7 +6039,7 @@
       "doc": "docs/_generated/lucid.md#lucid-select-borrow-conflict",
       "expectedRustDiagnostic": "E0499",
       "classification": 11,
-      "evidenceSet": 50
+      "evidenceSet": 51
     },
     {
       "id": "lucid:select-moved-send",
@@ -5902,7 +6047,7 @@
       "doc": "docs/_generated/lucid.md#lucid-select-moved-send",
       "expectedRustDiagnostic": "E0382",
       "classification": 11,
-      "evidenceSet": 51
+      "evidenceSet": 52
     },
     {
       "id": "lucid:iteration-conditions",
@@ -5910,7 +6055,7 @@
       "doc": "docs/_generated/lucid.md#lucid-iteration-conditions",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 52
+      "evidenceSet": 53
     },
     {
       "id": "lucid:iteration-bindings",
@@ -5918,7 +6063,7 @@
       "doc": "docs/_generated/lucid.md#lucid-iteration-bindings",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 53
+      "evidenceSet": 54
     },
     {
       "id": "lucid:iteration-async",
@@ -5926,7 +6071,7 @@
       "doc": "docs/_generated/lucid.md#lucid-iteration-async",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 54
+      "evidenceSet": 55
     },
     {
       "id": "lucid:iteration-traversal",
@@ -5934,7 +6079,7 @@
       "doc": "docs/_generated/lucid.md#lucid-iteration-traversal",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 55
+      "evidenceSet": 56
     },
     {
       "id": "lucid:iteration-labels",
@@ -5942,7 +6087,7 @@
       "doc": "docs/_generated/lucid.md#lucid-iteration-labels",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 56
+      "evidenceSet": 57
     },
     {
       "id": "lucid:iteration-nesting-scope",
@@ -5950,7 +6095,7 @@
       "doc": "docs/_generated/lucid.md#lucid-iteration-nesting-scope",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 57
+      "evidenceSet": 58
     },
     {
       "id": "lucid:iteration-nonboolean",
@@ -5958,7 +6103,7 @@
       "doc": "docs/_generated/lucid.md#lucid-iteration-nonboolean",
       "expectedRustDiagnostic": "E0308",
       "classification": 11,
-      "evidenceSet": 58
+      "evidenceSet": 59
     },
     {
       "id": "lucid:iteration-binding-scope",
@@ -5966,7 +6111,7 @@
       "doc": "docs/_generated/lucid.md#lucid-iteration-binding-scope",
       "expectedRustDiagnostic": "E0425",
       "classification": 11,
-      "evidenceSet": 59
+      "evidenceSet": 60
     },
     {
       "id": "lucid:iteration-sync-await",
@@ -5974,7 +6119,7 @@
       "doc": "docs/_generated/lucid.md#lucid-iteration-sync-await",
       "expectedRustDiagnostic": "E0728",
       "classification": 11,
-      "evidenceSet": 60
+      "evidenceSet": 61
     },
     {
       "id": "lucid:schedule-direct",
@@ -5982,7 +6127,7 @@
       "doc": "docs/_generated/lucid.md#lucid-schedule-direct",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 61
+      "evidenceSet": 62
     },
     {
       "id": "lucid:schedule-composed",
@@ -5990,1402 +6135,1402 @@
       "doc": "docs/_generated/lucid.md#lucid-schedule-composed",
       "expectedRustDiagnostic": null,
       "classification": 10,
-      "evidenceSet": 62
+      "evidenceSet": 63
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-capture.aml.txt",
       "name": "callable-invalid/bw-capture.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-capture-aml-txt",
       "classification": 12,
-      "evidenceSet": 63
+      "evidenceSet": 64
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-duplicate-input-prop-key.aml.txt",
       "name": "callable-invalid/bw-duplicate-input-prop-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-duplicate-input-prop-key-aml-txt",
       "classification": 12,
-      "evidenceSet": 64
+      "evidenceSet": 65
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-file-kob.aml.txt",
       "name": "callable-invalid/bw-file-kob.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-file-kob-aml-txt",
       "classification": 12,
-      "evidenceSet": 65
+      "evidenceSet": 66
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-file-ky.aml.txt",
       "name": "callable-invalid/bw-file-ky.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-file-ky-aml-txt",
       "classification": 12,
-      "evidenceSet": 66
+      "evidenceSet": 67
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-file-scope.aml.txt",
       "name": "callable-invalid/bw-file-scope.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-file-scope-aml-txt",
       "classification": 12,
-      "evidenceSet": 67
+      "evidenceSet": 68
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-flat-name.aml.txt",
       "name": "callable-invalid/bw-flat-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-flat-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 68
+      "evidenceSet": 69
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-flat-receiver.aml.txt",
       "name": "callable-invalid/bw-flat-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-flat-receiver-aml-txt",
       "classification": 12,
-      "evidenceSet": 69
+      "evidenceSet": 70
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-func-outputs-conflict.aml.txt",
       "name": "callable-invalid/bw-func-outputs-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-func-outputs-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 70
+      "evidenceSet": 71
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-malformed-func.aml.txt",
       "name": "callable-invalid/bw-malformed-func.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-malformed-func-aml-txt",
       "classification": 12,
-      "evidenceSet": 71
+      "evidenceSet": 72
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-operation-body.aml.txt",
       "name": "callable-invalid/bw-operation-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-operation-body-aml-txt",
       "classification": 12,
-      "evidenceSet": 72
+      "evidenceSet": 73
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-parameter-header.aml.txt",
       "name": "callable-invalid/bw-parameter-header.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-parameter-header-aml-txt",
       "classification": 12,
-      "evidenceSet": 73
+      "evidenceSet": 74
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-record-capture.aml.txt",
       "name": "callable-invalid/bw-record-capture.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-record-capture-aml-txt",
       "classification": 12,
-      "evidenceSet": 74
+      "evidenceSet": 75
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-record-name.aml.txt",
       "name": "callable-invalid/bw-record-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-record-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 75
+      "evidenceSet": 76
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-record-receiver.aml.txt",
       "name": "callable-invalid/bw-record-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-record-receiver-aml-txt",
       "classification": 12,
-      "evidenceSet": 76
+      "evidenceSet": 77
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-requirements-header.aml.txt",
       "name": "callable-invalid/bw-requirements-header.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-requirements-header-aml-txt",
       "classification": 12,
-      "evidenceSet": 77
+      "evidenceSet": 78
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-unknown-func-field.aml.txt",
       "name": "callable-invalid/bw-unknown-func-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-unknown-func-field-aml-txt",
       "classification": 12,
-      "evidenceSet": 78
+      "evidenceSet": 79
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-unknown-receiver-field.aml.txt",
       "name": "callable-invalid/bw-unknown-receiver-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-unknown-receiver-field-aml-txt",
       "classification": 12,
-      "evidenceSet": 79
+      "evidenceSet": 80
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-capture.aml.txt",
       "name": "callable-invalid/fw-capture.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-capture-aml-txt",
       "classification": 12,
-      "evidenceSet": 80
+      "evidenceSet": 81
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-duplicate-func-key.aml.txt",
       "name": "callable-invalid/fw-duplicate-func-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-duplicate-func-key-aml-txt",
       "classification": 12,
-      "evidenceSet": 81
+      "evidenceSet": 82
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-empty-func.aml.txt",
       "name": "callable-invalid/fw-empty-func.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-empty-func-aml-txt",
       "classification": 12,
-      "evidenceSet": 82
+      "evidenceSet": 83
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-empty-name.aml.txt",
       "name": "callable-invalid/fw-empty-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-empty-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 83
+      "evidenceSet": 84
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-func-inputs-conflict.aml.txt",
       "name": "callable-invalid/fw-func-inputs-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-func-inputs-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 84
+      "evidenceSet": 85
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-malformed-input-prop.aml.txt",
       "name": "callable-invalid/fw-malformed-input-prop.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-malformed-input-prop-aml-txt",
       "classification": 12,
-      "evidenceSet": 85
+      "evidenceSet": 86
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-malformed-receiver-prop.aml.txt",
       "name": "callable-invalid/fw-malformed-receiver-prop.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-malformed-receiver-prop-aml-txt",
       "classification": 12,
-      "evidenceSet": 86
+      "evidenceSet": 87
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-missing-name.aml.txt",
       "name": "callable-invalid/fw-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-missing-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 87
+      "evidenceSet": 88
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-parameter-header.aml.txt",
       "name": "callable-invalid/fw-parameter-header.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-parameter-header-aml-txt",
       "classification": 12,
-      "evidenceSet": 88
+      "evidenceSet": 89
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-record-capture.aml.txt",
       "name": "callable-invalid/fw-record-capture.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-record-capture-aml-txt",
       "classification": 12,
-      "evidenceSet": 89
+      "evidenceSet": 90
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-record-empty-name.aml.txt",
       "name": "callable-invalid/fw-record-empty-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-record-empty-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 90
+      "evidenceSet": 91
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-record-missing-name.aml.txt",
       "name": "callable-invalid/fw-record-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-record-missing-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 91
+      "evidenceSet": 92
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-requirements-header.aml.txt",
       "name": "callable-invalid/fw-requirements-header.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-requirements-header-aml-txt",
       "classification": 12,
-      "evidenceSet": 92
+      "evidenceSet": 93
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-unknown-func-field.aml.txt",
       "name": "callable-invalid/fw-unknown-func-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-unknown-func-field-aml-txt",
       "classification": 12,
-      "evidenceSet": 93
+      "evidenceSet": 94
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-whitespace-name.aml.txt",
       "name": "callable-invalid/fw-whitespace-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-whitespace-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 94
+      "evidenceSet": 95
     },
     {
       "id": "lucid-invalid:callable-invalid/input-empty-name.aml.txt",
       "name": "callable-invalid/input-empty-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-empty-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 95
+      "evidenceSet": 96
     },
     {
       "id": "lucid-invalid:callable-invalid/input-empty-type.aml.txt",
       "name": "callable-invalid/input-empty-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-empty-type-aml-txt",
       "classification": 12,
-      "evidenceSet": 96
+      "evidenceSet": 97
     },
     {
       "id": "lucid-invalid:callable-invalid/input-flat-struct-tags.aml.txt",
       "name": "callable-invalid/input-flat-struct-tags.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-flat-struct-tags-aml-txt",
       "classification": 12,
-      "evidenceSet": 97
+      "evidenceSet": 98
     },
     {
       "id": "lucid-invalid:callable-invalid/input-flat-unknown.aml.txt",
       "name": "callable-invalid/input-flat-unknown.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-flat-unknown-aml-txt",
       "classification": 12,
-      "evidenceSet": 98
+      "evidenceSet": 99
     },
     {
       "id": "lucid-invalid:callable-invalid/input-flat-value.aml.txt",
       "name": "callable-invalid/input-flat-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-flat-value-aml-txt",
       "classification": 12,
-      "evidenceSet": 99
+      "evidenceSet": 100
     },
     {
       "id": "lucid-invalid:callable-invalid/input-missing-name.aml.txt",
       "name": "callable-invalid/input-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-missing-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 100
+      "evidenceSet": 101
     },
     {
       "id": "lucid-invalid:callable-invalid/input-missing-type.aml.txt",
       "name": "callable-invalid/input-missing-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-missing-type-aml-txt",
       "classification": 12,
-      "evidenceSet": 101
+      "evidenceSet": 102
     },
     {
       "id": "lucid-invalid:callable-invalid/input-record-struct-tags.aml.txt",
       "name": "callable-invalid/input-record-struct-tags.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-record-struct-tags-aml-txt",
       "classification": 12,
-      "evidenceSet": 102
+      "evidenceSet": 103
     },
     {
       "id": "lucid-invalid:callable-invalid/input-record-unknown.aml.txt",
       "name": "callable-invalid/input-record-unknown.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-record-unknown-aml-txt",
       "classification": 12,
-      "evidenceSet": 103
+      "evidenceSet": 104
     },
     {
       "id": "lucid-invalid:callable-invalid/input-record-value.aml.txt",
       "name": "callable-invalid/input-record-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-record-value-aml-txt",
       "classification": 12,
-      "evidenceSet": 104
+      "evidenceSet": 105
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-anonymous-receiver.aml.txt",
       "name": "callable-invalid/ky-anonymous-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-anonymous-receiver-aml-txt",
       "classification": 12,
-      "evidenceSet": 105
+      "evidenceSet": 106
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-e-child.aml.txt",
       "name": "callable-invalid/ky-e-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-e-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 106
+      "evidenceSet": 107
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-empty-key.aml.txt",
       "name": "callable-invalid/ky-empty-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-empty-key-aml-txt",
       "classification": 12,
-      "evidenceSet": 107
+      "evidenceSet": 108
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-fw-child.aml.txt",
       "name": "callable-invalid/ky-fw-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-fw-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 108
+      "evidenceSet": 109
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-missing-callee.aml.txt",
       "name": "callable-invalid/ky-missing-callee.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-missing-callee-aml-txt",
       "classification": 12,
-      "evidenceSet": 109
+      "evidenceSet": 110
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-multiple-callees.aml.txt",
       "name": "callable-invalid/ky-multiple-callees.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-multiple-callees-aml-txt",
       "classification": 12,
-      "evidenceSet": 110
+      "evidenceSet": 111
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-named-child.aml.txt",
       "name": "callable-invalid/ky-named-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-named-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 111
+      "evidenceSet": 112
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-w-child.aml.txt",
       "name": "callable-invalid/ky-w-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-w-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 112
+      "evidenceSet": 113
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-whitespace-key.aml.txt",
       "name": "callable-invalid/ky-whitespace-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-whitespace-key-aml-txt",
       "classification": 12,
-      "evidenceSet": 113
+      "evidenceSet": 114
     },
     {
       "id": "lucid-invalid:callable-invalid/my-duplicate-func-key.aml.txt",
       "name": "callable-invalid/my-duplicate-func-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-duplicate-func-key-aml-txt",
       "classification": 12,
-      "evidenceSet": 114
+      "evidenceSet": 115
     },
     {
       "id": "lucid-invalid:callable-invalid/my-duplicate-input-prop-key.aml.txt",
       "name": "callable-invalid/my-duplicate-input-prop-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-duplicate-input-prop-key-aml-txt",
       "classification": 12,
-      "evidenceSet": 115
+      "evidenceSet": 116
     },
     {
       "id": "lucid-invalid:callable-invalid/my-empty-receiver.aml.txt",
       "name": "callable-invalid/my-empty-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-empty-receiver-aml-txt",
       "classification": 12,
-      "evidenceSet": 116
+      "evidenceSet": 117
     },
     {
       "id": "lucid-invalid:callable-invalid/my-input-missing-name.aml.txt",
       "name": "callable-invalid/my-input-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-input-missing-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 117
+      "evidenceSet": 118
     },
     {
       "id": "lucid-invalid:callable-invalid/my-input-missing-type.aml.txt",
       "name": "callable-invalid/my-input-missing-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-input-missing-type-aml-txt",
       "classification": 12,
-      "evidenceSet": 118
+      "evidenceSet": 119
     },
     {
       "id": "lucid-invalid:callable-invalid/my-input-unknown-field.aml.txt",
       "name": "callable-invalid/my-input-unknown-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-input-unknown-field-aml-txt",
       "classification": 12,
-      "evidenceSet": 119
+      "evidenceSet": 120
     },
     {
       "id": "lucid-invalid:callable-invalid/my-malformed-func.aml.txt",
       "name": "callable-invalid/my-malformed-func.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-malformed-func-aml-txt",
       "classification": 12,
-      "evidenceSet": 120
+      "evidenceSet": 121
     },
     {
       "id": "lucid-invalid:callable-invalid/my-malformed-input-prop.aml.txt",
       "name": "callable-invalid/my-malformed-input-prop.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-malformed-input-prop-aml-txt",
       "classification": 12,
-      "evidenceSet": 121
+      "evidenceSet": 122
     },
     {
       "id": "lucid-invalid:callable-invalid/my-missing-name.aml.txt",
       "name": "callable-invalid/my-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-missing-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 122
+      "evidenceSet": 123
     },
     {
       "id": "lucid-invalid:callable-invalid/my-receiver.aml.txt",
       "name": "callable-invalid/my-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-receiver-aml-txt",
       "classification": 12,
-      "evidenceSet": 123
+      "evidenceSet": 124
     },
     {
       "id": "lucid-invalid:callable-invalid/my-unknown-func-field.aml.txt",
       "name": "callable-invalid/my-unknown-func-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-unknown-func-field-aml-txt",
       "classification": 12,
-      "evidenceSet": 124
+      "evidenceSet": 125
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/hy-empty-props-parameters.aml.txt",
       "name": "empty-instantiation-invalid/hy-empty-props-parameters.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-hy-empty-props-parameters-aml-txt",
       "classification": 12,
-      "evidenceSet": 125
+      "evidenceSet": 126
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/hy-empty-sum.aml.txt",
       "name": "empty-instantiation-invalid/hy-empty-sum.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-hy-empty-sum-aml-txt",
       "classification": 12,
-      "evidenceSet": 126
+      "evidenceSet": 127
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/hy-missing-props-parameters.aml.txt",
       "name": "empty-instantiation-invalid/hy-missing-props-parameters.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-hy-missing-props-parameters-aml-txt",
       "classification": 12,
-      "evidenceSet": 127
+      "evidenceSet": 128
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/my-empty-funcs-parameters.aml.txt",
       "name": "empty-instantiation-invalid/my-empty-funcs-parameters.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-my-empty-funcs-parameters-aml-txt",
       "classification": 12,
-      "evidenceSet": 128
+      "evidenceSet": 129
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/my-missing-funcs-method.aml.txt",
       "name": "empty-instantiation-invalid/my-missing-funcs-method.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-my-missing-funcs-method-aml-txt",
       "classification": 12,
-      "evidenceSet": 129
+      "evidenceSet": 130
     },
     {
       "id": "lucid-invalid:generics-invalid/anonymous-ky-generic-types.aml.txt",
       "name": "generics-invalid/anonymous-ky-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-anonymous-ky-generic-types-aml-txt",
       "classification": 12,
-      "evidenceSet": 130
+      "evidenceSet": 131
     },
     {
       "id": "lucid-invalid:generics-invalid/anonymous-ky-lifetimes.aml.txt",
       "name": "generics-invalid/anonymous-ky-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-anonymous-ky-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 131
+      "evidenceSet": 132
     },
     {
       "id": "lucid-invalid:generics-invalid/bw-generic-types.aml.txt",
       "name": "generics-invalid/bw-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-bw-generic-types-aml-txt",
       "classification": 12,
-      "evidenceSet": 132
+      "evidenceSet": 133
     },
     {
       "id": "lucid-invalid:generics-invalid/bw-lifetimes.aml.txt",
       "name": "generics-invalid/bw-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-bw-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 133
+      "evidenceSet": 134
     },
     {
       "id": "lucid-invalid:generics-invalid/class-generic-types.aml.txt",
       "name": "generics-invalid/class-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-class-generic-types-aml-txt",
       "classification": 12,
-      "evidenceSet": 134
+      "evidenceSet": 135
     },
     {
       "id": "lucid-invalid:generics-invalid/class-lifetimes.aml.txt",
       "name": "generics-invalid/class-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-class-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 135
+      "evidenceSet": 136
     },
     {
       "id": "lucid-invalid:generics-invalid/duplicate-generic-types.aml.txt",
       "name": "generics-invalid/duplicate-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-duplicate-generic-types-aml-txt",
       "classification": 12,
-      "evidenceSet": 136
+      "evidenceSet": 137
     },
     {
       "id": "lucid-invalid:generics-invalid/duplicate-lifetimes.aml.txt",
       "name": "generics-invalid/duplicate-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-duplicate-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 137
+      "evidenceSet": 138
     },
     {
       "id": "lucid-invalid:generics-invalid/e-lifetimes.aml.txt",
       "name": "generics-invalid/e-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-e-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 138
+      "evidenceSet": 139
     },
     {
       "id": "lucid-invalid:generics-invalid/func-generic-types.aml.txt",
       "name": "generics-invalid/func-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-func-generic-types-aml-txt",
       "classification": 12,
-      "evidenceSet": 139
+      "evidenceSet": 140
     },
     {
       "id": "lucid-invalid:generics-invalid/func-lifetimes.aml.txt",
       "name": "generics-invalid/func-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-func-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 140
+      "evidenceSet": 141
     },
     {
       "id": "lucid-invalid:generics-invalid/funcs-generic-types.aml.txt",
       "name": "generics-invalid/funcs-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-funcs-generic-types-aml-txt",
       "classification": 12,
-      "evidenceSet": 141
+      "evidenceSet": 142
     },
     {
       "id": "lucid-invalid:generics-invalid/funcs-lifetimes.aml.txt",
       "name": "generics-invalid/funcs-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-funcs-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 142
+      "evidenceSet": 143
     },
     {
       "id": "lucid-invalid:generics-invalid/fw-empty-lifetimes.aml.txt",
       "name": "generics-invalid/fw-empty-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-fw-empty-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 143
+      "evidenceSet": 144
     },
     {
       "id": "lucid-invalid:generics-invalid/fw-whitespace-lifetimes.aml.txt",
       "name": "generics-invalid/fw-whitespace-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-fw-whitespace-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 144
+      "evidenceSet": 145
     },
     {
       "id": "lucid-invalid:generics-invalid/hy-empty-generic-types.aml.txt",
       "name": "generics-invalid/hy-empty-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-hy-empty-generic-types-aml-txt",
       "classification": 12,
-      "evidenceSet": 145
+      "evidenceSet": 146
     },
     {
       "id": "lucid-invalid:generics-invalid/hy-whitespace-generic-types.aml.txt",
       "name": "generics-invalid/hy-whitespace-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-hy-whitespace-generic-types-aml-txt",
       "classification": 12,
-      "evidenceSet": 146
+      "evidenceSet": 147
     },
     {
       "id": "lucid-invalid:generics-invalid/o-generic-types.aml.txt",
       "name": "generics-invalid/o-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-o-generic-types-aml-txt",
       "classification": 12,
-      "evidenceSet": 147
+      "evidenceSet": 148
     },
     {
       "id": "lucid-invalid:generics-invalid/object-generic-types-ea.aml.txt",
       "name": "generics-invalid/object-generic-types-ea.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-object-generic-types-ea-aml-txt",
       "classification": 12,
-      "evidenceSet": 148
+      "evidenceSet": 149
     },
     {
       "id": "lucid-invalid:generics-invalid/object-lifetimes.aml.txt",
       "name": "generics-invalid/object-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-object-lifetimes-aml-txt",
       "classification": 12,
-      "evidenceSet": 149
+      "evidenceSet": 150
     },
     {
       "id": "lucid-invalid:invocation-invalid/empty-receiver.aml.txt",
       "name": "invocation-invalid/empty-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-invocation-invalid-empty-receiver-aml-txt",
       "classification": 12,
-      "evidenceSet": 150
+      "evidenceSet": 151
     },
     {
       "id": "lucid-invalid:invocation-invalid/whitespace-receiver.aml.txt",
       "name": "invocation-invalid/whitespace-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-invocation-invalid-whitespace-receiver-aml-txt",
       "classification": 12,
-      "evidenceSet": 151
+      "evidenceSet": 152
     },
     {
       "id": "lucid-invalid:iteration-invalid/calculation-definition-conflict.aml.txt",
       "name": "iteration-invalid/calculation-definition-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-calculation-definition-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 152
+      "evidenceSet": 153
     },
     {
       "id": "lucid-invalid:iteration-invalid/calculation-evaluation-conflict.aml.txt",
       "name": "iteration-invalid/calculation-evaluation-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-calculation-evaluation-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 153
+      "evidenceSet": 154
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-empty-pattern.aml.txt",
       "name": "iteration-invalid/dog-empty-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-empty-pattern-aml-txt",
       "classification": 12,
-      "evidenceSet": 154
+      "evidenceSet": 155
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-key-keys-conflict.aml.txt",
       "name": "iteration-invalid/dog-key-keys-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-key-keys-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 155
+      "evidenceSet": 156
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-missing-child.aml.txt",
       "name": "iteration-invalid/dog-missing-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-missing-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 156
+      "evidenceSet": 157
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-missing-pattern.aml.txt",
       "name": "iteration-invalid/dog-missing-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-missing-pattern-aml-txt",
       "classification": 12,
-      "evidenceSet": 157
+      "evidenceSet": 158
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-multiple-children.aml.txt",
       "name": "iteration-invalid/dog-multiple-children.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-multiple-children-aml-txt",
       "classification": 12,
-      "evidenceSet": 158
+      "evidenceSet": 159
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-multiple-patterns.aml.txt",
       "name": "iteration-invalid/dog-multiple-patterns.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-multiple-patterns-aml-txt",
       "classification": 12,
-      "evidenceSet": 159
+      "evidenceSet": 160
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-native-value.aml.txt",
       "name": "iteration-invalid/dog-native-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-native-value-aml-txt",
       "classification": 12,
-      "evidenceSet": 160
+      "evidenceSet": 161
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-outside-x.aml.txt",
       "name": "iteration-invalid/dog-outside-x.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-outside-x-aml-txt",
       "classification": 12,
-      "evidenceSet": 161
+      "evidenceSet": 162
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-unsupported-mutable.aml.txt",
       "name": "iteration-invalid/dog-unsupported-mutable.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-unsupported-mutable-aml-txt",
       "classification": 12,
-      "evidenceSet": 162
+      "evidenceSet": 163
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-wrong-child.aml.txt",
       "name": "iteration-invalid/dog-wrong-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-wrong-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 163
+      "evidenceSet": 164
     },
     {
       "id": "lucid-invalid:iteration-invalid/evaluation-definition-conflict.aml.txt",
       "name": "iteration-invalid/evaluation-definition-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-evaluation-definition-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 164
+      "evidenceSet": 165
     },
     {
       "id": "lucid-invalid:iteration-invalid/iterator-calculation-conflict.aml.txt",
       "name": "iteration-invalid/iterator-calculation-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-iterator-calculation-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 165
+      "evidenceSet": 166
     },
     {
       "id": "lucid-invalid:iteration-invalid/iterator-definition-conflict.aml.txt",
       "name": "iteration-invalid/iterator-definition-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-iterator-definition-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 166
+      "evidenceSet": 167
     },
     {
       "id": "lucid-invalid:iteration-invalid/iterator-evaluation-conflict.aml.txt",
       "name": "iteration-invalid/iterator-evaluation-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-iterator-evaluation-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 167
+      "evidenceSet": 168
     },
     {
       "id": "lucid-invalid:iteration-invalid/missing-body.aml.txt",
       "name": "iteration-invalid/missing-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-missing-body-aml-txt",
       "classification": 12,
-      "evidenceSet": 168
+      "evidenceSet": 169
     },
     {
       "id": "lucid-invalid:iteration-invalid/multiple-bodies.aml.txt",
       "name": "iteration-invalid/multiple-bodies.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-multiple-bodies-aml-txt",
       "classification": 12,
-      "evidenceSet": 169
+      "evidenceSet": 170
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-child.aml.txt",
       "name": "iteration-invalid/og-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 170
+      "evidenceSet": 171
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-empty-pattern.aml.txt",
       "name": "iteration-invalid/og-empty-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-empty-pattern-aml-txt",
       "classification": 12,
-      "evidenceSet": 171
+      "evidenceSet": 172
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-empty-value.aml.txt",
       "name": "iteration-invalid/og-empty-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-empty-value-aml-txt",
       "classification": 12,
-      "evidenceSet": 172
+      "evidenceSet": 173
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-key-keys-conflict.aml.txt",
       "name": "iteration-invalid/og-key-keys-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-key-keys-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 173
+      "evidenceSet": 174
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-missing-pattern.aml.txt",
       "name": "iteration-invalid/og-missing-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-missing-pattern-aml-txt",
       "classification": 12,
-      "evidenceSet": 174
+      "evidenceSet": 175
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-missing-value.aml.txt",
       "name": "iteration-invalid/og-missing-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-missing-value-aml-txt",
       "classification": 12,
-      "evidenceSet": 175
+      "evidenceSet": 176
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-multiple-patterns.aml.txt",
       "name": "iteration-invalid/og-multiple-patterns.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-multiple-patterns-aml-txt",
       "classification": 12,
-      "evidenceSet": 176
+      "evidenceSet": 177
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-multiple-values.aml.txt",
       "name": "iteration-invalid/og-multiple-values.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-multiple-values-aml-txt",
       "classification": 12,
-      "evidenceSet": 177
+      "evidenceSet": 178
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-outside-x.aml.txt",
       "name": "iteration-invalid/og-outside-x.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-outside-x-aml-txt",
       "classification": 12,
-      "evidenceSet": 178
+      "evidenceSet": 179
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-unsupported-type.aml.txt",
       "name": "iteration-invalid/og-unsupported-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-unsupported-type-aml-txt",
       "classification": 12,
-      "evidenceSet": 179
+      "evidenceSet": 180
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-value-values-conflict.aml.txt",
       "name": "iteration-invalid/og-value-values-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-value-values-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 180
+      "evidenceSet": 181
     },
     {
       "id": "lucid-invalid:iteration-invalid/ordinary-do-condition.aml.txt",
       "name": "iteration-invalid/ordinary-do-condition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-ordinary-do-condition-aml-txt",
       "classification": 12,
-      "evidenceSet": 181
+      "evidenceSet": 182
     },
     {
       "id": "lucid-invalid:iteration-invalid/ordinary-dob-condition.aml.txt",
       "name": "iteration-invalid/ordinary-dob-condition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-ordinary-dob-condition-aml-txt",
       "classification": 12,
-      "evidenceSet": 182
+      "evidenceSet": 183
     },
     {
       "id": "lucid-invalid:iteration-invalid/ordinary-o-condition.aml.txt",
       "name": "iteration-invalid/ordinary-o-condition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-ordinary-o-condition-aml-txt",
       "classification": 12,
-      "evidenceSet": 183
+      "evidenceSet": 184
     },
     {
       "id": "lucid-invalid:iteration-invalid/ordinary-ob-condition.aml.txt",
       "name": "iteration-invalid/ordinary-ob-condition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-ordinary-ob-condition-aml-txt",
       "classification": 12,
-      "evidenceSet": 184
+      "evidenceSet": 185
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-empty-label.aml.txt",
       "name": "iteration-invalid/po-empty-label.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-empty-label-aml-txt",
       "classification": 12,
-      "evidenceSet": 185
+      "evidenceSet": 186
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-file-scope.aml.txt",
       "name": "iteration-invalid/po-file-scope.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-file-scope-aml-txt",
       "classification": 12,
-      "evidenceSet": 186
+      "evidenceSet": 187
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-key-keys-conflict.aml.txt",
       "name": "iteration-invalid/po-key-keys-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-key-keys-conflict-aml-txt",
       "classification": 12,
-      "evidenceSet": 187
+      "evidenceSet": 188
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-missing-child.aml.txt",
       "name": "iteration-invalid/po-missing-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-missing-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 188
+      "evidenceSet": 189
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-missing-label.aml.txt",
       "name": "iteration-invalid/po-missing-label.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-missing-label-aml-txt",
       "classification": 12,
-      "evidenceSet": 189
+      "evidenceSet": 190
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-multiple-children.aml.txt",
       "name": "iteration-invalid/po-multiple-children.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-multiple-children-aml-txt",
       "classification": 12,
-      "evidenceSet": 190
+      "evidenceSet": 191
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-multiple-labels.aml.txt",
       "name": "iteration-invalid/po-multiple-labels.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-multiple-labels-aml-txt",
       "classification": 12,
-      "evidenceSet": 191
+      "evidenceSet": 192
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-native-values.aml.txt",
       "name": "iteration-invalid/po-native-values.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-native-values-aml-txt",
       "classification": 12,
-      "evidenceSet": 192
+      "evidenceSet": 193
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-unsupported-coda.aml.txt",
       "name": "iteration-invalid/po-unsupported-coda.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-unsupported-coda-aml-txt",
       "classification": 12,
-      "evidenceSet": 193
+      "evidenceSet": 194
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-unsupported-parameter.aml.txt",
       "name": "iteration-invalid/po-unsupported-parameter.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-unsupported-parameter-aml-txt",
       "classification": 12,
-      "evidenceSet": 194
+      "evidenceSet": 195
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-wrong-child.aml.txt",
       "name": "iteration-invalid/po-wrong-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-wrong-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 195
+      "evidenceSet": 196
     },
     {
       "id": "lucid-invalid:iteration-invalid/repeated-calculation.aml.txt",
       "name": "iteration-invalid/repeated-calculation.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-repeated-calculation-aml-txt",
       "classification": 12,
-      "evidenceSet": 196
+      "evidenceSet": 197
     },
     {
       "id": "lucid-invalid:iteration-invalid/repeated-definition.aml.txt",
       "name": "iteration-invalid/repeated-definition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-repeated-definition-aml-txt",
       "classification": 12,
-      "evidenceSet": 197
+      "evidenceSet": 198
     },
     {
       "id": "lucid-invalid:iteration-invalid/repeated-evaluation.aml.txt",
       "name": "iteration-invalid/repeated-evaluation.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-repeated-evaluation-aml-txt",
       "classification": 12,
-      "evidenceSet": 198
+      "evidenceSet": 199
     },
     {
       "id": "lucid-invalid:iteration-invalid/three-part.aml.txt",
       "name": "iteration-invalid/three-part.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-three-part-aml-txt",
       "classification": 12,
-      "evidenceSet": 199
+      "evidenceSet": 200
     },
     {
       "id": "lucid-invalid:iteration-invalid/unsupported-evaluation-adapter.aml.txt",
       "name": "iteration-invalid/unsupported-evaluation-adapter.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-unsupported-evaluation-adapter-aml-txt",
       "classification": 12,
-      "evidenceSet": 200
+      "evidenceSet": 201
     },
     {
       "id": "lucid-invalid:iteration-invalid/wrong-category-body.aml.txt",
       "name": "iteration-invalid/wrong-category-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-wrong-category-body-aml-txt",
       "classification": 12,
-      "evidenceSet": 201
+      "evidenceSet": 202
     },
     {
       "id": "lucid-invalid:keyed-invalid/body-without-pattern.aml.txt",
       "name": "keyed-invalid/body-without-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-body-without-pattern-aml-txt",
       "classification": 12,
-      "evidenceSet": 202
+      "evidenceSet": 203
     },
     {
       "id": "lucid-invalid:keyed-invalid/duplicate-composed-fallback.aml.txt",
       "name": "keyed-invalid/duplicate-composed-fallback.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-duplicate-composed-fallback-aml-txt",
       "classification": 12,
-      "evidenceSet": 203
+      "evidenceSet": 204
     },
     {
       "id": "lucid-invalid:keyed-invalid/duplicate-fallback.aml.txt",
       "name": "keyed-invalid/duplicate-fallback.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-duplicate-fallback-aml-txt",
       "classification": 12,
-      "evidenceSet": 204
+      "evidenceSet": 205
     },
     {
       "id": "lucid-invalid:keyed-invalid/empty-key.aml.txt",
       "name": "keyed-invalid/empty-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-empty-key-aml-txt",
       "classification": 12,
-      "evidenceSet": 205
+      "evidenceSet": 206
     },
     {
       "id": "lucid-invalid:keyed-invalid/empty-pattern.aml.txt",
       "name": "keyed-invalid/empty-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-empty-pattern-aml-txt",
       "classification": 12,
-      "evidenceSet": 206
+      "evidenceSet": 207
     },
     {
       "id": "lucid-invalid:keyed-invalid/excess-bodies.aml.txt",
       "name": "keyed-invalid/excess-bodies.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-excess-bodies-aml-txt",
       "classification": 12,
-      "evidenceSet": 207
+      "evidenceSet": 208
     },
     {
       "id": "lucid-invalid:keyed-invalid/excess-patterns.aml.txt",
       "name": "keyed-invalid/excess-patterns.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-excess-patterns-aml-txt",
       "classification": 12,
-      "evidenceSet": 208
+      "evidenceSet": 209
     },
     {
       "id": "lucid-invalid:keyed-invalid/no-entries.aml.txt",
       "name": "keyed-invalid/no-entries.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-no-entries-aml-txt",
       "classification": 12,
-      "evidenceSet": 209
+      "evidenceSet": 210
     },
     {
       "id": "lucid-invalid:keyed-invalid/nonterminal-composed-fallback.aml.txt",
       "name": "keyed-invalid/nonterminal-composed-fallback.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-nonterminal-composed-fallback-aml-txt",
       "classification": 12,
-      "evidenceSet": 210
+      "evidenceSet": 211
     },
     {
       "id": "lucid-invalid:keyed-invalid/nonterminal-fallback.aml.txt",
       "name": "keyed-invalid/nonterminal-fallback.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-nonterminal-fallback-aml-txt",
       "classification": 12,
-      "evidenceSet": 211
+      "evidenceSet": 212
     },
     {
       "id": "lucid-invalid:keyed-invalid/pattern-without-body.aml.txt",
       "name": "keyed-invalid/pattern-without-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-pattern-without-body-aml-txt",
       "classification": 12,
-      "evidenceSet": 212
+      "evidenceSet": 213
     },
     {
       "id": "lucid-invalid:keyed-invalid/unexpected-child.aml.txt",
       "name": "keyed-invalid/unexpected-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-unexpected-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 213
+      "evidenceSet": 214
     },
     {
       "id": "lucid-invalid:keyed-invalid/whitespace-key.aml.txt",
       "name": "keyed-invalid/whitespace-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-whitespace-key-aml-txt",
       "classification": 12,
-      "evidenceSet": 214
+      "evidenceSet": 215
     },
     {
       "id": "lucid-invalid:keyed-invalid/whitespace-pattern.aml.txt",
       "name": "keyed-invalid/whitespace-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-whitespace-pattern-aml-txt",
       "classification": 12,
-      "evidenceSet": 215
+      "evidenceSet": 216
     },
     {
       "id": "lucid-invalid:scheduling-invalid/mv-deferred-false.aml.txt",
       "name": "scheduling-invalid/mv-deferred-false.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-scheduling-invalid-mv-deferred-false-aml-txt",
       "classification": 12,
-      "evidenceSet": 216
+      "evidenceSet": 217
     },
     {
       "id": "lucid-invalid:scheduling-invalid/mv-deferred-true.aml.txt",
       "name": "scheduling-invalid/mv-deferred-true.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-scheduling-invalid-mv-deferred-true-aml-txt",
       "classification": 12,
-      "evidenceSet": 217
+      "evidenceSet": 218
     },
     {
       "id": "lucid-invalid:scheduling-invalid/v-deferred-false.aml.txt",
       "name": "scheduling-invalid/v-deferred-false.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-scheduling-invalid-v-deferred-false-aml-txt",
       "classification": 12,
-      "evidenceSet": 218
+      "evidenceSet": 219
     },
     {
       "id": "lucid-invalid:scheduling-invalid/v-deferred-true.aml.txt",
       "name": "scheduling-invalid/v-deferred-true.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-scheduling-invalid-v-deferred-true-aml-txt",
       "classification": 12,
-      "evidenceSet": 219
+      "evidenceSet": 220
     },
     {
       "id": "lucid-invalid:selection-invalid/assignment-target.aml.txt",
       "name": "selection-invalid/assignment-target.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-assignment-target-aml-txt",
       "classification": 12,
-      "evidenceSet": 220
+      "evidenceSet": 221
     },
     {
       "id": "lucid-invalid:selection-invalid/bare-calculation.aml.txt",
       "name": "selection-invalid/bare-calculation.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-bare-calculation-aml-txt",
       "classification": 12,
-      "evidenceSet": 221
+      "evidenceSet": 222
     },
     {
       "id": "lucid-invalid:selection-invalid/bare-ce.aml.txt",
       "name": "selection-invalid/bare-ce.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-bare-ce-aml-txt",
       "classification": 12,
-      "evidenceSet": 222
+      "evidenceSet": 223
     },
     {
       "id": "lucid-invalid:selection-invalid/bi-orphan.aml.txt",
       "name": "selection-invalid/bi-orphan.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-bi-orphan-aml-txt",
       "classification": 12,
-      "evidenceSet": 223
+      "evidenceSet": 224
     },
     {
       "id": "lucid-invalid:selection-invalid/caller-key.aml.txt",
       "name": "selection-invalid/caller-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-caller-key-aml-txt",
       "classification": 12,
-      "evidenceSet": 224
+      "evidenceSet": 225
     },
     {
       "id": "lucid-invalid:selection-invalid/ci-file-scope.aml.txt",
       "name": "selection-invalid/ci-file-scope.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-ci-file-scope-aml-txt",
       "classification": 12,
-      "evidenceSet": 225
+      "evidenceSet": 226
     },
     {
       "id": "lucid-invalid:selection-invalid/ci-non-bi-child.aml.txt",
       "name": "selection-invalid/ci-non-bi-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-ci-non-bi-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 226
+      "evidenceSet": 227
     },
     {
       "id": "lucid-invalid:selection-invalid/default-missing-definition.aml.txt",
       "name": "selection-invalid/default-missing-definition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-default-missing-definition-aml-txt",
       "classification": 12,
-      "evidenceSet": 227
+      "evidenceSet": 228
     },
     {
       "id": "lucid-invalid:selection-invalid/do-guard.aml.txt",
       "name": "selection-invalid/do-guard.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-do-guard-aml-txt",
       "classification": 12,
-      "evidenceSet": 228
+      "evidenceSet": 229
     },
     {
       "id": "lucid-invalid:selection-invalid/dob-guard.aml.txt",
       "name": "selection-invalid/dob-guard.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-dob-guard-aml-txt",
       "classification": 12,
-      "evidenceSet": 229
+      "evidenceSet": 230
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-missing-child.aml.txt",
       "name": "selection-invalid/doc-missing-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-missing-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 230
+      "evidenceSet": 231
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-multiple-children.aml.txt",
       "name": "selection-invalid/doc-multiple-children.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-multiple-children-aml-txt",
       "classification": 12,
-      "evidenceSet": 231
+      "evidenceSet": 232
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-native-value.aml.txt",
       "name": "selection-invalid/doc-native-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-native-value-aml-txt",
       "classification": 12,
-      "evidenceSet": 232
+      "evidenceSet": 233
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-outside-bi.aml.txt",
       "name": "selection-invalid/doc-outside-bi.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-outside-bi-aml-txt",
       "classification": 12,
-      "evidenceSet": 233
+      "evidenceSet": 234
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-wrong-child.aml.txt",
       "name": "selection-invalid/doc-wrong-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-wrong-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 234
+      "evidenceSet": 235
     },
     {
       "id": "lucid-invalid:selection-invalid/duplicate-default.aml.txt",
       "name": "selection-invalid/duplicate-default.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-duplicate-default-aml-txt",
       "classification": 12,
-      "evidenceSet": 235
+      "evidenceSet": 236
     },
     {
       "id": "lucid-invalid:selection-invalid/guard-mutable.aml.txt",
       "name": "selection-invalid/guard-mutable.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-guard-mutable-aml-txt",
       "classification": 12,
-      "evidenceSet": 236
+      "evidenceSet": 237
     },
     {
       "id": "lucid-invalid:selection-invalid/guard-parameter.aml.txt",
       "name": "selection-invalid/guard-parameter.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-guard-parameter-aml-txt",
       "classification": 12,
-      "evidenceSet": 237
+      "evidenceSet": 238
     },
     {
       "id": "lucid-invalid:selection-invalid/guard-type.aml.txt",
       "name": "selection-invalid/guard-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-guard-type-aml-txt",
       "classification": 12,
-      "evidenceSet": 238
+      "evidenceSet": 239
     },
     {
       "id": "lucid-invalid:selection-invalid/invalid-default.aml.txt",
       "name": "selection-invalid/invalid-default.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-invalid-default-aml-txt",
       "classification": 12,
-      "evidenceSet": 239
+      "evidenceSet": 240
     },
     {
       "id": "lucid-invalid:selection-invalid/missing-guard.aml.txt",
       "name": "selection-invalid/missing-guard.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-missing-guard-aml-txt",
       "classification": 12,
-      "evidenceSet": 240
+      "evidenceSet": 241
     },
     {
       "id": "lucid-invalid:selection-invalid/missing-name.aml.txt",
       "name": "selection-invalid/missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-missing-name-aml-txt",
       "classification": 12,
-      "evidenceSet": 241
+      "evidenceSet": 242
     },
     {
       "id": "lucid-invalid:selection-invalid/mixed-guards.aml.txt",
       "name": "selection-invalid/mixed-guards.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-mixed-guards-aml-txt",
       "classification": 12,
-      "evidenceSet": 242
+      "evidenceSet": 243
     },
     {
       "id": "lucid-invalid:selection-invalid/multiple-bodies.aml.txt",
       "name": "selection-invalid/multiple-bodies.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-multiple-bodies-aml-txt",
       "classification": 12,
-      "evidenceSet": 243
+      "evidenceSet": 244
     },
     {
       "id": "lucid-invalid:selection-invalid/multiple-definitions.aml.txt",
       "name": "selection-invalid/multiple-definitions.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-multiple-definitions-aml-txt",
       "classification": 12,
-      "evidenceSet": 244
+      "evidenceSet": 245
     },
     {
       "id": "lucid-invalid:selection-invalid/multiple-names.aml.txt",
       "name": "selection-invalid/multiple-names.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-multiple-names-aml-txt",
       "classification": 12,
-      "evidenceSet": 245
+      "evidenceSet": 246
     },
     {
       "id": "lucid-invalid:selection-invalid/non-w-body.aml.txt",
       "name": "selection-invalid/non-w-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-non-w-body-aml-txt",
       "classification": 12,
-      "evidenceSet": 246
+      "evidenceSet": 247
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-child.aml.txt",
       "name": "selection-invalid/oc-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-child-aml-txt",
       "classification": 12,
-      "evidenceSet": 247
+      "evidenceSet": 248
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-empty-value.aml.txt",
       "name": "selection-invalid/oc-empty-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-empty-value-aml-txt",
       "classification": 12,
-      "evidenceSet": 248
+      "evidenceSet": 249
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-missing-value.aml.txt",
       "name": "selection-invalid/oc-missing-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-missing-value-aml-txt",
       "classification": 12,
-      "evidenceSet": 249
+      "evidenceSet": 250
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-multiple-values.aml.txt",
       "name": "selection-invalid/oc-multiple-values.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-multiple-values-aml-txt",
       "classification": 12,
-      "evidenceSet": 250
+      "evidenceSet": 251
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-outside-bi.aml.txt",
       "name": "selection-invalid/oc-outside-bi.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-outside-bi-aml-txt",
       "classification": 12,
-      "evidenceSet": 251
+      "evidenceSet": 252
     },
     {
       "id": "lucid-invalid:selection-invalid/pattern-binding.aml.txt",
       "name": "selection-invalid/pattern-binding.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-pattern-binding-aml-txt",
       "classification": 12,
-      "evidenceSet": 252
+      "evidenceSet": 253
     },
     {
       "id": "lucid-invalid:selection-invalid/unsupported-c-qualified.aml.txt",
       "name": "selection-invalid/unsupported-c-qualified.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-unsupported-c-qualified-aml-txt",
       "classification": 12,
-      "evidenceSet": 253
+      "evidenceSet": 254
     },
     {
       "id": "lucid-invalid:selection-invalid/unsupported-definition.aml.txt",
       "name": "selection-invalid/unsupported-definition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-unsupported-definition-aml-txt",
       "classification": 12,
-      "evidenceSet": 254
+      "evidenceSet": 255
     },
     {
       "id": "type:text",
       "name": "Text",
       "doc": "docs/spec/values.md#text",
       "classification": 13,
-      "evidenceSet": 255
+      "evidenceSet": 256
     },
     {
       "id": "type:number",
       "name": "Number",
       "doc": "docs/spec/values.md#number",
       "classification": 13,
-      "evidenceSet": 256
+      "evidenceSet": 257
     },
     {
       "id": "type:truth",
       "name": "Truth",
       "doc": "docs/spec/values.md#truth",
       "classification": 13,
-      "evidenceSet": 257
+      "evidenceSet": 258
     },
     {
       "id": "type:thing",
       "name": "Thing",
       "doc": "docs/spec/values.md#thing",
       "classification": 13,
-      "evidenceSet": 258,
-      "note": 159
+      "evidenceSet": 259,
+      "note": 177
     },
     {
       "id": "type:byte",
       "name": "Byte",
       "doc": "docs/spec/values.md#byte-and-bytes",
       "classification": 14,
-      "evidenceSet": 259
+      "evidenceSet": 260
     },
     {
       "id": "type:bytes",
       "name": "Bytes",
       "doc": "docs/spec/values.md#byte-and-bytes",
       "classification": 14,
-      "evidenceSet": 260,
-      "note": 160
+      "evidenceSet": 261,
+      "note": 178
     },
     {
       "id": "type:pointer",
       "name": "Pointer",
       "doc": "docs/spec/values.md#pointer",
       "classification": 13,
-      "evidenceSet": 261,
+      "evidenceSet": 262,
       "note": 124
     },
     {
@@ -7393,15 +7538,15 @@
       "name": "Null",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
-      "evidenceSet": 262,
-      "note": 161
+      "evidenceSet": 263,
+      "note": 179
     },
     {
       "id": "type:list",
       "name": "List",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 14,
-      "evidenceSet": 263,
+      "evidenceSet": 264,
       "note": 7
     },
     {
@@ -7409,517 +7554,517 @@
       "name": "Dictionary",
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
       "classification": 14,
-      "evidenceSet": 264
+      "evidenceSet": 265
     },
     {
       "id": "type:app",
       "name": "App",
       "doc": "docs/spec/applicational-types.md#apps",
       "classification": 13,
-      "evidenceSet": 265
+      "evidenceSet": 266
     },
     {
       "id": "type:service",
       "name": "Service",
       "doc": "docs/spec/applicational-types.md#services",
       "classification": 13,
-      "evidenceSet": 266,
-      "note": 162
+      "evidenceSet": 267,
+      "note": 180
     },
     {
       "id": "type:class",
       "name": "Class",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 13,
-      "evidenceSet": 267
+      "evidenceSet": 268
     },
     {
       "id": "type:object",
       "name": "Object",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 13,
-      "evidenceSet": 267
+      "evidenceSet": 268
     },
     {
       "id": "type:attribute",
       "name": "Attribute",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 14,
-      "evidenceSet": 268
+      "evidenceSet": 269
     },
     {
       "id": "type:definition",
       "name": "Definition",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 14,
-      "evidenceSet": 269
+      "evidenceSet": 270
     },
     {
       "id": "type:function",
       "name": "Function",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 13,
-      "evidenceSet": 270,
-      "note": 163
+      "evidenceSet": 271,
+      "note": 181
     },
     {
       "id": "type:property",
       "name": "Property",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 15,
-      "evidenceSet": 271
+      "evidenceSet": 272
     },
     {
       "id": "type:operation",
       "name": "Operation",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 15,
-      "evidenceSet": 271
+      "evidenceSet": 272
     },
     {
       "id": "type:noun",
       "name": "Noun",
       "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "classification": 13,
-      "evidenceSet": 272
+      "evidenceSet": 273
     },
     {
       "id": "type:verb",
       "name": "Verb",
       "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "classification": 13,
-      "evidenceSet": 273
+      "evidenceSet": 274
     },
     {
       "id": "type:adjective",
       "name": "Adjective",
       "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "classification": 13,
-      "evidenceSet": 274
+      "evidenceSet": 275
     },
     {
       "id": "type:adverb",
       "name": "Adverb",
       "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "classification": 14,
-      "evidenceSet": 275
+      "evidenceSet": 276
     },
     {
       "id": "value-tag:Thing",
       "name": "Thing",
       "doc": "docs/spec/values.md#thing",
       "classification": 16,
-      "evidenceSet": 276,
-      "note": 164
+      "evidenceSet": 277,
+      "note": 182
     },
     {
       "id": "value-tag:Text",
       "name": "Text",
       "doc": "docs/spec/values.md#text",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Number",
       "name": "Number",
       "doc": "docs/spec/values.md#number",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Truth",
       "name": "Truth",
       "doc": "docs/spec/values.md#truth",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Bytes",
       "name": "Bytes",
       "doc": "docs/spec/values.md#byte-and-bytes",
       "classification": 16,
-      "evidenceSet": 276,
-      "note": 164
+      "evidenceSet": 277,
+      "note": 182
     },
     {
       "id": "value-tag:Pointer",
       "name": "Pointer",
       "doc": "docs/spec/values.md#pointer",
       "classification": 16,
-      "evidenceSet": 276,
-      "note": 164
+      "evidenceSet": 277,
+      "note": 182
     },
     {
       "id": "value-tag:Lexeme",
       "name": "Lexeme",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:App",
       "name": "App",
       "doc": "docs/spec/applicational-types.md#apps",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Service",
       "name": "Service",
       "doc": "docs/spec/applicational-types.md#services",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Class",
       "name": "Class",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Object",
       "name": "Object",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Attribute",
       "name": "Attribute",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Definition",
       "name": "Definition",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Function",
       "name": "Function",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
-      "evidenceSet": 278,
-      "note": 165
+      "evidenceSet": 279,
+      "note": 183
     },
     {
       "id": "value-tag:Property",
       "name": "Property",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Operation",
       "name": "Operation",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:List",
       "name": "List",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 16,
-      "evidenceSet": 276,
-      "note": 164
+      "evidenceSet": 277,
+      "note": 182
     },
     {
       "id": "value-tag:Dictionary",
       "name": "Dictionary",
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Error",
       "name": "Error",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 276,
-      "note": 164
+      "evidenceSet": 277,
+      "note": 182
     },
     {
       "id": "value-tag:ID",
       "name": "ID",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:None",
       "name": "None",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Unknown",
       "name": "Unknown",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 277,
-      "note": 165
+      "evidenceSet": 278,
+      "note": 183
     },
     {
       "id": "value-tag:Null",
       "name": "Null",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 279,
-      "note": 164
+      "evidenceSet": 280,
+      "note": 182
     },
     {
       "id": "builtin:start",
       "name": "Start",
       "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
       "classification": 17,
-      "evidenceSet": 280
+      "evidenceSet": 281
     },
     {
       "id": "builtin:execute",
       "name": "Execute",
       "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
       "classification": 17,
-      "evidenceSet": 280
+      "evidenceSet": 281
     },
     {
       "id": "builtin:build",
       "name": "Build",
       "doc": "docs/reference/builtins/lifecycle.md#build",
       "classification": 17,
-      "evidenceSet": 281,
-      "note": 166
+      "evidenceSet": 282,
+      "note": 184
     },
     {
       "id": "builtin:run",
       "name": "Run",
       "doc": "docs/reference/builtins/lifecycle.md#run",
       "classification": 17,
-      "evidenceSet": 282,
-      "note": 166
+      "evidenceSet": 283,
+      "note": 184
     },
     {
       "id": "builtin:stop",
       "name": "Stop",
       "doc": "docs/reference/builtins/lifecycle.md#stop",
       "classification": 17,
-      "evidenceSet": 283,
-      "note": 166
+      "evidenceSet": 284,
+      "note": 184
     },
     {
       "id": "builtin:await",
       "name": "Await",
       "doc": "docs/reference/builtins/lifecycle.md#await",
       "classification": 17,
-      "evidenceSet": 284,
-      "note": 166
+      "evidenceSet": 285,
+      "note": 184
     },
     {
       "id": "builtin:show",
       "name": "Show",
       "doc": "docs/reference/builtins/lifecycle.md#show",
       "classification": 17,
-      "evidenceSet": 285
+      "evidenceSet": 286
     },
     {
       "id": "builtin:exit",
       "name": "Exit",
       "doc": "docs/reference/builtins/lifecycle.md#exit",
       "classification": 17,
-      "evidenceSet": 286
+      "evidenceSet": 287
     },
     {
       "id": "builtin:output",
       "name": "Output",
       "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
       "classification": 17,
-      "evidenceSet": 287,
-      "note": 166
+      "evidenceSet": 288,
+      "note": 184
     },
     {
       "id": "builtin:error",
       "name": "Error",
       "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
       "classification": 17,
-      "evidenceSet": 288,
-      "note": 166
+      "evidenceSet": 289,
+      "note": 184
     },
     {
       "id": "builtin:process",
       "name": "Process",
       "doc": "docs/reference/builtins/definitions.md#process",
       "classification": 17,
-      "evidenceSet": 289,
-      "note": 167
+      "evidenceSet": 290,
+      "note": 185
     },
     {
       "id": "builtin:function",
       "name": "Function",
       "doc": "docs/reference/builtins/definitions.md#function",
       "classification": 18,
-      "evidenceSet": 290,
-      "note": 168
+      "evidenceSet": 291,
+      "note": 186
     },
     {
       "id": "builtin:function.return",
       "name": "Function.Return",
       "doc": "docs/reference/builtins/definitions.md#functionreturn",
       "classification": 18,
-      "evidenceSet": 291,
-      "note": 169
+      "evidenceSet": 292,
+      "note": 187
     },
     {
       "id": "builtin:objective",
       "name": "Objective",
       "doc": "docs/reference/builtins/definitions.md#objective",
       "classification": 17,
-      "evidenceSet": 292
+      "evidenceSet": 293
     },
     {
       "id": "builtin:main",
       "name": "Main",
       "doc": "docs/reference/builtins/definitions.md#main",
       "classification": 17,
-      "evidenceSet": 292,
-      "note": 170
+      "evidenceSet": 293,
+      "note": 188
     },
     {
       "id": "builtin:basic",
       "name": "Basic",
       "doc": "docs/reference/builtins/definitions.md#basic",
       "classification": 17,
-      "evidenceSet": 292
+      "evidenceSet": 293
     },
     {
       "id": "builtin:create",
       "name": "Create",
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 17,
-      "evidenceSet": 293
+      "evidenceSet": 294
     },
     {
       "id": "builtin:define",
       "name": "Define",
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 17,
-      "evidenceSet": 294
+      "evidenceSet": 295
     },
     {
       "id": "builtin:describe",
       "name": "Describe",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 17,
-      "evidenceSet": 295
+      "evidenceSet": 296
     },
     {
       "id": "builtin:use",
       "name": "Use",
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "classification": 17,
-      "evidenceSet": 296
+      "evidenceSet": 297
     },
     {
       "id": "builtin:public",
       "name": "Public",
       "doc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 17,
-      "evidenceSet": 297
+      "evidenceSet": 298
     },
     {
       "id": "builtin:publicly",
       "name": "Publicly",
       "doc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 17,
-      "evidenceSet": 297
+      "evidenceSet": 298
     },
     {
       "id": "builtin:new",
       "name": "New",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 17,
-      "evidenceSet": 298
+      "evidenceSet": 299
     },
     {
       "id": "builtin:generic",
       "name": "Generic",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 18,
-      "evidenceSet": 298
+      "evidenceSet": 299
     },
     {
       "id": "builtin:input",
       "name": "Input",
       "doc": "docs/reference/builtins/index.md#runtime-members",
       "classification": 18,
-      "evidenceSet": 299
+      "evidenceSet": 300
     },
     {
       "id": "builtin:put",
       "name": "Put",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 17,
-      "evidenceSet": 300,
-      "note": 171
+      "evidenceSet": 301,
+      "note": 189
     },
     {
       "id": "builtin:place",
       "name": "Place",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 17,
-      "evidenceSet": 300,
-      "note": 171
+      "evidenceSet": 301,
+      "note": 189
     },
     {
       "id": "builtin:get",
       "name": "Get",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 301,
-      "note": 172
+      "evidenceSet": 302,
+      "note": 190
     },
     {
       "id": "builtin:take",
       "name": "Take",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 301,
-      "note": 172
+      "evidenceSet": 302,
+      "note": 190
     },
     {
       "id": "builtin:import",
       "name": "Import",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 301,
-      "note": 172
+      "evidenceSet": 302,
+      "note": 190
     },
     {
       "id": "builtin:export",
       "name": "Export",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 301,
-      "note": 172
+      "evidenceSet": 302,
+      "note": 190
     },
     {
       "id": "stdlib:eng:io",
@@ -7931,8 +8076,8 @@
       },
       "visibility": "namespace",
       "classification": 20,
-      "evidenceSet": 302,
-      "note": 173
+      "evidenceSet": 303,
+      "note": 191
     },
     {
       "id": "stdlib-export:eng:io:IO.Print",
@@ -7955,8 +8100,8 @@
       ],
       "effect": "Writes the selected typed rendering and appends LF; no L return value is declared.",
       "classification": 20,
-      "evidenceSet": 303,
-      "note": 174
+      "evidenceSet": 304,
+      "note": 192
     },
     {
       "id": "stdlib-internal:eng:io:output",
@@ -7968,168 +8113,168 @@
       },
       "visibility": "private",
       "classification": 21,
-      "evidenceSet": 304,
-      "note": 175
+      "evidenceSet": 305,
+      "note": 193
     },
     {
       "id": "grammar-group:values-subjects-objects",
       "name": "values-subjects-objects",
       "doc": "docs/spec/grammar.md#values-subjects-and-objects",
       "classification": 22,
-      "evidenceSet": 305,
-      "note": 176
+      "evidenceSet": 306,
+      "note": 194
     },
     {
       "id": "grammar-group:phrases",
       "name": "phrases",
       "doc": "docs/spec/grammar.md#phrases",
       "classification": 22,
-      "evidenceSet": 306,
-      "note": 176
+      "evidenceSet": 307,
+      "note": 194
     },
     {
       "id": "grammar-group:declarations",
       "name": "declarations",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 307,
-      "note": 176
+      "evidenceSet": 308,
+      "note": 194
     },
     {
       "id": "grammar-group:definitions",
       "name": "definitions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 308,
-      "note": 176
+      "evidenceSet": 309,
+      "note": 194
     },
     {
       "id": "grammar-group:descriptors",
       "name": "descriptors",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 309,
-      "note": 176
+      "evidenceSet": 310,
+      "note": 194
     },
     {
       "id": "grammar-group:aliases-imports",
       "name": "aliases-imports",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 310,
-      "note": 176
+      "evidenceSet": 311,
+      "note": 194
     },
     {
       "id": "grammar-group:process-lifecycle",
       "name": "process-lifecycle",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 311,
-      "note": 166
+      "evidenceSet": 312,
+      "note": 184
     },
     {
       "id": "grammar-group:collection-actions",
       "name": "collection-actions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 22,
-      "evidenceSet": 312,
-      "note": 177
+      "evidenceSet": 313,
+      "note": 195
     },
     {
       "id": "grammar-group:conditions",
       "name": "conditions",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 22,
-      "evidenceSet": 313,
-      "note": 176
+      "evidenceSet": 314,
+      "note": 194
     },
     {
       "id": "grammar-group:while",
       "name": "while",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 24,
-      "evidenceSet": 311,
-      "note": 176
+      "evidenceSet": 312,
+      "note": 194
     },
     {
       "id": "grammar-group:joined-conditions",
       "name": "joined-conditions",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 24,
-      "evidenceSet": 311,
-      "note": 176
+      "evidenceSet": 312,
+      "note": 194
     },
     {
       "id": "grammar-group:predicates-statements",
       "name": "predicates-statements",
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "classification": 22,
-      "evidenceSet": 311,
-      "note": 176
+      "evidenceSet": 312,
+      "note": 194
     },
     {
       "id": "grammar-group:vocabulary",
       "name": "vocabulary",
       "doc": "docs/spec/grammar.md#vocabulary-reference",
       "classification": 22,
-      "evidenceSet": 314,
-      "note": 176
+      "evidenceSet": 315,
+      "note": 194
     },
     {
       "id": "grammar-group:notation",
       "name": "notation",
       "doc": "docs/spec/grammar.md#configuration-notation",
       "classification": 23,
-      "evidenceSet": 315,
-      "note": 176
+      "evidenceSet": 316,
+      "note": 194
     },
     {
       "id": "grammar-group:matching",
       "name": "matching",
       "doc": "docs/spec/grammar.md#matching-and-ambiguity",
       "classification": 23,
-      "evidenceSet": 316,
-      "note": 176
+      "evidenceSet": 317,
+      "note": 194
     },
     {
       "id": "value-tag:invalid-zero",
       "name": "Invalid zero sentinel",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 317,
-      "note": 178
+      "evidenceSet": 318,
+      "note": 196
     },
     {
       "id": "type:map",
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "classification": 13,
-      "evidenceSet": 318,
-      "note": 179
+      "evidenceSet": 319,
+      "note": 197
     },
     {
       "id": "value-tag:Map",
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "classification": 16,
-      "evidenceSet": 319,
-      "note": 180
+      "evidenceSet": 320,
+      "note": 198
     },
     {
       "id": "type:error",
       "name": "Error",
       "doc": "docs/spec/execution.md#output-and-error",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 181
+      "evidenceSet": 261,
+      "note": 199
     },
     {
       "id": "grammar-group:runtime-captures",
       "name": "runtime-captures",
       "doc": "docs/spec/names-and-scope.md#runtime-storage-and-definite-assignment",
       "classification": 23,
-      "evidenceSet": 320,
-      "note": 182
+      "evidenceSet": 321,
+      "note": 200
     },
     {
       "id": "stdlib-internal:eng:storage",
@@ -8141,8 +8286,8 @@
       },
       "visibility": "namespace",
       "classification": 21,
-      "evidenceSet": 321,
-      "note": 183
+      "evidenceSet": 322,
+      "note": 201
     },
     {
       "id": "stdlib-internal:eng:runtime",
@@ -8154,8 +8299,8 @@
       },
       "visibility": "namespace",
       "classification": 21,
-      "evidenceSet": 322,
-      "note": 183
+      "evidenceSet": 323,
+      "note": 201
     },
     {
       "id": "stdlib-internal:eng:format",
@@ -8167,247 +8312,247 @@
       },
       "visibility": "namespace",
       "classification": 21,
-      "evidenceSet": 323,
-      "note": 184
+      "evidenceSet": 324,
+      "note": 202
     },
     {
       "id": "logeme.segment.B",
       "name": "B / declare",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 25,
-      "evidenceSet": 324
+      "evidenceSet": 325
     },
     {
       "id": "logeme.segment.A",
       "name": "A / declaration",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 25,
-      "evidenceSet": 325
+      "evidenceSet": 326
     },
     {
       "id": "logeme.segment.D",
       "name": "D / calculate",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 25,
-      "evidenceSet": 326
+      "evidenceSet": 327
     },
     {
       "id": "logeme.segment.E",
       "name": "E / calculation",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 25,
-      "evidenceSet": 327
+      "evidenceSet": 328
     },
     {
       "id": "logeme.segment.G",
       "name": "G / evaluate",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 25,
-      "evidenceSet": 328
+      "evidenceSet": 329
     },
     {
       "id": "logeme.segment.I",
       "name": "I / evaluation",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 25,
-      "evidenceSet": 329
+      "evidenceSet": 330
     },
     {
       "id": "logeme.segment.F",
       "name": "F / define",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 25,
-      "evidenceSet": 330
+      "evidenceSet": 331
     },
     {
       "id": "logeme.segment.O",
       "name": "O / definition",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 25,
-      "evidenceSet": 331
+      "evidenceSet": 332
     },
     {
       "id": "logeme.segment.H",
       "name": "H / describe",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 332
+      "evidenceSet": 333
     },
     {
       "id": "logeme.segment.U",
       "name": "U / description",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 333
+      "evidenceSet": 334
     },
     {
       "id": "logeme.segment.K",
       "name": "K / operate",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 25,
-      "evidenceSet": 334
+      "evidenceSet": 335
     },
     {
       "id": "logeme.segment.W",
       "name": "W / operation",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 25,
-      "evidenceSet": 335
+      "evidenceSet": 336
     },
     {
       "id": "logeme.segment.P",
       "name": "P / iterate",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 25,
-      "evidenceSet": 336
+      "evidenceSet": 337
     },
     {
       "id": "logeme.segment.X",
       "name": "X / iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 25,
-      "evidenceSet": 337
+      "evidenceSet": 338
     },
     {
       "id": "logeme.segment.M",
       "name": "M / instantiate",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 25,
-      "evidenceSet": 338
+      "evidenceSet": 339
     },
     {
       "id": "logeme.segment.Y",
       "name": "Y / instantiation",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 25,
-      "evidenceSet": 339
+      "evidenceSet": 340
     },
     {
       "id": "logeme.segment.C",
       "name": "C / execute",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 340
+      "evidenceSet": 341
     },
     {
       "id": "logeme.segment.V",
       "name": "V / execution",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 341
+      "evidenceSet": 342
     },
     {
       "id": "logeme.family.declaration-adapters",
       "name": "A/BA/DA/KA/HA/GA/MA/PA",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 26,
-      "evidenceSet": 342
+      "evidenceSet": 343
     },
     {
       "id": "logeme.family.definition-adapters",
       "name": "O/OB/FO/FOB/KO/KOB/DO/DOB/GO/GOB/MO/MOB/CO/COB/BO/BOD/BOK/BOH/BOG/BOM/BOP/BOC",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 26,
-      "evidenceSet": 343
+      "evidenceSet": 344
     },
     {
       "id": "logeme.family.literal-file",
       "name": "EA complete literal file",
       "doc": "docs/reference/logemes/declarations.md#ea-complete-literal-file",
       "classification": 26,
-      "evidenceSet": 344
+      "evidenceSet": 345
     },
     {
       "id": "logeme.family.communication",
       "name": "CE communication calculations",
       "doc": "docs/reference/logemes/calculations.md#communication-calculations",
       "classification": 25,
-      "evidenceSet": 345
+      "evidenceSet": 346
     },
     {
       "id": "logeme.family.description",
       "name": "U/MU description and updates",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 346
+      "evidenceSet": 347
     },
     {
       "id": "logeme.family.selection",
       "name": "I/GE/GI ordered selection",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 26,
-      "evidenceSet": 347
+      "evidenceSet": 348
     },
     {
       "id": "logeme.family.readiness",
       "name": "CI/BI/OC/DOC readiness selection",
       "doc": "docs/reference/logemes/selection.md#ci-and-bi-bounded-readiness-selection",
       "classification": 25,
-      "evidenceSet": 348
+      "evidenceSet": 349
     },
     {
       "id": "logeme.family.callables",
       "name": "W/FW/BW/KY/KO/KOB callables",
       "doc": "docs/reference/logemes/callables.md#invocation-through-ky",
       "classification": 25,
-      "evidenceSet": 349
+      "evidenceSet": 350
     },
     {
       "id": "logeme.family.iteration",
       "name": "X/I/OG/DOG/PO four-category iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 26,
-      "evidenceSet": 350
+      "evidenceSet": 351
     },
     {
       "id": "logeme.family.unsupported-loops",
       "name": "Three-part loops",
       "doc": "docs/reference/logemes/iteration.md#unsupported-forms-and-native-failures",
       "classification": 27,
-      "evidenceSet": 351
+      "evidenceSet": 352
     },
     {
       "id": "logeme.family.instantiation",
       "name": "Y/HY empty and populated records",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 26,
-      "evidenceSet": 352
+      "evidenceSet": 353
     },
     {
       "id": "logeme.family.traits",
       "name": "MY required signatures",
       "doc": "docs/reference/logemes/instantiation.md#required-trait-signatures",
       "classification": 25,
-      "evidenceSet": 353
+      "evidenceSet": 354
     },
     {
       "id": "logeme.family.generics",
       "name": "Local FW/HY/MY/Y/named KY parameters",
       "doc": "docs/reference/logemes/metadata.md#lifetimes-and-generictypes",
       "classification": 25,
-      "evidenceSet": 354
+      "evidenceSet": 355
     },
     {
       "id": "logeme.family.scheduling",
       "name": "V/MV scheduling",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 355
+      "evidenceSet": 356
     },
     {
       "id": "logeme.family.deferred",
       "name": "Deferred metadata",
       "doc": "docs/reference/logemes/instantiation.md#deferred-is-rejected",
       "classification": 27,
-      "evidenceSet": 351
+      "evidenceSet": 352
     },
     {
       "id": "logeme.family.futures",
       "name": "CV/DV/CO/COB future composition",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 28,
-      "evidenceSet": 356,
-      "note": 185
+      "evidenceSet": 357,
+      "note": 203
     }
   ],
   "schemaVersion": 3,
@@ -8562,7 +8707,7 @@
     "In selects a runtime update destination; the following index or field key remains part of that update.",
     "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.",
     "While is recognized but explicitly rejected by outer lowering.",
-    "The only command; optional one source defaults to main.l.",
+    "Build and publish; optional one source defaults to main.l.",
     "Complete replacement filesystem; FlagSet also accepts single-hyphen and equals-value spellings.",
     "Publish executable and companion output together; relative to caller CWD.",
     "Select source lexicon; bundled default eng. Explicit empty values fail.",
@@ -8571,6 +8716,24 @@
     "Supported help alias.",
     "End flag parsing, including before a filename beginning with a dash.",
     "OS targeting follows v0.0.1; currently rejected.",
+    "Source-only analysis command group; one required input after options. No Cargo build, publication, or App execution.",
+    "Inspection may succeed with unresolved obligations; it does not establish every reported property.",
+    "At least one profile is required; contradicted or unresolved enforcement returns 1 without semantic fallback.",
+    "An occurrence or source-byte selector is required; no matching binding returns 2.",
+    "Defaults to implementation assurance for the entire dictionary; loading definitions is not certification.",
+    "Select text or JSON display; default text. Other values reject.",
+    "Write the display in its selected format to a file instead of stdout; cannot replace source input.",
+    "Write an additional JSON report independently of display format; cannot replace source input.",
+    "One complete resource filesystem; missing optional metadata has no embedded fallback.",
+    "Select source resources; default eng, explicit empty value rejects.",
+    "Repeatable explicit manifests contribute records; conflicts reject rather than override by order.",
+    "Explicit trust_policy document; declarations do not approve themselves and default native approval is empty.",
+    "Repeatable supported profile names; check requires at least one. Whole-entry profiles reject in symbolic assurance mode.",
+    "Required for explain; matches exact occurrence identity or origin.source:origin.start.",
+    "Repeatable, nonempty canonical rule meaning or declaration source-byte selector; dictionary-only and must resolve uniquely.",
+    "Implementation is default. Symbolic requires explicit adjective selection and excludes whole-entry profiles; success leaves native assurance separate.",
+    "Group help accepts --help/-h; subcommand FlagSet help is available before input. Displays usage with status 0.",
+    "End subcommand option parsing, including before an input beginning with a dash.",
     "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types and callable signatures. No implicit coercion or dynamic arithmetic.",
     "Owned byte sequences construct from Text, snapshot and support checked indexed reads as Number. Byte mutation and numeric-width families are not supplied.",
     "Null initializes an explicit absence value; typed reads preserve evaluation and type/index/key checks. Unassigned storage and the native-definition Null atom remain separate.",
@@ -8641,6 +8804,17 @@
         "cmd/l/command_version_test.go",
         "cmd/l/command_test.go",
         "version_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run"
+    },
+    {
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_test.go",
+        "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run"
     },
@@ -12932,20 +13106,20 @@
     "lyger/runtime_values_plan.go": "91ff1b5e9143c06fd85f883a2130a06abb10a7777b4d534b99625f6c35536671",
     "builtins/eng/core.l": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
     "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
-    "lyger/semantic_resolution.go": "21f4b08ca04bed3f0247ed0a458d93685138cac538f3e6554ee41dbf249f3cee",
+    "lyger/semantic_resolution.go": "f924c2f40bc24b5d9c9d3b763c0d56e8027564ff8623e2da4c1ebc178114cabf",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
     "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
     "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
     "lyger/source_units_topology.go": "eb006bc1866daab6eba15a67c0e35b8c2bee94a15328927d388e54789c002ff5",
-    "lyger/construction.go": "2d2461bf4d9ea601248b0a162954039c6625a60c93a2eddb62e52505e12e7f24",
+    "lyger/construction.go": "e01de48db67121acf6ddaee35ea778a4dd5c29a618f685156954ae578c1eb9f7",
     "lyger/source_functions.go": "9e19b22b4d6614c38160528e67e7c426b8c1b5a658bd16be4073336957ee0fbf",
     "lyger/function_composition.go": "b1cc7002bf7a5f8ea20cf977bc9f94da30ebf4e57ba6fb6bd80e7600b55b63b6",
     "lyger/storage_words.go": "c22cd50d27415e75bed937d40fa469736d2963d7376144af2c2d124d61fabcfc",
     "lyger/binding.go": "be5070f9f04486c61ecae6e832ac09e85339df355b3eb2a4f157e553f4ac1b87",
     "lyger/scope.go": "c8fdbeb575b95e77f5785072ff8b15ad070af862033e48acd07346c0c980fdef",
-    "lyger/function_definitions.go": "ffcc74f3c577d20a4155b032595834a0e446b03066e720e588f1f6968f2c845c",
-    "lyger/lowering.go": "28dc70d4430c83d708361bff5c69d0f09d4ebe86cdc184dddba1e1cb6db1102d",
+    "lyger/function_definitions.go": "5bb1ca5803d502f66122d7c4faf0d36e2074876bf896b7a58e5a27018f106f2b",
+    "lyger/lowering.go": "075874475402f5d7569903642042e023fa0c88c2f972f2a1df325dcf59e1ec37",
     "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
     "lyger/semantics.go": "cdbd1b22d181b3026ddfd97d73dd5a13567d8a9b60da56822b423d49a73be383",
     "docs/cli-build.md": "1610aca679670fd07d05cdce15142e5136df7fb20dcbabf65f73ec4e779324e6",
@@ -12972,7 +13146,7 @@
     "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
     "builtins/runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
     "logiceme/runtime_composition.go": "24f443bd4fba2d87f7031c1acf3e39d02657c6fe4fb368449ac6a193ffe9b0b7",
-    "logiceme/logiceme_service.go": "0452128b7476dcd377bbceb6e96268498777e1bc4a15331994cff0f87c139bbb",
+    "logiceme/logiceme_service.go": "50239cca836811b93039570c16e0380220ebcae24237a9c725d809e8d7f311f7",
     "builtins/runtime/eng/number.l": "7d9f41f3990343b3ec6c63f5b03ca4762c5fab7207641d20515327ff71012f2b",
     "builtins/runtime/eng/foundations.l": "3f21a1e80f4249af50a48d35149f2144b00fa3c448eae1a3ab465b97b6044fd7",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
