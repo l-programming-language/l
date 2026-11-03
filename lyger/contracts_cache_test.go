@@ -13,18 +13,9 @@ func TestContractsAnalysisSessionWarmCold(t *testing.T) {
 	service := NewLygerService(Options{})
 	options := ContractAnalysisOptions{Session: session}
 	source := []byte("Create \"Worker\" as a New Basic App.\nRun Worker.\nAwait Worker.\n")
-	first, err := service.AnalyzeContracts(source, "/project/session.l", options)
-	if err != nil {
-		t.Fatal(err)
-	}
-	warm, err := service.AnalyzeContracts(source, "/project/session.l", options)
-	if err != nil {
-		t.Fatal(err)
-	}
-	cold, err := service.AnalyzeContracts(source, "/project/session.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	first := analyzeContractSource(t, service, source, "/project/session.l", options)
+	warm := analyzeContractSource(t, service, source, "/project/session.l", options)
+	cold := analyzeContractSource(t, service, source, "/project/session.l", ContractAnalysisOptions{})
 	if !reflect.DeepEqual(first.Bindings, warm.Bindings) || !reflect.DeepEqual(warm.Bindings, cold.Bindings) || contracts.StableID("summary", first.Summary) != contracts.StableID("summary", warm.Summary) || contracts.StableID("summary", warm.Summary) != contracts.StableID("summary", cold.Summary) {
 		t.Fatalf("cached source analysis differs from cold Track A resolution/inference: bindings first/warm=%v warm/cold=%v; summaries=%s %s %s", reflect.DeepEqual(first.Bindings, warm.Bindings), reflect.DeepEqual(warm.Bindings, cold.Bindings), contracts.StableID("summary", first.Summary), contracts.StableID("summary", warm.Summary), contracts.StableID("summary", cold.Summary))
 	}
@@ -54,10 +45,7 @@ func TestContractsAnalysisSessionWarmCold(t *testing.T) {
 }
 
 func TestContractsResourceLifecycleReportRoundTrip(t *testing.T) {
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(contractNativeUpdateSource), "/project/lifecycle-report.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(contractNativeUpdateSource), "/project/lifecycle-report.l", ContractAnalysisOptions{})
 	owned := 0
 	for _, path := range analysis.Summary.Paths {
 		for _, resource := range path.Owned {
@@ -94,14 +82,8 @@ func TestContractsAnalysisSessionSourceChange(t *testing.T) {
 		t.Fatal(err)
 	}
 	changed := []byte("Use IO's Print from `io` as \"Print\".\nCreate \"Other\" as a New Basic App.\nRun Other.\nAwait Other.\n")
-	warm, err := service.AnalyzeContracts(changed, "/project/session.l", ContractAnalysisOptions{Session: session})
-	if err != nil {
-		t.Fatal(err)
-	}
-	cold, err := service.AnalyzeContracts(changed, "/project/session.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	warm := analyzeContractSource(t, service, changed, "/project/session.l", ContractAnalysisOptions{Session: session})
+	cold := analyzeContractSource(t, service, changed, "/project/session.l", ContractAnalysisOptions{})
 	if !reflect.DeepEqual(warm.Bindings, cold.Bindings) || contracts.StableID("summary", warm.Summary) != contracts.StableID("summary", cold.Summary) {
 		t.Fatal("new import/target reused old bindings or assurance")
 	}
@@ -113,10 +95,7 @@ func TestContractsNativeApplicationsSessionWarmCold(t *testing.T) {
 	session := contracts.NewSession()
 	service := NewLygerService(Options{})
 	source := []byte(contractNativeUpdateSource)
-	analysis, err := service.AnalyzeContracts(source, "/project/native-cache.l", ContractAnalysisOptions{Session: session})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, service, source, "/project/native-cache.l", ContractAnalysisOptions{Session: session})
 	var uses []contracts.NativeUse
 	for _, use := range analysis.NativeUses {
 		if use.Name == "Storage.List.Update" {
@@ -155,14 +134,8 @@ func TestContractsNativeApplicationsSessionWarmCold(t *testing.T) {
 			application := evaluateNativeUse(use, declaration, currentEnvironment, currentPolicy, currentWitnesses, contracts.Established)
 			inference.NativeApplications = map[string]contracts.NativeEvaluation{use.ID: application}
 			options := ContractAnalysisOptions{Session: session, Inference: inference}
-			warm, err := service.AnalyzeContracts(source, "/project/native-cache.l", options)
-			if err != nil {
-				t.Fatal(err)
-			}
-			cold, err := service.AnalyzeContracts(source, "/project/native-cache.l", ContractAnalysisOptions{Inference: inference})
-			if err != nil {
-				t.Fatal(err)
-			}
+			warm := analyzeContractSource(t, service, source, "/project/native-cache.l", options)
+			cold := analyzeContractSource(t, service, source, "/project/native-cache.l", ContractAnalysisOptions{Inference: inference})
 			if !reflect.DeepEqual(warm.Bindings, cold.Bindings) || contracts.StableID("summary", warm.Summary) != contracts.StableID("summary", cold.Summary) {
 				t.Fatal("cached native application differs from cold analysis")
 			}

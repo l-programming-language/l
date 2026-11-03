@@ -16,45 +16,39 @@ func contractTrustFixture(t *testing.T) (contracts.Report, contractMetadata) {
 	report.Inputs = map[string]string{"fixture.l": "source-v1"}
 	report.Lowering.Steps = []contracts.LoweringStep{{ID: "use-1", Meaning: "fixture:meaning", Name: "Fixture", Kind: "native", Target: target, Implementation: "body-v1"}}
 	report.Lowering.Fingerprints = map[string]string{"fixture:meaning": "body-v1", "drop-helper": "drop-v1"}
-	report.Summary.Coverage = contracts.Partial
-	report.Summary.Unknowns = []contracts.UnknownReason{{Code: "other-native", Message: "surrounding native closure remains unresolved"}}
 	claim := contracts.Claim{ID: "leaf-no-block", Predicate: contracts.Predicate{Kind: "effects_closed", Subject: "blocking", Value: contracts.Atom{Kind: "bool", Bool: false}}, Target: target, Scope: "native_body", Phase: contracts.Invocation, Outcomes: []contracts.Outcome{contracts.Normal}}
 	signature := &contracts.NativeSignature{Inputs: []string{"Fixture"}, Outputs: []string{"Fixture"}}
 	use := contracts.NativeUse{ID: "use-1", Meaning: "fixture:meaning", Name: "Fixture", Target: target, Phase: contracts.Invocation, Boundary: "native_body", Signature: signature, Implementation: "body-v1", OutcomeDisposition: "value"}
 	report.NativeUses = []contracts.NativeUse{use}
 	environment := contracts.SealNativeEnvironment(contracts.NativeEnvironment{SchemaVersion: contracts.SchemaVersion, Kind: "native_environment", Producer: "test-only-fixture", Version: "1", Method: "test-only", Host: "test-only", Target: "test-only-target", Compiler: "test-only-compiler", PanicPolicy: "unwind", Runtime: "test-only", Allocator: "test-only", Inputs: report.Inputs, Dependencies: report.Lowering.Fingerprints})
 	declaration := contracts.DeclaredContract{ID: "fixture-contract", Meaning: "fixture:meaning", Name: "Fixture", Signature: signature, Guarantees: []contracts.Claim{claim}, Origin: contracts.Origin{Source: "test-only-fixture"}}
-	current := evaluateNativeUse(use, declaration, environment, contracts.TrustPolicy{}, nil, contracts.Unresolved).Guarantees[0].Current
+	current := evaluateNativeUse(use, declaration, environment).Guarantees[0].Current
 	witness := contracts.NativeWitness{ID: "test-native-approval", ClaimFingerprint: contracts.ClaimFingerprint(claim), ContractFingerprint: current.Contract, ImplementationFingerprint: current.Implementation, TargetFingerprint: current.Target, Authority: "test-only-authority", Rationale: "Explicit synthetic test assumption, never production approval", Dependencies: current.Dependencies, TestOnly: true}
 	metadata := contractMetadata{Environment: &environment, Native: []contracts.DeclaredContract{declaration}, Trust: contracts.TrustPolicyDocument{SchemaVersion: contracts.SchemaVersion, Kind: "trust_policy", Producer: "test-only-fixture", Policy: contracts.TrustPolicy{Version: contracts.SchemaVersion, ID: "test-only-policy", Authorities: []string{witness.Authority}, ApprovedWitnesses: []string{witness.ID}, AllowTestOnly: true}, Witnesses: []contracts.NativeWitness{witness}}}
 	return report, metadata
 }
 
-func evaluateContractTrust(report *contracts.Report, metadata contractMetadata) error {
+func evaluateContractTrust(t *testing.T, report *contracts.Report, metadata contractMetadata) {
+	t.Helper()
 	options, evaluations, err := prepareNativeApplications(report, metadata)
 	if err != nil {
-		return err
+		t.Fatal(err)
 	}
 	var nodes []contracts.Node
 	for _, use := range report.NativeUses {
 		nodes = append(nodes, contracts.Node{Kind: contracts.Native, ID: use.ID, Native: use.ID, Meaning: use.Meaning, Target: use.Target, Phase: use.Phase})
 	}
-	outside := report.Summary.Unknowns
 	report.Summary, err = contracts.Infer(contracts.Plan{Entry: contracts.Node{Kind: contracts.Sequence, Children: nodes}}, options)
 	if err != nil {
-		return err
+		t.Fatal(err)
 	}
-	report.Summary.Unknowns = append(report.Summary.Unknowns, outside...)
 	appendNativeEvaluations(report, evaluations, metadata.Trust)
-	return nil
 }
 
 func TestContractTrustIsPropositionSpecific(t *testing.T) {
 	t.Run("approved-conditional-claim", func(t *testing.T) {
 		report, metadata := contractTrustFixture(t)
-		if err := evaluateContractTrust(&report, metadata); err != nil {
-			t.Fatal(err)
-		}
+		evaluateContractTrust(t, &report, metadata)
 		if len(report.Obligations) == 0 || report.Obligations[len(report.Obligations)-1].Status != contracts.Established || len(report.Assumptions) != 1 || report.Assumptions[0] != "test-native-approval" {
 			t.Fatalf("explicit conditional assurance missing: %+v", report.Obligations)
 		}
@@ -75,12 +69,15 @@ func TestContractTrustIsPropositionSpecific(t *testing.T) {
 			t.Fatal("text report omitted conditional test-only approval scope")
 		}
 	})
-	for _, mutation := range []string{"missing-policy", "body", "cleanup", "source", "target", "role", "declaration", "unknown-attachment"} {
+	for _, mutation := range []string{"missing-policy", "missing-environment", "body", "cleanup", "source", "target", "role", "declaration", "unknown-attachment"} {
 		t.Run(mutation, func(t *testing.T) {
 			report, metadata := contractTrustFixture(t)
 			switch mutation {
 			case "missing-policy":
 				metadata.Trust = contracts.TrustPolicyDocument{}
+			case "missing-environment":
+				// Concrete-looking report labels cannot replace sealed evidence.
+				metadata.Environment = nil
 			case "body":
 				report.NativeUses[0].Implementation = "body-v2"
 			case "cleanup":
@@ -97,25 +94,11 @@ func TestContractTrustIsPropositionSpecific(t *testing.T) {
 			case "unknown-attachment":
 				report.NativeUses[0].Target = contracts.TargetRef{Unknown: true}
 			}
-			if err := evaluateContractTrust(&report, metadata); err != nil {
-				t.Fatal(err)
-			}
+			evaluateContractTrust(t, &report, metadata)
 			if len(report.Obligations) == 0 || report.Obligations[len(report.Obligations)-1].Status != contracts.Unresolved || len(report.Assumptions) != 0 {
 				t.Fatalf("stale/unapproved assertion accepted: %+v", report.Obligations)
 			}
 		})
-	}
-}
-
-func TestContractTrustRequiresConcreteNativeConfiguration(t *testing.T) {
-	report, metadata := contractTrustFixture(t)
-	// Concrete-looking report labels cannot replace sealed environment evidence.
-	metadata.Environment = nil
-	if err := evaluateContractTrust(&report, metadata); err != nil {
-		t.Fatal(err)
-	}
-	if report.Obligations[len(report.Obligations)-1].Status != contracts.Unresolved || len(report.Assumptions) != 0 {
-		t.Fatalf("missing native configuration granted assurance: %+v", report.Obligations)
 	}
 }
 
@@ -151,14 +134,12 @@ func TestContractTrustRequiresCurrentApplicability(t *testing.T) {
 			case "valid-target-type":
 				declaration.Requirements = []contracts.Predicate{{Kind: "type", Subject: "target", Value: contracts.Atom{Kind: "type", Text: "Fixture"}}}
 			}
-			current := evaluateNativeUse(report.NativeUses[0], *declaration, *metadata.Environment, contracts.TrustPolicy{}, nil, contracts.Unresolved).Guarantees[0].Current
+			current := evaluateNativeUse(report.NativeUses[0], *declaration, *metadata.Environment).Guarantees[0].Current
 			metadata.Trust.Witnesses[0].ContractFingerprint = current.Contract
 			if got := contracts.ApproveNativeClaim(metadata.Trust.Policy, metadata.Trust.Witnesses[0], declaration.Guarantees[0], current); got.Status != contracts.Established {
 				t.Fatalf("fixture must have a current valid native witness: %+v", got)
 			}
-			if err := evaluateContractTrust(&report, metadata); err != nil {
-				t.Fatal(err)
-			}
+			evaluateContractTrust(t, &report, metadata)
 			if len(report.Obligations) != 3 || report.Obligations[1].Status != test.want && !(test.name == "unprojected-signature" && report.Obligations[0].Status == test.want) {
 				t.Fatalf("applicability obligation omitted or mischecked: %+v", report.Obligations)
 			}
@@ -190,9 +171,7 @@ func TestNativeRequirementsWithoutAdvertisedGuarantees(t *testing.T) {
 	metadata.Native[0].Guarantees = nil
 	metadata.Native[0].Requirements = []contracts.Predicate{{Kind: "false"}}
 	metadata.Trust = contracts.TrustPolicyDocument{}
-	if err := evaluateContractTrust(&report, metadata); err != nil {
-		t.Fatal(err)
-	}
+	evaluateContractTrust(t, &report, metadata)
 	if len(report.Obligations) != 2 || report.Obligations[1].Status != contracts.Contradicted {
 		t.Fatalf("selected requirements ignored without an advertised guarantee: %+v", report.Obligations)
 	}
@@ -208,9 +187,7 @@ func TestNativeEvaluationRetainsOrphanDeclarations(t *testing.T) {
 	for i := range metadata.Native {
 		metadata.Native[i].Outcomes = []contracts.Outcome{contracts.Normal}
 	}
-	if err := evaluateContractTrust(&report, metadata); err != nil {
-		t.Fatal(err)
-	}
+	evaluateContractTrust(t, &report, metadata)
 	guarantees := 0
 	for _, obligation := range report.Obligations {
 		if obligation.Claim.Predicate.Kind == "effects_closed" {
@@ -232,7 +209,7 @@ func TestNativeEvaluationAggregatesEntryContexts(t *testing.T) {
 	report, metadata := contractTrustFixture(t)
 	requirement := contracts.Predicate{Kind: "present", Subject: "entry-ready"}
 	metadata.Native[0].Requirements = []contracts.Predicate{requirement}
-	current := evaluateNativeUse(report.NativeUses[0], metadata.Native[0], *metadata.Environment, contracts.TrustPolicy{}, nil, contracts.Unresolved).Guarantees[0].Current
+	current := evaluateNativeUse(report.NativeUses[0], metadata.Native[0], *metadata.Environment).Guarantees[0].Current
 	metadata.Trust.Witnesses[0].ContractFingerprint = current.Contract
 	options, evaluations, err := prepareNativeApplications(&report, metadata)
 	if err != nil {
@@ -265,16 +242,14 @@ func TestNativeEvaluationComponentsAndGuaranteesShareEvidence(t *testing.T) {
 	declaration := &metadata.Native[0]
 	declaration.Outcomes = []contracts.Outcome{contracts.Normal}
 	declaration.Guarantees = nil
-	prepared := evaluateNativeUse(report.NativeUses[0], *declaration, *metadata.Environment, contracts.TrustPolicy{}, nil, contracts.Unresolved)
+	prepared := evaluateNativeUse(report.NativeUses[0], *declaration, *metadata.Environment)
 	declaration.Guarantees = []contracts.Claim{prepared.Components[0].Claim}
-	prepared = evaluateNativeUse(report.NativeUses[0], *declaration, *metadata.Environment, contracts.TrustPolicy{}, nil, contracts.Unresolved)
+	prepared = evaluateNativeUse(report.NativeUses[0], *declaration, *metadata.Environment)
 	component := prepared.Components[0]
 	witness := &metadata.Trust.Witnesses[0]
 	witness.ClaimFingerprint, witness.ContractFingerprint = contracts.ClaimFingerprint(component.Claim), component.Current.Contract
 	witness.ImplementationFingerprint, witness.TargetFingerprint, witness.Dependencies = component.Current.Implementation, component.Current.Target, component.Current.Dependencies
-	if err := evaluateContractTrust(&report, metadata); err != nil {
-		t.Fatal(err)
-	}
+	evaluateContractTrust(t, &report, metadata)
 	if len(report.NativeComponents) != 1 || report.NativeComponents[0].Status != contracts.Established || report.Obligations[len(report.Obligations)-1].Status != contracts.Established {
 		t.Fatalf("same supported proposition disagrees across summary/report: %+v", report.Obligations)
 	}
@@ -283,8 +258,8 @@ func TestNativeEvaluationComponentsAndGuaranteesShareEvidence(t *testing.T) {
 	}
 }
 
-func evaluateNativeUse(use contracts.NativeUse, declaration contracts.DeclaredContract, environment contracts.NativeEnvironment, policy contracts.TrustPolicy, witnesses []contracts.NativeWitness, applicability contracts.Status) contracts.NativeEvaluation {
-	return contracts.EvaluateNativeUses([]contracts.NativeUse{use}, []contracts.DeclaredContract{declaration}, environment, policy, witnesses, applicability, nil)[0]
+func evaluateNativeUse(use contracts.NativeUse, declaration contracts.DeclaredContract, environment contracts.NativeEnvironment) contracts.NativeEvaluation {
+	return contracts.EvaluateNativeUses([]contracts.NativeUse{use}, []contracts.DeclaredContract{declaration}, environment, contracts.TrustPolicy{}, nil, contracts.Unresolved, nil)[0]
 }
 
 func TestNativeEvaluationRejectsMismatchedGuaranteeScope(t *testing.T) {
@@ -305,16 +280,14 @@ func TestNativeEvaluationRejectsMismatchedGuaranteeScope(t *testing.T) {
 			case "missing-outcomes":
 				claim.Outcomes = nil
 			}
-			evaluation := evaluateNativeUse(report.NativeUses[0], metadata.Native[0], *metadata.Environment, contracts.TrustPolicy{}, nil, contracts.Unresolved)
+			evaluation := evaluateNativeUse(report.NativeUses[0], metadata.Native[0], *metadata.Environment)
 			current := evaluation.Guarantees[0].Current
 			witness := &metadata.Trust.Witnesses[0]
 			witness.ClaimFingerprint, witness.ContractFingerprint = contracts.ClaimFingerprint(*claim), current.Contract
 			if result := contracts.ApproveNativeClaim(metadata.Trust.Policy, *witness, *claim, current); result.Status != contracts.Established {
 				t.Fatalf("fixture witness must approve the exact authored proposition: %+v", result)
 			}
-			if err := evaluateContractTrust(&report, metadata); err != nil {
-				t.Fatal(err)
-			}
+			evaluateContractTrust(t, &report, metadata)
 			if report.Obligations[len(report.Obligations)-1].Status != contracts.Unresolved || len(report.Assumptions) != 0 {
 				t.Fatal("fresh witness erased the native use's exact scope, phase, target or outcomes")
 			}

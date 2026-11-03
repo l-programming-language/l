@@ -187,16 +187,22 @@ func TestNativeEvidenceBuildRecordingAndNoReplay(t *testing.T) {
 	}
 }
 
+func nativeTestConfiguration(t *testing.T, root string, environment []string) map[string]string {
+	t.Helper()
+	configuration := make(map[string]string)
+	if err := nativeConfiguration(configuration, root, environment); err != nil {
+		t.Fatal(err)
+	}
+	return configuration
+}
+
 func TestNativeEvidenceConfigurationAndWorkspaceIdentity(t *testing.T) {
 	root := t.TempDir()
 	if err := nativeConfiguration(make(map[string]string), root, []string{"CARGO_HOME=relative"}); err == nil {
 		t.Fatal("relative Cargo home could fingerprint configuration in the wrong working directory")
 	}
 	environment := []string{"CARGO_HOME=" + root, "CARGO_NET_OFFLINE=true", "CARGO_REGISTRIES_PRIVATE_TOKEN=never-record-this-secret", "UNRELATED_SECRET=also-not-recorded"}
-	first := make(map[string]string)
-	if err := nativeConfiguration(first, root, environment); err != nil {
-		t.Fatal(err)
-	}
+	first := nativeTestConfiguration(t, root, environment)
 	if strings.Contains(fmt.Sprint(first), "never-record-this-secret") || strings.Contains(fmt.Sprint(first), "also-not-recorded") {
 		t.Fatal("environment values leaked into native provenance")
 	}
@@ -205,13 +211,8 @@ func TestNativeEvidenceConfigurationAndWorkspaceIdentity(t *testing.T) {
 			t.Fatalf("unlisted environment variable retained even as a hash: %s", key)
 		}
 	}
-	if err := os.WriteFile(filepath.Join(root, "config.toml"), []byte("[build]\njobs=1\n"), 0600); err != nil {
-		t.Fatal(err)
-	}
-	second := make(map[string]string)
-	if err := nativeConfiguration(second, root, environment); err != nil {
-		t.Fatal(err)
-	}
+	writeContractFile(t, filepath.Join(root, "config.toml"), []byte("[build]\njobs=1\n"))
+	second := nativeTestConfiguration(t, root, environment)
 	if reflect.DeepEqual(first, second) {
 		t.Fatal("newly matching Cargo configuration did not change identity")
 	}
@@ -219,9 +220,7 @@ func TestNativeEvidenceConfigurationAndWorkspaceIdentity(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(root, "main.rs"), []byte("fn main() {}\n"), 0600); err != nil {
-		t.Fatal(err)
-	}
+	writeContractFile(t, filepath.Join(root, "main.rs"), []byte("fn main() {}\n"))
 	after, err := nativeWorkspaceFingerprint(root)
 	if err != nil || before == after {
 		t.Fatalf("actual workspace bytes did not affect build inputs: %q / %q, %v", before, after, err)
@@ -239,10 +238,7 @@ func TestNativeEnvironmentConfigurationAllowlist(t *testing.T) {
 		}
 		environment = append(environment, key+"="+value)
 	}
-	baseline := make(map[string]string)
-	if err := nativeConfiguration(baseline, root, environment); err != nil {
-		t.Fatal(err)
-	}
+	baseline := nativeTestConfiguration(t, root, environment)
 	for index, key := range keys {
 		t.Run(key, func(t *testing.T) {
 			if baseline["environment:"+key] == "" {
@@ -253,10 +249,7 @@ func TestNativeEnvironmentConfigurationAllowlist(t *testing.T) {
 			if key == "CARGO_HOME" {
 				changed[index] = key + "=" + filepath.Join(root, "other")
 			}
-			actual := make(map[string]string)
-			if err := nativeConfiguration(actual, root, changed); err != nil {
-				t.Fatal(err)
-			}
+			actual := nativeTestConfiguration(t, root, changed)
 			if actual["environment:"+key] == baseline["environment:"+key] {
 				t.Fatal("changed relevant setting retained its configuration identity")
 			}
@@ -266,10 +259,7 @@ func TestNativeEnvironmentConfigurationAllowlist(t *testing.T) {
 	for _, key := range unlisted {
 		environment = append(environment, key+"=never-record-even-a-hash")
 	}
-	actual := make(map[string]string)
-	if err := nativeConfiguration(actual, root, environment); err != nil {
-		t.Fatal(err)
-	}
+	actual := nativeTestConfiguration(t, root, environment)
 	if !reflect.DeepEqual(baseline, actual) {
 		t.Fatal("credential or unrelated variables changed the captured configuration")
 	}
@@ -350,9 +340,7 @@ func TestNativeEnvironmentOfflineConfigurationApplicability(t *testing.T) {
 	if err := os.Mkdir(configDir, 0700); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(configDir, "config.toml"), []byte("[build]\njobs=2\n"), 0600); err != nil {
-		t.Fatal(err)
-	}
+	writeContractFile(t, filepath.Join(configDir, "config.toml"), []byte("[build]\njobs=2\n"))
 	if status, _, err := validateNativeEnvironmentConfiguration(environment); err != nil || status != contracts.Unresolved || len(fixture.calls) != 6 {
 		t.Fatalf("newly matching config was ignored or commands replayed: %s, %v", status, err)
 	}

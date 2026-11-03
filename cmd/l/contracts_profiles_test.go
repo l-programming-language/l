@@ -11,12 +11,15 @@ func TestContractsProfileRequestsAgree(t *testing.T) {
 	input := contractCLIInput(t)
 	for _, name := range []string{"NoHeapAllocation", "NoBlocking", "NoExternalIO", "NoPanic", "OwnedLifecycle"} {
 		t.Run(name, func(t *testing.T) {
-			flag := scopedCLIReport(t, input, 1, "check", "--profile", name)
+			flag, _ := contractJSON(t, input, 1, "check", "--profile", name)
 			document := contracts.CheckRequests{SchemaVersion: contracts.SchemaVersion, Kind: "contract_check_requests", Producer: "test", Version: "1", Checks: []contracts.CheckRequest{{ID: "whole", Scope: "whole_entry", Profile: contracts.Profile{Name: name}}}}
 			path := scopedWrite(t, t.TempDir(), "requests.json", document)
-			request := scopedCLIReport(t, input, 1, "check", "--request-file", path)
+			request, _ := contractJSON(t, input, 1, "check", "--request-file", path)
 			if len(flag.Profiles) != 1 || len(request.Requests) != 1 || flag.Profiles[0].Profile.Scope != "whole_region" || flag.Profiles[0].Status != request.Requests[0].Status {
 				t.Fatalf("flag/request disagreement: %+v / %+v", flag.Profiles, request.Requests)
+			}
+			if name == "NoBlocking" && flag.Profiles[0].Status != contracts.Unresolved {
+				t.Fatal("unknown native behavior did not stay unresolved")
 			}
 			obligations := request.Requests[0].Obligations
 			if !reflect.DeepEqual(flag.Profiles[0].Obligations, obligations[len(obligations)-len(flag.Profiles[0].Obligations):]) {

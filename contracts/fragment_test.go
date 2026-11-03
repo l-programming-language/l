@@ -84,11 +84,5 @@ func TestAdjectiveInstantiationChecksCallbackResources(t *testing.T) {
 	actual.Work = ConstantCost(2)
 	callback.Costs = &actual
 	instance.Callbacks["action"] = callback
-	result, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result.Status != Contradicted {
-		t.Fatal("concrete cost exceeded symbolic premise without rejection")
-	}
+	requireInstantiation(t, transformer, certificate, instance, Contradicted)
 }

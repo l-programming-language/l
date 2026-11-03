@@ -21,13 +21,7 @@ func TestAdjectiveAuthoritativeTargetTypeBASE048(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			instance := transformerInstance()
 			instance.Target.Type, instance.Facts = test.typeName, test.facts
-			result, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-			if err != nil {
-				t.Fatal(err)
-			}
-			if result.Status != test.want {
-				t.Fatalf("actual target type %q was replaced by caller facts: got %s, want %s: %+v", test.typeName, result.Status, test.want, result.Obligations)
-			}
+			requireInstantiation(t, transformer, certificate, instance, test.want)
 		})
 	}
 }
@@ -36,21 +30,12 @@ func TestAdjectiveGenericTargetType(t *testing.T) {
 	transformer := ContractTransformer{Meaning: "generic", Version: "1", Target: TargetRef{Root: "$target", Phase: Elaboration}, Body: Plan{Entry: Node{Kind: Event}}, Profiles: []Profile{{Name: "NoBlocking"}}}
 	instance := AdjectiveInstance{Target: TargetRef{Root: "actual", Phase: Elaboration}}
 	certificate := requireCertificate(t, transformer)
-	result, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-	if err != nil || result.Status != Established {
-		t.Fatalf("unconstrained generic target was rejected: %+v, %v", result, err)
-	}
+	requireInstantiation(t, transformer, certificate, instance, Established)
 	transformer.Requires = []Predicate{lexicalType("App")}
 	certificate = requireCertificate(t, transformer)
-	result, err = InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-	if err != nil || result.Status != Unresolved {
-		t.Fatalf("missing required type was inferred: %+v, %v", result, err)
-	}
+	requireInstantiation(t, transformer, certificate, instance, Unresolved)
 	instance.Target.Type = "App"
-	result, err = InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-	if err != nil || result.Status != Established {
-		t.Fatalf("authoritative concrete type did not discharge generic requirement: %+v, %v", result, err)
-	}
+	requireInstantiation(t, transformer, certificate, instance, Established)
 }
 
 func TestReferenceAuthoritativeTargetType(t *testing.T) {

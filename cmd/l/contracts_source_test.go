@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -73,29 +72,10 @@ func TestContractsSourceExplanationKeepsSelectedRule(t *testing.T) {
 	}
 }
 
-func sourceCLIReport(t *testing.T, args ...string) (contracts.Report, []byte, int) {
-	t.Helper()
-	var stdout, stderr bytes.Buffer
-	status := run(context.Background(), append([]string{"contracts"}, args...), &stdout, &stderr)
-	var report contracts.Report
-	if status != 2 {
-		if err := json.Unmarshal(stdout.Bytes(), &report); err != nil {
-			t.Fatalf("source report exit=%d error=%s output=%s: %v", status, stderr.String(), stdout.String(), err)
-		}
-	}
-	return report, stdout.Bytes(), status
-}
-
 func sourceCLIFixture(t *testing.T, additionalSource ...string) (string, contracts.SourceAdjectiveCertificate) {
 	t.Helper()
-	path := filepath.Join(t.TempDir(), "adjective.l")
-	if err := os.WriteFile(path, []byte("\"Named\" describes a Generic `selected` App.\n"+strings.Join(additionalSource, "")), 0600); err != nil {
-		t.Fatal(err)
-	}
-	report, _, status := sourceCLIReport(t, "inspect", "--format", "json", path)
-	if status != 0 {
-		t.Fatalf("source definition inspection exit %d", status)
-	}
+	path := writeContractFile(t, filepath.Join(t.TempDir(), "adjective.l"), []byte("\"Named\" describes a Generic `selected` App.\n"+strings.Join(additionalSource, "")))
+	report, _ := contractJSON(t, path, 0, "inspect")
 	var meaning contracts.MeaningKey
 	for _, definition := range report.Definitions {
 		if definition.Name == "Named" && definition.Descriptor {
@@ -118,38 +98,27 @@ func sourceCLIManifest(t *testing.T, path string, certificate contracts.SourceAd
 	t.Helper()
 	declaration := contracts.SourceTransformerDeclaration{Meaning: certificate.Meaning, Version: "1", TargetNominal: certificate.TargetNominal, Provides: []contracts.Predicate{{Kind: "eq", Subject: "name", Target: certificate.Target, Value: contracts.Atom{Kind: "text", Text: promise}}}, Origin: contracts.Origin{Source: "test-source-contract.json"}}
 	manifest := contracts.FacetRoleManifest{SchemaVersion: contracts.SchemaVersion, Kind: "facet_and_role_manifest", Producer: "source-cli-test", SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}}
-	data, err := contracts.EncodeDocument(manifest)
-	if err != nil {
-		t.Fatal(err)
-	}
-	output := filepath.Join(filepath.Dir(path), "source-contract.json")
-	if err := os.WriteFile(output, data, 0600); err != nil {
-		t.Fatal(err)
-	}
-	return output
+	return scopedWrite(t, filepath.Dir(path), "source-contract.json", manifest)
 }
 
 func TestContractsSourceSymbolicVerification(t *testing.T) {
 	path, certificate := sourceCLIFixture(t)
 	manifest := sourceCLIManifest(t, path, certificate, "selected")
-	args := []string{"verify-dictionary", "--format", "json", "--manifest", manifest, "--assurance", "symbolic", "--adjective", string(certificate.Meaning), path}
-	report, first, status := sourceCLIReport(t, args...)
-	if status != 0 || report.SourceVerification == nil || report.SourceVerification.Status != contracts.Established || report.SourceVerification.Scope != "source_elaboration" || report.SourceVerification.Assurance != "symbolic" {
-		t.Fatalf("valid source theorem did not verify in its explicit scope: exit=%d verification=%+v", status, report.SourceVerification)
+	args := []string{"verify-dictionary", "--manifest", manifest, "--assurance", "symbolic", "--adjective", string(certificate.Meaning)}
+	report, first := contractJSON(t, path, 0, args...)
+	if report.SourceVerification == nil || report.SourceVerification.Status != contracts.Established || report.SourceVerification.Scope != "source_elaboration" || report.SourceVerification.Assurance != "symbolic" {
+		t.Fatalf("valid source theorem did not verify in its explicit scope: %+v", report.SourceVerification)
 	}
 	if len(report.Executions) != 0 || contracts.AllEstablished(report.Obligations) || report.Lowering.TransitiveCoverage != contracts.Unknown {
 		t.Fatal("symbolic theorem erased native unknowns or fabricated execution")
 	}
-	_, second, repeatedStatus := sourceCLIReport(t, args...)
-	if repeatedStatus != 0 || !bytes.Equal(first, second) {
+	_, second := contractJSON(t, path, 0, args...)
+	if !bytes.Equal(first, second) {
 		t.Fatal("selected symbolic report is not deterministic")
 	}
-	_, _, status = sourceCLIReport(t, "verify-dictionary", "--format", "json", "--manifest", manifest, "--assurance", "symbolic", "--adjective", "source:adjective.l:0", path)
-	if status != 0 {
-		t.Fatalf("unique declaration source selector exit %d", status)
-	}
-	whole, _, status := sourceCLIReport(t, "verify-dictionary", "--format", "json", "--manifest", manifest, "--adjective", string(certificate.Meaning), path)
-	if status != 1 || whole.SourceVerification == nil || whole.SourceVerification.Scope != "whole_dictionary" || whole.SourceVerification.Status == contracts.Established {
+	contractJSON(t, path, 0, "verify-dictionary", "--manifest", manifest, "--assurance", "symbolic", "--adjective", "source:adjective.l:0")
+	whole, _ := contractJSON(t, path, 1, "verify-dictionary", "--manifest", manifest, "--adjective", string(certificate.Meaning))
+	if whole.SourceVerification == nil || whole.SourceVerification.Scope != "whole_dictionary" || whole.SourceVerification.Status == contracts.Established {
 		t.Fatal("default implementation verification silently narrowed its obligations")
 	}
 	entries, err := os.ReadDir(filepath.Dir(path))
@@ -170,45 +139,30 @@ func TestContractsSourceSymbolicVerification(t *testing.T) {
 func TestContractsSourceVerificationFailures(t *testing.T) {
 	path, certificate := sourceCLIFixture(t)
 	manifest := sourceCLIManifest(t, path, certificate, "different")
-	report, _, status := sourceCLIReport(t, "verify-dictionary", "--format", "json", "--manifest", manifest, "--assurance", "symbolic", "--adjective", string(certificate.Meaning), path)
-	if status != 1 || report.SourceVerification == nil || report.SourceVerification.Status != contracts.Contradicted {
-		t.Fatalf("false source promise passed: exit=%d %+v", status, report.SourceVerification)
+	report, _ := contractJSON(t, path, 1, "verify-dictionary", "--manifest", manifest, "--assurance", "symbolic", "--adjective", string(certificate.Meaning))
+	if report.SourceVerification == nil || report.SourceVerification.Status != contracts.Contradicted {
+		t.Fatalf("false source promise passed: %+v", report.SourceVerification)
 	}
-	report, _, status = sourceCLIReport(t, "verify-dictionary", "--format", "json", "--assurance", "symbolic", "--adjective", string(certificate.Meaning), path)
-	if status != 1 || report.SourceVerification == nil || report.SourceVerification.Status != contracts.Unresolved {
+	report, _ = contractJSON(t, path, 1, "verify-dictionary", "--assurance", "symbolic", "--adjective", string(certificate.Meaning))
+	if report.SourceVerification == nil || report.SourceVerification.Status != contracts.Unresolved {
 		t.Fatal("discovery without a source contract became proof")
 	}
-	_, _, status = sourceCLIReport(t, "verify-dictionary", "--format", "json", "--assurance", "symbolic", "--adjective", "missing-canonical-meaning", path)
-	if status != 2 {
-		t.Fatalf("missing selection exit %d, want invocation error", status)
-	}
+	contractJSON(t, path, 2, "verify-dictionary", "--assurance", "symbolic", "--adjective", "missing-canonical-meaning")
 	injected := map[string]any{"schema_version": contracts.SchemaVersion, "kind": "facet_and_role_manifest", "producer": "body-injection-test", "source_transformers": []any{map[string]any{"meaning": certificate.Meaning, "version": "1", "target_nominal": certificate.TargetNominal, "body": map[string]any{"entry": map[string]any{"kind": "event"}}}}}
 	data, err := json.Marshal(injected)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(manifest, data, 0600); err != nil {
-		t.Fatal(err)
-	}
-	_, _, status = sourceCLIReport(t, "verify-dictionary", "--format", "json", "--manifest", manifest, "--assurance", "symbolic", "--adjective", string(certificate.Meaning), path)
-	if status != 2 {
-		t.Fatal("source requirements accepted a caller-authored replacement body")
-	}
+	writeContractFile(t, manifest, data)
+	contractJSON(t, path, 2, "verify-dictionary", "--manifest", manifest, "--assurance", "symbolic", "--adjective", string(certificate.Meaning))
 }
 
 func TestContractsAuthoredTransformerCannotCertifySource(t *testing.T) {
 	path, certificate := sourceCLIFixture(t)
 	manifest := contracts.FacetRoleManifest{SchemaVersion: contracts.SchemaVersion, Kind: "facet_and_role_manifest", Producer: "authored-model-test", Transformers: []contracts.ContractTransformer{{Meaning: certificate.Meaning, Version: "1", Target: certificate.Target, Body: contracts.Plan{Entry: contracts.Node{Kind: contracts.Event}}, Profiles: []contracts.Profile{{Name: "NoBlocking"}}}}}
-	data, err := contracts.EncodeDocument(manifest)
-	if err != nil {
-		t.Fatal(err)
-	}
-	file := filepath.Join(filepath.Dir(path), "authored-model.json")
-	if err := os.WriteFile(file, data, 0600); err != nil {
-		t.Fatal(err)
-	}
-	report, _, status := sourceCLIReport(t, "verify-dictionary", "--format", "json", "--manifest", file, "--assurance", "symbolic", "--adjective", string(certificate.Meaning), path)
-	if status != 1 || report.SourceVerification == nil || report.SourceVerification.Status != contracts.Unresolved {
+	file := scopedWrite(t, filepath.Dir(path), "authored-model.json", manifest)
+	report, _ := contractJSON(t, path, 1, "verify-dictionary", "--manifest", file, "--assurance", "symbolic", "--adjective", string(certificate.Meaning))
+	if report.SourceVerification == nil || report.SourceVerification.Status != contracts.Unresolved {
 		t.Fatal("authored typed model was substituted for source conformance")
 	}
 }
@@ -216,10 +170,7 @@ func TestContractsAuthoredTransformerCannotCertifySource(t *testing.T) {
 func TestContractsSourceInstanceExplainAndWholeEntryCheck(t *testing.T) {
 	path, certificate := sourceCLIFixture(t, "Create \"Worker\" as a New Named Basic App.\n")
 	manifest := sourceCLIManifest(t, path, certificate, "selected")
-	report, _, status := sourceCLIReport(t, "inspect", "--format", "json", "--manifest", manifest, path)
-	if status != 0 {
-		t.Fatalf("source instance inspection exit %d", status)
-	}
+	report, _ := contractJSON(t, path, 0, "inspect", "--manifest", manifest)
 	var selected contracts.ResolvedBinding
 	for _, binding := range report.Bindings {
 		if binding.Meaning == certificate.Meaning && !binding.Target.Unknown && binding.Target.Root != "" {
@@ -229,23 +180,20 @@ func TestContractsSourceInstanceExplainAndWholeEntryCheck(t *testing.T) {
 	if selected.Occurrence == "" {
 		t.Fatal("fixture has no typed descriptor application binding")
 	}
-	explained, _, status := sourceCLIReport(t, "explain", "--format", "json", "--manifest", manifest, "--binding", string(selected.Occurrence), path)
-	if status != 0 || len(explained.SourceCertificates) != 1 || len(explained.SourceInstantiations) != 1 || explained.SourceCertificates[0].Meaning != selected.Meaning || explained.SourceInstantiations[0].Target.Root != selected.Target.Root {
-		t.Fatalf("explain lost selected source theorem or exact application: exit=%d certificates=%+v instances=%+v", status, explained.SourceCertificates, explained.SourceInstantiations)
+	explained, _ := contractJSON(t, path, 0, "explain", "--manifest", manifest, "--binding", string(selected.Occurrence))
+	if len(explained.SourceCertificates) != 1 || len(explained.SourceInstantiations) != 1 || explained.SourceCertificates[0].Meaning != selected.Meaning || explained.SourceInstantiations[0].Target.Root != selected.Target.Root {
+		t.Fatalf("explain lost selected source theorem or exact application: certificates=%+v instances=%+v", explained.SourceCertificates, explained.SourceInstantiations)
 	}
 	if len(explained.SourceInstantiations[0].LoweringObligations) == 0 {
 		t.Fatal("source application explanation hid native lowering residuals")
 	}
-	checked, _, status := sourceCLIReport(t, "check", "--format", "json", "--manifest", manifest, "--profile", "NoBlocking", path)
-	if status != 1 || len(checked.Profiles) != 1 || checked.Profiles[0].Status == contracts.Established {
+	checked, _ := contractJSON(t, path, 1, "check", "--manifest", manifest, "--profile", "NoBlocking")
+	if len(checked.Profiles) != 1 || checked.Profiles[0].Status == contracts.Established {
 		t.Fatal("source topology theorem certified whole-entry runtime behavior")
 	}
-	var stdout, stderr bytes.Buffer
-	if status := run(context.Background(), []string{"contracts", "explain", "--manifest", manifest, "--binding", string(selected.Occurrence), path}, &stdout, &stderr); status != 0 {
-		t.Fatalf("text source explanation: %d %s", status, stderr.String())
-	}
+	stdout, _ := contractOutput(t, 0, "explain", "--manifest", manifest, "--binding", string(selected.Occurrence), path)
 	for _, text := range []string{"Source adjective", "Source adjective instance", string(certificate.Meaning), "source_elaboration", "Native:"} {
-		if !strings.Contains(stdout.String(), text) {
+		if !strings.Contains(string(stdout), text) {
 			t.Fatalf("text explanation missing %q", text)
 		}
 	}
@@ -255,8 +203,5 @@ func TestContractsSourceMetadataMustNameResolvedRule(t *testing.T) {
 	path, certificate := sourceCLIFixture(t)
 	certificate.Meaning = "absent-source-rule"
 	manifest := sourceCLIManifest(t, path, certificate, "selected")
-	_, _, status := sourceCLIReport(t, "inspect", "--format", "json", "--manifest", manifest, path)
-	if status != 2 {
-		t.Fatalf("source metadata with absent canonical identity exit %d", status)
-	}
+	contractJSON(t, path, 2, "inspect", "--manifest", manifest)
 }

@@ -20,10 +20,7 @@ func TestContractsTrackA(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	comp, observed, err := service.ResolveContractBindings([]byte(contractsSource), "/project/main.l")
-	if err != nil {
-		t.Fatal(err)
-	}
+	comp, observed := resolveContractSource(t, service, []byte(contractsSource), "/project/main.l")
 	t.Run("BASE-009", func(t *testing.T) {
 		if !bytes.Equal(ordinary.AML, comp.ASMBytes) || !bytes.Equal(ordinary.BackendAML, comp.Program.BackendBytes) || !bytes.Equal(ordinary.ExpandedSource, comp.ExpandedBytes) {
 			t.Fatal("observing bindings changed source compilation")
@@ -70,18 +67,9 @@ func TestContractsTrackA(t *testing.T) {
 		}
 	})
 	t.Run("BASE-008", func(t *testing.T) {
-		_, again, err := service.ResolveContractBindings([]byte(contractsSource), "/project/main.l")
-		if err != nil {
-			t.Fatal(err)
-		}
-		first, err := json.Marshal(observed)
-		if err != nil {
-			t.Fatal(err)
-		}
-		second, err := json.Marshal(again)
-		if err != nil {
-			t.Fatal(err)
-		}
+		_, again := resolveContractSource(t, service, []byte(contractsSource), "/project/main.l")
+		first := contractJSON(t, observed)
+		second := contractJSON(t, again)
 		if !bytes.Equal(first, second) {
 			t.Fatal("binding report changes between compilations")
 		}
@@ -90,10 +78,7 @@ func TestContractsTrackA(t *testing.T) {
 
 func TestContractsConfiguredNativeBindings(t *testing.T) {
 	source := "Create \"Worker\" as a New Basic App.\nStart Worker.\nAwait Worker.\nStart Worker.\n"
-	_, snapshot, err := NewLygerService(Options{}).ResolveContractBindings([]byte(source), "/project/native.l")
-	if err != nil {
-		t.Fatal(err)
-	}
+	_, snapshot := resolveContractSource(t, NewLygerService(Options{}), []byte(source), "/project/native.l")
 	var runs []contracts.ResolvedBinding
 	for _, binding := range snapshot.Bindings {
 		if binding.CanonicalName == "native:action.executive" && binding.Origin.Label == "expanded typed instruction" {
@@ -131,10 +116,7 @@ func TestContractsRepeatedSourceOrigins(t *testing.T) {
 		t.Fatal(err)
 	}
 	service := NewLygerService(Options{})
-	_, first, err := service.ResolveContractBindings([]byte(source), filepath.Join(directory, "main.l"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	_, first := resolveContractSource(t, service, []byte(source), filepath.Join(directory, "main.l"))
 	parents := make(map[contracts.BindingOccurrenceID]bool)
 	uses := make(map[contracts.BindingOccurrenceID]bool)
 	for _, binding := range first.Bindings {
@@ -146,18 +128,9 @@ func TestContractsRepeatedSourceOrigins(t *testing.T) {
 	if len(parents) != 2 || len(uses) != 2 {
 		t.Fatalf("repeated inclusion lost occurrence ancestry: parents=%d uses=%d", len(parents), len(uses))
 	}
-	_, second, err := service.ResolveContractBindings([]byte(source), filepath.Join(directory, "main.l"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	left, err := json.Marshal(first)
-	if err != nil {
-		t.Fatal(err)
-	}
-	right, err := json.Marshal(second)
-	if err != nil {
-		t.Fatal(err)
-	}
+	_, second := resolveContractSource(t, service, []byte(source), filepath.Join(directory, "main.l"))
+	left := contractJSON(t, first)
+	right := contractJSON(t, second)
 	if !bytes.Equal(left, right) {
 		t.Fatal("repeated include identities nondeterministic")
 	}
@@ -167,10 +140,7 @@ func TestContractsDefinitionSiteHelperShadow(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
 	files["stdlib/eng/io/dictionary.l"] = &fstest.MapFile{Data: []byte("Create \"IO\" as a Dictionary.\nDefine \"Secret\" as `dictionary owned`.\nCreate IO's \"Reveal|-s|-ed|-ing|-er\" for Showing Secret and then Showing any Text.\n")}
 	source := "Use IO's Reveal from `io` as \"Reveal\".\nDefine \"Secret\" as `caller shadow`.\nReveal `argument`.\n"
-	_, snapshot, err := NewLygerService(Options{Resources: files}).ResolveContractBindings([]byte(source), "/project/hygiene.l")
-	if err != nil {
-		t.Fatal(err)
-	}
+	_, snapshot := resolveContractSource(t, NewLygerService(Options{Resources: files}), []byte(source), "/project/hygiene.l")
 	var caller contracts.DefinitionKey
 	var generated []contracts.ResolvedBinding
 	for _, binding := range snapshot.Bindings {
@@ -234,10 +204,7 @@ func TestContractsDictionaryDiscoveryDoesNotCertify(t *testing.T) {
 
 func TestContractsOriginalTokenSpans(t *testing.T) {
 	source := "***prefix*** Use Basic as \"Compact\".\nCreate \"Worker\" as a New Compact App.\n"
-	_, bindings, err := NewLygerService(Options{}).ResolveContractBindings([]byte(source), "/project/spans.l")
-	if err != nil {
-		t.Fatal(err)
-	}
+	_, bindings := resolveContractSource(t, NewLygerService(Options{}), []byte(source), "/project/spans.l")
 	for _, binding := range bindings.Bindings {
 		if binding.Origin.Source != "source:spans.l" || binding.Origin.Label != "" {
 			continue
@@ -253,10 +220,7 @@ func TestContractsOriginalTokenSpans(t *testing.T) {
 }
 
 func TestContractsAnalysisIncludesLateHelpers(t *testing.T) {
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(contractsSource), "/project/main.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(contractsSource), "/project/main.l", ContractAnalysisOptions{})
 	if len(analysis.Lowering.Steps) == 0 || len(analysis.Lowering.Native) == 0 {
 		t.Fatal("helper composition missing from inventory")
 	}
@@ -269,4 +233,32 @@ func TestContractsAnalysisIncludesLateHelpers(t *testing.T) {
 			t.Fatal("unapproved native closure established " + name)
 		}
 	}
+}
+
+// Successful analysis setup is shared; negative cases call the API directly.
+func analyzeContractSource(t *testing.T, service *LygerService, source []byte, path string, options ContractAnalysisOptions) *ContractAnalysis {
+	t.Helper()
+	analysis, err := service.AnalyzeContracts(source, path, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return analysis
+}
+
+func contractJSON(t *testing.T, value any) []byte {
+	t.Helper()
+	data, err := json.Marshal(value)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return data
+}
+
+func resolveContractSource(t *testing.T, service *LygerService, source []byte, path string) (*Compilation, ContractBindings) {
+	t.Helper()
+	compilation, bindings, err := service.ResolveContractBindings(source, path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return compilation, bindings
 }

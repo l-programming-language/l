@@ -157,10 +157,7 @@ func TestUnsupportedOrIncompleteRecordsRequireFreshAnalysis(t *testing.T) {
 			t.Fatalf("incomplete record manufactured proof: found=%v error=%v result=%+v", found, err, stale)
 		}
 		plan := Plan{Entry: Node{Kind: Native, Native: "opaque"}}
-		want, err := Infer(plan, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
+		want := reviewInfer(t, plan, AnalysisOptions{})
 		got, err := session.Infer(plan, AnalysisOptions{}, nil, LoweringInventory{})
 		if err != nil || !reflect.DeepEqual(got, want) || len(got.Unknowns) == 0 {
 			t.Fatalf("fresh analysis fabricated missing assurance: result=%+v want=%+v error=%v", got, want, err)

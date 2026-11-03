@@ -114,21 +114,19 @@ func TestAppProtocolInvocationContinuationSemantics(t *testing.T) {
 }
 
 func TestActivityOwnership(t *testing.T) {
-	t.Run("BASE-042", func(t *testing.T) {
-		running := protocolRunning(t)
-		if got := CheckOwnedLifecycle([]AppProtocolState{running}); got.Status != Established {
-			t.Fatal(got)
-		}
-		transferred, obligation := TransferActivity(running, "explicit-supervisor")
-		if obligation.Status != Established || transferred.Owner != "explicit-supervisor" || transferred.Stage != AppRunning || !transferred.Outstanding {
-			t.Fatalf("transfer altered lifecycle: %+v, %+v", transferred, obligation)
-		}
-		running.Owner = ""
-		if got := CheckOwnedLifecycle([]AppProtocolState{running}); got.Status != Unresolved {
-			t.Fatalf("unowned work accepted: %+v", got)
-		}
-		if got := CheckOwnedLifecycle(nil); got.Status != Unresolved {
-			t.Fatalf("missing inventory accepted: %+v", got)
-		}
-	})
+	running := protocolRunning(t)
+	if got := CheckOwnedLifecycle([]AppProtocolState{running}); got.Status != Established {
+		t.Fatal(got)
+	}
+	transferred, obligation := TransferActivity(running, "explicit-supervisor")
+	if obligation.Status != Established || transferred.Owner != "explicit-supervisor" || transferred.Stage != AppRunning || !transferred.Outstanding {
+		t.Fatalf("transfer altered lifecycle: %+v, %+v", transferred, obligation)
+	}
+	running.Owner = ""
+	if got := CheckOwnedLifecycle([]AppProtocolState{running}); got.Status != Unresolved {
+		t.Fatalf("unowned work accepted: %+v", got)
+	}
+	if got := CheckOwnedLifecycle(nil); got.Status != Unresolved {
+		t.Fatalf("missing inventory accepted: %+v", got)
+	}
 }

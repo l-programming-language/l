@@ -239,10 +239,7 @@ func TestFacetRulesMetadataAndInstantiation(t *testing.T) {
 		t.Fatalf("decoded rule could not certify configuration: %+v, %v", certificate, err)
 	}
 	instance := AdjectiveInstance{Target: TargetRef{Root: "concrete", Path: []string{"role"}, Type: slot.Target.Type, Phase: slot.Target.Phase}}
-	result, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-	if err != nil || result.Status != Established {
-		t.Fatalf("concrete rule rebasing failed: %+v, %v", result, err)
-	}
+	requireInstantiation(t, transformer, certificate, instance, Established)
 	concrete := rebaseTransformer(transformer, instance.Target)
 	configuration := requireConfiguration(t, concrete.Facets, concrete.Slots, concrete.Contributions, concrete.Rules)
 	expected := instance.Target
@@ -251,10 +248,7 @@ func TestFacetRulesMetadataAndInstantiation(t *testing.T) {
 		t.Fatalf("rule retained symbolic target: %+v", configuration)
 	}
 	transformer.Rules = append(transformer.Rules, FacetRule{Consequences: []Predicate{FacetFact(slot, Atom{Kind: "enum", Text: "light"})}})
-	stale, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-	if err != nil || stale.Status != Contradicted {
-		t.Fatalf("cached positive certificate hid changed conflicting rule: %+v, %v", stale, err)
-	}
+	stale := requireInstantiation(t, transformer, certificate, instance, Contradicted)
 	cold, err := VerifyAdjective(transformer, AnalysisOptions{})
 	if err != nil || cold.Status != stale.Status {
 		t.Fatalf("cold and stale-certificate verification disagreed: %+v / %+v, %v", cold, stale, err)

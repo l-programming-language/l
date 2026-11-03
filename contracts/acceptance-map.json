@@ -158,7 +158,7 @@
       "tests": [
         {
           "file": "contracts/metadata_test.go",
-          "name": "TestReportSerializationDeterministic/BASE-008"
+          "name": "TestReportSerializationDeterministic"
         },
         {
           "file": "lyger/contracts_integration_test.go",
@@ -468,7 +468,7 @@
         },
         {
           "file": "cmd/l/contracts_trust_test.go",
-          "name": "TestContractTrustRequiresConcreteNativeConfiguration"
+          "name": "TestContractTrustIsPropositionSpecific/missing-environment"
         },
         {
           "file": "contracts/native_assurance_test.go",
@@ -501,8 +501,8 @@
       "status": "covered",
       "tests": [
         {
-          "file": "cmd/l/contracts_test.go",
-          "name": "TestContractsCLI/BASE-028"
+          "file": "cmd/l/contracts_profiles_test.go",
+          "name": "TestContractsProfileRequestsAgree/NoBlocking"
         },
         {
           "file": "cmd/l/contracts_requests_test.go",
@@ -598,12 +598,15 @@
     },
     {
       "id": "BASE-034",
-      "status": "covered",
+      "status": "partial",
       "tests": [
         {
           "file": "contracts/failure_test.go",
           "name": "TestFailureFootprints/BASE-034"
         }
+      ],
+      "limitations": [
+        "Typed partial-write preservation and retry checks are covered. The removed test-only Go writer did not exercise compiler-linked native partial IO; that execution-to-summary fault-injection coverage remains absent."
       ]
     },
     {
@@ -638,7 +641,7 @@
       "tests": [
         {
           "file": "contracts/failure_test.go",
-          "name": "TestCleanupFailurePolicy/BASE-036-model"
+          "name": "TestCleanupFailurePolicy"
         },
         {
           "file": "logiceme/contracts_protocol_native_test.go",
@@ -718,7 +721,7 @@
       "tests": [
         {
           "file": "contracts/protocol_test.go",
-          "name": "TestActivityOwnership/BASE-042"
+          "name": "TestActivityOwnership"
         },
         {
           "file": "lyger/contracts_lowering_test.go",
@@ -796,7 +799,7 @@
       "tests": [
         {
           "file": "contracts/cache_dependencies_test.go",
-          "name": "TestLogicalCacheAllSemanticDependencies/BASE-047"
+          "name": "TestLogicalCacheAllSemanticDependencies"
         },
         {
           "file": "contracts/cache_test.go",
@@ -804,7 +807,7 @@
         },
         {
           "file": "cmd/l/contracts_trust_test.go",
-          "name": "TestContractTrustRequiresConcreteNativeConfiguration"
+          "name": "TestContractTrustIsPropositionSpecific/missing-environment"
         },
         {
           "file": "lyger/contracts_cache_test.go",
@@ -1564,12 +1567,15 @@
     },
     {
       "id": "LEX-029",
-      "status": "covered",
+      "status": "partial",
       "tests": [
         {
           "file": "contracts/adjective_acceptance_test.go",
           "name": "TestAdjectiveAcceptance/LEX-029"
         }
+      ],
+      "limitations": [
+        "The real predicate checker covers pure conjunction order/repetition within exact target and meaning premises. No named composition-law certificate or construction-rewrite mechanism is implemented."
       ]
     },
     {
@@ -1578,7 +1584,7 @@
       "tests": [
         {
           "file": "contracts/lexical_acceptance_test.go",
-          "name": "TestProviderAcceptance/LEX-030"
+          "name": "TestProviderAcceptance"
         },
         {
           "file": "contracts/target_type_test.go",
@@ -1612,6 +1618,9 @@
           "file": "contracts/adjective_acceptance_test.go",
           "name": "TestAdjectiveAcceptance/LEX-032"
         }
+      ],
+      "limitations": [
+        "Explicit typed plans are compared through actual inference while retaining their provenance. This does not establish a general named-equivalence certificate or a cache-reuse mechanism."
       ]
     },
     {
@@ -1654,7 +1663,7 @@
       "tests": [
         {
           "file": "contracts/cache_dependencies_test.go",
-          "name": "TestReferenceCacheCompetingCandidateBecomesApplicable/LEX-036"
+          "name": "TestReferenceCacheCompetingCandidateBecomesApplicable"
         },
         {
           "file": "contracts/cache_test.go",
@@ -1668,7 +1677,7 @@
       "tests": [
         {
           "file": "contracts/cache_dependencies_test.go",
-          "name": "TestReferenceCacheRolePhraseAndPolicy/LEX-037"
+          "name": "TestReferenceCacheRolePhraseAndPolicy"
         },
         {
           "file": "contracts/cache_test.go",
@@ -1726,7 +1735,7 @@
       "tests": [
         {
           "file": "cmd/l/contracts_test.go",
-          "name": "TestContractsCLI/LEX-040"
+          "name": "TestContractsCLI"
         },
         {
           "file": "lyger/contracts_source_adjectives_test.go",
@@ -1912,7 +1921,7 @@
       "tests": [
         {
           "file": "contracts/metadata_test.go",
-          "name": "TestExecutedEvidenceRequiresRecordedOperation/FALS-010"
+          "name": "TestExecutedEvidenceRequiresRecordedOperation"
         },
         {
           "file": "cmd/l/native_environment_native_test.go",

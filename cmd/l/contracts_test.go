@@ -13,38 +13,52 @@ import (
 	"github.com/l-programming-language/l/contracts"
 )
 
-func contractCLIInput(t *testing.T) string {
+func contractOutput(t *testing.T, expected int, args ...string) ([]byte, string) {
 	t.Helper()
-	path := filepath.Join(t.TempDir(), "main.l")
-	source := "Use IO's Print from `io` as \"Print\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints `hello`.\nRun Worker.\nAwait Worker.\nShow Worker's Output.\n"
-	if err := os.WriteFile(path, []byte(source), 0600); err != nil {
+	var stdout, stderr bytes.Buffer
+	if status := run(context.Background(), append([]string{"contracts"}, args...), &stdout, &stderr); status != expected {
+		t.Fatalf("%v exit %d want %d: %s\n%s", args, status, expected, &stderr, &stdout)
+	}
+	return stdout.Bytes(), stderr.String()
+}
+
+func contractJSON(t *testing.T, input string, expected int, options ...string) (contracts.Report, []byte) {
+	t.Helper()
+	data, _ := contractOutput(t, expected, append(options, "--format", "json", input)...)
+	var report contracts.Report
+	if expected != 2 {
+		if err := json.Unmarshal(data, &report); err != nil {
+			t.Fatalf("decode %s: %v", data, err)
+		}
+	}
+	return report, data
+}
+
+func writeContractFile(t *testing.T, path string, data []byte) string {
+	t.Helper()
+	if err := os.WriteFile(path, data, 0600); err != nil {
 		t.Fatal(err)
 	}
 	return path
 }
 
+func contractCLIInput(t *testing.T) string {
+	t.Helper()
+	source := "Use IO's Print from `io` as \"Print\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints `hello`.\nRun Worker.\nAwait Worker.\nShow Worker's Output.\n"
+	return writeContractFile(t, filepath.Join(t.TempDir(), "main.l"), []byte(source))
+}
+
 func TestContractsCLI(t *testing.T) {
 	input := contractCLIInput(t)
-	var stdout, stderr bytes.Buffer
-	status := run(context.Background(), []string{"contracts", "inspect", "--format", "json", input}, &stdout, &stderr)
-	if status != 0 {
-		t.Fatalf("inspect exit %d: %s", status, stderr.String())
-	}
-	var report contracts.Report
-	if err := json.Unmarshal(stdout.Bytes(), &report); err != nil {
-		t.Fatal(err)
-	}
+	report, first := contractJSON(t, input, 0, "inspect")
 	if len(report.Bindings) == 0 || len(report.Lowering.Native) == 0 || report.ResolutionPolicy != contracts.TrackAPolicy {
 		t.Fatal("inspection omitted actual bindings or native closure")
 	}
 	if len(report.Executions) != 0 {
 		t.Fatal("inspection fabricated execution evidence")
 	}
-	var repeated, repeatedError bytes.Buffer
-	if status := run(context.Background(), []string{"contracts", "inspect", "--format", "json", input}, &repeated, &repeatedError); status != 0 {
-		t.Fatalf("repeated inspection failed: %s", repeatedError.String())
-	}
-	if !bytes.Equal(stdout.Bytes(), repeated.Bytes()) {
+	_, repeated := contractJSON(t, input, 0, "inspect")
+	if !bytes.Equal(first, repeated) {
 		t.Fatal("same-source report is not deterministic")
 	}
 	entries, err := os.ReadDir(filepath.Dir(input))
@@ -54,40 +68,11 @@ func TestContractsCLI(t *testing.T) {
 	if len(entries) != 1 {
 		t.Fatal("source inspection created build/publication artifacts")
 	}
-	t.Run("BASE-028", func(t *testing.T) {
-		stdout.Reset()
-		stderr.Reset()
-		status := run(context.Background(), []string{"contracts", "check", "--profile", "NoBlocking", "--format", "json", input}, &stdout, &stderr)
-		if status != 1 {
-			t.Fatalf("unresolved enforcement exit %d: %s", status, stderr.String())
-		}
-		var checked contracts.Report
-		if err := json.Unmarshal(stdout.Bytes(), &checked); err != nil {
-			t.Fatal(err)
-		}
-		if len(checked.Profiles) != 1 || checked.Profiles[0].Status != contracts.Unresolved {
-			t.Fatal("unknown native behavior did not stay unresolved")
-		}
-	})
 	t.Run("LEX-039", func(t *testing.T) {
 		selected := report.Bindings[len(report.Bindings)-1]
-		stdout.Reset()
-		stderr.Reset()
-		status := run(context.Background(), []string{"contracts", "explain", "--binding", string(selected.Occurrence), "--format", "json", input}, &stdout, &stderr)
-		if status != 0 {
-			t.Fatalf("explain exit %d: %s", status, stderr.String())
-		}
-		var explained contracts.Report
-		if err := json.Unmarshal(stdout.Bytes(), &explained); err != nil {
-			t.Fatal(err)
-		}
+		explained, _ := contractJSON(t, input, 0, "explain", "--binding", string(selected.Occurrence))
 		if len(explained.Bindings) != 1 || explained.Bindings[0].Meaning != selected.Meaning || explained.Bindings[0].Target.String() != selected.Target.String() {
 			t.Fatal("explanation changed selected meaning or exact target")
-		}
-	})
-	t.Run("LEX-040", func(t *testing.T) {
-		if report.ResolutionPolicy != contracts.TrackAPolicy {
-			t.Fatal("contracts changed default resolver")
 		}
 	})
 }
@@ -96,37 +81,20 @@ func TestContractsCLIRejectsInvalidRequests(t *testing.T) {
 	input := contractCLIInput(t)
 	for index, args := range [][]string{{"check", input}, {"check", "--profile", "Fast", input}, {"inspect", "--format", "yaml", input}, {"explain", input}, {"inspect", input, "--format", "json"}} {
 		t.Run(strconv.Itoa(index), func(t *testing.T) {
-			var stdout, stderr bytes.Buffer
-			if status := run(context.Background(), append([]string{"contracts"}, args...), &stdout, &stderr); status != 2 {
-				t.Fatalf("invalid command exit %d: %s", status, stderr.String())
-			}
+			contractOutput(t, 2, args...)
 		})
 	}
 }
 
 func TestContractsCLIMetadataCannotSelfCertify(t *testing.T) {
 	input := contractCLIInput(t)
-	manifest := filepath.Join(filepath.Dir(input), "native.json")
 	bad := `{"schema_version":"1.1","kind":"native_contract_manifest","producer":"test","declarations":[],"established":true}`
-	if err := os.WriteFile(manifest, []byte(bad), 0600); err != nil {
-		t.Fatal(err)
-	}
-	var stdout, stderr bytes.Buffer
-	if status := run(context.Background(), []string{"contracts", "inspect", "--manifest", manifest, input}, &stdout, &stderr); status != 2 {
-		t.Fatalf("authored evidence accepted: %d %s", status, stderr.String())
-	}
+	manifest := writeContractFile(t, filepath.Join(filepath.Dir(input), "native.json"), []byte(bad))
+	contractOutput(t, 2, "inspect", "--manifest", manifest, input)
 }
 
 func TestContractsDictionaryVerificationIsNotLoading(t *testing.T) {
-	var stdout, stderr bytes.Buffer
-	status := run(context.Background(), []string{"contracts", "verify-dictionary", "--format", "json", "io"}, &stdout, &stderr)
-	if status != 1 {
-		t.Fatalf("unverified dictionary exit %d: %s", status, stderr.String())
-	}
-	var report contracts.Report
-	if err := json.Unmarshal(stdout.Bytes(), &report); err != nil {
-		t.Fatal(err)
-	}
+	report, _ := contractJSON(t, "io", 1, "verify-dictionary")
 	if len(report.Definitions) == 0 || len(report.Obligations) == 0 || contracts.AllEstablished(report.Obligations) {
 		t.Fatal("dictionary loading was treated as verification")
 	}
