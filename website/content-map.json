@@ -612,10 +612,10 @@
       "generated": false
     },
     {
-      "source": "docs/contracts-implementation.md",
-      "route": "/docs/internals/contracts-implementation/",
-      "title": "Contracts implementation evidence",
-      "description": "Revision-specific contracts implementation progress, validation records, and supported scope.",
+      "source": "docs/contracts-evidence.md",
+      "route": "/docs/internals/contracts-evidence/",
+      "title": "Contracts evidence",
+      "description": "Historical validation pointers, source identities and evidence availability.",
       "section": "Internals",
       "order": 13,
       "role": "implementation",
