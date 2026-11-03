@@ -501,10 +501,16 @@ func structuralFactTargets(fact Predicate) []TargetRef {
 
 func VerifySourceAdjectiveInstance(projection SourceAdjectiveProjection, certificate SourceAdjectiveCertificate, declaration SourceTransformerDeclaration, instance SourceAdjectiveInstance, options AnalysisOptions) (SourceAdjectiveInstantiation, error) {
 	verified, err := VerifySourceAdjective(projection, declaration, options)
-	result := SourceAdjectiveInstantiation{Meaning: projection.Meaning, Target: instance.Target, Status: Unresolved, CertificateFingerprint: StableID("source-certificate", verified), LoweringObligations: append(append([]Obligation(nil), verified.LoweringObligations...), instance.LoweringObligations...)}
 	if err != nil {
-		return result, err
+		return SourceAdjectiveInstantiation{}, err
 	}
+	return instantiateVerifiedSourceAdjective(projection, verified, certificate, declaration, instance), nil
+}
+
+// verified comes only from the current verifier or its private session cache;
+// the caller-supplied certificate remains a dependency check, never proof.
+func instantiateVerifiedSourceAdjective(projection SourceAdjectiveProjection, verified, certificate SourceAdjectiveCertificate, declaration SourceTransformerDeclaration, instance SourceAdjectiveInstance) SourceAdjectiveInstantiation {
+	result := SourceAdjectiveInstantiation{Meaning: projection.Meaning, Target: instance.Target, Status: Unresolved, CertificateFingerprint: StableID("source-certificate", verified), LoweringObligations: append(append([]Obligation(nil), verified.LoweringObligations...), instance.LoweringObligations...)}
 	result.Obligations = append(result.Obligations, verified.LogicalObligations...)
 	add := func(status Status, reason string, predicate Predicate) {
 		result.Obligations = append(result.Obligations, sourceObligation(instance.Target, instance.Origin, status, reason, predicate))
@@ -520,16 +526,17 @@ func VerifySourceAdjectiveInstance(projection SourceAdjectiveProjection, certifi
 	if TargetRelation(instance.Before.Target, instance.Target) != Established || TargetRelation(instance.After.Target, instance.Target) != Established || instance.Before.Nominal != instance.TargetNominal || instance.After.Nominal != instance.TargetNominal || instance.Target.Nominal != "" && instance.Target.Nominal != instance.TargetNominal {
 		add(Unresolved, "concrete before/after snapshots do not identify the selected nominal target", Predicate{Kind: "attachment"})
 	}
+	beforeFacts := SourceShapeFacts(instance.Before)
 	requirements := rebasePredicates(declaration.Requires, projection.Target, instance.Target)
 	for _, requirement := range requirements {
-		status, reason := Entails(SourceShapeFacts(instance.Before), requirement)
+		status, reason := Entails(beforeFacts, requirement)
 		add(status, "concrete before-rule requirement: "+reason, requirement)
 	}
 	for _, required := range rebasePredicates(projection.RequiredAssumptions, projection.Target, instance.Target) {
-		status, reason := Entails(SourceShapeFacts(instance.Before), required)
+		status, reason := Entails(beforeFacts, required)
 		add(status, "concrete ordinal/shape premise: "+reason, required)
 	}
-	post := invalidateSourceFacts(SourceShapeFacts(instance.Before), instance.Footprints)
+	post := invalidateSourceFacts(beforeFacts, instance.Footprints)
 	post = postFacts(post, SourceShapeFacts(instance.After))
 	for _, promise := range rebasePredicates(declaration.Provides, projection.Target, instance.Target) {
 		status, reason := Entails(post, promise)
@@ -540,5 +547,5 @@ func VerifySourceAdjectiveInstance(projection SourceAdjectiveProjection, certifi
 		result.Obligations = append(result.Obligations, CheckFrame(*transformer.Frame, instance.Footprints, FrameContext{})...)
 	}
 	result.Status = obligationStatus(result.Obligations)
-	return result, nil
+	return result
 }

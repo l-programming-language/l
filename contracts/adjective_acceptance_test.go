@@ -126,7 +126,7 @@ func TestAdjectiveAcceptance(t *testing.T) {
 		a := Node{Kind: Event, Effects: []Effect{{Kind: "io", Resource: ResourceRef{ID: "log:A"}, Definite: true}}}
 		b := Node{Kind: Event, Effects: []Effect{{Kind: "io", Resource: ResourceRef{ID: "log:B"}, Definite: true}}}
 		left, right := Plan{Entry: Node{Kind: Sequence, Children: []Node{a, b}}}, Plan{Entry: Node{Kind: Sequence, Children: []Node{b, a}}}
-		if EquivalentElaboration(left, right) {
+		if equivalentElaboration(left, right) {
 			t.Fatal("ordered wrappers treated as set")
 		}
 		summary, err := Infer(left, AnalysisOptions{})
@@ -140,14 +140,14 @@ func TestAdjectiveAcceptance(t *testing.T) {
 	t.Run("LEX-029", func(t *testing.T) {
 		fact := Predicate{Kind: "present", Subject: "constraint"}
 		target := lexicalTarget("primary")
-		law, err := ProveConstraintLaw("left", "right", target, "constraint-commutation", []Predicate{fact})
+		law, err := proveConstraintLaw("left", "right", target, "constraint-commutation", []Predicate{fact})
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !law.Applies("left", "right", target, []Predicate{fact}) || law.Applies("left", "right", lexicalTarget("secondary"), []Predicate{fact}) || law.Applies("left", "unrelated", target, []Predicate{fact}) {
+		if !law.applies("left", "right", target, []Predicate{fact}) || law.applies("left", "right", lexicalTarget("secondary"), []Predicate{fact}) || law.applies("left", "unrelated", target, []Predicate{fact}) {
 			t.Fatal("specific law escaped its target/meaning scope")
 		}
-		if _, err := ProveConstraintLaw("left", "right", target, "constructor-idempotence", nil); err == nil {
+		if _, err := proveConstraintLaw("left", "right", target, "constructor-idempotence", nil); err == nil {
 			t.Fatal("pure constraint theorem licensed constructive deduplication")
 		}
 	})
@@ -161,7 +161,7 @@ func TestAdjectiveAcceptance(t *testing.T) {
 			right.Entry.Children[i].Origin = Origin{Source: "factored"}
 			right.Entry.Children[i].ID = "factored"
 		}
-		if !EquivalentElaboration(left, right) {
+		if !equivalentElaboration(left, right) {
 			t.Fatal("equivalent elaborated behavior failed solely due to origins")
 		}
 		if left.Entry.Origin.Source != "convenience" || right.Entry.Origin.Source != "factored" {
@@ -172,7 +172,7 @@ func TestAdjectiveAcceptance(t *testing.T) {
 		left := Plan{Entry: Node{Kind: Sequence, Children: []Node{{Kind: Acquire, ID: "one", Meaning: "constructor", Resource: ResourceRef{ID: "one"}}, {Kind: Acquire, ID: "two", Meaning: "constructor", Resource: ResourceRef{ID: "two"}}}}}
 		faulty := left
 		faulty.Entry.Children = faulty.Entry.Children[:1]
-		if EquivalentElaboration(left, faulty) {
+		if equivalentElaboration(left, faulty) {
 			t.Fatal("faulty pass collapsed a constructive occurrence")
 		}
 		summary, err := Infer(left, AnalysisOptions{})

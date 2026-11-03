@@ -1398,7 +1398,7 @@
       "tests": [
         {
           "file": "contracts/cache_test.go",
-          "name": "TestLegacyIncompleteRecordRequiresRevalidation/BASE-049"
+          "name": "TestUnsupportedOrIncompleteRecordsRequireFreshAnalysis/BASE-049"
         },
         {
           "file": "contracts/native_assurance_test.go",
@@ -2583,7 +2583,7 @@
       "tests": [
         {
           "file": "contracts/cache_test.go",
-          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/LEX-035"
+          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/overlapping-candidate"
         },
         {
           "file": "lyger/contracts_source_cache_test.go",
@@ -2610,7 +2610,7 @@
         },
         {
           "file": "contracts/cache_test.go",
-          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/LEX-036"
+          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/changed-applicability"
         }
       ],
       "command_ids": [
@@ -2632,7 +2632,7 @@
         },
         {
           "file": "contracts/cache_test.go",
-          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/LEX-037"
+          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/changed-target"
         },
         {
           "file": "lyger/contracts_source_adjectives_test.go",
@@ -2868,7 +2868,7 @@
       "tests": [
         {
           "file": "contracts/cache_test.go",
-          "name": "TestCacheIntegrityAndImmutability/FALS-005"
+          "name": "TestCacheInvalidationAndImmutability/FALS-005"
         },
         {
           "file": "contracts/native_assurance_test.go",
@@ -2940,7 +2940,7 @@
       "tests": [
         {
           "file": "contracts/cache_test.go",
-          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/FALS-008"
+          "name": "TestBindingCacheRevalidatesFullCandidateEnvironment/overlapping-candidate"
         },
         {
           "file": "lyger/contracts_source_cache_test.go",

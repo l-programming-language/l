@@ -1,16 +1,17 @@
 package contracts
 
 import (
+	"bytes"
 	"reflect"
 	"testing"
 )
 
-func logicalKeyFixture() LogicalCacheKey {
-	return LogicalCacheKey{Schema: SchemaVersion, Meaning: "worker:meaning", Specification: "spec-v1", Substitutions: "substitutions-v1", FacetSchemas: "facets-v1", RoleInterfaces: "role-v1", Rules: AnalyzerVersion, TargetModel: "semantic-model-v1"}
+func logicalKeyFixture() logicalCacheKey {
+	return logicalCacheKey{Schema: SchemaVersion, Meaning: "worker:meaning", Specification: "spec-v1", Substitutions: "substitutions-v1", FacetSchemas: "facets-v1", RoleInterfaces: "role-v1", Rules: AnalyzerVersion, TargetModel: "semantic-model-v1"}
 }
 
-func implementationKeyFixture(logical LogicalCacheKey) ImplementationCacheKey {
-	return ImplementationCacheKey{Schema: SchemaVersion, Logical: StableID("logical", logical), Implementation: "body-v1", Target: "target-panic-unwind", TrustPolicy: "explicit-test-policy-v1", Witnesses: "witness-v1", Dependencies: map[string]string{"provider": "provider-v1", "drop": "drop-v1"}}
+func implementationKeyFixture(logical logicalCacheKey) implementationCacheKey {
+	return implementationCacheKey{Schema: SchemaVersion, Logical: StableID("logical", logical), Implementation: "body-v1", Target: "target-panic-unwind", TrustPolicy: "explicit-test-policy-v1", Witnesses: "witness-v1", Dependencies: map[string]string{"provider": "provider-v1", "drop": "drop-v1"}}
 }
 
 func TestSeparateCacheBoundaries(t *testing.T) {
@@ -21,14 +22,14 @@ func TestSeparateCacheBoundaries(t *testing.T) {
 			implementation := implementationKeyFixture(logical)
 			conditional := EvidenceResult{Status: Established, Reason: "conditional logical theorem", Assumptions: []string{"native-spec"}}
 			assurance := EvidenceResult{Status: Established, Reason: "current conformance", Assumptions: []string{"test-only-native"}}
-			if err := session.StoreLogical(logical, conditional); err != nil {
+			if err := session.storeLogical(logical, conditional); err != nil {
 				t.Fatal(err)
 			}
-			if err := session.StoreImplementation(implementation, assurance); err != nil {
+			if err := session.storeImplementation(implementation, assurance); err != nil {
 				t.Fatal(err)
 			}
 			var result EvidenceResult
-			if found, err := session.LoadImplementation(implementation, &result); err != nil || !found || !reflect.DeepEqual(result, assurance) {
+			if found, err := session.loadImplementation(implementation, &result); err != nil || !found || !reflect.DeepEqual(result, assurance) {
 				t.Fatalf("warm lookup = %v, %v, %+v", found, err, result)
 			}
 			switch id {
@@ -39,14 +40,14 @@ func TestSeparateCacheBoundaries(t *testing.T) {
 			case "LEX-031":
 				implementation.Dependencies = map[string]string{"provider": "provider-v2", "drop": "drop-v2"}
 			}
-			if found, err := session.LoadImplementation(implementation, &result); err != nil || found {
+			if found, err := session.loadImplementation(implementation, &result); err != nil || found {
 				t.Fatalf("stale assurance reused: %v, %v", found, err)
 			}
-			if found, err := session.LoadLogical(logical, &result); err != nil || !found || !reflect.DeepEqual(result, conditional) {
+			if found, err := session.loadLogical(logical, &result); err != nil || !found || !reflect.DeepEqual(result, conditional) {
 				t.Fatalf("conditional theorem unnecessarily discarded: %v, %v, %+v", found, err, result)
 			}
 			logical.Specification = "spec-v2"
-			if found, err := session.LoadLogical(logical, &result); err != nil || found {
+			if found, err := session.loadLogical(logical, &result); err != nil || found {
 				t.Fatalf("stale logical theorem reused: %v, %v", found, err)
 			}
 		})
@@ -56,8 +57,8 @@ func TestSeparateCacheBoundaries(t *testing.T) {
 func TestBindingCacheRevalidatesFullCandidateEnvironment(t *testing.T) {
 	context := SelectionContext{Target: TargetRef{Root: "app", Path: []string{"primary"}, Type: "Theme"}, Environment: "imports-v1", Policy: ReferencePolicy, LexicalRole: "adjective"}
 	candidate := Candidate{Meaning: "theme-dark", LexicalRole: "adjective", Applicability: Predicate{Kind: "type", Subject: "target", Value: Atom{Kind: "type", Text: "Theme"}}}
-	for _, id := range []string{"LEX-035", "LEX-036", "LEX-037", "FALS-008"} {
-		t.Run(id, func(t *testing.T) {
+	for _, scenario := range []string{"overlapping-candidate", "changed-applicability", "changed-target"} {
+		t.Run(scenario, func(t *testing.T) {
 			session := NewSession()
 			initial, err := session.SelectReference([]Candidate{candidate}, context)
 			if err != nil || initial.Status != Established {
@@ -68,15 +69,15 @@ func TestBindingCacheRevalidatesFullCandidateEnvironment(t *testing.T) {
 				t.Fatalf("warm selection: %+v, %v", warm, err)
 			}
 			changed, candidates := context, []Candidate{candidate}
-			switch id {
-			case "LEX-035", "FALS-008":
+			switch scenario {
+			case "overlapping-candidate":
 				other := candidate
 				other.Meaning = "theme-overlap"
 				candidates = append(candidates, other)
 				changed.Environment = "imports-v2"
-			case "LEX-036":
+			case "changed-applicability":
 				candidates[0].Applicability = Predicate{Kind: "type", Subject: "target", Value: Atom{Kind: "type", Text: "Backend"}}
-			case "LEX-037":
+			case "changed-target":
 				changed.Target = TargetRef{Root: "app", Path: []string{"secondary"}, Type: "Backend"}
 			}
 			got, err := session.SelectReference(candidates, changed)
@@ -91,35 +92,29 @@ func TestBindingCacheRevalidatesFullCandidateEnvironment(t *testing.T) {
 	}
 }
 
-func TestCacheIntegrityAndImmutability(t *testing.T) {
+func TestCacheInvalidationAndImmutability(t *testing.T) {
 	t.Run("FALS-005", func(t *testing.T) {
-		for _, fault := range []string{"schema", "key", "payload", "digest"} {
-			t.Run(fault, func(t *testing.T) {
+		for _, changed := range []string{"schema", "implementation", "target", "binding"} {
+			t.Run(changed, func(t *testing.T) {
 				session := NewSession()
 				key := implementationKeyFixture(logicalKeyFixture())
-				value := EvidenceResult{Status: Established}
-				if err := session.StoreImplementation(key, value); err != nil {
+				if err := session.storeImplementation(key, EvidenceResult{Status: Established}); err != nil {
 					t.Fatal(err)
 				}
-				identity, err := Fingerprint(key)
-				if err != nil {
-					t.Fatal(err)
-				}
-				entry := session.implementation[identity]
-				switch fault {
+				switch changed {
 				case "schema":
-					entry.Schema = "unsupported"
-				case "key":
-					entry.Key = "corrupted"
-				case "payload":
-					entry.Payload = []byte(`{"status":"unresolved"}`)
-				case "digest":
-					entry.PayloadFingerprint = "corrupted"
+					key.Schema = "1.0"
+				case "implementation":
+					key.Implementation = "changed-body"
+				case "target":
+					key.Target = "changed-target"
+				case "binding":
+					key.Dependencies["binding"] = "changed-selection"
 				}
-				session.implementation[identity] = entry
 				var got EvidenceResult
-				if found, err := session.LoadImplementation(key, &got); err != nil || found || session.CacheStats().Implementation.Rejected != 1 {
-					t.Fatalf("corrupt cache reused: %v, %v, %+v", found, err, got)
+				found, err := session.loadImplementation(key, &got)
+				if found || got.Status == Established || (err != nil) != (changed == "schema") {
+					t.Fatalf("stale assurance reused: found=%v error=%v result=%+v", found, err, got)
 				}
 			})
 		}
@@ -127,31 +122,71 @@ func TestCacheIntegrityAndImmutability(t *testing.T) {
 	session := NewSession()
 	key := logicalKeyFixture()
 	value := EvidenceResult{Status: Established, Assumptions: []string{"fixture-only"}}
-	if err := session.StoreLogical(key, value); err != nil {
+	if err := session.storeLogical(key, value); err != nil {
 		t.Fatal(err)
 	}
 	value.Assumptions[0] = "mutated"
 	var got EvidenceResult
-	if found, err := session.LoadLogical(key, &got); err != nil || !found || got.Assumptions[0] != "fixture-only" {
+	if found, err := session.loadLogical(key, &got); err != nil || !found || got.Assumptions[0] != "fixture-only" {
 		t.Fatalf("cache aliased caller memory: %v, %v, %+v", found, err, got)
 	}
 	got.Assumptions[0] = "mutated-again"
-	if found, err := session.LoadLogical(key, &got); err != nil || !found || got.Assumptions[0] != "fixture-only" {
+	if found, err := session.loadLogical(key, &got); err != nil || !found || got.Assumptions[0] != "fixture-only" {
 		t.Fatalf("cache leaked mutable output: %v, %v, %+v", found, err, got)
 	}
 }
 
-func TestLegacyIncompleteRecordRequiresRevalidation(t *testing.T) {
+func TestUnsupportedOrIncompleteRecordsRequireFreshAnalysis(t *testing.T) {
 	t.Run("BASE-049", func(t *testing.T) {
-		result, err := MigrateLegacyRecord(LegacyContractRecord{Version: "1.0", Definition: "old-definition", Specification: "old-spec"})
-		if err != nil || result.Status != Unresolved || !result.BindingRevalidationRequired || !result.ImplementationRevalidationRequired || len(result.Missing) < 4 {
-			t.Fatalf("incomplete legacy record certified: %+v, %v", result, err)
+		data, err := EncodeDocument(nativeManifestFixture())
+		if err != nil {
+			t.Fatal(err)
 		}
-		if result.Record.Meaning != "" || result.Record.Environment != "" || result.Record.Target.Root != "" {
-			t.Fatal("migration fabricated missing inputs")
+		old := bytes.Replace(data, []byte(`"schema_version": "1.1"`), []byte(`"schema_version": "1.0"`), 1)
+		if _, err := DecodeDocument(old); err == nil {
+			t.Fatal("unsupported predecessor metadata accepted")
+		}
+		session := NewSession()
+		key := logicalKeyFixture()
+		key.Substitutions = ""
+		if err := session.storeLogical(key, EvidenceResult{Status: Established}); err == nil {
+			t.Fatal("incomplete logical dependencies admitted")
+		}
+		var stale EvidenceResult
+		if found, err := session.loadLogical(key, &stale); found || err == nil || stale.Status == Established {
+			t.Fatalf("incomplete record manufactured proof: found=%v error=%v result=%+v", found, err, stale)
+		}
+		plan := Plan{Entry: Node{Kind: Native, Native: "opaque"}}
+		want, err := Infer(plan, AnalysisOptions{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := session.Infer(plan, AnalysisOptions{}, nil, LoweringInventory{})
+		if err != nil || !reflect.DeepEqual(got, want) || len(got.Unknowns) == 0 {
+			t.Fatalf("fresh analysis fabricated missing assurance: result=%+v want=%+v error=%v", got, want, err)
+		}
+		if stats := session.CacheStats(); stats.Logical.Misses != 1 || stats.Implementation.Misses != 1 {
+			t.Fatalf("fresh analysis was not computed: %+v", stats)
 		}
 	})
-	if _, err := MigrateLegacyRecord(LegacyContractRecord{Version: "future"}); err == nil {
-		t.Fatal("unsupported legacy version accepted")
+}
+
+func TestSessionBindingRevalidation(t *testing.T) {
+	key := BindingCacheKey{Schema: SchemaVersion, SourceStructure: "source", Environment: "definition-and-use-environment", Candidates: "candidates", Applicability: "applicability", Target: TargetRef{Root: "exact-target"}, LexicalRole: "adjective", PhrasePolicy: "existing-source-parser/1", ResolutionPolicy: "track-a"}
+	binding := ResolvedBinding{Occurrence: "application", Meaning: "selected-meaning", Target: key.Target}
+	session := NewSession()
+	if err := session.RevalidateBinding(key, binding); err != nil {
+		t.Fatal(err)
+	}
+	if err := session.RevalidateBinding(key, binding); err != nil || session.CacheStats().Binding.Hits != 1 {
+		t.Fatalf("consistent warm resolution rejected: %v", err)
+	}
+	binding.Meaning = "different-meaning"
+	if err := session.RevalidateBinding(key, binding); err == nil {
+		t.Fatal("conflicting current resolution accepted under unchanged key")
+	}
+	key.Candidates = "changed-candidates"
+	if err := session.RevalidateBinding(key, binding); err != nil {
+		t.Fatalf("newly resolved environment was rejected: %v", err)
 	}
 }

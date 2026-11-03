@@ -11,9 +11,9 @@ func (session *Session) VerifySourceAdjective(projection SourceAdjectiveProjecti
 	if logicalProjection.Environment != "" {
 		logicalProjection.Environment = "current-binding-revalidated"
 	}
-	key := LogicalCacheKey{Schema: SchemaVersion, Meaning: projection.Meaning, Specification: StableID("source-declaration", declaration), Substitutions: StableID("source-semantics", logicalProjection), FacetSchemas: "source-structure-only/1", RoleInterfaces: StableID("source-nominal", projection.TargetNominal), Rules: SourceProjectionVersion + ":" + AnalyzerVersion, TargetModel: "source_elaboration", Dependencies: map[string]string{"analysis-options": StableID("options", options)}}
+	key := logicalCacheKey{Schema: SchemaVersion, Meaning: projection.Meaning, Specification: StableID("source-declaration", declaration), Substitutions: StableID("source-semantics", logicalProjection), FacetSchemas: "source-structure-only/1", RoleInterfaces: StableID("source-nominal", projection.TargetNominal), Rules: SourceProjectionVersion + ":" + AnalyzerVersion, TargetModel: "source_elaboration", Dependencies: map[string]string{"analysis-options": StableID("options", options)}}
 	var certificate SourceAdjectiveCertificate
-	found, err := session.LoadLogical(key, &certificate)
+	found, err := session.loadLogical(key, &certificate)
 	if err != nil {
 		return certificate, err
 	}
@@ -22,7 +22,7 @@ func (session *Session) VerifySourceAdjective(projection SourceAdjectiveProjecti
 		if err != nil {
 			return certificate, err
 		}
-		if err := session.StoreLogical(key, certificate); err != nil {
+		if err := session.storeLogical(key, certificate); err != nil {
 			return certificate, err
 		}
 	}
@@ -46,7 +46,7 @@ func (session *Session) VerifySourceAdjectiveInstance(projection SourceAdjective
 	logical.Dependencies = nil
 	logical.LoweringObligations = nil
 	logical.ProjectionFingerprint = ""
-	key := ImplementationCacheKey{Schema: SchemaVersion, Logical: StableID("source-logical", logical), Implementation: StableID("source-projection", projection), Target: StableID("source-instance", instance), TrustPolicy: StableID("approved", options.ApprovedAssumptions), Witnesses: StableID("witnesses", options.NativeWitnesses), Dependencies: projection.Dependencies}
+	key := implementationCacheKey{Schema: SchemaVersion, Logical: StableID("source-logical", logical), Implementation: StableID("source-projection", projection), Target: StableID("source-instance", instance), TrustPolicy: StableID("approved", options.ApprovedAssumptions), Witnesses: StableID("witnesses", options.NativeWitnesses), Dependencies: projection.Dependencies}
 	// A supplied certificate is only a dependency check, never cached proof.
 	key.Dependencies = make(map[string]string, len(projection.Dependencies)+1)
 	for name, value := range projection.Dependencies {
@@ -54,18 +54,15 @@ func (session *Session) VerifySourceAdjectiveInstance(projection SourceAdjective
 	}
 	key.Dependencies["supplied-certificate"] = StableID("source-certificate", certificate)
 	var result SourceAdjectiveInstantiation
-	found, err := session.LoadImplementation(key, &result)
+	found, err := session.loadImplementation(key, &result)
 	if err != nil {
 		return result, err
 	}
 	if found {
 		return result, nil
 	}
-	result, err = VerifySourceAdjectiveInstance(projection, certificate, declaration, instance, options)
-	if err != nil {
-		return result, err
-	}
-	if err := session.StoreImplementation(key, result); err != nil {
+	result = instantiateVerifiedSourceAdjective(projection, verified, certificate, declaration, instance)
+	if err := session.storeImplementation(key, result); err != nil {
 		return result, err
 	}
 	return result, nil
