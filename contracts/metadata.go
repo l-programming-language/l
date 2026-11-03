@@ -23,8 +23,10 @@ type OwnershipDeclaration struct {
 }
 
 type NativeSignature struct {
-	Inputs  []string `json:"inputs"`
-	Outputs []string `json:"outputs"`
+	Inputs      []string     `json:"inputs"`
+	Outputs     []string     `json:"outputs"`
+	InputTypes  []NativeType `json:"input_types,omitempty"`
+	OutputTypes []NativeType `json:"output_types,omitempty"`
 }
 
 // DeclaredContract cannot contain Status or evidence. Favorable claims here
@@ -41,6 +43,7 @@ type DeclaredContract struct {
 	Demand             map[string]Multiplicity `json:"demand,omitempty"`
 	Ownership          *OwnershipDeclaration   `json:"ownership,omitempty"`
 	Outcomes           []Outcome               `json:"outcomes,omitempty"`
+	OutcomeContracts   []NativeOutcomeContract `json:"outcome_contracts,omitempty"`
 	Frames             []FrameContract         `json:"frames,omitempty"`
 	Coverage           map[string]Coverage     `json:"coverage,omitempty"`
 	Dependencies       []string                `json:"dependencies,omitempty"`
@@ -150,6 +153,34 @@ func (manifest NativeContractManifest) Validate() error {
 			return fmt.Errorf("native declaration requires unambiguous canonical contract and meaning identities")
 		}
 		identities[declaration.ID], meanings[declaration.Meaning] = true, true
+		outcomes := make(map[Outcome]bool)
+		for _, outcome := range declaration.Outcomes {
+			if outcomes[outcome] {
+				return fmt.Errorf("duplicate native outcome %s", outcome)
+			}
+			outcomes[outcome] = true
+		}
+		components := make(map[Outcome]bool)
+		for _, component := range declaration.OutcomeContracts {
+			if !outcomes[component.Outcome] || components[component.Outcome] {
+				return fmt.Errorf("native outcome components require unique declared outcomes")
+			}
+			components[component.Outcome] = true
+			for _, relation := range component.States {
+				if relation.Location.Resource.ID == "" || relation.Location.Resource.Unknown || relation.Observation != "state_at_completion" || !containsString([]string{"unchanged", "different", "unknown"}, relation.Relation) || len(relation.Evidence) > 0 {
+					return fmt.Errorf("native state declarations require an exact resource, supported observation/relation and no manufactured evidence")
+				}
+			}
+			for _, absent := range component.AbsentEffects {
+				if component.Effects != nil {
+					for _, effect := range component.Effects.Effects {
+						if effect.Kind == absent {
+							return fmt.Errorf("native effect both declared and excluded: %s", absent)
+						}
+					}
+				}
+			}
+		}
 		for family := range declaration.Coverage {
 			valid := false
 			for i := 1; i <= 10; i++ {
@@ -279,6 +310,10 @@ func DecodeDocument(data []byte) (any, error) {
 	}
 	var target any
 	switch header.Kind {
+	case "native_environment":
+		target = &NativeEnvironment{}
+	case "contract_check_requests":
+		target = &CheckRequests{}
 	case "native_contract_manifest":
 		target = &NativeContractManifest{}
 	case "facet_and_role_manifest":

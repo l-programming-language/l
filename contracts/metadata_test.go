@@ -154,7 +154,7 @@ func TestExecutedEvidenceRequiresRecordedOperation(t *testing.T) {
 }
 
 func TestDocumentSchemasFollowSharedModel(t *testing.T) {
-	for _, kind := range []string{"native_contract_manifest", "facet_and_role_manifest", "trust_policy", "contract_report", "adjective_certificate"} {
+	for _, kind := range []string{"native_contract_manifest", "facet_and_role_manifest", "trust_policy", "contract_report", "adjective_certificate", "native_environment", "contract_check_requests"} {
 		t.Run(kind, func(t *testing.T) {
 			first, err := JSONSchema(kind)
 			if err != nil {

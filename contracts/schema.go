@@ -16,11 +16,15 @@ var contractEnums = map[reflect.Type][]string{
 	reflect.TypeOf(ProtocolAuthority("")): {string(TransitionOwner), string(Observer), string(SharedTransition), string(UnknownAuthority)},
 	reflect.TypeOf(AppStage("")):          {string(AppIdle), string(AppRunning), string(AppDraining), string(AppFinalized)},
 	reflect.TypeOf(ContinuationClaim("")): {string(ClaimUnclaimed), string(ClaimActive), string(ClaimFinished)},
-	reflect.TypeOf(NodeKind("")):          {string(Sequence), string(Branch), string(Event), string(Call), string(Callback), string(Native), string(Guard), string(Require), string(Acquire), string(Move), string(Release), string(Scope), string(Repeat), string(Mutation)},
+	reflect.TypeOf(NodeKind("")):          {string(Sequence), string(Branch), string(Event), string(Call), string(Callback), string(Native), string(Guard), string(Require), string(Acquire), string(Move), string(Release), string(Scope), string(Repeat), string(Mutation), string(Return), string(CheckedResult)},
 }
 
 func documentModel(kind string) (reflect.Type, error) {
 	switch kind {
+	case "native_environment":
+		return reflect.TypeOf(NativeEnvironment{}), nil
+	case "contract_check_requests":
+		return reflect.TypeOf(CheckRequests{}), nil
 	case "native_contract_manifest":
 		return reflect.TypeOf(NativeContractManifest{}), nil
 	case "facet_and_role_manifest":

@@ -56,6 +56,103 @@
       ],
       "type": "object"
     },
+    "AnalysisScope": {
+      "additionalProperties": false,
+      "properties": {
+        "boundary": {
+          "type": "string"
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "exclusions": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "includes": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "native_uses": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "node_id": {
+          "type": "string"
+        },
+        "occurrence": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "phase": {
+          "enum": [
+            "",
+            "elaboration",
+            "construction",
+            "invocation",
+            "destruction",
+            "cleanup"
+          ],
+          "type": "string"
+        },
+        "resources": {
+          "items": {
+            "$ref": "#/$defs/FailureLocation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "unknowns": {
+          "items": {
+            "$ref": "#/$defs/UnknownReason"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "node_id",
+        "meaning",
+        "target",
+        "origin",
+        "boundary",
+        "phase",
+        "includes",
+        "complete"
+      ],
+      "type": "object"
+    },
     "AppProtocolState": {
       "additionalProperties": false,
       "properties": {
@@ -192,6 +289,91 @@
         "candidate",
         "status",
         "reason"
+      ],
+      "type": "object"
+    },
+    "CheckRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "footprint": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FailureFootprint"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "profile": {
+          "$ref": "#/$defs/Profile"
+        },
+        "scope": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "scope",
+        "profile"
+      ],
+      "type": "object"
+    },
+    "CheckResult": {
+      "additionalProperties": false,
+      "properties": {
+        "obligations": {
+          "items": {
+            "$ref": "#/$defs/Obligation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "request": {
+          "$ref": "#/$defs/CheckRequest"
+        },
+        "required": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AnalysisScope"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "established",
+            "contradicted",
+            "unresolved"
+          ],
+          "type": "string"
+        },
+        "summary": {
+          "$ref": "#/$defs/DerivedSummary"
+        }
+      },
+      "required": [
+        "request",
+        "status",
+        "summary",
+        "obligations",
+        "required"
       ],
       "type": "object"
     },
@@ -495,6 +677,15 @@
         },
         "origin": {
           "$ref": "#/$defs/Origin"
+        },
+        "outcome_contracts": {
+          "items": {
+            "$ref": "#/$defs/NativeOutcomeContract"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "outcomes": {
           "items": {
@@ -1022,6 +1213,68 @@
       ],
       "type": "object"
     },
+    "FailureFootprint": {
+      "additionalProperties": false,
+      "properties": {
+        "locations": {
+          "items": {
+            "$ref": "#/$defs/FailureLocation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "observation": {
+          "type": "string"
+        },
+        "outcomes": {
+          "items": {
+            "enum": [
+              "normal",
+              "returned_failure",
+              "guard_rejected",
+              "panic",
+              "abort",
+              "cancelled",
+              "process_failure"
+            ],
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "locations",
+        "observation",
+        "outcomes"
+      ],
+      "type": "object"
+    },
+    "FailureLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        }
+      },
+      "required": [
+        "resource"
+      ],
+      "type": "object"
+    },
     "FrameContract": {
       "additionalProperties": false,
       "properties": {
@@ -1267,6 +1520,30 @@
       ],
       "type": "object"
     },
+    "NativeArtifact": {
+      "additionalProperties": false,
+      "properties": {
+        "execution": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "inputs",
+        "execution"
+      ],
+      "type": "object"
+    },
     "NativeBoundary": {
       "additionalProperties": false,
       "properties": {
@@ -1309,12 +1586,288 @@
       ],
       "type": "object"
     },
+    "NativeComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "$ref": "#/$defs/Claim"
+        },
+        "component": {
+          "type": "string"
+        },
+        "current": {
+          "$ref": "#/$defs/EvidenceFingerprints"
+        },
+        "outcome": {
+          "enum": [
+            "normal",
+            "returned_failure",
+            "guard_rejected",
+            "panic",
+            "abort",
+            "cancelled",
+            "process_failure"
+          ],
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "established",
+            "contradicted",
+            "unresolved"
+          ],
+          "type": "string"
+        },
+        "use": {
+          "type": "string"
+        },
+        "witness": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "use",
+        "component",
+        "claim",
+        "current",
+        "status",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "NativeEnvironment": {
+      "additionalProperties": false,
+      "properties": {
+        "allocator": {
+          "type": "string"
+        },
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/NativeArtifact"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "compiler": {
+          "type": "string"
+        },
+        "configuration": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "dependencies": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "executions": {
+          "items": {
+            "$ref": "#/$defs/ExecutionRecord"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "fingerprint": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "inputs": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "kind": {
+          "type": "string"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "method": {
+          "type": "string"
+        },
+        "panic_policy": {
+          "type": "string"
+        },
+        "producer": {
+          "type": "string"
+        },
+        "runtime": {
+          "type": "string"
+        },
+        "schema_version": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "tools": {
+          "items": {
+            "$ref": "#/$defs/NativeToolIdentity"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "kind",
+        "producer",
+        "version",
+        "method",
+        "host",
+        "target",
+        "compiler",
+        "panic_policy",
+        "runtime",
+        "allocator",
+        "configuration",
+        "inputs",
+        "dependencies",
+        "tools",
+        "executions",
+        "limitations",
+        "fingerprint"
+      ],
+      "type": "object"
+    },
+    "NativeOutcomeContract": {
+      "additionalProperties": false,
+      "properties": {
+        "absent_effects": {
+          "items": {
+            "enum": [
+              "read",
+              "write",
+              "allocate",
+              "deallocate",
+              "release",
+              "io",
+              "spawn",
+              "transfer",
+              "wait",
+              "block",
+              "suspend",
+              "time",
+              "random",
+              "environment",
+              "foreign",
+              "panic",
+              "opaque",
+              "synchronize",
+              "replace",
+              "cleanup"
+            ],
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "costs": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResourceCost"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effects": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeclaredEffectRow"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "normal",
+            "returned_failure",
+            "guard_rejected",
+            "panic",
+            "abort",
+            "cancelled",
+            "process_failure"
+          ],
+          "type": "string"
+        },
+        "states": {
+          "items": {
+            "$ref": "#/$defs/StateRelation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "outcome"
+      ],
+      "type": "object"
+    },
     "NativeSignature": {
       "additionalProperties": false,
       "properties": {
+        "input_types": {
+          "items": {
+            "$ref": "#/$defs/NativeType"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "inputs": {
           "items": {
             "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "output_types": {
+          "items": {
+            "$ref": "#/$defs/NativeType"
           },
           "type": [
             "array",
@@ -1334,6 +1887,152 @@
       "required": [
         "inputs",
         "outputs"
+      ],
+      "type": "object"
+    },
+    "NativeToolIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "path",
+        "sha256",
+        "version"
+      ],
+      "type": "object"
+    },
+    "NativeType": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "items": {
+            "$ref": "#/$defs/NativeType"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "atom": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "nominal": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "NativeUse": {
+      "additionalProperties": false,
+      "properties": {
+        "boundary": {
+          "type": "string"
+        },
+        "dependencies": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "implementation": {
+          "type": "string"
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "occurrence": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "outcome_disposition": {
+          "type": "string"
+        },
+        "phase": {
+          "enum": [
+            "",
+            "elaboration",
+            "construction",
+            "invocation",
+            "destruction",
+            "cleanup"
+          ],
+          "type": "string"
+        },
+        "resources": {
+          "additionalProperties": {
+            "$ref": "#/$defs/ResourceRef"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "signature": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NativeSignature"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "substitutions": {
+          "$ref": "#/$defs/Substitutions"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "values": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Atom"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "meaning",
+        "name",
+        "target",
+        "origin",
+        "phase",
+        "implementation",
+        "dependencies",
+        "outcome_disposition"
       ],
       "type": "object"
     },
@@ -1388,6 +2087,16 @@
     "Node": {
       "additionalProperties": false,
       "properties": {
+        "body": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Node"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "callback": {
           "type": "string"
         },
@@ -1506,7 +2215,9 @@
             "release",
             "scope",
             "repeat",
-            "mutation"
+            "mutation",
+            "return",
+            "check_result"
           ],
           "type": "string"
         },
@@ -1769,6 +2480,87 @@
       },
       "type": "object"
     },
+    "OwnershipPossibility": {
+      "additionalProperties": false,
+      "properties": {
+        "may_exclusive": {
+          "type": "boolean"
+        },
+        "may_final_owner": {
+          "type": "boolean"
+        },
+        "may_guard": {
+          "type": "boolean"
+        },
+        "may_live": {
+          "type": "boolean"
+        },
+        "may_unsafe_guard": {
+          "type": "boolean"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        }
+      },
+      "required": [
+        "resource",
+        "may_live",
+        "may_guard",
+        "may_exclusive",
+        "may_unsafe_guard",
+        "may_final_owner",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "OwnershipSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "order": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "owned": {
+          "additionalProperties": {
+            "$ref": "#/$defs/OwnedResource"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "owned"
+      ],
+      "type": "object"
+    },
+    "OwnershipWidening": {
+      "additionalProperties": false,
+      "properties": {
+        "resources": {
+          "additionalProperties": {
+            "$ref": "#/$defs/OwnershipPossibility"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "resources"
+      ],
+      "type": "object"
+    },
     "PathSummary": {
       "additionalProperties": false,
       "properties": {
@@ -1780,6 +2572,9 @@
             "array",
             "null"
           ]
+        },
+        "control_return": {
+          "type": "boolean"
         },
         "demand": {
           "additionalProperties": {
@@ -1793,6 +2588,15 @@
         "effects": {
           "items": {
             "$ref": "#/$defs/Effect"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "entry_facts": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
           },
           "type": [
             "array",
@@ -1826,6 +2630,18 @@
             "null"
           ]
         },
+        "observed_outcome": {
+          "enum": [
+            "normal",
+            "returned_failure",
+            "guard_rejected",
+            "panic",
+            "abort",
+            "cancelled",
+            "process_failure"
+          ],
+          "type": "string"
+        },
         "outcome": {
           "enum": [
             "normal",
@@ -1847,6 +2663,15 @@
             "null"
           ]
         },
+        "ownership_alternatives": {
+          "items": {
+            "$ref": "#/$defs/OwnershipSnapshot"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "ownership_order": {
           "items": {
             "type": "string"
@@ -1856,11 +2681,30 @@
             "null"
           ]
         },
+        "ownership_widening": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OwnershipWidening"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "reachable": {
           "type": "boolean"
         },
         "resources": {
           "$ref": "#/$defs/ResourceCost"
+        },
+        "state_relations": {
+          "items": {
+            "$ref": "#/$defs/StateRelation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "unknowns": {
           "items": {
@@ -2180,6 +3024,34 @@
         "lowering": {
           "$ref": "#/$defs/LoweringInventory"
         },
+        "native_components": {
+          "items": {
+            "$ref": "#/$defs/NativeComponent"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "native_environment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NativeEnvironment"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "native_uses": {
+          "items": {
+            "$ref": "#/$defs/NativeUse"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "native_witnesses": {
           "items": {
             "$ref": "#/$defs/NativeWitness"
@@ -2219,6 +3091,15 @@
             "null"
           ]
         },
+        "requests": {
+          "items": {
+            "$ref": "#/$defs/CheckResult"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "resolution_policy": {
           "type": "string"
         },
@@ -2230,6 +3111,15 @@
         },
         "scope": {
           "$ref": "#/$defs/ReportScope"
+        },
+        "scopes": {
+          "items": {
+            "$ref": "#/$defs/AnalysisScope"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "source_certificates": {
           "items": {
@@ -2901,6 +3791,39 @@
       ],
       "type": "object"
     },
+    "StateRelation": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "location": {
+          "$ref": "#/$defs/FailureLocation"
+        },
+        "observation": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "relation": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "location",
+        "observation",
+        "relation",
+        "origin"
+      ],
+      "type": "object"
+    },
     "Substitutions": {
       "additionalProperties": false,
       "properties": {
@@ -3026,6 +3949,37 @@
         },
         "components": {
           "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "excluded_effects": {
+          "items": {
+            "enum": [
+              "read",
+              "write",
+              "allocate",
+              "deallocate",
+              "release",
+              "io",
+              "spawn",
+              "transfer",
+              "wait",
+              "block",
+              "suspend",
+              "time",
+              "random",
+              "environment",
+              "foreign",
+              "panic",
+              "opaque",
+              "synchronize",
+              "replace",
+              "cleanup"
+            ],
             "type": "string"
           },
           "type": [

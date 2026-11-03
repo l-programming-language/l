@@ -123,11 +123,7 @@ func checkTransformerSummary(transformer ContractTransformer, summary DerivedSum
 	obligations := checkSummaryPromises(summary, RoleOperation{Ensures: transformer.Provides, Profiles: transformer.Profiles}, transformer.Target, transformer.Origin)
 	for callback, expected := range transformer.Demand {
 		for _, path := range summary.Paths {
-			actual := path.Demand[callback]
-			if actual.Upper == nil && actual.Symbol == "" && actual.Lower == 0 {
-				zero := int64(0)
-				actual.Upper = &zero
-			}
+			actual := demandAt(path.Demand, callback)
 			status, reason := Entails([]Predicate{{Kind: "multiplicity", Subject: callback, Lower: &actual.Lower, Upper: actual.Upper}}, Predicate{Kind: "multiplicity", Subject: callback, Lower: &expected.Lower, Upper: expected.Upper})
 			obligations = append(obligations, facetObligation(transformer.Target, transformer.Origin, status, "callback demand: "+reason, Predicate{Kind: "multiplicity", Subject: callback, Lower: &expected.Lower, Upper: expected.Upper}))
 		}
@@ -319,6 +315,10 @@ func rebaseNodes(values []Node, from, to TargetRef) []Node {
 		node := &result[i]
 		node.Target = rebaseAdjectiveTarget(node.Target, from, to)
 		node.Children = rebaseNodes(node.Children, from, to)
+		if node.Body != nil {
+			body := rebaseNodes([]Node{*node.Body}, from, to)[0]
+			node.Body = &body
+		}
 		node.Then = rebaseNodes(node.Then, from, to)
 		node.Else = rebaseNodes(node.Else, from, to)
 		node.Cleanup = rebaseNodes(node.Cleanup, from, to)
@@ -430,6 +430,10 @@ func elaborationWithoutProvenance(plan Plan) Plan {
 	var strip func(Node) Node
 	strip = func(node Node) Node {
 		node.ID, node.Origin = "", Origin{}
+		if node.Body != nil {
+			body := strip(*node.Body)
+			node.Body = &body
+		}
 		for _, children := range []*[]Node{&node.Children, &node.Then, &node.Else, &node.Cleanup} {
 			*children = append([]Node(nil), (*children)...)
 			for i := range *children {

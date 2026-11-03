@@ -544,6 +544,27 @@
       ],
       "type": "object"
     },
+    "FailureLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        }
+      },
+      "required": [
+        "resource"
+      ],
+      "type": "object"
+    },
     "Multiplicity": {
       "additionalProperties": false,
       "properties": {
@@ -657,6 +678,16 @@
     "Node": {
       "additionalProperties": false,
       "properties": {
+        "body": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Node"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "callback": {
           "type": "string"
         },
@@ -775,7 +806,9 @@
             "release",
             "scope",
             "repeat",
-            "mutation"
+            "mutation",
+            "return",
+            "check_result"
           ],
           "type": "string"
         },
@@ -996,6 +1029,87 @@
       ],
       "type": "object"
     },
+    "OwnershipPossibility": {
+      "additionalProperties": false,
+      "properties": {
+        "may_exclusive": {
+          "type": "boolean"
+        },
+        "may_final_owner": {
+          "type": "boolean"
+        },
+        "may_guard": {
+          "type": "boolean"
+        },
+        "may_live": {
+          "type": "boolean"
+        },
+        "may_unsafe_guard": {
+          "type": "boolean"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        }
+      },
+      "required": [
+        "resource",
+        "may_live",
+        "may_guard",
+        "may_exclusive",
+        "may_unsafe_guard",
+        "may_final_owner",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "OwnershipSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "order": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "owned": {
+          "additionalProperties": {
+            "$ref": "#/$defs/OwnedResource"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "owned"
+      ],
+      "type": "object"
+    },
+    "OwnershipWidening": {
+      "additionalProperties": false,
+      "properties": {
+        "resources": {
+          "additionalProperties": {
+            "$ref": "#/$defs/OwnershipPossibility"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "resources"
+      ],
+      "type": "object"
+    },
     "PathSummary": {
       "additionalProperties": false,
       "properties": {
@@ -1007,6 +1121,9 @@
             "array",
             "null"
           ]
+        },
+        "control_return": {
+          "type": "boolean"
         },
         "demand": {
           "additionalProperties": {
@@ -1020,6 +1137,15 @@
         "effects": {
           "items": {
             "$ref": "#/$defs/Effect"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "entry_facts": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
           },
           "type": [
             "array",
@@ -1053,6 +1179,18 @@
             "null"
           ]
         },
+        "observed_outcome": {
+          "enum": [
+            "normal",
+            "returned_failure",
+            "guard_rejected",
+            "panic",
+            "abort",
+            "cancelled",
+            "process_failure"
+          ],
+          "type": "string"
+        },
         "outcome": {
           "enum": [
             "normal",
@@ -1074,6 +1212,15 @@
             "null"
           ]
         },
+        "ownership_alternatives": {
+          "items": {
+            "$ref": "#/$defs/OwnershipSnapshot"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "ownership_order": {
           "items": {
             "type": "string"
@@ -1083,11 +1230,30 @@
             "null"
           ]
         },
+        "ownership_widening": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OwnershipWidening"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "reachable": {
           "type": "boolean"
         },
         "resources": {
           "$ref": "#/$defs/ResourceCost"
+        },
+        "state_relations": {
+          "items": {
+            "$ref": "#/$defs/StateRelation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "unknowns": {
           "items": {
@@ -1249,6 +1415,39 @@
       ],
       "type": "object"
     },
+    "StateRelation": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "location": {
+          "$ref": "#/$defs/FailureLocation"
+        },
+        "observation": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "relation": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "location",
+        "observation",
+        "relation",
+        "origin"
+      ],
+      "type": "object"
+    },
     "Substitutions": {
       "additionalProperties": false,
       "properties": {
@@ -1337,6 +1536,37 @@
         },
         "components": {
           "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "excluded_effects": {
+          "items": {
+            "enum": [
+              "read",
+              "write",
+              "allocate",
+              "deallocate",
+              "release",
+              "io",
+              "spawn",
+              "transfer",
+              "wait",
+              "block",
+              "suspend",
+              "time",
+              "random",
+              "environment",
+              "foreign",
+              "panic",
+              "opaque",
+              "synchronize",
+              "replace",
+              "cleanup"
+            ],
             "type": "string"
           },
           "type": [

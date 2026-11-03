@@ -98,6 +98,9 @@ func summaryKey(summary DerivedSummary) string {
 
 func definitionCalls(node Node, callbacks map[string]Node, seen map[string]bool) []MeaningKey {
 	var result []MeaningKey
+	if node.Body != nil {
+		result = append(result, definitionCalls(*node.Body, callbacks, seen)...)
+	}
 	if node.Kind == Call {
 		result = append(result, node.Meaning)
 	}

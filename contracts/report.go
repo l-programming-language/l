@@ -46,7 +46,7 @@ func SealExecutionRecord(record ExecutionRecord) ExecutionRecord {
 }
 
 func (record ExecutionRecord) Validate() error {
-	if record.ID == "" || !containsString([]string{"build", "test", "benchmark", "proof", "sanitizer", "integrity", "schema"}, record.Kind) || len(record.Command) == 0 || record.Command[0] == "" || record.WorkingDirectory == "" {
+	if record.ID == "" || !containsString([]string{"environment", "build", "test", "benchmark", "proof", "sanitizer", "integrity", "schema"}, record.Kind) || len(record.Command) == 0 || record.Command[0] == "" || record.WorkingDirectory == "" {
 		return fmt.Errorf("execution record requires identity, operation kind, exact command and working directory")
 	}
 	if record.Status == "not_run" || record.Status == "blocked" {
@@ -102,6 +102,11 @@ type Report struct {
 	SourceDeclarations   []SourceTransformerDeclaration `json:"source_declarations,omitempty"`
 	SourceInstantiations []SourceAdjectiveInstantiation `json:"source_instantiations,omitempty"`
 	SourceVerification   *SourceVerificationResult      `json:"source_verification,omitempty"`
+	NativeUses           []NativeUse                    `json:"native_uses,omitempty"`
+	Scopes               []AnalysisScope                `json:"scopes,omitempty"`
+	NativeEnvironment    *NativeEnvironment             `json:"native_environment,omitempty"`
+	Requests             []CheckResult                  `json:"requests,omitempty"`
+	NativeComponents     []NativeComponent              `json:"native_components,omitempty"`
 }
 
 func NewReport(entry string) Report {
@@ -120,6 +125,25 @@ func (report Report) Validate() error {
 	}
 	if err := report.Lowering.Validate(); err != nil {
 		return err
+	}
+	if report.NativeEnvironment != nil {
+		if err := report.NativeEnvironment.Validate(); err != nil {
+			return err
+		}
+	}
+	scopes := make(map[string]string)
+	for _, scope := range report.Scopes {
+		if scope.ID == "" || scopes[scope.ID] != "" || scope.NodeID == "" || scope.Boundary == "" {
+			return fmt.Errorf("report has ambiguous or incomplete execution scope")
+		}
+		scopes[scope.ID] = StableID("report-scope", scope)
+	}
+	uses := make(map[string]bool)
+	for _, use := range report.NativeUses {
+		if use.ID == "" || uses[use.ID] || use.Meaning == "" {
+			return fmt.Errorf("report has ambiguous native application identity")
+		}
+		uses[use.ID] = true
 	}
 	seen := make(map[BindingOccurrenceID]bool)
 	for _, binding := range report.Bindings {
@@ -170,6 +194,31 @@ func (report Report) Validate() error {
 	}
 	obligations := append([]Obligation(nil), report.Obligations...)
 	obligations = append(obligations, report.Summary.Obligations...)
+	requests := make(map[string]bool)
+	for _, request := range report.Requests {
+		if requests[request.Request.ID] || request.Request.ID == "" || len(request.Obligations) == 0 || len(request.Required) != len(request.Obligations) {
+			return fmt.Errorf("request result requires unique identity and complete controlling obligations")
+		}
+		requests[request.Request.ID] = true
+		if request.Scope == nil && request.Request.Scope != "whole_entry" || request.Scope != nil && (request.Request.Scope == "whole_entry" || scopes[request.Scope.ID] != StableID("report-scope", *request.Scope)) {
+			return fmt.Errorf("request result references absent or changed execution scope")
+		}
+		status := Established
+		for i, obligation := range request.Obligations {
+			if request.Required[i] != obligation.ID {
+				return fmt.Errorf("request result hides controlling obligation")
+			}
+			if obligation.Status == Contradicted {
+				status = Contradicted
+			} else if obligation.Status != Established && status != Contradicted {
+				status = Unresolved
+			}
+		}
+		if request.Status != status {
+			return fmt.Errorf("request result status disagrees with controlling obligations")
+		}
+		obligations = append(obligations, request.Obligations...)
+	}
 	sourceDeclarations := make(map[MeaningKey]SourceTransformerDeclaration)
 	for _, declaration := range report.SourceDeclarations {
 		if declaration.Meaning == "" || declaration.Version == "" || declaration.TargetNominal == "" {

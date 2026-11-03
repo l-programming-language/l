@@ -201,6 +201,15 @@
         "origin": {
           "$ref": "#/$defs/Origin"
         },
+        "outcome_contracts": {
+          "items": {
+            "$ref": "#/$defs/NativeOutcomeContract"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "outcomes": {
           "items": {
             "enum": [
@@ -365,6 +374,27 @@
       ],
       "type": "object"
     },
+    "FailureLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        }
+      },
+      "required": [
+        "resource"
+      ],
+      "type": "object"
+    },
     "FrameContract": {
       "additionalProperties": false,
       "properties": {
@@ -476,12 +506,111 @@
       ],
       "type": "object"
     },
+    "NativeOutcomeContract": {
+      "additionalProperties": false,
+      "properties": {
+        "absent_effects": {
+          "items": {
+            "enum": [
+              "read",
+              "write",
+              "allocate",
+              "deallocate",
+              "release",
+              "io",
+              "spawn",
+              "transfer",
+              "wait",
+              "block",
+              "suspend",
+              "time",
+              "random",
+              "environment",
+              "foreign",
+              "panic",
+              "opaque",
+              "synchronize",
+              "replace",
+              "cleanup"
+            ],
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "costs": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResourceCost"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effects": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeclaredEffectRow"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "normal",
+            "returned_failure",
+            "guard_rejected",
+            "panic",
+            "abort",
+            "cancelled",
+            "process_failure"
+          ],
+          "type": "string"
+        },
+        "states": {
+          "items": {
+            "$ref": "#/$defs/StateRelation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "outcome"
+      ],
+      "type": "object"
+    },
     "NativeSignature": {
       "additionalProperties": false,
       "properties": {
+        "input_types": {
+          "items": {
+            "$ref": "#/$defs/NativeType"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "inputs": {
           "items": {
             "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "output_types": {
+          "items": {
+            "$ref": "#/$defs/NativeType"
           },
           "type": [
             "array",
@@ -501,6 +630,33 @@
       "required": [
         "inputs",
         "outputs"
+      ],
+      "type": "object"
+    },
+    "NativeType": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "items": {
+            "$ref": "#/$defs/NativeType"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "atom": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "nominal": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
       ],
       "type": "object"
     },
@@ -693,6 +849,39 @@
       },
       "required": [
         "id"
+      ],
+      "type": "object"
+    },
+    "StateRelation": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "location": {
+          "$ref": "#/$defs/FailureLocation"
+        },
+        "observation": {
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "relation": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "location",
+        "observation",
+        "relation",
+        "origin"
       ],
       "type": "object"
     },

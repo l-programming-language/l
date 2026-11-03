@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"sort"
+	"strings"
 )
 
 type FacetSchema struct {
@@ -145,166 +146,391 @@ func facetObligation(target TargetRef, origin Origin, status Status, reason stri
 	return Obligation{ID: StableID("obligation", claim), Claim: claim, Status: status, Reason: reason, Origin: origin}
 }
 
-// CheckConfiguration preserves the contribution sequence. Only pure selected
-// facts are deduplicated; the occurrence ledger is never normalized away.
-func CheckConfiguration(schemas []FacetSchema, slots []FacetSlot, contributions []ConfigurationContribution, rules []FacetRule, facts []Predicate) (ConfigurationResult, error) {
-	result := ConfigurationResult{Contributions: append([]ConfigurationContribution(nil), contributions...), Facts: append([]Predicate(nil), facts...)}
-	definitions := make(map[string]FacetSchema)
-	for _, schema := range schemas {
-		if err := schema.Validate(); err != nil {
-			return result, err
-		}
-		if _, duplicate := definitions[schema.ID]; duplicate {
-			return result, fmt.Errorf("duplicate facet identity %s", schema.ID)
-		}
-		definitions[schema.ID] = schema
+// configurationChecker keeps all selected values in one validated ledger. Facts
+// are a projection of that ledger, never an independent rule-output store.
+type configurationChecker struct {
+	result      ConfigurationResult
+	definitions map[string]FacetSchema
+	selection   map[string]*FacetSelection
+	premises    []Predicate
+}
+
+func (checker *configurationChecker) validate(contribution ConfigurationContribution) error {
+	schema, exists := checker.definitions[contribution.Facet]
+	if !exists {
+		return fmt.Errorf("unknown facet %s", contribution.Facet)
 	}
-	selection := make(map[string]*FacetSelection)
-	for _, slot := range slots {
-		if _, exists := definitions[slot.Facet]; !exists {
-			return result, fmt.Errorf("unknown facet %s", slot.Facet)
-		}
-		key := facetSlotKey(slot)
-		if prior := selection[key]; prior != nil {
-			prior.Slot.Closed = prior.Slot.Closed || slot.Closed
-		} else {
-			selection[key] = &FacetSelection{Slot: slot}
+	if !containsString(schema.AllowedContributions, contribution.Kind) {
+		return fmt.Errorf("facet %s does not authorize %s", schema.ID, contribution.Kind)
+	}
+	if !schema.accepts(contribution.Value) {
+		return fmt.Errorf("facet %s rejects value outside its domain", schema.ID)
+	}
+	_, _, err := checker.resolveSubject(FacetFact(FacetSlot{Facet: contribution.Facet, Scope: contribution.Scope}, contribution.Value).Subject)
+	return err
+}
+
+// Legacy subjects remain accepted only when the declared schema identities
+// determine one facet/scope split. Both fields may themselves contain colons.
+func (checker *configurationChecker) normalize(fact Predicate, origin Origin) (ConfigurationContribution, error) {
+	value := ConfigurationContribution{Target: fact.Target, Kind: "select", Value: fact.Value, Origin: origin}
+	if fact.Kind != "present" || !strings.HasPrefix(fact.Subject, "facet:") || len(fact.Args) != 0 || fact.Resource != (ResourceRef{}) || fact.Lower != nil || fact.Upper != nil {
+		return value, fmt.Errorf("cross-facet selections require an exact FacetFact predicate")
+	}
+	identity, scope, err := checker.resolveSubject(fact.Subject)
+	if err != nil {
+		return value, err
+	}
+	value.Facet, value.Scope = identity, scope
+	return value, checker.validate(value)
+}
+
+func (checker *configurationChecker) resolveSubject(subject string) (string, string, error) {
+	var matches []string
+	for identity := range checker.definitions {
+		if strings.HasPrefix(subject, "facet:"+identity+":") {
+			matches = append(matches, identity)
 		}
 	}
-	for _, contribution := range contributions {
-		schema, exists := definitions[contribution.Facet]
-		if !exists {
-			return result, fmt.Errorf("unknown facet %s", contribution.Facet)
-		}
-		if !containsString(schema.AllowedContributions, contribution.Kind) {
-			return result, fmt.Errorf("facet %s does not authorize %s", schema.ID, contribution.Kind)
-		}
-		if !schema.accepts(contribution.Value) {
-			return result, fmt.Errorf("facet %s rejects value outside its domain", schema.ID)
-		}
-		slot := FacetSlot{Facet: contribution.Facet, Target: contribution.Target, Scope: contribution.Scope}
-		predicate := FacetFact(slot, contribution.Value)
-		if contribution.Kind == "require" || contribution.Kind == "assert" {
-			result.Requests = append(result.Requests, PropertyRequest{Predicate: predicate, Target: contribution.Target, Scope: contribution.Scope, RequiredAssurance: "established", Origin: contribution.Origin})
-			continue
-		}
-		if contribution.Target.Unknown || contribution.Target.Root == "" {
-			result.Obligations = append(result.Obligations, facetObligation(contribution.Target, contribution.Origin, Unresolved, "facet attachment identity is unresolved", predicate))
-			continue
-		}
-		applicability := schema.Applicability
-		if applicability.Kind == "" {
-			applicability = Predicate{Kind: "true"}
-		}
-		localFacts := append([]Predicate(nil), result.Facts...)
-		if contribution.Target.Type != "" {
-			localFacts = append(localFacts, Predicate{Kind: "type", Subject: "target", Value: Atom{Kind: "type", Text: contribution.Target.Type}})
-		}
-		status, reason := Entails(localFacts, applicability)
-		if status != Established {
-			result.Obligations = append(result.Obligations, facetObligation(contribution.Target, contribution.Origin, status, "facet applicability: "+reason, applicability))
-			continue
-		}
-		conditionStatus, _ := Entails(localFacts, Predicate{Kind: "and", Args: contribution.Condition})
-		if conditionStatus == Contradicted {
-			continue
-		}
-		if conditionStatus != Established {
-			result.Conditional = append(result.Conditional, contribution)
-			continue
-		}
-		key := facetSlotKey(slot)
-		current := selection[key]
-		if current == nil {
-			current = &FacetSelection{Slot: slot}
-			selection[key] = current
-		}
-		if contribution.Kind == "replace" {
-			previous := *current
-			previous.Values, previous.Origins = append([]Atom(nil), current.Values...), append([]Origin(nil), current.Origins...)
-			obligation := facetObligation(contribution.Target, contribution.Origin, Unresolved, "replacement requires concrete ownership, release and implementation rechecking", Predicate{Kind: "replacement", Subject: schema.ID})
-			result.Replacements = append(result.Replacements, FacetReplacement{previous, contribution, obligation})
-			result.Obligations = append(result.Obligations, obligation)
-			current.Values, current.Origins = nil, nil
-		}
-		duplicate := false
-		for _, value := range current.Values {
-			if value == contribution.Value {
-				duplicate = true
-			}
-		}
-		if !duplicate && len(current.Values) > 0 && schema.Cardinality != "set" {
-			conflict := facetObligation(contribution.Target, contribution.Origin, Contradicted, "exclusive facet has simultaneous distinct selections on the same exact target and scope", predicate)
-			for _, origin := range current.Origins {
-				conflict.Dependencies = append(conflict.Dependencies, StableID("origin", origin))
-			}
-			result.Obligations = append(result.Obligations, conflict)
-		}
-		if !duplicate {
-			current.Values = append(current.Values, contribution.Value)
-		}
-		current.Origins = append(current.Origins, contribution.Origin)
+	sort.Strings(matches)
+	if len(matches) == 0 {
+		return "", "", fmt.Errorf("unknown facet in configuration predicate %q", subject)
 	}
-	keys := make([]string, 0, len(selection))
-	for key := range selection {
+	if len(matches) != 1 {
+		return "", "", fmt.Errorf("ambiguous legacy facet/scope predicate %q matches %v; use unambiguous facet identities and scopes", subject, matches)
+	}
+	return matches[0], strings.TrimPrefix(subject, "facet:"+matches[0]+":"), nil
+}
+
+func (checker *configurationChecker) selectionKeys() []string {
+	keys := make([]string, 0, len(checker.selection))
+	for key := range checker.selection {
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
-	for _, key := range keys {
-		current := selection[key]
-		schema := definitions[current.Slot.Facet]
-		if current.Slot.Closed && schema.Cardinality == "exactly-one-at-close" && len(current.Values) == 0 {
-			result.Obligations = append(result.Obligations, facetObligation(current.Slot.Target, schema.Origin, Unresolved, "exactly-one facet is unset at configuration closure", Predicate{Kind: "present", Subject: schema.ID}))
-		}
+	return keys
+}
+
+func (checker *configurationChecker) facts() []Predicate {
+	facts := append([]Predicate(nil), checker.premises...)
+	for _, key := range checker.selectionKeys() {
+		current := checker.selection[key]
 		for _, value := range current.Values {
-			result.Facts = append(result.Facts, FacetFact(current.Slot, value))
+			facts = append(facts, FacetFact(current.Slot, value))
 		}
-		result.Selections = append(result.Selections, *current)
 	}
-	// Consequences are restricted to configuration facts. Behavioral guarantees
-	// always require the ordinary evidence/implementation checker.
-	seen := make(map[string]bool)
-	for _, fact := range result.Facts {
-		seen[StableID("fact", fact)] = true
+	return facts
+}
+
+func (checker *configurationChecker) applicability(value ConfigurationContribution) (Status, string) {
+	if value.Target.Unknown || value.Target.Root == "" {
+		return Unresolved, "facet attachment identity is unresolved"
+	}
+	facts, status, reason := authoritativeTargetFacts(value.Target, checker.facts())
+	if status != Established {
+		return status, reason
+	}
+	applicability := checker.definitions[value.Facet].Applicability
+	if applicability.Kind == "" {
+		applicability = Predicate{Kind: "true"}
+	}
+	status, reason = Entails(facts, applicability)
+	return status, "facet applicability: " + reason
+}
+
+func (checker *configurationChecker) obligation(value ConfigurationContribution, status Status, reason string) {
+	slot := FacetSlot{Facet: value.Facet, Target: value.Target, Scope: value.Scope}
+	checker.result.Obligations = append(checker.result.Obligations, facetObligation(value.Target, value.Origin, status, reason, FacetFact(slot, value.Value)))
+}
+
+// selectValue is called only after static validation and applicability. It
+// preserves every origin while deduplicating pure selected values only.
+func (checker *configurationChecker) selectValue(value ConfigurationContribution) bool {
+	slot := FacetSlot{Facet: value.Facet, Target: value.Target, Scope: value.Scope}
+	key := facetSlotKey(slot)
+	current := checker.selection[key]
+	if current == nil {
+		current = &FacetSelection{Slot: slot}
+		checker.selection[key] = current
+	}
+	if value.Kind == "replace" {
+		previous := *current
+		previous.Values, previous.Origins = append([]Atom(nil), current.Values...), append([]Origin(nil), current.Origins...)
+		obligation := facetObligation(value.Target, value.Origin, Unresolved, "replacement requires concrete ownership, release and implementation rechecking", Predicate{Kind: "replacement", Subject: value.Facet})
+		checker.result.Replacements = append(checker.result.Replacements, FacetReplacement{previous, value, obligation})
+		checker.result.Obligations = append(checker.result.Obligations, obligation)
+		current.Values, current.Origins = nil, nil
+		var retained []Predicate
+		for _, premise := range checker.premises {
+			if !checker.premiseDependsOn(premise, slot) {
+				retained = append(retained, premise)
+			}
+		}
+		checker.premises = retained
+	}
+	predicate := FacetFact(slot, value.Value)
+	if status, _ := Entails(checker.premises, predicate); status == Contradicted {
+		checker.obligation(value, Contradicted, "selected facet value contradicts an explicit configuration premise")
+	}
+	duplicate := false
+	for _, selected := range current.Values {
+		duplicate = duplicate || selected == value.Value
+	}
+	if !duplicate && len(current.Values) > 0 && checker.definitions[value.Facet].Cardinality != "set" {
+		conflict := facetObligation(value.Target, value.Origin, Contradicted, "exclusive facet has simultaneous distinct selections on the same exact target and scope", predicate)
+		for _, origin := range current.Origins {
+			conflict.Dependencies = append(conflict.Dependencies, StableID("origin", origin))
+		}
+		checker.result.Obligations = append(checker.result.Obligations, conflict)
+	}
+	if !duplicate {
+		current.Values = append(current.Values, value.Value)
+	}
+	current.Origins = append(current.Origins, value.Origin)
+	return !duplicate
+}
+
+func (checker *configurationChecker) premiseDependsOn(fact Predicate, slot FacetSlot) bool {
+	if strings.HasPrefix(fact.Subject, "facet:") {
+		facet, scope, err := checker.resolveSubject(fact.Subject)
+		if err != nil || facet == slot.Facet && scope == slot.Scope && TargetRelation(fact.Target, slot.Target) != Contradicted {
+			return true
+		}
+	}
+	for _, child := range fact.Args {
+		if checker.premiseDependsOn(child, slot) {
+			return true
+		}
+	}
+	return false
+}
+
+func (checker *configurationChecker) contribute(value ConfigurationContribution) {
+	facts := checker.facts()
+	condition, _ := Entails(facts, Predicate{Kind: "and", Args: value.Condition})
+	if condition == Contradicted {
+		return
+	}
+	if condition != Established {
+		checker.result.Conditional = append(checker.result.Conditional, value)
+		checker.obligation(value, Unresolved, "ordered facet contribution condition is unresolved; contribution was not applied")
+		return
+	}
+	status, reason := checker.applicability(value)
+	if status != Established {
+		checker.obligation(value, status, reason)
+		return
+	}
+	if value.Kind == "require" || value.Kind == "assert" {
+		slot := FacetSlot{Facet: value.Facet, Target: value.Target, Scope: value.Scope}
+		checker.result.Requests = append(checker.result.Requests, PropertyRequest{Predicate: FacetFact(slot, value.Value), Target: value.Target, Scope: value.Scope, RequiredAssurance: "established", Origin: value.Origin})
+		return
+	}
+	checker.selectValue(value)
+}
+
+// A conjunction of input premises exposes its selections to the same ledger as
+// direct and derived contributions. Other logical wrappers retain their shape,
+// but every nested facet reference must still be a valid configuration fact.
+func (checker *configurationChecker) seed(facts []Predicate) error {
+	var selections []ConfigurationContribution
+	var collect func(Predicate) error
+	collect = func(fact Predicate) error {
+		if fact.Kind == "and" {
+			for _, child := range fact.Args {
+				if err := collect(child); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+		if strings.HasPrefix(fact.Subject, "facet:") {
+			selection, err := checker.normalize(fact, Origin{})
+			if err != nil {
+				return err
+			}
+			selections = append(selections, selection)
+			return nil
+		}
+		checker.premises = append(checker.premises, fact)
+		return nil
+	}
+	for _, fact := range facts {
+		if err := collect(fact); err != nil {
+			return err
+		}
+	}
+	// Do not expose unchecked nested facts while checking applicability.
+	premises := checker.premises
+	checker.premises = nil
+	for _, fact := range premises {
+		if !hasFacetPredicate(fact) {
+			checker.premises = append(checker.premises, fact)
+		}
+	}
+	for _, fact := range premises {
+		if !hasFacetPredicate(fact) {
+			continue
+		}
+		valid, err := checker.validateNestedPremise(fact)
+		if err != nil {
+			return err
+		}
+		if valid {
+			checker.premises = append(checker.premises, fact)
+		}
+	}
+	for _, value := range selections {
+		checker.contribute(value)
+	}
+	return nil
+}
+
+func hasFacetPredicate(fact Predicate) bool {
+	if strings.HasPrefix(fact.Subject, "facet:") {
+		return true
+	}
+	for _, child := range fact.Args {
+		if hasFacetPredicate(child) {
+			return true
+		}
+	}
+	return false
+}
+
+func (checker *configurationChecker) validateNestedPremise(fact Predicate) (bool, error) {
+	valid := true
+	if strings.HasPrefix(fact.Subject, "facet:") {
+		value, err := checker.normalize(fact, Origin{})
+		if err != nil {
+			return false, err
+		}
+		status, reason := checker.applicability(value)
+		if status != Established {
+			checker.obligation(value, status, reason)
+			valid = false
+		}
+	}
+	for _, child := range fact.Args {
+		ok, err := checker.validateNestedPremise(child)
+		if err != nil {
+			return false, err
+		}
+		valid = valid && ok
+	}
+	return valid, nil
+}
+
+func (checker *configurationChecker) rules(rules []FacetRule, consequences [][]ConfigurationContribution) {
+	applied := make([][]bool, len(rules))
+	for i := range rules {
+		applied[i] = make([]bool, len(consequences[i]))
 	}
 	for changed := true; changed; {
 		changed = false
-		for _, rule := range rules {
-			status, _ := Entails(result.Facts, Predicate{Kind: "and", Args: rule.When})
-			if status != Established {
+		for i, rule := range rules {
+			condition, _ := Entails(checker.facts(), Predicate{Kind: "and", Args: rule.When})
+			if condition != Established {
 				continue
 			}
-			for _, consequence := range rule.Consequences {
-				if consequence.Kind != "present" || len(consequence.Subject) < 6 || consequence.Subject[:6] != "facet:" {
-					return result, fmt.Errorf("cross-facet rules may derive configuration facts only")
+			for j, value := range consequences[i] {
+				if applied[i][j] {
+					continue
 				}
-				key := StableID("fact", consequence)
-				if !seen[key] {
-					seen[key] = true
-					result.Facts = append(result.Facts, consequence)
-					changed = true
+				if status, _ := checker.applicability(value); status != Established {
+					continue
 				}
+				applied[i][j] = true
+				changed = checker.selectValue(value) || changed
 			}
 		}
 	}
-	for _, rule := range rules {
-		condition, _ := Entails(result.Facts, Predicate{Kind: "and", Args: rule.When})
+	for i, rule := range rules {
+		condition, _ := Entails(checker.facts(), Predicate{Kind: "and", Args: rule.When})
 		if condition == Contradicted {
 			continue
 		}
+		for j, value := range consequences[i] {
+			if applied[i][j] {
+				continue
+			}
+			status, reason := checker.applicability(value)
+			if condition != Established {
+				status, reason = Unresolved, "cross-facet rule applicability is unresolved; consequence was not selected"
+			}
+			checker.obligation(value, status, reason)
+		}
 		for _, requirement := range rule.Requires {
-			status, reason := Entails(result.Facts, requirement)
+			status, reason := Entails(checker.facts(), requirement)
 			if condition != Established {
 				status, reason = Unresolved, "cross-facet rule applicability is unresolved"
 			}
-			result.Obligations = append(result.Obligations, facetObligation(requirement.Target, rule.Origin, status, reason, requirement))
+			checker.result.Obligations = append(checker.result.Obligations, facetObligation(requirement.Target, rule.Origin, status, reason, requirement))
 		}
 	}
-	for _, request := range result.Requests {
-		status, reason := Entails(result.Facts, request.Predicate)
-		result.Obligations = append(result.Obligations, facetObligation(request.Target, request.Origin, status, reason, request.Predicate))
+}
+
+// CheckConfiguration preserves the direct contribution sequence. Rule-derived
+// selections use the same schema/cardinality state, and closure is checked only
+// after their finite fixed point. No rule performs an ordered replacement.
+func CheckConfiguration(schemas []FacetSchema, slots []FacetSlot, contributions []ConfigurationContribution, rules []FacetRule, facts []Predicate) (ConfigurationResult, error) {
+	checker := configurationChecker{result: ConfigurationResult{Contributions: append([]ConfigurationContribution(nil), contributions...)}, definitions: make(map[string]FacetSchema), selection: make(map[string]*FacetSelection)}
+	for _, schema := range schemas {
+		if err := schema.Validate(); err != nil {
+			return checker.result, err
+		}
+		if _, duplicate := checker.definitions[schema.ID]; duplicate {
+			return checker.result, fmt.Errorf("duplicate facet identity %s", schema.ID)
+		}
+		checker.definitions[schema.ID] = schema
 	}
-	return result, nil
+	for _, slot := range slots {
+		if _, exists := checker.definitions[slot.Facet]; !exists {
+			return checker.result, fmt.Errorf("unknown facet %s", slot.Facet)
+		}
+		key := facetSlotKey(slot)
+		if prior := checker.selection[key]; prior != nil {
+			prior.Slot.Closed = prior.Slot.Closed || slot.Closed
+		} else {
+			checker.selection[key] = &FacetSelection{Slot: slot}
+		}
+	}
+	for _, contribution := range contributions {
+		if err := checker.validate(contribution); err != nil {
+			return checker.result, err
+		}
+	}
+	consequences := make([][]ConfigurationContribution, len(rules))
+	for i, rule := range rules {
+		for _, fact := range rule.Consequences {
+			value, err := checker.normalize(fact, rule.Origin)
+			if err != nil {
+				return checker.result, err
+			}
+			consequences[i] = append(consequences[i], value)
+		}
+	}
+	if err := checker.seed(facts); err != nil {
+		return checker.result, err
+	}
+	for _, contribution := range contributions {
+		checker.contribute(contribution)
+	}
+	checker.rules(rules, consequences)
+	checker.result.Facts = checker.facts()
+	for _, key := range checker.selectionKeys() {
+		current := checker.selection[key]
+		schema := checker.definitions[current.Slot.Facet]
+		if current.Slot.Closed && schema.Cardinality == "exactly-one-at-close" && len(current.Values) == 0 {
+			checker.result.Obligations = append(checker.result.Obligations, facetObligation(current.Slot.Target, schema.Origin, Unresolved, "exactly-one facet is unset at configuration closure", Predicate{Kind: "present", Subject: schema.ID}))
+		}
+		checker.result.Selections = append(checker.result.Selections, *current)
+	}
+	for _, request := range checker.result.Requests {
+		status, reason := Entails(checker.result.Facts, request.Predicate)
+		checker.result.Obligations = append(checker.result.Obligations, facetObligation(request.Target, request.Origin, status, reason, request.Predicate))
+	}
+	return checker.result, nil
 }
 
 // SameConfiguration compares pure final facts only; it is not an execution

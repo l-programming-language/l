@@ -184,20 +184,14 @@ func CheckFailureSummaryProfile(summary DerivedSummary, profile Profile, footpri
 	}
 	var results []Obligation
 	for index, path := range summary.Paths {
-		if !evidenceOutcomeContains(footprint.Outcomes, path.Outcome) {
+		outcome := path.Outcome
+		if profile.Scope == "native_body" && path.Outcome == Normal && path.ObservedOutcome != "" {
+			outcome = path.ObservedOutcome
+		}
+		if !evidenceOutcomeContains(footprint.Outcomes, outcome) {
 			continue
 		}
-		failure := FailureSummary{Outcome: path.Outcome, Observation: footprint.Observation, Coverage: Known, FailureChannel: string(path.Outcome)}
-		if len(path.Unknowns) != 0 {
-			failure.Coverage = Unknown
-		}
-		for _, effect := range path.Effects {
-			switch effect.Kind {
-			case "write", "io", "replace", "release", "deallocate", "spawn", "transfer":
-				failure.Changes = append(failure.Changes, FailureChange{Location: FailureLocation{Resource: effect.Resource}, Definite: effect.Definite && path.Reachable, Partial: effect.Kind == "io", Origin: effect.Origin})
-			}
-		}
-		obligation := CheckFailurePreservation(failure, footprint, disjoint)
+		obligation := checkPathFinalState(path, footprint, disjoint)
 		obligation.ID = StableID("failure-path", struct {
 			Claim string
 			Index int
@@ -207,10 +201,82 @@ func CheckFailureSummaryProfile(summary DerivedSummary, profile Profile, footpri
 	}
 	if len(results) == 0 {
 		status, reason := Established, "closed outcome summary contains no covered failure path"
-		if summary.Coverage != Known || len(summary.Paths) == 0 {
+		if len(summary.Paths) == 0 || hasOutcomeUnknown(summary.Paths) {
 			status, reason = Unresolved, "failure outcome coverage is incomplete"
 		}
 		results = append(results, Obligation{ID: claim.ID, Claim: claim, Status: status, Reason: reason})
+	} else if hasOutcomeUnknown(summary.Paths) {
+		results = append(results, Obligation{ID: claim.ID + ":outcome-coverage", Claim: claim, Status: Unresolved, Reason: "additional failure outcomes remain unknown"})
 	}
 	return results
+}
+
+func hasOutcomeUnknown(paths []PathSummary) bool {
+	for _, path := range paths {
+		for _, unknown := range path.Unknowns {
+			if len(unknown.Components) == 0 || containsString(unknown.Components, "outcomes") {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// Write history alone cannot establish a different final value. Approved
+// completion relations and exact typed state operations are separate evidence.
+func checkPathFinalState(path PathSummary, footprint FailureFootprint, disjoint []FailureResourcePair) Obligation {
+	result := Obligation{Status: Established, Reason: "selected failure preserves the modeled entry-to-completion state after cleanup"}
+	for _, requirement := range path.Obligations {
+		if requirement.Status != Established {
+			selectFinding(&result, Unresolved, requirement.Reason, requirement.Origin)
+		}
+	}
+	for _, location := range footprint.Locations {
+		if location.Resource.ID == "" || location.Resource.Unknown {
+			selectFinding(&result, Unresolved, "protected runtime resource identity is unresolved", Origin{})
+			continue
+		}
+		if footprint.Observation == "state_at_completion" {
+			status, reason := TypedFinalValueRelation(path, location)
+			if status == Established {
+				continue
+			}
+			if status == Contradicted {
+				selectFinding(&result, status, reason, Origin{})
+				continue
+			}
+		}
+		proven := false
+		for _, relation := range path.StateRelations {
+			if relation.Observation != footprint.Observation || len(relation.Evidence) == 0 || relation.Location.Resource.Unknown || relation.Location.Resource.ID != location.Resource.ID || !failurePathPrefix(relation.Location.Path, location.Path) {
+				continue
+			}
+			if relation.Relation == "different" && len(relation.Location.Path) == len(location.Path) {
+				status := Unresolved
+				if path.Reachable {
+					status = Contradicted
+				}
+				selectFinding(&result, status, "approved completion relation changes the selected state", relation.Origin)
+			} else if relation.Relation == "unchanged" {
+				proven = true
+			}
+		}
+		if proven {
+			continue
+		}
+		for _, unknown := range path.Unknowns {
+			if len(unknown.Components) == 0 || containsString(unknown.Components, "effects") || containsString(unknown.Components, "ownership") || containsString(unknown.Components, "outcomes") {
+				selectFinding(&result, Unresolved, "completion state depends on unknown native, alias, outcome or cleanup behavior: "+unknown.Message, unknown.Origin)
+			}
+		}
+		for _, effect := range path.Effects {
+			switch effect.Kind {
+			case "write", "io", "replace", "release", "deallocate", "spawn", "transfer":
+				if failureLocationRelation(location, FailureLocation{Resource: effect.Resource}, disjoint) != "disjoint" {
+					selectFinding(&result, Unresolved, "a possible mutation lacks a supported final-state relation", effect.Origin)
+				}
+			}
+		}
+	}
+	return result
 }

@@ -8,20 +8,22 @@ import (
 type NodeKind string
 
 const (
-	Sequence NodeKind = "sequence"
-	Branch   NodeKind = "branch"
-	Event    NodeKind = "event"
-	Call     NodeKind = "call"
-	Callback NodeKind = "callback"
-	Native   NodeKind = "native"
-	Guard    NodeKind = "guard"
-	Require  NodeKind = "require"
-	Acquire  NodeKind = "acquire"
-	Move     NodeKind = "move"
-	Release  NodeKind = "release"
-	Scope    NodeKind = "scope"
-	Repeat   NodeKind = "repeat"
-	Mutation NodeKind = "mutation"
+	Sequence      NodeKind = "sequence"
+	Branch        NodeKind = "branch"
+	Event         NodeKind = "event"
+	Call          NodeKind = "call"
+	Callback      NodeKind = "callback"
+	Native        NodeKind = "native"
+	Guard         NodeKind = "guard"
+	Require       NodeKind = "require"
+	Acquire       NodeKind = "acquire"
+	Move          NodeKind = "move"
+	Release       NodeKind = "release"
+	Scope         NodeKind = "scope"
+	Repeat        NodeKind = "repeat"
+	Mutation      NodeKind = "mutation"
+	Return        NodeKind = "return"
+	CheckedResult NodeKind = "check_result"
 )
 
 type Substitutions struct {
@@ -40,6 +42,7 @@ type Node struct {
 	Callback        string         `json:"callback,omitempty"`
 	Native          string         `json:"native,omitempty"`
 	Children        []Node         `json:"children,omitempty"`
+	Body            *Node          `json:"body,omitempty"`
 	Then            []Node         `json:"then,omitempty"`
 	Else            []Node         `json:"else,omitempty"`
 	Effects         []Effect       `json:"effects,omitempty"`
@@ -84,12 +87,13 @@ type Plan struct {
 }
 
 type UnknownReason struct {
-	Code       string   `json:"code"`
-	Message    string   `json:"message"`
-	Boundary   string   `json:"boundary,omitempty"`
-	Origin     Origin   `json:"origin"`
-	Components []string `json:"components,omitempty"`
-	Phase      Phase    `json:"phase,omitempty"`
+	Code            string       `json:"code"`
+	Message         string       `json:"message"`
+	Boundary        string       `json:"boundary,omitempty"`
+	Origin          Origin       `json:"origin"`
+	Components      []string     `json:"components,omitempty"`
+	Phase           Phase        `json:"phase,omitempty"`
+	ExcludedEffects []EffectKind `json:"excluded_effects,omitempty"`
 }
 
 type NativeBoundary struct {
@@ -120,18 +124,24 @@ type OwnedResource struct {
 }
 
 type PathSummary struct {
-	Outcome          Outcome                  `json:"outcome"`
-	Reachable        bool                     `json:"reachable"`
-	Facts            []Predicate              `json:"facts,omitempty"`
-	Effects          []Effect                 `json:"effects,omitempty"`
-	Demand           map[string]Multiplicity  `json:"demand,omitempty"`
-	Resources        ResourceCost             `json:"resources"`
-	Owned            map[string]OwnedResource `json:"owned,omitempty"`
-	OwnershipOrder   []string                 `json:"ownership_order,omitempty"`
-	Unknowns         []UnknownReason          `json:"unknowns,omitempty"`
-	Obligations      []Obligation             `json:"obligations,omitempty"`
-	Assumptions      []string                 `json:"assumptions,omitempty"`
-	NativeBoundaries []NativeBoundary         `json:"native_boundaries,omitempty"`
+	Outcome               Outcome                  `json:"outcome"`
+	ObservedOutcome       Outcome                  `json:"observed_outcome,omitempty"`
+	ControlReturn         bool                     `json:"control_return,omitempty"`
+	StateRelations        []StateRelation          `json:"state_relations,omitempty"`
+	Reachable             bool                     `json:"reachable"`
+	Facts                 []Predicate              `json:"facts,omitempty"`
+	EntryFacts            []Predicate              `json:"entry_facts,omitempty"`
+	Effects               []Effect                 `json:"effects,omitempty"`
+	Demand                map[string]Multiplicity  `json:"demand,omitempty"`
+	Resources             ResourceCost             `json:"resources"`
+	Owned                 map[string]OwnedResource `json:"owned,omitempty"`
+	OwnershipOrder        []string                 `json:"ownership_order,omitempty"`
+	OwnershipAlternatives []OwnershipSnapshot      `json:"ownership_alternatives,omitempty"`
+	OwnershipWidening     *OwnershipWidening       `json:"ownership_widening,omitempty"`
+	Unknowns              []UnknownReason          `json:"unknowns,omitempty"`
+	Obligations           []Obligation             `json:"obligations,omitempty"`
+	Assumptions           []string                 `json:"assumptions,omitempty"`
+	NativeBoundaries      []NativeBoundary         `json:"native_boundaries,omitempty"`
 }
 
 type DerivedSummary struct {
@@ -155,6 +165,7 @@ type AnalysisOptions struct {
 	Aliases             []ResourcePair
 	Disjoint            []ResourcePair
 	NativeSummaries     map[string]DerivedSummary
+	NativeApplications  map[string]ApprovedNativeApplication
 	NativeWitnesses     map[string]string
 	ApprovedAssumptions map[string]bool
 }
@@ -173,12 +184,15 @@ func (o AnalysisOptions) normalized() AnalysisOptions {
 }
 
 type inference struct {
-	plan          Plan
-	options       AnalysisOptions
-	summaries     map[MeaningKey]DerivedSummary
-	callbackStack map[string]bool
-	callStack     map[MeaningKey]bool
-	summarizing   bool
+	plan           Plan
+	options        AnalysisOptions
+	summaries      map[MeaningKey]DerivedSummary
+	callbackStack  map[string]bool
+	callStack      map[MeaningKey]bool
+	summarizing    bool
+	scopeNode      string
+	measuringScope bool
+	scopedPaths    []PathSummary
 }
 
 func initialPath() PathSummary {
@@ -186,7 +200,9 @@ func initialPath() PathSummary {
 }
 
 func clonePath(p PathSummary) PathSummary {
+	p.StateRelations = append([]StateRelation(nil), p.StateRelations...)
 	p.Facts = append([]Predicate(nil), p.Facts...)
+	p.EntryFacts = append([]Predicate(nil), p.EntryFacts...)
 	p.Effects = append([]Effect(nil), p.Effects...)
 	p.Unknowns = append([]UnknownReason(nil), p.Unknowns...)
 	p.Obligations = append([]Obligation(nil), p.Obligations...)
@@ -200,26 +216,41 @@ func clonePath(p PathSummary) PathSummary {
 	p.Demand = demand
 	owned := make(map[string]OwnedResource, len(p.Owned))
 	for key, value := range p.Owned {
-		owned[key] = value
+		owned[key] = normalizedOwnedResource(value)
 	}
 	p.Owned = owned
+	p.OwnershipAlternatives = cloneOwnershipSnapshots(p.OwnershipAlternatives)
+	p.OwnershipWidening = cloneOwnershipWidening(p.OwnershipWidening)
 	return p
 }
 
 func Infer(plan Plan, options AnalysisOptions) (DerivedSummary, error) {
+	return inferPlan(plan, options, "")
+}
+
+func inferPlan(plan Plan, options AnalysisOptions, scopeNode string) (DerivedSummary, error) {
 	options = options.normalized()
 	for _, pair := range options.Disjoint {
 		if AliasRelation(pair.Left, pair.Right, options.Aliases, nil) == Established {
 			return DerivedSummary{}, fmt.Errorf("resource %s is both aliased and declared disjoint from %s", pair.Left.ID, pair.Right.ID)
 		}
 	}
-	a := &inference{plan: plan, options: options, summaries: make(map[MeaningKey]DerivedSummary), callbackStack: make(map[string]bool), callStack: make(map[MeaningKey]bool)}
+	a := &inference{plan: plan, options: options, summaries: make(map[MeaningKey]DerivedSummary), callbackStack: make(map[string]bool), callStack: make(map[MeaningKey]bool), scopeNode: scopeNode}
 	if err := a.inferDefinitions(); err != nil {
 		return DerivedSummary{}, err
 	}
 	paths, err := a.run(plan.Entry, []PathSummary{initialPath()})
 	if err != nil {
 		return DerivedSummary{}, err
+	}
+	if scopeNode != "" {
+		if len(a.scopedPaths) == 0 {
+			return DerivedSummary{}, fmt.Errorf("selected typed region %q was not reached with a supported entry context", scopeNode)
+		}
+		paths = a.bound(a.scopedPaths)
+		// Whole-entry residuals are not scoped operations. The coordinator must
+		// supply the selected region's explicit coverage obligations separately.
+		plan.Residuals, plan.NativeClosure = nil, nil
 	}
 	for i := range paths {
 		paths[i].Unknowns = append(paths[i].Unknowns, plan.Residuals...)
@@ -254,9 +285,13 @@ func Infer(plan Plan, options AnalysisOptions) (DerivedSummary, error) {
 		Alternatives, Widen, Rounds int
 		Aliases, Disjoint           []ResourcePair
 		Native                      map[string]DerivedSummary
+		NativeApplications          map[string]ApprovedNativeApplication
 		Witnesses                   map[string]string
 		Approved                    map[string]bool
-	}{plan, AnalyzerVersion, options.MaxAlternatives, options.WidenAfter, options.MaxSCCRounds, options.Aliases, options.Disjoint, options.NativeSummaries, options.NativeWitnesses, options.ApprovedAssumptions})
+	}{plan, AnalyzerVersion, options.MaxAlternatives, options.WidenAfter, options.MaxSCCRounds, options.Aliases, options.Disjoint, options.NativeSummaries, options.NativeApplications, options.NativeWitnesses, options.ApprovedAssumptions})
+	if scopeNode != "" {
+		result.Fingerprint = StableID("scope-inference", struct{ Base, Scope string }{result.Fingerprint, scopeNode})
+	}
 	return result, nil
 }
 
@@ -275,9 +310,14 @@ func (a *inference) sequence(nodes []Node, paths []PathSummary) ([]PathSummary, 
 func (a *inference) run(node Node, paths []PathSummary) ([]PathSummary, error) {
 	var result []PathSummary
 	for _, path := range paths {
-		if path.Outcome != Normal {
+		if path.Outcome != Normal || path.ControlReturn {
 			result = append(result, path)
 			continue
+		}
+		if node.ID != "" && node.ID == a.scopeNode && !a.summarizing && !a.measuringScope {
+			if err := a.measureScope(node, path); err != nil {
+				return nil, err
+			}
 		}
 		out, err := a.step(node, clonePath(path))
 		if err != nil {
@@ -289,6 +329,17 @@ func (a *inference) run(node Node, paths []PathSummary) ([]PathSummary, error) {
 }
 
 func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
+	if len(p.OwnershipAlternatives) > 0 {
+		var result []PathSummary
+		for _, alternative := range expandOwnership(p) {
+			paths, err := a.step(node, alternative)
+			if err != nil {
+				return nil, err
+			}
+			result = append(result, paths...)
+		}
+		return result, nil
+	}
 	if node.Kind != Require && len(node.Requires) > 0 {
 		checked, err := a.step(Node{Kind: Require, Requires: node.Requires, Target: node.Target, Phase: node.Phase, Origin: node.Origin}, p)
 		if err != nil {
@@ -300,6 +351,16 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 	switch node.Kind {
 	case Sequence:
 		return a.sequence(node.Children, []PathSummary{p})
+	case Return:
+		paths, err := a.sequence(node.Children, []PathSummary{p})
+		for i := range paths {
+			if paths[i].Outcome == Normal {
+				paths[i].ControlReturn = true
+			}
+		}
+		return paths, err
+	case CheckedResult:
+		return a.checkResult(node, p)
 	case Branch:
 		left, err := a.sequence(node.Then, []PathSummary{clonePath(p)})
 		if err != nil {
@@ -368,6 +429,9 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 		}
 		return result, nil
 	case Native:
+		if application, ok := a.options.NativeApplications[node.Native]; ok {
+			return a.applyNativeApplication(p, node, application), nil
+		}
 		witness := a.options.NativeWitnesses[node.Native]
 		if summary, ok := a.options.NativeSummaries[node.Native]; ok && witness != "" && a.options.ApprovedAssumptions[witness] {
 			out := a.applySummary(p, summary, node.Substitutions)
@@ -387,16 +451,23 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 		}
 		var out []PathSummary
 		for _, path := range actuals {
-			if path.Outcome != Normal {
+			if path.Outcome != Normal || path.ControlReturn {
 				out = append(out, path)
 				continue
 			}
-			if body, ok := a.plan.Definitions[node.Meaning]; ok && !a.summarizing && !a.callStack[node.Meaning] {
+			body, hasBody := a.plan.Definitions[node.Meaning]
+			if node.Body != nil {
+				body, hasBody = *node.Body, true
+			}
+			if hasBody && !a.summarizing && !a.callStack[node.Meaning] {
 				a.callStack[node.Meaning] = true
 				called, err := a.run(rebaseNode(body, node.Substitutions), []PathSummary{path})
 				delete(a.callStack, node.Meaning)
 				if err != nil {
 					return nil, err
+				}
+				for i := range called {
+					called[i].ControlReturn = false
 				}
 				out = append(out, called...)
 				continue
@@ -418,6 +489,9 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 			a.callbackStack[node.Callback] = true
 			out, err := a.run(body, []PathSummary{p})
 			delete(a.callbackStack, node.Callback)
+			for i := range out {
+				out[i].ControlReturn = false
+			}
 			return out, err
 		}
 		a.unknown(&p, node, "callback_effects", "callback behavior, escape, and cost are not established")
@@ -429,11 +503,17 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 		if old, ok := p.Owned[node.Resource.ID]; ok && old.State == "owned" {
 			return nil, fmt.Errorf("acquire replaces initialized resource %s without an explicit release", node.Resource.ID)
 		}
+		a.consumeWidenedOwnership(&p, node, "acquire")
 		a.applyEvent(&p, node)
-		p.Owned[node.Resource.ID] = OwnedResource{Resource: node.Resource, Mode: node.Ownership, State: "owned", SuspensionSafe: node.SuspensionSafe, FinalOwner: node.FinalOwner, Destructor: node.Cleanup, Origin: node.Origin}
+		p.Owned[node.Resource.ID] = normalizedOwnedResource(OwnedResource{Resource: node.Resource, Mode: node.Ownership, State: "owned", SuspensionSafe: node.SuspensionSafe, FinalOwner: node.FinalOwner, Destructor: node.Cleanup, Origin: node.Origin})
 		p.OwnershipOrder = append(p.OwnershipOrder, node.Resource.ID)
 		return a.sequence(node.Children, []PathSummary{p})
 	case Move:
+		if a.consumeWidenedOwnership(&p, node, "move") {
+			p.Owned[node.Resource.ID] = OwnedResource{Resource: node.Resource, State: "moved", FinalOwner: Unresolved, Origin: node.Origin}
+			a.applyEvent(&p, node)
+			return []PathSummary{p}, nil
+		}
 		owned, ok := p.Owned[node.Resource.ID]
 		if !ok || owned.State != "owned" {
 			return nil, fmt.Errorf("move requires an initialized owned resource %s", node.Resource.ID)
@@ -449,12 +529,21 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 		for id, owned := range p.Owned {
 			before[id] = owned.State == "owned"
 		}
+		if p.OwnershipWidening != nil {
+			for id, owned := range p.OwnershipWidening.Resources {
+				before[id] = owned.MayLive
+			}
+		}
 		paths, err := a.sequence(node.Children, []PathSummary{p})
 		if err != nil {
 			return nil, err
 		}
 		var out []PathSummary
+		var expanded []PathSummary
 		for _, path := range paths {
+			expanded = append(expanded, expandOwnership(path)...)
+		}
+		for _, path := range expanded {
 			covered := path.Outcome == Normal
 			if len(node.CleanupOutcomes) > 0 {
 				covered = containsOutcome(node.CleanupOutcomes, path.Outcome)
@@ -464,10 +553,21 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 				continue
 			}
 			outcome := path.Outcome
+			controlReturn := path.ControlReturn
 			path.Outcome = Normal
+			path.ControlReturn = false
 			closed := []PathSummary{path}
 			for i := len(path.OwnershipOrder) - 1; i >= 0; i-- {
 				id := path.OwnershipOrder[i]
+				if before[id] {
+					continue
+				}
+				closed, err = a.run(Node{Kind: Release, Resource: ResourceRef{ID: id}, Origin: node.Origin, Phase: Cleanup}, closed)
+				if err != nil {
+					return nil, err
+				}
+			}
+			for _, id := range widenedResourceIDs(path.OwnershipWidening) {
 				if before[id] {
 					continue
 				}
@@ -483,6 +583,7 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 			for i := range closed {
 				if closed[i].Outcome == Normal {
 					closed[i].Outcome = outcome
+					closed[i].ControlReturn = controlReturn
 				}
 			}
 			out = append(out, closed...)
@@ -508,32 +609,13 @@ func (a *inference) applyEvent(p *PathSummary, node Node) {
 		}
 	}
 	for _, effect := range node.Effects {
-		switch effect.Kind {
-		case "read", "write", "replace", "release", "allocate", "block", "io", "panic", "spawn", "signal", "wait", "suspend", "retain", "escape", "close":
-		default:
-			a.unknown(p, node, "unsupported_effect", "typed event has an unsupported effect classification: "+string(effect.Kind))
-		}
 		if effect.Phase == "" {
 			effect.Phase = node.Phase
 		}
 		if effect.Origin.Source == "" {
 			effect.Origin = node.Origin
 		}
-		if !p.Reachable {
-			effect.Definite = false
-		}
-		p.Effects = append(p.Effects, effect)
-		if effect.Kind == "write" || effect.Kind == "replace" || effect.Kind == "release" {
-			a.invalidate(p, effect.Resource)
-			a.invalidateStructural(p, effect.Target, string(effect.Kind))
-		}
-		if effect.Kind == "suspend" {
-			for _, owned := range p.Owned {
-				if owned.State == "owned" && !owned.SuspensionSafe && owned.Mode == "guard" {
-					p.Obligations = append(p.Obligations, Obligation{ID: StableID("suspension", owned.Resource), Claim: Claim{Predicate: Predicate{Kind: "suspension_safe", Resource: owned.Resource}, Scope: "whole_region"}, Status: Contradicted, Reason: "non-suspension-safe guard is live across suspension", Origin: effect.Origin})
-				}
-			}
-		}
+		a.observeEffect(p, effect)
 	}
 	if node.Costs != nil {
 		p.Resources = SequenceResources(p.Resources, *node.Costs)
@@ -559,11 +641,18 @@ func (a *inference) applyEvent(p *PathSummary, node Node) {
 func (a *inference) invalidate(p *PathSummary, resource ResourceRef) {
 	var facts []Predicate
 	for _, fact := range p.Facts {
-		if fact.Resource.ID == "" && !fact.Resource.Unknown || AliasRelation(fact.Resource, resource, a.options.Aliases, a.options.Disjoint) == Contradicted {
+		if !a.resourceFactAffected(fact, resource) {
 			facts = append(facts, fact)
 		}
 	}
 	p.Facts = facts
+	var relations []StateRelation
+	for _, relation := range p.StateRelations {
+		if AliasRelation(relation.Location.Resource, resource, a.options.Aliases, a.options.Disjoint) == Contradicted {
+			relations = append(relations, relation)
+		}
+	}
+	p.StateRelations = relations
 }
 
 func (a *inference) invalidateStructural(p *PathSummary, target TargetRef, kind string) {
@@ -579,19 +668,13 @@ func (a *inference) invalidateStructural(p *PathSummary, target TargetRef, kind 
 func (a *inference) unknown(p *PathSummary, node Node, code, message string) {
 	p.Unknowns = append(p.Unknowns, UnknownReason{Code: code, Message: message, Boundary: node.Native, Origin: node.Origin, Phase: node.Phase, Components: []string{"effects", "outcomes", "ownership", "costs"}})
 	p.Resources = SequenceResources(p.Resources, UnknownResourceCost(message))
-	a.invalidate(p, ResourceRef{Unknown: true})
-	a.invalidateStructural(p, TargetRef{Unknown: true}, "unknown")
-	for _, owned := range p.Owned {
-		if owned.State == "owned" && (owned.Mode == "exclusive" || owned.Mode == "guard") {
-			p.Obligations = append(p.Obligations, Obligation{ID: StableID("unknown-interference", struct {
-				Resource ResourceRef
-				Origin   Origin
-			}{owned.Resource, node.Origin}), Claim: Claim{Predicate: Predicate{Kind: "ownership", Resource: owned.Resource}, Scope: "whole_region"}, Status: Unresolved, Reason: "unknown behavior may interfere with a live exclusive resource or guard", Origin: node.Origin})
-		}
-	}
+	a.observeUnknown(p, UnknownReason{Code: code, Message: message, Boundary: node.Native, Origin: node.Origin, Phase: node.Phase, Components: []string{"effects", "outcomes", "ownership", "costs"}})
 }
 
 func (a *inference) release(p PathSummary, node Node) ([]PathSummary, error) {
+	if a.releaseWidenedOwnership(&p, node) {
+		return []PathSummary{p}, nil
+	}
 	owned, ok := p.Owned[node.Resource.ID]
 	if !ok || owned.State != "owned" && owned.State != "conditional" {
 		return []PathSummary{p}, nil
@@ -655,12 +738,15 @@ func (a *inference) repeat(node Node, p PathSummary) ([]PathSummary, error) {
 		}
 		return paths, nil
 	}
+	wasMeasuring := a.measuringScope
+	a.measuringScope = true
 	body, err := a.sequence(node.Children, []PathSummary{initialPath()})
+	a.measuringScope = wasMeasuring
 	if err != nil {
 		return nil, err
 	}
 	summary := summarize(body)
-	if node.Count != nil && node.StateInvariant && len(body) == 1 && body[0].Outcome == Normal && len(body[0].Owned) == 0 {
+	if node.Count != nil && node.StateInvariant && len(body) == 1 && body[0].Outcome == Normal && !body[0].ControlReturn && len(body[0].Owned) == 0 && len(body[0].OwnershipAlternatives) == 0 && body[0].OwnershipWidening == nil {
 		summary.Paths[0].Resources = RepeatResources(body[0].Resources, *node.Count)
 		for key, demand := range summary.Paths[0].Demand {
 			demand.Lower = 0
@@ -722,29 +808,24 @@ func (a *inference) applySummary(p PathSummary, summary DerivedSummary, sub Subs
 	for _, tail := range summary.Paths {
 		path := clonePath(p)
 		path.Outcome = tail.Outcome
+		path.ObservedOutcome = tail.ObservedOutcome
 		path.Reachable = path.Reachable && tail.Reachable
 		for _, unknown := range tail.Unknowns {
-			for _, component := range unknown.Components {
-				if component == "effects" || component == "ownership" {
-					a.invalidate(&path, ResourceRef{Unknown: true})
-					a.invalidateStructural(&path, TargetRef{Unknown: true}, "unknown")
-				}
-			}
+			a.observeUnknown(&path, unknown)
 		}
 		for _, effect := range tail.Effects {
 			effect.Resource = rebaseResource(effect.Resource, sub)
 			effect.Target = rebaseTarget(effect.Target, sub)
-			if !path.Reachable {
-				effect.Definite = false
-			}
-			path.Effects = append(path.Effects, effect)
-			if effect.Kind == "write" || effect.Kind == "replace" || effect.Kind == "release" {
-				a.invalidate(&path, effect.Resource)
-				a.invalidateStructural(&path, effect.Target, string(effect.Kind))
-			}
+			a.observeEffect(&path, effect)
 		}
 		for _, fact := range tail.Facts {
 			path.Facts = postFacts(path.Facts, []Predicate{rebasePredicate(fact, sub)})
+		}
+		for _, relation := range tail.StateRelations {
+			relation.Location.Resource = rebaseResource(relation.Location.Resource, sub)
+			if a.relationHasRegionEntry(p, relation) {
+				path.StateRelations = append(path.StateRelations, relation)
+			}
 		}
 		for key, demand := range tail.Demand {
 			path.Demand[key] = addDemand(demandAt(path.Demand, key), demand)
@@ -754,13 +835,7 @@ func (a *inference) applySummary(p PathSummary, summary DerivedSummary, sub Subs
 		path.Obligations = append(path.Obligations, tail.Obligations...)
 		path.Assumptions = append(path.Assumptions, tail.Assumptions...)
 		path.NativeBoundaries = append(path.NativeBoundaries, tail.NativeBoundaries...)
-		for _, key := range tail.OwnershipOrder {
-			owned := tail.Owned[key]
-			owned.Resource = rebaseResource(owned.Resource, sub)
-			path.Owned[owned.Resource.ID] = owned
-			path.OwnershipOrder = append(path.OwnershipOrder, owned.Resource.ID)
-		}
-		out = append(out, path)
+		out = append(out, a.importOwnership(path, tail, sub)...)
 	}
 	return out
 }
@@ -798,6 +873,10 @@ func rebasePredicate(fact Predicate, sub Substitutions) Predicate {
 }
 
 func rebaseNode(node Node, sub Substitutions) Node {
+	if node.Body != nil {
+		body := rebaseNode(*node.Body, sub)
+		node.Body = &body
+	}
 	node.Resource = rebaseResource(node.Resource, sub)
 	node.Target = rebaseTarget(node.Target, sub)
 	node.Facts = append([]Predicate(nil), node.Facts...)
@@ -906,9 +985,10 @@ func (a *inference) bound(paths []PathSummary) []PathSummary {
 	if len(paths) <= a.options.MaxAlternatives {
 		return paths
 	}
-	groups := make(map[Outcome][]PathSummary)
+	groups := make(map[string][]PathSummary)
 	for _, path := range paths {
-		groups[path.Outcome] = append(groups[path.Outcome], path)
+		key := fmt.Sprintf("%s:%s:%t", path.Outcome, path.ObservedOutcome, path.ControlReturn)
+		groups[key] = append(groups[key], path)
 	}
 	keys := make([]string, 0, len(groups))
 	for outcome := range groups {
@@ -917,7 +997,7 @@ func (a *inference) bound(paths []PathSummary) []PathSummary {
 	sort.Strings(keys)
 	var out []PathSummary
 	for _, key := range keys {
-		group := groups[Outcome(key)]
+		group := groups[key]
 		merged := clonePath(group[0])
 		merged.Reachable = false
 		for _, path := range group[1:] {
@@ -928,44 +1008,22 @@ func (a *inference) bound(paths []PathSummary) []PathSummary {
 				}
 			}
 			merged.Facts = common
+			var entryCommon []Predicate
+			for _, fact := range merged.EntryFacts {
+				if status, _ := Entails(path.EntryFacts, fact); status == Established {
+					entryCommon = append(entryCommon, fact)
+				}
+			}
+			merged.EntryFacts = entryCommon
+			merged.StateRelations = commonStateRelations(merged.StateRelations, path.StateRelations)
 			merged.Effects = append(merged.Effects, path.Effects...)
 			merged.Unknowns = append(merged.Unknowns, path.Unknowns...)
 			merged.Resources = BranchResources(merged.Resources, path.Resources)
 			merged.Obligations = append(merged.Obligations, path.Obligations...)
 			merged.Assumptions = append(merged.Assumptions, path.Assumptions...)
 			merged.NativeBoundaries = append(merged.NativeBoundaries, path.NativeBoundaries...)
-			for id, owned := range merged.Owned {
-				other, ok := path.Owned[id]
-				if !ok || other.State != owned.State {
-					owned.State = "conditional"
-					merged.Owned[id] = owned
-				}
-			}
-			for id, owned := range path.Owned {
-				if _, ok := merged.Owned[id]; !ok {
-					owned.State = "conditional"
-					merged.Owned[id] = owned
-					merged.OwnershipOrder = append(merged.OwnershipOrder, id)
-				}
-			}
-			for callback, demand := range merged.Demand {
-				other := path.Demand[callback]
-				if other.Lower < demand.Lower {
-					demand.Lower = other.Lower
-				}
-				if other.Upper == nil || demand.Upper == nil {
-					demand.Upper = nil
-				} else if *other.Upper > *demand.Upper {
-					demand.Upper = other.Upper
-				}
-				merged.Demand[callback] = demand
-			}
-			for callback, demand := range path.Demand {
-				if _, ok := merged.Demand[callback]; !ok {
-					demand.Lower = 0
-					merged.Demand[callback] = demand
-				}
-			}
+			a.joinOwnership(&merged, path)
+			merged.Demand = joinDemands(merged.Demand, path.Demand)
 		}
 		for i := range merged.Effects {
 			merged.Effects[i].Definite = false

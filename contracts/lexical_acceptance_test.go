@@ -263,9 +263,10 @@ func TestFacetAcceptance(t *testing.T) {
 	})
 	t.Run("LEX-022", func(t *testing.T) {
 		a := FacetFact(FacetSlot{Facet: "palette", Target: target}, dark.Value)
-		b := Predicate{Kind: "present", Subject: "facet:feature:enabled", Value: Atom{Kind: "bool", Bool: true}}
+		feature := FacetSchema{ID: "feature", Version: "1", Domain: "bool", Cardinality: "optional-single", AllowedContributions: []string{"select"}, ClosurePoint: "constructed"}
+		b := FacetFact(FacetSlot{Facet: "feature", Target: target, Scope: "enabled"}, Atom{Kind: "bool", Bool: true})
 		rules := []FacetRule{{When: []Predicate{a}, Consequences: []Predicate{b}, Requires: []Predicate{b}}, {When: []Predicate{b}, Consequences: []Predicate{a}, Requires: []Predicate{a}}}
-		result := requireConfiguration(t, []FacetSchema{schema}, nil, []ConfigurationContribution{dark}, rules)
+		result := requireConfiguration(t, []FacetSchema{schema, feature}, nil, []ConfigurationContribution{dark}, rules)
 		if !AllEstablished(result.Obligations) || len(result.Facts) != 2 {
 			t.Fatalf("finite rule cycle failed to converge: %+v", result)
 		}

@@ -650,6 +650,16 @@
     "Node": {
       "additionalProperties": false,
       "properties": {
+        "body": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Node"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "callback": {
           "type": "string"
         },
@@ -768,7 +778,9 @@
             "release",
             "scope",
             "repeat",
-            "mutation"
+            "mutation",
+            "return",
+            "check_result"
           ],
           "type": "string"
         },
@@ -1438,6 +1450,37 @@
         },
         "components": {
           "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "excluded_effects": {
+          "items": {
+            "enum": [
+              "read",
+              "write",
+              "allocate",
+              "deallocate",
+              "release",
+              "io",
+              "spawn",
+              "transfer",
+              "wait",
+              "block",
+              "suspend",
+              "time",
+              "random",
+              "environment",
+              "foreign",
+              "panic",
+              "opaque",
+              "synchronize",
+              "replace",
+              "cleanup"
+            ],
             "type": "string"
           },
           "type": [

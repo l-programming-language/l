@@ -413,7 +413,7 @@ func sourcePlanElaboration(plan Plan) bool {
 				return false
 			}
 		}
-		return len(node.Then) == 0 && len(node.Else) == 0 && len(node.Cleanup) == 0
+		return node.Body == nil && len(node.Then) == 0 && len(node.Else) == 0 && len(node.Cleanup) == 0
 	}
 	if !supported(plan.Entry) {
 		return false

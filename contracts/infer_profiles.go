@@ -40,7 +40,11 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 				}
 			}
 		}
-		if len(profile.Outcomes) > 0 && !containsOutcome(profile.Outcomes, path.Outcome) {
+		outcome := path.Outcome
+		if profile.Scope == "native_body" && path.Outcome == Normal && path.ObservedOutcome != "" {
+			outcome = path.ObservedOutcome
+		}
+		if len(profile.Outcomes) > 0 && !containsOutcome(profile.Outcomes, outcome) {
 			continue
 		}
 		matched = true
@@ -80,7 +84,7 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 			}
 			relevant := len(unknown.Components) == 0
 			for _, component := range unknown.Components {
-				relevant = relevant || component == "effects" || component == "outcomes"
+				relevant = relevant || component == "outcomes" || component == "effects" && !unknownExcludesProfile(unknown, profile.Name)
 			}
 			if relevant {
 				selectFinding(&base, Unresolved, unknown.Message, unknown.Origin)
@@ -94,6 +98,16 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 		base.Reason = "established conditional on the displayed approved native assumptions"
 	}
 	return []Obligation{base}
+}
+
+func unknownExcludesProfile(unknown UnknownReason, profile string) bool {
+	kind := map[string]EffectKind{"NoHeapAllocation": "allocate", "NoBlocking": "block", "NoExternalIO": "io", "NoPanic": "panic"}[profile]
+	for _, excluded := range unknown.ExcludedEffects {
+		if excluded == kind {
+			return true
+		}
+	}
+	return false
 }
 
 func selectFinding(obligation *Obligation, status Status, reason string, origin Origin) {
