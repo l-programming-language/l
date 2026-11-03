@@ -1,6 +1,7 @@
 package Lyger
 
 import (
+	"bytes"
 	"reflect"
 	"testing"
 
@@ -52,6 +53,39 @@ func TestContractsAnalysisSessionWarmCold(t *testing.T) {
 	}
 }
 
+func TestContractsResourceLifecycleReportRoundTrip(t *testing.T) {
+	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(contractNativeUpdateSource), "/project/lifecycle-report.l", ContractAnalysisOptions{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	owned := 0
+	for _, path := range analysis.Summary.Paths {
+		for _, resource := range path.Owned {
+			owned++
+			if resource.FinalOwner == "" {
+				t.Fatal("owned resource omitted normalized final-owner uncertainty")
+			}
+		}
+	}
+	if owned == 0 {
+		t.Fatal("source fixture did not exercise owned runtime resources")
+	}
+	report := contracts.NewReport("/project/lifecycle-report.l")
+	report.Summary = analysis.Summary
+	encoded, err := contracts.EncodeDocument(report)
+	if err != nil {
+		t.Fatal(err)
+	}
+	decoded, err := contracts.DecodeDocument(encoded)
+	if err != nil {
+		t.Fatal(err)
+	}
+	again, err := contracts.EncodeDocument(decoded)
+	if err != nil || !bytes.Equal(encoded, again) {
+		t.Fatalf("resource lifecycle report lost normalized state: %v", err)
+	}
+}
+
 func TestContractsAnalysisSessionSourceChange(t *testing.T) {
 	session := contracts.NewSession()
 	service := NewLygerService(Options{})
@@ -70,5 +104,98 @@ func TestContractsAnalysisSessionSourceChange(t *testing.T) {
 	}
 	if !reflect.DeepEqual(warm.Bindings, cold.Bindings) || contracts.StableID("summary", warm.Summary) != contracts.StableID("summary", cold.Summary) {
 		t.Fatal("new import/target reused old bindings or assurance")
+	}
+}
+
+// Exercise real source scopes while keeping approval conspicuously test-only.
+// The reusable logical result remains independent of native implementation trust.
+func TestContractsNativeApplicationsSessionWarmCold(t *testing.T) {
+	session := contracts.NewSession()
+	service := NewLygerService(Options{})
+	source := []byte(contractNativeUpdateSource)
+	analysis, err := service.AnalyzeContracts(source, "/project/native-cache.l", ContractAnalysisOptions{Session: session})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var uses []contracts.NativeUse
+	for _, use := range analysis.NativeUses {
+		if use.Name == "Storage.List.Update" {
+			uses = append(uses, use)
+		}
+	}
+	if len(uses) != 2 {
+		t.Fatalf("selected update uses: %+v", uses)
+	}
+	use := uses[0]
+	declaration := contracts.DeclaredContract{ID: "test-only:cache-native", Meaning: use.Meaning, Name: use.Name, Signature: use.Signature, Outcomes: []contracts.Outcome{contracts.Normal}, OutcomeContracts: []contracts.NativeOutcomeContract{{Outcome: contracts.Normal, AbsentEffects: []contracts.EffectKind{"block"}}}}
+	environment := contracts.SealNativeEnvironment(contracts.NativeEnvironment{SchemaVersion: contracts.SchemaVersion, Kind: "native_environment", Producer: contracts.AnalyzerVersion, Version: "1", Method: "test-only", Host: "test-only", Target: "test-only", Compiler: "test-only", PanicPolicy: "test-only", Runtime: "test-only", Allocator: "test-only", Inputs: map[string]string{"source": "v1"}})
+	policy := contracts.TrustPolicy{Version: contracts.SchemaVersion, ID: "test-only:cache-policy", Authorities: []string{"test-only:authority"}, AllowTestOnly: true}
+	var witnesses []contracts.NativeWitness
+	for _, component := range contracts.NativeComponentClaims(use, declaration, environment) {
+		witness := contracts.NativeWitness{ID: "test-only:" + component.Claim.ID, ClaimFingerprint: contracts.ClaimFingerprint(component.Claim), ContractFingerprint: component.Current.Contract, ImplementationFingerprint: component.Current.Implementation, TargetFingerprint: component.Current.Target, Dependencies: component.Current.Dependencies, Authority: policy.Authorities[0], Rationale: "Synthetic cache regression assumption; no production approval", TestOnly: true}
+		witnesses = append(witnesses, witness)
+		policy.ApprovedWitnesses = append(policy.ApprovedWitnesses, witness.ID)
+	}
+	for _, change := range []string{"baseline", "environment", "witness", "trust", "budget", "restored"} {
+		t.Run(change, func(t *testing.T) {
+			currentEnvironment, currentPolicy := environment, policy
+			currentWitnesses := append([]contracts.NativeWitness(nil), witnesses...)
+			inference := contracts.AnalysisOptions{}
+			switch change {
+			case "environment":
+				currentEnvironment.PanicPolicy = "changed"
+				currentEnvironment = contracts.SealNativeEnvironment(currentEnvironment)
+			case "witness":
+				currentWitnesses[0].ImplementationFingerprint = "stale"
+			case "trust":
+				currentPolicy.ApprovedWitnesses = nil
+			case "budget":
+				inference.MaxAlternatives = 1
+			}
+			application, _ := contracts.ApproveNativeApplication(use, declaration, currentEnvironment, currentPolicy, currentWitnesses, contracts.Established)
+			inference.NativeApplications = map[string]contracts.ApprovedNativeApplication{use.ID: application}
+			options := ContractAnalysisOptions{Session: session, Inference: inference}
+			warm, err := service.AnalyzeContracts(source, "/project/native-cache.l", options)
+			if err != nil {
+				t.Fatal(err)
+			}
+			cold, err := service.AnalyzeContracts(source, "/project/native-cache.l", ContractAnalysisOptions{Inference: inference})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !reflect.DeepEqual(warm.Bindings, cold.Bindings) || contracts.StableID("summary", warm.Summary) != contracts.StableID("summary", cold.Summary) {
+				t.Fatal("cached native application differs from cold analysis")
+			}
+			if err := warm.ReinferContracts(options); err != nil {
+				t.Fatal(err)
+			}
+			if contracts.StableID("summary", warm.Summary) != contracts.StableID("summary", cold.Summary) {
+				t.Fatal("warm assurance reload changed its result")
+			}
+			for i, selected := range uses {
+				warmScope, err := contracts.InferScope(warm.Plan, selected.ID, inference)
+				if err != nil {
+					t.Fatal(err)
+				}
+				coldScope, err := contracts.InferScope(cold.Plan, selected.ID, inference)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if contracts.StableID("scope", warmScope) != contracts.StableID("scope", coldScope) {
+					t.Fatal("warm/cold selected scope differs")
+				}
+				want := i == 0 && (change == "baseline" || change == "budget" || change == "restored")
+				if contracts.AllEstablished(contracts.CheckProfile(warmScope, contracts.Profile{Name: "NoBlocking"})) != want {
+					t.Fatalf("change=%s scope=%d retained stale or cross-scope native approval: %+v", change, i, warmScope)
+				}
+			}
+			if contracts.AllEstablished(contracts.CheckProfile(warm.Summary, contracts.Profile{Name: "NoBlocking"})) {
+				t.Fatal("selected leaf approval closed the whole source/native closure")
+			}
+		})
+	}
+	stats := session.CacheStats()
+	if stats.Logical.Hits == 0 || stats.Implementation.Hits == 0 || stats.Implementation.Misses < 5 {
+		t.Fatalf("cache boundaries were not exercised: %+v", stats)
 	}
 }

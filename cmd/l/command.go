@@ -16,9 +16,10 @@ import (
 )
 
 type buildOptions struct {
-	OutputDir string
-	GOOS      string
-	GOARCH    string
+	OutputDir            string
+	GOOS                 string
+	GOARCH               string
+	NativeEvidenceOutput string
 }
 
 type compilerInitOptions struct {
@@ -27,10 +28,11 @@ type compilerInitOptions struct {
 }
 
 type buildCommand struct {
-	CLI      *cliData
-	Assets   string
-	Output   string
-	Language string
+	CLI                  *cliData
+	Assets               string
+	Output               string
+	Language             string
+	NativeEvidenceOutput string
 }
 
 var errUnsupportedBuildHost = lerrors.Unsupported.Errorf("native builds require macOS or Linux")
@@ -45,6 +47,7 @@ Help prints usage; version prints the embedded major.minor.patch version and new
 Top-level help/version flags stand alone. Build options/help precede the filename.
 Use -- to end option parsing. English resources are embedded.
 Developer overrides: --language LANGUAGE (default: eng); --assets ROOT (complete bundle).
+Optional native provenance: --native-evidence-output PATH records tools, compilation, and artifacts.
 -os/--os is unsupported; target OS selection is planned after v0.0.1.
 `
 
@@ -66,6 +69,7 @@ func parseCommand(args []string) (*buildCommand, error) {
 	flags.StringVar(&command.Assets, "assets", "", "compiler asset root")
 	flags.StringVar(&command.Output, "output-dir", "", "output directory")
 	flags.StringVar(&command.Language, "language", Lyger.DefaultLanguage, "source language")
+	flags.StringVar(&command.NativeEvidenceOutput, "native-evidence-output", "", "native build evidence document")
 	flags.Func("os", "unimplemented target flag", func(string) error {
 		return lerrors.InvalidInput.Errorf("-os is not implemented; builds target the native host")
 	})
@@ -143,6 +147,12 @@ func resolveBuildCommand(command *buildCommand) (*cliData, compilerInitOptions, 
 	options.OutputDir, err = filepath.Abs(options.OutputDir)
 	if err != nil {
 		return nil, compilerInitOptions{}, buildOptions{}, lerrors.IO.Errorf("resolve output directory: %w", err)
+	}
+	if command.NativeEvidenceOutput != "" {
+		options.NativeEvidenceOutput, err = filepath.Abs(command.NativeEvidenceOutput)
+		if err != nil {
+			return nil, compilerInitOptions{}, buildOptions{}, lerrors.IO.Errorf("resolve native evidence output: %w", err)
+		}
 	}
 	return &input, initialization, options, nil
 }

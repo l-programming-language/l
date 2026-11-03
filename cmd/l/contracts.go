@@ -23,12 +23,15 @@ import (
 
 const contractsUsage = `Usage: l contracts inspect [--format text|json] [--output PATH] INPUT
        l contracts check --profile NAME [--profile NAME ...] [--report PATH] INPUT
+       l contracts check --request-file PATH [--native-environment PATH] [--report PATH] INPUT
+       l contracts evidence capture --output PATH [--target HOST_TRIPLE] INPUT
        l contracts explain --binding OCCURRENCE_OR_SOURCE:BYTE_OFFSET INPUT
        l contracts verify-dictionary [--report PATH] DICTIONARY
        l contracts verify-dictionary --assurance symbolic --adjective MEANING_OR_SOURCE:BYTE_OFFSET [--adjective ...] DICTIONARY
 Options precede input. Common options: --assets ROOT, --language eng,
---manifest PATH (repeatable), --trust-policy PATH, --format text|json.
-These commands prepare source only; they never build or execute Apps.
+--manifest PATH (repeatable), --trust-policy PATH, --native-environment PATH,
+--format text|json. Inspection and checking never execute external tools.
+Explicit evidence capture queries installed tools; it never builds or runs Apps.
 Track A preserves current resolution. Track B has no source-facing mode.
 Assurance defaults to implementation. Symbolic assurance checks only selected
 source adjective definitions; native/runtime assurance remains separate.
@@ -37,6 +40,7 @@ source adjective definitions; native/runtime assurance remains separate.
 type contractsCommand struct {
 	Action, Input, Format, Output, Report, Binding, Assets, Language, Trust, Assurance string
 	Profiles, Manifests, Adjectives                                                    []string
+	NativeEnvironment, RequestFile, Target                                             string
 }
 
 func parseContractsCommand(args []string) (contractsCommand, error) {
@@ -48,8 +52,15 @@ func parseContractsCommand(args []string) (contractsCommand, error) {
 		return command, flag.ErrHelp
 	}
 	command.Action = args[0]
+	if command.Action == "evidence" {
+		if len(args) < 2 || args[1] != "capture" {
+			return command, fmt.Errorf("evidence requires capture")
+		}
+		command.Action = "capture"
+		args = append([]string{"capture"}, args[2:]...)
+	}
 	switch command.Action {
-	case "inspect", "check", "explain", "verify-dictionary":
+	case "inspect", "check", "explain", "verify-dictionary", "capture":
 	default:
 		return command, fmt.Errorf("unknown contracts command %q", command.Action)
 	}
@@ -62,6 +73,9 @@ func parseContractsCommand(args []string) (contractsCommand, error) {
 	flags.StringVar(&command.Assets, "assets", "", "complete resource filesystem")
 	flags.StringVar(&command.Language, "language", Lyger.DefaultLanguage, "source language")
 	flags.StringVar(&command.Trust, "trust-policy", "", "explicit trust policy document")
+	flags.StringVar(&command.NativeEnvironment, "native-environment", "", "explicit reusable native environment evidence")
+	flags.StringVar(&command.RequestFile, "request-file", "", "versioned scoped contract check requests")
+	flags.StringVar(&command.Target, "target", "", "capture host target compatibility assertion")
 	flags.StringVar(&command.Assurance, "assurance", "implementation", "implementation or selected symbolic assurance")
 	flags.Func("adjective", "source adjective meaning or declaration source selector", func(value string) error {
 		if value == "" {
@@ -94,8 +108,25 @@ func parseContractsCommand(args []string) (contractsCommand, error) {
 	if command.Format != "text" && command.Format != "json" {
 		return command, fmt.Errorf("unsupported report format %q", command.Format)
 	}
-	if command.Action == "check" && len(command.Profiles) == 0 {
-		return command, fmt.Errorf("check requires at least one --profile")
+	if command.Action == "check" && len(command.Profiles) == 0 && command.RequestFile == "" {
+		return command, fmt.Errorf("check requires --profile or --request-file")
+	}
+	if command.RequestFile != "" && command.Action != "check" {
+		return command, fmt.Errorf("--request-file requires check")
+	}
+	if command.Target != "" && command.Action != "capture" {
+		return command, fmt.Errorf("--target is an explicit capture compatibility assertion")
+	}
+	if command.Target != "" && !nativeTargetMatchesHost(command.Target) {
+		return command, fmt.Errorf("--target must identify the supported native host; cross-compilation is unsupported")
+	}
+	if command.Action == "capture" && (command.Output == "" || command.NativeEnvironment != "" || command.Trust != "" || len(command.Profiles) != 0) {
+		return command, fmt.Errorf("capture requires --output and cannot consume environment evidence, approve trust or enforce profiles")
+	}
+	for _, profile := range command.Profiles {
+		if profile == "PreservesOnFailure" {
+			return command, fmt.Errorf("PreservesOnFailure requires --request-file with explicit footprint, observation and outcomes")
+		}
 	}
 	if command.Action == "explain" && command.Binding == "" {
 		return command, fmt.Errorf("explain requires --binding")
@@ -125,6 +156,8 @@ type contractMetadata struct {
 	Facets             []contracts.FacetRoleManifest
 	SourceTransformers []contracts.SourceTransformerDeclaration
 	Trust              contracts.TrustPolicyDocument
+	Environment        *contracts.NativeEnvironment
+	Requests           *contracts.CheckRequests
 }
 
 type contractMetadataError struct{ error }
@@ -286,6 +319,33 @@ func loadContractMetadata(resources fs.FS, command contractsCommand) (contractMe
 		}
 		result.Trust = policy
 	}
+	for kind, path := range map[string]string{"native_environment": command.NativeEnvironment, "contract_check_requests": command.RequestFile} {
+		if path == "" {
+			continue
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return result, err
+		}
+		document, err := contracts.DecodeDocument(data)
+		if err != nil {
+			return result, err
+		}
+		switch value := document.(type) {
+		case contracts.NativeEnvironment:
+			if kind != "native_environment" {
+				return result, fmt.Errorf("request file requires contract_check_requests")
+			}
+			result.Environment = &value
+		case contracts.CheckRequests:
+			if kind != "contract_check_requests" {
+				return result, fmt.Errorf("native environment requires native_environment")
+			}
+			result.Requests = &value
+		default:
+			return result, fmt.Errorf("expected %s document", kind)
+		}
+	}
 	return result, nil
 }
 
@@ -353,6 +413,23 @@ func runContracts(ctx context.Context, args []string, stdout, stderr io.Writer) 
 		}
 		return contractsError(stderr, 1, err)
 	}
+	if command.Action == "capture" {
+		if err := validateContractReportDestinations(command, report); err != nil {
+			return contractsError(stderr, 2, err)
+		}
+		environment, err := captureNativeEnvironment(ctx, report, command.Target)
+		if err != nil {
+			return contractsError(stderr, 1, err)
+		}
+		data, err := contracts.EncodeDocument(environment)
+		if err != nil {
+			return contractsError(stderr, 1, err)
+		}
+		if err := writeContractsReport(command.Output, inputPath, data); err != nil {
+			return contractsError(stderr, 1, err)
+		}
+		return 0
+	}
 	if dictionary != nil {
 		report.Definitions = dictionary.Definitions
 		report.Obligations = append(report.Obligations, dictionary.Obligations...)
@@ -384,6 +461,9 @@ func runContracts(ctx context.Context, args []string, stdout, stderr io.Writer) 
 	if err != nil {
 		return contractsError(stderr, 1, err)
 	}
+	if err := validateContractReportDestinations(command, report); err != nil {
+		return contractsError(stderr, 2, err)
+	}
 	if command.Report != "" {
 		if err := writeContractsReport(command.Report, inputPath, data); err != nil {
 			return contractsError(stderr, 1, err)
@@ -412,8 +492,15 @@ func runContracts(ctx context.Context, args []string, stdout, stderr io.Writer) 
 	if err != nil {
 		return contractsError(stderr, 1, err)
 	}
-	if command.Action == "check" && !contracts.AllEstablished(report.Obligations) {
-		return 1
+	if command.Action == "check" {
+		if len(command.Profiles) > 0 && !contracts.AllEstablished(report.Obligations) {
+			return 1
+		}
+		for _, request := range report.Requests {
+			if request.Status != contracts.Established {
+				return 1
+			}
+		}
 	}
 	if command.Action == "verify-dictionary" {
 		if command.Assurance == "symbolic" {
@@ -593,6 +680,31 @@ func writeContractsReport(path, input string, data []byte) error {
 	return os.WriteFile(path, append(data, '\n'), 0600)
 }
 
+func validateContractReportDestinations(command contractsCommand, report contracts.Report) error {
+	inputs := append([]string{command.Input, command.Trust, command.NativeEnvironment, command.RequestFile}, command.Manifests...)
+	for path := range report.Inputs {
+		if filepath.IsAbs(path) {
+			inputs = append(inputs, path)
+		}
+	}
+	for _, output := range []string{command.Output, command.Report} {
+		if output == "" {
+			continue
+		}
+		for _, input := range inputs {
+			if input != "" && sameContractPath(input, output) {
+				return fmt.Errorf("contract output must not replace selected source or metadata input %s", input)
+			}
+		}
+		if command.Assets != "" {
+			if err := validateAssetDestinations(command.Assets, output); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 func prepareContractReport(command contractsCommand, analysis *Lyger.ContractAnalysis, resources fs.FS, metadata contractMetadata) (contracts.Report, error) {
 	report := contracts.NewReport(command.Input)
 	report.Bindings, report.Targets, report.Inputs = analysis.Bindings.Bindings, analysis.Bindings.Targets, analysis.Bindings.Inputs
@@ -715,7 +827,12 @@ func prepareContractReport(command contractsCommand, analysis *Lyger.ContractAna
 	plan.NativeClosure = append(plan.NativeClosure, backendInventory.Native...)
 	plan.Residuals = append(append([]contracts.UnknownReason(nil), plan.Residuals...), backendInventory.Unknowns...)
 	analysis.Plan, analysis.Lowering = plan, report.Lowering
-	if err := analysis.ReinferContracts(Lyger.ContractAnalysisOptions{}); err != nil {
+	report.NativeUses, report.Scopes = analysis.NativeUses, analysis.Scopes
+	inferenceOptions, err := prepareNativeApplications(&report, metadata)
+	if err != nil {
+		return report, contractMetadataError{err}
+	}
+	if err := analysis.ReinferContracts(Lyger.ContractAnalysisOptions{Inference: inferenceOptions}); err != nil {
 		return report, err
 	}
 	report.Summary = analysis.Summary
@@ -742,6 +859,9 @@ func prepareContractReport(command contractsCommand, analysis *Lyger.ContractAna
 	}
 	for _, step := range report.Lowering.Steps {
 		known[step.Meaning] = true
+	}
+	for _, use := range report.NativeUses {
+		known[use.Meaning] = true
 	}
 	for _, declaration := range metadata.Native {
 		if !known[declaration.Meaning] {
@@ -797,12 +917,30 @@ func prepareContractReport(command contractsCommand, analysis *Lyger.ContractAna
 	if err := applyContractTrust(&report, metadata); err != nil {
 		return report, err
 	}
+	if err := applyContractRequests(&report, analysis, metadata, inferenceOptions); err != nil {
+		return report, contractMetadataError{err}
+	}
 	return report, nil
 }
 
 func writeContractText(output io.Writer, report contracts.Report) error {
 	if _, err := fmt.Fprintf(output, "L Contracts %s — %s\nResolution: %s\nScope: %s (%s), %s\nCoverage: %s; native transitive closure: %s\n", report.SchemaVersion, report.Entry, report.ResolutionPolicy, report.Scope.Boundary, report.Scope.Platform, report.Scope.Target, report.Summary.Coverage, report.Lowering.TransitiveCoverage); err != nil {
 		return err
+	}
+	for _, scope := range report.Scopes {
+		if _, err := fmt.Fprintf(output, "Scope %s: %s at %s:%d meaning=%s target=%s\n", scope.ID, scope.Boundary, scope.Origin.Source, scope.Origin.Start, scope.Meaning, scope.Target.String()); err != nil {
+			return err
+		}
+		for _, location := range scope.Resources {
+			if _, err := fmt.Fprintf(output, "  resource: %s projection=%v\n", location.Resource.ID, location.Path); err != nil {
+				return err
+			}
+		}
+	}
+	for _, request := range report.Requests {
+		if _, err := fmt.Fprintf(output, "Request %s: %s (%s, %s)\n", request.Request.ID, request.Status, request.Request.Profile.Name, request.Request.Scope); err != nil {
+			return err
+		}
 	}
 	if verification := report.SourceVerification; verification != nil {
 		if _, err := fmt.Fprintf(output, "Source verification: %s assurance, %s scope, %s\n", verification.Assurance, verification.Scope, verification.Status); err != nil {

@@ -263,7 +263,12 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		if err != nil {
 			return nil, err
 		}
+		// This composes an alternative for Storage.Invoke; it is not an eager
+		// execution of that alternative. The selected wrapper retains its
+		// dependency, while contract tracing observes the wrapper boundary.
+		e.contractValueDepth++
 		exit, err := e.functionOperation(returnContract, "Exit", map[string]DefinitionArgument{"Value": definitionReferenceArgument(stopped)})
+		e.contractValueDepth--
 		if err != nil {
 			return nil, err
 		}

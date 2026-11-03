@@ -96,6 +96,21 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 			return "", err
 		}
 	}
+	if options.NativeEvidenceOutput != "" {
+		if err := validateNativeEvidenceOutput(options.NativeEvidenceOutput, generated.Compilation.Compilation.SourcePaths, canonicalOutput, canonicalCompanion, c.options.AssetRoot); err != nil {
+			return "", err
+		}
+		recorder, err := prepareBuildNativeEvidence(ctx, c)
+		if err != nil {
+			return "", fmt.Errorf("prepare native build evidence: %w", err)
+		}
+		ctx = context.WithValue(ctx, nativeBuildEvidenceKey{}, recorder)
+		defer func() {
+			if err := recorder.write(options.NativeEvidenceOutput, c.cli.mainPath); err != nil {
+				resultErr = errors.Join(resultErr, fmt.Errorf("write requested native evidence: %w", err))
+			}
+		}()
+	}
 	bundles := make([]*sourceBundle, len(ids))
 	for index, id := range ids {
 		var err error

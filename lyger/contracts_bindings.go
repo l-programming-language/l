@@ -45,6 +45,8 @@ type contractRecorder struct {
 	environments             map[*lexicalScope]contracts.BindingEnvironmentKey
 	configurationFingerprint string
 	lowering                 []contracts.LoweringStep
+	nativeAnalysis           *contractNativeAnalysis
+	nativeEmissions          map[*instruction][]contractNativeEmission
 	identityReady            bool
 }
 

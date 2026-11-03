@@ -18,6 +18,7 @@ func inferContractAnalysis(analysis *ContractAnalysis, options ContractAnalysisO
 	}
 	logicalOptions := options.Inference
 	logicalOptions.NativeSummaries = nil
+	logicalOptions.NativeApplications = nil
 	logicalOptions.NativeWitnesses = nil
 	logicalOptions.ApprovedAssumptions = nil
 	logical := contracts.LogicalCacheKey{
@@ -49,6 +50,7 @@ func inferContractAnalysis(analysis *ContractAnalysis, options ContractAnalysisO
 	for name, fingerprint := range analysis.Lowering.Fingerprints {
 		dependencies["implementation:"+name] = fingerprint
 	}
+	dependencies["native-applications"] = contracts.StableID("native-applications", options.Inference.NativeApplications)
 	implementation := contracts.ImplementationCacheKey{
 		Schema: contracts.SchemaVersion, Logical: contracts.StableID("logical-key", logical),
 		Implementation: contracts.StableID("lowering", analysis.Lowering), Target: contracts.StableID("selected-target-inputs", analysis.Bindings.Inputs),
@@ -61,7 +63,7 @@ func inferContractAnalysis(analysis *ContractAnalysis, options ContractAnalysisO
 		analysis.Summary = summary
 		return nil
 	}
-	if options.Inference.NativeSummaries == nil && options.Inference.NativeWitnesses == nil && options.Inference.ApprovedAssumptions == nil {
+	if options.Inference.NativeApplications == nil && options.Inference.NativeSummaries == nil && options.Inference.NativeWitnesses == nil && options.Inference.ApprovedAssumptions == nil {
 		summary = baseline
 	} else {
 		summary, err = contracts.Infer(analysis.Plan, options.Inference)

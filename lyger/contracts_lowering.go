@@ -80,6 +80,8 @@ type ContractAnalysis struct {
 	SourceProjections    []contracts.SourceAdjectiveProjection
 	SourceCertificates   []contracts.SourceAdjectiveCertificate
 	SourceInstantiations []contracts.SourceAdjectiveInstantiation
+	NativeUses           []contracts.NativeUse
+	Scopes               []contracts.AnalysisScope
 }
 
 type ContractAnalysisOptions struct {
@@ -125,7 +127,7 @@ func (a *ContractAnalysis) RefreshLoweringInventory() error {
 	a.Plan.Residuals = append(residuals, inventory.Unknowns...)
 	a.Lowering = inventory
 	a.Bindings = r.snapshot()
-	return nil
+	return a.refreshNativeScopes()
 }
 
 func (ls *LygerService) AnalyzeContracts(source []byte, path string, options ContractAnalysisOptions) (*ContractAnalysis, error) {
@@ -139,8 +141,7 @@ func (ls *LygerService) AnalyzeContracts(source []byte, path string, options Con
 		return nil, err
 	}
 	r := c.contractRecorder
-	typed := contracts.Plan{Entry: contracts.Node{Kind: contracts.Sequence, ID: "entry", Children: r.contractBlock(plan.Root)}, Definitions: make(map[contracts.MeaningKey]contracts.Node)}
-	r.contractFunctions(plan.Root.Body, typed.Definitions)
+	typed := contracts.Plan{}
 	// Use deterministic logical companion references; inspection never allocates
 	// a generation, materializes a workspace, invokes Cargo or runs the program.
 	var companions []AppArtifact
@@ -163,6 +164,9 @@ func (ls *LygerService) AnalyzeContracts(source []byte, path string, options Con
 	typed.NativeClosure = append(typed.NativeClosure, contracts.NativeBoundary{ID: "backend-support-pending", Status: contracts.Unresolved, Reason: "backend support and finalization require target closure", Origin: contracts.Origin{Label: "coordinator closure pending"}, Implicit: true})
 	lifecycle, lifecycleObligations := r.contractLifecycle(plan)
 	analysis := &ContractAnalysis{Compilation: result, Bindings: r.snapshot(), Plan: typed, Lowering: inventory, Orchestrator: entry, Lifecycle: lifecycle, LifecycleObligations: lifecycleObligations}
+	if err := analysis.refreshNativeScopes(); err != nil {
+		return nil, err
+	}
 	if err := inferContractAnalysis(analysis, options); err != nil {
 		return nil, err
 	}
@@ -241,9 +245,10 @@ func (r *contractRecorder) contractAcquire(slot *orchestrationStorage, origin co
 	if resource.Unknown {
 		return contracts.Node{Kind: contracts.Native, Native: "unresolved-storage-construction", Origin: origin, Target: target, Phase: contracts.Construction}
 	}
-	destructor := contracts.Node{Kind: contracts.Native, Native: "representation-destruction:" + slot.Type.String(), Origin: origin, Target: target, Phase: contracts.Destruction}
-	if slot.Type == valueNumber || slot.Type == valueTruth || slot.Type == valueNull {
-		destructor = contracts.Node{Kind: contracts.Event, Origin: origin, Target: target, Phase: contracts.Destruction}
+	destructor := contracts.Node{Kind: contracts.Event, Origin: origin, Target: target, Phase: contracts.Destruction}
+	// The selected scalar storage representation has no destructor.
+	if slot.Type != valueNumber && slot.Type != valueTruth && slot.Type != valueNull {
+		destructor = r.contractRepresentationDestruction(slot, origin)
 	}
 	return contracts.Node{Kind: contracts.Acquire, Resource: resource, Target: target, Ownership: "owned", SuspensionSafe: true, Phase: contracts.Construction, Origin: origin, Cleanup: []contracts.Node{destructor}}
 }
@@ -255,7 +260,13 @@ func (r *contractRecorder) contractFunctions(body []*orchestrationInstruction, d
 		}
 		if current.Function != nil && current.Function.Body != nil {
 			function := current.Function
-			definitions[r.meaning(function.Source.Record, nil)] = contracts.Node{Kind: contracts.Sequence, Children: r.contractBlock(function.Body), Origin: r.origin(r.declarationTokens[function.Source.Record])}
+			origin := r.origin(r.declarationTokens[function.Source.Record])
+			// Callee lowering (prologue, value transfer and return composition)
+			// is an independent native obligation, not an empty effect inferred
+			// from the explicit source body or charged to the invocation wrapper.
+			children := []contracts.Node{r.contractFunctionBodyOverhead(function, origin)}
+			children = append(children, r.contractBlock(function.Body)...)
+			definitions[r.meaning(function.Source.Record, nil)] = contracts.Node{Kind: contracts.Sequence, Children: children, Origin: origin}
 			r.contractFunctions(function.Body.Body, definitions)
 		}
 		if current.Block != nil {
@@ -278,6 +289,11 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 			continue
 		}
 		source := current.Source
+		firstUse := 0
+		if r.nativeAnalysis != nil {
+			firstUse = len(r.nativeAnalysis.uses)
+		}
+		var scopeMeaning contracts.MeaningKey
 		origin := r.origin(source.SourceToken)
 		if origin.Source == "" {
 			origin = contracts.Origin{Source: r.logicalSource(source.Source.Path), Start: source.Source.Start.Offset, End: source.Source.End.Offset}
@@ -315,15 +331,29 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 			node.Children = append(node.Children, r.contractBlock(current.Block)...)
 		case instructionCall:
 			node.Children = append(node.Children, r.contractInstructions(current.Actions)...)
+			if source.Application != nil && source.Application.verb != nil && source.Application.verb.binding != nil {
+				selected := source.Application.verb.binding.Record
+				scopeMeaning = r.meaning(selected, nil)
+				node.Children = append(node.Children, r.contractNativeUse(selected, selected.ID, r.recordTarget(selected, contracts.Invocation), origin, nil, nil, "value"))
+			}
 		case instructionAssign:
 			if current.Target != nil && current.Target.Storage != nil && !resource.Unknown {
 				node.Children = append(node.Children, contracts.Node{Kind: contracts.Release, Resource: resource, Target: target, Origin: origin, Phase: contracts.Destruction}, r.contractAcquire(current.Target.Storage, origin))
 			}
 			node.Children = append(node.Children, event("write"))
 		case instructionUpdate:
-			node.Children = append(node.Children, r.contractValue(current.Target, origin)...)
-			node.Children = append(node.Children, r.contractValue(current.Key, origin)...)
-			node.Children = append(node.Children, event("write"), contracts.Node{Kind: contracts.Native, Native: "representation-update-and-replacement", Origin: origin, Target: target, Phase: contracts.Invocation})
+			if emitted, ok := r.contractEmittedUpdate(current, target, origin); ok {
+				// The trace includes actual argument evaluation, boxing, snapshot,
+				// checked invocation and final storage publication, in that order.
+				node.Children = emitted
+			} else {
+				node.Children = append(node.Children, r.contractValue(current.Target, origin)...)
+				node.Children = append(node.Children, r.contractValue(current.Key, origin)...)
+				node.Children = append(node.Children, r.contractUpdate(current, target, origin)...)
+			}
+			// Publication follows the checked update. A returned failure must not
+			// acquire a write which the selected emitter never performs.
+			node.Children = append(node.Children, event("write"))
 		case instructionBuild:
 			node.Children = append(node.Children, event("io"))
 		case instructionRun:
@@ -379,7 +409,11 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 				}
 			}
 			if function != nil && !function.Native {
-				node.Children = append(node.Children, contracts.Node{Kind: contracts.Call, Meaning: r.meaning(function.Record, nil), Origin: origin, Phase: contracts.Invocation})
+				scopeMeaning = r.meaning(function.Record, nil)
+				node.Children = append(node.Children, r.contractFunctionInvocation(current, function, origin, node.ID))
+			} else if function != nil {
+				scopeMeaning = r.meaning(function.Record, nil)
+				node.Children = append(node.Children, r.contractNativeUse(function.Record, function.Record.ID, r.recordTarget(function.Record, contracts.Invocation), origin, nil, nil, "value"))
 			} else {
 				node.Children = append(node.Children, contracts.Node{Kind: contracts.Native, Native: "typed-function-invocation", Origin: origin, Phase: contracts.Invocation})
 			}
@@ -396,6 +430,7 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 			for _, value := range current.Results {
 				node.Children = append(node.Children, r.contractValue(value, origin)...)
 			}
+			node.Children = append(node.Children, contracts.Node{Kind: contracts.Return, Origin: origin, Phase: contracts.Invocation})
 		default:
 			node.Children = append(node.Children, contracts.Node{Kind: contracts.Native, Native: "unmodeled-instruction:" + source.Kind.String(), Origin: origin})
 		}
@@ -414,6 +449,10 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 			}
 		}
 		result = append(result, node)
+		switch source.Kind {
+		case instructionUpdate, instructionInvoke, instructionCall:
+			r.recordContractScope(node, target, origin, firstUse, scopeMeaning)
+		}
 	}
 	return result
 }
