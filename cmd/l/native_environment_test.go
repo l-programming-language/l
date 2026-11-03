@@ -200,6 +200,11 @@ func TestNativeEvidenceConfigurationAndWorkspaceIdentity(t *testing.T) {
 	if strings.Contains(fmt.Sprint(first), "never-record-this-secret") || strings.Contains(fmt.Sprint(first), "also-not-recorded") {
 		t.Fatal("environment values leaked into native provenance")
 	}
+	for _, key := range []string{"CARGO_REGISTRIES_PRIVATE_TOKEN", "UNRELATED_SECRET"} {
+		if _, recorded := first["environment:"+key]; recorded {
+			t.Fatalf("unlisted environment variable retained even as a hash: %s", key)
+		}
+	}
 	if err := os.WriteFile(filepath.Join(root, "config.toml"), []byte("[build]\njobs=1\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -220,6 +225,53 @@ func TestNativeEvidenceConfigurationAndWorkspaceIdentity(t *testing.T) {
 	after, err := nativeWorkspaceFingerprint(root)
 	if err != nil || before == after {
 		t.Fatalf("actual workspace bytes did not affect build inputs: %q / %q, %v", before, after, err)
+	}
+}
+
+func TestNativeEnvironmentConfigurationAllowlist(t *testing.T) {
+	root := t.TempDir()
+	keys := []string{"PATH", "CARGO_HOME", "RUSTUP_HOME", "RUSTUP_TOOLCHAIN", "RUSTFLAGS", "RUSTDOCFLAGS", "CC", "CXX", "AR", "CARGO_NET_OFFLINE", "CARGO_ENCODED_RUSTFLAGS", "CARGO_TERM_COLOR", "CARGO_PROFILE_DEV_DEBUG", "CARGO_INCREMENTAL", "RUSTC_WRAPPER", "RUSTC_WORKSPACE_WRAPPER", "RUSTC_BOOTSTRAP", "RUSTC_FORCE_INCREMENTAL"}
+	var environment []string
+	for _, key := range keys {
+		value := "selected-" + key
+		if key == "CARGO_HOME" {
+			value = root
+		}
+		environment = append(environment, key+"="+value)
+	}
+	baseline := make(map[string]string)
+	if err := nativeConfiguration(baseline, root, environment); err != nil {
+		t.Fatal(err)
+	}
+	for index, key := range keys {
+		t.Run(key, func(t *testing.T) {
+			if baseline["environment:"+key] == "" {
+				t.Fatal("documented configuration setting was omitted")
+			}
+			changed := append([]string(nil), environment...)
+			changed[index] = key + "=changed-setting"
+			if key == "CARGO_HOME" {
+				changed[index] = key + "=" + filepath.Join(root, "other")
+			}
+			actual := make(map[string]string)
+			if err := nativeConfiguration(actual, root, changed); err != nil {
+				t.Fatal(err)
+			}
+			if actual["environment:"+key] == baseline["environment:"+key] {
+				t.Fatal("changed relevant setting retained its configuration identity")
+			}
+		})
+	}
+	unlisted := []string{"CARGO_REGISTRY_TOKEN", "CARGO_REGISTRIES_PRIVATE_TOKEN", "CARGO_CREDENTIAL_PROVIDER", "CARGO_UNRELATED", "RUSTC_SECRET", "RUSTC_UNRELATED", "UNRELATED_SECRET"}
+	for _, key := range unlisted {
+		environment = append(environment, key+"=never-record-even-a-hash")
+	}
+	actual := make(map[string]string)
+	if err := nativeConfiguration(actual, root, environment); err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(baseline, actual) {
+		t.Fatal("credential or unrelated variables changed the captured configuration")
 	}
 }
 
@@ -284,6 +336,16 @@ func TestNativeEnvironmentOfflineConfigurationApplicability(t *testing.T) {
 			t.Fatal("arbitrary recorded config path accepted")
 		}
 	})
+	for _, key := range []string{"CARGO_REGISTRY_TOKEN", "CARGO_REGISTRIES_PRIVATE_TOKEN", "RUSTC_SECRET", "UNRELATED_SECRET"} {
+		t.Run("unlisted-"+key, func(t *testing.T) {
+			malformed := environment
+			malformed.Configuration = cloneNativeStrings(environment.Configuration)
+			malformed.Configuration["environment:"+key] = nativeBytesHash([]byte("not-even-a-credential-hash"))
+			if _, _, err := validateNativeEnvironmentConfiguration(malformed); err == nil {
+				t.Fatal("unlisted environment key accepted in supplied evidence")
+			}
+		})
+	}
 	configDir := filepath.Join(filepath.Dir(fixture.report.Entry), ".cargo")
 	if err := os.Mkdir(configDir, 0700); err != nil {
 		t.Fatal(err)

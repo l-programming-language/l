@@ -168,11 +168,11 @@
     "pr20_repair_release": {
       "command": "scripts/l-ci bootstrap && scripts/l-check",
       "outcome": "passed",
-      "evidence": "docs/contracts-pr20-validation.json; full release exit 0, 837 ordinary and 4527 native acceptance test/subtest passes, 16 original observers and protected-input integrity; separate tagged native compilation passed.",
-      "revision": "ada795faae59bfe417f85927391debc161c9c473",
+      "evidence": "docs/contracts-pr20-validation.json; isolated full release exit 0, 837 ordinary and 4550 native acceptance test/subtest passes, 16 original observers and protected-input integrity; separate tagged native compilation passed. Earlier same-source native watchdog failures are retained in the ledger.",
+      "revision": "8698e07f170b1ce49404a324d7df419b861791e2",
       "platform": "darwin/arm64",
       "exit_code": 0,
-      "source_identity": "faf10477ef9f217666ef8a6631a6322c0d29334a208991eee360c022d028c32f"
+      "source_identity": "22c9202ff482ece32f9f0807b18d15bf2abf07d02f70446613021970919807d7"
     },
     "pr20_repair_fuzz": {
       "command": "env GOCACHE=$PWD/.harness/cache/go-build GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off scripts/l-go test -mod=readonly -run '^$' -fuzz '^FuzzDemandJoinSoundness$' -fuzztime=10s -parallel=2 -timeout=30s ./contracts",

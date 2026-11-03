@@ -100,6 +100,16 @@ cross-compilation. Omit it for the current native host.
 If `CARGO_HOME` is set, explicit evidence collection requires an absolute path so
 configuration identity does not depend on an unrelated working directory.
 
+Environment fingerprints use this exact allowlist: `PATH`, `CARGO_HOME`,
+`RUSTUP_HOME`, `RUSTUP_TOOLCHAIN`, `RUSTFLAGS`, `RUSTDOCFLAGS`, `CC`, `CXX`, `AR`,
+`CARGO_NET_OFFLINE`, `CARGO_ENCODED_RUSTFLAGS`, `CARGO_TERM_COLOR`,
+`CARGO_PROFILE_DEV_DEBUG`, `CARGO_INCREMENTAL`, `RUSTC_WRAPPER`,
+`RUSTC_WORKSPACE_WRAPPER`, `RUSTC_BOOTSTRAP`, and `RUSTC_FORCE_INCREMENTAL`.
+Only the values selected by the existing sanitized build environment are hashed.
+Credential variables and other unlisted variables are omitted entirely, including
+their hashes; non-test evidence containing unlisted environment keys rejects.
+Conventional Cargo configuration files and their absence are tracked separately.
+
 The optional build flag produces the same versioned environment document, adding
 actual Cargo command/results, exact workspace-input identity and compiled
 artifact hashes. It does not run generated programs. A Cargo failure retains its

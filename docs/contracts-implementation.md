@@ -12,7 +12,8 @@ This follow-up starts from `ada795faae59bfe417f85927391debc161c9c473` on
 `codex/docs-browser-tab-title`. The user authorized implementation, full local
 release and website validation, focused commits, push, and PR #20 validation
 notes/CI monitoring. Previous release outcomes below are historical evidence.
-Current work is in progress; no release result is claimed for these edits yet.
+Implementation and local release validation are complete; revision-specific
+results and remaining assurance limits are recorded below.
 
 The entire five-file follow-up package was extracted and compared byte for byte
 with the previously reviewed package. Its six regression functions are retained
@@ -91,8 +92,43 @@ returned 0. Missing-witness, stale-witness and broader whole-entry checks return
 1. The selected source invocation contains 12 native uses and owned destruction;
 its positive result displays 24 **TEST-ONLY** assumptions and retains 155 broader
 unknowns. Production trust remains empty; this is conditional scoped assurance,
-not blanket native certification. The final ledger/map edits only record these
-outcomes; compiler implementation and tests were unchanged after the release run.
+not blanket native certification. That first ledger/map update recorded those
+outcomes without changing the compiler or tests.
+
+### Environment allowlist correction and final local validation
+
+Final review replaced broad Cargo/Rust environment-prefix collection with an
+explicit documented allowlist of 18 configuration keys. Credential and unrelated
+variables are omitted even as hashes; supplied non-test records containing such
+keys reject. The existing sanitized build environment is unchanged. New tests
+cover every allowed setting, unrelated-variable stability and rejected injected
+keys. The CLI review fingerprint and author guide were updated.
+
+The first repeat `scripts/l-check` passed lint and ordinary tests but hit runtime
+watchdogs in existing native scenarios while website validation ran concurrently
+(`ci-acceptance-670123627`). Host contention is suspected, not proven. That failed
+run is retained in the validation ledger. The unchanged full command then ran
+alone and **passed**, with no test, watchdog, budget or concurrency changes.
+All three stages used source identity
+`22c9202ff482ece32f9f0807b18d15bf2abf07d02f70446613021970919807d7`:
+
+- Full lint: `ci-lint-1859405191`, no warnings/errors.
+- Both unfiltered acceptance phases: `ci-acceptance-2014807848`, **837** ordinary
+  and **4,550** native test/subtest passes, zero failures/skips, all 16 original
+  observers passing, protected integrity before and after.
+- Separate tagged native compilation: `ci-native-3458133387`, **124** passes.
+
+Pinned reference generation/check and `npm --prefix website run verify:website`
+also passed for this correction: **257** unit tests, **13** browser tests and
+69 routes/70 HTML files. The final ledger/map edits only record these outcomes;
+implementation and tests were unchanged after the isolated release run.
+
+Hosted checks passed for preceding head `8698e07` at synthetic merge
+`ee5f07f9228f69ee84752b63409c8ea00bfd3444` with main `6b34a619`.
+That Linux run passed **830** ordinary and **4,527** native results, protected
+integrity, all 16 original observers, tagged native compilation, and the actual
+kernel-enforced offline process/network-denial test. Final-head hosted outcomes
+are recorded separately in PR #20's validation notes.
 
 F01–F05 repairs, F06's supported capture/composition/scoped workflow and F07
 interaction coverage are implemented. Local native results establish macOS

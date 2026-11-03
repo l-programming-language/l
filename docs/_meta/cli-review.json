@@ -7,7 +7,7 @@
     "cmd/l/command.go": "fc6e07ba875c7c41e62aec111a2efe12220c5aa19199c061ed3352513d551761",
     "cmd/l/contracts.go": "de5304a1900b5d258b895dc4551da400bd415d4aea171ccba27b3be16ed13759",
     "cmd/l/contracts_requests.go": "12fcea7b7b94634ade374cb91e63046533209660f41153ea65c28aa409fb3532",
-    "cmd/l/native_environment.go": "73f51eedc769f2c98defb26b596fade5e7805a52d777c4d25bcd94cb12f19181"
+    "cmd/l/native_environment.go": "c0d0f721ecec4263ea77a626bc5b2e30f33feb2463a621f7d6045d0838cbdc00"
   },
   "entries": [
     {

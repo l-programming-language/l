@@ -199,6 +199,17 @@ func addNativeTool(value *contracts.NativeEnvironment, name, path, version strin
 	return nil
 }
 
+func nativeConfigurationEnvironmentKey(key string) bool {
+	switch key {
+	case "PATH", "CARGO_HOME", "RUSTUP_HOME", "RUSTUP_TOOLCHAIN", "RUSTFLAGS", "RUSTDOCFLAGS", "CC", "CXX", "AR",
+		"CARGO_NET_OFFLINE", "CARGO_ENCODED_RUSTFLAGS", "CARGO_TERM_COLOR", "CARGO_PROFILE_DEV_DEBUG", "CARGO_INCREMENTAL",
+		"RUSTC_WRAPPER", "RUSTC_WORKSPACE_WRAPPER", "RUSTC_BOOTSTRAP", "RUSTC_FORCE_INCREMENTAL":
+		return true
+	default:
+		return false
+	}
+}
+
 func nativeConfiguration(configuration map[string]string, directory string, environment []string) error {
 	configuration["toolchain"] = nativeToolchainVersion
 	configuration["target-selection"] = "host-tuple"
@@ -206,9 +217,9 @@ func nativeConfiguration(configuration map[string]string, directory string, envi
 	var cargoHome string
 	for _, item := range environment {
 		key, value, _ := strings.Cut(item, "=")
-		if key == "PATH" || key == "CARGO_HOME" || key == "RUSTUP_HOME" || key == "RUSTUP_TOOLCHAIN" || key == "RUSTFLAGS" || key == "RUSTDOCFLAGS" || key == "CC" || key == "CXX" || key == "AR" || strings.HasPrefix(key, "CARGO_") || strings.HasPrefix(key, "RUSTC_") {
-			// Values may contain credentials in arbitrary Cargo configuration.
-			// Record identities without disclosing process environment contents.
+		if nativeConfigurationEnvironmentKey(key) {
+			// Record only the documented native configuration settings. Arbitrary
+			// Cargo/Rust variables, including credentials, are excluded even as hashes.
 			configuration["environment:"+key] = nativeBytesHash([]byte(value))
 		}
 		if key == "CARGO_HOME" {
@@ -426,6 +437,11 @@ func validateNativeEvidenceOutput(path string, inputs []string, output, companio
 func validateNativeEnvironmentConfiguration(value contracts.NativeEnvironment) (contracts.Status, string, error) {
 	if value.Method == "test-only" {
 		return contracts.Established, "explicit test-only environment fixture", nil
+	}
+	for key := range value.Configuration {
+		if name, environment := strings.CutPrefix(key, "environment:"); environment && !nativeConfigurationEnvironmentKey(name) {
+			return contracts.Unresolved, "", fmt.Errorf("native environment contains an unsupported configuration key %q", key)
+		}
 	}
 	expected := make(map[string]string)
 	directories := make(map[string]bool)
