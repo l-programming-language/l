@@ -6,6 +6,100 @@ authority. The immutable [acceptance catalog](../contracts/acceptance-catalog.js
 contains 110 requirements; [local mappings](../contracts/acceptance-map.json)
 record actual implementation and execution states separately.
 
+## PR #20 correctness and native assurance repair
+
+This follow-up starts from `ada795faae59bfe417f85927391debc161c9c473` on
+`codex/docs-browser-tab-title`. The user authorized implementation, full local
+release and website validation, focused commits, push, and PR #20 validation
+notes/CI monitoring. Previous release outcomes below are historical evidence.
+Current work is in progress; no release result is claimed for these edits yet.
+
+The entire five-file follow-up package was extracted and compared byte for byte
+with the previously reviewed package. Its six regression functions are retained
+unchanged in `contracts/pr20_review_regressions_test.go`. Before repair, all six
+failed (including three facet subcases); the diagnostic run also reproduced the
+33-alternative default-budget, final-owner and unsafe-guard counterexamples.
+Original evidence is retained locally under
+`/private/tmp/pr20-review-validation-k_ybuxl8/validation.json` and the associated
+logs. These were analyzer defects, not demonstrated generated-code failures.
+
+Implementation now separates presence-aware demand joins, correlated ownership
+alternatives, caller-context effect observation, recursive predicate dependency
+invalidation and validated facet closure. The analyzer revision advances to
+`l-contracts-1.1/3`. The approved LEX-022 correction declares the second boolean
+facet and exact target while retaining its cyclic rule and successful assertion.
+
+Native assurance adds compiler-derived invocation identities, exact selected
+signatures and implementation dependencies, explicit environment acquisition,
+individual component approval before inference, and scoped request records.
+Capture is provenance, never approval. Offline checks remain conditional on the
+supplied applicable environment and selected policy; production trust is empty.
+Observed failure and execution control remain separate. Completion-state
+preservation is checked after modeled cleanup and is separate from write history.
+
+Focused results and failed development attempts are retained in
+`.harness/pr20-repair/`. The unchanged supplied regressions and new inference,
+facet, native-assurance and frontend identity cases pass their focused commands.
+Public checks cover multiple-operation source invocation with argument/capture
+work and owned finalization, native-body failure preservation, mutated temporary
+custom-provider behavior, missing/stale witnesses and visible outside-scope
+unknowns. Temporary custom support AML is compiled from the modified provider;
+no repository runtime resource or integrity hash is changed.
+
+The macOS subprocess harness denies process creation/execution and network
+access at the kernel boundary, verifies both denial controls, and exercises
+offline inspect/check/explain with missing/stale evidence and hostile historical
+commands. Its test passed. Linux AMD64/ARM64 versions compiled locally; runtime
+validation is reserved for hosted Linux CI. Explicit build-evidence tests record
+one actual frozen Cargo build and matching artifact hashes, and a failed build
+with exit 7 and no artifacts. Capture does not grant native approval.
+
+Bootstrap passed at `.harness/runs/ci-bootstrap-2868236373/stage.json` after the
+sandbox denied Rustup cache writes on the first attempt. Preliminary complete
+lint found one unchecked optional context type assertion; it was replaced with
+an explicit checked branch, without a suppression. Representative focused
+commands (all exit 0) include:
+
+```sh
+env GOCACHE=$PWD/.harness/cache/go-build GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off scripts/l-go test -mod=readonly -count=1 -timeout=90s ./contracts ./lyger -run 'TestPR20|TestInfer|TestContractsNative|TestFailure|TestSourceAdjective'
+env GOCACHE=$PWD/.harness/cache/go-build GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off scripts/l-go test -mod=readonly -count=1 -timeout=120s ./cmd/l -run 'TestScopedNativeCLIMultiOperationInvocation'
+env GOCACHE=$PWD/.harness/cache/go-build GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off scripts/l-go test -mod=readonly -count=1 -timeout=120s ./cmd/l -run 'TestScopedNativeCLICustomProvider'
+```
+
+### Repair release results
+
+`scripts/l-check` passed with one unchanged source identity:
+`faf10477ef9f217666ef8a6631a6322c0d29334a208991eee360c022d028c32f`.
+Full lint passed in `ci-lint-1641836894`; acceptance passed in
+`ci-acceptance-338701085`; separate tagged native compilation passed in
+`ci-native-148028790`. The two unfiltered acceptance phases recorded **837**
+ordinary and **4,527** native test/subtest passes, zero failures/skips, all 16
+original compiler-view observers passing, and protected integrity before/after.
+Native generation, compilation and supervised runtime observations remain
+separate evidence in the harness artifacts; inspection itself executes no Apps.
+
+Pinned `npm --prefix website run verify:website` passed all **257** unit tests,
+**13** browser tests and static output validation (69 routes, 70 HTML files).
+The bounded demand fuzz campaign used two workers for ten seconds and completed
+**611,833** executions without failure. Exact commands, platform, source identity
+and artifact SHA-256 digests are recorded in
+[the validation ledger](contracts-pr20-validation.json).
+
+Reusable actual CLI artifacts live at `.harness/pr20-repair/public/` with a
+reproduction driver and command/hash ledger. Inspect, scoped check and explain
+returned 0. Missing-witness, stale-witness and broader whole-entry checks returned
+1. The selected source invocation contains 12 native uses and owned destruction;
+its positive result displays 24 **TEST-ONLY** assumptions and retains 155 broader
+unknowns. Production trust remains empty; this is conditional scoped assurance,
+not blanket native certification. The final ledger/map edits only record these
+outcomes; compiler implementation and tests were unchanged after the release run.
+
+F01–F05 repairs, F06's supported capture/composition/scoped workflow and F07
+interaction coverage are implemented. Local native results establish macOS
+ARM64; hosted Linux results are recorded separately on PR #20. Follow-up precision
+work may extend unsupported native resource observations and closure, without
+weakening current profiles or turning authored metadata into evidence.
+
 ## Source adjective adapter follow-up
 
 Starting revision: `94b9e969c15f17ede868049b10da4bddf01f6c15`, on

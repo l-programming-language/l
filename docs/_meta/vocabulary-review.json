@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceHashes": {
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-    "lyger/function_composition.go": "b1cc7002bf7a5f8ea20cf977bc9f94da30ebf4e57ba6fb6bd80e7600b55b63b6",
+    "lyger/function_composition.go": "f51800bb1c0dedf03d76a36eea5adb053300332742bb81c86da6be57e4ef25cb",
     "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
     "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
     "lyger/source_functions.go": "9e19b22b4d6614c38160528e67e7c426b8c1b5a658bd16be4073336957ee0fbf",

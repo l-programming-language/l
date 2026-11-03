@@ -4,7 +4,7 @@
     "builtins/eng/core.l": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
     "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
     "lyger/construction.go": "e01de48db67121acf6ddaee35ea778a4dd5c29a618f685156954ae578c1eb9f7",
-    "lyger/function_composition.go": "b1cc7002bf7a5f8ea20cf977bc9f94da30ebf4e57ba6fb6bd80e7600b55b63b6",
+    "lyger/function_composition.go": "f51800bb1c0dedf03d76a36eea5adb053300332742bb81c86da6be57e4ef25cb",
     "lyger/function_definitions.go": "5bb1ca5803d502f66122d7c4faf0d36e2074876bf896b7a58e5a27018f106f2b",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
@@ -17,7 +17,7 @@
     "lyger/source_body.go": "41cbf8f1711709cfdc86ceec733a495c027c03b9b3dd60c0f6d7ee9376f336b0",
     "lyger/source_functions.go": "9e19b22b4d6614c38160528e67e7c426b8c1b5a658bd16be4073336957ee0fbf",
     "lyger/types.go": "8d1c5403e26386b560c2bad36d8e5b3aaed28174708f46dda470f572fcf75859",
-    "lyger/word_values.go": "f30788b00ce62cdcd39658bab21aa2df228889a25c914263277a8b136d2d361b"
+    "lyger/word_values.go": "449b35c1a97327533fa663131fa3817c71b30675cce7cf63d387eb27578e1240"
   },
   "entries": {
     "value": {

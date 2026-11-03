@@ -25,6 +25,27 @@ not read unrelated host files. Install instructions are in [README](../README.md
 
 Help, version and builds return 0 on success; invalid invocations or unsupported hosts return 2; build or output-write failures return 1. Diagnostics retain phase/cause on stderr. Build stdout contains the executable path and newline; standalone [`l --version` or `l -v`](cli/build.md#version) prints the version without compiler initialization.
 
+## Optional native build evidence
+
+```sh
+l build --native-evidence-output build-environment.json main.l
+```
+
+This explicit option records pinned tool identity/version observations, selected
+source and backend fingerprints, relevant Cargo configuration, the actual Cargo
+invocation and output digests, and compiled artifact hashes. It does not run the
+published executable or any App. A failed Cargo invocation is retained in the
+evidence document once initial environment capture has succeeded. An evidence
+write failure is reported separately, including if executable publication has
+already succeeded.
+
+Choose a destination outside source inputs, the executable, companion generations
+and custom assets. The ordinary build path performs no additional observation or
+analysis when the option is absent. The document is conditional provenance for
+[contract checking](contracts.md#capture-native-environment-evidence), not approval
+of native implementation behavior, allocator/panic policy or the current
+runtime deployment.
+
 ## Output and publication
 
 For `main.l`, the default layout is:

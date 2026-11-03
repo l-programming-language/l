@@ -2,8 +2,12 @@
   "schemaVersion": 1,
   "reviewPolicy": "Manually reviewed command/option surface from the current parser. A changed parser hash requires review of its behavior and documentation before this manifest is edited. references:generate never updates this approval hash. Aliases and flag-parser spelling variants are grouped with the corresponding option.",
   "sourceHashes": {
-    "cmd/l/command.go": "dcdbfd43fc8553ce00d0a8dbd4b7d0c2b55d1b1dff5b4088e42796a6f3c5d41e",
-    "cmd/l/contracts.go": "c29f91b7ad61db5b616fa9649f768b1652ea8f3843f6a4ab01254f2dc533587d"
+    "cmd/l/build.go": "cb8fc1fb73efe6080f8531bda5987a5e3be0f6c498c3461d1cc9b393eab1a0a7",
+    "cmd/l/cargo.go": "1a970fca9701660e6a17ee855e68a6b107b72ed019a7760da8e36b1d09e5d24b",
+    "cmd/l/command.go": "fc6e07ba875c7c41e62aec111a2efe12220c5aa19199c061ed3352513d551761",
+    "cmd/l/contracts.go": "de5304a1900b5d258b895dc4551da400bd415d4aea171ccba27b3be16ed13759",
+    "cmd/l/contracts_requests.go": "12fcea7b7b94634ade374cb91e63046533209660f41153ea65c28aa409fb3532",
+    "cmd/l/native_environment.go": "73f51eedc769f2c98defb26b596fade5e7805a52d777c4d25bcd94cb12f19181"
   },
   "entries": [
     {
@@ -186,7 +190,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Source-only analysis command group; one required input after options. No Cargo build, publication, or App execution."
+      "notes": "Analysis commands remain offline; explicit evidence capture performs bounded installed-tool observations. One required input follows options; no Cargo build, publication, or App execution in the contracts command group."
     },
     {
       "id": "cli:contracts inspect",
@@ -222,7 +226,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "At least one profile is required; contradicted or unresolved enforcement returns 1 without semantic fallback."
+      "notes": "Requires --profile or --request-file; checks whole entry by default or exact published scopes in explicit requests. Contradicted or unresolved controlling obligations return 1 without semantic fallback."
     },
     {
       "id": "cli:contracts explain",
@@ -402,7 +406,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Repeatable supported profile names; check requires at least one. Whole-entry profiles reject in symbolic assurance mode."
+      "notes": "Repeatable supported whole-entry profiles; check requires these or --request-file. PreservesOnFailure requires an explicit request footprint. Whole-entry profiles reject in symbolic assurance mode."
     },
     {
       "id": "cli:contracts --binding",
@@ -493,6 +497,100 @@
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "End subcommand option parsing, including before an input beginning with a dash."
+    },
+    {
+      "id": "cli:--native-evidence-output",
+      "kind": "cli",
+      "name": "--native-evidence-output",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/cli/build.md#options",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/native_environment.go",
+        "cmd/l/build.go",
+        "cmd/l/cargo.go"
+      ],
+      "witnesses": [
+        "cmd/l/native_environment_test.go",
+        "cmd/l/native_environment_native_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Optional build evidence records tool identities, the actual frozen Cargo invocation and artifact hashes. Failed Cargo invocations remain recorded after initial capture; no App execution is introduced."
+    },
+    {
+      "id": "cli:contracts evidence capture",
+      "kind": "cli",
+      "name": "contracts evidence capture",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#capture-native-environment-evidence",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go",
+        "cmd/l/native_environment.go"
+      ],
+      "witnesses": [
+        "cmd/l/native_environment_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Explicit bounded offline installed-tool resolution/version queries; requires --output. No build, fetch, publication, App execution or native approval."
+    },
+    {
+      "id": "cli:contracts --native-environment",
+      "kind": "cli",
+      "name": "contracts --native-environment",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#options-and-reports",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go",
+        "cmd/l/contracts_requests.go",
+        "cmd/l/native_environment.go"
+      ],
+      "witnesses": [
+        "cmd/l/native_environment_test.go",
+        "cmd/l/contracts_requests_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Loads versioned native-environment provenance. Source/selected dependency and relevant Cargo configuration changes invalidate applicability; checking never replays commands or probes historical binaries."
+    },
+    {
+      "id": "cli:contracts --request-file",
+      "kind": "cli",
+      "name": "contracts --request-file",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#scoped-checks-and-failure-footprints",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go",
+        "cmd/l/contracts_requests.go"
+      ],
+      "witnesses": [
+        "cmd/l/contracts_requests_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Check-only versioned requests select whole_entry or exact published scopes; PreservesOnFailure requires a supported observation, nonempty exact resource footprint and failure outcomes. Every controlling obligation remains in the report."
+    },
+    {
+      "id": "cli:contracts --target",
+      "kind": "cli",
+      "name": "contracts --target",
+      "role": "normative",
+      "support": "supported",
+      "doc": "docs/contracts.md#capture-native-environment-evidence",
+      "sources": [
+        "cmd/l/command.go",
+        "cmd/l/contracts.go",
+        "cmd/l/native_environment.go"
+      ],
+      "witnesses": [
+        "cmd/l/native_environment_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Capture-only compatibility assertion; must match the observed native host triple. It does not enable cross-compilation."
     }
   ]
 }

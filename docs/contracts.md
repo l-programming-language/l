@@ -1,8 +1,8 @@
 # Contracts v1.1
 
 Contracts describe selected meanings and their typed behavior. Inspection does
-not change resolution, build a Cargo workspace, publish an executable, or run an
-App. The default native approval policy is empty: a declaration is not proof of
+not change resolution, build a Cargo workspace, publish an executable, run a
+tool query, or run an App. The default native approval policy is empty: a declaration is not proof of
 its implementation. A successful inspection can contain unknowns; enforced
 checking fails when a required fact is contradicted or unresolved.
 
@@ -11,7 +11,8 @@ checking fails when a required fact is contradicted or unresolved.
 Use `l contracts --help` or `l contracts -h` for contracts usage. Each analysis
 subcommand requires exactly one input. Options precede that input; use `--` to
 end option parsing before a filename beginning with a dash. No contracts command
-builds a Cargo workspace, publishes an executable, or launches an App.
+builds a Cargo workspace, publishes an executable, or launches an App. Explicit
+`evidence capture` is the only contracts operation that queries external tools.
 
 ### Inspect
 
@@ -29,8 +30,8 @@ all reported properties to be established.
 l contracts check --profile NoHeapAllocation --profile NoBlocking --report check.json program.l
 ```
 
-Checking requires at least one `--profile`. Repeat it to enforce several
-profiles over the whole selected entry and all modeled outcomes. Unknown or
+Checking requires `--profile` or `--request-file`. Repeat `--profile` to enforce
+several profiles over the whole selected entry and all modeled outcomes. Unknown or
 contradicted required properties fail checking. A profile does not select a
 different word or provider to obtain a passing result.
 
@@ -81,9 +82,121 @@ not a runtime guarantee. Options still precede the dictionary input. Whole-entry
 implementation assurance, selecting adjectives still retains whole-dictionary
 enforcement; use explicit symbolic assurance for the narrower check.
 
+### Capture native environment evidence
+
+```sh
+l contracts evidence capture --output environment.json program.l
+l contracts evidence capture --output environment.json --target aarch64-apple-darwin program.l
+l build --native-evidence-output build-environment.json program.l
+```
+
+Capture always writes a JSON environment document to its required `--output`.
+It is an explicit tool observation: it resolves the pinned local toolchain
+and records executable hashes, version-query commands and results, the native
+host target, selected source/backend fingerprints, and relevant Cargo
+configuration. It never fetches a toolchain, builds a workspace, or runs an App.
+`--target` is an assertion that must match the observed host; it does not enable
+cross-compilation. Omit it for the current native host.
+If `CARGO_HOME` is set, explicit evidence collection requires an absolute path so
+configuration identity does not depend on an unrelated working directory.
+
+The optional build flag produces the same versioned environment document, adding
+actual Cargo command/results, exact workspace-input identity and compiled
+artifact hashes. It does not run generated programs. A Cargo failure retains its
+failed execution record once capture has succeeded; it produces no successful
+artifact evidence. Recorded staging paths are historical provenance and may no
+longer exist after cleanup.
+
+Neither document approves native behavior. Panic strategy, allocator behavior,
+linker internals and transitive native conformance remain unproved by these
+observations. `inspect`, `check`, `explain` and dictionary verification consume
+these documents offline: they compare current source, selected dependencies and
+relevant Cargo configuration, but never replay command strings, run version
+queries or re-attest historical tool binaries.
+
+### Scoped checks and failure footprints
+
+First inspect `scopes`, `native_uses`, and their published resource locations.
+Copy an exact scope ID into a version-1 `contract_check_requests` document; use
+`whole_entry` to retain the whole selected program. Do not invent resource IDs
+from spelling or select a same-type role as a substitute.
+
+A request file has this shape, with placeholders replaced by values from the
+inspection report:
+
+```json
+{
+  "schema_version": "1.1",
+  "kind": "contract_check_requests",
+  "producer": "project-contracts",
+  "version": "1",
+  "checks": [{
+    "id": "update-preservation",
+    "scope": "SCOPE_ID_FROM_INSPECT",
+    "profile": {
+      "name": "PreservesOnFailure",
+      "version": "1.1",
+      "scope": "",
+      "target": {"root": ""}
+    },
+    "footprint": {
+      "locations": [{"resource": {"id": "RESOURCE_ID_FROM_SCOPE"}, "path": []}],
+      "observation": "state_at_completion",
+      "outcomes": ["returned_failure"]
+    }
+  }]
+}
+```
+
+The request's selected scope supplies the profile boundary and target. Copy each
+complete location from that scope's `resources`, including its resource kind and
+path when present. An absent, ambiguous or unsupported scope, or a location that
+the scope does not expose, rejects. `PreservesOnFailure` requires a nonempty
+footprint, explicit failure outcomes and `state_at_completion`; a bare
+`--profile PreservesOnFailure` is invalid. `OwnedLifecycle` currently requires
+`whole_entry`.
+
+For List/Map update failure examples, distinguish the native helper's input
+snapshot from the caller's destination. A `native_body` scope can expose both
+resources: an unchanged caller destination does not prove that the helper left
+its input snapshot unchanged after a partial failure. Select the exact published
+resource and observation being claimed.
+
+```sh
+l contracts check --request-file checks.json --native-environment environment.json --manifest native-contracts.json --trust-policy reviewed-policy.json --report check.json program.l
+```
+
+A native manifest's `outcome_contracts` describes outcome-specific effect rows,
+`absent_effects`, costs and completion-state relations. These are declarations.
+Inspect with the manifest and environment selected to obtain `native_components`:
+each component identifies its exact proposition, native use, target and current
+dependency fingerprints. Reviewed trust witnesses must match those propositions
+individually. An approved absence of allocation cannot certify absent blocking,
+a closed outcome set, cleanup, or unchanged state.
+
+Native uses distinguish the selected `native_body` from
+`invocation_composition_overhead` and `source_body_lowering_overhead`. Invocation
+overhead covers the selected wrapper and its context handling. Source-body
+overhead covers prologue, value transfers and return composition. These claims
+exclude separately analyzed source operations and owned-storage destruction;
+approving one cannot discharge the others. Published scopes retain these
+inclusions and exclusions explicitly.
+
+Checking applies only current, applicable component evidence, then reinfers the
+selected consumers and profiles. Source guards and entry requirements still
+apply. An unchanged completion-state relation may justify preservation despite
+an earlier write; a partial failure with an observable changed state contradicts
+it. Missing or stale evidence leaves the dependent obligation unresolved.
+Independent opaque helpers remain unresolved, including outside a successfully
+checked narrower scope. Reports retain every controlling request obligation and
+its assumptions. Test-only trust policies remain labeled and grant no production
+approval.
+
 ## Options and reports
 
-All contracts subcommands use the following resource and report options:
+Analysis subcommands use the following resource and report options. Explicit
+capture requires `--output` and rejects input environment evidence, trust policy
+and profile enforcement:
 
 | Option | Behavior |
 | --- | --- |
@@ -94,6 +207,8 @@ All contracts subcommands use the following resource and report options:
 | `--assets ROOT` | Use one complete resource filesystem in place of embedded resources. |
 | `--manifest PATH` | Add a metadata manifest; repeat to contribute multiple manifests. |
 | `--trust-policy PATH` | Load an explicit trust-policy document; production native approval otherwise starts empty. |
+| `--native-environment PATH` | Read a previously captured native environment without executing recorded commands or probing tool versions. |
+| `--request-file PATH` | For `check`, load explicit scoped checks and failure-preservation footprints. |
 
 Report destinations must not replace the source input. Reports can be written
 before enforcement returns a failure status, so retain both the report and exit
@@ -187,6 +302,13 @@ The supported typed fragment includes sequence/branch/call/callback transfer,
 outcome-sensitive demand, guards, alias-aware effects, ownership transfers and
 cleanup, representation-dependent mutation, finite facets and cross-facet rules,
 exact-path frames, provider substitution, and symbolic adjective checking.
+Direct selections, rule-derived selections and supplied facet premises share
+schema, target, domain and cardinality validation. Rule closure precedes closed
+configuration checks. Unknown contribution/rule conditions remain obligations;
+rules never perform an implicit replacement. Authorized replacements preserve
+release obligations and invalidate facts about the replaced slot. Legacy
+`facet:ID:SCOPE` predicates are accepted only when declared schema identities
+make the split unambiguous, including IDs or scopes containing colons.
 Adjective certificates are rechecked at instantiation; concrete callback effects,
 captures and lowering can invalidate a valid symbolic certificate. Repetition and
 wrapper order remain observable. Reflection outside this fragment is explicitly
@@ -201,7 +323,7 @@ rule, import precedence, or contract-driven fallback.
 
 ## Evidence and limits
 
-The five interchange schemas in `contracts/schemas` are generated from the shared
+The interchange schemas in `contracts/schemas` are generated from the shared
 Go model by `go run ./tools/contracts-schema KIND`; output is written to stdout.
 Strict decoding rejects unknown fields, duplicate keys, unsupported versions and
 ambiguous declaration identities. Native manifests cannot contain established
@@ -209,16 +331,18 @@ evidence. Trust documents approve named, proposition-specific witnesses with
 authority, rationale, exact contract/body/target fingerprints and dependencies.
 Approval of one proposition does not close unrelated native behavior.
 Requirements and target restrictions are separate evidence dependencies: a
-current native witness cannot bypass an unmet applicability condition. The
-source-only CLI does not identify the concrete Rust toolchain or panic
-configuration by running external tools. Its placeholder environment therefore
-cannot grant concrete native implementation assurance, even with a newly signed
-witness. Typed clients can supply a concrete configuration and independently
-checked premises; test-only assumptions remain explicitly labeled.
+current native witness cannot bypass an unmet applicability condition. Explicit
+capture or build evidence supplies a reusable native-environment identity;
+source-only inspection without it retains an unresolved environment dependency.
+Evidence remains conditional on the recorded environment and selected native
+contracts. It does not attest the current deployment or grant approval to a
+native implementation merely because compilation succeeded. Typed clients can
+supply independently checked premises; test-only assumptions remain explicitly
+labeled.
 
 Profiles cover the whole selected entry and all modeled outcomes by default.
-API callers may explicitly narrow the scope, which remains visible in each
-claim. Allocation, blocking, external IO and panic are distinct constraints;
+Typed API callers and explicit request-file checks may narrow the scope, which
+remains visible in each claim. Allocation, blocking, external IO and panic are distinct constraints;
 neither nonblocking nor unknown cost establishes termination. Lifecycle ownership
 does not remove external completion or runtime synchronization. Preservation on
 failure requires an explicit observable footprint and selected failure outcomes.

@@ -164,6 +164,23 @@
       "outcome": "failed",
       "exit_code": 1,
       "evidence": "Expected unresolved NoBlocking; actual source theorem/instance do not certify runtime behavior; 51 enumerated native boundaries, unknown transitive closure. Final CLI rebuilt after full release gate; reports contain no executed checks."
+    },
+    "pr20_repair_release": {
+      "command": "scripts/l-ci bootstrap && scripts/l-check",
+      "outcome": "passed",
+      "evidence": "docs/contracts-pr20-validation.json; full release exit 0, 837 ordinary and 4527 native acceptance test/subtest passes, 16 original observers and protected-input integrity; separate tagged native compilation passed.",
+      "revision": "ada795faae59bfe417f85927391debc161c9c473",
+      "platform": "darwin/arm64",
+      "exit_code": 0,
+      "source_identity": "faf10477ef9f217666ef8a6631a6322c0d29334a208991eee360c022d028c32f"
+    },
+    "pr20_repair_fuzz": {
+      "command": "env GOCACHE=$PWD/.harness/cache/go-build GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off scripts/l-go test -mod=readonly -run '^$' -fuzz '^FuzzDemandJoinSoundness$' -fuzztime=10s -parallel=2 -timeout=30s ./contracts",
+      "outcome": "passed",
+      "exit_code": 0,
+      "evidence": "10 seconds, two workers, 611833 executions, no failure; log digest in docs/contracts-pr20-validation.json",
+      "source_identity": "faf10477ef9f217666ef8a6631a6322c0d29334a208991eee360c022d028c32f",
+      "platform": "darwin/arm64"
     }
   },
   "cases": [
@@ -236,6 +253,14 @@
         {
           "file": "contracts/target_interchange_test.go",
           "name": "TestTargetIdentitySurvivesEmptyPathInterchange"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
         }
       ],
       "command_ids": [
@@ -243,7 +268,8 @@
         "contracts_final",
         "final_applicability_regressions",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -255,13 +281,22 @@
         {
           "file": "contracts/metadata_test.go",
           "name": "TestNativeNormalizationAndEvidenceSeparation/BASE-005"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -273,13 +308,22 @@
         {
           "file": "contracts/metadata_test.go",
           "name": "TestNativeNormalizationAndEvidenceSeparation/BASE-006"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -392,13 +436,18 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE012CallbackEffects"
+        },
+        {
+          "file": "contracts/pr20_review_regressions_test.go",
+          "name": "TestPR20ReviewNativeSummaryRechecksCallerGuard"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -410,13 +459,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE013OutcomeDemand"
+        },
+        {
+          "file": "contracts/pr20_review_regressions_test.go",
+          "name": "TestPR20ReviewUnknownDemandIsNotZero"
+        },
+        {
+          "file": "contracts/pr20_review_regressions_test.go",
+          "name": "TestPR20ReviewBudgetJoinCannotCertifyZeroDemand"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -432,13 +490,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE014Phases"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipBudgetFinalOwnerAndGuard"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipSnapshotsPreserveOrderAndCosts"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -454,13 +521,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE015DemandChange"
+        },
+        {
+          "file": "contracts/pr20_review_regressions_test.go",
+          "name": "TestPR20ReviewUnknownDemandIsNotZero"
+        },
+        {
+          "file": "contracts/pr20_review_regressions_test.go",
+          "name": "TestPR20ReviewBudgetJoinCannotCertifyZeroDemand"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -472,13 +548,18 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE016Aliases"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceNestedPredicateInvalidationAndDisjointness"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -494,6 +575,14 @@
         {
           "file": "contracts/target_interchange_test.go",
           "name": "TestAdjectiveOmittedCallbackCostsAndOutcomesStayUnknown"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
         }
       ],
       "command_ids": [
@@ -501,7 +590,8 @@
         "contracts_final",
         "callback_omission_regression",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -513,13 +603,18 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE018UnsafeAcrossCallbackAndSuspend"
+        },
+        {
+          "file": "contracts/pr20_review_regressions_test.go",
+          "name": "TestPR20ReviewNativeSummaryRechecksCallerGuard"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -531,13 +626,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE019DestructorBlocking"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipBudgetFinalOwnerAndGuard"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipSnapshotsPreserveOrderAndCosts"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -549,13 +653,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE020ConditionalFinalOwner"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipBudgetFinalOwnerAndGuard"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipSnapshotsPreserveOrderAndCosts"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -571,13 +684,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE021ConditionalInitializationMoves"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipBudgetFinalOwnerAndGuard"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipSnapshotsPreserveOrderAndCosts"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -669,13 +791,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE026DestructorCostsAndFailures"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipBudgetFinalOwnerAndGuard"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipSnapshotsPreserveOrderAndCosts"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -695,6 +826,30 @@
         {
           "file": "cmd/l/contracts_trust_test.go",
           "name": "TestContractTrustRequiresConcreteNativeConfiguration"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIApprovalAndRemoval"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIFailureCompletionRelations"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLICustomProviderFailureMutation"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIMultiOperationInvocation"
         }
       ],
       "command_ids": [
@@ -702,7 +857,8 @@
         "contracts_final",
         "final_applicability_regressions",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -714,6 +870,22 @@
         {
           "file": "cmd/l/contracts_test.go",
           "name": "TestContractsCLI/BASE-028"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIApprovalAndRemoval"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIFailureCompletionRelations"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLICustomProviderFailureMutation"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIMultiOperationInvocation"
         }
       ],
       "command_ids": [
@@ -721,7 +893,8 @@
         "cli_inspect",
         "cli_check",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -733,13 +906,18 @@
         {
           "file": "contracts/acceptance_additional_test.go",
           "name": "TestAcceptancePostEventDetectionBASE029"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceNestedPredicateInvalidationAndDisjointness"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -751,13 +929,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE030StaleGuard"
+        },
+        {
+          "file": "contracts/pr20_review_regressions_test.go",
+          "name": "TestPR20ReviewNativeSummaryRechecksCallerGuard"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceNestedPredicateInvalidationAndDisjointness"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -787,13 +974,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceBASE032RecursiveWidening"
+        },
+        {
+          "file": "contracts/pr20_review_regressions_test.go",
+          "name": "TestPR20ReviewUnknownDemandIsNotZero"
+        },
+        {
+          "file": "contracts/pr20_review_regressions_test.go",
+          "name": "TestPR20ReviewBudgetJoinCannotCertifyZeroDemand"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -845,13 +1041,30 @@
         {
           "file": "contracts/failure_test.go",
           "name": "TestFailureFootprints/BASE-035"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIApprovalAndRemoval"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIFailureCompletionRelations"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLICustomProviderFailureMutation"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIMultiOperationInvocation"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1020,6 +1233,14 @@
         {
           "file": "cmd/l/contracts_trust_test.go",
           "name": "TestNativeRequirementsWithoutAdvertisedGuarantees"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
         }
       ],
       "command_ids": [
@@ -1027,7 +1248,8 @@
         "contracts_final",
         "final_applicability_regressions",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1075,13 +1297,26 @@
         {
           "file": "contracts/cache_test.go",
           "name": "TestSeparateCacheBoundaries/BASE-046"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
+        },
+        {
+          "file": "lyger/contracts_cache_test.go",
+          "name": "TestContractsNativeApplicationsSessionWarmCold"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1101,6 +1336,10 @@
         {
           "file": "cmd/l/contracts_trust_test.go",
           "name": "TestContractTrustRequiresConcreteNativeConfiguration"
+        },
+        {
+          "file": "lyger/contracts_cache_test.go",
+          "name": "TestContractsNativeApplicationsSessionWarmCold"
         }
       ],
       "command_ids": [
@@ -1108,7 +1347,8 @@
         "contracts_final",
         "final_applicability_regressions",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1159,13 +1399,22 @@
         {
           "file": "contracts/cache_test.go",
           "name": "TestLegacyIncompleteRecordRequiresRevalidation/BASE-049"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1465,6 +1714,34 @@
         {
           "file": "lyger/contracts_lowering_test.go",
           "name": "TestContractsSevenPilotSelectionsRemainUnapproved"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIApprovalAndRemoval"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIFailureCompletionRelations"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLICustomProviderFailureMutation"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIMultiOperationInvocation"
+        },
+        {
+          "file": "cmd/l/native_environment_native_test.go",
+          "name": "TestNativeEvidenceRecordsActualBuildWithoutRunningApp"
+        },
+        {
+          "file": "cmd/l/native_environment_native_test.go",
+          "name": "TestNativeEvidenceRetainsFailedCargoInvocation"
+        },
+        {
+          "file": "cmd/l/contracts_offline_test.go",
+          "name": "TestContractsOfflineNoProcessOrNetwork"
         }
       ],
       "command_ids": [
@@ -1477,7 +1754,8 @@
         "cli_explain",
         "cli_dictionary",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": [
         "Production native approvals remain empty. Selected helper inventory is transitive where explicit composition records expose it; opaque native internals remain unknown boundaries."
@@ -1708,13 +1986,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-011"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1780,13 +2071,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-015"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1798,13 +2102,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-016"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1816,13 +2133,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-017"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1834,13 +2164,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-018"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1852,13 +2195,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-019"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1870,13 +2226,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-020"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1888,13 +2257,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-021"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1906,13 +2288,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-022"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -1924,13 +2319,26 @@
         {
           "file": "contracts/lexical_acceptance_test.go",
           "name": "TestFacetAcceptance/LEX-023"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDirectDerivedValidationParity"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetDerivedClosureAndProvenance"
+        },
+        {
+          "file": "contracts/facet_rules_test.go",
+          "name": "TestFacetReplacementInvalidatesNestedConfigurationPremises"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -2282,6 +2690,10 @@
         {
           "file": "lyger/contracts_source_adjectives_test.go",
           "name": "TestSourceAdjectiveDictionarySelectedAssuranceAPI"
+        },
+        {
+          "file": "cmd/l/contracts_offline_test.go",
+          "name": "TestContractsOfflineNoProcessOrNetwork"
         }
       ],
       "command_ids": [
@@ -2292,7 +2704,8 @@
         "release_final",
         "source_adapter_followup",
         "source_adapter_release",
-        "source_cli_explain"
+        "source_cli_explain",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -2346,13 +2759,30 @@
         {
           "file": "contracts/failure_test.go",
           "name": "TestFailureFootprints/FALS-002"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIApprovalAndRemoval"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIFailureCompletionRelations"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLICustomProviderFailureMutation"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIMultiOperationInvocation"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -2364,13 +2794,22 @@
         {
           "file": "contracts/infer_test.go",
           "name": "TestInferenceFALS003DestructorIO"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipBudgetFinalOwnerAndGuard"
+        },
+        {
+          "file": "contracts/infer_interactions_test.go",
+          "name": "TestInferenceOwnershipSnapshotsPreserveOrderAndCosts"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -2386,6 +2825,30 @@
         {
           "file": "cmd/l/contracts_trust_test.go",
           "name": "TestContractTrustRequiresCurrentApplicability"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIApprovalAndRemoval"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIFailureCompletionRelations"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLICustomProviderFailureMutation"
+        },
+        {
+          "file": "cmd/l/contracts_requests_test.go",
+          "name": "TestScopedNativeCLIMultiOperationInvocation"
         }
       ],
       "command_ids": [
@@ -2393,7 +2856,8 @@
         "contracts_final",
         "final_applicability_regressions",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -2405,13 +2869,26 @@
         {
           "file": "contracts/cache_test.go",
           "name": "TestCacheIntegrityAndImmutability/FALS-005"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceExactComponentApproval"
+        },
+        {
+          "file": "contracts/native_assurance_test.go",
+          "name": "TestNativeAssuranceChangedDependenciesReject"
+        },
+        {
+          "file": "lyger/contracts_cache_test.go",
+          "name": "TestContractsNativeApplicationsSessionWarmCold"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     },
@@ -2510,15 +2987,25 @@
         {
           "file": "contracts/metadata_test.go",
           "name": "TestExecutedEvidenceRequiresRecordedOperation/FALS-010"
+        },
+        {
+          "file": "cmd/l/native_environment_native_test.go",
+          "name": "TestNativeEvidenceRecordsActualBuildWithoutRunningApp"
+        },
+        {
+          "file": "cmd/l/native_environment_native_test.go",
+          "name": "TestNativeEvidenceRetainsFailedCargoInvocation"
         }
       ],
       "command_ids": [
         "contracts_and_frontend",
         "contracts_final",
         "release_final",
-        "source_adapter_release"
+        "source_adapter_release",
+        "pr20_repair_release"
       ],
       "limitations": []
     }
-  ]
+  ],
+  "review_repair_scope": "F01-F05 regressions and interaction checks; F06 explicit capture/build provenance, approved per-use components, scoped CLI requests and final-state footprints. Production native trust remains empty. Focused/body scopes retain exclusions; no complete native transitive closure is claimed. F07 mapping remains bookkeeping, with execution evidence separately recorded."
 }
