@@ -23,6 +23,7 @@ func (e *orchestrationEmitter) describedWord(name string, descriptors []string, 
 	if err != nil {
 		return nil, err
 	}
+	e.recordContractNativeEmission(name, descriptors, arguments, "")
 	e.dependencies = append(e.dependencies, instance.Dependencies...)
 	return builtinProcessExpressions(&DefinitionTemplate{Span: instance.Span}, instance)
 }
@@ -48,6 +49,9 @@ func (e *orchestrationEmitter) valueBinding(word string, arguments map[string]De
 }
 
 func (e *orchestrationEmitter) describedValueBinding(word string, descriptors []string, arguments map[string]DefinitionArgument) (string, error) {
+	depth := e.contractValueDepth
+	e.contractValueDepth++
+	defer func() { e.contractValueDepth = depth }()
 	if arguments == nil {
 		arguments = make(map[string]DefinitionArgument)
 	}
@@ -77,6 +81,11 @@ func (e *orchestrationEmitter) describedValueBinding(word string, descriptors []
 		return "", err
 	}
 	e.pending = append(e.pending, body...)
+	if depth == 0 {
+		e.contractValueDepth = 0
+		e.recordContractNativeEmission(word, descriptors, arguments, name)
+		e.contractValueDepth = 1
+	}
 	return name, nil
 }
 
@@ -109,7 +118,11 @@ func (e *orchestrationEmitter) borrowedResultBinding(word string, arguments map[
 }
 
 func (e *orchestrationEmitter) checkedBinding(value string) (string, error) {
-	return e.describedValueBinding("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Value": definitionReferenceArgument(value)})
+	result, err := e.describedValueBinding("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Value": definitionReferenceArgument(value)})
+	if err == nil {
+		e.recordContractCheckedResult(value)
+	}
+	return result, err
 }
 
 func (e *orchestrationEmitter) vector(values []DefinitionArgument, elementType string) (string, error) {

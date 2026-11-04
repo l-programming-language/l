@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "base_revision": "ada795faae59bfe417f85927391debc161c9c473",
+  "validated_source_identity": "22c9202ff482ece32f9f0807b18d15bf2abf07d02f70446613021970919807d7",
+  "platform": "darwin/arm64",
+  "go": "1.27.3",
+  "rust": "1.98.1",
+  "node": "24.21.0",
+  "production_native_trust": "empty",
+  "track_a": "existing resolution/emission preserved",
+  "track_b": "typed selector only; no source mode",
+  "commands": [
+    {
+      "command": "scripts/l-ci bootstrap",
+      "exit": 0
+    },
+    {
+      "command": "scripts/l-check",
+      "exit": 0
+    },
+    {
+      "command": "PATH=\"$PWD/.harness/tools/node/24.21.0/node-v24.21.0-darwin-arm64/bin:/usr/bin:/bin:/usr/sbin:/sbin\" npm --prefix website run verify:website",
+      "exit": 0
+    },
+    {
+      "command": "env GOCACHE=$PWD/.harness/cache/go-build GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN=local GOPROXY=off scripts/l-go test -mod=readonly -run '^$' -fuzz '^FuzzDemandJoinSoundness$' -fuzztime=10s -parallel=2 -timeout=30s ./contracts",
+      "exit": 0
+    }
+  ],
+  "results": {
+    "ordinary_test_and_subtest_passes": 837,
+    "native_acceptance_test_and_subtest_passes": 4550,
+    "tagged_native_compilation_events": {
+      "run": 124,
+      "output": 371,
+      "pass": 124
+    },
+    "original_compiler_observers_passed": 16,
+    "protected_integrity_before": true,
+    "protected_integrity_after": true,
+    "website_unit_passes": 257,
+    "website_browser_passes": 13,
+    "fuzz_executions": 611833,
+    "fuzz_seconds": 10
+  },
+  "artifacts": {
+    "bootstrap": {
+      "path": ".harness/runs/ci-bootstrap-2868236373/stage.json",
+      "sha256": "d627686b4c588b2fac4fa68f2d303ff9db8629d8e9445ce8b2a052b90dd46be8"
+    },
+    "lint": {
+      "path": ".harness/runs/ci-lint-1859405191/stage.json",
+      "sha256": "64e89a685651c80bf9591ab4801f624bb9fb2bc3ebb175d1a5b9ebd19e967222"
+    },
+    "acceptance": {
+      "path": ".harness/runs/ci-acceptance-2014807848/stage.json",
+      "sha256": "f38ace420438a5557f56907967602ac995fe5bd9f8d8e80b49158dc189f44b87"
+    },
+    "native_compilation": {
+      "path": ".harness/runs/ci-native-3458133387/stage.json",
+      "sha256": "9695d7c5017d3f94992b7eac1321f86997ba2173319a17570d6727ff89115ee5"
+    },
+    "acceptance_report": {
+      "path": ".harness/runs/20261103T081430.857431000Z-2727799724/report.json",
+      "sha256": "5db06f7ca9964f350b9b253b33d2a0b719835df9044e68c4346bde110c26ce1e"
+    },
+    "website": {
+      "path": ".harness/pr20-repair/documentation-allowlist-website.log",
+      "sha256": "942c230500e94c7f8a8b798b2df80fbd6e292d6d04eeab3d5b9a86aaafb2f8bb"
+    },
+    "fuzz": {
+      "path": ".harness/pr20-repair/fuzz.log",
+      "sha256": "5d2678f7ca041439b1d9c19aa9d472f7ce0aecedafb45871352f83d4762e84cb"
+    },
+    "public_workflow": {
+      "path": ".harness/pr20-repair/public/demo-validation.json",
+      "sha256": "0a20c4fccdb853c5c217091a832ee67d050f661af76464737f34a98ed9276522"
+    },
+    "unchanged_regressions": {
+      "path": "contracts/pr20_review_regressions_test.go",
+      "sha256": "ce924b18e4ff4d1046b884bac97379a6bb780462bd760c1b7f95cc52590dc58c"
+    },
+    "reference_checks": {
+      "path": ".harness/pr20-repair/documentation-allowlist-references.log",
+      "sha256": "63b1f8a603c13f4d1ef2ee022320f453d175581b0562e8b4227b7b872819d0b0"
+    },
+    "release_log": {
+      "path": ".harness/pr20-repair/release-allowlist-isolated.log",
+      "sha256": "86b90b5c7965b58948c9692df74aea39baad6486eabb1faabc38604b2579c203"
+    }
+  },
+  "limitations": [
+    "Final local native execution establishes macOS ARM64. Hosted Linux CI passed for preceding head 8698e07 via synthetic merge ee5f07f9228f69ee84752b63409c8ea00bfd3444; final-head hosted results are recorded on PR #20.",
+    "Positive public native checks use explicit TEST-ONLY assumptions, not production approval.",
+    "Whole-entry native transitive closure and unrelated opaque helpers remain unresolved.",
+    "Native-body failure footprints describe the selected input snapshot; caller-destination preservation is a separate scope.",
+    "Final-state preservation does not certify no intermediate external IO or a retry protocol.",
+    "Only this ledger, implementation log and acceptance-map outcomes changed after the final release run. Fuzz/public-demo artifacts describe the preceding unchanged analyzer implementation; the final code correction narrows environment capture to 18 explicit keys."
+  ],
+  "previous_release": {
+    "validated_source_identity": "faf10477ef9f217666ef8a6631a6322c0d29334a208991eee360c022d028c32f",
+    "results": {
+      "ordinary_test_and_subtest_passes": 837,
+      "native_acceptance_test_and_subtest_passes": 4527,
+      "tagged_native_compilation_events": {
+        "run": 124,
+        "output": 371,
+        "pass": 124
+      },
+      "original_compiler_observers_passed": 16,
+      "protected_integrity_before": true,
+      "protected_integrity_after": true,
+      "website_unit_passes": 257,
+      "website_browser_passes": 13,
+      "fuzz_executions": 611833,
+      "fuzz_seconds": 10
+    },
+    "artifacts": {
+      "bootstrap": {
+        "path": ".harness/runs/ci-bootstrap-2868236373/stage.json",
+        "sha256": "d627686b4c588b2fac4fa68f2d303ff9db8629d8e9445ce8b2a052b90dd46be8"
+      },
+      "lint": {
+        "path": ".harness/runs/ci-lint-1641836894/stage.json",
+        "sha256": "3c2a4f7f8a535d159c6473a6f72fe5dd21b26a80e5a0f155b27c4b18c90670b0"
+      },
+      "acceptance": {
+        "path": ".harness/runs/ci-acceptance-338701085/stage.json",
+        "sha256": "a86023f2f30d8fc52e3a002f05d7876292482a586918d7d943adfa689854d764"
+      },
+      "native_compilation": {
+        "path": ".harness/runs/ci-native-148028790/stage.json",
+        "sha256": "7b14c000dc6b5d6b4e36fb63b500e463c2f01a7a2ca5176429ab9bc8582a2611"
+      },
+      "acceptance_report": {
+        "path": ".harness/runs/20261103T074123.676406000Z-3649332688/report.json",
+        "sha256": "edf5850074fbec0a2eec28f7076651843dda37e12898ae1167d14c95dc55d882"
+      },
+      "website": {
+        "path": ".harness/pr20-repair/documentation-website-release.log",
+        "sha256": "b3e2ce39ec4b87e8823daa845a9a7ed353d513841aadefed8493373763035f9b"
+      },
+      "fuzz": {
+        "path": ".harness/pr20-repair/fuzz.log",
+        "sha256": "5d2678f7ca041439b1d9c19aa9d472f7ce0aecedafb45871352f83d4762e84cb"
+      },
+      "public_workflow": {
+        "path": ".harness/pr20-repair/public/demo-validation.json",
+        "sha256": "0a20c4fccdb853c5c217091a832ee67d050f661af76464737f34a98ed9276522"
+      },
+      "unchanged_regressions": {
+        "path": "contracts/pr20_review_regressions_test.go",
+        "sha256": "ce924b18e4ff4d1046b884bac97379a6bb780462bd760c1b7f95cc52590dc58c"
+      }
+    }
+  },
+  "validated_checkout_revision": "8698e07f170b1ce49404a324d7df419b861791e2",
+  "validated_checkout_dirty": true,
+  "failed_attempts": [
+    {
+      "command": "scripts/l-check",
+      "exit": 1,
+      "source_identity": "22c9202ff482ece32f9f0807b18d15bf2abf07d02f70446613021970919807d7",
+      "acceptance": {
+        "path": ".harness/runs/ci-acceptance-670123627/stage.json",
+        "sha256": "553f6d7ed93b0e2a3fc89ae6b449f542f7e329c26afd448a1d9834f9ec7da75e"
+      },
+      "report": {
+        "path": ".harness/runs/ci-acceptance-670123627/verify.report.json",
+        "sha256": "398d91ecc7749ee763b7bb1ae1e9838f9bb7e3f58dc779f4fdd40236c190821c"
+      },
+      "log": {
+        "path": ".harness/pr20-repair/release-allowlist.log",
+        "sha256": "bd6ee320dd7ae3856c44a97ebd767fa1f90f38d149752cdd22d3723f0562a731"
+      },
+      "observation": "Lint, ordinary tests and protected integrity passed; existing native scenarios hit runtime watchdogs. Website validation ran concurrently. Host contention is suspected, not established. An isolated rerun of the unchanged source passed without changing tests, watchdogs, budgets or concurrency."
+    }
+  ]
+}

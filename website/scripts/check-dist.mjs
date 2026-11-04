@@ -10,6 +10,8 @@ export async function checkDist(site = website) {
   const dist = path.join(site, 'dist'); const files = await walk(dist);
   const map = await json(path.join(site, 'content-map.json'));
   const expectedIdentity = await json(path.join(site, '.generated/version.json'));
+  const bootstrap = await fs.readFile(path.join(site, 'public/install.sh'));
+  if (!files.includes('install.sh') || !(await fs.readFile(path.join(dist, 'install.sh'))).equals(bootstrap)) throw new Error('Built install.sh differs from the authored installation bootstrap.');
   for (const route of ['/', ...map.pages.map((p) => p.route)]) if (!files.includes(route.slice(1) + 'index.html')) throw new Error(`Missing real static route: ${route}`);
   if (!files.includes('404.html') || !files.some((p) => p.startsWith('pagefind/') && p.endsWith('.js'))) throw new Error('Missing static 404 or built Pagefind index.');
   if (files.some((p) => /(?:^|\/)(?:_meta|reports|ci-templates|node_modules)(?:\/|$)/.test(p))) throw new Error('Private maintenance content leaked into dist.');

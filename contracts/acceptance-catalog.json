@@ -1,0 +1,2436 @@
+{
+  "$schema": "CONTRACT_ACCEPTANCE_TESTS.schema.json",
+  "catalog_version": "1.1",
+  "document_kind": "implementation_acceptance_catalog",
+  "specification": "L_CONTRACTS_IMPLEMENTATION_SPEC.md",
+  "status": "planned_requirements_not_executed",
+  "scope_note": "This catalog specifies tests for a future local implementation. No L compiler tests were executed when preparing the package. Typed fixtures do not activate changed source semantics.",
+  "counts": {
+    "core": 60,
+    "lexical": 40,
+    "falsification": 10,
+    "total": 110
+  },
+  "cases": [
+    {
+      "id": "BASE-001",
+      "group": "core",
+      "title": "Discover actual baseline",
+      "milestone": "M0",
+      "spec_sections": [
+        "authority",
+        "roadmap"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A local L checkout with its actual revision, instructions, dirty files, and available tools.",
+      "action": "Inspect integration points and execute applicable existing baseline checks.",
+      "expected": [
+        "Record exact observations, commands, outcomes, and unavailable prerequisites.",
+        "Preserve unrelated changes and map historical pilot names to actual definitions."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-002",
+      "group": "core",
+      "title": "Canonical aliases do not duplicate meanings",
+      "milestone": "M1",
+      "spec_sections": [
+        "model",
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two aliases denote one canonical definition and selected rule.",
+      "action": "Resolve and inspect both uses.",
+      "expected": [
+        "Meaning identity is shared; alias origins and occurrence IDs remain distinct."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-003",
+      "group": "core",
+      "title": "Instantiated targets do not collapse",
+      "milestone": "M1",
+      "spec_sections": [
+        "model"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "One definition is instantiated twice with distinct target or resource substitutions.",
+      "action": "Build summaries for both instantiations.",
+      "expected": [
+        "Do not merge the instances solely by definition identity.",
+        "Any shared parameterized summary is correctly rebound."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-004",
+      "group": "core",
+      "title": "Reject malformed or unsupported metadata",
+      "milestone": "M1",
+      "spec_sections": [
+        "interchange"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Manifests with unsupported versions, misspelled guarantee fields, and ambiguous canonical references.",
+      "action": "Load each manifest.",
+      "expected": [
+        "Reject explicitly; never ignore the erroneous property or pick an arbitrary identity."
+      ],
+      "test_layer": "unit",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-005",
+      "group": "core",
+      "title": "Normalize omissions to unknown",
+      "milestone": "M1",
+      "spec_sections": [
+        "model",
+        "interchange"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A native manifest omits a family and leaves an unknown effect tail.",
+      "action": "Normalize and inspect it.",
+      "expected": [
+        "Missing data is visibly unknown; no empty favorable summary is inferred."
+      ],
+      "test_layer": "unit",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-006",
+      "group": "core",
+      "title": "Declarations cannot self-certify",
+      "milestone": "M1",
+      "spec_sections": [
+        "model",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Native metadata claims a favorable guarantee without implementation evidence or approved trust.",
+      "action": "Request a strong profile.",
+      "expected": [
+        "The declaration remains distinct from a derived/evidenced conclusion.",
+        "Required assurance is unresolved."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-007",
+      "group": "core",
+      "title": "Validate not-applicable coverage",
+      "milestone": "M1",
+      "spec_sections": [
+        "model"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A declaration marks a relevant effect or ownership component not applicable.",
+      "action": "Check applicability of the omission.",
+      "expected": [
+        "Reject the unsupported applicability assertion or retain an unresolved obligation.",
+        "Do not use it to erase a relevant behavior."
+      ],
+      "test_layer": "unit",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-008",
+      "group": "core",
+      "title": "Deterministic semantic serialization",
+      "milestone": "M1",
+      "spec_sections": [
+        "interchange"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Reports containing parameters, unknown tails, targets, outcomes, and evidence.",
+      "action": "Round-trip and serialize repeatedly with varied insertion order.",
+      "expected": [
+        "Normalized output is deterministic and retains all semantic data.",
+        "No memory addresses or incidental temporary names become identities."
+      ],
+      "test_layer": "unit",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-009",
+      "group": "core",
+      "title": "Ordinary compilation remains compatible",
+      "milestone": "M1",
+      "spec_sections": [
+        "authority",
+        "migration"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Existing accepted source fixtures and no opted-in lexical or profile changes.",
+      "action": "Compile before and after integration.",
+      "expected": [
+        "Preserve accepted meanings, behavior, and required existing diagnostics."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-010",
+      "group": "core",
+      "title": "Sequence respects failure paths",
+      "milestone": "M2",
+      "spec_sections": [
+        "algebra"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "B requires a fact established only on normal return of A.",
+      "action": "Analyze A followed by B.",
+      "expected": [
+        "Normal entailment uses that fact.",
+        "An unhandled failure of A does not execute B or acquire its effects."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-011",
+      "group": "core",
+      "title": "Branch postconditions are alternatives",
+      "milestone": "M2",
+      "spec_sections": [
+        "algebra"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "One branch establishes x=0 and another x=1.",
+      "action": "Merge the branches and request x=0.",
+      "expected": [
+        "Merged states include both alternatives.",
+        "Do not conjoin incompatible exact states or establish x=0 universally."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-012",
+      "group": "core",
+      "title": "Higher-order effect substitution",
+      "milestone": "M2",
+      "spec_sections": [
+        "families",
+        "algebra"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "One traversal takes an IO callback; another takes an opaque callback.",
+      "action": "Infer their summaries.",
+      "expected": [
+        "Propagate actual IO in the first and an unknown effect component in the second.",
+        "Neither is silently pure or zero-cost."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-013",
+      "group": "core",
+      "title": "Outcome-conditioned callback demand",
+      "milestone": "M2",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Separate eager and missing-value-conditional error factory implementations.",
+      "action": "Infer multiplicity on success and failure.",
+      "expected": [
+        "Distinguish the actual paths and do not rewrite the eager implementation automatically."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-014",
+      "group": "core",
+      "title": "Capture, invocation, destruction phases",
+      "milestone": "M2",
+      "spec_sections": [
+        "families",
+        "pipeline"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Closures with allocating capture construction, allocating body, or effectful captured-value destruction.",
+      "action": "Analyze construction, invocation, and release separately.",
+      "expected": [
+        "Charge each event at its actual phase.",
+        "Unboxed or static dispatch does not grant no-allocation."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-015",
+      "group": "core",
+      "title": "Demand changes invalidate dependent facts",
+      "milestone": "M2",
+      "spec_sections": [
+        "algebra",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A controlled test transformation changes callback demand and captures.",
+      "action": "Reanalyze the changed plan.",
+      "expected": [
+        "Ownership, failure, effect, release, and cost facts dependent on the change are invalidated.",
+        "No stale profile success survives."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-016",
+      "group": "core",
+      "title": "Alias-sensitive resource effects",
+      "milestone": "M2",
+      "spec_sections": [
+        "model",
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two names alias one resource; two regions have a disjointness witness; two external handles have unknown overlap.",
+      "action": "Check interference.",
+      "expected": [
+        "Detect the known alias, use valid disjointness, and preserve possible external overlap."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-017",
+      "group": "core",
+      "title": "Unknown native calls fail closed",
+      "milestone": "M2",
+      "spec_sections": [
+        "families",
+        "profiles"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A closed-looking wrapper reaches an uncontracted native helper.",
+      "action": "Request NoHeapAllocation and NoBlocking.",
+      "expected": [
+        "Both relevant unknown components prevent favorable assurance.",
+        "The report identifies the native boundary."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-018",
+      "group": "core",
+      "title": "Unsafe resource across suspension or callback",
+      "milestone": "M2",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A non-suspension-safe guard crosses suspension, or an exclusive resource crosses an unknown callback.",
+      "action": "Check the requested lifetime discipline.",
+      "expected": [
+        "Reject or retain unresolved safety as appropriate; do not infer harmlessness from lexical scope alone."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-019",
+      "group": "core",
+      "title": "Hidden destructor blocking",
+      "milestone": "M2",
+      "spec_sections": [
+        "families",
+        "pipeline",
+        "profiles"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Explicit statements do not block, but scope exit can run a blocking destructor.",
+      "action": "Check the whole region.",
+      "expected": [
+        "NoBlocking does not establish.",
+        "The diagnostic follows the implicit destruction path."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-020",
+      "group": "core",
+      "title": "Conditional final-owner release",
+      "milestone": "M2",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A shared handle has effectful final-owner destruction and unknown final ownership.",
+      "action": "Analyze release.",
+      "expected": [
+        "Keep the last-owner condition and possible effects.",
+        "Do not treat all releases as cheap handle decrements."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-021",
+      "group": "core",
+      "title": "Conditional initialization and moves",
+      "milestone": "M2",
+      "spec_sections": [
+        "pipeline",
+        "algebra"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A value is initialized only on one path and moved on another.",
+      "action": "Build release events and cost/effect summaries.",
+      "expected": [
+        "No double release or duplicate accounting.",
+        "Possible cleanup on initialized owned paths is not omitted."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-022",
+      "group": "core",
+      "title": "No invented cleanup on abort",
+      "milestone": "M2",
+      "spec_sections": [
+        "families",
+        "profiles"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A supported abrupt termination path does not execute ordinary destruction.",
+      "action": "Analyze outcome-specific cleanup.",
+      "expected": [
+        "Do not claim cleanup occurred on that path.",
+        "State the corresponding environmental/outcome exclusions."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-023",
+      "group": "core",
+      "title": "Shared snapshot mutation cost",
+      "milestone": "M2",
+      "spec_sections": [
+        "families",
+        "profiles"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A logical snapshot may share backing and mutation can materialize a copy.",
+      "action": "Check mutation inside NoHeapAllocation.",
+      "expected": [
+        "Require evidence of allocation-free mutation or leave the profile unestablished.",
+        "Amortized credit is not an allocation exemption."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-024",
+      "group": "core",
+      "title": "Unique storage can still grow",
+      "milestone": "M2",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Unique backing has insufficient or unknown capacity, or a nested operation may allocate.",
+      "action": "Infer mutation cost.",
+      "expected": [
+        "Uniqueness alone does not establish no allocation."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-025",
+      "group": "core",
+      "title": "Snapshots and Pointers retain distinct semantics",
+      "milestone": "M2",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Fixtures exercise ordinary-value independence and explicit Pointer sharing.",
+      "action": "Analyze and execute existing semantic fixtures where available.",
+      "expected": [
+        "Contract representations preserve the actual distinction.",
+        "No silent cloning or sharing repair changes program meaning."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-026",
+      "group": "core",
+      "title": "Destruction has cost and failure summaries",
+      "milestone": "M2",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A nested final-owner destructor has supported nontrivial cost or failure behavior.",
+      "action": "Close region summaries.",
+      "expected": [
+        "Include release work and applicable failures.",
+        "Unknown recursive destruction cost remains unknown rather than zero."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-027",
+      "group": "core",
+      "title": "Positive discrete profiles",
+      "milestone": "M2",
+      "spec_sections": [
+        "profiles",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A closed modeled allocation-free/nonblocking fixture with explicit approved test-only assumptions if necessary.",
+      "action": "Enforce both early profiles.",
+      "expected": [
+        "Establish the supported guarantees with exact scope and trust set.",
+        "Do not silently approve production native implementations."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-028",
+      "group": "core",
+      "title": "Unresolved profile has failing exit",
+      "milestone": "M2",
+      "spec_sections": [
+        "profiles",
+        "interchange"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A required profile depends on unknown behavior.",
+      "action": "Use the public check interface.",
+      "expected": [
+        "Return failed enforcement and distinguish unresolved from contradicted.",
+        "Inspection may still succeed while displaying the unknown."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-029",
+      "group": "core",
+      "title": "Post-event detection is not prevention",
+      "milestone": "M2",
+      "spec_sections": [
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A detector notices an allocation or write after it has already occurred.",
+      "action": "Attach its evidence to a no-event claim.",
+      "expected": [
+        "Record detection or empirical violation, not proof that the event could not occur."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-030",
+      "group": "core",
+      "title": "Dominating but stale guard",
+      "milestone": "M2",
+      "spec_sections": [
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A valid precondition guard is followed by an invalidating transition before use.",
+      "action": "Compare stable and stale-check paths.",
+      "expected": [
+        "Only the stable/protected case establishes the use precondition.",
+        "Guard cost and failure remain modeled."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-031",
+      "group": "core",
+      "title": "Normal-only claim is not all-exit guarantee",
+      "milestone": "M2",
+      "spec_sections": [
+        "model",
+        "profiles"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Success is allocation-free but a failure path allocates or blocks.",
+      "action": "Compare success-only and full-outcome profiles.",
+      "expected": [
+        "Keep scope differences explicit; do not promote the success-only claim."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-032",
+      "group": "core",
+      "title": "Recursive inference terminates conservatively",
+      "milestone": "M2",
+      "spec_sections": [
+        "algebra"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A recursive quantitative summary exceeds the supported finite analysis.",
+      "action": "Run repeated analysis with the configured budget.",
+      "expected": [
+        "Terminate deterministically.",
+        "Report no finite bound established, not demonstrated unbounded execution."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-033",
+      "group": "core",
+      "title": "Checked errors do not imply impurity",
+      "milestone": "M2",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A modeled checked arithmetic operation returns an error value without external effects.",
+      "action": "Classify result, totality domain, and effects separately.",
+      "expected": [
+        "Do not mark it externally impure merely because it can return an error.",
+        "Preserve actual local numeric semantics."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-034",
+      "group": "core",
+      "title": "Partial IO before failure",
+      "milestone": "M4",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A write fixture emits a nonempty prefix then fails.",
+      "action": "Inject failure and inspect its summary.",
+      "expected": [
+        "Record partial external completion and actual failure channel.",
+        "Do not establish transactional output or automatic retry safety."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-035",
+      "group": "core",
+      "title": "Failure guarantees are footprint-specific",
+      "milestone": "M4",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "In-memory state is unchanged but an external resource has partial output.",
+      "action": "Check two different failure footprints.",
+      "expected": [
+        "Distinguish the guarantees by resource and observation boundary."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-036",
+      "group": "core",
+      "title": "Cleanup failure preserves actual runtime policy",
+      "milestone": "M4",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Cleanup fails while another failure is active.",
+      "action": "Compare the summary with existing behavior.",
+      "expected": [
+        "Report actual primary/secondary handling without inventing suppression or aggregation."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-037",
+      "group": "core",
+      "title": "Retry requires an actual protocol",
+      "milestone": "M4",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A hypothetical retry wrapper receives one safe failure-before-effect operation and one partially committing operation.",
+      "action": "Check required retry conditions.",
+      "expected": [
+        "Accept only the established applicable case.",
+        "An error result alone does not satisfy the requirement."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-038",
+      "group": "core",
+      "title": "Observer alias preserves stable facts",
+      "milestone": "M4",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "An observer receives a known read-only alias of an App handle.",
+      "action": "Analyze owner and observer behavior.",
+      "expected": [
+        "Retain justified identity/authority facts without discarding all protocol information.",
+        "Do not grant the observer transition authority."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-039",
+      "group": "core",
+      "title": "External completion remains possible",
+      "milestone": "M4",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "An App has one transition owner but its subprocess may finish independently.",
+      "action": "Analyze the next lifecycle operation.",
+      "expected": [
+        "Include environment transitions and required observation/synchronization.",
+        "Unique caller authority does not freeze Running."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-040",
+      "group": "core",
+      "title": "Protocol alternatives at branch join",
+      "milestone": "M4",
+      "spec_sections": [
+        "families",
+        "algebra"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Branches leave different possible lifecycle states.",
+      "action": "Check an operation accepting only one state.",
+      "expected": [
+        "Prove all possibilities, use a valid existing guard, or remain unresolved.",
+        "Do not invent one exact merged state."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-041",
+      "group": "core",
+      "title": "Contract and runtime protocol agree",
+      "milestone": "M4",
+      "spec_sections": [
+        "pipeline"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Existing lifecycle fixtures include repeated waits and invocation-specific continuations.",
+      "action": "Cross-test the contract transition view.",
+      "expected": [
+        "Preserve current invocation/claim semantics and detect drift."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-042",
+      "group": "core",
+      "title": "Started work has an owner",
+      "milestone": "M4",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Started activities are joined, transferred, or deliberately left with an existing supervisor.",
+      "action": "Check OwnedLifecycle.",
+      "expected": [
+        "Record the actual owner/transfer.",
+        "Do not add implicit paragraph-exit termination or promise eventual external completion."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-043",
+      "group": "core",
+      "title": "Derived assurance retains trust dependencies",
+      "milestone": "M4",
+      "spec_sections": [
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A statically derived composite uses an approved test native contract.",
+      "action": "Explain its assurance.",
+      "expected": [
+        "Report the derivation modulo its explicit assumptions.",
+        "Neither erase trust nor flatten every conclusion to a bare trusted label."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-044",
+      "group": "core",
+      "title": "Separate test suites do not prove integration",
+      "milestone": "M4",
+      "spec_sections": [
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A and B each have empirical unit tests but no valid composed derivation or integration witness.",
+      "action": "Request a stronger composition claim.",
+      "expected": [
+        "Do not combine labels or intersect witness IDs into a proof."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-045",
+      "group": "core",
+      "title": "Circular evidence is not a proof",
+      "milestone": "M4",
+      "spec_sections": [
+        "algebra",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Claim A cites B and B cites A without a supported induction/invariant rule.",
+      "action": "Validate the derivation graph.",
+      "expected": [
+        "Reject unsupported circular certification or leave it unresolved."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-046",
+      "group": "core",
+      "title": "Implementation change invalidates assurance",
+      "milestone": "M4",
+      "spec_sections": [
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A native body changes while its logical specification stays unchanged.",
+      "action": "Recheck with warm caches.",
+      "expected": [
+        "Invalidate stale implementation conformance and dependent effective assurance.",
+        "Retain a valid conditional caller theorem separately."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-047",
+      "group": "core",
+      "title": "Logical or target change invalidates dependencies",
+      "milestone": "M4",
+      "spec_sections": [
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A contract, target feature, or relevant panic configuration changes.",
+      "action": "Recheck cached derivations.",
+      "expected": [
+        "Invalidate affected logical/target-specific results and match cold analysis."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-048",
+      "group": "core",
+      "title": "Instantiation checks certificate premises",
+      "milestone": "M5",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "An existing symbolic certificate is reused with changed target substitutions or assumptions.",
+      "action": "Validate applicability.",
+      "expected": [
+        "Recheck all applicable premises; do not reuse a cached success bit blindly."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-049",
+      "group": "core",
+      "title": "Migrate old incomplete records conservatively",
+      "milestone": "M4",
+      "spec_sections": [
+        "migration"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A prior record lacks rule, target, environment, or conformance dependencies.",
+      "action": "Load/migrate it.",
+      "expected": [
+        "Reconstruct and revalidate where supported, otherwise invalidate/recompute or report unknown.",
+        "Do not fabricate missing proof inputs."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-050",
+      "group": "core",
+      "title": "Positive modular adjective certificate",
+      "milestone": "M5",
+      "spec_sections": [
+        "families",
+        "frame"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A supported adjective wraps a symbolic action and constructs exact roles under declared requirements.",
+      "action": "Verify at definition time.",
+      "expected": [
+        "Establish a nontrivial conditional certificate without inspecting a concrete target body."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-051",
+      "group": "core",
+      "title": "Definition-time adjective violation",
+      "milestone": "M5",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A wrapper body violates its advertised effects, demand, or frame contract.",
+      "action": "Verify the definition.",
+      "expected": [
+        "Do not certify; attribute the obligation to the wrapper implementation."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-052",
+      "group": "core",
+      "title": "Incompatible concrete adjective target",
+      "milestone": "M5",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A certified adjective is applied to a target failing a callback or role requirement.",
+      "action": "Check instantiation.",
+      "expected": [
+        "Reject or leave the missing obligation unresolved; certificate reuse cannot bypass it."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-053",
+      "group": "core",
+      "title": "Lowering adds hidden behavior",
+      "milestone": "M5",
+      "spec_sections": [
+        "families",
+        "pipeline"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Target representation introduces captures or drops beyond the symbolic assumptions.",
+      "action": "Check the target-closed instance.",
+      "expected": [
+        "Fail or leave the final guarantee unresolved; the symbolic certificate does not hide the effect."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-054",
+      "group": "core",
+      "title": "Unsupported reflection remains instantiation-only",
+      "milestone": "M5",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A wrapper inspects target internals beyond the supported symbolic fragment.",
+      "action": "Verify and instantiate it.",
+      "expected": [
+        "Report instantiation_only, perform supported concrete checks, and do not publish a universal certificate."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-055",
+      "group": "core",
+      "title": "Cumulative versus peak live accounting",
+      "milestone": "M6",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "One hundred sequential iterations each allocate and release an 8-unit temporary, with no other live changes.",
+      "action": "Compute supported resource summaries.",
+      "expected": [
+        "Report 800 cumulative allocated units and 8 peak additional live units in that model.",
+        "Do not equate these with resident memory."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-056",
+      "group": "core",
+      "title": "Retained results change peak behavior",
+      "milestone": "M6",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "The preceding traversal retains each temporary instead of releasing it.",
+      "action": "Recompute live/retained summaries.",
+      "expected": [
+        "Retained/peak use grows; do not reuse the constant-peak summary."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-057",
+      "group": "core",
+      "title": "Callback costs depend on evolving state",
+      "milestone": "M6",
+      "spec_sections": [
+        "families",
+        "algebra"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A traversal callback has symbolic cost and changes later input size/state.",
+      "action": "Instantiate its cost summary.",
+      "expected": [
+        "Use supported size relations and callback costs, or report unknown.",
+        "Do not assume zero callback cost or fixed initial size."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-058",
+      "group": "core",
+      "title": "Pointer copy includes metadata",
+      "milestone": "M6",
+      "spec_sections": [
+        "pipeline",
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "The actual local Pointer copy retains a handle and may copy signature metadata.",
+      "action": "Inspect all actual work.",
+      "expected": [
+        "Include metadata copying if present; do not infer constant total cost from handle retention alone."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-059",
+      "group": "core",
+      "title": "Cycle prevention differs from borrow checking",
+      "milestone": "M6",
+      "spec_sections": [
+        "pipeline",
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Separate fixtures trigger a borrow conflict and attempt an ownership cycle.",
+      "action": "Run actual local checks and classify outcomes.",
+      "expected": [
+        "Keep the mechanisms and failed-write timing distinct.",
+        "Borrow flags are not credited as ownership-cycle detection."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "BASE-060",
+      "group": "core",
+      "title": "Pilot closure and public reporting",
+      "milestone": "M6",
+      "spec_sections": [
+        "pipeline",
+        "interchange",
+        "testing"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "All seven real pilot areas and explicit/implicit native helpers are mapped locally.",
+      "action": "Run inspection/check/explain and applicable regression tests.",
+      "expected": [
+        "Report actual behavior, native-boundary status, profile scope, and real commands/results.",
+        "Unknown native properties remain explicit; do not force an all-green pilot."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-001",
+      "group": "lexical",
+      "title": "Disjoint typed meanings select uniquely",
+      "milestone": "M3",
+      "spec_sections": [
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two meanings spelled Light apply to disjoint Theme and Client target domains.",
+      "action": "Run the versioned reference selector on each typed target.",
+      "expected": [
+        "Select the uniquely applicable canonical meaning; contracts do not collide by spelling."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-002",
+      "group": "lexical",
+      "title": "Overlapping meanings are ambiguous",
+      "milestone": "M3",
+      "spec_sections": [
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two distinct meanings apply to the same target under a policy with no tie-breaker.",
+      "action": "Resolve.",
+      "expected": [
+        "Report ambiguity with both applicability domains; import order does not decide."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-003",
+      "group": "lexical",
+      "title": "Generic and specialized domains can overlap",
+      "milestone": "M3",
+      "spec_sections": [
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A generic and a specialized meaning both apply; the new reference policy has no specificity rule.",
+      "action": "Resolve.",
+      "expected": [
+        "Report ambiguity rather than silently prefer the specialized candidate.",
+        "An existing explicit Track A rule is recorded separately if it applies."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-004",
+      "group": "lexical",
+      "title": "Unknown applicability cannot be discarded",
+      "milestone": "M3",
+      "spec_sections": [
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "One meaning is applicable and another could apply but is undetermined.",
+      "action": "Resolve.",
+      "expected": [
+        "Selection remains unresolved; unknown is not inapplicable."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-005",
+      "group": "lexical",
+      "title": "Alias candidates retain canonical identity",
+      "milestone": "M1",
+      "spec_sections": [
+        "binding",
+        "model"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two visible aliases denote exactly one MeaningKey.",
+      "action": "Enumerate candidates.",
+      "expected": [
+        "Do not report duplicate-meaning ambiguity solely due to aliases.",
+        "Keep both lexical origins."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-006",
+      "group": "lexical",
+      "title": "A profile cannot choose meaning",
+      "milestone": "M3",
+      "spec_sections": [
+        "binding",
+        "profiles"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two meanings differ in blocking effects, or a selected meaning fails NoBlocking.",
+      "action": "Resolve with and without the requested profile.",
+      "expected": [
+        "Binding is unchanged by the profile.",
+        "No fallback or best-effect selection occurs."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-007",
+      "group": "lexical",
+      "title": "Definition-site helper hygiene",
+      "milestone": "M1",
+      "spec_sections": [
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "An imported adjective refers to its own helper; the caller imports a same-spelled helper.",
+      "action": "Resolve the expanded body.",
+      "expected": [
+        "Preserve definition-site binding and record caller attachment separately."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-008",
+      "group": "lexical",
+      "title": "Same noun type does not identify same component",
+      "milestone": "M1",
+      "spec_sections": [
+        "binding",
+        "model"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "An App has primary and secondary Theme roles.",
+      "action": "Bind a modifier to an explicit role and test an under-specified attachment.",
+      "expected": [
+        "The explicit role targets the correct instance.",
+        "A missing unique attachment is not guessed from nearest spelling."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-009",
+      "group": "lexical",
+      "title": "Target projection participates in identity",
+      "milestone": "M1",
+      "spec_sections": [
+        "model",
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "The same modifier is applied to two nested canonical role paths.",
+      "action": "Inspect instances and summaries.",
+      "expected": [
+        "Keep target paths/instances distinct while allowing valid parameterized summary reuse."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-010",
+      "group": "lexical",
+      "title": "Occurrence identity preserves execution",
+      "milestone": "M3",
+      "spec_sections": [
+        "frame",
+        "model"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two occurrences of one constructive adjective each create a resource.",
+      "action": "Elaborate and count modeled construction events.",
+      "expected": [
+        "Keep both occurrences; shared MeaningKey does not deduplicate execution."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-011",
+      "group": "lexical",
+      "title": "Exclusive facet conflict on one target",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two distinct simultaneous values select one exclusive facet on one exact target and scope.",
+      "action": "Close the configuration.",
+      "expected": [
+        "Report contradiction early with both origins and same-target evidence."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-012",
+      "group": "lexical",
+      "title": "Different components permit different selections",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two proven-distinct storage roles select different exclusive-facet values.",
+      "action": "Check consistency.",
+      "expected": [
+        "No false global conflict; each target has its own facet instance."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-013",
+      "group": "lexical",
+      "title": "Facet aliasing uncertainty is not independence",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets",
+        "model"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two facet contributions govern resources that might alias.",
+      "action": "Check a constraint requiring identity or disjointness.",
+      "expected": [
+        "Keep the identity/interference obligation unresolved rather than invent exact conflict or disjointness."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-014",
+      "group": "lexical",
+      "title": "Lifecycle scope distinguishes retention meanings",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets",
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A component requests recoverability during a session and removal at normal session exit.",
+      "action": "Apply declared boundary-specific schemas.",
+      "expected": [
+        "Do not infer contradiction from the words Ephemeral and Durable.",
+        "Compare actual target/facet/scope predicates."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-015",
+      "group": "lexical",
+      "title": "Requested property is not a guarantee",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A request names a desired behavior without a supporting implementation witness.",
+      "action": "Check the resulting obligation.",
+      "expected": [
+        "Keep request and guarantee separate; requested behavior is not automatically established."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-016",
+      "group": "lexical",
+      "title": "Configuration is not behavioral evidence",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets",
+        "frame"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A provider or Durable-like selection exists, but implementation conformance is unknown.",
+      "action": "Inspect claims.",
+      "expected": [
+        "Establish only the supported selection fact; behavioral assurance remains conditional/unresolved."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-017",
+      "group": "lexical",
+      "title": "Exactly-one requirement closes at the correct boundary",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "An exactly-one facet is initially unset while a component is open.",
+      "action": "Inspect before and after closure.",
+      "expected": [
+        "Allow incomplete intermediate construction.",
+        "At closure report the missing value; do not insert a silent default."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-018",
+      "group": "lexical",
+      "title": "Set-valued constraints retain origins",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two pure declarations contribute the same member to a set-valued facet.",
+      "action": "Normalize logical constraints.",
+      "expected": [
+        "A duplicate logical member may unify; all origins remain available.",
+        "Do not infer permission to eliminate expression evaluation."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-019",
+      "group": "lexical",
+      "title": "Ordered explicit replacement is not a conflict",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets",
+        "frame"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A declared extension point authorizes replacing a default configuration.",
+      "action": "Apply the actual ordered replacement.",
+      "expected": [
+        "Distinguish old and new stages; do not treat historical selections as simultaneous final conflicts.",
+        "Retain ownership/release and assurance consequences."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-020",
+      "group": "lexical",
+      "title": "No implicit last-word-wins behavior",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two incompatible selections have no replacement rule.",
+      "action": "Reverse their source order and check both.",
+      "expected": [
+        "Neither silently wins; report conflict according to the same declared policy."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-021",
+      "group": "lexical",
+      "title": "Cross-facet behavioral incompatibility",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets",
+        "profiles"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Facet selections are consistent, but selected implementation performs external IO under NoExternalIO.",
+      "action": "Run early and full checks.",
+      "expected": [
+        "Early consistency can pass while behavioral assurance fails or remains unresolved."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-022",
+      "group": "lexical",
+      "title": "Cross-facet implication and cycle termination",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets",
+        "algebra"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Finite rules contain a supported requirement chain and a cycle that adds no new facts.",
+      "action": "Run the constraint worklist.",
+      "expected": [
+        "Reach a deterministic fixed point.",
+        "Do not invent a satisfying provider or assume unsupported negation from absence."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-023",
+      "group": "lexical",
+      "title": "Unsupported cross-facet search remains unresolved",
+      "milestone": "M3",
+      "spec_sections": [
+        "facets"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A constraint requires unsupported global disjunctive search or arbitrary predicate execution.",
+      "action": "Check it.",
+      "expected": [
+        "Produce a residual obligation; no hidden solver-backed reconfiguration is claimed."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-024",
+      "group": "lexical",
+      "title": "Preserve unrelated exact-path structure",
+      "milestone": "M3",
+      "spec_sections": [
+        "frame"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A Theme modifier changes only an established palette path and advertises a matching frame.",
+      "action": "Check its typed body.",
+      "expected": [
+        "Establish supported preservation of disjoint unrelated structure."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-025",
+      "group": "lexical",
+      "title": "Unexpected unrelated write violates frame",
+      "milestone": "M3",
+      "spec_sections": [
+        "frame"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "The same modifier writes another component outside its declared change footprint.",
+      "action": "Check its body.",
+      "expected": [
+        "Contradict the frame claim with the write and target origin."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-026",
+      "group": "lexical",
+      "title": "Parent replacement affects descendants",
+      "milestone": "M3",
+      "spec_sections": [
+        "frame"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A modifier replaces a parent node but claims an old descendant is preserved.",
+      "action": "Analyze path ancestry.",
+      "expected": [
+        "Do not infer descendant preservation merely because no direct leaf write occurred."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-027",
+      "group": "lexical",
+      "title": "Unknown or aliasing writes block frame proof",
+      "milestone": "M3",
+      "spec_sections": [
+        "frame",
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A modifier uses an unknown native write or a may-alias path.",
+      "action": "Check preservation.",
+      "expected": [
+        "Leave the affected frame obligation unresolved unless a valid footprint/disjointness witness exists."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-028",
+      "group": "lexical",
+      "title": "Facet independence does not imply commutation",
+      "milestone": "M5",
+      "spec_sections": [
+        "frame",
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Two different-facet constructors or wrappers have order-sensitive effects.",
+      "action": "Inspect both application orders.",
+      "expected": [
+        "Preserve explicit order; do not sort or treat the applications as a set."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-029",
+      "group": "lexical",
+      "title": "Established special composition law is scoped",
+      "milestone": "M5",
+      "spec_sections": [
+        "frame"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A supported fixture establishes commutation or idempotence under explicit assumptions.",
+      "action": "Use the law inside and outside its scope.",
+      "expected": [
+        "Permit only the established case; do not generalize to other meanings or arbitrary repetition."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-030",
+      "group": "lexical",
+      "title": "Provider interface success and failure",
+      "milestone": "M3",
+      "spec_sections": [
+        "frame"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "One configured provider satisfies a role; another shares operation names but lacks a required failure/protocol guarantee.",
+      "action": "Check substitution.",
+      "expected": [
+        "Accept the supported conformance case under its evidence and reject/unresolve the second.",
+        "Names alone do not establish substitutability."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-031",
+      "group": "lexical",
+      "title": "Provider change invalidates dependent assurance",
+      "milestone": "M4",
+      "spec_sections": [
+        "frame",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A Backend provider changes while the role name remains the same.",
+      "action": "Recheck cached evidence and costs.",
+      "expected": [
+        "Invalidate affected conformance, effects, resources, cleanup, and downstream requirements.",
+        "Retain unrelated claims only where their dependencies/frame permit."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-032",
+      "group": "lexical",
+      "title": "Composite convenience preserves genuine equivalence",
+      "milestone": "M5",
+      "spec_sections": [
+        "frame",
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A named convenience expands to a typed plan equivalent to an explicitly factored form.",
+      "action": "Compare elaborated order, occurrences, and obligations.",
+      "expected": [
+        "Reuse valid semantics/assurance where equivalence is established, with both provenance chains.",
+        "Do not infer equivalence from facet labels alone."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-033",
+      "group": "lexical",
+      "title": "Multiword entry can denote one meaning",
+      "milestone": "M3",
+      "spec_sections": [
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "An explicit typed lexical entry denotes a coherent domain idiom.",
+      "action": "Bind it under supported existing or fixture rules.",
+      "expected": [
+        "Treat it as one meaning without forcing token-by-token decomposition or proper-noun status."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-034",
+      "group": "lexical",
+      "title": "Multiword versus compositional phrase ambiguity",
+      "milestone": "M3",
+      "spec_sections": [
+        "binding",
+        "migration"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A phrase can denote a lexical entry or a compositional structure under a new policy with no precedence rule.",
+      "action": "Resolve the fixture.",
+      "expected": [
+        "Report ambiguity rather than silently enable longest-match recognition.",
+        "Track A retains existing documented grammar behavior."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-035",
+      "group": "lexical",
+      "title": "New overlapping import invalidates binding",
+      "milestone": "M4",
+      "spec_sections": [
+        "binding",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A cached unique selection receives a newly visible overlapping candidate.",
+      "action": "Compare warm and cold resolution.",
+      "expected": [
+        "Revalidate; ambiguity is detected and old assurance is not attached to a stale choice."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-036",
+      "group": "lexical",
+      "title": "Candidate changes and negative dependencies",
+      "milestone": "M4",
+      "spec_sections": [
+        "binding",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A candidate is removed or its applicability changes; also test adding a previously absent matching name.",
+      "action": "Recheck cached binding.",
+      "expected": [
+        "Dependency tracking notices relevant candidate-set/absence changes, not just selected-body changes."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-037",
+      "group": "lexical",
+      "title": "Phrase, role, or policy change invalidates binding",
+      "milestone": "M4",
+      "spec_sections": [
+        "binding",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "The target role/type, phrase recognition, or resolution-policy version changes.",
+      "action": "Recompute binding and assurance.",
+      "expected": [
+        "Invalidate relevant binding results; reuse downstream summaries only after justified rebinding."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-038",
+      "group": "lexical",
+      "title": "No spelling-based prohibition or guarantee",
+      "milestone": "M3",
+      "spec_sections": [
+        "binding"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Equivalent test meanings use short, compound, aliased, and multiword names.",
+      "action": "Check them.",
+      "expected": [
+        "No compound-word ban or automatic decomposition is applied.",
+        "Spelling does not create orthogonality or stronger assurance."
+      ],
+      "test_layer": "typed_plan",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-039",
+      "group": "lexical",
+      "title": "Diagnostics expose exact target and candidates",
+      "milestone": "M6",
+      "spec_sections": [
+        "interchange"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A binding ambiguity, exclusive-facet conflict, and wrapper frame violation are available.",
+      "action": "Use explain and report outputs.",
+      "expected": [
+        "Show selected/competing meanings, actual role targets, requirements, and origins.",
+        "Do not invent unsupported qualification syntax or blame the caller automatically."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "LEX-040",
+      "group": "lexical",
+      "title": "Track A compatibility and Track B gating",
+      "milestone": "M6",
+      "spec_sections": [
+        "authority",
+        "migration",
+        "roadmap"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Existing source is compiled before integration; a typed new-selector policy is also available.",
+      "action": "Run baseline mode and explicitly selected experimental integration if any.",
+      "expected": [
+        "Default source semantics remain unchanged.",
+        "Reports identify the policy; no contracts command silently switches it.",
+        "Source-facing changes have separate grammar/regression activation gates."
+      ],
+      "test_layer": "integration",
+      "resolution_scope": "typed_fixture_or_existing_mode",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-001",
+      "group": "falsification",
+      "title": "Inject allocation into a claimed clean body",
+      "milestone": "M2",
+      "spec_sections": [
+        "families",
+        "profiles"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A positive no-allocation fixture is changed to include a modeled allocation.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "The profile no longer establishes; the added event is in the explanation."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-002",
+      "group": "falsification",
+      "title": "Mutate before advertised unchanged failure",
+      "milestone": "M4",
+      "spec_sections": [
+        "families"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A failure-preserving operation gains a mutation to the protected footprint before failure.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "The outcome-specific frame/failure guarantee is rejected or refuted by the supported analysis."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-003",
+      "group": "falsification",
+      "title": "Smuggle IO through destructor",
+      "milestone": "M2",
+      "spec_sections": [
+        "families",
+        "pipeline"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A clean scope acquires a destructor performing modeled IO.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "The closed-region no-IO guarantee cannot survive; body-only evidence is not promoted."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-004",
+      "group": "falsification",
+      "title": "Remove native approval witness",
+      "milestone": "M4",
+      "spec_sections": [
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A previously approved native assumption loses its required valid witness.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "Dependent effective assurance becomes unresolved under the same policy."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-005",
+      "group": "falsification",
+      "title": "Corrupt cache fingerprints",
+      "milestone": "M4",
+      "spec_sections": [
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "An implementation, target, schema, or binding cache entry has a mismatched fingerprint.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "Reject stale material and recompute or report unresolved; never retain stale success."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-006",
+      "group": "falsification",
+      "title": "Misspell or omit favorable metadata",
+      "milestone": "M1",
+      "spec_sections": [
+        "interchange",
+        "model"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A favorable property field is misspelled, or omitted from a manifest.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "Reject the misspelling; normalize omission to unknown; neither grants the property."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-007",
+      "group": "falsification",
+      "title": "Publish a false frame contribution",
+      "milestone": "M3",
+      "spec_sections": [
+        "frame",
+        "facets"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "Facet metadata claims a narrow change, but the modeled transformation writes another role.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "Analyze actual body/footprint and expose the disagreement instead of trusting the label."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-008",
+      "group": "falsification",
+      "title": "Hide an overlapping candidate from a warm cache",
+      "milestone": "M4",
+      "spec_sections": [
+        "binding",
+        "evidence"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A new applicable lexical entry is introduced after a cache is populated.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "Warm and cold runs agree on ambiguity or the documented new binding; selected-only caching fails the test."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-009",
+      "group": "falsification",
+      "title": "Deduplicate constructive applications",
+      "milestone": "M5",
+      "spec_sections": [
+        "frame",
+        "model"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A test-only faulty pass collapses two occurrences of one resource-creating modifier.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "Occurrence/construction regression test detects changed semantics; matching MeaningKeys cannot justify it."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    },
+    {
+      "id": "FALS-010",
+      "group": "falsification",
+      "title": "Fabricate executed verification status",
+      "milestone": "M6",
+      "spec_sections": [
+        "testing",
+        "interchange"
+      ],
+      "prerequisites": [
+        "The relevant milestone implementation and a suitable local test harness."
+      ],
+      "setup": "A test report attempts to label a tool/check executed without an execution record.",
+      "action": "Apply the deliberate fault and exercise the checking/reporting boundary.",
+      "expected": [
+        "Validation/reporting rejects or exposes the inconsistency.",
+        "Package integrity checks are not reported as compiler tests or proofs."
+      ],
+      "test_layer": "fault_injection",
+      "resolution_scope": "either",
+      "required": true,
+      "implementation_status": "not_implemented"
+    }
+  ]
+}

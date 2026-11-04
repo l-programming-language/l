@@ -1,0 +1,237 @@
+{
+  "$defs": {
+    "CheckRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "footprint": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FailureFootprint"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "profile": {
+          "$ref": "#/$defs/Profile"
+        },
+        "scope": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "scope",
+        "profile"
+      ],
+      "type": "object"
+    },
+    "CheckRequests": {
+      "additionalProperties": false,
+      "properties": {
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/CheckRequest"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "kind": {
+          "const": "contract_check_requests"
+        },
+        "producer": {
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.1"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "kind",
+        "producer",
+        "version",
+        "checks"
+      ],
+      "type": "object"
+    },
+    "FailureFootprint": {
+      "additionalProperties": false,
+      "properties": {
+        "locations": {
+          "items": {
+            "$ref": "#/$defs/FailureLocation"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "observation": {
+          "type": "string"
+        },
+        "outcomes": {
+          "items": {
+            "enum": [
+              "normal",
+              "returned_failure",
+              "guard_rejected",
+              "panic",
+              "abort",
+              "cancelled",
+              "process_failure"
+            ],
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "locations",
+        "observation",
+        "outcomes"
+      ],
+      "type": "object"
+    },
+    "FailureLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "resource": {
+          "$ref": "#/$defs/ResourceRef"
+        }
+      },
+      "required": [
+        "resource"
+      ],
+      "type": "object"
+    },
+    "Profile": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "outcomes": {
+          "items": {
+            "enum": [
+              "normal",
+              "returned_failure",
+              "guard_rejected",
+              "panic",
+              "abort",
+              "cancelled",
+              "process_failure"
+            ],
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "scope": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetRef"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "scope",
+        "target"
+      ],
+      "type": "object"
+    },
+    "ResourceRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "TargetRef": {
+      "additionalProperties": false,
+      "properties": {
+        "generation": {
+          "type": "string"
+        },
+        "nominal": {
+          "type": "string"
+        },
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "",
+            "elaboration",
+            "construction",
+            "invocation",
+            "destruction",
+            "cleanup"
+          ],
+          "type": "string"
+        },
+        "root": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "root"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "l-contracts/1.1/contract_check_requests",
+  "$ref": "#/$defs/CheckRequests",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

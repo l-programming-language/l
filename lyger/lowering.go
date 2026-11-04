@@ -150,7 +150,14 @@ func (c *Compilation) instantiateStaticCall(rec *record, args []DefinitionArgume
 
 // Named and positional calls share selected definitions, cycle detection and
 // source expansion. Only the binding of caller operands differs.
-func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgument, named map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool) (DefinitionInstance, error) {
+func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgument, named map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool) (result DefinitionInstance, resultErr error) {
+	if c.contractRecorder != nil {
+		defer func() {
+			if resultErr == nil {
+				c.contractRecorder.recordLowering(rec, result, named)
+			}
+		}()
+	}
 	rec, err := canonicalRecord(rec, c.Semantics.Aliases)
 	if err != nil {
 		return DefinitionInstance{}, err

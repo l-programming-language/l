@@ -4,7 +4,7 @@ Releases are published manually from main after native validation, installer che
 
 ## Download L
 
-Check [GitHub Releases](https://github.com/l-programming-language/l/releases) for published versions. Follow [installation](../cli/installation.md) for the terminal installer or the source-build fallback; the v0.0.1 download commands work after that release is published.
+[L v0.0.1](https://github.com/l-programming-language/l/releases/tag/v0.0.1) is available for Apple Silicon macOS and Linux. Follow [Install L](../cli/installation.md) to get started, or browse [GitHub Releases](https://github.com/l-programming-language/l/releases) for other published versions.
 
 ## Versioning and compatibility
 

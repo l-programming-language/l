@@ -10,6 +10,7 @@ import (
 
 // Compilation organizes the pre-assembled structure of an L program as it is recursively pre-processed
 type Compilation struct {
+	contractRecorder      *contractRecorder
 	definitionTemporaries []int
 	definitionReserved    map[string]bool
 	definitionStatements  int
@@ -136,6 +137,9 @@ func (c *Compilation) scan() {
 			return
 		}
 		c.Statements = append(c.Statements, lStmt)
+		if c.contractRecorder != nil {
+			c.contractRecorder.captureStatement(lStmt)
+		}
 	}
 }
 

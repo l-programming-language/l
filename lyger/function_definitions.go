@@ -105,7 +105,12 @@ func (c *Compilation) functionReferenceArgument(object *objectGram, active, dyna
 	return argument, true, nil
 }
 
-func (c *Compilation) functionDefinition(function *sourceFunction, active, dynamic map[*record]bool) (DefinitionInstance, error) {
+func (c *Compilation) functionDefinition(function *sourceFunction, active, dynamic map[*record]bool) (result DefinitionInstance, resultErr error) {
+	defer func() {
+		if resultErr == nil && c.contractRecorder != nil {
+			c.contractRecorder.recordLowering(function.Record, result, nil)
+		}
+	}()
 	defer c.definitionScope()()
 	active[function.Record] = true
 	defer delete(active, function.Record)
