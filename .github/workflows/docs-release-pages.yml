@@ -203,7 +203,7 @@ jobs:
           node scripts/release.mjs verify-promotion --manifest "$RUNNER_TEMP/published/promotion.json" --dist "$RUNNER_TEMP/site" --archive "$RUNNER_TEMP/published/site.tar.gz" --native "$RUNNER_TEMP/published/native-release.json"
           node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
           node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/published/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --root ..
-      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
         with:
           path: ${{ runner.temp }}/site
       - name: Deploy verified Pages artifact

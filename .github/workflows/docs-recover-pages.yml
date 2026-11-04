@@ -70,7 +70,7 @@ jobs:
           node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
           node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --expected-current "$EXPECTED_CURRENT" --root .. --output "$RUNNER_TEMP/promotion-plan.json"
           node -e 'const fs=require("node:fs"); const {action}=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/promotion-plan.json")); if (!["deploy","verify"].includes(action)) throw new Error("Invalid promotion action"); fs.appendFileSync(process.env.GITHUB_OUTPUT, "action="+action+"\n")'
-      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
         if: steps.plan.outputs.action == 'deploy'
         with:
           path: ${{ runner.temp }}/site
