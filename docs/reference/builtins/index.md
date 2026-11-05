@@ -12,8 +12,8 @@ Builtins are available from the selected complete distribution without an explic
 | Function | Function, Functions, Functional, Functioning | Compose FW with typed native signature/body inputs |
 | Function.Invoke | Invoke, Invokes, Invoked, Invoking, Invoker | Bind a selected callable and ordered argument references through KY |
 | Function.Return | Return, Returns, Returned, Returning, Returner | Native-backed return statement inside the supplied Function composition |
-| Delegate | Delegate, Delegates, Delegated, Delegating, Delegator | Compose a call to a selected target through KY |
-| Retain | Retain, Retains, Retained, Retaining, Retainer | Retain a selected shared handle |
+| Delegate | Delegate, Delegates, Delegated, Delegating, Delegator | Invoke the selected native target through KY |
+| Retain | Retain, Retains, Retained, Retaining, Retainer | Borrow an Arc and return another handle to the same allocation |
 | Objective | Objective | Wrap a Function's source grouping |
 | Main | Main | Describe the canonical bounded Service/Object/Function entry structure |
 | Basic | Basic | Compose an App with a Main Service using a Process |

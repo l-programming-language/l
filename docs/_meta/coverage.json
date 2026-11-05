@@ -1,6 +1,6 @@
 {
   "inputs": {
-    "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
+    "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
     "cmd/l/command.go": "fc6e07ba875c7c41e62aec111a2efe12220c5aa19199c061ed3352513d551761",
@@ -338,7 +338,7 @@
     "logiceme/testdata/lucid/schedule-composed.rs.txt": "42dc9d2427c3cfbc172b320e1c49b1b33e40f98f7d1e22c282a3e965c2d7b4c2"
   },
   "grammarRules": 99,
-  "grammarCases": 306,
+  "grammarCases": 307,
   "vocabularyEntries": 72,
   "valueNames": [
     "Thing",
@@ -1234,7 +1234,7 @@
       "name": "object.callable",
       "doc": "docs/_generated/grammar.md#grammar-object",
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "sequence": "ID | PHRASE.SIGNATURE",
+      "sequence": "ID | PHRASE",
       "classification": 1,
       "evidenceSet": 0,
       "note": 29
@@ -4756,6 +4756,16 @@
       "note": 112
     },
     {
+      "id": "grammar:phrase.signature:inputs_only",
+      "name": "phrase.signature.inputs_only",
+      "doc": "docs/_generated/grammar.md#grammar-phrase-signature",
+      "semanticDoc": "docs/reference/builtins/definitions.md#process",
+      "sequence": "NOUN.FUNCTIONAL.INFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [SUBJECT.SIGNATURE]",
+      "classification": 1,
+      "evidenceSet": 0,
+      "note": 113
+    },
+    {
       "id": "grammar:phrase.signature:outputs",
       "name": "phrase.signature.outputs",
       "doc": "docs/_generated/grammar.md#grammar-phrase-signature",
@@ -4782,7 +4792,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 4,
       "evidenceSet": 0,
-      "note": 113
+      "note": 114
     },
     {
       "id": "grammar:phrase.results",
@@ -4791,7 +4801,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 4,
       "evidenceSet": 0,
-      "note": 114
+      "note": 115
     },
     {
       "id": "vocabulary:nouns.it",
@@ -4800,7 +4810,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#pronouns",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 115
+      "note": 116
     },
     {
       "id": "vocabulary:nouns.that",
@@ -4809,7 +4819,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#pronouns",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 115
+      "note": 116
     },
     {
       "id": "vocabulary:nouns.this",
@@ -4818,7 +4828,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#pronouns",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 115
+      "note": 116
     },
     {
       "id": "vocabulary:nouns.input",
@@ -4827,7 +4837,7 @@
       "semanticDoc": "docs/reference/builtins/index.md#runtime-members",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 116
+      "note": 117
     },
     {
       "id": "vocabulary:nouns.output",
@@ -4836,7 +4846,7 @@
       "semanticDoc": "docs/spec/execution.md#output-and-error",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 117
+      "note": 118
     },
     {
       "id": "vocabulary:nouns.error",
@@ -4845,7 +4855,7 @@
       "semanticDoc": "docs/spec/execution.md#output-and-error",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 117
+      "note": 118
     },
     {
       "id": "vocabulary:nouns.list",
@@ -4863,7 +4873,7 @@
       "semanticDoc": "docs/spec/collections-and-categories.md#dictionaries",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 118
+      "note": 119
     },
     {
       "id": "vocabulary:nouns.null",
@@ -4881,7 +4891,7 @@
       "semanticDoc": "docs/spec/values.md#thing",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 119
+      "note": 120
     },
     {
       "id": "vocabulary:nouns.text",
@@ -4890,7 +4900,7 @@
       "semanticDoc": "docs/spec/values.md#text",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 120
+      "note": 121
     },
     {
       "id": "vocabulary:nouns.number",
@@ -4899,7 +4909,7 @@
       "semanticDoc": "docs/spec/values.md#number",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 121
+      "note": 122
     },
     {
       "id": "vocabulary:nouns.byte",
@@ -4908,7 +4918,7 @@
       "semanticDoc": "docs/spec/values.md#byte-and-bytes",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 122
+      "note": 123
     },
     {
       "id": "vocabulary:nouns.truth",
@@ -4917,7 +4927,7 @@
       "semanticDoc": "docs/spec/values.md#truth",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 123
+      "note": 124
     },
     {
       "id": "vocabulary:nouns.pointer",
@@ -4926,7 +4936,7 @@
       "semanticDoc": "docs/spec/values.md#pointer",
       "classification": 6,
       "evidenceSet": 1,
-      "note": 124
+      "note": 125
     },
     {
       "id": "vocabulary:nouns.op",
@@ -4935,7 +4945,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 118
+      "note": 119
     },
     {
       "id": "vocabulary:nouns.prop",
@@ -4944,7 +4954,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 118
+      "note": 119
     },
     {
       "id": "vocabulary:nouns.func",
@@ -4953,7 +4963,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 125
+      "note": 126
     },
     {
       "id": "vocabulary:nouns.definition",
@@ -4962,7 +4972,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 118
+      "note": 119
     },
     {
       "id": "vocabulary:nouns.attribute",
@@ -4971,7 +4981,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 118
+      "note": 119
     },
     {
       "id": "vocabulary:nouns.object",
@@ -4980,7 +4990,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 118
+      "note": 119
     },
     {
       "id": "vocabulary:nouns.class",
@@ -4989,7 +4999,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 118
+      "note": 119
     },
     {
       "id": "vocabulary:nouns.service",
@@ -4998,7 +5008,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#services",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 118
+      "note": 119
     },
     {
       "id": "vocabulary:nouns.app",
@@ -5007,7 +5017,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#apps",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 118
+      "note": 119
     },
     {
       "id": "vocabulary:verbs.passive",
@@ -5016,7 +5026,7 @@
       "semanticDoc": "docs/spec/control-flow.md#assignment",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 126
+      "note": 127
     },
     {
       "id": "vocabulary:verbs.associative",
@@ -5025,7 +5035,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 127
+      "note": 128
     },
     {
       "id": "vocabulary:verbs.declarative",
@@ -5034,7 +5044,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 128
+      "note": 129
     },
     {
       "id": "vocabulary:verbs.definitive",
@@ -5043,7 +5053,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 129
+      "note": 130
     },
     {
       "id": "vocabulary:verbs.descriptive",
@@ -5052,7 +5062,7 @@
       "semanticDoc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 130
+      "note": 131
     },
     {
       "id": "vocabulary:verbs.expansive",
@@ -5061,7 +5071,7 @@
       "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 131
+      "note": 132
     },
     {
       "id": "vocabulary:verbs.locative",
@@ -5070,7 +5080,7 @@
       "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 132
+      "note": 133
     },
     {
       "id": "vocabulary:verbs.receptive",
@@ -5079,7 +5089,7 @@
       "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 133
+      "note": 134
     },
     {
       "id": "vocabulary:verbs.reductive",
@@ -5088,7 +5098,7 @@
       "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 133
+      "note": 134
     },
     {
       "id": "vocabulary:verbs.generative",
@@ -5097,7 +5107,7 @@
       "semanticDoc": "docs/spec/execution.md#build-run-stop-and-await",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 134
+      "note": 135
     },
     {
       "id": "vocabulary:verbs.executive",
@@ -5106,7 +5116,7 @@
       "semanticDoc": "docs/spec/execution.md#build-run-stop-and-await",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 135
+      "note": 136
     },
     {
       "id": "vocabulary:verbs.suspensive",
@@ -5115,7 +5125,7 @@
       "semanticDoc": "docs/spec/execution.md#continuations-and-activation",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 136
+      "note": 137
     },
     {
       "id": "vocabulary:verbs.interruptive",
@@ -5124,7 +5134,7 @@
       "semanticDoc": "docs/spec/execution.md#build-run-stop-and-await",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 137
+      "note": 138
     },
     {
       "id": "vocabulary:verbs.inflective",
@@ -5133,7 +5143,7 @@
       "semanticDoc": "docs/spec/imports.md#indexed-dictionaries",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 138
+      "note": 139
     },
     {
       "id": "vocabulary:verbs.deflective",
@@ -5142,7 +5152,7 @@
       "semanticDoc": "docs/spec/imports.md#indexed-dictionaries",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 138
+      "note": 139
     },
     {
       "id": "vocabulary:verbs.observative",
@@ -5151,7 +5161,7 @@
       "semanticDoc": "docs/spec/control-flow.md#show-and-output",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 139
+      "note": 140
     },
     {
       "id": "vocabulary:verbs.terminative",
@@ -5160,7 +5170,7 @@
       "semanticDoc": "docs/spec/control-flow.md#exit-and-return",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 140
+      "note": 141
     },
     {
       "id": "vocabulary:verbs.appropriative",
@@ -5169,7 +5179,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 141
+      "note": 142
     },
     {
       "id": "vocabulary:verbs.comparative",
@@ -5178,7 +5188,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 141
+      "note": 142
     },
     {
       "id": "vocabulary:adjectives.visibility.public",
@@ -5187,7 +5197,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 142
+      "note": 143
     },
     {
       "id": "vocabulary:adjectives.initialization",
@@ -5196,7 +5206,7 @@
       "semanticDoc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 143
+      "note": 144
     },
     {
       "id": "vocabulary:adjectives.abstraction",
@@ -5205,7 +5215,7 @@
       "semanticDoc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 143
+      "note": 144
     },
     {
       "id": "vocabulary:adverbs.visibility.public",
@@ -5214,7 +5224,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 142
+      "note": 143
     },
     {
       "id": "vocabulary:adverbs.nullification",
@@ -5223,7 +5233,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 144
+      "note": 145
     },
     {
       "id": "vocabulary:adverbs.comparison.subtraction",
@@ -5232,7 +5242,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 144
+      "note": 145
     },
     {
       "id": "vocabulary:adverbs.comparison.multiplication",
@@ -5241,7 +5251,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 144
+      "note": 145
     },
     {
       "id": "vocabulary:adverbs.progression",
@@ -5250,7 +5260,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 144
+      "note": 145
     },
     {
       "id": "vocabulary:prepositions.definement.declarative",
@@ -5259,7 +5269,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 145
+      "note": 146
     },
     {
       "id": "vocabulary:prepositions.definement.definitive",
@@ -5268,7 +5278,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 145
+      "note": 146
     },
     {
       "id": "vocabulary:prepositions.definement.locative",
@@ -5277,7 +5287,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 146
+      "note": 147
     },
     {
       "id": "vocabulary:prepositions.consignment.associative",
@@ -5286,7 +5296,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 145
+      "note": 146
     },
     {
       "id": "vocabulary:prepositions.consignment.inflective",
@@ -5295,7 +5305,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 147
+      "note": 148
     },
     {
       "id": "vocabulary:prepositions.consignment.deflective",
@@ -5304,7 +5314,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 145
+      "note": 146
     },
     {
       "id": "vocabulary:prepositions.consignment.indicative",
@@ -5313,7 +5323,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 145
+      "note": 146
     },
     {
       "id": "vocabulary:prepositions.conjoinment.objective",
@@ -5322,7 +5332,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 145
+      "note": 146
     },
     {
       "id": "vocabulary:prepositions.conjoinment.subjective",
@@ -5331,7 +5341,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 145
+      "note": 146
     },
     {
       "id": "vocabulary:prepositions.conjoinment.comparative",
@@ -5340,7 +5350,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 145
+      "note": 146
     },
     {
       "id": "vocabulary:prepositions.conjoinment.directive",
@@ -5349,7 +5359,7 @@
       "semanticDoc": "docs/spec/grammar.md#phrases",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 145
+      "note": 146
     },
     {
       "id": "vocabulary:articles.variable",
@@ -5358,7 +5368,7 @@
       "semanticDoc": "docs/spec/definitions.md#typed-slots",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 148
+      "note": 149
     },
     {
       "id": "vocabulary:articles.none",
@@ -5367,7 +5377,7 @@
       "semanticDoc": "docs/spec/definitions.md#typed-slots",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 148
+      "note": 149
     },
     {
       "id": "vocabulary:articles.indefinite",
@@ -5376,7 +5386,7 @@
       "semanticDoc": "docs/spec/definitions.md#typed-slots",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 148
+      "note": 149
     },
     {
       "id": "vocabulary:articles.definite",
@@ -5385,7 +5395,7 @@
       "semanticDoc": "docs/spec/definitions.md#typed-slots",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 148
+      "note": 149
     },
     {
       "id": "vocabulary:conjunctions.mutual",
@@ -5394,7 +5404,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 144
+      "note": 145
     },
     {
       "id": "vocabulary:conjunctions.exclusive",
@@ -5403,7 +5413,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 144
+      "note": 145
     },
     {
       "id": "vocabulary:evaluations.conditional",
@@ -5412,7 +5422,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 144
+      "note": 145
     },
     {
       "id": "vocabulary:evaluations.exceptional",
@@ -5421,7 +5431,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 144
+      "note": 145
     },
     {
       "id": "vocabulary:evaluations.alternative",
@@ -5430,7 +5440,7 @@
       "semanticDoc": "docs/spec/control-flow.md#comparisons",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 144
+      "note": 145
     },
     {
       "id": "vocabulary:evaluations.iterative",
@@ -5439,7 +5449,7 @@
       "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "classification": 7,
       "evidenceSet": 1,
-      "note": 149
+      "note": 150
     },
     {
       "id": "cli:build",
@@ -5447,7 +5457,7 @@
       "doc": "docs/cli/build.md#command-syntax",
       "classification": 8,
       "evidenceSet": 2,
-      "note": 150
+      "note": 151
     },
     {
       "id": "cli:--assets",
@@ -5455,7 +5465,7 @@
       "doc": "docs/development-harness.md#compiler-defaults",
       "classification": 8,
       "evidenceSet": 2,
-      "note": 151
+      "note": 152
     },
     {
       "id": "cli:--output-dir",
@@ -5463,7 +5473,7 @@
       "doc": "docs/cli/build.md#options",
       "classification": 8,
       "evidenceSet": 2,
-      "note": 152
+      "note": 153
     },
     {
       "id": "cli:--language",
@@ -5471,7 +5481,7 @@
       "doc": "docs/development-harness.md#compiler-defaults",
       "classification": 8,
       "evidenceSet": 2,
-      "note": 153
+      "note": 154
     },
     {
       "id": "cli:--version",
@@ -5479,7 +5489,7 @@
       "doc": "docs/cli/build.md#version",
       "classification": 8,
       "evidenceSet": 3,
-      "note": 154
+      "note": 155
     },
     {
       "id": "cli:--help",
@@ -5487,7 +5497,7 @@
       "doc": "docs/cli/build.md#help",
       "classification": 8,
       "evidenceSet": 2,
-      "note": 155
+      "note": 156
     },
     {
       "id": "cli:-h",
@@ -5495,7 +5505,7 @@
       "doc": "docs/cli/build.md#help",
       "classification": 8,
       "evidenceSet": 2,
-      "note": 156
+      "note": 157
     },
     {
       "id": "cli:-help",
@@ -5503,7 +5513,7 @@
       "doc": "docs/cli/build.md#help",
       "classification": 8,
       "evidenceSet": 2,
-      "note": 156
+      "note": 157
     },
     {
       "id": "cli:--",
@@ -5511,7 +5521,7 @@
       "doc": "docs/cli/build.md#command-syntax",
       "classification": 8,
       "evidenceSet": 2,
-      "note": 157
+      "note": 158
     },
     {
       "id": "cli:-os",
@@ -5519,7 +5529,7 @@
       "doc": "docs/cli/build.md#target-os",
       "classification": 9,
       "evidenceSet": 2,
-      "note": 158
+      "note": 159
     },
     {
       "id": "cli:contracts",
@@ -5527,7 +5537,7 @@
       "doc": "docs/contracts.md#commands",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 159
+      "note": 160
     },
     {
       "id": "cli:contracts inspect",
@@ -5535,7 +5545,7 @@
       "doc": "docs/contracts.md#inspect",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 160
+      "note": 161
     },
     {
       "id": "cli:contracts check",
@@ -5543,7 +5553,7 @@
       "doc": "docs/contracts.md#check",
       "classification": 8,
       "evidenceSet": 5,
-      "note": 161
+      "note": 162
     },
     {
       "id": "cli:contracts explain",
@@ -5551,7 +5561,7 @@
       "doc": "docs/contracts.md#explain",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 162
+      "note": 163
     },
     {
       "id": "cli:contracts verify-dictionary",
@@ -5559,7 +5569,7 @@
       "doc": "docs/contracts.md#verify-a-dictionary",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 163
+      "note": 164
     },
     {
       "id": "cli:contracts --format",
@@ -5567,7 +5577,7 @@
       "doc": "docs/contracts.md#options-and-reports",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 164
+      "note": 165
     },
     {
       "id": "cli:contracts --output",
@@ -5575,7 +5585,7 @@
       "doc": "docs/contracts.md#options-and-reports",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 165
+      "note": 166
     },
     {
       "id": "cli:contracts --report",
@@ -5583,7 +5593,7 @@
       "doc": "docs/contracts.md#options-and-reports",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 166
+      "note": 167
     },
     {
       "id": "cli:contracts --assets",
@@ -5591,7 +5601,7 @@
       "doc": "docs/contracts.md#options-and-reports",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 167
+      "note": 168
     },
     {
       "id": "cli:contracts --language",
@@ -5599,7 +5609,7 @@
       "doc": "docs/contracts.md#options-and-reports",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 168
+      "note": 169
     },
     {
       "id": "cli:contracts --manifest",
@@ -5607,7 +5617,7 @@
       "doc": "docs/contracts.md#options-and-reports",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 169
+      "note": 170
     },
     {
       "id": "cli:contracts --trust-policy",
@@ -5615,7 +5625,7 @@
       "doc": "docs/contracts.md#options-and-reports",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 170
+      "note": 171
     },
     {
       "id": "cli:contracts --profile",
@@ -5623,7 +5633,7 @@
       "doc": "docs/contracts.md#check",
       "classification": 8,
       "evidenceSet": 6,
-      "note": 171
+      "note": 172
     },
     {
       "id": "cli:contracts --binding",
@@ -5631,7 +5641,7 @@
       "doc": "docs/contracts.md#explain",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 172
+      "note": 173
     },
     {
       "id": "cli:contracts --adjective",
@@ -5639,7 +5649,7 @@
       "doc": "docs/contracts.md#focused-symbolic-verification",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 173
+      "note": 174
     },
     {
       "id": "cli:contracts --assurance",
@@ -5647,7 +5657,7 @@
       "doc": "docs/contracts.md#focused-symbolic-verification",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 174
+      "note": 175
     },
     {
       "id": "cli:contracts --help",
@@ -5655,7 +5665,7 @@
       "doc": "docs/contracts.md#commands",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 175
+      "note": 176
     },
     {
       "id": "cli:contracts --",
@@ -5663,7 +5673,7 @@
       "doc": "docs/contracts.md#commands",
       "classification": 8,
       "evidenceSet": 4,
-      "note": 176
+      "note": 177
     },
     {
       "id": "cli:--native-evidence-output",
@@ -5671,7 +5681,7 @@
       "doc": "docs/cli/build.md#options",
       "classification": 8,
       "evidenceSet": 7,
-      "note": 177
+      "note": 178
     },
     {
       "id": "cli:contracts evidence capture",
@@ -5679,7 +5689,7 @@
       "doc": "docs/contracts.md#capture-native-environment-evidence",
       "classification": 8,
       "evidenceSet": 8,
-      "note": 178
+      "note": 179
     },
     {
       "id": "cli:contracts --native-environment",
@@ -5687,7 +5697,7 @@
       "doc": "docs/contracts.md#options-and-reports",
       "classification": 8,
       "evidenceSet": 9,
-      "note": 179
+      "note": 180
     },
     {
       "id": "cli:contracts --request-file",
@@ -5695,7 +5705,7 @@
       "doc": "docs/contracts.md#scoped-checks-and-failure-footprints",
       "classification": 8,
       "evidenceSet": 10,
-      "note": 180
+      "note": 181
     },
     {
       "id": "cli:contracts --target",
@@ -5703,7 +5713,7 @@
       "doc": "docs/contracts.md#capture-native-environment-evidence",
       "classification": 8,
       "evidenceSet": 8,
-      "note": 181
+      "note": 182
     },
     {
       "id": "lucid:future-composed",
@@ -7548,7 +7558,7 @@
       "doc": "docs/spec/values.md#thing",
       "classification": 13,
       "evidenceSet": 265,
-      "note": 182
+      "note": 183
     },
     {
       "id": "type:byte",
@@ -7563,7 +7573,7 @@
       "doc": "docs/spec/values.md#byte-and-bytes",
       "classification": 14,
       "evidenceSet": 267,
-      "note": 183
+      "note": 184
     },
     {
       "id": "type:pointer",
@@ -7571,7 +7581,7 @@
       "doc": "docs/spec/values.md#pointer",
       "classification": 13,
       "evidenceSet": 268,
-      "note": 124
+      "note": 125
     },
     {
       "id": "type:null",
@@ -7579,7 +7589,7 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
       "evidenceSet": 269,
-      "note": 184
+      "note": 185
     },
     {
       "id": "type:list",
@@ -7609,7 +7619,7 @@
       "doc": "docs/spec/applicational-types.md#services",
       "classification": 13,
       "evidenceSet": 273,
-      "note": 185
+      "note": 186
     },
     {
       "id": "type:class",
@@ -7645,7 +7655,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 13,
       "evidenceSet": 277,
-      "note": 186
+      "note": 187
     },
     {
       "id": "type:property",
@@ -7680,7 +7690,8 @@
       "name": "Adjective",
       "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
       "classification": 13,
-      "evidenceSet": 281
+      "evidenceSet": 281,
+      "note": 188
     },
     {
       "id": "type:adverb",
@@ -7695,7 +7706,7 @@
       "doc": "docs/spec/values.md#thing",
       "classification": 16,
       "evidenceSet": 283,
-      "note": 187
+      "note": 189
     },
     {
       "id": "value-tag:Text",
@@ -7703,7 +7714,7 @@
       "doc": "docs/spec/values.md#text",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Number",
@@ -7711,7 +7722,7 @@
       "doc": "docs/spec/values.md#number",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Truth",
@@ -7719,7 +7730,7 @@
       "doc": "docs/spec/values.md#truth",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Bytes",
@@ -7727,7 +7738,7 @@
       "doc": "docs/spec/values.md#byte-and-bytes",
       "classification": 16,
       "evidenceSet": 283,
-      "note": 187
+      "note": 189
     },
     {
       "id": "value-tag:Pointer",
@@ -7735,7 +7746,7 @@
       "doc": "docs/spec/values.md#pointer",
       "classification": 16,
       "evidenceSet": 283,
-      "note": 187
+      "note": 189
     },
     {
       "id": "value-tag:Lexeme",
@@ -7743,7 +7754,7 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:App",
@@ -7751,7 +7762,7 @@
       "doc": "docs/spec/applicational-types.md#apps",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Service",
@@ -7759,7 +7770,7 @@
       "doc": "docs/spec/applicational-types.md#services",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Class",
@@ -7767,7 +7778,7 @@
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Object",
@@ -7775,7 +7786,7 @@
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Attribute",
@@ -7783,7 +7794,7 @@
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Definition",
@@ -7791,7 +7802,7 @@
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Function",
@@ -7799,7 +7810,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
       "evidenceSet": 285,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Property",
@@ -7807,7 +7818,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Operation",
@@ -7815,7 +7826,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:List",
@@ -7823,7 +7834,7 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 16,
       "evidenceSet": 283,
-      "note": 187
+      "note": 189
     },
     {
       "id": "value-tag:Dictionary",
@@ -7831,7 +7842,7 @@
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Error",
@@ -7839,7 +7850,7 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
       "evidenceSet": 283,
-      "note": 187
+      "note": 189
     },
     {
       "id": "value-tag:ID",
@@ -7847,7 +7858,7 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:None",
@@ -7855,7 +7866,7 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Unknown",
@@ -7863,7 +7874,7 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
       "evidenceSet": 284,
-      "note": 188
+      "note": 190
     },
     {
       "id": "value-tag:Null",
@@ -7871,7 +7882,7 @@
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
       "evidenceSet": 286,
-      "note": 187
+      "note": 189
     },
     {
       "id": "builtin:start",
@@ -7893,7 +7904,7 @@
       "doc": "docs/reference/builtins/lifecycle.md#build",
       "classification": 17,
       "evidenceSet": 288,
-      "note": 189
+      "note": 191
     },
     {
       "id": "builtin:run",
@@ -7901,7 +7912,7 @@
       "doc": "docs/reference/builtins/lifecycle.md#run",
       "classification": 17,
       "evidenceSet": 289,
-      "note": 189
+      "note": 191
     },
     {
       "id": "builtin:stop",
@@ -7909,7 +7920,7 @@
       "doc": "docs/reference/builtins/lifecycle.md#stop",
       "classification": 17,
       "evidenceSet": 290,
-      "note": 189
+      "note": 191
     },
     {
       "id": "builtin:await",
@@ -7917,7 +7928,7 @@
       "doc": "docs/reference/builtins/lifecycle.md#await",
       "classification": 17,
       "evidenceSet": 291,
-      "note": 189
+      "note": 191
     },
     {
       "id": "builtin:show",
@@ -7939,7 +7950,7 @@
       "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
       "classification": 17,
       "evidenceSet": 294,
-      "note": 189
+      "note": 191
     },
     {
       "id": "builtin:error",
@@ -7947,7 +7958,7 @@
       "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
       "classification": 17,
       "evidenceSet": 295,
-      "note": 189
+      "note": 191
     },
     {
       "id": "builtin:process",
@@ -7955,7 +7966,7 @@
       "doc": "docs/reference/builtins/definitions.md#process",
       "classification": 17,
       "evidenceSet": 296,
-      "note": 190
+      "note": 192
     },
     {
       "id": "builtin:function",
@@ -7963,7 +7974,7 @@
       "doc": "docs/reference/builtins/definitions.md#function",
       "classification": 18,
       "evidenceSet": 297,
-      "note": 191
+      "note": 193
     },
     {
       "id": "builtin:function.return",
@@ -7971,140 +7982,150 @@
       "doc": "docs/reference/builtins/definitions.md#functionreturn",
       "classification": 18,
       "evidenceSet": 298,
-      "note": 192
+      "note": 194
+    },
+    {
+      "id": "builtin:retain",
+      "name": "Retain",
+      "doc": "docs/reference/builtins/definitions.md#retain",
+      "classification": 17,
+      "evidenceSet": 299,
+      "note": 195
     },
     {
       "id": "builtin:objective",
       "name": "Objective",
       "doc": "docs/reference/builtins/definitions.md#objective",
       "classification": 17,
-      "evidenceSet": 299
+      "evidenceSet": 300
     },
     {
       "id": "builtin:main",
       "name": "Main",
       "doc": "docs/reference/builtins/definitions.md#main",
       "classification": 17,
-      "evidenceSet": 299,
-      "note": 193
+      "evidenceSet": 300,
+      "note": 196
     },
     {
       "id": "builtin:basic",
       "name": "Basic",
       "doc": "docs/reference/builtins/definitions.md#basic",
       "classification": 17,
-      "evidenceSet": 299
+      "evidenceSet": 300
     },
     {
       "id": "builtin:create",
       "name": "Create",
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 17,
-      "evidenceSet": 300
+      "evidenceSet": 301
     },
     {
       "id": "builtin:define",
       "name": "Define",
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 17,
-      "evidenceSet": 301
+      "evidenceSet": 302
     },
     {
       "id": "builtin:describe",
       "name": "Describe",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 17,
-      "evidenceSet": 302
+      "evidenceSet": 303
     },
     {
       "id": "builtin:use",
       "name": "Use",
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "classification": 17,
-      "evidenceSet": 303
+      "evidenceSet": 304
     },
     {
       "id": "builtin:public",
       "name": "Public",
       "doc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 17,
-      "evidenceSet": 304
+      "evidenceSet": 305
     },
     {
       "id": "builtin:publicly",
       "name": "Publicly",
       "doc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 17,
-      "evidenceSet": 304
+      "evidenceSet": 305
     },
     {
       "id": "builtin:new",
       "name": "New",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 17,
-      "evidenceSet": 305
+      "evidenceSet": 306
     },
     {
       "id": "builtin:generic",
       "name": "Generic",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 18,
-      "evidenceSet": 305
+      "evidenceSet": 307,
+      "note": 197
     },
     {
       "id": "builtin:input",
       "name": "Input",
       "doc": "docs/reference/builtins/index.md#runtime-members",
       "classification": 18,
-      "evidenceSet": 306
+      "evidenceSet": 308,
+      "note": 198
     },
     {
       "id": "builtin:put",
       "name": "Put",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 17,
-      "evidenceSet": 307,
-      "note": 194
+      "evidenceSet": 309,
+      "note": 199
     },
     {
       "id": "builtin:place",
       "name": "Place",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 17,
-      "evidenceSet": 307,
-      "note": 194
+      "evidenceSet": 309,
+      "note": 199
     },
     {
       "id": "builtin:get",
       "name": "Get",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 308,
-      "note": 195
+      "evidenceSet": 310,
+      "note": 200
     },
     {
       "id": "builtin:take",
       "name": "Take",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 308,
-      "note": 195
+      "evidenceSet": 310,
+      "note": 200
     },
     {
       "id": "builtin:import",
       "name": "Import",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 308,
-      "note": 195
+      "evidenceSet": 310,
+      "note": 200
     },
     {
       "id": "builtin:export",
       "name": "Export",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 308,
-      "note": 195
+      "evidenceSet": 310,
+      "note": 200
     },
     {
       "id": "stdlib:eng:io",
@@ -8116,8 +8137,8 @@
       },
       "visibility": "namespace",
       "classification": 20,
-      "evidenceSet": 309,
-      "note": 196
+      "evidenceSet": 311,
+      "note": 201
     },
     {
       "id": "stdlib-export:eng:io:IO.Print",
@@ -8140,8 +8161,113 @@
       ],
       "effect": "Writes the selected typed rendering and appends LF; no L return value is declared.",
       "classification": 20,
-      "evidenceSet": 310,
-      "note": 197
+      "evidenceSet": 312,
+      "note": 202
+    },
+    {
+      "id": "stdlib-export:eng:io:IO.Output",
+      "name": "IO.Output",
+      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Output"
+      ],
+      "argumentRoles": [],
+      "effect": "Obtains the standard-output handle; does not lock, write or flush.",
+      "classification": 20,
+      "evidenceSet": 313,
+      "note": 203
+    },
+    {
+      "id": "stdlib-export:eng:io:IO.Diagnostic",
+      "name": "IO.Diagnostic",
+      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Diagnostic"
+      ],
+      "argumentRoles": [],
+      "effect": "Obtains the standard-error handle; does not redirect Print.",
+      "classification": 20,
+      "evidenceSet": 313,
+      "note": 204
+    },
+    {
+      "id": "stdlib-export:eng:io:IO.Send",
+      "name": "IO.Send",
+      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Send",
+        "Sends",
+        "Sent",
+        "Sending",
+        "Sender"
+      ],
+      "argumentRoles": [
+        "Writer (&mut W: std::io::Write + ?Sized)",
+        "Payload (&P: AsRef<[u8]> + ?Sized)"
+      ],
+      "effect": "Writes the borrowed byte view and returns std::io::Result<()>; no added LF, lock, flush or panic.",
+      "classification": 20,
+      "evidenceSet": 314,
+      "note": 205
+    },
+    {
+      "id": "stdlib-export:eng:io:IO.Lined",
+      "name": "IO.Lined",
+      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Lined"
+      ],
+      "argumentRoles": [
+        "Selected Sender invocation"
+      ],
+      "effect": "After payload success, sends LF through the same writer; returns the first error or unit success.",
+      "classification": 20,
+      "evidenceSet": 315,
+      "note": 206
+    },
+    {
+      "id": "stdlib-export:eng:io:IO.Flush",
+      "name": "IO.Flush",
+      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Flush",
+        "Flushes",
+        "Flushed",
+        "Flushing",
+        "Flusher"
+      ],
+      "argumentRoles": [
+        "Writer (&mut std::io::Write)"
+      ],
+      "effect": "Requests an explicit native writer flush and returns its IO Result.",
+      "classification": 20,
+      "evidenceSet": 314,
+      "note": 207
     },
     {
       "id": "stdlib-internal:eng:io:output",
@@ -8153,152 +8279,152 @@
       },
       "visibility": "private",
       "classification": 21,
-      "evidenceSet": 311,
-      "note": 198
+      "evidenceSet": 316,
+      "note": 208
     },
     {
       "id": "grammar-group:values-subjects-objects",
       "name": "values-subjects-objects",
       "doc": "docs/spec/grammar.md#values-subjects-and-objects",
       "classification": 22,
-      "evidenceSet": 312,
-      "note": 199
+      "evidenceSet": 317,
+      "note": 209
     },
     {
       "id": "grammar-group:phrases",
       "name": "phrases",
       "doc": "docs/spec/grammar.md#phrases",
       "classification": 22,
-      "evidenceSet": 313,
-      "note": 199
+      "evidenceSet": 318,
+      "note": 209
     },
     {
       "id": "grammar-group:declarations",
       "name": "declarations",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 314,
-      "note": 199
+      "evidenceSet": 319,
+      "note": 209
     },
     {
       "id": "grammar-group:definitions",
       "name": "definitions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 315,
-      "note": 199
+      "evidenceSet": 320,
+      "note": 209
     },
     {
       "id": "grammar-group:descriptors",
       "name": "descriptors",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 316,
-      "note": 199
+      "evidenceSet": 321,
+      "note": 209
     },
     {
       "id": "grammar-group:aliases-imports",
       "name": "aliases-imports",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 317,
-      "note": 199
+      "evidenceSet": 322,
+      "note": 209
     },
     {
       "id": "grammar-group:process-lifecycle",
       "name": "process-lifecycle",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 318,
-      "note": 189
+      "evidenceSet": 323,
+      "note": 191
     },
     {
       "id": "grammar-group:collection-actions",
       "name": "collection-actions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 22,
-      "evidenceSet": 319,
-      "note": 200
+      "evidenceSet": 324,
+      "note": 210
     },
     {
       "id": "grammar-group:conditions",
       "name": "conditions",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 22,
-      "evidenceSet": 320,
-      "note": 199
+      "evidenceSet": 325,
+      "note": 209
     },
     {
       "id": "grammar-group:while",
       "name": "while",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 24,
-      "evidenceSet": 318,
-      "note": 199
+      "evidenceSet": 323,
+      "note": 209
     },
     {
       "id": "grammar-group:joined-conditions",
       "name": "joined-conditions",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 24,
-      "evidenceSet": 318,
-      "note": 199
+      "evidenceSet": 323,
+      "note": 209
     },
     {
       "id": "grammar-group:predicates-statements",
       "name": "predicates-statements",
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "classification": 22,
-      "evidenceSet": 318,
-      "note": 199
+      "evidenceSet": 323,
+      "note": 209
     },
     {
       "id": "grammar-group:vocabulary",
       "name": "vocabulary",
       "doc": "docs/spec/grammar.md#vocabulary-reference",
       "classification": 22,
-      "evidenceSet": 321,
-      "note": 199
+      "evidenceSet": 326,
+      "note": 209
     },
     {
       "id": "grammar-group:notation",
       "name": "notation",
       "doc": "docs/spec/grammar.md#configuration-notation",
       "classification": 23,
-      "evidenceSet": 322,
-      "note": 199
+      "evidenceSet": 327,
+      "note": 209
     },
     {
       "id": "grammar-group:matching",
       "name": "matching",
       "doc": "docs/spec/grammar.md#matching-and-ambiguity",
       "classification": 23,
-      "evidenceSet": 323,
-      "note": 199
+      "evidenceSet": 328,
+      "note": 209
     },
     {
       "id": "value-tag:invalid-zero",
       "name": "Invalid zero sentinel",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 324,
-      "note": 201
+      "evidenceSet": 329,
+      "note": 211
     },
     {
       "id": "type:map",
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "classification": 13,
-      "evidenceSet": 325,
-      "note": 202
+      "evidenceSet": 330,
+      "note": 212
     },
     {
       "id": "value-tag:Map",
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "classification": 16,
-      "evidenceSet": 326,
-      "note": 203
+      "evidenceSet": 331,
+      "note": 213
     },
     {
       "id": "type:error",
@@ -8306,28 +8432,28 @@
       "doc": "docs/spec/execution.md#output-and-error",
       "classification": 13,
       "evidenceSet": 267,
-      "note": 204
+      "note": 214
     },
     {
       "id": "grammar-group:runtime-captures",
       "name": "runtime-captures",
       "doc": "docs/spec/names-and-scope.md#runtime-storage-and-definite-assignment",
       "classification": 23,
-      "evidenceSet": 327,
-      "note": 205
+      "evidenceSet": 332,
+      "note": 215
     },
     {
       "id": "stdlib-internal:eng:storage",
       "name": "Storage",
-      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "doc": "docs/reference/builtins/definitions.md#storage-source-compositions",
       "dictionary": {
         "lexicon": "eng",
         "key": "storage"
       },
       "visibility": "namespace",
       "classification": 21,
-      "evidenceSet": 328,
-      "note": 206
+      "evidenceSet": 333,
+      "note": 216
     },
     {
       "id": "stdlib-internal:eng:runtime",
@@ -8339,8 +8465,8 @@
       },
       "visibility": "namespace",
       "classification": 21,
-      "evidenceSet": 329,
-      "note": 206
+      "evidenceSet": 334,
+      "note": 217
     },
     {
       "id": "stdlib-internal:eng:format",
@@ -8352,247 +8478,247 @@
       },
       "visibility": "namespace",
       "classification": 21,
-      "evidenceSet": 330,
-      "note": 207
+      "evidenceSet": 335,
+      "note": 218
     },
     {
       "id": "logeme.segment.B",
       "name": "B / declare",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 25,
-      "evidenceSet": 331
+      "evidenceSet": 336
     },
     {
       "id": "logeme.segment.A",
       "name": "A / declaration",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 25,
-      "evidenceSet": 332
+      "evidenceSet": 337
     },
     {
       "id": "logeme.segment.D",
       "name": "D / calculate",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 25,
-      "evidenceSet": 333
+      "evidenceSet": 338
     },
     {
       "id": "logeme.segment.E",
       "name": "E / calculation",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 25,
-      "evidenceSet": 334
+      "evidenceSet": 339
     },
     {
       "id": "logeme.segment.G",
       "name": "G / evaluate",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 25,
-      "evidenceSet": 335
+      "evidenceSet": 340
     },
     {
       "id": "logeme.segment.I",
       "name": "I / evaluation",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 25,
-      "evidenceSet": 336
+      "evidenceSet": 341
     },
     {
       "id": "logeme.segment.F",
       "name": "F / define",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 25,
-      "evidenceSet": 337
+      "evidenceSet": 342
     },
     {
       "id": "logeme.segment.O",
       "name": "O / definition",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 25,
-      "evidenceSet": 338
+      "evidenceSet": 343
     },
     {
       "id": "logeme.segment.H",
       "name": "H / describe",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 339
+      "evidenceSet": 344
     },
     {
       "id": "logeme.segment.U",
       "name": "U / description",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 340
+      "evidenceSet": 345
     },
     {
       "id": "logeme.segment.K",
       "name": "K / operate",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 25,
-      "evidenceSet": 341
+      "evidenceSet": 346
     },
     {
       "id": "logeme.segment.W",
       "name": "W / operation",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 25,
-      "evidenceSet": 342
+      "evidenceSet": 347
     },
     {
       "id": "logeme.segment.P",
       "name": "P / iterate",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 25,
-      "evidenceSet": 343
+      "evidenceSet": 348
     },
     {
       "id": "logeme.segment.X",
       "name": "X / iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 25,
-      "evidenceSet": 344
+      "evidenceSet": 349
     },
     {
       "id": "logeme.segment.M",
       "name": "M / instantiate",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 25,
-      "evidenceSet": 345
+      "evidenceSet": 350
     },
     {
       "id": "logeme.segment.Y",
       "name": "Y / instantiation",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 25,
-      "evidenceSet": 346
+      "evidenceSet": 351
     },
     {
       "id": "logeme.segment.C",
       "name": "C / execute",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 347
+      "evidenceSet": 352
     },
     {
       "id": "logeme.segment.V",
       "name": "V / execution",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 348
+      "evidenceSet": 353
     },
     {
       "id": "logeme.family.declaration-adapters",
       "name": "A/BA/DA/KA/HA/GA/MA/PA",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 26,
-      "evidenceSet": 349
+      "evidenceSet": 354
     },
     {
       "id": "logeme.family.definition-adapters",
       "name": "O/OB/FO/FOB/KO/KOB/DO/DOB/GO/GOB/MO/MOB/CO/COB/BO/BOD/BOK/BOH/BOG/BOM/BOP/BOC",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 26,
-      "evidenceSet": 350
+      "evidenceSet": 355
     },
     {
       "id": "logeme.family.literal-file",
       "name": "EA complete literal file",
       "doc": "docs/reference/logemes/declarations.md#ea-complete-literal-file",
       "classification": 26,
-      "evidenceSet": 351
+      "evidenceSet": 356
     },
     {
       "id": "logeme.family.communication",
       "name": "CE communication calculations",
       "doc": "docs/reference/logemes/calculations.md#communication-calculations",
       "classification": 25,
-      "evidenceSet": 352
+      "evidenceSet": 357
     },
     {
       "id": "logeme.family.description",
       "name": "U/MU description and updates",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 353
+      "evidenceSet": 358
     },
     {
       "id": "logeme.family.selection",
       "name": "I/GE/GI ordered selection",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 26,
-      "evidenceSet": 354
+      "evidenceSet": 359
     },
     {
       "id": "logeme.family.readiness",
       "name": "CI/BI/OC/DOC readiness selection",
       "doc": "docs/reference/logemes/selection.md#ci-and-bi-bounded-readiness-selection",
       "classification": 25,
-      "evidenceSet": 355
+      "evidenceSet": 360
     },
     {
       "id": "logeme.family.callables",
       "name": "W/FW/BW/KY/KO/KOB callables",
       "doc": "docs/reference/logemes/callables.md#invocation-through-ky",
       "classification": 25,
-      "evidenceSet": 356
+      "evidenceSet": 361
     },
     {
       "id": "logeme.family.iteration",
       "name": "X/I/OG/DOG/PO four-category iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 26,
-      "evidenceSet": 357
+      "evidenceSet": 362
     },
     {
       "id": "logeme.family.unsupported-loops",
       "name": "Three-part loops",
       "doc": "docs/reference/logemes/iteration.md#unsupported-forms-and-native-failures",
       "classification": 27,
-      "evidenceSet": 358
+      "evidenceSet": 363
     },
     {
       "id": "logeme.family.instantiation",
       "name": "Y/HY empty and populated records",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 26,
-      "evidenceSet": 359
+      "evidenceSet": 364
     },
     {
       "id": "logeme.family.traits",
       "name": "MY required signatures",
       "doc": "docs/reference/logemes/instantiation.md#required-trait-signatures",
       "classification": 25,
-      "evidenceSet": 360
+      "evidenceSet": 365
     },
     {
       "id": "logeme.family.generics",
       "name": "Local FW/HY/MY/Y/named KY parameters",
       "doc": "docs/reference/logemes/metadata.md#lifetimes-and-generictypes",
       "classification": 25,
-      "evidenceSet": 361
+      "evidenceSet": 366
     },
     {
       "id": "logeme.family.scheduling",
       "name": "V/MV scheduling",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 362
+      "evidenceSet": 367
     },
     {
       "id": "logeme.family.deferred",
       "name": "Deferred metadata",
       "doc": "docs/reference/logemes/instantiation.md#deferred-is-rejected",
       "classification": 27,
-      "evidenceSet": 358
+      "evidenceSet": 363
     },
     {
       "id": "logeme.family.futures",
       "name": "CV/DV/CO/COB future composition",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 28,
-      "evidenceSet": 363,
-      "note": 208
+      "evidenceSet": 368,
+      "note": 219
     }
   ],
   "schemaVersion": 3,
@@ -8626,10 +8752,10 @@
     "A quoted identifier occurs as an owned declaration/reference role. It is not a Text literal or a universal executable scalar value.",
     "A named reference carries a dependency phrase. Supported Use import scanning and source-provider ownership remain authoritative; arbitrary grammar placement does not imply import execution.",
     "An atomic operand leaves its destination phrase for the enclosing update clause. Its resolved runtime type still governs use.",
-    "A Function name carries its explicit Inputs/Outputs signature; descriptors supply the Process to the same canonical constructor.",
+    "A checked callable construction can carry explicit constructor operands before its signature, or a structured Process input signature and directive body. Canonical targets determine the native constructor and scoped binding roles.",
     "This phrase associates grammatical objects, prepositions or clauses as given by its sequence. Its location and optional/repeated terms are defined by the configured matcher, not conventional EBNF.",
     "This phrase participates in construction or argument attachment. Native placeholders have explicit type and encoding contracts; do not infer arbitrary coercions.",
-    "The for phrase contains ordered applicative clauses. Source actions retain their generic argument and recursion checks. Constructor directives in native metadata Functions use the shared instruction path with enclosing Function bindings; they do not introduce loop-local declarations.",
+    "The for phrase contains ordered applicative clauses. Source actions retain their generic argument and recursion checks. Structured Process inputs and locals bind within that body while retaining enclosing Function references; this adds no general loop syntax.",
     "Recognizes List type/storage structure. General runtime element construction, mutation, indexing, iteration and bounds behavior are not established.",
     "The phrase owns a declaration object whose scope and publication are resolved semantically.",
     "The as phrase supplies a bound value; concrete type and runtime assignment requirements remain enforced.",
@@ -8709,11 +8835,12 @@
     "The exact configured phrase maps to a typed scalar operator. Equality requires matching scalar types; order requires Number. Native operator witnesses do not independently verify every source phrase.",
     "The parser recognizes this shape, but outer instruction lowering explicitly rejects while. Rust backend iteration cases do not establish source-language loop support.",
     "This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support.",
-    "An ordinary Function signature declares ordered named inputs and ordered result types, or explicit No Inputs/No Outputs. Nested runtime and callable identities remain complete.",
+    "Function signatures declare ordered named inputs and result types, or explicit No Inputs/No Outputs. Structured Process bodies accept typed input bindings without callable outputs. Nested runtime and callable identities remain complete.",
+    "Typed input-only Process signatures bind pattern or iteration values within the directive body. Positive native selection/pair cases and scope-escape/output rejection witnesses constrain this support; no general closure or Process output signature is added.",
     "Invocation words bind ordered values and prepositional arguments. Argument counts and complete types are checked.",
     "An invocation declares one result name per output, assigned only after the invocation completes.",
     "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.",
-    "Inputs name ordinary Function parameters or native signature metadata. They do not introduce process stdin/argument transport.",
+    "Inputs name ordinary Function parameters, native signature metadata, or scoped structured Process bindings. They do not introduce process stdin/argument transport.",
     "Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries.",
     "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.",
     "Explicit Thing boundaries retain concrete runtime types; typed reads validate element types and callable identities. No implicit coercion or dynamic arithmetic.",
@@ -8784,18 +8911,27 @@
     "Null initializes an explicit absence value; typed reads preserve evaluation and type/index/key checks. Unassigned storage and the native-definition Null atom remain separate.",
     "Service declarations remain structural; standalone bodies, packages and native process operations are unsupported. App-constructed Service libraries retain their workspace topology. Static inspection; witnesses not run.",
     "Functions bind typed invocation verbs and private bodies. Signatures include canonical constructor identity; aliases preserve it and incompatible transfers reject. Emission uses selected builtin/logeme definitions.",
+    "Descriptors retain canonical targets through aliases and qualified imports. Derived invocation wrappers evaluate original value operands once in source order, preserve their base signature and result, and retain lexical helper dependencies. Replacements use their effective signature. Native ownership rules remain enforced; this is not a resource-cost certificate.",
     "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
     "Internal tag; source construction and runtime support are documented separately.",
     "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-    "Native metadata Functions can bind ordered source operations through directive compositions; locals retain their enclosing Function scope.",
+    "Ordered source operations use the shared instruction path. Process inputs bind selected pattern/iteration values inside their body; explicit annotations preserve declared types and dependencies for native type and borrow checking. Labels remain lexical and cannot escape; no callable outputs or closure runtime are added.",
     "The canonical Function definition supplies composed signatures and Process bodies for source declarations and constructed Objects.",
-    "Return retains its definition-site member through word expansion; different constructor contracts reject. Output counts and types remain checked.",
+    "A root-authored returning action uses its caller’s selected Return. Function-owned Returns retain their definition-site constructor contract and reject incompatible callers. Source-composed unconditional returns terminate typed caller flow; output counts/types and native effect obligations remain checked.",
+    "Core Retain consumes a borrowed Arc and returns another handle to the same allocation without cloning its payload. The App source wrapper delegates to core Retain without lifecycle effects; Storage.Retain remains Rc-based. Atomic ownership does not certify payload Send/Sync or destructor costs.",
     "Source-defined Service/Object/Function construction descriptor used by Apps; it grants no standalone Service process role.",
+    "Native source constructors accept explicit ordered parameter atoms through their declared slots. GenericTypes and Lifetimes retain their approved local native-input contract; this does not infer parameters or introduce general L generics.",
+    "Input metadata covers Function parameters and scoped structured Process bindings. No App process input transport is supplied.",
     "Typed updates append/replace List elements, write Map values or replace a Pointer target. Destination kind, keys, element types and managed ownership cycles are checked.",
     "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
     "Reviewed registered export namespace for dictionary language=eng key=io. Index-driven addition/rename/deletion must trigger new review.",
-    "IO.Print composes the operand's selected Render member with Write; implementation dependencies retain their private owners.",
-    "Private source Functions and small host operations selected by IO.Print, not additional imported API.",
+    "Print retains Render then private Write. Write obtains one stdout guard, invokes the source Lined Sender and applies shared Result.Expect with the existing failure message; bytes, formatting and LF policy remain unchanged.",
+    "One selected std::io::stdout call. Resource identity does not establish authority or isolation.",
+    "One selected std::io::stderr call. It supplies an alternate native writer handle without adding an input or networking API.",
+    "The source Function composes a borrowed byte view with write_all. A failure can follow partial output; writer allocation and blocking remain native obligations.",
+    "Targets the actual derived Sender. Its private L-authored helper selects the retained Result; base evaluation, generic arguments, result binding and helper provenance are preserved. It adds no output transaction or lifecycle operation.",
+    "One Write::flush call. Flushing may block or fail and does not establish durable storage.",
+    "Render, Write, Lock, byte view and line-completion source helpers remain private dependencies. Stream, Check and Slice have no compatibility aliases; public byte IO is classified separately.",
     "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
     "Put/Place lower to checked runtime updates. Typed constructor reads supply indexed access; Get/Take, iteration and general removal are not established.",
     "The unnamed zero value is a compiler sentinel; it is not one of the 23 named representation tags or a public source constructor. valueTypeCount is an enum bound, not a stored value. Static inspection only.",
@@ -8803,6 +8939,7 @@
     "Internal representation tag; executable source semantics are defined by the linked runtime type contract.",
     "Error values can be constructed, stored, captured and placed in typed containers. App Error is optional until inspected; extracting an absent Error rejects. Direct Show remains unsupported.",
     "Activation-specific environments snapshot ordinary captures and retain shared Pointer targets. Actual arguments evaluate once in caller scope before callee entry; copies retain environments until last-owner release. App-process capture transport is not inferred.",
+    "Internal source compositions own typed traversal, explicit result binding, lazy failure branches, release sequencing, byte appends and Function returns. Retired word identities have no compatibility aliases. This source support establishes no general native allocation, blocking or destructor-cost proof.",
     "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog.",
     "IO and Runtime select one canonical formatting Function and its source-owned dependencies; importing IO does not load process supervision.",
     "CV constructs one unscheduled future; local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing; this adds no async-FW modifier or Function dispatcher."
@@ -11722,10 +11859,14 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/semantics.go"
+        "lyger/semantics.go",
+        "lyger/source_descriptors.go",
+        "lyger/builtin_bindings.go"
       ],
       "witnesses": [
-        "lyger/paragraph_descriptor_identity_test.go"
+        "lyger/paragraph_descriptor_identity_test.go",
+        "lyger/word_library_constructor_test.go",
+        "lyger/word_library_pos_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -11965,12 +12106,18 @@
         "lyger/construction.go",
         "lyger/definition_bindings.go",
         "lyger/source_body.go",
-        "lyger/function_definitions.go"
+        "lyger/function_definitions.go",
+        "lyger/process_inputs.go",
+        "lyger/lowering.go",
+        "lyger/constructor_grammar.go",
+        "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
-        "lyger/scoped_definition_test.go"
+        "lyger/scoped_definition_test.go",
+        "lyger/process_inputs_test.go",
+        "lyger/word_library_acceptance_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -12011,16 +12158,36 @@
         "lyger/scope.go",
         "lyger/function_definitions.go",
         "lyger/lowering.go",
-        "lyger/instructions.go"
+        "lyger/instructions.go",
+        "lyger/source_return_context.go",
+        "lyger/contracts_lowering.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
         "lyger/function_composition_test.go",
         "lyger/function_contract_regression_test.go",
-        "lyger/nested_definition_test.go"
+        "lyger/nested_definition_test.go",
+        "lyger/word_library_reject_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "builtins/eng/core.l",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/builtin_app_selection.go",
+        "lyger/storage_words.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_ownership_test.go"
+      ],
+      "evidence": "static-inspection; word-library native ownership witnesses",
       "checkedStages": [
         "static-source-inspection"
       ],
@@ -12136,10 +12303,28 @@
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/construction.go",
-        "docs/cli-build.md"
+        "lyger/constructor_grammar.go"
       ],
       "witnesses": [
-        "lyger/construction_test.go"
+        "lyger/construction_test.go",
+        "lyger/word_library_constructor_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lyger/construction.go",
+        "docs/cli-build.md",
+        "lyger/process_inputs.go"
+      ],
+      "witnesses": [
+        "lyger/construction_test.go",
+        "lyger/process_inputs_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -12211,9 +12396,66 @@
         "lyger/configured_import_test.go",
         "lyger/raw_text_test.go",
         "lyger/io_numeric_test.go",
-        "lyger/nested_definition_test.go"
+        "lyger/nested_definition_test.go",
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_io_policy_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/io/dictionary.l",
+        "lyger/source_units.go",
+        "lyger/function_definitions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_io_policy_test.go"
+      ],
+      "evidence": "static-inspection; word-library native and import witnesses",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/io/dictionary.l",
+        "lyger/source_units.go",
+        "lyger/function_definitions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go"
+      ],
+      "evidence": "static-inspection; word-library native and import witnesses",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/io/dictionary.l",
+        "lyger/source_units.go",
+        "lyger/function_definitions.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/source_descriptors.go",
+        "lyger/builtin_bindings.go",
+        "lyger/process_inputs.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_constructor_test.go",
+        "lyger/word_library_io_policy_test.go"
+      ],
+      "evidence": "static-inspection; word-library native and import witnesses",
       "checkedStages": [
         "static-source-inspection"
       ],
@@ -12227,7 +12469,8 @@
       ],
       "witnesses": [
         "lyger/dictionary_ownership_test.go",
-        "lyger/dictionary_dependency_capture_test.go"
+        "lyger/dictionary_dependency_capture_test.go",
+        "lyger/word_library_io_policy_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -12515,7 +12758,10 @@
       ],
       "witnesses": [
         "lyger/private_dictionary_test.go",
-        "lyger/definition_export_test.go"
+        "lyger/definition_export_test.go",
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_ownership_test.go",
+        "lyger/source_formal_composition_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -13229,47 +13475,54 @@
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
     "lyger/word_values.go": "449b35c1a97327533fa663131fa3817c71b30675cce7cf63d387eb27578e1240",
-    "stdlib/eng/storage/dictionary.l": "5d658412b1684a59d585ef6139302cf5dbd3a3458eaf2e78df06d40ce6ff57e2",
-    "lyger/definition_bindings.go": "c239e4939718346ed7db8b7677167f3a8fdcad97da3b0001afd1dbd20cf4377c",
-    "lyger/grammar.go": "5879aa138ee902f20463aa57ee5fe470c848b2f0ede945417d8487c8253b4f02",
+    "stdlib/eng/storage/dictionary.l": "939f4e9f5180f9962b4bc1b44b48fb08f0e6c0536f35b41f5800cc5b4e81201d",
+    "lyger/definition_bindings.go": "326e221f0872093dcd05e42829b25952eb01e69e563c214b98202eeea1228226",
+    "lyger/grammar.go": "0e24157ab96bed610a8914f962646c1a1d38eea70c8c1f655ae6023b47e72ec5",
     "lyger/runtime_types.go": "4334d0bc85798b5afac5fa32ba1dd33dc1b95e887a707e5e6f3995a635e363fc",
     "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
     "lyger/runtime_values_plan.go": "91ff1b5e9143c06fd85f883a2130a06abb10a7777b4d534b99625f6c35536671",
-    "builtins/eng/core.l": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
+    "builtins/eng/core.l": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
     "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
-    "lyger/semantic_resolution.go": "f924c2f40bc24b5d9c9d3b763c0d56e8027564ff8623e2da4c1ebc178114cabf",
+    "lyger/semantic_resolution.go": "9e340190c53baaf3e73cdbfd7887d2bdf8c0619f2980dd59cff2a2132ab144c6",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
     "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
-    "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
+    "lyger/instructions.go": "f320b4904175adf721b8fcc67b6c9e67353ee77aa97ad49af72d33ee5641adeb",
     "lyger/source_units_topology.go": "eb006bc1866daab6eba15a67c0e35b8c2bee94a15328927d388e54789c002ff5",
-    "lyger/construction.go": "e01de48db67121acf6ddaee35ea778a4dd5c29a618f685156954ae578c1eb9f7",
-    "lyger/source_functions.go": "9e19b22b4d6614c38160528e67e7c426b8c1b5a658bd16be4073336957ee0fbf",
-    "lyger/function_composition.go": "f51800bb1c0dedf03d76a36eea5adb053300332742bb81c86da6be57e4ef25cb",
-    "lyger/storage_words.go": "c22cd50d27415e75bed937d40fa469736d2963d7376144af2c2d124d61fabcfc",
-    "lyger/binding.go": "be5070f9f04486c61ecae6e832ac09e85339df355b3eb2a4f157e553f4ac1b87",
-    "lyger/scope.go": "c8fdbeb575b95e77f5785072ff8b15ad070af862033e48acd07346c0c980fdef",
-    "lyger/function_definitions.go": "5bb1ca5803d502f66122d7c4faf0d36e2074876bf896b7a58e5a27018f106f2b",
-    "lyger/lowering.go": "075874475402f5d7569903642042e023fa0c88c2f972f2a1df325dcf59e1ec37",
+    "lyger/construction.go": "192da2c2dc96741f707b32a8ba0e469f9e3ec028ae58f0dae6711d47df9ef2df",
+    "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
+    "lyger/function_composition.go": "709ee22c5bd2c2074276f0d3be6613e632915a022c21a5cab84d71f1b9c47cba",
+    "lyger/storage_words.go": "27daf80e13a829b55c4cfc41ee2b12d3006b622eb2a1eaf3ee79d3b0cd79d557",
+    "lyger/binding.go": "b1e8dc42ef2885adb528bcbd001f1f2071a1302dedfc95cd0eb5b53497c4b774",
+    "lyger/scope.go": "7080b02f19fa5728afb6772642c2bd376536b484ec771dda8535d3c505ae77a7",
+    "lyger/function_definitions.go": "27f58f97f26bdfdb51fe62fa6e969a0797131132b411a83e4b8721eeb53efa7b",
+    "lyger/lowering.go": "03a829d0d5dd9c2fdf15b2f881803bb4f3787100a645c42eaf9bdaefe50f0e53",
     "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
-    "lyger/semantics.go": "cdbd1b22d181b3026ddfd97d73dd5a13567d8a9b60da56822b423d49a73be383",
+    "lyger/semantics.go": "db528f999f22cf3ab5c2ff04fbca7709f270d321ae6350341c1d69feb72658b9",
+    "lyger/source_descriptors.go": "148c24029662f7dd3f8f39a0798d5aa5b69b18ae3ad297dfc7c47d6dad1387cf",
+    "lyger/builtin_bindings.go": "ca2a6a5d543ab23373ddee016522467c9314a7764929a900115bd5fd8b71e4e2",
     "docs/cli-build.md": "d66aacb6e7996bd4860ad7b60fe96a157227fc5cfe442dd8c40e9e5a1c5fe7e9",
     "lyger/builtin_operations.go": "2f025da178c6f59db2aa098f90d83cd81fd3e28e1d5cf50b71330a73a923e376",
-    "lyger/execution_composition.go": "16488cc98b137f93c910a795d891131614cea18314b428ba1089ec86c032e7e7",
+    "lyger/execution_composition.go": "28db7b11ca044a881c4d5c808a9bfaa45a29a5a970b66af46f39b7b66a8a08f0",
     "lyger/entry_composition.go": "561579d280ba920406d3f38b0c96aa8ffe324eca0be7877071783340d8f23214",
     "lyger/orchestration_plan.go": "5a9fbaa1d0e0eaf132720b960db17a216a11c65e90cf2ddb79e039200dc9ac0d",
-    "lyger/source_body.go": "41cbf8f1711709cfdc86ceec733a495c027c03b9b3dd60c0f6d7ee9376f336b0",
-    "lyger/registration.go": "2ef2c5f1d08897b7754d16bf56b8a0ff069a17c2f6171985e6374150de8ca4d5",
+    "lyger/source_body.go": "935279b83718227289fc0e9b21c4bd874f445aea65afbf77f14a9a186df6e6e1",
+    "lyger/process_inputs.go": "d19c3ce67ca0215d097868591aef667c2d15db48c1cc766f48f04e19c14aefad",
+    "lyger/constructor_grammar.go": "0756d02c04134ce5732dad7b5bc06de129909b5c9957509ee08c2ce41cf144cb",
+    "lyger/source_return_context.go": "75050139d3b3c4bd996aee10d8425bb823c629ed94d4bef6c9940bc09450b4ee",
+    "lyger/contracts_lowering.go": "6bb0190727db25891a178b9a7343a69a74a5b870ad01536e5ea1d03167fe5cfa",
+    "lyger/builtin_app_selection.go": "d27277189643bcb740dc4cd064aefa8fd810f5bff073a7d9d434f9bfec1f092f",
+    "lyger/registration.go": "e55d5e4e001d863ab082b8415e4a84c7d573b493a6bfe8fb0df015fcec738898",
     "lyger/builder.go": "4ac944a308bb7f0e940013c32488a2cbb89f450de2fec15e1b7558c33c004845",
     "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
-    "lyger/publication.go": "9ead493a6787b091e7f86e21d43a2b08cf7d19c6d790a02c829990c4c800a298",
-    "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
+    "lyger/publication.go": "9da8cdfa67fd9225890e374fcefa455263a1dc80aeaa42568e0b45668a331a54",
+    "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lyger/ir_kinds.go": "d552e2cd21079344f25317d13aec439bb665d269678a879169ac065b45058a79",
     "lyger/runtime_value_words.go": "820e42f8b6a8ef2ddf18b756bb54528ff36b18764108db4d3abce4714812670c",
     "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
-    "stdlib/eng/io/dictionary.l": "0aee928628163ae6deebcf061cb7a61680cb4da36177202694e739062ca56d82",
-    "lyger/lexical_scope.go": "2d2690c205ef1da8e1868a10d57eeb222018172fda7da9de76c0dc9c84c78288",
-    "lyger/grammar_types.go": "c57ca69f9748e991cd757cf567ee45c996ab57da9699afbef57fb6ac31970f1e",
+    "stdlib/eng/io/dictionary.l": "52d59eea2f063372f2ed55e2fd9673bccf32f21595ddc7530a2363175dc29664",
+    "lyger/lexical_scope.go": "9de4a95cbc9d4923f880330ac178717152008d8c604e50d7a7c744bebf26fa96",
+    "lyger/grammar_types.go": "a14fd3aac73b9a66a087f0e0eada9d09f37c6e1a08b2295fe9119044a480b8ae",
     "lyger/lexicon.go": "e6c61d41351f3116573742fbe107f87de188c9b36e0b6fc0cb14a8b74e60c2c7",
     "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
     "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
@@ -13281,7 +13534,7 @@
     "builtins/runtime/eng/number.l": "7d9f41f3990343b3ec6c63f5b03ca4762c5fab7207641d20515327ff71012f2b",
     "builtins/runtime/eng/foundations.l": "3f21a1e80f4249af50a48d35149f2144b00fa3c448eae1a3ab465b97b6044fd7",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
-    "builtins/README.md": "3f0865288ba3db13d96b9242ccdb3676c297f7dd8c1a0437fe519581e48cac2e",
+    "builtins/README.md": "1410c3695a9cd1d5c74d28cb4fc9fd87b7de50e20023f975286494a5ef26a36d",
     "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",
     "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
     "builtins/segments/vowels/calculation.lu": "18fa1ec1c7e13df95c5581646418aaa457f7779dac06fc44015ae20f1d4ebf86",

@@ -40,7 +40,7 @@ Preview serves `http://127.0.0.1:4321/`, including the Pagefind search index tha
 
 ## Keep native work opt-in
 
-Compiler bootstrap and expensive native validation follow the [temporary validation pause](../development-harness.md#temporary-validation-pause). The optional example verifier requires explicit authorization and an existing compiler with its native prerequisites:
+Compiler bootstrap and native validation follow the [validation policy](../development-harness.md#validation-authorization); task authorization persists through its checks. The optional example verifier requires authorization and an existing compiler with its native prerequisites:
 
 ```sh
 npm run examples:verify -- --compiler /absolute/path/to/l --id basic

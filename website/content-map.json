@@ -565,7 +565,7 @@
       "source": "docs/stdlib/eng/io.md",
       "route": "/docs/stdlib/eng/io/",
       "title": "IO",
-      "description": "IO.Print arguments, output formatting and failure behavior.",
+      "description": "Value printing, borrowed byte output, line completion and IO failures.",
       "section": "Libraries",
       "order": 1,
       "role": "explanatory",

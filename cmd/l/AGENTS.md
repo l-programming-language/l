@@ -20,4 +20,4 @@ workspace-entry bridge rather than editing returned source. Preserve the selecte
 runtime/process bytes and ordinary direct-API bundle layout. Library reuse does
 not authorize ignoring source paths or bypassing Cargo graph/source invalidation.
 
-Follow root [acceptance instructions](../../AGENTS.md#current-contract) and the [validation policy](../../docs/development-harness.md#temporary-validation-pause). Expensive local validation requires explicit authorization. Focused checks aid diagnosis and do not establish full validation; report unrun stages.
+Follow root [acceptance instructions](../../AGENTS.md#current-contract) and the [validation policy](../../docs/development-harness.md#validation-authorization). Task-authorized validation proceeds without repeated permission requests. Focused checks aid diagnosis and do not establish full validation; report unrun stages.

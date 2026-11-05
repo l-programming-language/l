@@ -38,6 +38,10 @@ Main constructs a Function inside an Object inside a Service; Basic supplies tha
 
 Process composes ordered Syllables through W. Function supplies FW/Func metadata: Name, typed Inputs, output types and an instantiated Process. Source Function declarations use this selected definition too; Function-local Return binds its builtin member after checking source results.
 
+A structured Process can declare typed Inputs for a selected pattern or iteration body. Lyger checks lexical scope and cardinality; explicit local annotations preserve declared types and dependencies for native type and borrow checking. Its bindings remain within that body and do not escape into a sibling branch. It has no callable outputs or capture runtime. See the [Process contract](../reference/builtins/definitions.md#process).
+
+Native source Function constructors can receive explicit generic parameter atoms before their signature. A source descriptor on a derived invocation noun can retain the selected base result and forward checked original inputs to a lexical helper. Forwarded operands evaluate once in source order; the base finishes before the helper uses its result. Wrappers preserve the base's operand boundary, while replacements use their effective signature. Generic declarations, output bindings and selected dependencies remain intact; native move and borrow rules still apply.
+
 <!-- example:main-descriptor -->
 
 Each `It describes` refines Main. App construction selects its Service, Object and Function rules. Main supplies no inputs or outputs; [ordinary Functions](applicational-types.md#functions-properties-and-operations) supply their declared signatures and bodies. A standalone Main Service remains structural; methods, overloads and variadic signatures are not introduced.

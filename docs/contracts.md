@@ -400,8 +400,11 @@ variables and dependent bounds.
 Native reports distinguish enumerated compiler boundaries, transitive dependency
 closure and implementation conformance. Opaque native internals, destructors and
 external runtime behavior remain explicit unresolved boundaries without approved
-evidence. Runtime failure channels, eager `Require`, snapshot/sharing semantics,
-and App lifecycle checks are unchanged. Inspection records no build/test evidence;
+evidence. `Require` constructs a failure only on its selected failure path;
+`Accept` releases a replaced error before constructing its replacement. Those
+source compositions do not establish general allocation or destructor-cost
+bounds. Runtime failure channels, snapshot/sharing semantics and App lifecycle
+checks retain their contracts. Inspection records no build/test evidence;
 explicit validation commands and their results remain separate from requirement
 coverage and native approval.
 

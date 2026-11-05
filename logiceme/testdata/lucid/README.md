@@ -32,8 +32,9 @@ below describe each family's composition, rejection and isolation obligations.
 paths and SHA-256 hashes of the 18 Rust segment files. The freeze check compares
 the selected resource files against those hashes; there is no automatic update
 mode. The [Rust reference](../../../builtins/README.md) defines the supported
-forms, excluded Deferred interface and integration limits. Changes to frozen
-assets or independent expectations require explicit finite authorization.
+forms, excluded Deferred interface and integration limits. Keep frozen assets,
+interfaces and hash expectations unchanged. Independent fixture/oracle amendments
+require explicit finite authorization.
 
 Shared parser, interpreter, conjoinment, source-fragment, communication-operand
 and native `Void` provenance regressions remain. Shared low-level interpreter
@@ -209,9 +210,9 @@ runtime behavior.
 
 ## Run and retain evidence
 
-Follow the [validation policy](../../../docs/development-harness.md#temporary-validation-pause).
-Full local validation requires an explicit request; focused checks establish only
-their stated boundary. The [development guide](../../../docs/development-harness.md)
+Follow the [validation policy](../../../docs/development-harness.md#validation-authorization).
+Task-authorized checks proceed without repeated permission requests; focused
+checks establish only their stated boundary. The [development guide](../../../docs/development-harness.md)
 owns tool provisioning, environment and validation budgets.
 
 For an authorized native-compilation check, run:
@@ -518,7 +519,7 @@ The ledger records whether the current generation and native obligations passed
 at a given revision. A documentation update alone establishes no new behavioral
 result. For subsequent behavior changes, use an existing exposing regression
 when available and repair the responsible production layer within the approved
-scope. Keep independent expectations and frozen hashes; changing either requires
+scope. Keep frozen hashes unchanged. Independent expectation changes require
 a concrete, separately scoped amendment, never an automatic update from actual
 output. Consult the [current integration limits](../../../builtins/README.md#current-integration-limits)
 before treating the current corpus as support for additional compositions.

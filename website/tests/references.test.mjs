@@ -79,7 +79,7 @@ async function fixture(t) {
   }));
   const semantic = (id, kind, name, source, doc) => ({
     id, kind, name, role: 'implementation', support: 'supported', doc,
-    ...(kind === 'stdlib-export' ? { visibility: 'public' } : {}),
+    ...(kind === 'stdlib-export' ? { dictionary: { lexicon: 'eng', key: 'io' }, visibility: 'public' } : {}),
     sources: [source],
     witnesses: ['lyger/scanner_test.go'], evidence: 'static-inspection; existing-witness-not-run',
   });

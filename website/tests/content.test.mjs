@@ -231,13 +231,13 @@ test('a second indexed dictionary requires both a dedicated page and reviewed pu
     extra: { entry: 'stdlib/eng/extra/dictionary.l', dictionary: 'Extra' },
   } } };
   const pages = [page('docs/stdlib/io.md', '/docs/stdlib/eng/io/')];
-  const entries = [{ kind: 'stdlib-export', visibility: 'public', name: 'IO.Print', sources: ['stdlib/eng/io/dictionary.l'] }];
+  const entries = [{ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'io' }, visibility: 'public', name: 'IO.Print', sources: ['stdlib/eng/io/dictionary.l'] }];
   assert.throws(() => validateStdlib(index, pages, entries), /Unclassified indexed dictionary eng\/extra/);
   pages.push(page('docs/stdlib/extra.md', '/docs/stdlib/eng/extra/'));
   assert.throws(() => validateStdlib(index, pages, entries), /Missing reviewed export inventory for eng\/extra/);
-  entries.push({ kind: 'stdlib-export', visibility: 'public', name: 'Extra.Value', sources: ['stdlib/eng/extra/dictionary.l'] });
-  entries.push({ kind: 'stdlib-export', visibility: 'private', name: 'Extra.Hidden', sources: ['stdlib/eng/extra/dictionary.l'] });
-  entries.push({ kind: 'stdlib-export', visibility: 'namespace', name: 'Extra', sources: ['stdlib/eng/extra/dictionary.l'] });
+  entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'extra' }, visibility: 'public', name: 'Extra.Value', sources: ['stdlib/eng/extra/dictionary.l'] });
+  entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'extra' }, visibility: 'private', name: 'Extra.Hidden', sources: ['stdlib/eng/extra/dictionary.l'] });
+  entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'extra' }, visibility: 'namespace', name: 'Extra', sources: ['stdlib/eng/extra/dictionary.l'] });
   assert.deepEqual(validateStdlib(index, pages, entries).map((row) => [row.key, row.exports]), [
     ['extra', ['Extra.Value']], ['io', ['IO.Print']],
   ]);
@@ -245,10 +245,28 @@ test('a second indexed dictionary requires both a dedicated page and reviewed pu
 
 test('reviewed internal dictionaries retain coverage without becoming public catalog entries', () => {
   const index = { format: 1, languages: { eng: { support: { entry: 'stdlib/eng/support.l', dictionary: 'Support' } } } };
-  const entries = [{ kind: 'stdlib-export', visibility: 'namespace', support: 'internal', sources: ['stdlib/eng/support.l'] }];
+  const entries = [{ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'support' }, visibility: 'namespace', support: 'internal', sources: ['stdlib/eng/support.l'] }];
   assert.deepEqual(validateStdlib(index, [], entries), []);
-  entries.push({ kind: 'stdlib-export', visibility: 'public', support: 'supported', sources: ['stdlib/eng/support.l'] });
+  entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'support' }, visibility: 'public', support: 'supported', sources: ['stdlib/eng/support.l'] });
   assert.throws(() => validateStdlib(index, [], entries), /conflicting public documentation classifications/);
+});
+
+test('export ownership is distinct from reviewed source dependencies', () => {
+  const index = { format: 1, languages: { eng: {
+    io: { entry: 'stdlib/eng/io/dictionary.l', dictionary: 'IO' },
+    support: { entry: 'stdlib/eng/support.l', dictionary: 'Support' },
+  } } };
+  const pages = [page('docs/stdlib/io.md', '/docs/stdlib/eng/io/')];
+  const owner = { lexicon: 'eng', key: 'io' };
+  const entries = [
+    { kind: 'stdlib-export', dictionary: owner, visibility: 'public', support: 'supported', name: 'IO.Lined', sources: ['stdlib/eng/io/dictionary.l', 'stdlib/eng/support.l'] },
+    { kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'support' }, visibility: 'namespace', support: 'internal', sources: ['stdlib/eng/support.l'] },
+  ];
+  assert.deepEqual(validateStdlib(index, pages, entries).map((row) => [row.key, row.exports]), [['io', ['IO.Lined']]]);
+  for (const dictionary of [undefined, { lexicon: 'eng', key: 'unknown' }]) {
+    assert.throws(() => validateStdlib(index, pages, [{ ...entries[0], dictionary }]), /Invalid reviewed dictionary owner/);
+  }
+  assert.throws(() => validateStdlib(index, pages, [{ ...entries[0], sources: ['stdlib/eng/support.l'] }]), /Missing reviewed dictionary source/);
 });
 
 test('portable containment and safe files reject traversal and external symlinks', async (t) => {

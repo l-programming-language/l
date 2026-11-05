@@ -2,27 +2,23 @@
 
 Use the repository harness for current-input integrity and the ordinary build/test gate. The [architecture](architecture.md), [build/runtime contract](cli-build.md) and [error model](error-model.md) describe supported behavior.
 
-## Temporary validation pause
+## Validation authorization
 
-Expensive local validation requires an explicit author request. Repository Actions
-automatically validate Linux when a pull request opens, receives commits, or reopens.
-Manual dispatch also supports macOS. The required `L CI` check on `main` remains
-removed; pull-request, deletion and force-push protections remain.
+Explicit task authorization covers its bounded baseline, regression, native and
+full completion checks, including required tool preparation. Continue those checks
+without asking again. Use focused checks during development and the full gate for
+a completion claim; report unrun stages accurately. Documentation-only checks do
+not establish native behavior. Historical green reports validate only their tested
+revision. Preserve tests, assertions, protected inputs, tool pins and budgets.
 
-Do not automatically run local bootstrap, full-module lint, full ordinary/native
-suites, or `scripts/l-check`. Run them only when explicitly requested by the user.
-Hosted runs are authorized by the PR events above or an explicit dispatch request.
-This policy overrides completion commands elsewhere in
-repository documentation and skills, including documentation-only changes.
-Use lightweight inspection appropriate to the change, and state which validation
-was not run. Historical green reports do not establish validation of a new revision.
-Tests, assertions, protected inputs, tool pins and command behavior are retained.
+Repository Actions automatically validate Linux when a pull request opens, receives
+commits, or reopens. Manual dispatch, including macOS, requires explicit
+authorization. The required `L CI` check on `main` remains removed; restoring it is
+a separate decision. Pull-request, deletion and force-push protections remain.
 
-Restoring the required branch check remains a separate explicit decision.
+## Full validation
 
-## Full validation when requested
-
-When explicitly requested, prepare pinned tools and dependencies with
+For authorized full validation, prepare pinned tools and dependencies with
 `scripts/l-ci bootstrap`, then run `scripts/l-check`. The shared CI launcher sets child `GOMAXPROCS` to the smaller
 of four and the logical CPUs available to the process, overriding inherited
 values. A two-CPU runner therefore uses two concurrent packages and two parallel
@@ -85,7 +81,7 @@ deployment scripts, filters acceptance tests or changes retained locks.
 (Ubuntu 24.04 x64) on PR creation, new commits, and reopening. There is no separate
 push trigger or run for title/description edits. Manual dispatch defaults to
 `linux`; `macos` selects macOS 15 ARM64, and `both` selects both platforms. Each
-selected platform bootstraps once and runs the [full gate](#full-validation-when-requested).
+selected platform bootstraps once and runs the [full gate](#full-validation).
 Hosted checks set `CARGO_INCREMENTAL=0`; local runs retain their
 configured Cargo setting. This changes compilation reuse without changing test
 selection, compiler concurrency or deadlines. A stage failure stops later stages on that platform; the other
@@ -298,7 +294,7 @@ keyed-pattern and generic/lifetime scenarios. The suite guide owns the current c
 verification runs exact-bundle comparisons, malformed-input and focused checks,
 and the 18-template freeze check. Native Rust
 compilation is separately tagged and is **not** part of the untagged acceptance
-command. The [full gate](#full-validation-when-requested) includes the complete
+command. The [full gate](#full-validation) includes the complete
 paired Expected/Generated compilation stage, also available separately:
 
 ```sh
@@ -326,8 +322,9 @@ runtime/module support and unrelated advanced validation paths are not verified
 by this corpus; consult the
 [integration limits](../builtins/README.md#current-integration-limits).
 Do not restore the removed Rust matrix or change frozen definitions merely to
-obtain a passing run. Future interface or coverage changes need an explicitly
-scoped task; protected bytes still require a finite approved amendment.
+obtain a passing run. Keep `builtins/segments/`, `builtins/templates/`, their
+interfaces and frozen hash expectations unchanged. New source-level coverage retains the existing corpus;
+protected fixture changes still require a finite approved amendment.
 
 ## Current integrity and amendments
 

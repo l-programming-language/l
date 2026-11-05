@@ -28,8 +28,8 @@ Definitions, Operations and Default; Definition forwards PO's Iteration directly
 Execution excludes Deferred. Operation and Instantiation explicitly forward the
 two local generic/lifetime inputs through their approved cases. The
 [Declaration composition witnesses](../logiceme/testdata/lucid/README.md#declaration-adapters)
-exercise the outer action selectors and singular child forwarding. Frozen assets
-and independent expectations require explicit authorization for changes.
+exercise the outer action selectors and singular child forwarding. Source-library
+composition does not widen frozen assets, their interfaces or hash expectations.
 
 ## L source library counterparts
 
@@ -37,6 +37,9 @@ The [core](eng/core.l) supplies the small implicit vocabulary: Process, Function
 its Invoke and Return members, construction descriptors, Retain, Start and
 Execute. Start composes Build then Run; Execute composes Start then Await.
 Both retain their `any App` signatures.
+Retain consumes an explicit borrowed Arc operand and retains the same allocation;
+Storage's Rc retention remains distinct. Its typed App wrapper delegates to core
+Retain without lifecycle effects.
 
 The privately imported [Storage dictionary](../stdlib/eng/storage/dictionary.l)
 composes storage, copying, checking and capture operations from source Functions
@@ -44,13 +47,21 @@ and small native leaves. Selected definitions carry their declaration dependenci
 there is no unconditional helper aggregate. Storage's names do not become global
 builtin words. Source Functions supply their own invocation words, use normal
 local declarations and Return, and retain canonical declaration ownership.
+Typed Process inputs bind branch and iteration values in their own lexical scope.
+Result selection, lazy failure construction, traversal and return sequencing stay
+in L; labels preserve typed provenance through expansion. See the
+[source-word contracts](../docs/reference/builtins/definitions.md#storage-source-compositions)
+for current forms and retired identities.
 
 [IO.Print](../stdlib/eng/io/dictionary.l) composes the operand's selected Render
 member with Write. Text retains exact bytes; Number uses the same
-[source formatter](runtime/eng/number.l) as the runtime. Write holds stdout's lock,
-writes the value and one LF, and reports write failure through the App's native
-failure boundary. Its leaves perform individual host operations; no native
-formatting dispatcher or duplicated formatter remains.
+[source formatter](runtime/eng/number.l) as the runtime. Write holds one stdout
+guard across a Lined Sender and applies the existing fail-fast message through
+Storage.Result.Expect. The public Output, Diagnostic, Send, Lined and Flush words
+separate resource choice, byte delivery, line completion and flushing. Lined is a
+descriptor on the actual derived Sender; its source helper selects on the retained
+base result and preserves the caller's writer. These words add no general cost,
+blocking, durability or ownership proof. See the [IO reference](../docs/stdlib/eng/io.md).
 
 Native source Function signatures use existing Func/Props metadata. The frontend
 `Type` slot binds a native type atom or selected source type declaration; `Atoms`
@@ -60,8 +71,8 @@ targets remain references. These frontend roles add no AML fields or logeme
 interfaces. Native and ordinary Function bodies share instruction lowering.
 
 Runtime policy is authored in [L source](runtime/eng/dictionary.l). Run
-`scripts/l-go run ./tools/composition` after changing its dependencies, then
-`scripts/l-go run ./tools/composition --check` to verify the derived AML,
+`scripts/l-go run -mod=readonly ./tools/composition` after changing its dependencies, then
+`scripts/l-go run -mod=readonly ./tools/composition -check` to verify the derived AML,
 fingerprints and selection index. The [CLI contract](../docs/cli-build.md#source-generation-and-native-builds)
 defines runtime selection and provider behavior. Logiceme consumes complete AML,
 not L source or private frontend plans.
