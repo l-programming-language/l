@@ -33,35 +33,12 @@ composition does not widen frozen assets, their interfaces or hash expectations.
 
 ## L source library counterparts
 
-The [core](eng/core.l) supplies the small implicit vocabulary: Process, Function,
-its Invoke and Return members, construction descriptors, Retain, Start and
-Execute. Start composes Build then Run; Execute composes Start then Await.
-Both retain their `any App` signatures.
-Retain consumes an explicit borrowed Arc operand and retains the same allocation;
-Storage's Rc retention remains distinct. Its typed App wrapper delegates to core
-Retain without lifecycle effects.
-
-The privately imported [Storage dictionary](../stdlib/eng/storage/dictionary.l)
-composes storage, copying, checking and capture operations from source Functions
-and small native leaves. Selected definitions carry their declaration dependencies;
-there is no unconditional helper aggregate. Storage's names do not become global
-builtin words. Source Functions supply their own invocation words, use normal
-local declarations and Return, and retain canonical declaration ownership.
-Typed Process inputs bind branch and iteration values in their own lexical scope.
-Result selection, lazy failure construction, traversal and return sequencing stay
-in L; labels preserve typed provenance through expansion. See the
-[source-word contracts](../docs/reference/builtins/definitions.md#storage-source-compositions)
-for current forms and retired identities.
-
-[IO.Print](../stdlib/eng/io/dictionary.l) composes the operand's selected Render
-member with Write. Text retains exact bytes; Number uses the same
-[source formatter](runtime/eng/number.l) as the runtime. Write holds one stdout
-guard across a Lined Sender and applies the existing fail-fast message through
-Storage.Result.Expect. The public Output, Diagnostic, Send, Lined and Flush words
-separate resource choice, byte delivery, line completion and flushing. Lined is a
-descriptor on the actual derived Sender; its source helper selects on the retained
-base result and preserves the caller's writer. These words add no general cost,
-blocking, durability or ownership proof. See the [IO reference](../docs/stdlib/eng/io.md).
+[Core](eng/core.l) supplies implicit source vocabulary; its [word reference](../docs/reference/builtins/definitions.md)
+owns forms, operands and behavior. [Storage](../docs/internals/storage.md) supplies
+explicitly importable implementation compositions, and [IO](../docs/stdlib/eng/io.md)
+supplies public printing and byte output. Their selection, traversal, error and
+wrapper policies remain in L over small native leaves. Source-library changes
+do not widen the frozen logeme interfaces.
 
 Native source Function signatures use existing Func/Props metadata. The frontend
 `Type` slot binds a native type atom or selected source type declaration; `Atoms`

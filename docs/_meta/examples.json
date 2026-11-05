@@ -283,32 +283,6 @@
       "lang": "l"
     },
     {
-      "id": "aml-declaration-evaluation",
-      "source": "logiceme/testdata/lucid/declaration-evaluation.aml.txt",
-      "classification": "fragment",
-      "description": "Canonical backend AML input for the declaration/evaluation Lucid witness; no L execution claim.",
-      "sha256": "8998333ae8cbd043ca66bf742186c8341c65d6f7c1aede4024d11fca606f01e5",
-      "validation": "existing-witness-not-run",
-      "witnesses": [
-        "logiceme/lucid_generation_test.go",
-        "logiceme/testdata/lucid/README.md"
-      ],
-      "lang": "text"
-    },
-    {
-      "id": "aml-statements",
-      "source": "logiceme/testdata/lucid/statements.aml.txt",
-      "classification": "fragment",
-      "description": "Canonical complete backend AML statement witness, displayed without XML normalization.",
-      "sha256": "e546146fadad91e2828950ba0332f42f8b93e3d2ae64bc26d6022df983aa96cf",
-      "validation": "existing-witness-not-run",
-      "witnesses": [
-        "logiceme/lucid_generation_test.go",
-        "logiceme/testdata/lucid/README.md"
-      ],
-      "lang": "text"
-    },
-    {
       "id": "stdlib-index",
       "source": "stdlib/index.json",
       "classification": "fragment",
@@ -319,20 +293,6 @@
         "lyger/dictionary_index_test.go"
       ],
       "lang": "json"
-    },
-    {
-      "id": "list-declaration",
-      "source": "docs/examples/list-declaration.l",
-      "classification": "fragment",
-      "description": "Documentation-only declaration shape; grammar and storage inspection, no compilation or runtime witness.",
-      "validation": "static-inspection",
-      "witnesses": [
-        "lexicon/eng/grammar.json",
-        "lyger/refactor_value_characterization_test.go",
-        "lyger/types.go"
-      ],
-      "sha256": "ed319a1d005e1f9bd1f1d25dffa3fbefc8f74a86f5baa869ffc4d107cb765b66",
-      "lang": "l"
     },
     {
       "id": "recursive-classes",
@@ -394,41 +354,6 @@
         "end": 3
       },
       "sha256": "7af773c6f2993d71df8d1f26d9dcb32d98fea8f4df249b7c3b2f969ec9ded40a",
-      "lang": "l"
-    },
-    {
-      "id": "service-output-member",
-      "source": "cmd/l/test/runnable_service/canonical-io.l",
-      "classification": "fragment",
-      "description": "App lifecycle and Output member access from the Worker example; requires its preceding declaration.",
-      "validation": "existing-witness-not-run",
-      "witnesses": [
-        "cmd/l/runnable_service_test.go",
-        "cmd/l/runnable_service_native_test.go"
-      ],
-      "lines": {
-        "start": 4,
-        "end": 6
-      },
-      "sha256": "9d37f9bb2379046dead50f3c6cddff8322aa4744c125cec5d08a0cd489e39c1c",
-      "lang": "l"
-    },
-    {
-      "id": "local-launch",
-      "source": "demo/paragraphs/local-definitions.l",
-      "classification": "fragment",
-      "description": "First local paragraph from the complete local-definitions runtime witness, with import and enclosing value; remaining paragraphs omitted.",
-      "validation": "existing-witness-not-run",
-      "witnesses": [
-        "cmd/l/paragraph_integration_test.go",
-        "cmd/l/paragraph_native_integration_test.go",
-        "demo/paragraphs/README.md"
-      ],
-      "lines": {
-        "start": 1,
-        "end": 11
-      },
-      "sha256": "e8e0b3b83cf5a8987424d68ffd2c049962782dbcc59fdaf28e625cefde55cb09",
       "lang": "l"
     },
     {
@@ -952,20 +877,83 @@
       }
     },
     {
-      "id": "native-dictionary-use",
-      "source": "cmd/l/test/runnable_service/basic.l",
-      "classification": "fragment",
-      "description": "ProbeIO caller import and App-body use; requires sibling probe.l and omits the later Build/Run/Await/Show instructions. The Text includes an explicit newline.",
+      "id": "composed-functions",
+      "source": "docs/examples/composed-functions.l",
+      "classification": "runnable",
+      "description": "Ordinary Functions compose Identity and Relay with an explicit caller result, then Show writes hello.",
+      "sha256": "05748c69f17bab6b64c8465553a2ce554e8d30fc08daa9d666233c50c0120a03",
       "validation": "existing-witness-not-run",
       "witnesses": [
-        "cmd/l/runnable_service_test.go",
-        "cmd/l/runnable_service_native_test.go"
+        "lyger/source_functions_test.go"
       ],
-      "sha256": "d5f7458b98b50106a02c00a70e5c43486c7f6cab2a52c06589c7aec2c5efa5b2",
+      "lang": "l",
+      "expectedStdoutBase64": "aGVsbG8=",
+      "expectedStderrBase64": "",
+      "expectedExit": 0
+    },
+    {
+      "id": "composed-function-definition",
+      "source": "docs/examples/composed-functions.l",
+      "classification": "fragment",
+      "description": "Identity declaration and Return from the complete composed-functions example.",
+      "sha256": "05748c69f17bab6b64c8465553a2ce554e8d30fc08daa9d666233c50c0120a03",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/source_functions_test.go"
+      ],
       "lang": "l",
       "lines": {
         "start": 1,
-        "end": 4
+        "end": 2
+      }
+    },
+    {
+      "id": "source-require",
+      "source": "stdlib/eng/storage/dictionary.l",
+      "classification": "fragment",
+      "description": "Require constructs a runtime failure only in the absent Option branch.",
+      "sha256": "939f4e9f5180f9962b4bc1b44b48fb08f0e6c0536f35b41f5800cc5b4e81201d",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 178,
+        "end": 179
+      }
+    },
+    {
+      "id": "source-send",
+      "source": "stdlib/eng/io/dictionary.l",
+      "classification": "fragment",
+      "description": "Send composes a borrowed byte projection and one write_all operation.",
+      "sha256": "52d59eea2f063372f2ed55e2fd9673bccf32f21595ddc7530a2363175dc29664",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 17,
+        "end": 19
+      }
+    },
+    {
+      "id": "source-lined",
+      "source": "stdlib/eng/io/dictionary.l",
+      "classification": "fragment",
+      "description": "Lined Sender wraps the retained base with source-defined Result selection.",
+      "sha256": "52d59eea2f063372f2ed55e2fd9673bccf32f21595ddc7530a2363175dc29664",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_constructor_test.go"
+      ],
+      "lang": "l",
+      "lines": {
+        "start": 21,
+        "end": 24
       }
     }
   ]

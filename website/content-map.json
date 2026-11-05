@@ -56,7 +56,7 @@
       "source": "docs/guide/definitions.md",
       "route": "/docs/guide/definitions/",
       "title": "Definitions",
-      "description": "Define vocabulary, typed actions and Functions.",
+      "description": "Build reusable words from small actions, Functions, scoped Processes and descriptors.",
       "section": "Learn L",
       "order": 4,
       "role": "explanatory",
@@ -579,6 +579,16 @@
       "section": "Internals",
       "order": 0,
       "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/internals/storage.md",
+      "route": "/docs/internals/storage/",
+      "title": "Storage compositions",
+      "description": "Internal source words for results, traversal, returns, ownership and bytes.",
+      "section": "Internals",
+      "order": 1,
+      "role": "implementation",
       "generated": false
     },
     {

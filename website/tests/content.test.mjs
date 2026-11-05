@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import test from 'node:test';
 import { parse as parseYAML } from 'yaml';
 import { anchors, parseMarkdown, preparePage, validateMap, validateStdlib, stdlibCatalog } from '../scripts/content.mjs';
@@ -401,4 +402,43 @@ test('catalog rendering handles additional languages and libraries without IO-sp
   assert.match(rendered, /Vectors.Length, Vectors.Dot/);
   assert.match(rendered, /\[Vectors\]\(\/docs\/stdlib\/eng\/vectors\/\)/);
   assert.match(rendered, /\[Sample\]\(\/docs\/stdlib\/test\/sample\/\)/);
+});
+
+test('example verification replaces prior success even when the current run fails', async (t) => {
+  const source = 'Show `checked`.\n';
+  for (const scenario of [
+    { name: 'invalid invocation', stage: 'configuration', message: /provide --compiler/ },
+    { name: 'invalid manifest', stage: 'configuration', message: /JSON/ },
+    { name: 'changed source', stage: 'source-validation', message: /Source changed/ },
+    { name: 'build failure', stage: 'native-compilation', message: /build failed/ },
+    { name: 'runtime failure', stage: 'native-runtime', message: /runtime output\/status differs/ },
+    { name: 'success', stage: 'native-runtime' },
+  ]) {
+    await t.test(scenario.name, async (t) => {
+      const manifest = { examples: [{ id: 'current', source: 'example.l', classification: 'runnable', sha256: sha256(source), expectedExit: 0, expectedStdoutBase64: Buffer.from('checked\n').toString('base64') }] };
+      if (scenario.name === 'changed source') manifest.examples[0].sha256 = '0'.repeat(64);
+      const root = await fixture(t, {
+        'website/scripts/examples.mjs': await fs.readFile(new URL('../scripts/examples.mjs', import.meta.url)),
+        'website/scripts/lib.mjs': await fs.readFile(new URL('../scripts/lib.mjs', import.meta.url)),
+        'website/reports/examples-verification.json': JSON.stringify({ compiler: 'old', outcomes: [{ id: 'old', stage: 'native-runtime', status: 'passed' }] }),
+        'docs/_meta/examples.json': scenario.name === 'invalid manifest' ? '{' : JSON.stringify(manifest),
+        'example.l': source,
+      });
+      const compiler = path.join(root, 'compiler.mjs');
+      await fs.writeFile(compiler, `#!${process.execPath}\nimport fs from 'node:fs';\nimport path from 'node:path';\nif (${scenario.name === 'build failure'}) process.exit(2);\nfs.writeFileSync(path.join(process.argv[4], path.basename(process.argv[5], '.l')), ${JSON.stringify('#!/bin/sh\nprintf "checked\\n"\nexit ' + (scenario.name === 'runtime failure' ? 3 : 0) + '\n')}, {mode:0o755});\n`, { mode: 0o755 });
+      const args = scenario.name === 'invalid invocation' ? [] : ['--compiler', compiler];
+      const result = spawnSync(process.execPath, [path.join(root, 'website/scripts/examples.mjs'), ...args], { encoding: 'utf8', timeout: 10000 });
+      assert.ifError(result.error);
+      assert.equal(result.status, scenario.message ? 1 : 0, result.stderr);
+      if (scenario.message) assert.match(result.stderr, scenario.message);
+      const report = JSON.parse(await fs.readFile(path.join(root, 'website/reports/examples-verification.json'), 'utf8'));
+      assert.ok(report.outcomes.every((outcome) => outcome.id !== 'old'), 'failed run left the prior successful report current');
+      assert.equal(report.status, scenario.message ? 'failed' : 'passed');
+      assert.equal(report.exitCode, result.status);
+      const outcome = report.outcomes.at(-1);
+      assert.equal(outcome.stage, scenario.stage);
+      assert.equal(outcome.status, report.status);
+      if (scenario.message) assert.match(outcome.error, scenario.message);
+    });
+  }
 });

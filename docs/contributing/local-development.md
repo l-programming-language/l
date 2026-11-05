@@ -46,7 +46,11 @@ Compiler bootstrap and native validation follow the [validation policy](../devel
 npm run examples:verify -- --compiler /absolute/path/to/l --id basic
 ```
 
-This checks approved examples, not arbitrary Markdown fences or the full acceptance gate.
+Omit `--id` to check every complete registered example. This does not execute
+arbitrary Markdown fences or replace full compiler acceptance.
+`website/reports/examples-verification.json` is replaced on each invocation;
+`running` is incomplete, `failed` names the failed stage, and only `passed` records
+a completed selection.
 
 ### Test the installation flow
 

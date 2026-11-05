@@ -280,7 +280,7 @@
         "list": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "List",
-          "notes": "Recognizes List type/storage structure. General runtime element construction, mutation, indexing, iteration and bounds behavior are not established."
+          "notes": "Recognizes List construction arguments. The List contract defines typed elements, checked updates, indexed reads and bounds errors; this recognizer adds no general source loop syntax."
         },
         "dict": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
@@ -561,7 +561,7 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.expansive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
@@ -585,7 +585,7 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.locative.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
@@ -597,49 +597,49 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.receptive.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.receptive.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.receptive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.reductive.imperative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.reductive.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.reductive.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.reductive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.associative.imperative": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",

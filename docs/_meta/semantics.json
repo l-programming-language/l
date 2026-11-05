@@ -1786,7 +1786,7 @@
       "witnesses": [
         "lyger/word_library_acceptance_test.go"
       ],
-      "notes": "The source Function composes a borrowed byte view with write_all. A failure can follow partial output; writer allocation and blocking remain native obligations.",
+      "notes": "The source Function composes a borrowed byte view with write_all. Its native operation handles short writes and Interrupted, and rejects zero progress with WriteZero; L adds no extra retry policy. A failure can follow partial output; allocation and blocking remain native obligations.",
       "evidence": "static-inspection; word-library native and import witnesses",
       "dictionary": {
         "lexicon": "eng",
@@ -2060,7 +2060,7 @@
       "witnesses": [
         "lyger/runtime_values_test.go"
       ],
-      "notes": "Put/Place lower to checked runtime updates. Typed constructor reads supply indexed access; Get/Take, iteration and general removal are not established.",
+      "notes": "Put/Place lower to checked runtime updates; typed constructor reads supply indexed access. Get/Take, general source loop syntax and general removal remain unsupported. Storage traversal inside native Functions is a separate source composition.",
       "evidence": "static-inspection; existing-witness-not-run"
     },
     {
@@ -2310,7 +2310,7 @@
       "name": "Storage",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/reference/builtins/definitions.md#storage-source-compositions",
+      "doc": "docs/internals/storage.md#results-and-errors",
       "sources": [
         "stdlib/index.json",
         "stdlib/eng/storage/dictionary.l"
@@ -2322,7 +2322,7 @@
         "lyger/word_library_ownership_test.go",
         "lyger/source_formal_composition_test.go"
       ],
-      "notes": "Internal source compositions own typed traversal, explicit result binding, lazy failure branches, release sequencing, byte appends and Function returns. Retired word identities have no compatibility aliases. This source support establishes no general native allocation, blocking or destructor-cost proof.",
+      "notes": "Explicitly importable implementation vocabulary, not an implicit builtin or public dictionary catalog. Source compositions own typed traversal, result binding, lazy failures, release sequencing, byte appends and caller returns. Native allocation, blocking and destructor costs remain separate obligations.",
       "evidence": "static-inspection; existing-witness-not-run",
       "dictionary": {
         "lexicon": "eng",

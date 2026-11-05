@@ -1,14 +1,10 @@
 # Construction and definition builtins
 
-These facilities are defined in the implicit source unit `builtins/eng/core.l`. Their source definitions are the authority for composition; their names do not create conventional object-oriented or functional-language semantics beyond the current implementation.
+The implicit [core source](../../../builtins/eng/core.l) defines these composition facilities. See the [builtin index](index.md#source-defined-facilities) for their word forms and the [definition guide](../../guide/definitions.md) for source authoring.
 
 ## Process
 
-Process has forms Process, Processes, Processive, and Processing. Its native definition is operation W integrated with the ordered Definitions/Syllables parameter:
-
-```text
-<DEF>W^<@Definitions|Syllables@><DEF>
-```
+Process composes ordered Definitions/Syllables through operation W.
 
 A Process collects existing instantiated definition expressions. It is not an OS process handle; App invocations own those. Processing a source-defined rendering or writing operation in IO is an application-body composition, not a direct runtime launch instruction.
 
@@ -16,15 +12,19 @@ Structured selection and iteration bodies can declare typed Process Inputs. Lyge
 
 ## Function
 
-Function has forms Function, Functions, Functional, and Functioning. It supplies an FW native definition with Func metadata. Name is Text, Inputs is Props, Outputs is Texts, and Process is an already instantiated definition reference.
+Function supplies an FW native definition with Func metadata. Name is Text, Inputs is Props, Outputs is Texts, and Process is an already instantiated definition reference.
 
 Inputs and Outputs preserve their typed cardinality. Main supplies No Inputs and No Outputs; ordinary Function declarations bind their checked signatures and paragraph bodies to the same selected definition. The constructor is not a marker for a second emitter.
 
-Invocation words use normal grammatical binding, as Print does. Captures, snapshots and Pointer sharing follow [scope rules](../../spec/names-and-scope.md#runtime-storage-and-definite-assignment). Native signature/lifetime metadata remains bounded by the [definition contract](../../spec/definitions.md#process-function-and-return).
+Invocation words use normal grammatical binding. Captures, snapshots and Pointer sharing follow [scope rules](../../spec/names-and-scope.md#runtime-storage-and-definite-assignment). Native signature/lifetime metadata remains bounded by the [definition contract](../../spec/definitions.md#process-function-and-return).
+
+## Function.Invoke and Delegate
+
+Function.Invoke applies its Target with ordered Arguments atoms through KY. Delegate supplies a direct native Target call without an argument-list slot. These are composition facilities; each source Function declaration binds its own ordinary invocation verb, with checked inputs and outputs.
 
 ## Function.Return
 
-Return, Returns, Returned, Returning, and Returner are Function members. Root-authored returning actions select their caller's Return; that selected implementation preserves its own lexical delegates. Function-owned actions retain their constructor contract and reject incompatible callers. Each Function establishes its own return context and checks declared result types and counts. Known unconditional exits through source actors and transparent Processes enter the typed plan; opaque or conditional bodies do not establish unconditional exits.
+Root-authored returning actions select their caller's Return; that selected implementation preserves its own lexical delegates. Function-owned actions retain their constructor contract and reject incompatible callers. Each Function establishes its own return context and checks declared result types and counts. Known unconditional exits through source actors and transparent Processes enter the typed plan; opaque or conditional bodies do not establish unconditional exits.
 
 Return completes that invocation; Exit terminates the enclosing program. Neither transports runtime captures into an App process.
 
@@ -32,27 +32,11 @@ Return completes that invocation; Exit terminates the enclosing program. Neither
 
 Retain takes an explicit borrowed Arc and returns another handle to the same allocation. It increments shared ownership without cloning the payload. Atomic reference counting does not make an arbitrary payload Send or Sync.
 
-The implementation dictionary's `Storage.App.Retain` accepts a borrowed App Arc and delegates to this core word. It performs no launch, stop, wait or invocation transition. `Storage.Retain` remains the separate Rc operation. `Storage.Release` consumes a value through native drop; any destructor behavior belongs to that value's representation.
+The [Storage ownership words](../../internals/storage.md#ownership-and-bytes) distinguish this Arc operation from Rc retention, copying and release.
 
 ## Storage source compositions
 
-The [Storage implementation dictionary](../../../stdlib/eng/storage/dictionary.l) keeps algorithms in source Functions and Processes. Native leaves perform their individual calls, operators, borrows or patterns.
-
-| Family | Source contract |
-| --- | --- |
-| Option.Select / Result.Select | Select an explicit branch Process, with its payload or error scoped to that branch |
-| Traverse / Enumerate | Visit each element or pair once in iterator order; Paired describes the pair-shaped Iteration and Applier |
-| Examine / Review / Inspect / Audit | Bind callback results explicitly and propagate the first failure through Verify |
-| Decide / Probe / Search | Propagate a callback error, continue after false, and activate the supplied continuation after true |
-| Require / Accept | Return a successful value without constructing a failure; Accept releases a replaced error before constructing its replacement |
-| Index.Check | Accept a finite nonnegative integral Number strictly below `usize::MAX as f64` before native conversion; reject other values with the existing index diagnostic |
-| Reject | Construct Failure, wrap it in Rejection, and return from the enclosing Function through its selected Return |
-| Function.Yield / Function.Exit | Wrap the selected control-flow value with shared Success and invoke the selected Function.Return using explicit generated result bindings |
-| Bytes.Extend / Text.Enclose | Append a borrowed byte slice to an exclusively borrowed vector; Enclose consumes its input vector and builds opening + value + closing in one output buffer |
-
-Append and enclosure can copy bytes and reallocate. These words establish no general allocation, blocking or destructor-cost bound. Result.Expect remains a separate fail-fast operation with an explicit message.
-
-The former Propagate, Function.Success, Function.Completion, Rejection.Error and Rejection.Result helpers are removed. Paired replaces the former Storage.Indexed descriptor, and explicit Routine generic parameter lists replace Storage.Fallible. No aliases preserve those retired identities. The runtime's duplicate Retain alias and Dispose leaf are also removed; their consumers use core Retain and Storage.Release.
+Core imports Storage privately. Its [implementation reference](../../internals/storage.md) explains reusable result selection, traversal, return, ownership and byte operations. Programs that name Storage members import that dictionary explicitly.
 
 ## Objective
 
