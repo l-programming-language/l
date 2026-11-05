@@ -1,19 +1,23 @@
 package Lyger
 
 import (
-	"github.com/l-programming-language/l/lerrors"
 	"strconv"
 	"strings"
+
+	"github.com/l-programming-language/l/lerrors"
 )
 
 // A local constructor declaration names its result through the selected
 // definition's existing name slot. The binding is lexical and source-owned.
 func (c *Compilation) prepareDefinitionBindingSite(statement *lStatement, site registrationSite, prepared *statementRegistration) (bool, error) {
+	if site.parameter || site.isDescriptor() {
+		return false, nil
+	}
 	target, err := site.target()
 	if err != nil {
 		return false, err
 	}
-	if target == nil || target.scope == nil || target.scope.function == nil || !target.scope.function.Native || target.scope.function.Header == statement {
+	if target == nil || target.scope == nil || target.scope.kind != lexicalProcess && (target.scope.function == nil || !target.scope.function.Native || target.scope.function.Header == statement) {
 		return false, nil
 	}
 	object := site.valueObject()
@@ -42,20 +46,17 @@ func (c *Compilation) invokeFunctionDefinition(function *sourceFunction, args []
 	if len(args) != len(function.Constructor.Inputs) {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("Function %s requires %d arguments, got %d", function.Record.ID, len(function.Constructor.Inputs), len(args))
 	}
-	var before []DefinitionInstance
-	args = append([]DefinitionArgument(nil), args...)
-	for index, argument := range args {
-		argument, err := c.atomArgument(argument)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		var steps []DefinitionInstance
-		args[index], steps = argument.boundResult()
-		before = append(before, steps...)
+	header, err := c.sourceHeader(function.Record, false, nil)
+	if err != nil {
+		return DefinitionInstance{}, err
+	}
+	args, _, before, err := c.bindWrapperOperands(header, args, nil)
+	if err != nil {
+		return DefinitionInstance{}, err
 	}
 	bindings := map[string]DefinitionArgument{"Target": definitionReferenceArgument(function.Constructor.Name), "Arguments": definitionAtomListArgument(args...)}
 	used := make(map[string]bool)
-	invocation, err := c.instantiateNamedDefinition(function.Invoke, bindings, used, active)
+	invocation, err := c.instantiateSourceCall(function.Invoke, nil, bindings, used, active, dynamic)
 	if err == nil {
 		err = validateDefinitionArguments(function.Invoke, bindings, used)
 	}
@@ -105,7 +106,13 @@ func (c *Compilation) functionReferenceArgument(object *objectGram, active, dyna
 	return argument, true, nil
 }
 
-func (c *Compilation) functionDefinition(function *sourceFunction, active, dynamic map[*record]bool) (DefinitionInstance, error) {
+func (c *Compilation) functionDefinition(function *sourceFunction, active, dynamic map[*record]bool) (result DefinitionInstance, resultErr error) {
+	defer c.withDefinitionReturn(functionReturnContext(function))()
+	defer func() {
+		if resultErr == nil && c.contractRecorder != nil {
+			c.contractRecorder.recordLowering(function.Record, result, nil)
+		}
+	}()
 	defer c.definitionScope()()
 	active[function.Record] = true
 	defer delete(active, function.Record)

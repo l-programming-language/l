@@ -29,8 +29,8 @@ separate part of ordinary acceptance; see the
 run artifacts and their execution scope.
 
 This documentation update did not rerun language validation. Follow the
-[validation policy](../../../docs/development-harness.md#temporary-validation-pause)
-for the local pause and authorized hosted runs.
+[validation policy](../../../docs/development-harness.md#validation-authorization)
+for task-authorized checks and hosted runs.
 
 ## Preserved scope and remaining boundaries
 

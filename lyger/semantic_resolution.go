@@ -11,8 +11,10 @@ import (
 // semanticResolver borrows the compilation's bindings. Source spellings and
 // lexical forms remain on tokens; ownership follows declaration/alias identity.
 type semanticResolver struct {
-	scopes    *scopePlan
-	semantics *semanticProgram
+	scopes      *scopePlan
+	semantics   *semanticProgram
+	contracts   *contractRecorder
+	expectedPOS partOfSpeech
 }
 
 type semanticOwner struct {
@@ -72,7 +74,7 @@ func (r semanticResolver) nominalIdentity(tok *token) (nominalIdentity, error) {
 }
 
 func (c *Compilation) resolver() semanticResolver {
-	return semanticResolver{scopes: c.Scope, semantics: c.Semantics}
+	return semanticResolver{scopes: c.Scope, semantics: c.Semantics, contracts: c.contractRecorder}
 }
 
 func canonicalRecord(rec *record, aliases map[*record]*record) (*record, error) {
@@ -100,8 +102,11 @@ func (r semanticResolver) lookup(tok *token) (*tokenBinding, lookupState, error)
 		return nil, lookupAbsent, lerrors.Internal.Errorf("reference %q has no lexical scope", tok.rawBytes)
 	}
 	for ; scope != nil; scope = scope.parent {
-		binding, state, err := scope.lookupLocal(tok.rawBytes)
+		binding, state, err := scope.lookupLocal(tok.rawBytes, r.expectedPOS)
 		if err != nil || state != lookupAbsent {
+			if r.contracts != nil && state == lookupFound && err == nil {
+				r.contracts.lookupReasons[tok] = "existing lexical scope: complete qualified query before owner-prefix traversal"
+			}
 			return binding, state, err
 		}
 		if function := scope.function; function != nil && function.Return != nil {
@@ -118,6 +123,9 @@ func (r semanticResolver) lookup(tok *token) (*tokenBinding, lookupState, error)
 				return nil, state, err
 			}
 			if state == lookupFound {
+				if r.contracts != nil {
+					r.contracts.lookupReasons[tok] = "existing longest visible owner prefix commits member lookup; no outer fallback"
+				}
 				return r.lookupMember(owner.Record, tok.rawBytes[dot+1:])
 			}
 		}
@@ -135,7 +143,7 @@ func (r semanticResolver) lookupMember(owner *record, tail []byte) (*tokenBindin
 		return nil, lookupPending, nil
 	}
 	qualified := owner.ID + "." + string(tail)
-	binding, err := r.scopes.resolveMemberBinding(owner, []byte(qualified))
+	binding, err := r.scopes.resolveMemberBinding(owner, []byte(qualified), r.expectedPOS)
 	if err != nil || binding != nil {
 		return binding, lookupFound, err
 	}

@@ -21,6 +21,7 @@ Options accept single or double hyphens and either a separate value or `=value`.
 | Option | Default | Meaning |
 | --- | --- | --- |
 | `--output-dir DIRECTORY` | Source directory | Put the published executable and companion directory together here. |
+| `--native-evidence-output PATH` | Disabled | Record explicit native-environment observations, actual Cargo results and artifact identities in a separate JSON document; see [build evidence](../cli-build.md#optional-native-build-evidence). |
 | `--` | None | Stop flag parsing before the optional filename. |
 
 Relative source and output paths use the invocation directory without changing it. Compiler contributors can use [developer resource overrides](../development-harness.md#compiler-defaults); ordinary builds need neither override.

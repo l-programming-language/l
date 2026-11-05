@@ -32,7 +32,7 @@ jobs:
     timeout-minutes: 20
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: https://ldocs.org
     permissions:
       contents: read
       actions: read
@@ -54,6 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication true
       - name: Download and verify original release archive
+        id: plan
         working-directory: website
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -67,14 +68,24 @@ jobs:
           tar -xzf "$RUNNER_TEMP/sealed/site.tar.gz" --no-same-owner -C "$RUNNER_TEMP/site"
           node scripts/release.mjs verify-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --dist "$RUNNER_TEMP/site" --archive "$RUNNER_TEMP/sealed/site.tar.gz" --native "$RUNNER_TEMP/sealed/native-release.json"
           node scripts/release.mjs fetch-current --policy ci-templates/release-policy.json --output "$RUNNER_TEMP/current.json"
-          node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --expected-current "$EXPECTED_CURRENT" --root ..
+          node scripts/release.mjs guard-promotion --manifest "$RUNNER_TEMP/sealed/promotion.json" --current "$RUNNER_TEMP/current.json" --mode "$MODE" --expected-current "$EXPECTED_CURRENT" --root .. --output "$RUNNER_TEMP/promotion-plan.json"
+          node -e 'const fs=require("node:fs"); const {action}=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/promotion-plan.json")); if (!["deploy","verify"].includes(action)) throw new Error("Invalid promotion action"); fs.appendFileSync(process.env.GITHUB_OUTPUT, "action="+action+"\n")'
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
+        if: steps.plan.outputs.action == 'deploy'
         with:
           path: ${{ runner.temp }}/site
-      - id: deployment
+      - name: Deploy verified Pages artifact
+        id: deployment
+        if: steps.plan.outputs.action == 'deploy'
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
       - name: Verify production identity after recovery
         working-directory: website
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/release.mjs postdeploy --policy ci-templates/release-policy.json --manifest "$RUNNER_TEMP/sealed/promotion.json"
+          PROMOTION_ACTION: ${{ steps.plan.outputs.action }}
+        run: |
+          args=()
+          if [[ "$PROMOTION_ACTION" == deploy ]]; then
+            args+=(--deployment-sha "$GITHUB_SHA")
+          fi
+          node scripts/release.mjs postdeploy --policy ci-templates/release-policy.json --manifest "$RUNNER_TEMP/sealed/promotion.json" "${args[@]}"

@@ -74,7 +74,7 @@ While and three-part source loops remain unsupported. [Collections](collections-
 
 The [grammar](../../lexicon/eng/grammar.json) recognizes this While shape, but the [instruction builder](../../lyger/instructions.go) rejects it.
 
-The Rust backend separately supports bounded iteration compositions described in the [target reference](../../builtins/README.md#iteration-and-definition-contract). It rejects the three-part X form. Native loop composition does not confer source-level iteration semantics, collection ordering, bounds behavior, or break/continue vocabulary.
+Within native Function bodies, the Storage implementation dictionary composes Iteration and typed Processes into Traverse, Enumerate and related [source words](../internals/storage.md#iteration-and-continuations). Their contracts specify ordering and error behavior. They do not add general source loop syntax or break/continue vocabulary. The [Rust target](../../builtins/README.md#iteration-and-definition-contract) supports their bounded iteration shapes and rejects the three-part X form.
 
 ## Arithmetic and native calculations
 
@@ -88,11 +88,7 @@ Show is an outer observation instruction. It writes Text bytes unchanged and for
 
 IO.Print is an imported action that adds one newline. See [IO](../stdlib/eng/io.md#output-and-newlines) for raw-byte and numeric behavior.
 
-**Supported application print and outer observation — complete canonical example.**
-
-<!-- example:basic -->
-
-`The App Prints message` belongs to Hello's generated program and appends LF through imported IO.Print. Execute waits for that invocation; `Show Hello's Output` then writes the captured `Hello World!\n` exactly. Show does not add a second LF. The canonical CLI witness records that expected output.
+In the [first program](../guide/first-program.md#read-the-program), Print adds LF inside Hello's process. Execute waits, then Show writes captured Output exactly, without adding a second LF.
 
 ## Exit and Return
 
@@ -104,7 +100,7 @@ Bare Exit terminates the whole L program after cleanup and succeeds if cleanup s
 
 Execute reaches First's continuation, which shows `First\n` and then exits. The following Show in the paragraph, Second's Execute operand, and the program's final Show are unreachable. The retained paragraph test expects that one output line and status 0 when cleanup succeeds. Compare the [explicit-error example](errors.md#runtime-failure-is-a-separate-stage), whose exit status is 1.
 
-Function.Return belongs to the builtin native-backed Function facility. It emits target return syntax within its composed function. The presence of Return does not make Exit a function return, nor establish general source exceptions or arbitrary return-value transport between processes.
+Function.Return completes the enclosing invocation through its selected definition. Root-authored returning actions use their caller's Return; definition-owned actions preserve their constructor contract. A conditional Return leaves other paths continuing, and constructing another Function does not return from its caller. See the [Return contract](../reference/builtins/definitions.md#functionreturn). This supplies neither general source exceptions nor return-value transport between App processes.
 
 ## Sources and witnesses
 

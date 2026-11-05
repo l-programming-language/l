@@ -128,7 +128,11 @@ func (e *orchestrationEmitter) programContext(actions []*record) ([]string, erro
 		}
 	}
 	for _, app := range e.plan.Apps {
-		retained, err := e.valueBinding("Retain", map[string]DefinitionArgument{"Target": definitionReferenceArgument(e.apps[app])})
+		arguments := map[string]DefinitionArgument{"Target": definitionReferenceArgument(e.apps[app])}
+		if err := e.borrowArgument(arguments, "Target", false); err != nil {
+			return nil, err
+		}
+		retained, err := e.valueBinding("Retain", arguments)
 		if err != nil {
 			return nil, err
 		}

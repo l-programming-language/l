@@ -27,28 +27,27 @@ of the syntax and execution steps.
 
 ## Try L
 
-Check [GitHub Releases](https://github.com/l-programming-language/l/releases) for
-Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64) binaries. Once `v0.0.1`
-is published, download its installer:
+[L releases](https://github.com/l-programming-language/l/releases) support
+Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64). In a Bash or Zsh
+terminal, install the latest stable release and activate it:
 
 ```sh
-curl --fail --location --proto '=https' --tlsv1.2 \
-  https://github.com/l-programming-language/l/releases/download/v0.0.1/install-release.sh \
-  --output install-release.sh
+(set -o pipefail; curl --proto '=https' --tlsv1.2 -fsSL https://ldocs.org/install.sh | sh) && . "$HOME/.local/share/l/env"
 ```
 
-Inspect the script, then install L and its pinned Rust dependencies:
+Setup asks once before installing L, preparing its pinned Rust dependencies,
+and configuring Bash and Zsh. Check the installation:
 
 ```sh
-bash ./install-release.sh --version 0.0.1 --with-toolchain
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 l --version
 ```
 
-Keep that `PATH` in your shell configuration. Native C/linker tools are required;
-pre-1.0 macOS binaries are unsigned. The [installation guide](docs/cli/installation.md)
-covers prerequisites, macOS approval and building L from source when a binary
-release is unavailable. Binary installation needs neither Go nor a source checkout.
+Native C/linker tools are required; setup explains what is missing. The
+[installation guide](docs/cli/installation.md) covers getting started. A
+[versioned manual installer](docs/cli/installation-options.md#download-and-inspect-the-release-installer)
+is also available, along with options for custom locations and shell setup.
+Binary installation needs neither Go nor a source checkout; pre-1.0 macOS
+binaries are unsigned.
 
 Save the example as `main.l`, then build and run it:
 
@@ -73,7 +72,7 @@ Go/Rust toolchains. See the [CLI guide](docs/cli/build.md) for build options.
 Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the
 [development guide](docs/development-harness.md). Pull requests run Linux CI;
 expensive local validation remains subject to the
-[validation policy](docs/development-harness.md#temporary-validation-pause).
+[validation policy](docs/development-harness.md#validation-authorization).
 
 Maintainers can find publication prerequisites and recovery steps in the
 [release activation guide](website/DEPLOYMENT.md).

@@ -20,8 +20,8 @@ lint, acceptance, and tagged-native reports for every target. Full gates keep
 the existing pins, both unfiltered test phases, watchdogs and concurrency. A
 manual dry run prepares validation and packages without enabling publication.
 Do not dispatch it merely to inspect this implementation: the
-[validation pause](../docs/development-harness.md#temporary-validation-pause)
-still governs expensive local runs and hosted dispatches.
+[validation policy](../docs/development-harness.md#validation-authorization)
+keeps hosted dispatch authorization separate from local checks.
 
 [Documentation release](../.github/workflows/docs-release-pages.yml) runs after
 native validation, installer checks and proof sealing. It builds and tests the
@@ -107,6 +107,17 @@ fingerprints. Changes outside
 `docs/` and `website/`, including workflows, release/install scripts, lockfiles and
 root README, remain release-relevant.
 
+The public `/install.sh` endpoint is served from the tested documentation archive.
+Its setup script selects a published stable language release, verifies its
+versioned installer, and delegates native installation to that retained script.
+Adding the endpoint in source does not make it available on `ldocs.org`; it
+becomes available only after the matching site archive is deployed. Changes that
+also update the root README remain release-relevant under the policy above and
+require a later native release rather than a docs-only correction. Until that
+deployment, published versioned installers remain available through GitHub
+Releases. Verify `/install.sh` alongside the deployed documentation identity
+before announcing the quick-install command.
+
 The tested `dist/` is sealed into an archive with the full file inventory,
 version-file hash and native-manifest hash. Initial publication stages these
 assets alongside every native asset in one draft, then publishes once:
@@ -130,11 +141,20 @@ it out of the terminal installer's latest-language-release lookup. It is a docs
 archive, not a prerelease language version; native authority still comes from
 `vVERSION`.
 
-Before publication and again before deployment, the workflow reconciles a
-successful Pages deployment record, live `/version.json`, and the retained
-promotion manifest. First deployment requires no successful prior deployment and
-an HTTP 404 at `/version.json`; ambiguous or unavailable states reject. After
-deployment it verifies identity, homepage, specification, CLI and Pagefind routes.
+Before publication and again before deployment, the workflow reconciles the
+authenticated Pages deployment result, live `/version.json`, and the retained
+immutable promotion manifest. A deployment receipt must belong to a trusted
+manual workflow on main. The Pages result is separate from the environment job's
+status: the site can be live while that job is still running or its later checks
+have failed. First deployment requires no successful prior deployment and an HTTP
+404 at `/version.json`; ambiguous or unavailable states reject.
+
+After deployment, verification checks the current Pages result and compares live
+identity and representative route bytes with the sealed manifest. It never waits
+for its own environment job to become successful. Bounded retries allow HTTP
+content to propagate; an incorrect identity or unavailable route still fails
+when the retry budget is exhausted. The Pages deployment SHA identifies the
+workflow revision, which can differ from the archived docs SHA during recovery.
 
 ## Retry, rollback and corrections
 
@@ -144,7 +164,15 @@ intact. Dispatch recovery from main with `mode: retry`, the language tag, full d
 SHA, and current production digest. Recovery selects the language release for
 initial docs or the separate snapshot for a correction, then verifies the original
 archive and native authority without rebuilding. An already-live identical digest
-is idempotent; a changed current digest rejects a stale request.
+is idempotent; a changed current digest rejects a stale request. Recovery captures
+the promotion guard's decision: `verify` skips both Pages upload and deployment,
+while `deploy` promotes the retained archive. Both paths verify the live content.
+
+If Pages succeeded but the environment job failed during verification, recovery
+can reconcile the successful Pages receipt with the exact live release identity
+and immutable archive. It does not treat an arbitrary HTTP 200 as authority or
+replace that live baseline with `null`. Use the current archive digest and the
+original language tag and docs SHA; do not rebuild or replace published assets.
 
 For a retry before the first successful deployment, enter the literal text `null`
 for `expected_current_digest`. The workflow independently verifies that no

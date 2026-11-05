@@ -18,9 +18,7 @@ Only Apps own process lifecycle. Internal categories do not imply source constru
 
 ### Create and execute an App
 
-<!-- example:basic -->
-
-`New Basic App` constructs a Main Service, Object and entry Function. `The App Prints message` supplies its child-process body; `Execute Hello` builds, runs and awaits it. Show displays finalized stdout: `Hello World!` and one newline.
+The [first program](../guide/first-program.md#read-the-program) constructs a Basic App, supplies its Print body and observes its captured output. Basic composes the Main Service, Object and entry Function; Execute builds, runs and awaits the App.
 
 `l build` publishes the native program; running that program performs its lifecycle actions. Aliases preserve App identity. Separate declarations remain separate Apps even if they use the same name in different private scopes.
 
@@ -48,21 +46,15 @@ A Function composed inside an Object is represented as an Attribute containing a
 
 A Function declaration also defines its invocation verb. Its encapsulated paragraph supplies the body:
 
-```l
-    Publicly create "Echo|-es|-ed|-ing|-er" as a New Function with Inputs of "Value" as Text and Outputs of Text.
-Return Value.
+<!-- example:composed-function-definition -->
 
-Echo `hello` as "Result".
-Show Result.
-```
-
-Four leading spaces begin the private body; a blank line ends it. Public exposes Echo, not Value. The label supplies ordinary verb inflections. A member word can form a sentence such as `The User walks to the Store`: User selects its Walk definition and Store supplies the Location argument. See [word forms](../guide/values.md#read-pipe-delimited-word-forms).
+Four leading spaces begin the private body; a blank line ends it. Public exposes Identity, not Value. The [complete Function example](../guide/definitions.md#give-a-result-bearing-operation-a-function) calls it through Relay and names the caller's result explicitly. A label may declare related [word forms](lexical-structure.md#vocabulary-and-inflection).
 
 Invocations check ordered types and have fresh locals. Function signatures include canonical constructor identity; incompatible constructors reject, including boxed values. Copies and aliases retain signatures and captures. Every continuing result-bearing path must Return through its bound member; Exit terminates the program.
 
 The header retains surrounding conditions and coordinated effects. Captures must be assigned when it executes; ordinary values snapshot and explicit Pointers share targets. An invocation assigns its explicit results, without inferring assignment from side effects. A Function may Await an App and its continuation. Dictionary/Class units have no executable initialization phase.
 
-Source declarations and Object construction use the same selected Function/logeme definitions. Rust checks the generated signatures and lifetimes; no user-written Rust lifetime parameters, overloads, variadic signatures or inference across opaque native bodies are implied.
+Source declarations and Object construction use the same selected Function/logeme definitions. Ordinary signatures do not infer native lifetime or generic parameters. Native-backed constructors can accept explicit atoms within the [definition contract](definitions.md#composition-and-source-ownership); this introduces no overloads, variadic Function signatures or inference across opaque native bodies.
 
 ### Construct a Function in an Object
 

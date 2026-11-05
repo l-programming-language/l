@@ -1,0 +1,239 @@
+{
+  "$defs": {
+    "ExecutionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "exit_code": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "finished": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "record_fingerprint": {
+          "type": "string"
+        },
+        "started": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "stderr_fingerprint": {
+          "type": "string"
+        },
+        "stdout_fingerprint": {
+          "type": "string"
+        },
+        "working_directory": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "command",
+        "working_directory",
+        "status"
+      ],
+      "type": "object"
+    },
+    "NativeArtifact": {
+      "additionalProperties": false,
+      "properties": {
+        "execution": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "inputs",
+        "execution"
+      ],
+      "type": "object"
+    },
+    "NativeEnvironment": {
+      "additionalProperties": false,
+      "properties": {
+        "allocator": {
+          "type": "string"
+        },
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/NativeArtifact"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "compiler": {
+          "type": "string"
+        },
+        "configuration": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "dependencies": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "executions": {
+          "items": {
+            "$ref": "#/$defs/ExecutionRecord"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "fingerprint": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "inputs": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "kind": {
+          "const": "native_environment"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "method": {
+          "type": "string"
+        },
+        "panic_policy": {
+          "type": "string"
+        },
+        "producer": {
+          "type": "string"
+        },
+        "runtime": {
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.1"
+        },
+        "target": {
+          "type": "string"
+        },
+        "tools": {
+          "items": {
+            "$ref": "#/$defs/NativeToolIdentity"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "kind",
+        "producer",
+        "version",
+        "method",
+        "host",
+        "target",
+        "compiler",
+        "panic_policy",
+        "runtime",
+        "allocator",
+        "configuration",
+        "inputs",
+        "dependencies",
+        "tools",
+        "executions",
+        "limitations",
+        "fingerprint"
+      ],
+      "type": "object"
+    },
+    "NativeToolIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "path",
+        "sha256",
+        "version"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "l-contracts/1.1/native_environment",
+  "$ref": "#/$defs/NativeEnvironment",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

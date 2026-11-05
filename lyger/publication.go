@@ -50,6 +50,16 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 		}
 		staged := *rec
 		rec = &staged
+		if declaration.Alias == nil && rec.Value != nil && rec.Value.Lexeme != nil && rec.Value.Lexeme.Value == "" && len(rec.Value.Lexeme.Actions) > 0 {
+			inputs, err := c.sourceActionInputs(stmt, tok)
+			if err != nil {
+				return err
+			}
+			value := *rec.Value
+			value.Lexeme = value.Lexeme.cloneUse()
+			value.Lexeme.Inputs = inputs
+			rec.Value = &value
+		}
 		if rec.Value != nil && rec.Value.Lexeme != nil && rec.Value.Lexeme.Type == roleOutput.String() {
 			ref := rec.Value.Runtime
 			if ref == nil || ref.Member != memberOutput {
@@ -100,7 +110,7 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 		if destination == nil {
 			destination = c.Scope.Root
 		}
-		rejectDuplicate := stmt.source.imported == nil && (destination.isParagraph() || destination.kind == lexicalDictionary || declaration.Visibility == visibilityPublic)
+		rejectDuplicate := stmt.source.imported == nil && (destination.isParagraph() || destination.kind == lexicalProcess || destination.kind == lexicalDictionary || declaration.Visibility == visibilityPublic)
 		var prior *record
 		for _, candidate := range pending {
 			if rejectDuplicate && candidate.destination == destination && strings.EqualFold(candidate.staged.ID, id) {
@@ -167,17 +177,26 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 			return lerrors.Internal.Errorf("descriptor %s has no prepared or published declaration", descriptor.Record.ID)
 		}
 	}
+	returns := make([]*record, len(prepared.functions))
+	for index, function := range prepared.functions {
+		selected, err := canonicalRecord(function.Return, c.Semantics.Aliases)
+		if err != nil {
+			return err
+		}
+		returns[index] = selected
+	}
 	for _, publication := range pending {
 		publication.commit(c, stmt)
 	}
 	for _, descriptor := range prepared.descriptors {
 		c.Semantics.Descriptors[descriptor.Record] = descriptor
 	}
-	for _, function := range prepared.functions {
+	for index, function := range prepared.functions {
 		if function.Native && function.Constructor.Name == "" {
 			function.Constructor.Name = sourceModuleName(strings.ToLower(function.Record.ID))
 		}
 		function.Record.function = function
+		c.Semantics.Returns[returns[index]] = true
 		if !function.Native {
 			c.Semantics.Functions[function.Record] = function
 		}

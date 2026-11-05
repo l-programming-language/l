@@ -11,27 +11,29 @@ import (
 // orchestrationEmitter binds a checked plan to AML and typed runtime operands.
 // Function execution composes selected definitions; source bindings are resolved.
 type orchestrationEmitter struct {
-	definitionBindings []DefinitionBinding
-	definitionActive   map[*record]bool
-	definitionDynamic  map[*record]bool
-	compilation        *Compilation
-	pending            []string
-	dependencies       []DefinitionInstance
-	valueCount         int
-	plan               *orchestrationPlan
-	artifacts          map[*App]string
-	apps               map[*App]string
-	invocation         int
-	processSelection   int
-	functionDepth      int
-	functionWords      *sourceFunction
-	functionItems      []string
-	functionContracts  map[*record]*sourceFunction
-	functionEmitted    map[int]bool
-	functionCall       int
-	programStorage     map[*orchestrationStorage]int
-	programActions     map[*record]int
-	processes          *builtinProcessCatalog
+	definitionBindings  []DefinitionBinding
+	definitionActive    map[*record]bool
+	definitionDynamic   map[*record]bool
+	compilation         *Compilation
+	pending             []string
+	dependencies        []DefinitionInstance
+	valueCount          int
+	plan                *orchestrationPlan
+	artifacts           map[*App]string
+	apps                map[*App]string
+	invocation          int
+	processSelection    int
+	functionDepth       int
+	functionWords       *sourceFunction
+	functionItems       []string
+	functionContracts   map[*record]*sourceFunction
+	functionEmitted     map[int]bool
+	functionCall        int
+	programStorage      map[*orchestrationStorage]int
+	programActions      map[*record]int
+	processes           *builtinProcessCatalog
+	contractInstruction *instruction
+	contractValueDepth  int
 }
 
 func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact) (BuildUnit, error) {
@@ -459,11 +461,7 @@ func (e *orchestrationEmitter) instructions(body []*orchestrationInstruction) ([
 	defer func() { e.pending = outer }()
 	var result []string
 	for _, current := range body {
-		attribution, err := e.attribution(current)
-		if err != nil {
-			return nil, current.Source.wrapError(err)
-		}
-		statements, err := e.instruction(current)
+		attribution, statements, err := e.attributedInstruction(current)
 		if err != nil {
 			return nil, current.Source.wrapError(err)
 		}
@@ -473,6 +471,26 @@ func (e *orchestrationEmitter) instructions(body []*orchestrationInstruction) ([
 		e.pending = nil
 	}
 	return result, nil
+}
+
+// attributedInstruction retains the actual typed source operation while helper
+// selection runs. Analysis observes selections, never the emitted strings.
+func (e *orchestrationEmitter) attributedInstruction(current *orchestrationInstruction) ([]string, []string, error) {
+	previous := e.contractInstruction
+	e.contractInstruction = current.Source
+	defer func() { e.contractInstruction = previous }()
+	if recorder := e.compilation.contractRecorder; recorder != nil {
+		if recorder.nativeEmissions == nil {
+			recorder.nativeEmissions = make(map[*instruction][]contractNativeEmission)
+		}
+		recorder.nativeEmissions[current.Source] = nil
+	}
+	attribution, err := e.attribution(current)
+	if err != nil {
+		return nil, nil, err
+	}
+	statements, err := e.instruction(current)
+	return attribution, statements, err
 }
 
 func (e *orchestrationEmitter) returned(value string) ([]string, error) {
