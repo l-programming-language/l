@@ -7,10 +7,7 @@ import (
 
 func inferTest(t *testing.T, node Node, callbacks map[string]Node) DerivedSummary {
 	t.Helper()
-	summary, err := Infer(Plan{Entry: node, Callbacks: callbacks}, AnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	summary := reviewInfer(t, Plan{Entry: node, Callbacks: callbacks}, AnalysisOptions{})
 	return summary
 }
 func sequenceTest(nodes ...Node) Node { return Node{Kind: Sequence, Children: nodes} }
@@ -31,10 +28,7 @@ func factTest(subject string, value int64) Predicate {
 func TestInferenceBASE010SequenceFailure(t *testing.T) {
 	fact := factTest("ready", 1)
 	plan := Plan{Entry: sequenceTest(Node{Kind: Branch, Then: []Node{{Kind: Event, Facts: []Predicate{fact}}}, Else: []Node{{Kind: Event, Outcome: ReturnedFailure}}}, Node{Kind: Call, Meaning: "consumer"}), Definitions: map[MeaningKey]Node{"consumer": sequenceTest(Node{Kind: Require, Requires: []Predicate{fact}}, eventTest("io", Invocation))}}
-	summary, err := Infer(plan, AnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	summary := reviewInfer(t, plan, AnalysisOptions{})
 	if len(summary.Paths) != 2 {
 		t.Fatalf("lost alternatives: %+v", summary.Paths)
 	}
@@ -208,16 +202,10 @@ func TestInferenceBASE027ApprovedConditionalProfile(t *testing.T) {
 	modeled := inferTest(t, Node{Kind: Event}, nil)
 	plan := Plan{Entry: Node{Kind: Native, Native: "leaf"}}
 	options := AnalysisOptions{NativeSummaries: map[string]DerivedSummary{"leaf": modeled}, NativeWitnesses: map[string]string{"leaf": "test-only:fixture"}}
-	unapproved, err := Infer(plan, options)
-	if err != nil {
-		t.Fatal(err)
-	}
+	unapproved := reviewInfer(t, plan, options)
 	statusTest(t, unapproved, "NoHeapAllocation", Unresolved)
 	options.ApprovedAssumptions = map[string]bool{"test-only:fixture": true}
-	approved, err := Infer(plan, options)
-	if err != nil {
-		t.Fatal(err)
-	}
+	approved := reviewInfer(t, plan, options)
 	statusTest(t, approved, "NoHeapAllocation", Established)
 	statusTest(t, approved, "NoBlocking", Established)
 	if len(approved.Assumptions) != 1 || approved.Assumptions[0] != "test-only:fixture" {
@@ -261,14 +249,8 @@ func TestInferenceBASE032RecursiveWidening(t *testing.T) {
 	cost := ZeroResourceCost()
 	cost.Work = ConstantCost(1)
 	plan := Plan{Entry: Node{Kind: Call, Meaning: "recursive"}, Definitions: map[MeaningKey]Node{"recursive": sequenceTest(Node{Kind: Event, Costs: &cost}, Node{Kind: Call, Meaning: "recursive"})}}
-	first, err := Infer(plan, AnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	second, err := Infer(plan, AnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	first := reviewInfer(t, plan, AnalysisOptions{})
+	second := reviewInfer(t, plan, AnalysisOptions{})
 	if first.Resources.Work.Kind != "unknown" || first.Fingerprint != second.Fingerprint {
 		t.Fatal("recursive analysis failed to widen deterministically")
 	}
@@ -304,10 +286,7 @@ func TestInferenceSubstitutionPreservesAliases(t *testing.T) {
 	fact := factTest("stable", 1)
 	fact.Resource = actual
 	plan := Plan{Entry: sequenceTest(Node{Kind: Event, Facts: []Predicate{fact}}, Node{Kind: Call, Meaning: "write", Substitutions: Substitutions{Resources: map[string]ResourceRef{"parameter": actual}}}, Node{Kind: Require, Requires: []Predicate{fact}}), Definitions: map[MeaningKey]Node{"write": {Kind: Event, Effects: []Effect{{Kind: "write", Resource: formal, Definite: true}}}}}
-	summary, err := Infer(plan, AnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	summary := reviewInfer(t, plan, AnalysisOptions{})
 	if AllEstablished(summary.Obligations) {
 		t.Fatal("resource substitution lost invalidation")
 	}
@@ -339,10 +318,7 @@ func TestInferenceMissingOutcomeAndDestructorRemainUnknown(t *testing.T) {
 
 func TestInferenceResidualsCoverTerminalOutcomes(t *testing.T) {
 	plan := Plan{Entry: Node{Kind: Event, Outcome: Abort}, Residuals: []UnknownReason{{Code: "backend", Message: "runtime finalization is not closed", Components: []string{"effects", "costs"}}}}
-	summary, err := Infer(plan, AnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	summary := reviewInfer(t, plan, AnalysisOptions{})
 	statusTest(t, summary, "NoBlocking", Unresolved)
 	if len(summary.Paths) != 1 || summary.Paths[0].Outcome != Abort || summary.Resources.Work.Kind != "unknown" {
 		t.Fatal("terminal source erased backend coverage or resource uncertainty")
@@ -352,10 +328,7 @@ func TestInferenceResidualsCoverTerminalOutcomes(t *testing.T) {
 func TestInferenceNativeClosureNeedsApproval(t *testing.T) {
 	plan := Plan{Entry: Node{Kind: Event}, NativeClosure: []NativeBoundary{{ID: "fixture-native", Status: Established, Witness: "fixture-only"}}}
 	for _, approved := range []bool{false, true} {
-		summary, err := Infer(plan, AnalysisOptions{ApprovedAssumptions: map[string]bool{"fixture-only": approved}})
-		if err != nil {
-			t.Fatal(err)
-		}
+		summary := reviewInfer(t, plan, AnalysisOptions{ApprovedAssumptions: map[string]bool{"fixture-only": approved}})
 		want := Unresolved
 		if approved {
 			want = Established
@@ -398,5 +371,63 @@ func TestInferenceUnrecognizedClassificationsRemainUnknown(t *testing.T) {
 		summary := inferTest(t, node, nil)
 		statusTest(t, summary, "NoHeapAllocation", Unresolved)
 		statusTest(t, summary, "NoBlocking", Unresolved)
+	}
+}
+
+func TestCumulativeInferenceBudget(t *testing.T) {
+	zero, count := int64(0), int64(2)
+	origin := Origin{Source: "manifest.json", Label: "repeat"}
+	repeat := func(child Node) Node {
+		return Node{Kind: Repeat, Origin: origin, Count: &count, Children: []Node{child}}
+	}
+	// One sequence, two sibling repeats, four iteration charges and four leaves.
+	leaf := Node{Kind: Event, Origin: origin}
+	plan := Plan{Entry: sequenceTest(repeat(leaf), repeat(leaf))}
+	for _, limit := range []int{10, 11, 12} {
+		s, err := inferPlan(plan, AnalysisOptions{}, "", limit)
+		if err != nil || (s.Coverage == Known) != (limit >= 11) {
+			t.Fatalf("budget %d: %+v, %v", limit, s, err)
+		}
+	}
+	large := int64(1024)
+	nested := repeat(repeat(leaf))
+	nested.Count, nested.Children[0].Count = &large, &large
+	target := TargetRef{Root: "target", Phase: Invocation}
+	footprint := FailureFootprint{Observation: "state_at_completion", Locations: []FailureLocation{{Resource: ResourceRef{ID: "protected"}}}, Outcomes: []Outcome{ReturnedFailure}}
+	plan.Entry = Node{Kind: Scope, Children: []Node{
+		{Kind: Acquire, Resource: ResourceRef{ID: "owner"}, Cleanup: []Node{eventTest("block", Destruction)}}, nested,
+		{Kind: Callback, ID: "late", Callback: "work"},
+	}}
+	session := NewSession()
+	cold := reviewInfer(t, plan, AnalysisOptions{})
+	for i := 0; i < 2; i++ {
+		result, err := session.Infer(plan, AnalysisOptions{}, nil, LoweringInventory{})
+		if err != nil || result.Fingerprint != cold.Fingerprint || !hasWorkCutoff(result.Unknowns) || result.Unknowns[len(result.Unknowns)-1].Origin.Source != origin.Source || result.Resources.Work.Kind != "unknown" || len(result.Paths) != 0 || ObligationStatus(result.Obligations) != Unresolved {
+			t.Fatalf("budget result: %+v, %v", result, err)
+		}
+		statusTest(t, result, "NoBlocking", Unresolved)
+		if got := CheckFailureSummaryProfile(result, Profile{Name: "PreservesOnFailure", Scope: "whole_region"}, footprint, nil); ObligationStatus(got) != Unresolved {
+			t.Fatal(got)
+		}
+		for _, o := range checkTransformerSummary(ContractTransformer{Target: target, Demand: map[string]Multiplicity{"work": {Upper: &zero}}, Provides: []Predicate{factTest("final", 1)}}, result) {
+			if o.Status != Unresolved {
+				t.Fatalf("truncated promise or demand: %+v", o)
+			}
+		}
+	}
+	if s, err := InferScope(plan, "late", AnalysisOptions{}); err != nil || !hasWorkCutoff(s.Unknowns) {
+		t.Fatalf("valid selected region: %+v, %v", s, err)
+	}
+	if _, err := InferScope(plan, "absent", AnalysisOptions{}); err == nil {
+		t.Fatal("missing region accepted on exhaustion")
+	}
+	plan.Entry = sequenceTest(eventTest("block", Invocation), nested)
+	s, err := inferPlan(plan, AnalysisOptions{}, "", 5)
+	if err != nil {
+		t.Fatal(err)
+	}
+	statusTest(t, s, "NoBlocking", Contradicted)
+	if got := CheckProfile(s, Profile{Name: "NoBlocking", Outcomes: []Outcome{Normal}}); ObligationStatus(got) != Unresolved {
+		t.Fatal("truncated prefix acquired a completion outcome")
 	}
 }

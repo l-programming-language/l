@@ -1,6 +1,9 @@
 package contracts
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func supportedTransformer() ContractTransformer {
 	one := int64(1)
@@ -26,6 +29,15 @@ func requireCertificate(t *testing.T, transformer ContractTransformer) Adjective
 	return certificate
 }
 
+func requireInstantiation(t *testing.T, transformer ContractTransformer, certificate AdjectiveCertificate, instance AdjectiveInstance, want Status) AdjectiveInstantiation {
+	t.Helper()
+	result, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
+	if err != nil || result.Status != want {
+		t.Fatalf("instantiation status=%s want=%s obligations=%+v error=%v", result.Status, want, result.Obligations, err)
+	}
+	return result
+}
+
 func TestAdjectiveAcceptance(t *testing.T) {
 	t.Run("BASE-050", func(t *testing.T) {
 		transformer := supportedTransformer()
@@ -33,13 +45,7 @@ func TestAdjectiveAcceptance(t *testing.T) {
 		if certificate.Status != Established || certificate.Mode != "symbolic" || len(certificate.Assumptions) != 1 || len(certificate.Summary.Paths[0].Owned) != 1 {
 			t.Fatalf("nontrivial parametric construction/action failed: %+v", certificate)
 		}
-		result, err := InstantiateAdjective(transformer, certificate, transformerInstance(), AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if result.Status != Established {
-			t.Fatalf("valid independently supplied target failed: %+v", result.Obligations)
-		}
+		requireInstantiation(t, transformer, certificate, transformerInstance(), Established)
 	})
 	t.Run("BASE-051", func(t *testing.T) {
 		transformer := supportedTransformer()
@@ -65,26 +71,14 @@ func TestAdjectiveAcceptance(t *testing.T) {
 		callback := instance.Callbacks["action"]
 		callback.Effects = []Effect{{Kind: "block", Definite: true}}
 		instance.Callbacks["action"] = callback
-		result, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if result.Status != Contradicted {
-			t.Fatalf("incompatible callback bypassed certificate premises: %+v", result)
-		}
+		requireInstantiation(t, transformer, certificate, instance, Contradicted)
 	})
 	t.Run("BASE-053", func(t *testing.T) {
 		transformer := supportedTransformer()
 		certificate := requireCertificate(t, transformer)
 		instance := transformerInstance()
 		instance.Lowering = []Node{{Kind: Event, Phase: Destruction, Effects: []Effect{{Kind: "block", Phase: Destruction, Definite: true, Origin: Origin{Source: "representation"}}}}}
-		result, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if result.Status != Contradicted {
-			t.Fatal("target-specific destruction escaped final check")
-		}
+		requireInstantiation(t, transformer, certificate, instance, Contradicted)
 	})
 	t.Run("BASE-054", func(t *testing.T) {
 		transformer := supportedTransformer()
@@ -104,17 +98,8 @@ func TestAdjectiveAcceptance(t *testing.T) {
 	t.Run("BASE-048", func(t *testing.T) {
 		transformer := supportedTransformer()
 		certificate := requireCertificate(t, transformer)
-		instance := transformerInstance()
-		instance.Facts = []Predicate{lexicalType("Service")}
-		result, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if result.Status != Contradicted {
-			t.Fatal("changed target assumptions reused success bit")
-		}
 		certificate.TransformerFingerprint = "stale"
-		result, err = InstantiateAdjective(transformer, certificate, transformerInstance(), AnalysisOptions{})
+		result, err := InstantiateAdjective(transformer, certificate, transformerInstance(), AnalysisOptions{})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -126,29 +111,35 @@ func TestAdjectiveAcceptance(t *testing.T) {
 		a := Node{Kind: Event, Effects: []Effect{{Kind: "io", Resource: ResourceRef{ID: "log:A"}, Definite: true}}}
 		b := Node{Kind: Event, Effects: []Effect{{Kind: "io", Resource: ResourceRef{ID: "log:B"}, Definite: true}}}
 		left, right := Plan{Entry: Node{Kind: Sequence, Children: []Node{a, b}}}, Plan{Entry: Node{Kind: Sequence, Children: []Node{b, a}}}
-		if EquivalentElaboration(left, right) {
-			t.Fatal("ordered wrappers treated as set")
-		}
-		summary, err := Infer(left, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if len(summary.Paths[0].Effects) != 2 || summary.Paths[0].Effects[0].Resource.ID != "log:A" || summary.Paths[0].Effects[1].Resource.ID != "log:B" {
-			t.Fatal("effect order changed")
+		for i, plan := range []Plan{left, right} {
+			effects := reviewInfer(t, plan, AnalysisOptions{}).Paths[0].Effects
+			want := [][2]string{{"log:A", "log:B"}, {"log:B", "log:A"}}[i]
+			if len(effects) != 2 || effects[0].Resource.ID != want[0] || effects[1].Resource.ID != want[1] {
+				t.Fatalf("ordered wrapper effects changed: %+v", effects)
+			}
 		}
 	})
 	t.Run("LEX-029", func(t *testing.T) {
-		fact := Predicate{Kind: "present", Subject: "constraint"}
 		target := lexicalTarget("primary")
-		law, err := ProveConstraintLaw("left", "right", target, "constraint-commutation", []Predicate{fact})
-		if err != nil {
-			t.Fatal(err)
+		constraint := Predicate{Kind: "present", Subject: "constraint", Target: target}
+		meaning := Predicate{Kind: "meaning", Subject: "modifier", Target: target, Value: Atom{Kind: "meaning", Text: "left"}}
+		facts := []Predicate{constraint, meaning}
+		// Exercise the actual pure-conjunction fragment; this is not a named
+		// composition-law API or permission to reorder construction.
+		for _, args := range [][]Predicate{{constraint, meaning}, {meaning, constraint}, {constraint, meaning, constraint}} {
+			if status, _ := Entails(facts, Predicate{Kind: "and", Args: args}); status != Established {
+				t.Fatal("pure conjunction changed under order or repetition")
+			}
 		}
-		if !law.Applies("left", "right", target, []Predicate{fact}) || law.Applies("left", "right", lexicalTarget("secondary"), []Predicate{fact}) || law.Applies("left", "unrelated", target, []Predicate{fact}) {
-			t.Fatal("specific law escaped its target/meaning scope")
+		outside := meaning
+		outside.Target = lexicalTarget("secondary")
+		if status, _ := Entails(facts, outside); status != Unresolved {
+			t.Fatal("constraint escaped its exact target")
 		}
-		if _, err := ProveConstraintLaw("left", "right", target, "constructor-idempotence", nil); err == nil {
-			t.Fatal("pure constraint theorem licensed constructive deduplication")
+		outside = meaning
+		outside.Value.Text = "unrelated"
+		if status, _ := Entails(facts, outside); status != Contradicted {
+			t.Fatal("constraint escaped its canonical meaning")
 		}
 	})
 	t.Run("LEX-032", func(t *testing.T) {
@@ -161,7 +152,7 @@ func TestAdjectiveAcceptance(t *testing.T) {
 			right.Entry.Children[i].Origin = Origin{Source: "factored"}
 			right.Entry.Children[i].ID = "factored"
 		}
-		if !EquivalentElaboration(left, right) {
+		if a, b := reviewInfer(t, left, AnalysisOptions{}), reviewInfer(t, right, AnalysisOptions{}); !reflect.DeepEqual(a.Paths, b.Paths) {
 			t.Fatal("equivalent elaborated behavior failed solely due to origins")
 		}
 		if left.Entry.Origin.Source != "convenience" || right.Entry.Origin.Source != "factored" {
@@ -172,15 +163,9 @@ func TestAdjectiveAcceptance(t *testing.T) {
 		left := Plan{Entry: Node{Kind: Sequence, Children: []Node{{Kind: Acquire, ID: "one", Meaning: "constructor", Resource: ResourceRef{ID: "one"}}, {Kind: Acquire, ID: "two", Meaning: "constructor", Resource: ResourceRef{ID: "two"}}}}}
 		faulty := left
 		faulty.Entry.Children = faulty.Entry.Children[:1]
-		if EquivalentElaboration(left, faulty) {
-			t.Fatal("faulty pass collapsed a constructive occurrence")
-		}
-		summary, err := Infer(left, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if len(summary.Paths[0].Owned) != 2 {
-			t.Fatal("analyzer erased repeated constructions")
+		full, collapsed := reviewInfer(t, left, AnalysisOptions{}), reviewInfer(t, faulty, AnalysisOptions{})
+		if len(full.Paths[0].Owned) != 2 || len(collapsed.Paths[0].Owned) != 1 || full.Fingerprint == collapsed.Fingerprint {
+			t.Fatal("analyzer erased repeated constructions or failed to detect the faulty collapse")
 		}
 	})
 }

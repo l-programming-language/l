@@ -2,7 +2,6 @@ package Lyger
 
 import (
 	"fmt"
-	"sort"
 
 	"github.com/l-programming-language/l/contracts"
 )
@@ -90,17 +89,32 @@ type ContractAnalysisOptions struct {
 	SourceTransformers []contracts.SourceTransformerDeclaration
 }
 
+// RecordedInventory snapshots the inputs and lowering choices from this
+// compilation only, after its last App, Service, entry or runtime selection.
+func (c *CompilationResult) RecordedInventory() (ContractBindings, contracts.LoweringInventory, error) {
+	if c == nil || c.Compilation == nil || c.Compilation.contractRecorder == nil {
+		return ContractBindings{}, contracts.LoweringInventory{}, fmt.Errorf("contract analysis has no binding recorder")
+	}
+	r := c.Compilation.contractRecorder
+	bindings, inventory := r.snapshot(), r.inventory()
+	for _, source := range r.compilation.SourceOrigins {
+		if bindings.Inputs[r.logicalSource(source.Name)] != source.SHA256 {
+			return ContractBindings{}, contracts.LoweringInventory{}, fmt.Errorf("contract input %s changed between reads in one compilation", source.Name)
+		}
+	}
+	return bindings, inventory, inventory.Validate()
+}
+
 // RefreshLoweringInventory includes helper choices made by subsequent real
 // compilation operations, such as the final coordinator entry and runtime
 // library. Call this before merging backend coverage and reinferring Plan.
 // Pending backend closure remains an independent obligation.
 func (a *ContractAnalysis) RefreshLoweringInventory() error {
-	if a == nil || a.Compilation == nil || a.Compilation.Compilation == nil || a.Compilation.Compilation.contractRecorder == nil {
-		return fmt.Errorf("contract analysis has no binding recorder")
+	if a == nil {
+		return fmt.Errorf("contract analysis is required")
 	}
-	r := a.Compilation.Compilation.contractRecorder
-	inventory := r.inventory()
-	if err := inventory.Validate(); err != nil {
+	bindings, inventory, err := a.Compilation.RecordedInventory()
+	if err != nil {
 		return err
 	}
 	oldNative := make(map[string]bool)
@@ -126,16 +140,16 @@ func (a *ContractAnalysis) RefreshLoweringInventory() error {
 	}
 	a.Plan.Residuals = append(residuals, inventory.Unknowns...)
 	a.Lowering = inventory
-	a.Bindings = r.snapshot()
+	a.Bindings = bindings
 	return a.refreshNativeScopes()
 }
 
 func (ls *LygerService) AnalyzeContracts(source []byte, path string, options ContractAnalysisOptions) (*ContractAnalysis, error) {
-	c, _, err := ls.ResolveContractBindings(source, path)
+	result, err := ls.CompileForContracts(source, path)
 	if err != nil {
 		return nil, err
 	}
-	result := &CompilationResult{Compilation: c, ExpandedSource: append([]byte(nil), c.ExpandedBytes...), AML: append([]byte(nil), c.ASMBytes...), BackendAML: append([]byte(nil), c.Program.BackendBytes...)}
+	c := result.Compilation
 	plan, err := planOrchestration(c.Semantics)
 	if err != nil {
 		return nil, err
@@ -193,19 +207,12 @@ func (r *contractRecorder) contractBlock(block *orchestrationBlock) []contracts.
 }
 
 func (r *contractRecorder) contractAppTarget(app *App) contracts.TargetRef {
-	if app == nil {
+	target, ok := r.appTargets[app]
+	if !ok {
 		return contracts.TargetRef{Unknown: true, Type: "App", Phase: contracts.Invocation}
 	}
-	for _, construction := range r.compilation.Semantics.Constructions {
-		if construction.App == app {
-			target, ok := r.targets[construction.Root]
-			if ok {
-				target.Phase = contracts.Invocation
-				return target
-			}
-		}
-	}
-	return contracts.TargetRef{Unknown: true, Type: "App", Phase: contracts.Invocation}
+	target.Phase = contracts.Invocation
+	return target
 }
 
 func (r *contractRecorder) contractStorageTarget(slot *orchestrationStorage) contracts.TargetRef {
@@ -329,12 +336,18 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 			node.Children = append(node.Children, contracts.Node{Kind: contracts.Branch, Origin: origin, Then: r.contractInstructions(current.Then), Else: r.contractInstructions(current.Else)})
 		case instructionBlock:
 			node.Children = append(node.Children, r.contractBlock(current.Block)...)
-		case instructionCall:
+		case instructionCall, instructionReturn:
 			node.Children = append(node.Children, r.contractInstructions(current.Actions)...)
 			if source.Application != nil && source.Application.verb != nil && source.Application.verb.binding != nil {
 				selected := source.Application.verb.binding.Record
 				scopeMeaning = r.meaning(selected, nil)
 				node.Children = append(node.Children, r.contractNativeUse(selected, selected.ID, r.recordTarget(selected, contracts.Invocation), origin, nil, nil, "value"))
+			}
+			if source.Kind == instructionReturn {
+				for _, value := range current.Results {
+					node.Children = append(node.Children, r.contractValue(value, origin)...)
+				}
+				node.Children = append(node.Children, contracts.Node{Kind: contracts.Return, Origin: origin, Phase: contracts.Invocation})
 			}
 		case instructionAssign:
 			if current.Target != nil && current.Target.Storage != nil && !resource.Unknown {
@@ -359,7 +372,7 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 		case instructionRun:
 			node.Children = append(node.Children, event("spawn"))
 		case instructionStop:
-			node.Children = append(node.Children, event("signal"))
+			node.Children = append(node.Children, event(contracts.EffectSignal))
 		case instructionAwait:
 			node.Children = append(node.Children, event("wait"), event("suspend"))
 			node.Children = append(node.Children, r.contractBlock(current.Continuation)...)
@@ -426,11 +439,6 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 					}
 				}
 			}
-		case instructionReturn:
-			for _, value := range current.Results {
-				node.Children = append(node.Children, r.contractValue(value, origin)...)
-			}
-			node.Children = append(node.Children, contracts.Node{Kind: contracts.Return, Origin: origin, Phase: contracts.Invocation})
 		default:
 			node.Children = append(node.Children, contracts.Node{Kind: contracts.Native, Native: "unmodeled-instruction:" + source.Kind.String(), Origin: origin})
 		}
@@ -452,6 +460,10 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 		switch source.Kind {
 		case instructionUpdate, instructionInvoke, instructionCall:
 			r.recordContractScope(node, target, origin, firstUse, scopeMeaning)
+		case instructionReturn:
+			if source.Application != nil {
+				r.recordContractScope(node, target, origin, firstUse, scopeMeaning)
+			}
 		}
 	}
 	return result
@@ -501,19 +513,4 @@ func (r *contractRecorder) contractValue(value *orchestrationValue, origin contr
 	}
 	nodes = append(nodes, contracts.Node{Kind: contracts.Native, Native: name, Origin: origin, Target: target, Phase: contracts.Invocation})
 	return nodes
-}
-
-// NativeNames reports canonical selected compositions for inventory/debugging.
-// It does not infer native behavior from names.
-func (a *ContractAnalysis) NativeNames() []string {
-	set := make(map[string]bool)
-	for _, step := range a.Lowering.Steps {
-		set[step.Name] = true
-	}
-	var names []string
-	for name := range set {
-		names = append(names, name)
-	}
-	sort.Strings(names)
-	return names
 }

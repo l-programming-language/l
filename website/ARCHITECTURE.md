@@ -32,4 +32,4 @@ Brand colors map to Starlight tokens using system fonts. SVG diagrams have nearb
 
 Website checks cover canonical content, types, transformations, provenance, emitted HTML/links/assets, search, browser interaction, and accessibility. They do not execute L examples or native validation. See [local development](../docs/contributing/local-development.md) for commands.
 
-Pull-request documentation and dependency checks use read-only permissions. Manual release and recovery workflows live in `.github/workflows/`; committed policy currently blocks publication. The release guard checks approved manual paths, authorization, action pins, and read-only PR workflows.
+Pull-request documentation and dependency checks use read-only permissions. Manual release and recovery workflows live in `.github/workflows/`; publication requires the authorized manual path and matching release evidence. The release guard checks approved manual paths, authorization, action pins, and read-only PR workflows.

@@ -49,9 +49,13 @@ func TestMetadataStrictness(t *testing.T) {
 		if _, err := DecodeDocument(invalid); err == nil {
 			t.Fatal("favorable misspelling ignored")
 		}
-		loaded, err := ReadNativeManifest(data)
+		document, err := DecodeDocument(data)
 		if err != nil {
 			t.Fatal(err)
+		}
+		loaded, ok := document.(NativeContractManifest)
+		if !ok {
+			t.Fatalf("expected native manifest, got %T", document)
 		}
 		if got := NormalizeNativeContract(loaded.Declarations[0]); got.Assurance != Unresolved || got.Effects.UnknownTail == nil || !*got.Effects.UnknownTail {
 			t.Fatalf("omission granted no-allocation: %+v", got)
@@ -97,30 +101,28 @@ func TestNativeNormalizationAndEvidenceSeparation(t *testing.T) {
 }
 
 func TestReportSerializationDeterministic(t *testing.T) {
-	t.Run("BASE-008", func(t *testing.T) {
-		report := NewReport("typed-fixture")
-		report.Inputs["z-source"], report.Inputs["a-source"] = "z-hash", "a-hash"
-		report.Scope.Exclusions = []string{"external forced termination"}
-		report.Summary.Unknowns = []UnknownReason{{Code: "opaque", Message: "native callback effects", Components: []string{"effects"}}}
-		report.Targets = []TargetRef{{Root: "A", Path: []string{"first"}, Type: "Theme"}, {Root: "A", Path: []string{"second"}, Type: "Theme"}}
-		first, err := EncodeDocument(report)
-		if err != nil {
-			t.Fatal(err)
-		}
-		report.Inputs = map[string]string{"a-source": "a-hash", "z-source": "z-hash"}
-		second, err := EncodeDocument(report)
-		if err != nil || !bytes.Equal(first, second) {
-			t.Fatalf("map insertion order changed serialization: %v", err)
-		}
-		decoded, err := DecodeDocument(first)
-		if err != nil {
-			t.Fatal(err)
-		}
-		third, err := EncodeDocument(decoded)
-		if err != nil || !bytes.Equal(first, third) || !reflect.DeepEqual(decoded, report) {
-			t.Fatalf("round trip lost semantic data: %v", err)
-		}
-	})
+	report := NewReport("typed-fixture")
+	report.Inputs["z-source"], report.Inputs["a-source"] = "z-hash", "a-hash"
+	report.Scope.Exclusions = []string{"external forced termination"}
+	report.Summary.Unknowns = []UnknownReason{{Code: "opaque", Message: "native callback effects", Components: []string{"effects"}}}
+	report.Targets = []TargetRef{{Root: "A", Path: []string{"first"}, Type: "Theme"}, {Root: "A", Path: []string{"second"}, Type: "Theme"}}
+	first, err := EncodeDocument(report)
+	if err != nil {
+		t.Fatal(err)
+	}
+	report.Inputs = map[string]string{"a-source": "a-hash", "z-source": "z-hash"}
+	second, err := EncodeDocument(report)
+	if err != nil || !bytes.Equal(first, second) {
+		t.Fatalf("map insertion order changed serialization: %v", err)
+	}
+	decoded, err := DecodeDocument(first)
+	if err != nil {
+		t.Fatal(err)
+	}
+	third, err := EncodeDocument(decoded)
+	if err != nil || !bytes.Equal(first, third) || !reflect.DeepEqual(decoded, report) {
+		t.Fatalf("round trip lost semantic data: %v", err)
+	}
 }
 
 func executionFixture() ExecutionRecord {
@@ -129,28 +131,26 @@ func executionFixture() ExecutionRecord {
 }
 
 func TestExecutedEvidenceRequiresRecordedOperation(t *testing.T) {
-	t.Run("FALS-010", func(t *testing.T) {
-		report := NewReport("fixture")
-		claim := Claim{ID: "observed", Predicate: Predicate{Kind: "observed", Subject: "one-input"}, Phase: Invocation, Outcomes: []Outcome{Normal}}
-		report.Evidence.Claims = []Claim{claim}
-		report.Evidence.Nodes = []EvidenceNode{{ID: "empirical", Claim: claim.ID, Kind: "empirical", Witness: "fixture-run"}}
-		if _, err := EncodeDocument(report); err == nil {
-			t.Fatal("fabricated executed evidence accepted without record")
-		}
-		report.Executions = []ExecutionRecord{{ID: "fixture-run", Kind: "test", Command: []string{"fixture-test"}, WorkingDirectory: "/fixture", Status: "passed"}}
-		if _, err := EncodeDocument(report); err == nil {
-			t.Fatal("fabricated success with no timestamps/status/provenance accepted")
-		}
-		report.Executions = []ExecutionRecord{executionFixture()}
-		if _, err := EncodeDocument(report); err != nil {
-			t.Fatal(err)
-		}
-		report.Executions[0].Kind = "integrity"
-		report.Executions[0] = SealExecutionRecord(report.Executions[0])
-		if _, err := EncodeDocument(report); err == nil || !strings.Contains(err.Error(), "scope") {
-			t.Fatalf("integrity observation became compiler test: %v", err)
-		}
-	})
+	report := NewReport("fixture")
+	claim := Claim{ID: "observed", Predicate: Predicate{Kind: "observed", Subject: "one-input"}, Phase: Invocation, Outcomes: []Outcome{Normal}}
+	report.Evidence.Claims = []Claim{claim}
+	report.Evidence.Nodes = []EvidenceNode{{ID: "empirical", Claim: claim.ID, Kind: "empirical", Witness: "fixture-run"}}
+	if _, err := EncodeDocument(report); err == nil {
+		t.Fatal("fabricated executed evidence accepted without record")
+	}
+	report.Executions = []ExecutionRecord{{ID: "fixture-run", Kind: "test", Command: []string{"fixture-test"}, WorkingDirectory: "/fixture", Status: "passed"}}
+	if _, err := EncodeDocument(report); err == nil {
+		t.Fatal("fabricated success with no timestamps/status/provenance accepted")
+	}
+	report.Executions = []ExecutionRecord{executionFixture()}
+	if _, err := EncodeDocument(report); err != nil {
+		t.Fatal(err)
+	}
+	report.Executions[0].Kind = "integrity"
+	report.Executions[0] = SealExecutionRecord(report.Executions[0])
+	if _, err := EncodeDocument(report); err == nil || !strings.Contains(err.Error(), "scope") {
+		t.Fatalf("integrity observation became compiler test: %v", err)
+	}
 }
 
 func TestDocumentSchemasFollowSharedModel(t *testing.T) {

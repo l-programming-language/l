@@ -1,8 +1,9 @@
 package contracts
 
 import (
+	"errors"
 	"fmt"
-	"sort"
+	"maps"
 )
 
 type NodeKind string
@@ -124,6 +125,7 @@ type OwnedResource struct {
 }
 
 type PathSummary struct {
+	unfinished            bool                     // private traversal state, excluded from published paths
 	Outcome               Outcome                  `json:"outcome"`
 	ObservedOutcome       Outcome                  `json:"observed_outcome,omitempty"`
 	ControlReturn         bool                     `json:"control_return,omitempty"`
@@ -165,7 +167,7 @@ type AnalysisOptions struct {
 	Aliases             []ResourcePair
 	Disjoint            []ResourcePair
 	NativeSummaries     map[string]DerivedSummary
-	NativeApplications  map[string]ApprovedNativeApplication
+	NativeApplications  map[string]NativeEvaluation
 	NativeWitnesses     map[string]string
 	ApprovedAssumptions map[string]bool
 }
@@ -183,7 +185,28 @@ func (o AnalysisOptions) normalized() AnalysisOptions {
 	return o
 }
 
+func hasWorkCutoff(unknowns []UnknownReason) bool {
+	for _, u := range unknowns {
+		if u.Code == "work_budget" {
+			return true
+		}
+	}
+	return false
+}
+
+// This bounds abstract transfers across an entire inference, including nested loops.
+const inferenceWorkLimit = 8192
+
+var inferencePolicy = StableID("inference-policy", struct {
+	Analyzer string
+	Limit    int
+}{AnalyzerVersion, inferenceWorkLimit})
+
+var errWorkLimit = errors.New("contract inference work budget exhausted")
+
 type inference struct {
+	remaining      int
+	cutoff         Origin
 	plan           Plan
 	options        AnalysisOptions
 	summaries      map[MeaningKey]DerivedSummary
@@ -208,51 +231,54 @@ func clonePath(p PathSummary) PathSummary {
 	p.Obligations = append([]Obligation(nil), p.Obligations...)
 	p.Assumptions = append([]string(nil), p.Assumptions...)
 	p.NativeBoundaries = append([]NativeBoundary(nil), p.NativeBoundaries...)
-	p.OwnershipOrder = append([]string(nil), p.OwnershipOrder...)
+	snapshot := cloneOwnershipSnapshot(OwnershipSnapshot{Owned: p.Owned, Order: p.OwnershipOrder})
+	p.Owned, p.OwnershipOrder = snapshot.Owned, snapshot.Order
 	demand := make(map[string]Multiplicity, len(p.Demand))
-	for key, value := range p.Demand {
-		demand[key] = value
-	}
+	maps.Copy(demand, p.Demand)
 	p.Demand = demand
-	owned := make(map[string]OwnedResource, len(p.Owned))
-	for key, value := range p.Owned {
-		owned[key] = normalizedOwnedResource(value)
-	}
-	p.Owned = owned
 	p.OwnershipAlternatives = cloneOwnershipSnapshots(p.OwnershipAlternatives)
 	p.OwnershipWidening = cloneOwnershipWidening(p.OwnershipWidening)
 	return p
 }
 
 func Infer(plan Plan, options AnalysisOptions) (DerivedSummary, error) {
-	return inferPlan(plan, options, "")
+	return inferPlan(plan, options, "", inferenceWorkLimit)
 }
 
-func inferPlan(plan Plan, options AnalysisOptions, scopeNode string) (DerivedSummary, error) {
+func inferPlan(plan Plan, options AnalysisOptions, scopeNode string, limit int) (DerivedSummary, error) {
 	options = options.normalized()
 	for _, pair := range options.Disjoint {
 		if AliasRelation(pair.Left, pair.Right, options.Aliases, nil) == Established {
 			return DerivedSummary{}, fmt.Errorf("resource %s is both aliased and declared disjoint from %s", pair.Left.ID, pair.Right.ID)
 		}
 	}
-	a := &inference{plan: plan, options: options, summaries: make(map[MeaningKey]DerivedSummary), callbackStack: make(map[string]bool), callStack: make(map[MeaningKey]bool), scopeNode: scopeNode}
-	if err := a.inferDefinitions(); err != nil {
-		return DerivedSummary{}, err
+	a := &inference{remaining: limit, plan: plan, options: options, summaries: make(map[MeaningKey]DerivedSummary), callbackStack: make(map[string]bool), callStack: make(map[MeaningKey]bool), scopeNode: scopeNode}
+	var paths []PathSummary
+	err := a.inferDefinitions()
+	if err == nil {
+		paths, err = a.run(plan.Entry, []PathSummary{initialPath()})
 	}
-	paths, err := a.run(plan.Entry, []PathSummary{initialPath()})
-	if err != nil {
+	if err != nil && err != errWorkLimit {
 		return DerivedSummary{}, err
 	}
 	if scopeNode != "" {
-		if len(a.scopedPaths) == 0 {
+		if len(a.scopedPaths) == 0 && (err == nil || !plan.anyNode(func(node Node) bool { return node.ID == scopeNode })) {
 			return DerivedSummary{}, fmt.Errorf("selected typed region %q was not reached with a supported entry context", scopeNode)
 		}
-		paths = a.bound(a.scopedPaths)
+		paths = a.scopedPaths
 		// Whole-entry residuals are not scoped operations. The coordinator must
 		// supply the selected region's explicit coverage obligations separately.
 		plan.Residuals, plan.NativeClosure = nil, nil
 	}
+	if err == errWorkLimit && len(paths) == 0 {
+		paths = []PathSummary{{unfinished: true}} // carry residual coverage without an invented outcome
+	}
 	for i := range paths {
+		if err == errWorkLimit && !paths[i].Reachable {
+			for j := range paths[i].Effects {
+				paths[i].Effects[j].Definite = false
+			}
+		}
 		paths[i].Unknowns = append(paths[i].Unknowns, plan.Residuals...)
 		for _, boundary := range plan.NativeClosure {
 			if boundary.Status == Established {
@@ -279,37 +305,56 @@ func inferPlan(plan Plan, options AnalysisOptions, scopeNode string) (DerivedSum
 		}
 	}
 	result := summarize(paths)
-	result.Fingerprint = StableID("inference", struct {
-		Plan                        Plan
-		Policy                      string
-		Alternatives, Widen, Rounds int
-		Aliases, Disjoint           []ResourcePair
-		Native                      map[string]DerivedSummary
-		NativeApplications          map[string]ApprovedNativeApplication
-		Witnesses                   map[string]string
-		Approved                    map[string]bool
-	}{plan, AnalyzerVersion, options.MaxAlternatives, options.WidenAfter, options.MaxSCCRounds, options.Aliases, options.Disjoint, options.NativeSummaries, options.NativeApplications, options.NativeWitnesses, options.ApprovedAssumptions})
-	if scopeNode != "" {
-		result.Fingerprint = StableID("scope-inference", struct{ Base, Scope string }{result.Fingerprint, scopeNode})
+	if err == errWorkLimit {
+		// Only completed siblings can establish exit-conditioned counterexamples.
+		// Prefix effects remain observations for all-outcome checks.
+		result.Paths = nil
+		for _, path := range paths {
+			if !path.unfinished {
+				result.Paths = append(result.Paths, path)
+			}
+		}
+		result.Coverage = Partial
+		result.Resources = UnknownResourceCost(err.Error())
+		result.Unknowns = append(result.Unknowns, UnknownReason{Code: "work_budget", Message: err.Error(), Origin: a.cutoff})
+		result.Obligations = append(result.Obligations, Obligation{ID: StableID("work-budget", a.cutoff), Claim: Claim{Predicate: Predicate{Kind: "analysis_complete"}, Scope: "analysis"}, Status: Unresolved, Origin: a.cutoff, Reason: err.Error()})
 	}
+	result.Fingerprint = StableID("inference", struct {
+		Plan          Plan
+		Options       AnalysisOptions
+		Policy, Scope string
+		Limit         int
+	}{plan, options, AnalyzerVersion, scopeNode, limit})
 	return result, nil
+}
+
+// Paths that already exited do not need any further ordinary transfers.
+func pending(paths []PathSummary) []PathSummary {
+	for i := range paths {
+		if paths[i].Outcome == Normal && !paths[i].ControlReturn {
+			paths[i].unfinished = true
+		}
+	}
+	return paths
 }
 
 func (a *inference) sequence(nodes []Node, paths []PathSummary) ([]PathSummary, error) {
 	var err error
-	for _, node := range nodes {
+	for i, node := range nodes {
 		paths, err = a.run(node, paths)
 		if err != nil {
-			return nil, err
+			if i+1 < len(nodes) {
+				pending(paths)
+			}
+			return paths, err
 		}
-		paths = a.bound(paths)
 	}
 	return paths, nil
 }
 
 func (a *inference) run(node Node, paths []PathSummary) ([]PathSummary, error) {
 	var result []PathSummary
-	for _, path := range paths {
+	for i, path := range paths {
 		if path.Outcome != Normal || path.ControlReturn {
 			result = append(result, path)
 			continue
@@ -320,30 +365,34 @@ func (a *inference) run(node Node, paths []PathSummary) ([]PathSummary, error) {
 			}
 		}
 		out, err := a.step(node, clonePath(path))
-		if err != nil {
-			return nil, err
-		}
 		result = append(result, out...)
+		if err != nil {
+			return append(result, pending(paths[i+1:])...), err
+		}
 	}
 	return a.bound(result), nil
 }
 
 func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
+	if !a.spend(node.Origin) {
+		p.unfinished = true
+		return []PathSummary{p}, errWorkLimit
+	}
 	if len(p.OwnershipAlternatives) > 0 {
 		var result []PathSummary
 		for _, alternative := range expandOwnership(p) {
 			paths, err := a.step(node, alternative)
-			if err != nil {
-				return nil, err
-			}
 			result = append(result, paths...)
+			if err != nil {
+				return result, err
+			}
 		}
 		return result, nil
 	}
 	if node.Kind != Require && len(node.Requires) > 0 {
 		checked, err := a.step(Node{Kind: Require, Requires: node.Requires, Target: node.Target, Phase: node.Phase, Origin: node.Origin}, p)
 		if err != nil {
-			return nil, err
+			return checked, err
 		}
 		node.Requires = nil
 		return a.run(node, checked)
@@ -364,7 +413,7 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 	case Branch:
 		left, err := a.sequence(node.Then, []PathSummary{clonePath(p)})
 		if err != nil {
-			return nil, err
+			return left, err
 		}
 		right, err := a.sequence(node.Else, []PathSummary{p})
 		return append(left, right...), err
@@ -447,7 +496,7 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 	case Call:
 		actuals, err := a.sequence(node.Children, []PathSummary{p})
 		if err != nil {
-			return nil, err
+			return pending(actuals), err
 		}
 		var out []PathSummary
 		for _, path := range actuals {
@@ -463,13 +512,13 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 				a.callStack[node.Meaning] = true
 				called, err := a.run(rebaseNode(body, node.Substitutions), []PathSummary{path})
 				delete(a.callStack, node.Meaning)
-				if err != nil {
-					return nil, err
-				}
 				for i := range called {
 					called[i].ControlReturn = false
 				}
 				out = append(out, called...)
+				if err != nil {
+					return out, err
+				}
 				continue
 			}
 			if summary, ok := a.summaries[node.Meaning]; ok {
@@ -535,7 +584,7 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 			}
 		}
 		paths, err := a.sequence(node.Children, []PathSummary{p})
-		if err != nil {
+		if err != nil && err != errWorkLimit {
 			return nil, err
 		}
 		var out []PathSummary
@@ -548,7 +597,7 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 			if len(node.CleanupOutcomes) > 0 {
 				covered = containsOutcome(node.CleanupOutcomes, path.Outcome)
 			}
-			if path.Outcome == Abort || !covered {
+			if path.unfinished || path.Outcome == Abort || !covered {
 				out = append(out, path)
 				continue
 			}
@@ -557,28 +606,31 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 			path.Outcome = Normal
 			path.ControlReturn = false
 			closed := []PathSummary{path}
+			// Reconstruct only the pending cleanup sequence for this sibling.
+			// run() charges every actual release against the shared budget.
+			var cleanup []Node
 			for i := len(path.OwnershipOrder) - 1; i >= 0; i-- {
 				id := path.OwnershipOrder[i]
 				if before[id] {
 					continue
 				}
-				closed, err = a.run(Node{Kind: Release, Resource: ResourceRef{ID: id}, Origin: node.Origin, Phase: Cleanup}, closed)
-				if err != nil {
-					return nil, err
-				}
+				cleanup = append(cleanup, Node{Kind: Release, Resource: ResourceRef{ID: id}, Origin: node.Origin, Phase: Cleanup})
 			}
 			for _, id := range widenedResourceIDs(path.OwnershipWidening) {
-				if before[id] {
-					continue
-				}
-				closed, err = a.run(Node{Kind: Release, Resource: ResourceRef{ID: id}, Origin: node.Origin, Phase: Cleanup}, closed)
-				if err != nil {
-					return nil, err
+				if !before[id] {
+					cleanup = append(cleanup, Node{Kind: Release, Resource: ResourceRef{ID: id}, Origin: node.Origin, Phase: Cleanup})
 				}
 			}
-			closed, err = a.sequence(node.Cleanup, closed)
-			if err != nil {
-				return nil, err
+			cleanup = append(cleanup, node.Cleanup...)
+			if err == errWorkLimit {
+				if len(cleanup) > 0 {
+					pending(closed)
+				}
+			} else {
+				closed, err = a.sequence(cleanup, closed)
+				if err != nil && err != errWorkLimit {
+					return nil, err
+				}
 			}
 			for i := range closed {
 				if closed[i].Outcome == Normal {
@@ -588,7 +640,7 @@ func (a *inference) step(node Node, p PathSummary) ([]PathSummary, error) {
 			}
 			out = append(out, closed...)
 		}
-		return out, nil
+		return out, err
 	case Repeat:
 		return a.repeat(node, p)
 	default:
@@ -723,6 +775,15 @@ func (a *inference) release(p PathSummary, node Node) ([]PathSummary, error) {
 	return append([]PathSummary{p}, with...), err
 }
 
+func (a *inference) spend(origin Origin) bool {
+	if a.remaining == 0 {
+		a.cutoff = origin
+		return false
+	}
+	a.remaining--
+	return true
+}
+
 func (a *inference) repeat(node Node, p PathSummary) ([]PathSummary, error) {
 	if node.Count != nil && *node.Count < 0 {
 		return nil, fmt.Errorf("negative repetition count")
@@ -731,9 +792,15 @@ func (a *inference) repeat(node Node, p PathSummary) ([]PathSummary, error) {
 		paths := []PathSummary{p}
 		var err error
 		for i := int64(0); i < *node.Count; i++ {
+			if !a.spend(node.Origin) {
+				return pending(paths), errWorkLimit
+			}
 			paths, err = a.sequence(node.Children, paths)
 			if err != nil {
-				return nil, err
+				if i+1 < *node.Count {
+					pending(paths)
+				}
+				return paths, err
 			}
 		}
 		return paths, nil
@@ -743,7 +810,8 @@ func (a *inference) repeat(node Node, p PathSummary) ([]PathSummary, error) {
 	body, err := a.sequence(node.Children, []PathSummary{initialPath()})
 	a.measuringScope = wasMeasuring
 	if err != nil {
-		return nil, err
+		p.unfinished = true
+		return []PathSummary{p}, err
 	}
 	summary := summarize(body)
 	if node.Count != nil && node.StateInvariant && len(body) == 1 && body[0].Outcome == Normal && !body[0].ControlReturn && len(body[0].Owned) == 0 && len(body[0].OwnershipAlternatives) == 0 && body[0].OwnershipWidening == nil {
@@ -800,11 +868,14 @@ func demandAt(demands map[string]Multiplicity, name string) Multiplicity {
 }
 
 func (a *inference) applySummary(p PathSummary, summary DerivedSummary, sub Substitutions) []PathSummary {
-	if len(summary.Paths) == 0 {
-		a.unknown(&p, Node{}, "missing_summary", "callee has no outcome summary")
-		return []PathSummary{p}
-	}
 	var out []PathSummary
+	if len(summary.Paths) == 0 || hasWorkCutoff(summary.Unknowns) {
+		unknown := clonePath(p)
+		a.unknown(&unknown, Node{}, "missing_summary", "callee outcome coverage is incomplete")
+		unknown.Unknowns = append(unknown.Unknowns, summary.Unknowns...)
+		unknown.Obligations = append(unknown.Obligations, summary.Obligations...)
+		out = append(out, unknown)
+	}
 	for _, tail := range summary.Paths {
 		path := clonePath(p)
 		path.Outcome = tail.Outcome
@@ -947,8 +1018,8 @@ func summarize(paths []PathSummary) DerivedSummary {
 			result.Resources = BranchResources(result.Resources, path.Resources)
 		}
 	}
-	result.Effects = uniqueEffects(result.Effects)
-	result.Unknowns = uniqueUnknowns(result.Unknowns)
+	result.Effects = distinctRecords("effect", result.Effects)
+	result.Unknowns = distinctRecords("unknown", result.Unknowns)
 	result.Assumptions = sortedStrings(result.Assumptions)
 	if len(result.Unknowns) > 0 {
 		result.Coverage = Partial
@@ -956,26 +1027,14 @@ func summarize(paths []PathSummary) DerivedSummary {
 	return result
 }
 
-func uniqueEffects(effects []Effect) []Effect {
+func distinctRecords[T any](kind string, records []T) []T {
 	seen := make(map[string]bool)
-	var out []Effect
-	for _, effect := range effects {
-		key := StableID("effect", effect)
+	var out []T
+	for _, record := range records {
+		key := StableID(kind, record)
 		if !seen[key] {
 			seen[key] = true
-			out = append(out, effect)
-		}
-	}
-	return out
-}
-func uniqueUnknowns(unknowns []UnknownReason) []UnknownReason {
-	seen := make(map[string]bool)
-	var out []UnknownReason
-	for _, unknown := range unknowns {
-		key := StableID("unknown", unknown)
-		if !seen[key] {
-			seen[key] = true
-			out = append(out, unknown)
+			out = append(out, record)
 		}
 	}
 	return out
@@ -990,13 +1049,9 @@ func (a *inference) bound(paths []PathSummary) []PathSummary {
 		key := fmt.Sprintf("%s:%s:%t", path.Outcome, path.ObservedOutcome, path.ControlReturn)
 		groups[key] = append(groups[key], path)
 	}
-	keys := make([]string, 0, len(groups))
-	for outcome := range groups {
-		keys = append(keys, string(outcome))
-	}
-	sort.Strings(keys)
+
 	var out []PathSummary
-	for _, key := range keys {
+	for _, key := range sortedMapKeys(groups) {
 		group := groups[key]
 		merged := clonePath(group[0])
 		merged.Reachable = false
@@ -1028,8 +1083,8 @@ func (a *inference) bound(paths []PathSummary) []PathSummary {
 		for i := range merged.Effects {
 			merged.Effects[i].Definite = false
 		}
-		merged.Effects = uniqueEffects(merged.Effects)
-		merged.Unknowns = append(uniqueUnknowns(merged.Unknowns), UnknownReason{Code: "alternative_budget", Message: "bounded disjunction widened; only common facts and conservative behavior retained", Components: []string{"relations", "ownership"}})
+		merged.Effects = distinctRecords("effect", merged.Effects)
+		merged.Unknowns = append(distinctRecords("unknown", merged.Unknowns), UnknownReason{Code: "alternative_budget", Message: "bounded disjunction widened; only common facts and conservative behavior retained", Components: []string{"relations", "ownership"}})
 		out = append(out, merged)
 	}
 	return out

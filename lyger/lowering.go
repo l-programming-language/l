@@ -10,8 +10,8 @@ import (
 
 // definitionSite identifies one authored declaration for both literal and source
 // constructions. Aliases are resolved by callers before selecting that site.
-func (c *Compilation) definitionSite(rec *record) (*lStatement, *registrationSite, error) {
-	source := c.Semantics.Declarations[rec]
+func (s *semanticProgram) definitionSite(rec *record) (*lStatement, *registrationSite, error) {
+	source := s.Declarations[rec]
 	if source == nil {
 		return nil, nil, nil
 	}
@@ -24,11 +24,26 @@ func (c *Compilation) definitionSite(rec *record) (*lStatement, *registrationSit
 		if err != nil {
 			return nil, nil, err
 		}
-		if c.Semantics.Subjects[target] == rec {
+		if s.Subjects[target] == rec {
 			return source, &site, nil
 		}
 	}
 	return source, nil, nil
+}
+
+func (site registrationSite) actionClauses() []*clauseGram {
+	if site.subject != nil && site.subject.phrase != nil && site.subject.phrase.gType == "phrase.directive" {
+		return site.subject.phrase.clauses
+	}
+	return nil
+}
+
+func (s *semanticProgram) definitionActions(rec *record) ([]*clauseGram, error) {
+	_, site, err := s.definitionSite(rec)
+	if err != nil || site == nil {
+		return nil, err
+	}
+	return site.actionClauses(), nil
 }
 
 func (c *Compilation) recordTemplate(rec *record) (*DefinitionTemplate, error) {
@@ -36,7 +51,32 @@ func (c *Compilation) recordTemplate(rec *record) (*DefinitionTemplate, error) {
 	return template, err
 }
 
-// Literal leaves and source constructions select the same authored site once.
+// A selected shape is pure source structure; lowering attaches dependencies.
+type selectedDefinition struct {
+	source   *lStatement
+	site     *registrationSite
+	template *DefinitionTemplate
+	object   *objectGram
+}
+
+func (s *semanticProgram) selectedDefinition(rec *record) (selectedDefinition, error) {
+	source, site, err := s.definitionSite(rec)
+	selected := selectedDefinition{source: source, site: site}
+	if err != nil || site == nil {
+		return selected, err
+	}
+	literal, err := site.literal()
+	if err != nil {
+		return selected, err
+	}
+	if literal != nil {
+		selected.template, err = ParseDefinitionTemplate(literal.rawBytes, source.source.Span)
+	} else if object := site.valueObject(); object != nil && object.noun != nil && object.noun.binding != nil && s.Declarations[object.noun.binding.Record] != nil {
+		selected.object = object
+	}
+	return selected, err
+}
+
 func (c *Compilation) recordDefinition(rec *record) (*DefinitionTemplate, *objectGram, error) {
 	rec, err := canonicalRecord(rec, c.Semantics.Aliases)
 	if err != nil {
@@ -45,38 +85,28 @@ func (c *Compilation) recordDefinition(rec *record) (*DefinitionTemplate, *objec
 	if rec == nil {
 		return nil, nil, lerrors.Internal.Errorf("definition reference has no record")
 	}
-	source, site, err := c.definitionSite(rec)
+	selected, err := c.Semantics.selectedDefinition(rec)
 	if err != nil {
 		return nil, nil, err
 	}
-	if source == nil {
+	if selected.source == nil {
 		return nil, nil, lerrors.Internal.Errorf("definition %s has no source declaration", rec.ID)
 	}
-	if site == nil {
+	if selected.site == nil {
 		return nil, nil, lerrors.Internal.Errorf("definition %s has no source declaration site", rec.ID)
 	}
-	literal, err := site.literal()
-	if err != nil || literal == nil {
-		object := site.valueObject()
-		if object != nil && object.noun != nil && object.noun.binding != nil && c.Semantics.Declarations[object.noun.binding.Record] != nil {
-			return nil, object, err
-		}
-		return nil, nil, err
+	if selected.template != nil {
+		selected.template.dependencies, err = c.declarationDependencies(rec)
 	}
-	template, err := ParseDefinitionTemplate(literal.rawBytes, source.source.Span)
-	if err == nil {
-		template.dependencies, err = c.declarationDependencies(rec)
-	}
-	return template, nil, err
+	return selected.template, selected.object, err
 }
 
-func definitionArguments(template *DefinitionTemplate, args []DefinitionArgument) (map[string]DefinitionArgument, error) {
-	return bindDefinitionArguments(template, args, nil, nil)
-}
-
-// Explicit operands fill the selected signature's open slots; named operands
-// remain available through source constructors and are marked only when used.
 func bindDefinitionArguments(template *DefinitionTemplate, args []DefinitionArgument, named map[string]DefinitionArgument, used map[string]bool) (map[string]DefinitionArgument, error) {
+	var err error
+	args, err = scopedDefinitionArguments(template, args)
+	if err != nil {
+		return nil, err
+	}
 	bindings := make(map[string]DefinitionArgument)
 	next := 0
 	for _, slot := range template.Slots {
@@ -172,23 +202,22 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 		if used != nil && len(args) == 0 {
 			args = make([]DefinitionArgument, len(function.Constructor.Inputs))
 			for i, input := range function.Constructor.Inputs {
-				found := false
-				for name, argument := range named {
-					if !strings.EqualFold(name, input.Key) {
-						continue
-					}
-					if found {
-						return DefinitionInstance{}, lerrors.InvalidInput.Errorf("ambiguous argument for %s", input.Key)
-					}
-					found = true
-					args[i], used[name] = argument, true
+				argument, found, err := namedDefinitionArgument(input.Key, named, used)
+				if err != nil {
+					return DefinitionInstance{}, lerrors.InvalidInput.Errorf("ambiguous argument for %s", input.Key)
 				}
 				if !found {
 					return DefinitionInstance{}, lerrors.InvalidInput.Errorf("missing argument for %s", input.Key)
 				}
+				args[i] = argument
 			}
 		}
 		return c.invokeFunctionDefinition(function, args, active, dynamic)
+	}
+	if c.Semantics.Returns[rec] {
+		context := c.definitionReturn
+		context.implementation = rec
+		defer c.withDefinitionReturn(context)()
 	}
 	if active[rec] {
 		return DefinitionInstance{}, lerrors.Cycle.Errorf("recursive definition invocation: %s", rec.ID)
@@ -232,35 +261,21 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 		})
 	}
 	var before []DefinitionInstance
-	for _, ordered := range c.Scope.Ordered {
-		if ordered.Statement != c.Semantics.Declarations[rec] || len(ordered.Arguments) == 0 {
-			continue
+	parameters, err := c.sourceParameters(rec)
+	if err != nil {
+		return DefinitionInstance{}, err
+	}
+	if len(parameters) > 0 {
+		if len(args) != len(parameters) {
+			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("source action requires %d arguments, got %d", len(parameters), len(args))
 		}
-		if len(args) != len(ordered.Arguments) {
-			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("source action requires %d arguments, got %d", len(ordered.Arguments), len(args))
-		}
-		process, err := c.builtinRecord("Process")
+		args, _, before, err = c.bindWrapperOperands(definitionHeader{parameters: parameters}, args, nil)
 		if err != nil {
 			return DefinitionInstance{}, err
 		}
-		args = append([]DefinitionArgument(nil), args...)
-		for index, formal := range ordered.Arguments {
-			typ, err := c.resolver().reference(formal.Token)
-			if err != nil {
-				return DefinitionInstance{}, err
-			}
-			if typ == process {
-				continue
-			}
-			argument, err := c.atomArgument(args[index])
-			if err != nil {
-				return DefinitionInstance{}, err
-			}
-			var steps []DefinitionInstance
-			args[index], steps = argument.boundResult()
-			before = append(before, steps...)
+		for index := range parameters {
+			args[index].formal = &parameters[index]
 		}
-		break
 	}
 	forwarded := false
 	resultSymbol := ""
@@ -293,12 +308,12 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 // ownership remain one generic definition operation.
 func (c *Compilation) composeSourceActions(rec *record, invoke func(*clauseGram) (DefinitionInstance, error)) (DefinitionInstance, error) {
 	source := c.Semantics.Declarations[rec]
-	if source == nil || source.sGram.predicate == nil || len(source.sGram.predicate.clauses) == 0 {
-		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s has no action definition", rec.ID)
+	body, err := c.Semantics.definitionActions(rec)
+	if err != nil {
+		return DefinitionInstance{}, err
 	}
-	clause := source.sGram.predicate.clauses[0]
-	if clause.subject == nil || clause.subject.phrase == nil {
-		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s has no directive body", rec.ID)
+	if len(body) == 0 {
+		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s has no action definition", rec.ID)
 	}
 	dependencies, err := c.declarationDependencies(rec)
 	if err != nil {
@@ -307,7 +322,7 @@ func (c *Compilation) composeSourceActions(rec *record, invoke func(*clauseGram)
 	bound := DefinitionInstance{Symbol: rec.ID, definition: rec, Original: append([]byte(nil), source.source.Raw...), Span: source.source.Span, Dependencies: dependencies}
 	var actions []DefinitionInstance
 	var expressions []string
-	for _, action := range clause.subject.phrase.clauses {
+	for _, action := range body {
 		if action.verb == nil || action.verb.binding == nil {
 			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("source action in %s is not a definition", rec.ID)
 		}
@@ -315,8 +330,11 @@ func (c *Compilation) composeSourceActions(rec *record, invoke func(*clauseGram)
 		if err != nil {
 			return DefinitionInstance{}, err
 		}
-		if instance.Expression == "" {
+		if instance.Expression == "" && (len(body) != 1 || instance.result == nil) {
 			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("source action %s requires a composed syllable", rec.ID)
+		}
+		if len(body) == 1 {
+			bound.result = instance.result
 		}
 		actions = append(actions, instance)
 		for _, step := range definitionSteps(instance) {
@@ -324,9 +342,6 @@ func (c *Compilation) composeSourceActions(rec *record, invoke func(*clauseGram)
 		}
 		bound.Bindings = append(bound.Bindings, instance.Bindings...)
 		bound.Dependencies = append(bound.Dependencies, instance.Dependencies...)
-	}
-	if len(actions) == 0 {
-		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s has an empty action definition", rec.ID)
 	}
 	bound.Expression = strings.Join(expressions, "*")
 	bound.sequence = pureDefinitionSequence(actions)
@@ -367,7 +382,11 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 		}
 		arguments = append(arguments, argument)
 	}
-	instance, err := c.instantiateStaticCall(action.verb.binding.Record, arguments, active, dynamic)
+	selected, _, err := sourceReturnBinding(c.Semantics, action.verb, c.definitionReturn)
+	if err != nil {
+		return DefinitionInstance{}, false, err
+	}
+	instance, err := c.instantiateStaticCall(selected, arguments, active, dynamic)
 	if err != nil {
 		return DefinitionInstance{}, false, err
 	}
@@ -377,32 +396,31 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 
 // The same operand rules serve source directives, constructors and App bodies.
 // Only selected source definitions compose operations; other operands stay atoms.
-func (c *Compilation) staticObjectArgument(object *objectGram, inherited []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionArgument, bool, error) {
-	if object != nil && object.noun != nil {
-		target := object.noun
-		if pronoun, exists := c.Scope.Pronouns[target]; exists && pronoun.Kind == scopeActionArgument {
-			target = pronoun.TargetToken
+func (c *Compilation) formalArgument(tok *token, arguments []DefinitionArgument) (DefinitionArgument, bool) {
+	if pronoun, exists := c.Scope.Pronouns[tok]; exists && pronoun.Kind == scopeActionArgument {
+		tok = pronoun.TargetToken
+	}
+	for _, argument := range arguments {
+		if argument.formal != nil && argument.formal.token == tok {
+			return argument, true
 		}
-		for _, ordered := range c.Scope.Ordered {
-			for index, formal := range ordered.Arguments {
-				if formal.Token != target {
-					continue
+	}
+	return DefinitionArgument{}, false
+}
+
+func (c *Compilation) staticObjectArgument(object *objectGram, inherited []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionArgument, bool, error) {
+	if object != nil {
+		if argument, found := c.formalArgument(object.noun, inherited); found {
+			if kind, _ := parseDefinitionArgKindExact(argument.Kind); kind >= definitionArgText && kind <= definitionArgNull && argument.reference == "" {
+				name, err := nominalType(argument.formal.token)
+				if err != nil {
+					return DefinitionArgument{}, false, err
 				}
-				if len(inherited) != len(ordered.Arguments) {
-					return DefinitionArgument{}, false, lerrors.InvalidInput.Errorf("source action requires %d arguments, got %d", len(ordered.Arguments), len(inherited))
+				if _, err := argument.renderFor(DefinitionSlot{Type: name}); err != nil {
+					return DefinitionArgument{}, false, err
 				}
-				argument := inherited[index]
-				if kind, _ := parseDefinitionArgKindExact(argument.Kind); kind >= definitionArgText && kind <= definitionArgNull && argument.reference == "" {
-					name, err := nominalType(formal.Token)
-					if err != nil {
-						return DefinitionArgument{}, false, err
-					}
-					if _, err := argument.renderFor(DefinitionSlot{Type: name}); err != nil {
-						return DefinitionArgument{}, false, err
-					}
-				}
-				return argument, true, nil
 			}
+			return argument, true, nil
 		}
 	}
 	return c.definitionOperand(object, active, dynamic, func(child *objectGram) (DefinitionInstance, bool, error) {
@@ -452,15 +470,6 @@ func (c *Compilation) instantiateStaticObject(object *objectGram, inherited []De
 		return DefinitionInstance{}, false, err
 	}
 	node.Source = object
-	if node.Name == "" {
-		template, err := c.recordTemplate(node.Definition)
-		if err != nil {
-			return DefinitionInstance{}, false, err
-		}
-		if template != nil && len(template.Slots) > 0 && template.Slots[0].Type == "Label" {
-			node.Name = c.definitionLabel()
-		}
-	}
 	return c.instantiateStaticConstruction(node, arguments, active, dynamic)
 }
 
@@ -480,44 +489,39 @@ func (c *Compilation) bindFormalMember(object *objectGram, arguments []Definitio
 	if owner == nil {
 		return object, arguments, nil
 	}
-	if pronoun, exists := c.Scope.Pronouns[owner]; exists && pronoun.Kind == scopeActionArgument {
-		owner = pronoun.TargetToken
-	}
-	for _, ordered := range c.Scope.Ordered {
-		for index, formal := range ordered.Arguments {
-			if formal.Token != owner {
-				continue
-			}
-			if len(arguments) != len(ordered.Arguments) {
-				return nil, nil, lerrors.InvalidInput.Errorf("source action requires %d arguments, got %d", len(ordered.Arguments), len(arguments))
-			}
-			argument := arguments[index]
-			name, _ := possessiveOwner(string(formal.Token.rawBytes))
-			wanted, _ := checkType([]byte(name))
-			if _, err := argument.renderFor(DefinitionSlot{Type: wanted}); err != nil {
-				return nil, nil, ordered.Source.wrapError(err)
-			}
-			resolved, ready, err := c.resolver().member(semanticOwner{Namespace: argument.Kind}, object.noun, ordered.Statement)
-			if err != nil {
-				return nil, nil, err
-			}
-			if !ready || resolved.Binding == nil {
-				return nil, nil, lerrors.UnresolvedReference.Errorf("%s has no selected member %s", argument.Kind, object.noun.rawBytes)
-			}
-			selected := object.clone()
-			noun := *object.noun
-			noun.binding, noun.mem, noun.tType = resolved.Binding, resolved.Value, resolved.Type
-			selected.noun = &noun
-			return &selected, []DefinitionArgument{argument}, nil
+	if argument, found := c.formalArgument(owner, arguments); found {
+		formal := argument.formal
+		name, _ := possessiveOwner(string(formal.token.rawBytes))
+		wanted, _ := checkType([]byte(name))
+		if _, err := argument.renderFor(DefinitionSlot{Type: wanted}); err != nil {
+			return nil, nil, formal.source.source.Span.wrapError(err)
 		}
+		resolved, ready, err := c.resolver().member(semanticOwner{Namespace: argument.Kind}, object.noun, formal.source)
+		if err != nil {
+			return nil, nil, err
+		}
+		if !ready || resolved.Binding == nil {
+			return nil, nil, lerrors.UnresolvedReference.Errorf("%s has no selected member %s", argument.Kind, object.noun.rawBytes)
+		}
+		selected := object.clone()
+		noun := *object.noun
+		noun.binding, noun.mem, noun.tType = resolved.Binding, resolved.Value, resolved.Type
+		selected.noun = &noun
+		return &selected, []DefinitionArgument{argument}, nil
 	}
+
 	return object, arguments, nil
 }
 
 func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inherited []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionInstance, bool, error) {
-	template, err := c.recordTemplate(node.Definition)
+	inputs := c.processInputArguments(node.Source)
+	header, wrappers, selected, err := c.constructionHeader(node, node.Source != nil && node.Source.name != nil, make(map[*record]bool))
 	if err != nil {
 		return DefinitionInstance{}, false, err
+	}
+	template := header.template
+	if node.Name == "" && (header.implicitName != nil && (header.implicitName.Type == "Label" || template.hasDeclarationName()) || template == nil && len(wrappers) > 0) {
+		node.Name = c.definitionLabel()
 	}
 	arguments := inherited
 	forwarded := len(node.Arguments) == 0
@@ -535,87 +539,60 @@ func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inhe
 			arguments = append(arguments, argument)
 		}
 	}
-	if instructions, exists, err := c.directiveInstructions(node.Source); err != nil {
-		return DefinitionInstance{}, false, err
-	} else if exists {
-		body, err := c.composeInstructions(instructions, active, dynamic)
+	if node.Source != nil && node.Source.directivePhrase() != nil {
+		body, used, err := c.directiveComposition(node.Source, inherited, active, dynamic)
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}
+		body, err = c.annotateProcessInputs(body, inputs)
+		if err != nil {
+			return DefinitionInstance{}, false, err
+		}
+		if len(node.Arguments) == 0 {
+			arguments, forwarded = nil, used
+		} else {
+			forwarded = forwarded || used
+		}
 		arguments = append(arguments, DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &body})
 	}
-	var instance DefinitionInstance
 	if template != nil && template.IsFunction() {
 		if len(arguments) != 1 {
 			return DefinitionInstance{}, false, lerrors.InvalidInput.Errorf("Function constructor must own one body composition")
 		}
 		constructor := *node
-		constructor.Arguments = nil // The explicit body was composed above.
-		instance, err = c.instantiateFunctionConstructor(&constructor, arguments[0], false, active)
+		constructor.Arguments = nil
+		instance, err := c.instantiateFunctionConstructor(&constructor, arguments[0], false, active)
 		return instance, forwarded, err
-	} else if function := node.Definition.function; function != nil && function.Native {
-		instance, err = c.invokeFunctionDefinition(function, arguments, active, dynamic)
-		if err == nil && node.Name != "" {
-			instance, err = c.instantiateDescribedBuiltin("Storage.Binding", []string{"Storage.Produced"}, map[string]DefinitionArgument{"Name": definitionReferenceArgument(node.Name), "Value": {Kind: definitionArgDefinition.String(), Definition: &instance}})
+	}
+	var ledger []DefinitionBinding
+	for _, argument := range arguments {
+		if argument.Definition != nil {
+			ledger = append(ledger, argument.Definition.Bindings...)
 		}
-	} else {
-		if node.Name != "" {
+	}
+	var bindings map[string]DefinitionArgument
+	var used map[string]bool
+	if template != nil {
+		if header.implicitName != nil && node.Name != "" {
 			argument := definitionReferenceArgument(node.Name)
-			if node.Source.name != nil {
+			if node.Source != nil && node.Source.name != nil {
 				argument.source = c.operandSource(node.Source.name.noun)
 			}
-			if template != nil && len(template.Slots) > 0 && template.Slots[0].Type == definitionArgText.String() {
-				argument = DefinitionArgument{Kind: definitionArgText.String(), Text: node.Name}
+			if header.implicitName.Type == "Text" {
+				argument = DefinitionArgument{Kind: "Text", Text: node.Name}
 			}
 			arguments = append([]DefinitionArgument{argument}, arguments...)
 		}
-		if template != nil {
-			if dynamic[node.Definition] || node.Definition.Value != nil && node.Definition.Value.Runtime != nil {
-				return DefinitionInstance{}, false, lerrors.Unsupported.Errorf("runtime value %s cannot be captured by an App body", node.Definition.ID)
-			}
-			bindings, bindErr := definitionArguments(template, arguments)
-			if bindErr != nil {
-				return DefinitionInstance{}, false, bindErr
-			}
-			instance, err = c.instantiateNamedConstruction(node, bindings, make(map[string]bool), active)
-			if err == nil && node.Name != "" {
-				result := definitionReferenceArgument(node.Name)
-				result.source = c.operandSource(node.Source.noun)
-				instance.result = &result
-			}
-			return instance, forwarded, err
-		}
-		instance, err = c.instantiateStaticCall(node.Definition, arguments, active, dynamic)
-	}
-	if err != nil {
-		return DefinitionInstance{}, false, err
-	}
-	for i := len(node.Wrappers) - 1; i >= 0; i-- {
-		rule := node.Wrappers[i]
-		wrapper, err := ParseDefinitionTemplate(rule.Template.rawBytes, rule.Source.source.Span)
+		bindings, err = bindDefinitionArguments(template, arguments, nil, nil)
 		if err != nil {
-			return DefinitionInstance{}, false, err
+			return DefinitionInstance{}, false, fmt.Errorf("constructor %s (%d arguments): %w", node.Nominal, len(arguments), err)
 		}
-		bindings, err := definitionArguments(wrapper, []DefinitionArgument{{Kind: definitionArgDefinition.String(), Definition: &instance}})
-		if err != nil {
-			return DefinitionInstance{}, false, err
-		}
-		instance, err = c.instantiateTemplate(wrapper, bindings)
-		if err != nil {
-			return DefinitionInstance{}, false, err
-		}
+		arguments, used = nil, make(map[string]bool)
 	}
-	instance.definition, err = canonicalRecord(node.Definition, c.Semantics.Aliases)
-	if err != nil {
-		return DefinitionInstance{}, false, err
-	}
-	instance.Symbol = instance.definition.ID
-	if node.Name != "" {
-		result := definitionReferenceArgument(node.Name)
-		result.source = c.operandSource(node.Source.noun)
-		instance.result = &result
-	}
-	return instance, forwarded, nil
+	instance, err := c.instantiateConstruction(node, header, wrappers, selected, arguments, bindings, used, active, dynamic)
+	instance.Bindings = append(ledger, instance.Bindings...)
+	instance.inputs = inputs
+	return instance, forwarded, err
 }
 
 func (c *Compilation) operandSource(tok *token) SourceSpan {
@@ -778,12 +755,14 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 	if template == nil || !template.IsFunction() {
 		return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s does not define a function structure", node.Nominal)
 	}
-	wrappers, selected, err := constructionTemplates(node)
+	wrappers, selected, err := c.constructionTemplates(node)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
 	if selected >= 0 {
 		template = wrappers[selected]
+	} else {
+		selected = len(wrappers)
 	}
 	if node.Name == "" || !node.InputsDefined || !node.OutputsDefined {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("function constructor requires name and explicit signature")
@@ -844,7 +823,7 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 	if !declared && remaining != 1 {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("Function constructor must own one body composition")
 	}
-	instance, err := c.instantiateNamedConstruction(node, bindings, make(map[string]bool), active)
+	instance, err := c.instantiateConstruction(node, templateHeader(template, true, true), wrappers, selected, nil, bindings, make(map[string]bool), active, nil)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}

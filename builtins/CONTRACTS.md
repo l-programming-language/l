@@ -10,7 +10,8 @@ for ownership boundaries, and [AML.md](../logiceme/AML.md) for input structure.
 
 Follow the current user-approved scope. Future design constraints below are not
 standing authorization to replace templates, add inputs or change callers. The
-18 Rust segments remain frozen; consult the [current Rust reference](README.md).
+18 Rust segments remain frozen; keep `segments/`, `templates/`, their interfaces
+and frozen hash expectations unchanged. Consult the [current Rust reference](README.md).
 Existing behavioral inputs,
 oracles, and resources remain protected by the
 [repository acceptance contract](../harness/contract.json). Correcting production
@@ -33,8 +34,8 @@ letter permutation meaning or silently reuse an occupied spelling.
    Definition fragment. Existing adapters have explicit
    meanings; do not infer assignment or binding from category alone.
 3. **Mutability follows typed semantics.** The frontend may select mutable storage
-   from resolved assignment paths; the current plan does so without a new glyph
-   input. A template mutability interface still requires separate review. Do not
+   from resolved assignment paths without a new glyph input. Do not introduce a
+   template mutability interface. Do not
    make every local mutable, add `mut` to `_`, or infer arbitrary native captures.
 4. **Calculation is not conditional selection.** Comparisons produce conditions;
    evaluations choose alternatives. Type constraints and structural patterns
@@ -59,8 +60,11 @@ declared child slots. Vowel cases select/forward compositions; consonant cases
 render their focused primitive. Keep the nine logical pairs and existing names
 `Meta`, `Conjoinments`, `Funcs`, `Props`, and `Ops`.
 
-- Compose involved behavior from syllables rather than adding a mini-runtime to
-  a segment. Reuse signature/body fragments instead of copying full variants.
+- Source L owns branches, loops, callbacks, error policy, resource selection and
+  sequencing. Native leaves perform one call, operator, constructor,
+  borrow/projection or bounded pattern/binding. Do not hide algorithms in native
+  helpers, closures, Statement or EA. Reuse source compositions and preserve typed
+  input/intermediate binding identity, scope and provenance.
 - Local loops over fields or children are appropriate. Dependency resolution,
   ownership inference, process supervision, and substantial validation are not.
 - Do not parse rendered child strings to recover lost roles. Preserve roles and
@@ -76,8 +80,8 @@ render their focused primitive. Keep the nine logical pairs and existing names
 ## Metadata, values, and ownership
 
 Func/Prop/Op are existing metadata groupings, not logical classifications. Their
-redesign is out of scope. Additional metadata requires a separately scoped
-change with a necessary semantic distinction and a complete interface contract.
+redesign is out of scope. Do not add template metadata or change its interfaces;
+compose the existing forms with resolved typed bindings.
 Do not introduce target-prefixed duplicates or opaque whole-program inputs to
 bypass composition.
 
@@ -223,8 +227,8 @@ not replace, that boundary. A source bundle is not proof of compilation/executio
 
 The [Rust suite](../logiceme/testdata/lucid/README.md) owns the current case
 inventory, composed baseline and explicitly scoped extensions. The 18 Rust
-segment definitions remain frozen. Replacing or expanding the suite or changing
-templates needs a separately scoped task.
+segment definitions, interfaces and hash expectations remain frozen. Add source
+regressions within task scope without replacing the maintained corpus.
 The [dated results](../logiceme/testdata/lucid/FAILURES.md) record observed
 outcomes and evidence, not a blanket parity claim.
 
@@ -252,9 +256,9 @@ an exact-byte mismatch is expectation-only; review literal data, evaluation
 order, scopes, and all support files before making that classification.
 
 The [acceptance guide](../docs/development-harness.md) owns commands and deadlines.
-Follow its [validation policy](../docs/development-harness.md#temporary-validation-pause):
-local full validation remains paused unless explicitly requested. When requested,
-run `scripts/l-check` before claiming full validation; it includes linting,
+Follow its [validation policy](../docs/development-harness.md#validation-authorization):
+task-authorized checks proceed without repeated permission requests.
+Run `scripts/l-check` before claiming full validation; it includes linting,
 unfiltered acceptance and the complete tagged native-compilation stage described
 by the [Rust suite](../logiceme/testdata/lucid/README.md). Do not execute
 generated Rust applications as an incidental test step. Supervised runtime

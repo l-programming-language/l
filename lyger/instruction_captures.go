@@ -15,7 +15,10 @@ func (b *instructionBuilder) prepareCaptures() error {
 			if rec.Value == nil || rec.Value.Type != storageLexeme || b.semantics.Aliases[rec] != nil {
 				continue
 			}
-			body := directiveClauses(ordered.Statement)
+			body, err := b.semantics.definitionActions(rec)
+			if err != nil {
+				return err
+			}
 			if len(body) == 0 {
 				continue
 			}
@@ -53,7 +56,11 @@ func (b *instructionBuilder) prepareCaptures() error {
 						if _, native := tok.nativeRole(); native {
 							continue
 						}
-						if definition := b.semantics.Declarations[found]; definition != nil && len(directiveClauses(definition)) > 0 && !seenCalls[binding] {
+						actions, err := b.semantics.definitionActions(found)
+						if err != nil {
+							return err
+						}
+						if len(actions) > 0 && !seenCalls[binding] {
 							event.CaptureCalls = append(event.CaptureCalls, binding)
 							seenCalls[binding] = true
 						}

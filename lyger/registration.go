@@ -167,9 +167,30 @@ func (sg *statementGram) walkRegistration(visit func(registrationSite, []*token,
 			nested = append(nested, nestedDeclarationClauses(nil, site.predicate.obj, nil, nil)...)
 		}
 		var supplemental []registrationSite
-		if object := site.valueObject(); object != nil && object.cType == "callable" && object.phrase != nil {
-			for _, parameter := range object.phrase.subjects {
-				supplemental = append(supplemental, registrationSite{subject: parameter, parameter: true})
+		parameters := make(map[*subjectGram]bool)
+		var signatures func(*objectGram)
+		signatures = func(object *objectGram) {
+			if object == nil {
+				return
+			}
+			for phrase := object.phrase; phrase != nil; phrase = phrase.phrase {
+				if phrase.gType == "phrase.signature" {
+					for _, parameter := range phrase.subjects {
+						if !parameters[parameter] {
+							supplemental = append(supplemental, registrationSite{subject: parameter, parameter: true})
+							parameters[parameter] = true
+						}
+					}
+				}
+				for _, child := range phrase.orderedObjects() {
+					signatures(child)
+				}
+			}
+		}
+		signatures(site.valueObject())
+		if site.clause != nil {
+			for _, object := range site.clause.orderedObjects() {
+				signatures(object)
 			}
 		}
 		if site.clause != nil && site.clause.verb != nil && site.clause.verb.binding != nil && site.clause.verb.binding.Record.isFunction() {

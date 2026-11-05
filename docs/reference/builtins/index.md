@@ -4,21 +4,21 @@ Builtins are available from the selected complete distribution without an explic
 
 ## Source-defined facilities
 
-| Facility | Declared forms | Contract |
+| Word and kind | Declared forms | Contract |
 | --- | --- | --- |
-| Start | Start, Starts, Started, Starting, Starter | Build any App, then Run it |
-| Execute | Execute, Executes, Executed, Executing, Executor | Start any App, then Await it |
-| Process | Process, Processes, Processive, Processing | Compose ordered definition syllables into operation W |
-| Function | Function, Functions, Functional, Functioning | Compose FW with typed native signature/body inputs |
-| Function.Invoke | Invoke, Invokes, Invoked, Invoking, Invoker | Bind a selected callable and ordered argument references through KY |
-| Function.Return | Return, Returns, Returned, Returning, Returner | Native-backed return statement inside the supplied Function composition |
-| Delegate | Delegate, Delegates, Delegated, Delegating, Delegator | Compose a call to a selected target through KY |
-| Retain | Retain, Retains, Retained, Retaining, Retainer | Retain a selected shared handle |
-| Objective | Objective | Wrap a Function's source grouping |
-| Main | Main | Describe the canonical bounded Service/Object/Function entry structure |
-| Basic | Basic | Compose an App with a Main Service using a Process |
+| Start — verb | Start, Starts, Started, Starting, Starter | Build any App, then Run it |
+| Execute — verb | Execute, Executes, Executed, Executing, Executor | Start any App, then Await it |
+| Process — noun | Process, Processes, Processive, Processing | Compose ordered definition expressions |
+| Function — noun | Function, Functions, Functional, Functioning | Define a callable with typed inputs, outputs and body |
+| Function.Invoke — verb | Invoke, Invokes, Invoked, Invoking, Invoker | Apply a selected callable to ordered argument references |
+| Function.Return — verb | Return, Returns, Returned, Returning, Returner | Complete the current Function with its checked results |
+| Delegate — verb | Delegate, Delegates, Delegated, Delegating, Delegator | Call the selected native target |
+| Retain — verb | Retain, Retains, Retained, Retaining, Retainer | Borrow an Arc and return another handle to the same allocation |
+| Objective — adjective | Objective | Group a Function's source definition |
+| Main — adjective | Main | Construct the Service/Object/Function entry structure |
+| Basic — adjective | Basic | Construct an App with a Main Service using a Process |
 
-The exact source-defined [construction and callable reference](definitions.md) explains their inputs and limits. These names are source-defined facilities: aliases preserve canonical identity and descriptor targets govern composition.
+The [construction and callable reference](definitions.md) explains their inputs and limits. Actor forms such as Invoker and Retainer construct uses of their verb; they are not separate primitives. Aliases preserve canonical identity and adjectives retain their declared targets. See [word forms](../../spec/definitions.md#inflection-declarations) for the declaration notation.
 
 ## Compiler-typed operations
 
@@ -31,7 +31,7 @@ The exact source-defined [construction and callable reference](definitions.md) e
 | Show | Show, Shows, Showed, Showing, Shower | Observe supported runtime values; no added newline |
 | Exit | Exit, Exits, Exited, Exiting, Exiter | Terminate whole program, with optional supported failure operand |
 
-Inflection recognition does not make every grammatical owner valid. For example, native Await inside an App body rejects even though its word form is recognized. The [lifecycle reference](lifecycle.md) records supported contexts and failure modes.
+These operations are verbs. Inflection recognition does not make every grammatical owner valid: native Await inside an App body rejects even though its word form is recognized. The [lifecycle reference](lifecycle.md) records supported contexts and failure modes.
 
 ## Declaration and vocabulary facilities
 
@@ -41,7 +41,7 @@ Create, Define, Describe, and Use establish declarations, typed/native definitio
 
 ## Runtime members
 
-Output is Text containing finalized raw stdout. Error is the selected process operation/invocation failure. These are compiler-typed process members, so a possessive keeps its canonical target. Input exists in vocabulary/signature metadata but runtime process argument/input transport is not provided by the current App contract.
+Output and Error are noun members: Output contains finalized raw stdout as Text; Error identifies the selected process operation/invocation failure. Possessive access keeps the canonical target. Input exists in vocabulary/signature metadata but runtime process argument/input transport is not provided by the current App contract.
 
 ## Availability and errors
 

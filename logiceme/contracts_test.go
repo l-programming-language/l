@@ -23,7 +23,14 @@ func TestContractsBackendPreflight(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		// A caller cannot change a prepared proof by editing an exported effect row.
+		prepared.inventory.Unknowns[0].ExcludedEffects = []contracts.EffectKind{"block"}
 		inventory := prepared.Inventory()
+		inventory.Unknowns[0].ExcludedEffects[0] = "allocate"
+		if prepared.inventory.Unknowns[0].ExcludedEffects[0] != "block" {
+			t.Fatal("snapshot shares effect exclusions with prepared inventory")
+		}
+		inventory = prepared.Inventory()
 		if len(inventory.Native) == 0 || inventory.TransitiveCoverage != contracts.Unknown {
 			t.Fatal("opaque native closure was erased")
 		}
@@ -47,7 +54,7 @@ func TestContractsBackendPreflight(t *testing.T) {
 func TestContractsWorkspacePreflight(t *testing.T) {
 	service := NewLogicemeService(nil)
 	placement := WorkspaceRuntime{Package: "l_runtime_support", RelativeDirectory: "../support/runtime"}
-	ordinary, _, err := service.EvaluateWorkspaceEntry(workspaceRuntimeInput(), placement)
+	ordinary, support, err := service.EvaluateWorkspaceEntry(workspaceRuntimeInput(), placement)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -55,11 +62,11 @@ func TestContractsWorkspacePreflight(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	generated, err := prepared.Render()
+	generated, library, err := prepared.RenderWorkspace()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !reflect.DeepEqual(ordinary, generated) {
+	if !reflect.DeepEqual(ordinary, generated) || !reflect.DeepEqual(support, library) {
 		t.Fatal("workspace preflight changed entry sources")
 	}
 }
@@ -75,13 +82,13 @@ func TestContractsBackendDependenciesInvalidateAssurance(t *testing.T) {
 		t.Fatal(err)
 	}
 	input := libraryFixture(t)
-	first, err := prepareContractGeneration(input, system, templates, GenerationOptions{}, nil)
+	first, err := prepareContractGeneration(input, system, templates, GenerationOptions{}, nil, true)
 	if err != nil {
 		t.Fatal(err)
 	}
 	// A temporary in-memory body change leaves the frozen resource untouched.
 	system.Declaration.Content = append(append([]byte(nil), system.Declaration.Content...), '\n')
-	second, err := prepareContractGeneration(input, system, templates, GenerationOptions{}, nil)
+	second, err := prepareContractGeneration(input, system, templates, GenerationOptions{}, nil, true)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -197,10 +197,6 @@ func entails(facts []Predicate, want Predicate, depth int) (Status, string) {
 			}
 		}
 		if want.Kind == "effect_contains" && fact.Kind == "effect_contains" {
-			closed, _ := entails(facts, Predicate{Kind: "effects_closed", Subject: want.Subject, Target: want.Target, Resource: want.Resource}, depth+1)
-			if closed != Established {
-				return Unresolved, "effect containment requires a closed effect row"
-			}
 			for _, effect := range fact.Args {
 				found := false
 				for _, allowed := range want.Args {
@@ -253,15 +249,12 @@ func TargetRelation(left, right TargetRef) Status {
 }
 
 func pathContains(parent, child TargetRef) bool {
-	if parent.Unknown || child.Unknown || parent.Root == "" || parent.Root != child.Root || parent.Phase != child.Phase || parent.Generation != child.Generation || len(parent.Path) > len(child.Path) {
-		return false
-	}
-	for i := range parent.Path {
-		if parent.Path[i] != child.Path[i] {
-			return false
-		}
-	}
-	return true
+	return !parent.Unknown && !child.Unknown && parent.Root != "" && parent.Root == child.Root &&
+		parent.Phase == child.Phase && parent.Generation == child.Generation && pathPrefix(parent.Path, child.Path)
+}
+
+func pathPrefix(parent, child []string) bool {
+	return len(parent) <= len(child) && slices.Equal(parent, child[:len(parent)])
 }
 
 func targetKey(target TargetRef) string {

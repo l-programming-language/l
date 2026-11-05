@@ -2,9 +2,11 @@
 
 Builtins are implicit, standard dictionaries are imported explicitly, and project files use `.l` includes. Neighboring files cannot silently replace a standard dictionary.
 
-## Import the public IO member
+<a id="import-the-public-io-member"></a>
 
-The [basic program](first-program.md) imports IO's Print from `io` under the local name Print. The standard-library index maps `eng/io` to the IO dictionary, whose public member is IO.Print; rendering and writing helpers remain private. Builtins need no project copy, but Print requires its import. A local `io` or `io.l` does not shadow the indexed `io` import.
+## Import a public IO member
+
+The [basic program](first-program.md) imports IO's Print from `io` under the local name Print. The index maps `eng/io` to the IO dictionary; its [public members](../stdlib/eng/io.md#public-and-private-names) also include byte output and the Lined descriptor. Rendering, locking and line-completion helpers remain private. Builtins need no project copy, but dictionary words require their import. A local `io` or `io.l` does not shadow the indexed `io` import.
 
 ## Import a project-owned member
 

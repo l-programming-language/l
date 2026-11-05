@@ -14,11 +14,7 @@ An App is a process target. Standalone Service declarations remain structural an
 
 Children inherit the caller's environment and CWD, receive EOF on stdin, and receive no synthesized runtime arguments. Runtime argument transport and process return-value transport are outside the current contract. The process result carries raw captured output and error state instead.
 
-**App lifecycle example.**
-
-<!-- example:runnable-app -->
-
-The Basic App declaration supplies Worker's executable body through ordinary Main/Basic construction. Run launches its process, and Await joins it before Show reads Output. Expected stdout is `work completed\n`. Standalone Service declarations and bodies do not supply executable targets.
+The [complete App example](../guide/apps-and-services.md#run-an-app) supplies Worker's body through Basic construction, then runs and awaits it before reading Output. Standalone Service declarations and bodies do not supply executable targets.
 
 ## Build, Run, Stop, and Await
 
@@ -37,7 +33,7 @@ Start and Execute are source-defined App actions. Start composes Build then Run;
 
 <!-- example:runtime-build-run -->
 
-Build checks Worker's already compiled companion. Run starts it; Await is the completion boundary; Show observes its final output. This excerpt omits the witness's declarations and test-owned native printing probe, so it is not an independent source file. The complete canonical-IO example above demonstrates the public printing path.
+Build checks Worker's already compiled companion. Run starts it; Await is the completion boundary; Show observes its final output. This excerpt omits the witness's declarations and test-owned native printing probe. Use the linked App example for the complete public IO path.
 
 **Stop is a request, then Await joins — excerpt from the existing race-aware witness.** Its preceding paragraph declares Worker and supplies a continuation that inspects Error:
 

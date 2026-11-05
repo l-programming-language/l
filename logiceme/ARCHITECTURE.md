@@ -93,21 +93,16 @@ workspace. All generated entries and companion applications are native Rust.
 
 ## Frontend lowering boundary
 
-Lyger resolves bindings, types, activation, definite assignment, mutation and
-capture transfers, then instantiates canonical definitions into AML. Each Function
-declaration binds its invocation verb; no additional `Call` primitive is needed.
-Functions, invocations and returns use the same composition path for typed
-parameters/results and retained captures. Native strings must not conceal generated Function declarations, closures or
-dispatch machinery.
+Lyger resolves bindings, types, activation and ownership, then instantiates
+selected definitions into complete AML. Logiceme renders those compositions;
+no Lyger object, Go-only plan or second L interpreter crosses this boundary.
+Resolved native type/name/value atoms contain no executable body or closure.
 
-Lyger may encode resolved native type/name/value atoms in approved AML fields.
-Those atoms contain no executable Function body or closure. Logiceme renders
-callable declarations and composes syntax from them. Complete AML must suffice;
-no Lyger object or Go-only plan may cross this boundary. Use existing syllables
-and approved `Lifetimes`/`GenericTypes` inputs before changing templates. Authored
-builtin native leaves remain opaque. Native helpers may implement resolved
-ownership and App supervision, but cannot interpret L instructions or replace
-typed Functions with erased argument/result vectors and runtime signatures.
+The [source-word guide](../docs/guide/definitions.md) owns composition practice;
+[the native-definition guide](../docs/guide/native-definitions.md) owns leaf boundaries.
+Use the [approved callable and generic interfaces](../builtins/README.md#typed-functions-and-anonymous-callables)
+without changing frozen templates. Native helpers supply resolved ownership and
+App supervision, not erased Function dispatch or concealed L algorithms.
 
 ## Layer contracts
 

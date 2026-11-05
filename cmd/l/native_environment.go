@@ -17,7 +17,7 @@ import (
 
 	"github.com/l-programming-language/l/contracts"
 	"github.com/l-programming-language/l/lerrors"
-	Lyger "github.com/l-programming-language/l/lyger"
+	"maps"
 )
 
 type nativeEnvironmentQuery func(context.Context, string, []string, string, []string) ([]byte, []byte, int, error)
@@ -59,7 +59,7 @@ func captureNativeEnvironment(ctx context.Context, report contracts.Report, asse
 }
 
 func captureNativeEnvironmentWith(ctx context.Context, report contracts.Report, assertedTarget string, observer nativeEnvironmentObserver) (contracts.NativeEnvironment, error) {
-	value := contracts.NativeEnvironment{SchemaVersion: contracts.SchemaVersion, Kind: "native_environment", Producer: contracts.AnalyzerVersion, Version: "1", Method: "capture", Host: runtime.GOOS + "/" + runtime.GOARCH, PanicPolicy: "unknown-effective-native-policy", Allocator: "unknown-native-allocator", Runtime: contracts.StableID("selected-runtime", report.Lowering.Fingerprints), Inputs: cloneNativeStrings(report.Inputs), Dependencies: cloneNativeStrings(report.Lowering.Fingerprints), Configuration: make(map[string]string), Limitations: []string{"Environment capture records tool identity and versions only; no native build or App execution was performed.", "Panic strategy, allocator behavior, linker internals and transitive native implementation conformance remain unproved.", "The record describes this observation, not the toolchain or deployment present when the document is later inspected."}}
+	value := contracts.NativeEnvironment{SchemaVersion: contracts.SchemaVersion, Kind: "native_environment", Producer: contracts.AnalyzerVersion, Version: "1", Method: "capture", Host: runtime.GOOS + "/" + runtime.GOARCH, PanicPolicy: "unknown-effective-native-policy", Allocator: "unknown-native-allocator", Runtime: contracts.StableID("selected-runtime", report.Lowering.Fingerprints), Inputs: maps.Clone(report.Inputs), Dependencies: maps.Clone(report.Lowering.Fingerprints), Configuration: make(map[string]string), Limitations: []string{"Environment capture records tool identity and versions only; no native build or App execution was performed.", "Panic strategy, allocator behavior, linker internals and transitive native implementation conformance remain unproved.", "The record describes this observation, not the toolchain or deployment present when the document is later inspected."}}
 	if runtime.GOOS != "darwin" && runtime.GOOS != "linux" {
 		return value, lerrors.Unsupported.Errorf("native environment capture requires macOS or Linux")
 	}
@@ -175,14 +175,6 @@ func nativeTargetMatchesHost(target string) bool {
 	return strings.HasPrefix(target, architecture+"-") && (runtime.GOOS == "darwin" && strings.HasSuffix(target, "-apple-darwin") || runtime.GOOS == "linux" && strings.Contains(target, "-linux-"))
 }
 
-func cloneNativeStrings(values map[string]string) map[string]string {
-	copy := make(map[string]string, len(values))
-	for key, value := range values {
-		copy[key] = value
-	}
-	return copy
-}
-
 func addNativeTool(value *contracts.NativeEnvironment, name, path, version string) error {
 	resolved, err := filepath.EvalSymlinks(path)
 	if err != nil {
@@ -288,24 +280,6 @@ func nativeBuildEvidence(ctx context.Context) *nativeBuildRecorder {
 	return nil
 }
 
-func prepareBuildNativeEvidence(ctx context.Context, c *compiler) (*nativeBuildRecorder, error) {
-	analysis, err := c.lyger.AnalyzeContracts(c.mainBytes, c.cli.mainPath, Lyger.ContractAnalysisOptions{})
-	if err != nil {
-		return nil, err
-	}
-	report, err := prepareContractReport(contractsCommand{Action: "inspect", Input: c.cli.mainPath, Language: c.options.Language, Assets: c.options.AssetRoot}, analysis, c.options.Resources, contractMetadata{})
-	if err != nil {
-		return nil, err
-	}
-	environment, err := captureNativeEnvironment(ctx, report, "")
-	if err != nil {
-		return nil, err
-	}
-	environment.Method = "build"
-	environment.Limitations[0] = "This document records native compilation and artifact identities only; no generated App was executed by evidence collection."
-	return &nativeBuildRecorder{environment: environment}, nil
-}
-
 func (recorder *nativeBuildRecorder) record(command *exec.Cmd, started time.Time, stdout, stderr []byte, err error) string {
 	exit := -1
 	if command.ProcessState != nil {
@@ -351,13 +325,31 @@ func (recorder *nativeBuildRecorder) artifact(path, inputs, execution string) er
 	return nil
 }
 
-func (recorder *nativeBuildRecorder) write(path, input string) error {
-	value := contracts.SealNativeEnvironment(recorder.environment)
-	data, err := contracts.EncodeDocument(value)
+func (recorder *nativeBuildRecorder) write(path string) error {
+	if recorder == nil {
+		return nil
+	}
+	data, err := contracts.EncodeDocument(contracts.SealNativeEnvironment(recorder.environment))
 	if err != nil {
 		return err
 	}
-	return writeContractsReport(path, input, append(data, '\n'))
+	return replaceFile(path, append(data, '\n'))
+}
+
+// Replace only complete output. A failed write must leave any previous file intact.
+func replaceFile(path string, data []byte) error {
+	file, err := os.CreateTemp(filepath.Dir(path), ".l-output-")
+	if err != nil {
+		return err
+	}
+	_, err = file.Write(data)
+	if err = errors.Join(err, file.Close()); err == nil {
+		err = os.Rename(file.Name(), path)
+	}
+	if err != nil {
+		return errors.Join(err, os.Remove(file.Name()))
+	}
+	return nil
 }
 
 func nativeWorkspaceFingerprint(directory string) (string, error) {
@@ -389,46 +381,53 @@ func nativeWorkspaceFingerprint(directory string) (string, error) {
 	return contracts.StableID("native-workspace", inputs), nil
 }
 
-func validateNativeEvidenceOutput(path string, inputs []string, output, companion, assets string) error {
+func resolveNativeEvidenceOutput(path string, inputs []string, output, companion, assets string) (string, error) {
 	if path == "" {
-		return nil
+		return path, nil
 	}
 	var err error
 	path, err = canonicalBuildPath(path)
 	if err != nil {
-		return err
+		return "", err
+	}
+	if info, err := os.Stat(path); err == nil && !info.Mode().IsRegular() {
+		return "", lerrors.InvalidInput.Errorf("native evidence requires a regular file destination: %s", path)
+	} else if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return "", err
 	}
 	output, err = canonicalBuildPath(output)
 	if err != nil {
-		return err
+		return "", err
 	}
 	companion, err = canonicalBuildPath(companion)
 	if err != nil {
-		return err
+		return "", err
 	}
 	for _, input := range inputs {
 		canonical, err := canonicalBuildPath(input)
 		if err != nil {
-			return err
+			return "", err
 		}
 		if sameContractPath(path, canonical) {
-			return lerrors.InvalidInput.Errorf("native evidence output must not replace source input %s", input)
+			return "", lerrors.InvalidInput.Errorf("native evidence output must not replace source input %s", input)
 		}
 	}
 	if sameContractPath(path, output) {
-		return lerrors.InvalidInput.Errorf("native evidence output must not replace the executable")
+		return "", lerrors.InvalidInput.Errorf("native evidence output must not replace the executable")
 	}
 	within, err := buildPathContains(companion, path)
 	if err != nil {
-		return err
+		return "", err
 	}
 	if within {
-		return lerrors.InvalidInput.Errorf("native evidence output must be outside companion generations")
+		return "", lerrors.InvalidInput.Errorf("native evidence output must be outside companion generations")
 	}
 	if assets != "" {
-		return validateAssetDestinations(assets, path)
+		if err := validateAssetDestinations(assets, path); err != nil {
+			return "", err
+		}
 	}
-	return nil
+	return path, nil
 }
 
 // validateNativeEnvironmentConfiguration rechecks only the current sanitized
@@ -473,7 +472,7 @@ func validateNativeEnvironmentConfiguration(value contracts.NativeEnvironment) (
 		if strings.HasPrefix(key, "environment:") && expected[key] == "" {
 			return contracts.Unresolved, "native environment variable is no longer selected: " + key, nil
 		}
-		if key == "workspace-inputs" && value.Method == "build" {
+		if (key == "workspace-inputs" || key == "companion-generation") && value.Method == "build" {
 			continue
 		}
 		if _, allowed := expected[key]; !allowed {

@@ -1,7 +1,7 @@
 # Working on builtin logeme assets
 
 Read [LOGEMES.md](LOGEMES.md) for the alphabet and
-[CONTRACTS.md](CONTRACTS.md) for required behavior before changing segments.
+[CONTRACTS.md](CONTRACTS.md) for required behavior before changing composition.
 Read [backend guidance](../logiceme/AGENTS.md) when changing integration.
 The repository root instructions remain applicable.
 
@@ -15,8 +15,8 @@ The repository root instructions remain applicable.
   composition. Functions use this same path, including typed inputs/results and
   capture/lifetime bindings supplied through approved AML. A separate frontend
   implementation or a native-expression wrapper around one is prohibited.
-  Follow Print: definitions own behavior, words own invocation, and sentences
-  bind their arguments. Compose bodies; never package them as one Statement/EA.
+  Definitions own behavior, words own invocation, and sentences bind their
+  arguments. Compose bodies; never package them as one Statement/EA.
 - Lyger resolves types, effects, activation and ownership; Logiceme renders Rust
   from AML and selected assets. Authored native leaves and storage helpers may
   preserve resolved semantics, but cannot interpret non-App L behavior. Templates
@@ -25,22 +25,26 @@ The repository root instructions remain applicable.
 - Letters own abstract logic. F/O defines; B/A declares; D/E calculates;
   G/I selects alternatives; C/V handles asynchrony. Target syntax cannot reassign
   those owners. Preserve focused template granularity.
-- Keep primitives short. Compose involved behavior through syllables. Metadata
-  preparation, ownership inference, dependency resolution, and process lifecycle
-  belong outside segment templates.
+- Native leaves perform one call, operator, constructor, borrow/projection or
+  bounded pattern/binding. L owns branches, loops, callback/error policy, resource
+  selection and sequencing. A native helper, closure or single expression must
+  not conceal that algorithm. Existing host/process adapters retain OS boundaries.
+- Typed Process inputs and intermediate labels retain lexical scope, canonical
+  identity and source provenance. Preserve nominal descriptor targets and verb
+  inflections; migrate retired callers without compatibility aliases or adapters
+  unless the task explicitly requires them.
 - Preserve Meta/Funcs/Props/Ops/Conjoinments terminology and Func/Prop/Op records.
   The current Rust template interfaces are frozen, including the approved
   [Lifetimes/GenericTypes inputs](README.md#lifetime-and-generic-inputs).
   These local String inputs qualify existing forms; they are not record fields.
-  Additional inputs or mutability/capture interfaces need a separately scoped
-  change with explicit type/default/absence rules.
+  Do not add inputs or mutability/capture interfaces.
 - Rust Execute/Execution exclude Deferred. No scope-exit
   syllable or implicit cleanup is defined; see the
   [Rust execution contract](README.md#execution-without-deferred).
 - Use composed examples and tests. EA is an emergency whole-file escape, not the
   default authoring path or a substitute for exercising a supported syllable.
 
-## Before changing a form
+## Before composing a form
 
 State its letter meanings, input and child cardinalities, output role, and
 interaction with existing pairings. Distinguish supported syntax from design
@@ -55,9 +59,9 @@ are artifacts, not commands to run while working on templates.
 ## Verification
 
 Follow root [acceptance instructions](../AGENTS.md#current-contract) and the
-[validation policy](../docs/development-harness.md#temporary-validation-pause).
-Expensive local checks require explicit authorization; focused checks establish
-no full-acceptance result.
+[validation policy](../docs/development-harness.md#validation-authorization).
+Task-authorized checks proceed without repeated permission requests; focused
+checks establish no full-acceptance result.
 
 Use complete AML through Evaluate and compare every artifact's exact bytes,
 ordered paths and dependencies. Preserve scenario identities, independent
@@ -80,20 +84,18 @@ Expected/Generated native compilation and a template hash check. Consult the
 [current integration limits](README.md#current-integration-limits); preparation
 code and broad test matrices do not certify other forms.
 
-- Preserve the frozen conditions, selectors, inputs, primitive forwarding and
-  template bytes unless the user explicitly scopes a later asset change. Do not
-  revive abandoned forms or add metadata/conjoinment types to bypass a compiler
-  integration defect.
+- Do not edit `segments/`, `templates/`, their conditions, selectors, inputs,
+  forwarding, interfaces or frozen hash expectations. Do not revive abandoned
+  forms or add metadata/conjoinment types to bypass a compiler integration defect.
 - Keep Meta/Funcs/Props/Ops/Conjoinments and the existing Func/Prop/Op records.
-  More involved behavior belongs in composition or compiler preparation, not
-  larger primitives. Only Default cases must stand alone; qualified fragments
+  Program behavior belongs in L composition; compiler preparation resolves roles
+  and ownership. Only Default cases must stand alone; qualified fragments
   may require their enclosing composition to complete the syntax.
 - Preserve the approved [Lifetimes/GenericTypes contract](README.md#lifetime-and-generic-inputs):
   local String list interiors on FW/HY/MY declarations and Y/named KY applications.
   Missing inputs emit nothing; supplied blanks reject; native `Void` stays text.
-  These are not record fields or inherited Class/Object/file defaults. Further
-  interfaces require separate review. CV alone accepts its reviewed local
-  Capture policy; it does not widen FW/BW or lifetime/generic metadata.
+  These are not record fields or inherited Class/Object/file defaults.
+  CV alone accepts its reviewed local Capture policy; it does not widen FW/BW or lifetime/generic metadata.
 - Declare currently renders typed `let` through `Meta.Keys` and `Meta.Type`, with
   no initializer or automatic `mut`. Definitions own their supplied values.
   Missing lifetime/capture data is not permission to clone, move, or invent one.

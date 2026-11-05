@@ -11,6 +11,7 @@ Lyger resolves grammar, bindings, and ordered instructions into AML (Assembly Ma
 - [Architecture](../architecture.md): responsibilities and source ownership.
 - [AML protocol](../../logiceme/AML.md): the frontend/backend handoff.
 - [Logeme reference](../reference/logemes/index.md): template composition.
+- [Storage compositions](storage.md): internal result, traversal, ownership and byte words.
 - [Native definitions](../guide/native-definitions.md): writing native-backed L vocabulary.
 - [Build/runtime contract](../cli-build.md): native output and execution.
 

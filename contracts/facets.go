@@ -2,7 +2,6 @@ package contracts
 
 import (
 	"fmt"
-	"reflect"
 	"sort"
 	"strings"
 )
@@ -202,18 +201,9 @@ func (checker *configurationChecker) resolveSubject(subject string) (string, str
 	return matches[0], strings.TrimPrefix(subject, "facet:"+matches[0]+":"), nil
 }
 
-func (checker *configurationChecker) selectionKeys() []string {
-	keys := make([]string, 0, len(checker.selection))
-	for key := range checker.selection {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	return keys
-}
-
 func (checker *configurationChecker) facts() []Predicate {
 	facts := append([]Predicate(nil), checker.premises...)
-	for _, key := range checker.selectionKeys() {
+	for _, key := range sortedMapKeys(checker.selection) {
 		current := checker.selection[key]
 		for _, value := range current.Values {
 			facts = append(facts, FacetFact(current.Slot, value))
@@ -518,7 +508,7 @@ func CheckConfiguration(schemas []FacetSchema, slots []FacetSlot, contributions 
 	}
 	checker.rules(rules, consequences)
 	checker.result.Facts = checker.facts()
-	for _, key := range checker.selectionKeys() {
+	for _, key := range sortedMapKeys(checker.selection) {
 		current := checker.selection[key]
 		schema := checker.definitions[current.Slot.Facet]
 		if current.Slot.Closed && schema.Cardinality == "exactly-one-at-close" && len(current.Values) == 0 {
@@ -531,13 +521,4 @@ func CheckConfiguration(schemas []FacetSchema, slots []FacetSlot, contributions 
 		checker.result.Obligations = append(checker.result.Obligations, facetObligation(request.Target, request.Origin, status, reason, request.Predicate))
 	}
 	return checker.result, nil
-}
-
-// SameConfiguration compares pure final facts only; it is not an execution
-// equivalence check. Contributions and replacement work remain ordered.
-func SameConfiguration(left, right ConfigurationResult) bool {
-	a, b := append([]Predicate(nil), left.Facts...), append([]Predicate(nil), right.Facts...)
-	sort.Slice(a, func(i, j int) bool { return StableID("fact", a[i]) < StableID("fact", a[j]) })
-	sort.Slice(b, func(i, j int) bool { return StableID("fact", b[i]) < StableID("fact", b[j]) })
-	return reflect.DeepEqual(a, b)
 }

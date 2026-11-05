@@ -21,7 +21,7 @@ func TestEvidenceDependencies(t *testing.T) {
 		graph := EvidenceGraph{Claims: []Claim{claim, copyClaim}, Nodes: []EvidenceNode{{ID: "native", Claim: claim.ID, Kind: "native_assumption", Witness: witness.ID}, {ID: "caller", Claim: copyClaim.ID, Kind: "derived", Rule: "identity", Premises: []string{"native"}}}}
 		context := EvidenceContext{Policy: policy, NativeWitnesses: map[string]NativeWitness{witness.ID: witness}, Current: map[string]EvidenceFingerprints{"native": current}}
 		result := graph.Evaluate("caller", context)
-		if result.Status != Established || len(result.Assumptions) != 1 || result.Assumptions[0] != witness.ID || !strings.Contains(result.Reason, "derived") || !evidenceContains(result.Evidence, "native") {
+		if result.Status != Established || len(result.Assumptions) != 1 || result.Assumptions[0] != witness.ID || !strings.Contains(result.Reason, "derived") || !containsString(result.Evidence, "native") {
 			t.Fatalf("derived trust closure was lost: %+v", result)
 		}
 	})

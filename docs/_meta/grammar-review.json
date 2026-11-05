@@ -1,21 +1,26 @@
 {
   "schemaVersion": 1,
   "sourceHashes": {
-    "builtins/eng/core.l": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
-    "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
-    "lyger/construction.go": "e01de48db67121acf6ddaee35ea778a4dd5c29a618f685156954ae578c1eb9f7",
-    "lyger/function_composition.go": "f51800bb1c0dedf03d76a36eea5adb053300332742bb81c86da6be57e4ef25cb",
-    "lyger/function_definitions.go": "5bb1ca5803d502f66122d7c4faf0d36e2074876bf896b7a58e5a27018f106f2b",
+    "builtins/eng/core.l": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
+    "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
+    "lyger/binding.go": "ae768960f2e1e9bb6dea5e5154844dc3a4d3638cc2f8815572c99dafc348ab35",
+    "lyger/construction.go": "d9112edcd3c28d508b6d0849dedd7d746ee6179d585fe88571f51a1341734bd9",
+    "lyger/constructor_grammar.go": "5a4b766982a31035bb298e6adf4e2014c406a3fd11213ad42c8144b64e642156",
+    "lyger/function_composition.go": "028b2b49eb47681cc23e3b3272fa2ba5b689d2ca8c7596453471e1a69f06f4ea",
+    "lyger/function_definitions.go": "1888437b6c54abf864ee600cb576e7a2bf905204777e044d86382da8ff8595dd",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
     "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
-    "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
+    "lyger/instructions.go": "efb8cc58f9665652dd8a1aa480ae7cc4b9d71e0b3bf4c14b22787deb8cc9884e",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
-    "lyger/lowering.go": "075874475402f5d7569903642042e023fa0c88c2f972f2a1df325dcf59e1ec37",
+    "lyger/lowering.go": "a3b2bec3b690d9192a3da0fabd5fe863586d95e5aba035a0a98ca42fb5278ef2",
+    "lyger/process_inputs.go": "8d694eebf5de74b5585f10a04c24146426918036ebec3906d97cf4602721dfce",
     "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
-    "lyger/semantic_resolution.go": "f924c2f40bc24b5d9c9d3b763c0d56e8027564ff8623e2da4c1ebc178114cabf",
-    "lyger/source_body.go": "41cbf8f1711709cfdc86ceec733a495c027c03b9b3dd60c0f6d7ee9376f336b0",
-    "lyger/source_functions.go": "9e19b22b4d6614c38160528e67e7c426b8c1b5a658bd16be4073336957ee0fbf",
+    "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
+    "lyger/semantic_resolution.go": "9e340190c53baaf3e73cdbfd7887d2bdf8c0619f2980dd59cff2a2132ab144c6",
+    "lyger/source_body.go": "81da3955864cfb1526647733fd5acc2900fd0d29a662fa1b69425d67f865cbb0",
+    "lyger/source_descriptors.go": "7f9a47a50d5fa679e7323d1c5e485174e2080d3c885ccfcd3f687a56e436b98e",
+    "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
     "lyger/types.go": "8d1c5403e26386b560c2bad36d8e5b3aaed28174708f46dda470f572fcf75859",
     "lyger/word_values.go": "449b35c1a97327533fa663131fa3817c71b30675cce7cf63d387eb27578e1240"
   },
@@ -24,7 +29,7 @@
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.",
+      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type\u2019s support boundary before using a configured value pattern.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -156,7 +161,7 @@
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.",
+      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type\u2019s support boundary before using a configured value pattern.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -237,7 +242,7 @@
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Functions",
           "support": "supported",
-          "notes": "A Function name carries its explicit Inputs/Outputs signature; descriptors supply the Process to the same canonical constructor."
+          "notes": "A checked callable construction can carry explicit constructor operands before its signature, or a structured Process input signature and directive body. Canonical targets determine the native constructor and scoped binding roles."
         }
       }
     },
@@ -257,7 +262,7 @@
           "doc": "docs/spec/definitions.md#source-actions",
           "topic": "Source action body",
           "support": "supported",
-          "notes": "The for phrase contains ordered applicative clauses. Source actions retain their generic argument and recursion checks. Constructor directives in native metadata Functions use the shared instruction path with enclosing Function bindings; they do not introduce loop-local declarations."
+          "notes": "The for phrase contains ordered applicative clauses. Source actions retain their generic argument and recursion checks. Structured Process inputs and locals bind within that body while retaining enclosing Function references; this adds no general loop syntax."
         }
       }
     },
@@ -275,7 +280,7 @@
         "list": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "List",
-          "notes": "Recognizes List type/storage structure. General runtime element construction, mutation, indexing, iteration and bounds behavior are not established."
+          "notes": "Recognizes List construction arguments. The List contract defines typed elements, checked updates, indexed reads and bounds errors; this recognizer adds no general source loop syntax."
         },
         "dict": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
@@ -556,7 +561,7 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.expansive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
@@ -580,7 +585,7 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.locative.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
@@ -592,49 +597,49 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.receptive.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.receptive.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.receptive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.reductive.imperative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.reductive.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.reductive.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.reductive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API."
     },
     "clause.associative.imperative": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
@@ -808,25 +813,25 @@
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.observative.active": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.observative.passive": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.observative.applicative": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
+      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries."
     },
     "clause.terminative.imperative": {
       "doc": "docs/spec/control-flow.md#exit-and-return",
@@ -980,7 +985,15 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "Typed Functions",
       "support": "supported",
-      "notes": "An ordinary Function signature declares ordered named inputs and ordered result types, or explicit No Inputs/No Outputs. Nested runtime and callable identities remain complete."
+      "notes": "Function signatures declare ordered named inputs and result types, or explicit No Inputs/No Outputs. Structured Process bodies accept typed input bindings without callable outputs. Nested runtime and callable identities remain complete.",
+      "cases": {
+        "inputs_only": {
+          "doc": "docs/reference/builtins/definitions.md#process",
+          "topic": "Scoped Process inputs",
+          "support": "supported",
+          "notes": "Input-only Process signatures bind pattern or iteration values within their directive body. Provisional labels cannot shadow enclosing inputs before their owner is resolved. Native selection/pair, mixed-nesting and scope-escape/output rejection witnesses constrain support; no general closure or Process output signature is added."
+        }
+      }
     },
     "phrase.arguments": {
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",

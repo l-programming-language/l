@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/l-programming-language/l/contracts"
+	"github.com/l-programming-language/l/lerrors"
 )
 
 // ContractGeneration owns one prepared backend graph. Inventory and rendering
@@ -21,52 +22,48 @@ type ContractGeneration struct {
 }
 
 func (ls *LogicemeService) PrepareContractGeneration(input []byte, options GenerationOptions) (*ContractGeneration, error) {
-	if ls == nil || ls.resources == nil {
-		return nil, fmt.Errorf("source generator configuration is required")
-	}
-	system, err := loadSegmentalSystem(ls.resources)
-	if err != nil {
-		return nil, err
-	}
-	templates, err := loadSupportTemplates(ls.resources, options.IncludeRuntime)
-	if err != nil {
-		return nil, err
-	}
-	return prepareContractGeneration(input, system, templates, options, nil)
+	return ls.prepareGeneration(input, options, nil, true)
 }
 
-// PrepareWorkspaceContractGeneration uses the same selected runtime AML and
-// workspace support placement as EvaluateWorkspaceEntry. It never builds it.
+// PrepareWorkspaceContractGeneration prepares the real workspace entry and its
+// selected runtime library, including the inventory used for contract checking.
 func (ls *LogicemeService) PrepareWorkspaceContractGeneration(input []byte, runtime WorkspaceRuntime, libraries ...[]byte) (*ContractGeneration, error) {
+	return ls.prepareGeneration(input, GenerationOptions{IncludeRuntime: true}, &runtime, true, libraries...)
+}
+
+func (ls *LogicemeService) prepareGeneration(input []byte, options GenerationOptions, workspace *WorkspaceRuntime, record bool, libraries ...[]byte) (*ContractGeneration, error) {
 	if ls == nil || ls.resources == nil {
-		return nil, fmt.Errorf("source generator configuration is required")
+		return nil, lerrors.InvalidConfiguration.Errorf("source generator configuration is required")
 	}
-	if err := validateWorkspaceRuntime(runtime); err != nil {
-		return nil, err
-	}
-	if len(libraries) > 1 {
-		return nil, fmt.Errorf("workspace entry accepts one runtime library")
+	if workspace != nil {
+		if err := validateWorkspaceRuntime(*workspace); err != nil {
+			return nil, err
+		}
+		if len(libraries) > 1 {
+			return nil, lerrors.InvalidInput.Errorf("workspace entry accepts one runtime library")
+		}
 	}
 	system, err := loadSegmentalSystem(ls.resources)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("load source generator: %w", err)
 	}
-	templates, err := loadSupportAssets(ls.resources, true)
+	var templates map[string][]byte
+	if workspace == nil {
+		templates, err = loadSupportTemplates(ls.resources, options.IncludeRuntime)
+	} else if templates, err = loadSupportAssets(ls.resources, true); err == nil {
+		if len(libraries) == 0 {
+			templates["runtime/runtime.rs"], err = loadRuntimeComposition(ls.resources, templates)
+		} else {
+			templates["runtime/runtime.rs"], err = generateRuntimeComposition(libraries[0], system, templates, workspace.Package)
+		}
+	}
 	if err != nil {
 		return nil, err
 	}
-	if len(libraries) == 0 {
-		templates["runtime/runtime.rs"], err = loadRuntimeComposition(ls.resources, templates)
-	} else {
-		templates["runtime/runtime.rs"], err = generateRuntimeComposition(libraries[0], system, templates, runtime.Package)
-	}
-	if err != nil {
-		return nil, err
-	}
-	return prepareContractGeneration(input, system, templates, GenerationOptions{IncludeRuntime: true}, &runtime)
+	return prepareContractGeneration(input, system, templates, options, workspace, record)
 }
 
-func prepareContractGeneration(input []byte, system SegmentalSystem, templates map[string][]byte, options GenerationOptions, workspace *WorkspaceRuntime) (*ContractGeneration, error) {
+func prepareContractGeneration(input []byte, system SegmentalSystem, templates map[string][]byte, options GenerationOptions, workspace *WorkspaceRuntime, record bool) (*ContractGeneration, error) {
 	scanner, err := loadScannerBytes(input)
 	if err != nil {
 		return nil, err
@@ -79,6 +76,9 @@ func prepareContractGeneration(input []byte, system SegmentalSystem, templates m
 		return nil, err
 	}
 	prepared := &ContractGeneration{program: program, templates: templates, includeRuntime: options.IncludeRuntime, workspace: workspace}
+	if !record {
+		return prepared, nil
+	}
 	prepared.inventory = contracts.LoweringInventory{Fingerprints: make(map[string]string), BoundaryCoverage: contracts.Known, TransitiveCoverage: contracts.Unknown}
 	prepared.inventory.Fingerprints["runtime-placement"] = contracts.StableID("runtime-placement", workspace)
 	// Segment templates are executable composition dependencies, even when a
@@ -145,6 +145,7 @@ func (g *ContractGeneration) Render() (Executable, error) {
 	if g == nil || g.program == nil || g.rendered {
 		return Executable{}, fmt.Errorf("contract generation requires an unconsumed prepared graph")
 	}
+	before := g.Inventory()
 	g.rendered = true
 	if err := g.program.Assemble(); err != nil {
 		return Executable{}, err
@@ -153,5 +154,25 @@ func (g *ContractGeneration) Render() (Executable, error) {
 	if err := g.program.linkBundleSupport(g.templates, g.includeRuntime, g.workspace); err != nil {
 		return Executable{}, err
 	}
+	if before.Fingerprints != nil {
+		if err := contracts.VerifyInventory(before, g.inventory); err != nil {
+			return Executable{}, err
+		}
+	}
 	return g.program.Executable, nil
+}
+
+func (g *ContractGeneration) RenderWorkspace() (Executable, Executable, error) {
+	if g == nil || g.workspace == nil {
+		return Executable{}, Executable{}, lerrors.InvalidInput.Errorf("expected a prepared workspace entry")
+	}
+	entry, err := g.Render()
+	if err != nil {
+		return Executable{}, Executable{}, err
+	}
+	support, err := workspaceRuntimeLibrary(g.workspace.Package, g.templates)
+	if err != nil {
+		return Executable{}, Executable{}, err
+	}
+	return entry, support, nil
 }

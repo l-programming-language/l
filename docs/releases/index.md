@@ -12,6 +12,28 @@ Releases are **English-only** until after `v1.0.0`. Release tags start at `v0.0.
 
 Backward compatibility is **not guaranteed before `v1.0.0`**. Read the release notes before upgrading, including minor and patch updates.
 
+## Current-source word changes
+
+The current source tree removes these former interfaces without aliases. This
+note describes source migration, not an additional published release. Use the
+[Storage reference](../internals/storage.md) and [IO reference](../stdlib/eng/io.md)
+for current signatures and policies.
+
+| Removed interface | Replacement |
+| --- | --- |
+| Storage.Propagate | Verify an explicit callback result |
+| Storage.Function.Success / Completion | Parameterized Storage.Success |
+| Storage.Rejection.Error / Result | Failure / Rejection with explicit arguments |
+| IO.Check / Stream | Storage.Result.Expect with a message / IO.Output |
+| Storage.Indexed on Iteration or Applier | Storage.Paired; unrelated Indexed meanings remain valid |
+| Storage.Fallible on Routine | Explicit generic constructor arguments |
+
+Require now constructs its error only on absence; its message still evaluates
+normally. Accept releases the old error before replacement. Core Retain takes an
+explicit borrowed Arc. Removed implementation helpers Storage.Demand, IO.Slice,
+Runtime.Dispose and Runtime.Retain use Require, the shared byte view,
+Storage.Release and core Retain respectively. No compatibility route remains.
+
 ## Inspect this site's provenance
 
 `/version.json` identifies the language version/commit, documentation revision, channel, and source fingerprint. Local previews are labeled **Local**; source links identify their committed base. A fingerprint identifies content, not a passing test result.

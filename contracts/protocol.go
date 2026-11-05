@@ -261,7 +261,8 @@ func TransferActivity(state AppProtocolState, owner string) (AppProtocolState, O
 func CheckLifecycleProfile(states []AppProtocolState, profile Profile) []Obligation {
 	result := CheckOwnedLifecycle(states)
 	result.Claim = Claim{ID: result.ID, Predicate: Predicate{Kind: "profile", Subject: "OwnedLifecycle"}, Target: profile.Target, Scope: profile.Scope, Outcomes: profile.Outcomes}
-	if profile.Name != "OwnedLifecycle" {
+	descriptor, supported := LookupProfile(profile.Name)
+	if !supported || !descriptor.WholeEntryOnly || !descriptor.SupportsScope(profile.Scope) {
 		result.Status, result.Reason = Unresolved, "lifecycle projection requires the OwnedLifecycle profile"
 	}
 	return []Obligation{result}
