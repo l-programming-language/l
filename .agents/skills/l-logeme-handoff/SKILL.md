@@ -5,7 +5,7 @@ description: Diagnose the boundary between AML and Rust logeme source bundles, i
 
 # Inspect the logeme handoff
 
-The [temporary validation pause](../../../docs/development-harness.md#temporary-validation-pause) governs this workflow. Expensive local validation requires explicit user authorization; configured pull-request events already authorize hosted CI. Follow that canonical policy for requested runs and report unrun stages accurately.
+The [validation policy](../../../docs/development-harness.md#validation-authorization) governs this workflow. Explicit task authorization covers its bounded baseline, regression, native and completion checks without repeated permission requests. Configured pull-request events authorize hosted CI; manual dispatch requires explicit authorization. Report unrun stages accurately.
 
 Read [backend guidance](../../../logiceme/AGENTS.md), [AML protocol](../../../docs/architecture.md#aml-and-logeme-protocol) and the relevant fixed expectation. Use maintained `TestDemoGeneratesBuildableSource` and `TestMemberSourceGeneratesBuildableSource` in cmd/l for the Rust frontend handoff. Distinguish App runtime observers from `TestRunnableServiceComposition`, which retains raw AML library and explicit native-consumer controls. The [coverage ledger](../../../testdata/service-execution/coverage.md) records these boundaries. For raw Evaluate (Rust by default), use the [maintained complete-AML corpus](../../../logiceme/testdata/lucid/README.md). Follow the [documented environment](../../../docs/development-harness.md).
 
@@ -17,6 +17,6 @@ Read [backend guidance](../../../logiceme/AGENTS.md), [AML protocol](../../../do
 
 Use selected `fs.FS` and actual production runtime templates. Generated deployment scripts remain artifacts, never validation commands. Preserve raw application stdout and separate compiler diagnostics. The native macOS/Linux CLI compiles Rust workspaces and uses the actual Rust runtime. Establish runtime parity through the supervised mapped tests; backend compilation alone does not prove lifecycle behavior. Containers and Phase 2 in-code concurrency remain outside that CLI scope.
 
-For Rust, compare every returned artifact exactly and run the separate Expected/Generated compilation stage with retained locks. Do not repair or format actual projects before Cargo. The 18 segment definitions remain frozen unless an explicitly scoped task changes them. Read the [current integration limits](../../../builtins/README.md#current-integration-limits); template routes, residual preparation entries and verified compositions are different evidence.
+For Rust, compare every returned artifact exactly and run the separate Expected/Generated compilation stage with retained locks. Do not repair or format actual projects before Cargo. Do not edit `builtins/segments/`, `builtins/templates/`, their interfaces or frozen hash expectations. Read the [current integration limits](../../../builtins/README.md#current-integration-limits); template routes, residual preparation entries and verified compositions are different evidence.
 
 Return input identity, first failing boundary, relevant outputs and evidence limits. Report generation, native compilation, acceptance and runtime verification separately. Use the acceptance skill for the full gate.

@@ -55,19 +55,16 @@ override is useful for development. Resource files stay in their native JSON, L
 and template formats, and generated programs do not depend on them at runtime.
 
 `builtins/<configured-language>/core.l` supplies the implicit builtin unit.
-The [core](../builtins/eng/core.l) supplies foundational words and imports the
-[Storage dictionary](../stdlib/eng/storage/dictionary.l) privately. Programs and
-dictionaries inherit core words; they do not inherit Storage's implementation
-namespace. Ordinary source Functions, locals, descriptors and invocation words
-compose storage behavior. Selected declarations carry only their required source
-dependencies into AML.
+The [core reference](reference/builtins/index.md) describes its implicit vocabulary.
+Core privately imports [Storage](internals/storage.md); that implementation namespace
+requires an explicit import at a source use. The [dictionary index](../stdlib/index.json)
+also selects [IO](stdlib/eng/io.md) and private support dictionaries. Adding an
+indexed dictionary does not make its words implicit.
 
-The [dictionary index](../stdlib/index.json) also selects IO and private support
-dictionaries. IO.Print composes typed rendering with byte output. IO and Runtime
-select the same [Formatting Function](../builtins/runtime/eng/number.l). Runtime lifecycle, error and capture policy lives in
-[builtins/runtime/eng](../builtins/runtime/eng); its generated, fingerprinted AML
-is rendered by Logiceme with the same frozen logemes. Host adapters retain OS and
-async access. Adding an indexed dictionary never makes its words implicit.
+Runtime lifecycle, errors and captures are composed in [L source](../builtins/runtime/eng).
+Its fingerprinted AML is rendered with the same frozen logemes; host adapters
+retain OS and async access. Selected source declarations carry their dependencies
+into AML without an unconditional library aggregate.
 
 Build, Run, Stop and Await retain their semantic operation identities. The
 [private builtin catalog](../lyger/builtin_operations.go) loads their process
@@ -81,9 +78,9 @@ validates its complete inputs, and adds no public definition-slot or glyph field
 Start and Execute still accept `any App` through their existing source signatures.
 
 
-The [basic demo](../demo/basic/main.l) imports IO.Print, creates a Basic App, executes it, and shows its raw output. Tests execute that source directly. Controlled process fixtures use explicit test-owned companion definitions without copying the language foundation. Basic construction and backend generation retain their existing semantic assertions.
-
-Definitions can embed logeme expressions in text marked with `<DEF>`. Placeholders such as `<@Output|Thing@>` carry substitution information. Labels such as `Log|-s|-ged|-ging|-ger` define related grammatical forms. Resolving one of those words from memory must preserve its grammatical identity, not replace it with the storage label `lexeme`.
+For source authoring, see [composable definitions](guide/definitions.md) and the
+[native boundary](guide/native-definitions.md). Those guides own invocation forms,
+inflections and examples; this map covers compiler responsibilities.
 
 Number arguments in definitions and orchestrator primitives share one finite
 binary64 encoder. It emits the shortest round-trip decimal representation with

@@ -1,0 +1,126 @@
+{
+  "$defs": {
+    "NativeWitness": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": {
+          "type": "string"
+        },
+        "claim_fingerprint": {
+          "type": "string"
+        },
+        "contract_fingerprint": {
+          "type": "string"
+        },
+        "dependencies": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "implementation_fingerprint": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "target_fingerprint": {
+          "type": "string"
+        },
+        "test_only": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "claim_fingerprint",
+        "contract_fingerprint",
+        "implementation_fingerprint",
+        "target_fingerprint",
+        "authority",
+        "rationale"
+      ],
+      "type": "object"
+    },
+    "TrustPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "allow_test_only": {
+          "type": "boolean"
+        },
+        "approved_witnesses": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "authorities": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "id"
+      ],
+      "type": "object"
+    },
+    "TrustPolicyDocument": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "trust_policy"
+        },
+        "policy": {
+          "$ref": "#/$defs/TrustPolicy"
+        },
+        "producer": {
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.1"
+        },
+        "witnesses": {
+          "items": {
+            "$ref": "#/$defs/NativeWitness"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "kind",
+        "producer",
+        "policy",
+        "witnesses"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "l-contracts/1.1/trust_policy",
+  "$ref": "#/$defs/TrustPolicyDocument",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

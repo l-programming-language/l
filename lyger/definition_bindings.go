@@ -73,6 +73,8 @@ type DefinitionArgument struct {
 	reference    string
 	atoms        *[]DefinitionArgument
 	typeAtom     string
+	formal       *definitionParameter // exact source declaration parameter, carried only by its invocation
+	processType  *DefinitionArgument  // declared type of a structured Process input; never an executable operand
 	index        *uint64
 	sequence     []DefinitionInstance
 	source       SourceSpan
@@ -89,6 +91,7 @@ type DefinitionBinding struct {
 // DefinitionInstance owns fresh output and an argument ledger. Expression is
 // a glyph expression; Words preserves an explicit word/sentence grouping.
 type DefinitionInstance struct {
+	inputs             []DefinitionArgument // lexical parameters awaiting a structured pattern/iteration owner
 	result             *DefinitionArgument
 	before             []DefinitionInstance
 	Symbol             string  // source-defined spelling, retained for diagnostics
@@ -111,6 +114,8 @@ type definitionPart struct {
 // DefinitionTemplate retains the raw source prototype. Instantiation uses its
 // parsed private parts and never substitutes into or updates the prototype.
 type DefinitionTemplate struct {
+	scopedLabels   map[string]bool
+	scopedIndex    string
 	Original       []byte
 	Span           SourceSpan
 	Slots          []DefinitionSlot
@@ -276,6 +281,8 @@ func (t *DefinitionTemplate) parseParts(source string) ([]definitionPart, error)
 			break
 		}
 		metadata := source[start:end]
+		pattern := strings.TrimSpace(source[:start]) == "E"
+		iteration := start > 0 && source[start-1] == 'X'
 		for {
 			opening := strings.Index(metadata, "<@")
 			if opening < 0 {
@@ -286,7 +293,21 @@ func (t *DefinitionTemplate) parseParts(source string) ([]definitionPart, error)
 				break
 			}
 			closing += opening + 2
-			t.metadataSlots[strings.SplitN(metadata[opening+2:closing], "|", 2)[0]] = true
+			fields := strings.SplitN(metadata[opening+2:closing], "|", 2)
+			t.metadataSlots[fields[0]] = true
+			field := metadata[:opening]
+			if comma := strings.LastIndexByte(field, ','); comma >= 0 {
+				field = field[comma+1:]
+			}
+			if len(fields) == 2 && fields[1] == "Label" && (pattern || iteration && (strings.Contains(field, "Key:") || strings.Contains(field, "Index:"))) {
+				if t.scopedLabels == nil {
+					t.scopedLabels = make(map[string]bool)
+				}
+				t.scopedLabels[fields[0]] = true
+				if iteration && strings.Contains(field, "Index:") {
+					t.scopedIndex = fields[0]
+				}
+			}
 			metadata = metadata[closing+2:]
 		}
 		position = end + 2
@@ -349,11 +370,29 @@ func definitionName(name string) bool {
 	return true
 }
 
+// O with a final B declares a named definition. A callable's Key is an
+// operand, even when it happens to occupy the first metadata slot.
+func (t *DefinitionTemplate) hasDeclarationName() bool {
+	if len(t.parts) == 0 {
+		return false
+	}
+	form, metadata, found := strings.Cut(t.parts[0].text, "{|")
+	return found && strings.HasSuffix(strings.TrimSpace(form), "OB") && !strings.ContainsAny(form, "^*(") && strings.TrimSpace(metadata) == "Key: ~"
+}
+
+func (t *DefinitionTemplate) identitySlot() *DefinitionSlot {
+	if len(t.parts) == 3 && t.parts[0].text == "" && t.parts[2].text == "" && t.parts[1].slot != nil && t.parts[1].slot.Type == "" {
+		return t.parts[1].slot
+	}
+	return nil
+}
+
 // Instantiate binds every slot by name. Values are emitted only at parsed slot
 // locations, so a replacement never reinterprets argument text as another slot.
 func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument) (DefinitionInstance, error) {
 	instance := DefinitionInstance{Original: bytes.Clone(t.Original), Span: t.Span, Dependencies: append([]DefinitionInstance(nil), t.dependencies...)}
 	values := make(map[string]string, len(t.Slots))
+	referenceIdentity := false
 	for _, slot := range t.Slots {
 		argument, ok := bindings[slot.Name]
 		if !ok {
@@ -366,7 +405,7 @@ func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument)
 				return DefinitionInstance{}, t.failure(fmt.Errorf("parameter %q: %w", slot.Name, err))
 			}
 		}
-		if t.metadataSlots[slot.Name] && slot.Type != "Type" {
+		if (t.metadataSlots[slot.Name] || t.identitySlot() != nil && argument.Definition != nil && argument.Definition.result != nil) && slot.Type != "Type" {
 			var before []DefinitionInstance
 			argument, before = argument.boundResult()
 			instance.before = append(instance.before, before...)
@@ -382,8 +421,12 @@ func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument)
 			return DefinitionInstance{}, t.failure(fmt.Errorf("parameter %q: %w", slot.Name, err))
 		}
 		// Only exact identity rendering preserves the operand's structural proof.
-		if child := argument.Definition; child != nil && value == child.Expression && len(t.parts) == 3 && t.parts[0].text == "" && t.parts[1].slot != nil && t.parts[1].slot.Name == slot.Name && t.parts[2].text == "" {
+		if child := argument.Definition; child != nil && value == child.Expression && t.identitySlot() != nil {
 			instance.sequence, instance.result = child.sequence, child.result
+		}
+		if t.identitySlot() != nil && argument.reference != "" {
+			result := argument
+			instance.result, referenceIdentity = &result, true
 		}
 		values[slot.Name] = value
 		instance.Dependencies = append(instance.Dependencies, argument.dependencies...)
@@ -407,6 +450,9 @@ func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument)
 			binding.Sources = append(binding.Sources, child.Span)
 		}
 		instance.Bindings = append(instance.Bindings, binding)
+	}
+	if referenceIdentity {
+		return instance, nil
 	}
 	render := func(parts []definitionPart) (string, string, error) {
 		var result strings.Builder
@@ -461,17 +507,23 @@ func (argument DefinitionArgument) orderedSequence() (DefinitionArgument, []Defi
 		if child.Expression != argument.Syllables[i] {
 			return argument, nil
 		}
-		if child.sequence == nil {
-			children = append(children, child)
-		} else {
-			children = append(children, child.sequence...)
-		}
+		children = appendDefinitionSequence(children, child)
 	}
 	argument.Syllables = make([]string, len(children))
 	for i, child := range children {
 		argument.Syllables[i] = child.Expression
 	}
 	return argument, children
+}
+
+func appendDefinitionSequence(children []DefinitionInstance, child DefinitionInstance) []DefinitionInstance {
+	if child.sequence == nil {
+		return append(children, child)
+	}
+	for _, step := range child.sequence {
+		children = appendDefinitionSequence(children, step)
+	}
+	return children
 }
 
 // Source wrappers retain the same proof only when all their authored actions
@@ -482,7 +534,9 @@ func pureDefinitionSequence(actions []DefinitionInstance) []DefinitionInstance {
 		if action.sequence == nil {
 			return nil
 		}
-		children = append(children, action.sequence...)
+		for _, step := range definitionSteps(action) {
+			children = appendDefinitionSequence(children, step)
+		}
 	}
 	return children
 }
@@ -1102,7 +1156,8 @@ func normalizeDefinitionGroups(source string) (string, error) {
 			case '(':
 				// A sibling's transparent grouping does not introduce a child
 				// level. Groups after ^ still own their complete child sequence.
-				sameLevel := strings.HasSuffix(strings.TrimSpace(output.String()), "*")
+				prefix := strings.TrimSpace(output.String())
+				sameLevel := prefix == "" || strings.HasSuffix(prefix, "*")
 				inner, many, err := group(true)
 				if err != nil {
 					return "", false, err
@@ -1111,6 +1166,9 @@ func normalizeDefinitionGroups(source string) (string, error) {
 					output.WriteByte('(')
 				}
 				output.WriteString(inner)
+				if many && sameLevel {
+					siblings = true
+				}
 				if many && !sameLevel {
 					output.WriteByte(')')
 				}

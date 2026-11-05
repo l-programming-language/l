@@ -14,7 +14,7 @@ Declarations retain tokens, formal identities, bindings, descriptor targets and 
 
 `any App` declares a typed argument; `it` refers to that argument. Start expands Build/Run; Execute expands Start/Await. Neither is a primitive instruction root.
 
-Calls check argument count and nominal type. Coordinated operands expand the complete body for each operand in order. Definition-site references retain their bindings; actual arguments and diagnostics belong to the call. Expansion cycles reject rather than supplying runtime recursion.
+Calls check argument count and nominal type. A one-argument source action with coordinated operands expands its complete body for each operand in order. Definition-site references retain their bindings; actual arguments and diagnostics belong to the call. Source-action expansion cycles reject; [Function invocations](applicational-types.md#functions-properties-and-operations) have their own callable semantics.
 
 ## Inflection declarations
 
@@ -24,11 +24,9 @@ Quoted labels list bar-separated forms. Nouns use root/plural/descriptive/active
 
 ## Descriptors and constructors
 
-Descriptors bind nominal identities to ordered child-construction or wrapper rules. Same-named private declarations remain distinct; aliases preserve identity. Missing target constructors and recursive expansion reject.
+Descriptors bind nominal identities to ordered child-construction or wrapper rules. Every rule matching the target applies in authored order; wrapper order and repeated construction are preserved. Same-named private declarations remain distinct; aliases preserve identity. Missing target constructors and recursive expansion reject.
 
-<!-- example:local-definitions -->
-
-The two paragraphs own separate Launch actions, Compact descriptors and captured messages. New selects construction, Generic participates in source composition and Public controls visibility; none infers Rust lifetimes or generic arguments.
+The [authoring guide](../guide/definitions.md#compose-a-source-action) demonstrates separate paragraph-local actions and descriptors. New selects construction, Generic participates in source composition and Public controls visibility; none infers Rust lifetimes or generic arguments.
 
 Main constructs a Function inside an Object inside a Service; Basic supplies that Main Service to an App. These rules define `New Basic App`.
 
@@ -37,6 +35,10 @@ Main constructs a Function inside an Object inside a Service; Basic supplies tha
 <!-- example:definitions-callable-core -->
 
 Process composes ordered Syllables through W. Function supplies FW/Func metadata: Name, typed Inputs, output types and an instantiated Process. Source Function declarations use this selected definition too; Function-local Return binds its builtin member after checking source results.
+
+A structured Process can declare typed Inputs for a selected pattern or iteration body. The [Process contract](../reference/builtins/definitions.md#process) specifies scope, cardinality and native type/borrow checking; the [Require walkthrough](../guide/definitions.md#keep-branch-data-inside-its-process) shows their use. A Process has no callable outputs or capture runtime.
+
+Native source Function constructors accept explicit generic parameter atoms before their signature. Descriptors on derived invocation nouns retain the base result and forward checked operands once, in source order, including through transparent value definitions. Structured bodies retain their execution placement. One selected signature determines operand boundaries and result bindings: wrappers preserve it, replacements supply it, and source forwarding inherits its remaining parameters. Each declaration owns its body and formal inputs, including declarations sharing a sentence. Native move/borrow checks still apply; forwarding introduces no clone. [Lined](../guide/native-definitions.md#compose-a-wrapper) demonstrates a source wrapper.
 
 <!-- example:main-descriptor -->
 
@@ -48,7 +50,7 @@ Source definitions use backtick Text with one complete outer `<DEF>…<DEF>` pai
 
 <!-- example:native-dictionary-definition -->
 
-Log defines a native body; ProbeIO.Print composes its Logger form. App-body callers supply Output. `BOD^E` integrates the Calculation, `{|Statement: …|}` supplies metadata and `~…~` encloses native statement text. See the [native-definition guide](../guide/native-definitions.md) for its caller.
+This retained ProbeIO fixture witnesses framing and escaping, not the recommended decomposition of IO policy. `BOD^E` integrates the Calculation, `{|Statement: …|}` supplies metadata and `~…~` encloses native statement text. Its [caller](../../cmd/l/test/runnable_service/basic.l) supplies Output. For compositional authoring, follow the [Send/Lined walkthrough](../guide/native-definitions.md#start-from-the-existing-foundation).
 
 A body may be one expression, a JSON string array representing a word, or an array of word arrays. Grouping survives instantiation. Quote, backslash and backtick escapes decode once; native escapes such as `\n` survive, and arguments are not decoded again.
 

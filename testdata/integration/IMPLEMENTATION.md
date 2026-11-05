@@ -64,10 +64,10 @@ for protected inputs, assertions, expected bytes, resources and pins. Preserve
 the [validation budgets](../../docs/development-harness.md#validation-budgets),
 runtime watchdogs and concurrency.
 
-The [local validation pause](../../docs/development-harness.md#temporary-validation-pause)
-requires an explicit request for local bootstrap, full lint, full ordinary/native
-suites or `scripts/l-check`. Automatic Linux validation on PR creation, new
-commits and reopening is authorized; manual dispatch requires explicit
-authorization. For requested full local validation, follow the
-[development guide](../../docs/development-harness.md#full-validation-when-requested).
+[Task validation authorization](../../docs/development-harness.md#validation-authorization)
+covers requested bootstrap, lint, ordinary/native suites and `scripts/l-check`
+without repeated permission requests. Automatic Linux validation on PR creation,
+new commits and reopening is authorized; manual dispatch requires explicit
+authorization. For full local validation, follow the
+[development guide](../../docs/development-harness.md#full-validation).
 Historical evidence never substitutes for the requested fresh gate.

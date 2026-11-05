@@ -10,33 +10,36 @@ import (
 
 // Compilation organizes the pre-assembled structure of an L program as it is recursively pre-processed
 type Compilation struct {
-	definitionTemporaries []int
-	definitionReserved    map[string]bool
-	definitionStatements  int
-	definitionValues      map[*DefinitionInstance]bool
-	Gram                  *grammar
-	MainBytes             []byte
-	MainPath              string
-	RootDir               string
-	CompiledBytes         []byte
-	ASMBytes              []byte
-	Memory                map[string]*record
-	TextCache             map[string][]byte
-	Statements            []*lStatement
-	ProcStatements        []*lStatement
-	Program               *Program
-	Error                 error
-	Prepared              *PreparedSource
-	SourceStatements      []SourceStatement
-	SourcePaths           []string
-	SourceOccurrences     []sourceOccurrence
-	SourceUnits           []*SourceUnit
-	SourceOrigins         []SourceOrigin
-	Semantics             *semanticProgram
-	Scope                 *scopePlan
-	ExpandedBytes         []byte
-	builtinProcesses      *builtinProcessCatalog
-	nativeDeclarations    map[*record]bool
+	pendingDescriptorRules map[*lStatement]descriptorGrammarDependency
+	contractRecorder       *contractRecorder
+	definitionTemporaries  []int
+	definitionReserved     map[string]bool
+	definitionStatements   int
+	definitionValues       map[*DefinitionInstance]bool
+	definitionReturn       sourceReturnContext
+	Gram                   *grammar
+	MainBytes              []byte
+	MainPath               string
+	RootDir                string
+	CompiledBytes          []byte
+	ASMBytes               []byte
+	Memory                 map[string]*record
+	TextCache              map[string][]byte
+	Statements             []*lStatement
+	ProcStatements         []*lStatement
+	Program                *Program
+	Error                  error
+	Prepared               *PreparedSource
+	SourceStatements       []SourceStatement
+	SourcePaths            []string
+	SourceOccurrences      []sourceOccurrence
+	SourceUnits            []*SourceUnit
+	SourceOrigins          []SourceOrigin
+	Semantics              *semanticProgram
+	Scope                  *scopePlan
+	ExpandedBytes          []byte
+	builtinProcesses       *builtinProcessCatalog
+	nativeDeclarations     map[*record]bool
 }
 
 // newCompilation returns a newly created Compilation struct
@@ -84,6 +87,7 @@ func (c *Compilation) init(options Options) {
 		return
 	}
 	c.Gram = gram
+	c.Gram.constructorSignature = c.constructorGrammarSignature
 	c.builtinProcesses, err = loadBuiltinProcesses(gram.resources)
 	c.checkError(err)
 }
@@ -136,6 +140,9 @@ func (c *Compilation) scan() {
 			return
 		}
 		c.Statements = append(c.Statements, lStmt)
+		if c.contractRecorder != nil {
+			c.contractRecorder.captureStatement(lStmt)
+		}
 	}
 }
 
@@ -198,7 +205,15 @@ func (c *Compilation) buildMemory() {
 				pending = append(pending, statement)
 				continue
 			}
-			if c.checkStatementError(statement, "grammar", statement.loadGram()) {
+			err = statement.loadGram()
+			if errors.Is(err, lerrors.UnresolvedReference) {
+				pending = append(pending, statement)
+				if unresolved == nil {
+					unresolved, unresolvedError = statement, err
+				}
+				continue
+			}
+			if c.checkStatementError(statement, "grammar", err) {
 				return
 			}
 			if c.checkStatementError(statement, "resolve literals", statement.uncacheLiterals(c.TextCache)) {
@@ -233,6 +248,7 @@ func (c *Compilation) buildMemory() {
 				}
 				tok.pendingDeclaration = nil
 			}
+			delete(c.pendingDescriptorRules, statement)
 			progress = true
 		}
 		c.ProcStatements = pending
@@ -272,6 +288,7 @@ func (c *Compilation) analyze() {
 	}
 	defer c.Scope.indexBindings()()
 	c.ProcStatements = append([]*lStatement{}, c.Statements...)
+	c.prepareDescriptorGrammar()
 	// 1) determine each c.Statement type (i.e. IMPERATIVE.CREATE.VERB) with Subject and Predicate Tokens (LProcess E.1)
 	//		1.A) Any statement with an unknown is set aside.
 	//		1.B) Create working memory map for declared/defined IDs

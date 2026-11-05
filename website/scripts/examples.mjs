@@ -16,36 +16,52 @@ export function runBounded(command, args, { cwd, timeoutMs = 30000 } = {}) {
   });
 }
 export async function verifyExamples(args) {
-  const at = args.indexOf('--compiler');
-  if (at < 0 || !args[at + 1] || !path.isAbsolute(args[at + 1])) throw new Error('Opt-in language execution: provide --compiler /absolute/path/to/l. This requires separately authorized compiler/native validation under the repository pause. No toolchains are installed by this command.');
-  const compiler = args[at + 1]; const idAt = args.indexOf('--id'); const selectedId = idAt >= 0 ? args[idAt + 1] : null;
-  const all = (await json(path.join(repository, 'docs/_meta/examples.json'))).examples;
-  const selected = all.filter((e) => e.classification !== 'fragment' && (!selectedId || e.id === selectedId));
-  if (!selected.length) throw new Error('No complete examples matched.');
-  const outcomes = [];
-  for (const example of selected) {
-    const source = await safeFile(repository, example.source);
-    if (sha256(await fs.readFile(source)) !== example.sha256) throw new Error(`Source changed: ${example.id}`);
-    if (example.classification === 'runnable' && (example.expectedStdoutBase64 === undefined || example.expectedExit === undefined)) throw new Error(`No reviewed exact output expectation for ${example.id}; select a fully specified example with --id.`);
-    const temporary = await fs.mkdtemp(path.join(os.tmpdir(), 'l-docs-example-'));
-    try {
-      const build = await runBounded(compiler, ['build', '--output-dir', temporary, source], { cwd: repository, timeoutMs: 40000 });
-      if (build.timedOut) throw new Error(`${example.id}: compilation timed out`);
-      if (example.classification === 'invalid') {
-        const tokens = Array.isArray(example.diagnosticIncludes) ? example.diagnosticIncludes : [example.diagnosticIncludes];
-        if (build.code === 0 || (example.expectedExit !== undefined && build.code !== example.expectedExit) || !tokens.length || tokens.some((token) => !token || !build.stderr.toString('utf8').toLowerCase().includes(token.toLowerCase()))) throw new Error(`${example.id}: expected compile diagnostic was not observed`);
-        outcomes.push({ id: example.id, stage: 'compile-rejection', status: 'passed' }); continue;
-      }
-      if (build.code !== 0) throw new Error(`${example.id}: build failed: ${build.stderr.toString('utf8')}`);
-      if (example.classification === 'runnable') {
-        const binary = path.join(temporary, path.basename(source, '.l'));
-        const run = await runBounded(binary, [], { cwd: temporary, timeoutMs: 15000 });
-        if (run.timedOut || run.code !== example.expectedExit || !run.stdout.equals(Buffer.from(example.expectedStdoutBase64, 'base64')) || !run.stderr.equals(Buffer.from(example.expectedStderrBase64 ?? '', 'base64'))) throw new Error(`${example.id}: runtime output/status differs from its reviewed exact expectation`);
-      }
-      outcomes.push({ id: example.id, stage: example.classification === 'runnable' ? 'native-runtime' : 'native-compilation', status: 'passed' });
-    } finally { await fs.rm(temporary, { recursive: true, force: true }); }
+  const reportPath = path.join(website, 'reports/examples-verification.json');
+  const report = { compiler: null, status: 'running', exitCode: null, outcomes: [] };
+  let current = { stage: 'configuration' };
+  // Invalidate an older success before validation or subprocess work can fail.
+  await atomicWrite(reportPath, stable(report));
+  try {
+    const at = args.indexOf('--compiler');
+    if (at < 0 || !args[at + 1] || !path.isAbsolute(args[at + 1])) throw new Error('Opt-in language execution: provide --compiler /absolute/path/to/l. Compiler/native validation requires task authorization. No toolchains are installed by this command.');
+    const compiler = args[at + 1]; const idAt = args.indexOf('--id'); const selectedId = idAt >= 0 ? args[idAt + 1] : null;
+    report.compiler = compiler;
+    const all = (await json(path.join(repository, 'docs/_meta/examples.json'))).examples;
+    const selected = all.filter((e) => e.classification !== 'fragment' && (!selectedId || e.id === selectedId));
+    if (!selected.length) throw new Error('No complete examples matched.');
+    for (const example of selected) {
+      current = { id: example.id, stage: 'source-validation' };
+      const source = await safeFile(repository, example.source);
+      if (sha256(await fs.readFile(source)) !== example.sha256) throw new Error(`Source changed: ${example.id}`);
+      if (example.classification === 'runnable' && (example.expectedStdoutBase64 === undefined || example.expectedExit === undefined)) throw new Error(`No reviewed exact output expectation for ${example.id}; select a fully specified example with --id.`);
+      const temporary = await fs.mkdtemp(path.join(os.tmpdir(), 'l-docs-example-'));
+      try {
+        current.stage = example.classification === 'invalid' ? 'compile-rejection' : 'native-compilation';
+        const build = await runBounded(compiler, ['build', '--output-dir', temporary, source], { cwd: repository, timeoutMs: 40000 });
+        if (build.timedOut) throw new Error(`${example.id}: compilation timed out`);
+        if (example.classification === 'invalid') {
+          const tokens = Array.isArray(example.diagnosticIncludes) ? example.diagnosticIncludes : [example.diagnosticIncludes];
+          if (build.code === 0 || (example.expectedExit !== undefined && build.code !== example.expectedExit) || !tokens.length || tokens.some((token) => !token || !build.stderr.toString('utf8').toLowerCase().includes(token.toLowerCase()))) throw new Error(`${example.id}: expected compile diagnostic was not observed`);
+        } else {
+          if (build.code !== 0) throw new Error(`${example.id}: build failed: ${build.stderr.toString('utf8')}`);
+          if (example.classification === 'runnable') {
+            current.stage = 'native-runtime';
+            const binary = path.join(temporary, path.basename(source, '.l'));
+            const run = await runBounded(binary, [], { cwd: temporary, timeoutMs: 15000 });
+            if (run.timedOut || run.code !== example.expectedExit || !run.stdout.equals(Buffer.from(example.expectedStdoutBase64, 'base64')) || !run.stderr.equals(Buffer.from(example.expectedStderrBase64 ?? '', 'base64'))) throw new Error(`${example.id}: runtime output/status differs from its reviewed exact expectation`);
+          }
+        }
+      } finally { await fs.rm(temporary, { recursive: true, force: true }); }
+      report.outcomes.push({ ...current, status: 'passed' });
+    }
+    report.status = 'passed'; report.exitCode = 0;
+    return report.outcomes;
+  } catch (error) {
+    report.status = 'failed'; report.exitCode = 1;
+    report.outcomes.push({ ...current, status: 'failed', error: error.message });
+    throw error;
+  } finally {
+    await atomicWrite(reportPath, stable(report));
   }
-  await atomicWrite(path.join(website, 'reports/examples-verification.json'), stable({ compiler, outcomes }));
-  return outcomes;
 }
 if (isMain(import.meta.url)) verifyExamples(process.argv.slice(2)).then((r) => console.log(stable(r))).catch((e) => { console.error(e.message); process.exitCode = 1; });

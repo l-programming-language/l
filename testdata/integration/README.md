@@ -78,11 +78,11 @@ acceptance; tests that require artifact provenance still enable private captures
 See the [development guide](../../docs/development-harness.md) for cache ownership
 and diagnostic boundaries.
 
-The [local validation pause](../../docs/development-harness.md#temporary-validation-pause)
-requires an explicit user request for full suites. Automatic Linux PR
-validation is authorized for the documented PR events; manual dispatch requires
-explicit authorization. For requested full validation, follow the
-[development guide](../../docs/development-harness.md#full-validation-when-requested)
+[Task validation authorization](../../docs/development-harness.md#validation-authorization)
+covers the requested checks without repeated permission requests. Automatic Linux
+PR validation is authorized for the documented events; manual dispatch requires
+explicit authorization. For full validation, follow the
+[development guide](../../docs/development-harness.md#full-validation)
 and run `scripts/l-check`: workflow lint, both Go lint profiles, doctor, both
 unfiltered package phases and the separate tagged native matrix. The harness
 assigns these frontend/runtime packages to `tests-native`; preserve the

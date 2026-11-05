@@ -4,13 +4,35 @@ Releases are published manually from main after native validation, installer che
 
 ## Download L
 
-Check [GitHub Releases](https://github.com/l-programming-language/l/releases) for published versions. Follow [installation](../cli/installation.md) for the terminal installer or the source-build fallback; the v0.0.1 download commands work after that release is published.
+[L v0.0.1](https://github.com/l-programming-language/l/releases/tag/v0.0.1) is available for Apple Silicon macOS and Linux. Follow [Install L](../cli/installation.md) to get started, or browse [GitHub Releases](https://github.com/l-programming-language/l/releases) for other published versions.
 
 ## Versioning and compatibility
 
 Releases are **English-only** until after `v1.0.0`. Release tags start at `v0.0.1` and use `vMAJOR.MINOR.PATCH`; `l --version` reports the bare version.
 
 Backward compatibility is **not guaranteed before `v1.0.0`**. Read the release notes before upgrading, including minor and patch updates.
+
+## Current-source word changes
+
+The current source tree removes these former interfaces without aliases. This
+note describes source migration, not an additional published release. Use the
+[Storage reference](../internals/storage.md) and [IO reference](../stdlib/eng/io.md)
+for current signatures and policies.
+
+| Removed interface | Replacement |
+| --- | --- |
+| Storage.Propagate | Verify an explicit callback result |
+| Storage.Function.Success / Completion | Parameterized Storage.Success |
+| Storage.Rejection.Error / Result | Failure / Rejection with explicit arguments |
+| IO.Check / Stream | Storage.Result.Expect with a message / IO.Output |
+| Storage.Indexed on Iteration or Applier | Storage.Paired; unrelated Indexed meanings remain valid |
+| Storage.Fallible on Routine | Explicit generic constructor arguments |
+
+Require now constructs its error only on absence; its message still evaluates
+normally. Accept releases the old error before replacement. Core Retain takes an
+explicit borrowed Arc. Removed implementation helpers Storage.Demand, IO.Slice,
+Runtime.Dispose and Runtime.Retain use Require, the shared byte view,
+Storage.Release and core Retain respectively. No compatibility route remains.
 
 ## Inspect this site's provenance
 

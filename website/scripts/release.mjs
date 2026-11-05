@@ -308,7 +308,7 @@ export function sourceFingerprintAt(root, commit) {
 async function github(path) {
   assert(process.env.GITHUB_TOKEN, 'Authenticated GitHub API verification requires GITHUB_TOKEN');
   assert(path.startsWith('/repos/'), 'Unexpected API path');
-  const response = await fetch(`https://api.github.com${path}`, { headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } });
+  const response = await fetch(`https://api.github.com${path}`, { signal: AbortSignal.timeout(15000), headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } });
   assert(response.ok, `GitHub verification failed: ${response.status} ${path}`);
   return response.json();
 }
@@ -342,31 +342,128 @@ async function documentationRelease(policy, identity) {
   return release;
 }
 
-async function fetchCurrent(policy) {
-  assertPublicationPolicy(policy);
-  const deployments = await github(`/repos/${policy.repository}/deployments?environment=github-pages&per_page=30`);
-  let deployed = null;
-  for (const item of deployments) {
-    const states = await github(`/repos/${policy.repository}/deployments/${item.id}/statuses`);
-    if (states[0]?.state === 'success') { deployed = item; break; }
-  }
-  const response = await fetch(`${policy.origin}/version.json`, { cache: 'no-store', redirect: 'error' });
-  if (!deployed && response.status === 404) return null;
-  assert(deployed && response.ok, 'Production HTTP and GitHub deployment records disagree; first deployment requires no prior success and HTTP 404');
-  const version = await response.json();
-  // Recovery runs can execute trusted workflow code from a newer commit while
-  // promoting an older exact artifact; the deployed content owns docsCommit.
-  assert(SHA.test(version.docsCommit) && VERSION.test(version.languageVersion), 'Production identity lacks immutable source identity');
-  const release = await documentationRelease(policy, version);
-  const asset = release.assets?.find((x) => x.name === `docs-${version.docsCommit}.promotion.json`);
-  assert(asset && /^sha256:[a-f0-9]{64}$/.test(asset.digest), 'Production promotion manifest is missing from its release');
-  const raw = await fetch(asset.url, { headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/octet-stream' } });
-  assert(raw.ok, 'Cannot read production promotion manifest');
+async function publishedPromotion(policy, identity) {
+  assert(SHA.test(identity.docsCommit) && SHA.test(identity.languageCommit) && VERSION.test(identity.languageVersion), 'Production identity lacks immutable source identity');
+  const release = await documentationRelease(policy, identity);
+  const assets = release.assets?.filter((x) => x.name === `docs-${identity.docsCommit}.promotion.json`) || [];
+  const asset = assets[0];
+  assert(assets.length === 1 && asset.state === 'uploaded' && FINGERPRINT.test(asset.digest), 'Production promotion manifest is missing or ambiguous in its release');
+  assert(asset.url?.startsWith(`https://api.github.com/repos/${policy.repository}/releases/assets/`) && /^\d+$/.test(asset.url.split('/').at(-1)), 'Invalid promotion asset URL');
+  const raw = await fetch(asset.url, { signal: AbortSignal.timeout(15000), headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/octet-stream' } });
+  assert(raw.ok, `Cannot read production promotion manifest: HTTP ${raw.status}`);
   const bytes = Buffer.from(await raw.arrayBuffer());
   assert(`sha256:${sha256(bytes)}` === asset.digest, 'Published promotion manifest digest mismatch');
   const current = JSON.parse(bytes);
-  assert(current.docsCommit === version.docsCommit && current.languageCommit === version.languageCommit, 'Production release manifest and live identity disagree');
+  assert(current.schemaVersion === 1 && current.channel === 'production' && current.dirty === false && DIGEST.test(current.siteArchiveSha256) && DIGEST.test(current.versionSha256), 'Invalid published promotion manifest');
+  for (const key of ['docsCommit', 'languageCommit', 'languageVersion']) assert(current[key] === identity[key], `Production release manifest and live identity disagree: ${key}`);
   return current;
+}
+
+async function deploymentHistory(policy) {
+  const items = [];
+  for (let page = 1; page <= 20; page++) {
+    const batch = await github(`/repos/${policy.repository}/deployments?environment=github-pages&per_page=100&page=${page}`);
+    assert(Array.isArray(batch), 'Invalid deployment history');
+    items.push(...batch);
+    if (batch.length < 100) return items;
+  }
+  throw new Error('Deployment history exceeds verification limit; cannot establish production baseline');
+}
+
+async function pagesStatus(policy, sha) {
+  assert(SHA.test(sha), 'Pages receipt requires an immutable workflow SHA');
+  return (await github(`/repos/${policy.repository}/pages/deployments/${sha}`)).status;
+}
+
+// Environment deployment states describe the enclosing job, not the Pages
+// operation. A successful Pages action remains evidence if later checks fail.
+// Resolve its authenticated job/run before accepting that partial-success state.
+async function verifiedPagesReceipt(policy, item, states, docsCommit) {
+  if (item.environment !== 'github-pages' || !SHA.test(item.sha) || !['main', 'refs/heads/main'].includes(item.ref)) return false;
+  const prefix = `https://github.com/${policy.repository}/actions/runs/`;
+  const link = states.find((state) => state.log_url?.startsWith(prefix))?.log_url;
+  const ids = link?.slice(prefix.length).match(/^(\d+)\/job\/(\d+)$/);
+  if (!ids) return false;
+  const job = await github(`/repos/${policy.repository}/actions/jobs/${ids[2]}`);
+  if (job.id !== Number(ids[2]) || job.run_id !== Number(ids[1]) || job.head_sha !== item.sha || !Number.isSafeInteger(job.run_attempt) || job.run_attempt < 1) return false;
+  if (!job.steps?.some((step) => (step.name === 'Deploy verified Pages artifact' || /^Run actions\/deploy-pages@[a-f0-9]{40}$/.test(step.name)) && step.status === 'completed' && step.conclusion === 'success')) return false;
+  const run = await github(`/repos/${policy.repository}/actions/runs/${job.run_id}/attempts/${job.run_attempt}`);
+  const recovery = run.path === '.github/workflows/docs-recover-pages.yml';
+  const trusted = recovery || run.path === '.github/workflows/docs-release-pages.yml' || (run.path === policy.nativePublisher.workflowPath && run.workflow_id === policy.nativePublisher.workflowId);
+  if (!trusted || run.id !== job.run_id || run.run_attempt !== job.run_attempt || run.repository?.full_name !== policy.repository || run.head_sha !== item.sha || run.head_branch !== policy.productionBranch || run.event !== 'workflow_dispatch') return false;
+  // Recovery code may run at a newer SHA than the archived docs it promotes.
+  if (docsCommit && !recovery && item.sha !== docsCommit) return false;
+  return await pagesStatus(policy, item.sha) === 'succeed';
+}
+
+export async function fetchCurrent(policy) {
+  assertPublicationPolicy(policy);
+  const deployments = await deploymentHistory(policy);
+  const response = await fetch(`${policy.origin}/version.json`, { signal: AbortSignal.timeout(15000), cache: 'no-store', redirect: 'error' });
+  assert(response.ok || response.status === 404, `Cannot observe production identity: HTTP ${response.status}`);
+  const versionBytes = response.ok ? Buffer.from(await response.arrayBuffer()) : null;
+  const version = versionBytes ? JSON.parse(versionBytes) : null;
+  if (response.ok) assert(version && typeof version === 'object' && !Array.isArray(version), 'Production identity must be an object');
+  const current = version && await publishedPromotion(policy, version);
+  if (current) assert(sha256(versionBytes) === current.versionSha256, 'Live version bytes differ from the published promotion manifest');
+  let completedEnvironment = false;
+  for (const item of deployments) {
+    const states = await github(`/repos/${policy.repository}/deployments/${item.id}/statuses`);
+    completedEnvironment ||= states.some((state) => state.state === 'success');
+    if (await verifiedPagesReceipt(policy, item, states, version?.docsCommit)) {
+      assert(current, 'Pages deployment succeeded but production identity is HTTP 404');
+      return current;
+    }
+  }
+  if (response.status === 404 && !completedEnvironment) return null;
+  throw new Error(`Production identity HTTP ${response.status} has no matching authenticated successful Pages deployment; environment job success alone is insufficient`);
+}
+
+const liveRoutes = new Map([['/', 'index.html'], ['/docs/spec/', 'docs/spec/index.html'], ['/docs/cli/', 'docs/cli/index.html'], ['/pagefind/pagefind.js', 'pagefind/pagefind.js']]);
+
+export async function verifyDeployment(policy, expected, { deploymentSha, attempts = 12, intervalMs = 5000, timeoutMs = 120000 } = {}) {
+  assertPublicationPolicy(policy);
+  const published = await publishedPromotion(policy, expected);
+  assert(stableJSON(published) === stableJSON(expected), 'Expected promotion differs from its immutable published manifest');
+  if (deploymentSha) {
+    assert(deploymentSha === process.env.GITHUB_SHA && SHA.test(deploymentSha), 'Deployment SHA must match the current workflow SHA');
+    const status = await pagesStatus(policy, deploymentSha);
+    assert(status === 'succeed', `Pages deployment ${deploymentSha} did not succeed: ${status}`);
+  } else {
+    const current = await fetchCurrent(policy);
+    assert(current && stableJSON(current) === stableJSON(expected), 'Deployed identity is not the validated artifact');
+  }
+  assert(Number.isInteger(attempts) && attempts > 0 && Number.isFinite(intervalMs) && intervalMs >= 0 && Number.isFinite(timeoutMs) && timeoutMs > 0, 'Invalid production verification retry budget');
+  const checks = [['/version.json', expected.versionSha256], ...[...liveRoutes].map(([path, file]) => {
+    const entries = expected.files?.filter((entry) => entry.path === file) || [];
+    assert(entries.length === 1 && DIGEST.test(entries[0].sha256), `Promotion lacks representative route: ${path}`);
+    return [path, entries[0].sha256];
+  })];
+  const deadline = performance.now() + timeoutMs;
+  let observation = 'No HTTP observations';
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    let complete = true;
+    for (const [path, digest] of checks) {
+      const remaining = Math.ceil(deadline - performance.now());
+      if (remaining <= 0) { complete = false; break; }
+      let response, bytes;
+      try {
+        response = await fetch(policy.origin + path, { signal: AbortSignal.timeout(Math.min(15000, remaining)), redirect: 'error', cache: 'no-store' });
+        if (response.ok) bytes = Buffer.from(await response.arrayBuffer());
+      } catch (error) { observation = `${path}: ${error.message}`; complete = false; break; }
+      assert(response.ok || [404, 429].includes(response.status) || response.status >= 500, `Production route refused: ${path}, HTTP ${response.status}`);
+      const actual = bytes && sha256(bytes);
+      if (actual !== digest) {
+        observation = `${path}: HTTP ${response.status}, expected sha256 ${digest}, observed ${actual || 'unavailable'}`;
+        complete = false; break;
+      }
+    }
+    if (complete) return;
+    if (attempt === attempts || performance.now() >= deadline) break;
+    console.error(`Waiting for production content (${attempt}/${attempts}): ${observation}`);
+    await new Promise((done) => setTimeout(done, Math.max(0, Math.min(intervalMs, deadline - performance.now()))));
+  }
+  throw new Error(`Production verification exhausted its retry budget for docs ${expected.docsCommit}: ${observation}`);
 }
 
 export async function documentationFiles(manifest, archive, nativePath, manifestPath) {
@@ -538,7 +635,9 @@ async function main() {
     // Dispatch inputs are strings; preserve an explicit empty-production baseline
     // instead of falling back to the retained manifest's original digest.
     const expectedDigest = expected === 'null' ? null : expected;
-    console.log(stableJSON(guardPromotion({ mode: options.mode, desiredDigest: manifest.siteArchiveSha256, currentDigest: current?.siteArchiveSha256 ?? null, expectedCurrentDigest: expectedDigest, currentDocsCommit: current?.docsCommit, desiredDocsCommit: manifest.docsCommit, isDescendant: descendant })));
+    const plan = stableJSON(guardPromotion({ mode: options.mode, desiredDigest: manifest.siteArchiveSha256, currentDigest: current?.siteArchiveSha256 ?? null, expectedCurrentDigest: expectedDigest, currentDocsCommit: current?.docsCommit, desiredDocsCommit: manifest.docsCommit, isDescendant: descendant }));
+    if (options.output) await writeFile(options.output, plan, { flag: 'wx' });
+    console.log(plan);
   } else if (command === 'fetch-current') {
     const policy = await json(options.policy);
     await writeFile(options.output, stableJSON(await fetchCurrent(policy)));
@@ -546,9 +645,7 @@ async function main() {
     await publishDocs(await json(options.policy), await json(options.manifest), options.archive, options.native, options.manifest, options.dist);
   } else if (command === 'postdeploy') {
     const policy = await json(options.policy), expected = await json(options.manifest);
-    const current = await fetchCurrent(policy);
-    assert(current?.siteArchiveSha256 === expected.siteArchiveSha256 && current.docsCommit === expected.docsCommit, 'Deployed identity is not the validated artifact');
-    for (const path of ['/', '/docs/spec/', '/docs/cli/', '/pagefind/pagefind.js']) { const response = await fetch(policy.origin + path, { redirect: 'error', cache: 'no-store' }); assert(response.ok, `Production route failed: ${path}`); }
+    await verifyDeployment(policy, expected, { deploymentSha: options['deployment-sha'] });
     console.log('Production version and representative routes verified');
   } else throw new Error('Usage: release.mjs verify-native|plan|seal-site|verify-promotion|guard-promotion|fetch-current with explicit file arguments; see DEPLOYMENT.md');
 }

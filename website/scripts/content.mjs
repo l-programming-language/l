@@ -43,11 +43,17 @@ export function validateMap(map) {
 
 export function validateStdlib(index, pages, semanticEntries) {
   if (index.format !== 1 || !index.languages || typeof index.languages !== 'object') throw new Error('Unsupported stdlib index format.');
+  const exports = semanticEntries.filter((entry) => entry.kind === 'stdlib-export');
+  for (const entry of exports) {
+    const owner = entry.dictionary;
+    if (!owner || !Object.hasOwn(index.languages, owner.lexicon) || !Object.hasOwn(index.languages[owner.lexicon], owner.key)) throw new Error(`Invalid reviewed dictionary owner: ${entry.id ?? entry.name}`);
+    if (!Array.isArray(entry.sources) || !entry.sources.includes(index.languages[owner.lexicon][owner.key].entry)) throw new Error(`Missing reviewed dictionary source: ${entry.id ?? entry.name}`);
+  }
   const dictionaries = [];
   for (const [language, entries] of Object.entries(index.languages).sort()) {
     for (const [key, entry] of Object.entries(entries).sort()) {
       if (!/^[a-z0-9-]+$/.test(language) || !/^[a-z0-9-]+$/.test(key) || !entry.entry || !entry.dictionary) throw new Error(`Invalid indexed dictionary: ${language}/${key}`);
-      const reviewed = semanticEntries.filter((x) => x.kind === 'stdlib-export' && x.sources.includes(entry.entry));
+      const reviewed = exports.filter((x) => x.dictionary.lexicon === language && x.dictionary.key === key);
       if (reviewed.some((x) => !['namespace', 'public', 'private'].includes(x.visibility))) throw new Error(`Missing reviewed export visibility for ${language}/${key}.`);
       if (reviewed.some((x) => x.visibility === 'namespace' && x.support === 'internal')) {
         if (reviewed.some((x) => x.support !== 'internal')) throw new Error(`Internal dictionary ${language}/${key} has conflicting public documentation classifications.`);

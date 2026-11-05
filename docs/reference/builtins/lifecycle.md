@@ -40,13 +40,9 @@ Error identifies the selected operation or invocation failure. Build/Stop can se
 
 ## Show
 
-Show writes Text exactly and formats supported runtime values without adding LF. Direct App and Error display rejects. Show a target's Output only when it is available. It does not replay other targets' streams. This distinguishes it from imported IO.Print, which appends one LF inside its native action.
+Show writes Text exactly and formats supported runtime values without adding LF. Direct App and Error display rejects. Show a target's Output only when it is available. It does not replay other targets' streams. This distinguishes it from imported IO.Print, whose source composition appends one LF after the payload succeeds.
 
-The maintained basic program uses Execute then Show:
-
-<!-- example:basic -->
-
-Its expected stdout is `Hello World!` followed by LF, because Print supplied that newline. The linked fixture records its expected output.
+The [first program](../../guide/first-program.md) uses Execute then Show. Its stdout is `Hello World!` followed by LF, supplied by Print.
 
 ## Exit
 

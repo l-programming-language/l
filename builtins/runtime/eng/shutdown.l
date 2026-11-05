@@ -129,7 +129,7 @@ Create "Outcome" as a New Mutable Binding of a New Absent.
 Create "Notification" as a New Storage.Editable Storage's Borrower of Receiver.
 Create "Destination" as a New Storage.Editable Storage's Borrower of Outcome.
 Runtime.Repeat a New Process for Runtime.Halting a New Runtime's Completion of a New Runtime's Listener of Notification and Destination.
-Dispose Receiver.
+Storage.Release Receiver.
 Create "Optional" as a New Runtime's Taker of Destination.
 Return a New Contents of Optional and `completed shutdown`.
 

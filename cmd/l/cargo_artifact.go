@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"syscall"
 
 	"github.com/l-programming-language/l/lerrors"
 )
@@ -80,6 +81,12 @@ func copyCargoArtifact(source, destination string) (resultErr error) {
 	if err != nil {
 		return lerrors.IO.Wrap(err, "read Cargo artifact")
 	}
+	// Close-on-exec does not prevent a concurrent fork from inheriting this
+	// writer until that child reaches exec. Keep the entire writer lifetime
+	// outside forks so an immediately launched artifact cannot see ETXTBSY.
+	// A read lock still allows independent artifact copies to proceed together.
+	syscall.ForkLock.RLock()
+	defer syscall.ForkLock.RUnlock()
 	file, err := os.OpenFile(destination, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0700)
 	if err != nil {
 		return lerrors.IO.Wrap(err, "publish Cargo artifact")

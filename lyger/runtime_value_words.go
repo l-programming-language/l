@@ -182,6 +182,7 @@ func (e *orchestrationEmitter) storeRuntimeValue(slot *orchestrationStorage, val
 }
 
 func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) ([]string, error) {
+	selection := selectedRuntimeUpdate(current)
 	target, err := e.value(current.Target)
 	if err != nil {
 		return nil, err
@@ -196,7 +197,7 @@ func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) 
 		if err = e.borrowArgument(args, "Pointer", false); err != nil {
 			return nil, err
 		}
-		_, err = e.resultBinding("Storage.Pointer.Update", args)
+		_, err = e.resultBinding(selection.Word, args)
 		return nil, err
 	}
 	snapshot, err := e.copyValue(target)
@@ -207,7 +208,7 @@ func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) 
 	if err != nil {
 		return nil, err
 	}
-	word := "Storage.List.Append"
+	word := selection.Word
 	args["List"] = definitionReferenceArgument(mutable)
 	if current.Key != nil {
 		key, err := e.transferRuntimeValue(current.Key, current.Key.RuntimeType)
@@ -215,12 +216,10 @@ func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) 
 			return nil, err
 		}
 		if target.kind == valueMap {
-			word = "Storage.Map.Update"
 			delete(args, "List")
 			args["Map"] = definitionReferenceArgument(mutable)
 			args["Key"] = definitionReferenceArgument(key)
 		} else {
-			word = "Storage.List.Update"
 			args["Index"] = definitionReferenceArgument(key)
 		}
 	}

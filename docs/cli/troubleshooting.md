@@ -18,7 +18,7 @@ For source-backed definitions, check typed placeholders, literal delimiters and 
 
 ## Cargo and publication
 
-Check `cargo +1.98.1 --version`, then follow [dependency preparation](installation.md#rust-dependency-preparation) for missing offline packages. Preserve the retained locks. A Rust diagnostic after successful L parsing can indicate an invalid native fragment; source generation alone does not establish a successful build.
+Check `cargo +1.98.1 --version`, then follow [dependency preparation](installation-options.md#rust-dependency-preparation) for missing offline packages. Preserve the retained locks. A Rust diagnostic after successful L parsing can indicate an invalid native fragment; source generation alone does not establish a successful build.
 
 Publication rejects unrelated existing destinations and symlinked companion directories. Choose a new output directory or inspect ownership; do not delete an unknown directory to make a build succeed. Keep a working executable and its companion generations together. The compiler intentionally retains previous generations for running processes.
 

@@ -181,12 +181,16 @@ func (e *orchestrationEmitter) functionOperation(function *sourceFunction, membe
 		return nil, lerrors.InvalidConfiguration.Errorf("Function requires its %s composition", member)
 	}
 	if member == "Yield" || member == "Exit" {
-		name := "lSuccess"
-		if member == "Exit" {
-			name = "lExit"
+		if len(e.compilation.definitionTemporaries) == 0 {
+			defer e.compilation.definitionScope()()
 		}
 		if function.Return == nil {
 			return nil, lerrors.InvalidConfiguration.Errorf("Function requires its Return composition")
+		}
+		name := e.compilation.definitionLabel()
+		bindings["Name"] = definitionReferenceArgument(name)
+		if member == "Yield" {
+			bindings["Value"] = definitionReferenceArgument(name)
 		}
 		returned, err := e.compilation.instantiateDefinition(function.Return, map[string]DefinitionArgument{"Statement": definitionReferenceArgument(name)})
 		if err != nil {
@@ -263,7 +267,12 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		if err != nil {
 			return nil, err
 		}
+		// This composes an alternative for Storage.Invoke; it is not an eager
+		// execution of that alternative. The selected wrapper retains its
+		// dependency, while contract tracing observes the wrapper boundary.
+		e.contractValueDepth++
 		exit, err := e.functionOperation(returnContract, "Exit", map[string]DefinitionArgument{"Value": definitionReferenceArgument(stopped)})
+		e.contractValueDepth--
 		if err != nil {
 			return nil, err
 		}
@@ -311,6 +320,7 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 
 func (e *orchestrationEmitter) constructFunction(current *orchestrationInstruction) ([]string, error) {
 	function := current.Function
+	defer e.compilation.withDefinitionReturn(functionReturnContext(function.Source))()
 	captureTypes, captures, err := e.captureEnvironment(function.Captures, function.CaptureHandles)
 	if err != nil {
 		return nil, err
