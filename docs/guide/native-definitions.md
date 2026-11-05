@@ -1,37 +1,39 @@
 # Write native-backed definitions
 
-Build words from existing words, with logemes supplying small target-specific foundations. Native leaves must obey the target's type, ownership and lifetime contracts.
+Compose behavior in L and use native leaves for individual target operations. A leaf can perform one call, operator, constructor, borrow/projection or bounded pattern/binding. Keep branching, iteration, sequencing and error policy in the words that compose those leaves.
 
 ## Start from the existing foundation
 
-The [core](../../builtins/eng/core.l) defines Function through a logeme composition. Objective builds on Function; Main and Basic compose the entry structure. Function bodies use Process and the selected Return member. These words are already available without import.
+The implicit [core](../../builtins/eng/core.l) supplies Process, Function, Objective, Main and Basic. [IO](../stdlib/eng/io.md) adds reusable byte operations through an explicit import. This excerpt shows how its Send Function separates byte projection from writing:
 
-[IO.Print](../../stdlib/eng/io/dictionary.l) follows the same pattern: it composes typed Render functions with Write. Extend vocabulary through reusable nouns, verbs and descriptors before introducing a native leaf.
+<!-- example:source-send -->
+
+Borrowed names the byte view produced from Payload. Deliverer performs one `write_all` call with Writer and Borrowed; Return passes its IO Result to the caller. Send adds no newline, lock or panic policy. Its native signature borrows the writer exclusively and the payload through a shared reference. Rust checks those ownership requirements.
+
+This dictionary fragment requires its helpers and a native caller. `Storage.Routine` accepts explicit native generic parameters: `W` and `P` are supplied type atoms, not inferred by Generic. See the [definition contract](../spec/definitions.md#process-function-and-return).
+
+## Compose a wrapper
+
+<!-- example:source-lined -->
+
+Lined describes IO's Sender through the private Terminate Function. In its rule, `any IO's Sender` denotes the retained base invocation, and `any Thing` forwards its writer. The base result becomes Receipt. Result.Select runs the newline send only after payload success; failure returns through the other Process. The wrapper keeps the same writer rather than acquiring another handle.
+
+Callers import the public Send/Lined words; Terminate remains an implementation dependency. `New IO.Lined IO's Sender` evaluates the original operands once and preserves their ownership. A wrapper may use those references; it cannot silently clone a consumed payload. The [IO contract](../stdlib/eng/io.md#explicit-byte-output) owns exact newline, partial-write and failure behavior.
+
+Keep each policy at the level that owns it. IO.Print composes rendering, writer/guard acquisition, Lined sending and an explicit fail-fast result check. A reusable Send leaves those choices to its caller.
 
 ## Typed slots cross an encoding boundary
 
-The retained ProbeIO fixture illustrates a small native leaf exposed through a dictionary:
+Native definitions use one complete backtick-delimited `<DEF>…<DEF>` frame. [Typed slots](../spec/definitions.md#typed-slots) bind checked values, names, types or compositions into approved AML fields. A Label names a result, a Type supplies a native type atom, and `<@Process@>` carries an instantiated body. These roles are not interchangeable text substitutions.
 
-<!-- example:native-dictionary-definition -->
-
-Log declares its inflections; Logger is its constructed form. `<DEF>…<DEF>` frames the logeme body. `BOD^E` supplies a bounded native statement, not an alternative place to implement composed language behavior.
-
-Its caller imports the dictionary member and supplies App-body work:
-
-<!-- example:native-dictionary-use -->
-
-This excerpt requires sibling `probe.l`; the [complete caller](../../cmd/l/test/runnable_service/basic.l) ends with Build, Run, Await and Show. The probe writes exact Text bytes; public IO.Print adds a newline.
-
-`<@Output|Thing@>` declares a typed argument; this leaf's `.as_bytes()` call requires Text. `<@Process@>` instead binds an instantiated definition. See [typed slots](../spec/definitions.md#typed-slots) for the supported kinds.
-
-Text receives protected Rust quoting; Number uses finite binary64 encoding. Preserve literal bytes and use definition composition for executable behavior.
+Text receives protected native quoting and Number uses finite binary64 encoding. Preserve source bytes and explicit move/borrow behavior. The retained [ProbeIO fixture](../../cmd/l/test/runnable_service/probe.l) and its [caller](../../cmd/l/test/runnable_service/basic.l) witness framing and dictionary binding; its combined stdout/write/unwrap expression is not the decomposition pattern used above.
 
 ## Read a complete backend witness
 
-The [declaration/evaluation witness](../../logiceme/testdata/lucid/declaration-evaluation.aml.txt) shows the AML backend interface. [Alphabet and composition](../reference/logemes/alphabet.md) explains its glyphs and grouping. Generation returns a source bundle; native compilation and execution are separate steps.
+The [declaration/evaluation witness](../../logiceme/testdata/lucid/declaration-evaluation.aml.txt) shows the backend interface; [alphabet and composition](../reference/logemes/alphabet.md) explains its glyphs. Generation, native compilation and execution are separate checks. A compiled library fragment still needs its caller.
 
 ## Stay inside the approved surface
 
-The eighteen Rust segments are frozen. Lifetime/generic inputs are glyph-local native interiors, not L generics, Func/Prop/Op fields or inherited defaults. Rust rejects Deferred metadata; scheduling supplies no automatic deferred cleanup.
+Use existing syllables and interfaces; the eighteen Rust segments are frozen. Lifetime/generic inputs are glyph-local native interiors, not Func/Prop/Op fields or inherited defaults. Do not hide algorithms, executable Function bodies or closures in Statement, EA or opaque native helpers. Functions construct, invoke and return through selected definitions. Rust rejects Deferred metadata; scheduling supplies no automatic deferred cleanup.
 
-Compose within the existing [definition](../spec/definitions.md), [builtin](../../builtins/CONTRACTS.md), [Rust](../../builtins/README.md) and [AML](../../logiceme/AML.md) contracts.
+The [builtin](../../builtins/CONTRACTS.md), [Rust](../../builtins/README.md) and [AML](../../logiceme/AML.md) contracts define the available native surface.

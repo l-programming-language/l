@@ -49,9 +49,7 @@ A subject identifies what is being defined or acted upon; an object supplies the
 
 ### Read a complete sentence in context
 
-The basic demo gives those grammatical roles a concrete meaning:
-
-<!-- example:basic -->
+The [complete first program](../guide/first-program.md#read-the-program) gives those grammatical roles a concrete meaning:
 
 | Source phrase | Role in this program |
 | --- | --- |
@@ -61,7 +59,7 @@ The basic demo gives those grammatical roles a concrete meaning:
 | `Execute Hello` | Imperative source-action call with Hello as its argument |
 | `Hello's Output` | Member access, used here as the operand of Show |
 
-`The App` associates Print with the App's generated body. The outer Execute and Show sentences control execution and display its result. Reading the words as a grammatical sentence does not erase that ownership distinction. The complete example has an existing runtime witness, which was not executed for this website build.
+`The App` associates Print with the App's generated body. The outer Execute and Show sentences control execution and display its result. Grammatical form does not erase that ownership distinction.
 
 ## Phrases
 

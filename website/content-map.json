@@ -56,7 +56,7 @@
       "source": "docs/guide/definitions.md",
       "route": "/docs/guide/definitions/",
       "title": "Definitions",
-      "description": "Define vocabulary, typed actions and Functions.",
+      "description": "Build reusable words from small actions, Functions, scoped Processes and descriptors.",
       "section": "Learn L",
       "order": 4,
       "role": "explanatory",
@@ -565,7 +565,7 @@
       "source": "docs/stdlib/eng/io.md",
       "route": "/docs/stdlib/eng/io/",
       "title": "IO",
-      "description": "IO.Print arguments, output formatting and failure behavior.",
+      "description": "Value printing, borrowed byte output, line completion and IO failures.",
       "section": "Libraries",
       "order": 1,
       "role": "explanatory",
@@ -579,6 +579,16 @@
       "section": "Internals",
       "order": 0,
       "role": "explanatory",
+      "generated": false
+    },
+    {
+      "source": "docs/internals/storage.md",
+      "route": "/docs/internals/storage/",
+      "title": "Storage compositions",
+      "description": "Internal source words for results, traversal, returns, ownership and bytes.",
+      "section": "Internals",
+      "order": 1,
+      "role": "implementation",
       "generated": false
     },
     {
@@ -612,10 +622,10 @@
       "generated": false
     },
     {
-      "source": "docs/contracts-implementation.md",
-      "route": "/docs/internals/contracts-implementation/",
-      "title": "Contracts implementation evidence",
-      "description": "Revision-specific contracts implementation progress, validation records, and supported scope.",
+      "source": "docs/contracts-evidence.md",
+      "route": "/docs/internals/contracts-evidence/",
+      "title": "Contracts evidence",
+      "description": "Historical validation pointers, source identities and evidence availability.",
       "section": "Internals",
       "order": 13,
       "role": "implementation",

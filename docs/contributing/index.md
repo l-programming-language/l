@@ -12,7 +12,7 @@ Edit the canonical Markdown linked by a page's source attribution. Language or A
 
 ## Preserve the contract
 
-Follow [AGENTS.md](../../AGENTS.md) and the [development policy](../development-harness.md), including the local validation pause. Documentation changes do not authorize compiler changes, fixture or expected-byte updates, frozen-template changes, or weakened tests. Investigate prose/implementation mismatches at their source.
+Follow [AGENTS.md](../../AGENTS.md) and the [development policy](../development-harness.md), including task validation authorization. Documentation changes do not authorize compiler changes, fixture or expected-byte updates, frozen-template changes, or weakened tests. Investigate prose/implementation mismatches at their source.
 
 ## Review the result readers receive
 

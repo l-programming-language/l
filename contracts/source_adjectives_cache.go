@@ -4,27 +4,19 @@ package contracts
 // must resolve and project the source first. Current provenance and lowering
 // obligations are always refreshed, even when semantic projection is unchanged.
 func (session *Session) VerifySourceAdjective(projection SourceAdjectiveProjection, declaration SourceTransformerDeclaration, options AnalysisOptions) (SourceAdjectiveCertificate, error) {
-	options = sourceLogicalOptions(options)
+	options = options.logical()
 	logicalProjection := projection
 	logicalProjection.Dependencies = nil
 	logicalProjection.LoweringObligations = nil
 	if logicalProjection.Environment != "" {
 		logicalProjection.Environment = "current-binding-revalidated"
 	}
-	key := LogicalCacheKey{Schema: SchemaVersion, Meaning: projection.Meaning, Specification: StableID("source-declaration", declaration), Substitutions: StableID("source-semantics", logicalProjection), FacetSchemas: "source-structure-only/1", RoleInterfaces: StableID("source-nominal", projection.TargetNominal), Rules: SourceProjectionVersion + ":" + AnalyzerVersion, TargetModel: "source_elaboration", Dependencies: map[string]string{"analysis-options": StableID("options", options)}}
-	var certificate SourceAdjectiveCertificate
-	found, err := session.LoadLogical(key, &certificate)
+	key := logicalCacheKey{Schema: SchemaVersion, Meaning: projection.Meaning, Specification: StableID("source-declaration", declaration), Substitutions: StableID("source-semantics", logicalProjection), FacetSchemas: "source-structure-only/1", RoleInterfaces: StableID("source-nominal", projection.TargetNominal), Rules: SourceProjectionVersion + ":" + inferencePolicy, TargetModel: "source_elaboration", Dependencies: map[string]string{"analysis-options": StableID("options", options)}}
+	certificate, err := cachedResult(session, key, func() (SourceAdjectiveCertificate, error) {
+		return VerifySourceAdjective(projection, declaration, options)
+	})
 	if err != nil {
 		return certificate, err
-	}
-	if !found {
-		certificate, err = VerifySourceAdjective(projection, declaration, options)
-		if err != nil {
-			return certificate, err
-		}
-		if err := session.StoreLogical(key, certificate); err != nil {
-			return certificate, err
-		}
 	}
 	certificate.ProjectionFingerprint = StableID("source-projection", projection)
 	certificate.Environment = projection.Environment
@@ -46,27 +38,15 @@ func (session *Session) VerifySourceAdjectiveInstance(projection SourceAdjective
 	logical.Dependencies = nil
 	logical.LoweringObligations = nil
 	logical.ProjectionFingerprint = ""
-	key := ImplementationCacheKey{Schema: SchemaVersion, Logical: StableID("source-logical", logical), Implementation: StableID("source-projection", projection), Target: StableID("source-instance", instance), TrustPolicy: StableID("approved", options.ApprovedAssumptions), Witnesses: StableID("witnesses", options.NativeWitnesses), Dependencies: projection.Dependencies}
+	key := implementationCacheKey{Schema: SchemaVersion, Logical: StableID("source-logical", logical), Implementation: StableID("source-projection", projection), Target: StableID("source-instance", instance), TrustPolicy: StableID("approved", options.ApprovedAssumptions), Witnesses: StableID("witnesses", options.NativeWitnesses), Dependencies: projection.Dependencies}
 	// A supplied certificate is only a dependency check, never cached proof.
 	key.Dependencies = make(map[string]string, len(projection.Dependencies)+1)
 	for name, value := range projection.Dependencies {
 		key.Dependencies[name] = value
 	}
+	key.Dependencies["native-applications"] = StableID("native-applications", options.NativeApplications)
 	key.Dependencies["supplied-certificate"] = StableID("source-certificate", certificate)
-	var result SourceAdjectiveInstantiation
-	found, err := session.LoadImplementation(key, &result)
-	if err != nil {
-		return result, err
-	}
-	if found {
-		return result, nil
-	}
-	result, err = VerifySourceAdjectiveInstance(projection, certificate, declaration, instance, options)
-	if err != nil {
-		return result, err
-	}
-	if err := session.StoreImplementation(key, result); err != nil {
-		return result, err
-	}
-	return result, nil
+	return cachedResult(session, key, func() (SourceAdjectiveInstantiation, error) {
+		return instantiateVerifiedSourceAdjective(projection, verified, certificate, declaration, instance), nil
+	})
 }

@@ -3,7 +3,6 @@ package contracts
 import (
 	"fmt"
 	"reflect"
-	"sort"
 )
 
 type SymbolicActionContract struct {
@@ -52,12 +51,8 @@ func VerifyAdjective(transformer ContractTransformer, options AnalysisOptions) (
 	}
 	plan := transformer.Body
 	plan.Callbacks = make(map[string]Node, len(transformer.Callbacks))
-	names := make([]string, 0, len(transformer.Callbacks))
-	for name := range transformer.Callbacks {
-		names = append(names, name)
-	}
-	sort.Strings(names)
-	for _, name := range names {
+
+	for _, name := range sortedMapKeys(transformer.Callbacks) {
 		contract := transformer.Callbacks[name]
 		certificate.Assumptions = append(certificate.Assumptions, "symbolic callback "+name+":"+StableID("contract", contract))
 		if !contract.EffectsClosed {
@@ -102,38 +97,28 @@ func VerifyAdjective(transformer ContractTransformer, options AnalysisOptions) (
 		certificate.Mode = "instantiation_only"
 		certificate.Obligations = append(certificate.Obligations, facetObligation(transformer.Target, transformer.Origin, Unresolved, "body inspects target internals outside the supported symbolic fragment", Predicate{Kind: "symbolic_body"}))
 	}
-	certificate.Status = obligationStatus(certificate.Obligations)
+	certificate.Status = ObligationStatus(certificate.Obligations)
 	return certificate, nil
-}
-
-func obligationStatus(obligations []Obligation) Status {
-	status := Established
-	for _, obligation := range obligations {
-		if obligation.Status == Contradicted {
-			return Contradicted
-		}
-		if obligation.Status != Established {
-			status = Unresolved
-		}
-	}
-	return status
 }
 
 func checkTransformerSummary(transformer ContractTransformer, summary DerivedSummary) []Obligation {
 	obligations := checkSummaryPromises(summary, RoleOperation{Ensures: transformer.Provides, Profiles: transformer.Profiles}, transformer.Target, transformer.Origin)
 	for callback, expected := range transformer.Demand {
+		want := Predicate{Kind: "multiplicity", Subject: callback, Lower: &expected.Lower, Upper: expected.Upper}
+		if hasWorkCutoff(summary.Unknowns) {
+			obligations = append(obligations, facetObligation(transformer.Target, transformer.Origin, Unresolved, "callback demand analysis was incomplete", want))
+		}
 		for _, path := range summary.Paths {
+			if hasWorkCutoff(path.Unknowns) {
+				continue
+			}
 			actual := demandAt(path.Demand, callback)
-			status, reason := Entails([]Predicate{{Kind: "multiplicity", Subject: callback, Lower: &actual.Lower, Upper: actual.Upper}}, Predicate{Kind: "multiplicity", Subject: callback, Lower: &expected.Lower, Upper: expected.Upper})
-			obligations = append(obligations, facetObligation(transformer.Target, transformer.Origin, status, "callback demand: "+reason, Predicate{Kind: "multiplicity", Subject: callback, Lower: &expected.Lower, Upper: expected.Upper}))
+			status, reason := Entails([]Predicate{{Kind: "multiplicity", Subject: callback, Lower: &actual.Lower, Upper: actual.Upper}}, want)
+			obligations = append(obligations, facetObligation(transformer.Target, transformer.Origin, status, "callback demand: "+reason, want))
 		}
 	}
 	if transformer.Frame != nil {
-		writes := FootprintsFromEffects(summary.Effects)
-		if len(summary.Unknowns) > 0 {
-			writes = append(writes, FrameFootprint{Kind: "unknown", Origin: transformer.Origin})
-		}
-		obligations = append(obligations, CheckFrame(*transformer.Frame, writes, FrameContext{})...)
+		obligations = append(obligations, checkSummaryFrame(*transformer.Frame, summary, transformer.Origin)...)
 	}
 	return obligations
 }
@@ -244,7 +229,7 @@ func InstantiateAdjective(transformer ContractTransformer, certificate Adjective
 		return result, err
 	}
 	result.Obligations = append(result.Obligations, configuration.Obligations...)
-	result.Status = obligationStatus(result.Obligations)
+	result.Status = ObligationStatus(result.Obligations)
 	return result, nil
 }
 
@@ -383,79 +368,4 @@ func rebaseTransformer(value ContractTransformer, target TargetRef) ContractTran
 		value.Rules[i].Consequences = rebasePredicates(value.Rules[i].Consequences, from, target)
 	}
 	return value
-}
-
-type ConstraintLaw struct {
-	Left        MeaningKey  `json:"left"`
-	Right       MeaningKey  `json:"right"`
-	Target      TargetRef   `json:"target"`
-	Kind        string      `json:"kind"`
-	Premises    []Predicate `json:"premises"`
-	Fingerprint string      `json:"fingerprint"`
-}
-
-// ProveConstraintLaw concerns pure conjunction only. It never licenses changing
-// evaluation, construction, wrappers, releases, or any other ordered plan node.
-func ProveConstraintLaw(left, right MeaningKey, target TargetRef, kind string, predicates []Predicate) (ConstraintLaw, error) {
-	if kind != "constraint-commutation" && kind != "constraint-idempotence" {
-		return ConstraintLaw{}, fmt.Errorf("unsupported composition law")
-	}
-	for _, predicate := range predicates {
-		if status, _ := Entails([]Predicate{predicate}, predicate); status != Established {
-			return ConstraintLaw{}, fmt.Errorf("unsupported pure constraint predicate")
-		}
-	}
-	law := ConstraintLaw{Left: left, Right: right, Target: target, Kind: kind, Premises: append([]Predicate(nil), predicates...)}
-	law.Fingerprint = StableID("constraint-law", law)
-	return law, nil
-}
-
-func (law ConstraintLaw) Applies(left, right MeaningKey, target TargetRef, facts []Predicate) bool {
-	copy := law
-	copy.Fingerprint = ""
-	if law.Fingerprint != StableID("constraint-law", copy) || law.Left != left || law.Right != right || TargetRelation(law.Target, target) != Established {
-		return false
-	}
-	status, _ := Entails(facts, Predicate{Kind: "and", Args: law.Premises})
-	return status == Established
-}
-
-// EquivalentElaboration requires the same ordered typed plan after callers
-// explicitly rebase target/resource variables. Equal facet labels are insufficient.
-func EquivalentElaboration(left, right Plan) bool {
-	return reflect.DeepEqual(elaborationWithoutProvenance(left), elaborationWithoutProvenance(right))
-}
-
-func elaborationWithoutProvenance(plan Plan) Plan {
-	var strip func(Node) Node
-	strip = func(node Node) Node {
-		node.ID, node.Origin = "", Origin{}
-		if node.Body != nil {
-			body := strip(*node.Body)
-			node.Body = &body
-		}
-		for _, children := range []*[]Node{&node.Children, &node.Then, &node.Else, &node.Cleanup} {
-			*children = append([]Node(nil), (*children)...)
-			for i := range *children {
-				(*children)[i] = strip((*children)[i])
-			}
-		}
-		node.Effects = append([]Effect(nil), node.Effects...)
-		for i := range node.Effects {
-			node.Effects[i].Origin = Origin{}
-		}
-		return node
-	}
-	plan.Entry = strip(plan.Entry)
-	definitions := make(map[MeaningKey]Node, len(plan.Definitions))
-	for key, node := range plan.Definitions {
-		definitions[key] = strip(node)
-	}
-	plan.Definitions = definitions
-	callbacks := make(map[string]Node, len(plan.Callbacks))
-	for key, node := range plan.Callbacks {
-		callbacks[key] = strip(node)
-	}
-	plan.Callbacks = callbacks
-	return plan
 }

@@ -1,6 +1,9 @@
 package contracts
 
-import "fmt"
+import (
+	"fmt"
+	"maps"
+)
 
 // LoweringStep records a selected typed composition, never Rust source parsed
 // back into purported source semantics. A selection is not execution evidence.
@@ -71,13 +74,7 @@ func CloneInventory(value LoweringInventory) LoweringInventory {
 		step.Target.Path = append([]string(nil), step.Target.Path...)
 		step.Origin.Expansion = append([]int(nil), step.Origin.Expansion...)
 		step.Dependencies = append([]MeaningKey(nil), step.Dependencies...)
-		if step.Arguments != nil {
-			args := make(map[string]string, len(step.Arguments))
-			for k, v := range step.Arguments {
-				args[k] = v
-			}
-			step.Arguments = args
-		}
+		step.Arguments = maps.Clone(step.Arguments)
 	}
 	value.Native = append([]NativeBoundary(nil), value.Native...)
 	for i := range value.Native {
@@ -86,15 +83,10 @@ func CloneInventory(value LoweringInventory) LoweringInventory {
 	}
 	value.Unknowns = append([]UnknownReason(nil), value.Unknowns...)
 	for i := range value.Unknowns {
+		value.Unknowns[i].ExcludedEffects = append([]EffectKind(nil), value.Unknowns[i].ExcludedEffects...)
 		value.Unknowns[i].Components = append([]string(nil), value.Unknowns[i].Components...)
 		value.Unknowns[i].Origin.Expansion = append([]int(nil), value.Unknowns[i].Origin.Expansion...)
 	}
-	if value.Fingerprints != nil {
-		fingerprints := make(map[string]string, len(value.Fingerprints))
-		for k, v := range value.Fingerprints {
-			fingerprints[k] = v
-		}
-		value.Fingerprints = fingerprints
-	}
+	value.Fingerprints = maps.Clone(value.Fingerprints)
 	return value
 }

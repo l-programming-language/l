@@ -42,6 +42,7 @@ type contractRecorder struct {
 	occurrences              map[sourceOccurrenceID]contracts.BindingOccurrenceID
 	targets                  map[*constructionNode]contracts.TargetRef
 	appTargets               map[*App]contracts.TargetRef
+	constructionTargets      []contracts.TargetRef
 	environments             map[*lexicalScope]contracts.BindingEnvironmentKey
 	configurationFingerprint string
 	lowering                 []contracts.LoweringStep
@@ -317,9 +318,12 @@ func (r *contractRecorder) environment(scope *lexicalScope) contracts.BindingEnv
 }
 
 func (r *contractRecorder) prepareIdentities() {
-	if r.identityReady {
-		return
+	if !r.identityReady {
+		r.indexDeclarations()
 	}
+}
+
+func (r *contractRecorder) indexDeclarations() {
 	for _, statement := range r.compilation.Statements {
 		for _, tok := range statement.tokens {
 			if rec := r.compilation.Semantics.Subjects[tok]; rec != nil && r.compilation.Semantics.Aliases[rec] == nil {
@@ -361,22 +365,11 @@ func (r *contractRecorder) binding(tok *token, rec *record, rule *descriptorRule
 	return contracts.ResolvedBinding{Occurrence: contracts.BindingOccurrenceID(contracts.StableID("binding-use", origin)), Definition: r.definition(canonical), Meaning: r.meaning(canonical, rule), Spelling: string(tok.rawBytes), CanonicalName: canonical.ID, LexicalRole: tok.tType, Target: target, Origin: origin, DefinitionOrigin: r.definitionOrigin(canonical), DefinitionEnvironment: r.environment(definitionScope), UseEnvironment: environment, Policy: contracts.TrackAPolicy, SelectionReason: reason, CandidateFingerprint: string(environment), Dependencies: []string{string(environment)}}
 }
 
-func (r *contractRecorder) snapshot() ContractBindings {
+// Construction roots and definition-site identities must already exist when
+// workspace emission and lifecycle projection first ask for an App target.
+func (r *contractRecorder) indexResolvedTargets() {
 	c := r.compilation
-	for _, statement := range c.Statements {
-		for _, tok := range statement.tokens {
-			if rec := c.Semantics.Subjects[tok]; rec != nil && c.Semantics.Aliases[rec] == nil {
-				if r.declarationTokens[rec] == nil {
-					r.declarationTokens[rec] = tok
-				}
-			}
-		}
-	}
-	result := ContractBindings{Policy: contracts.TrackAPolicy, Inputs: make(map[string]string)}
-	for _, source := range c.SourceOrigins {
-		result.Inputs[r.logicalSource(source.Name)] = source.SHA256
-	}
-	result.Inputs["configuration:"+c.Gram.language] = r.configurationIdentity()
+	r.indexDeclarations()
 	var visit func(*constructionNode, contracts.TargetRef)
 	visit = func(node *constructionNode, target contracts.TargetRef) {
 		if node == nil {
@@ -384,7 +377,7 @@ func (r *contractRecorder) snapshot() ContractBindings {
 		}
 		target.Type = node.Nominal
 		r.targets[node] = target
-		result.Targets = append(result.Targets, target)
+		r.constructionTargets = append(r.constructionTargets, target)
 		for index, child := range node.Children {
 			next := target
 			next.Path = append(append([]string(nil), target.Path...), fmt.Sprintf("%s[%d]", child.Nominal, index))
@@ -398,6 +391,19 @@ func (r *contractRecorder) snapshot() ContractBindings {
 		}{r.origin(construction.Root.Source.noun), construction.App.ID})
 		visit(construction.Root, contracts.TargetRef{Root: root, Phase: contracts.Construction})
 		r.appTargets[construction.App] = r.targets[construction.Root]
+	}
+}
+
+func (r *contractRecorder) snapshot() ContractBindings {
+	c := r.compilation
+	result := ContractBindings{Policy: contracts.TrackAPolicy, Inputs: make(map[string]string)}
+	for _, source := range c.SourceOrigins {
+		result.Inputs[r.logicalSource(source.Name)] = source.SHA256
+	}
+	result.Inputs["configuration:"+c.Gram.language] = r.configurationIdentity()
+	for _, target := range r.constructionTargets {
+		target.Path = append([]string(nil), target.Path...)
+		result.Targets = append(result.Targets, target)
 	}
 	for _, statement := range c.Statements {
 		for _, tok := range statement.tokens {
@@ -619,14 +625,10 @@ func (r *contractRecorder) instructionBindings() []contracts.ResolvedBinding {
 // pipeline as Compile while observing its decisions. It never builds or runs an
 // executable. Its returned Compilation retains the actual graph for analysis.
 func (ls *LygerService) ResolveContractBindings(source []byte, path string) (*Compilation, ContractBindings, error) {
-	c := ls.NewCompilation(source, path)
-	if c.Error != nil {
-		return nil, ContractBindings{}, c.Error
+	result, err := ls.CompileForContracts(source, path)
+	if err != nil {
+		return nil, ContractBindings{}, err
 	}
-	c.contractRecorder = newContractRecorder(c)
-	c.Make()
-	if c.Error != nil {
-		return nil, ContractBindings{}, c.Error
-	}
+	c := result.Compilation
 	return c, c.contractRecorder.snapshot(), nil
 }

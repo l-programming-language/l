@@ -70,7 +70,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 | <code>dict</code> | <code>{~} &#124; PHRASE* &#124; CLAUSE*</code> | [Dictionary](../spec/collections-and-categories.md#dictionaries) · partial |
 | <code>argument</code> | <code>ID</code> | [Bound update operands](../spec/collections-and-categories.md#lists) · partial |
 | <code>type_argument</code> | <code>#~#</code> | [Atomic type operands](../spec/collections-and-categories.md#lists) · partial |
-| <code>callable</code> | <code>ID &#124; PHRASE.SIGNATURE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>callable</code> | <code>ID &#124; PHRASE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
 ## phrase.generic
 
@@ -544,7 +544,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>RECEPTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 29](#grammar-note-29) |
+| <code>CLAUSE</code> | <code>RECEPTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -557,7 +557,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>RECEPTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.ACTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 30](#grammar-note-30) |
+| <code>CLAUSE</code> | <code>RECEPTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.ACTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -578,7 +578,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>RECEPTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.APPLICATIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 31](#grammar-note-31) |
+| <code>CLAUSE</code> | <code>RECEPTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.APPLICATIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -591,7 +591,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>REDUCTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 29](#grammar-note-29) |
+| <code>CLAUSE</code> | <code>REDUCTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -604,7 +604,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>REDUCTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.ACTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 30](#grammar-note-30) |
+| <code>CLAUSE</code> | <code>REDUCTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.ACTIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -625,7 +625,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>REDUCTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.APPLICATIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 31](#grammar-note-31) |
+| <code>CLAUSE</code> | <code>REDUCTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.RECEPTIVE.APPLICATIVE &#124; CASE &#124; PHRASE.OBJECTIVE</code> | partial | [Collections](../spec/collections-and-categories.md#lists) | [Note 28](#grammar-note-28) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -638,7 +638,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>ASSOCIATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE &#124; SUBJECT.DEFINITIVE &#124; CASE*</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 32](#grammar-note-32) |
+| <code>CLAUSE</code> | <code>ASSOCIATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE &#124; SUBJECT.DEFINITIVE &#124; CASE*</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 29](#grammar-note-29) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -650,7 +650,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>ASSOCIATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.ACTIVE &#124; SUBJECT.DEFINITIVE &#124; CASE*</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 33](#grammar-note-33) |
+| <code>CLAUSE</code> | <code>ASSOCIATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.ACTIVE &#124; SUBJECT.DEFINITIVE &#124; CASE*</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 30](#grammar-note-30) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -662,7 +662,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>ASSOCIATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.PASSIVE &#124; CASE</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 34](#grammar-note-34) |
+| <code>CLAUSE</code> | <code>ASSOCIATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.PASSIVE &#124; CASE</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 31](#grammar-note-31) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -675,7 +675,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>ASSOCIATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.APPLICATIVE &#124; OBJECT &#124; CASE*</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 35](#grammar-note-35) |
+| <code>CLAUSE</code> | <code>ASSOCIATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.ASSOCIATIVE.APPLICATIVE &#124; OBJECT &#124; CASE*</code> | partial | [Aliases](../spec/names-and-scope.md#aliases-and-canonical-identity) | [Note 32](#grammar-note-32) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -687,7 +687,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>GENERATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE &#124; OBJECT</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 36](#grammar-note-36) |
+| <code>CLAUSE</code> | <code>GENERATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE &#124; OBJECT</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 33](#grammar-note-33) |
 
 ## clause.generative.active
 
@@ -695,7 +695,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>GENERATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE.ACTIVE &#124; OBJECT</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 37](#grammar-note-37) |
+| <code>CLAUSE</code> | <code>GENERATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE.ACTIVE &#124; OBJECT</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 34](#grammar-note-34) |
 
 ## clause.generative.passive
 
@@ -703,7 +703,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>GENERATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE.PASSIVE</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 38](#grammar-note-38) |
+| <code>CLAUSE</code> | <code>GENERATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE.PASSIVE</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 35](#grammar-note-35) |
 
 ## clause.generative.applicative
 
@@ -711,7 +711,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>GENERATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 39](#grammar-note-39) |
+| <code>CLAUSE</code> | <code>GENERATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.GENERATIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Build](../spec/execution.md#build-run-stop-and-await) | [Note 36](#grammar-note-36) |
 
 ## clause.executive.imperative
 
@@ -719,7 +719,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>EXECUTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE &#124; OBJECT</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 40](#grammar-note-40) |
+| <code>CLAUSE</code> | <code>EXECUTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE &#124; OBJECT</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 37](#grammar-note-37) |
 
 ## clause.executive.active
 
@@ -727,7 +727,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>EXECUTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE.ACTIVE &#124; OBJECT</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 41](#grammar-note-41) |
+| <code>CLAUSE</code> | <code>EXECUTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE.ACTIVE &#124; OBJECT</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 38](#grammar-note-38) |
 
 ## clause.executive.passive
 
@@ -735,7 +735,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>EXECUTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE.PASSIVE</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 42](#grammar-note-42) |
+| <code>CLAUSE</code> | <code>EXECUTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE.PASSIVE</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 39](#grammar-note-39) |
 
 ## clause.executive.applicative
 
@@ -743,7 +743,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>EXECUTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 43](#grammar-note-43) |
+| <code>CLAUSE</code> | <code>EXECUTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.EXECUTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Run](../spec/execution.md#build-run-stop-and-await) | [Note 40](#grammar-note-40) |
 
 ## clause.suspensive.imperative
 
@@ -751,7 +751,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>SUSPENSIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE &#124; OBJECT</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 44](#grammar-note-44) |
+| <code>CLAUSE</code> | <code>SUSPENSIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE &#124; OBJECT</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 41](#grammar-note-41) |
 
 ## clause.suspensive.active
 
@@ -759,7 +759,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>SUSPENSIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.ACTIVE &#124; OBJECT</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 45](#grammar-note-45) |
+| <code>CLAUSE</code> | <code>SUSPENSIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.ACTIVE &#124; OBJECT</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 42](#grammar-note-42) |
 
 ## clause.suspensive.passive
 
@@ -767,7 +767,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>SUSPENSIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.PASSIVE</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 46](#grammar-note-46) |
+| <code>CLAUSE</code> | <code>SUSPENSIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.PASSIVE</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 43](#grammar-note-43) |
 
 ## clause.suspensive.applicative
 
@@ -775,7 +775,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>SUSPENSIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 47](#grammar-note-47) |
+| <code>CLAUSE</code> | <code>SUSPENSIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.SUSPENSIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Await](../spec/execution.md#continuations-and-activation) | [Note 44](#grammar-note-44) |
 
 ## clause.interruptive.imperative
 
@@ -783,7 +783,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>INTERRUPTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE &#124; OBJECT</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 48](#grammar-note-48) |
+| <code>CLAUSE</code> | <code>INTERRUPTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE &#124; OBJECT</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 45](#grammar-note-45) |
 
 ## clause.interruptive.active
 
@@ -791,7 +791,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>INTERRUPTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.ACTIVE &#124; OBJECT</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 49](#grammar-note-49) |
+| <code>CLAUSE</code> | <code>INTERRUPTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.ACTIVE &#124; OBJECT</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 46](#grammar-note-46) |
 
 ## clause.interruptive.passive
 
@@ -799,7 +799,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>INTERRUPTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.PASSIVE</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 50](#grammar-note-50) |
+| <code>CLAUSE</code> | <code>INTERRUPTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.PASSIVE</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 47](#grammar-note-47) |
 
 ## clause.interruptive.applicative
 
@@ -807,7 +807,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>INTERRUPTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 51](#grammar-note-51) |
+| <code>CLAUSE</code> | <code>INTERRUPTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.INTERRUPTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Stop](../spec/execution.md#build-run-stop-and-await) | [Note 48](#grammar-note-48) |
 
 ## clause.inflective.imperative
 
@@ -815,7 +815,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>INFLECTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 52](#grammar-note-52) |
+| <code>CLAUSE</code> | <code>INFLECTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 49](#grammar-note-49) |
 
 ## clause.inflective.active
 
@@ -823,7 +823,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>INFLECTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE.ACTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 53](#grammar-note-53) |
+| <code>CLAUSE</code> | <code>INFLECTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE.ACTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 50](#grammar-note-50) |
 
 ## clause.inflective.passive
 
@@ -831,7 +831,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>INFLECTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE.PASSIVE</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 54](#grammar-note-54) |
+| <code>CLAUSE</code> | <code>INFLECTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE.PASSIVE</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 51](#grammar-note-51) |
 
 ## clause.inflective.applicative
 
@@ -839,7 +839,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>INFLECTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 55](#grammar-note-55) |
+| <code>CLAUSE</code> | <code>INFLECTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.INFLECTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 52](#grammar-note-52) |
 
 ## clause.deflective.imperative
 
@@ -847,7 +847,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>DEFLECTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 52](#grammar-note-52) |
+| <code>CLAUSE</code> | <code>DEFLECTIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 49](#grammar-note-49) |
 
 ## clause.deflective.active
 
@@ -855,7 +855,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>DEFLECTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.ACTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 53](#grammar-note-53) |
+| <code>CLAUSE</code> | <code>DEFLECTIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.ACTIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 50](#grammar-note-50) |
 
 ## clause.deflective.passive
 
@@ -863,7 +863,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>DEFLECTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.PASSIVE</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 54](#grammar-note-54) |
+| <code>CLAUSE</code> | <code>DEFLECTIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.PASSIVE</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 51](#grammar-note-51) |
 
 ## clause.deflective.applicative
 
@@ -871,7 +871,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>DEFLECTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 55](#grammar-note-55) |
+| <code>CLAUSE</code> | <code>DEFLECTIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.DEFLECTIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Import and export vocabulary](../spec/imports.md#indexed-dictionaries) | [Note 52](#grammar-note-52) |
 
 ## clause.observative.imperative
 
@@ -879,7 +879,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>OBSERVATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE &#124; OBJECT</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 56](#grammar-note-56) |
+| <code>CLAUSE</code> | <code>OBSERVATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE &#124; OBJECT</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 53](#grammar-note-53) |
 
 ## clause.observative.active
 
@@ -887,7 +887,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>OBSERVATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.ACTIVE &#124; OBJECT</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 57](#grammar-note-57) |
+| <code>CLAUSE</code> | <code>OBSERVATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.ACTIVE &#124; OBJECT</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 54](#grammar-note-54) |
 
 ## clause.observative.passive
 
@@ -895,7 +895,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>OBSERVATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.PASSIVE</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 58](#grammar-note-58) |
+| <code>CLAUSE</code> | <code>OBSERVATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.PASSIVE</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 55](#grammar-note-55) |
 
 ## clause.observative.applicative
 
@@ -903,7 +903,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>OBSERVATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 59](#grammar-note-59) |
+| <code>CLAUSE</code> | <code>OBSERVATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.OBSERVATIVE.APPLICATIVE &#124; OBJECT</code> | partial | [Show](../spec/control-flow.md#show-and-output) | [Note 56](#grammar-note-56) |
 
 ## clause.terminative.imperative
 
@@ -911,7 +911,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>TERMINATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE &#124; CASE*</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 60](#grammar-note-60) |
+| <code>CLAUSE</code> | <code>TERMINATIVE.IMPERATIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE &#124; CASE*</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 57](#grammar-note-57) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -924,7 +924,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>TERMINATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE.ACTIVE &#124; CASE</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 61](#grammar-note-61) |
+| <code>CLAUSE</code> | <code>TERMINATIVE.ACTIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE.ACTIVE &#124; CASE</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 58](#grammar-note-58) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -937,7 +937,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>TERMINATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE.PASSIVE &#124; CASE</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 62](#grammar-note-62) |
+| <code>CLAUSE</code> | <code>TERMINATIVE.PASSIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE.PASSIVE &#124; CASE</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 59](#grammar-note-59) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -950,7 +950,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CLAUSE</code> | <code>TERMINATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE.APPLICATIVE &#124; CASE</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 63](#grammar-note-63) |
+| <code>CLAUSE</code> | <code>TERMINATIVE.APPLICATIVE</code> | <code>[ADVERB]* &#124; VERB.TERMINATIVE.APPLICATIVE &#124; CASE</code> | partial | [Exit](../spec/control-flow.md#exit-and-return) | [Note 60](#grammar-note-60) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -963,7 +963,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CONDITION</code> | <code>CONDITION</code> | <code>CASE</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 64](#grammar-note-64) |
+| <code>CONDITION</code> | <code>CONDITION</code> | <code>CASE</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 61](#grammar-note-61) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -983,7 +983,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CONDITIONAL</code> | <code>IF</code> | <code>EVALUATION.CONDITIONAL &#124; [CONDITION] &#124; [CLAUSE.IMPERATIVE]</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 64](#grammar-note-64) |
+| <code>CONDITIONAL</code> | <code>IF</code> | <code>EVALUATION.CONDITIONAL &#124; [CONDITION] &#124; [CLAUSE.IMPERATIVE]</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 61](#grammar-note-61) |
 
 ## conditional.else
 
@@ -991,7 +991,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CONDITIONAL</code> | <code>ELSE</code> | <code>EVALUATION.EXCEPTIONAL &#124; CASE</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 64](#grammar-note-64) |
+| <code>CONDITIONAL</code> | <code>ELSE</code> | <code>EVALUATION.EXCEPTIONAL &#124; CASE</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 61](#grammar-note-61) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1004,7 +1004,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CONDITIONAL</code> | <code>WHILE</code> | <code>EVALUATION.ITERATIVE &#124; [CONDITION] &#124; CLAUSE.IMPERATIVE</code> | rejected | [Iteration rejection](../spec/control-flow.md#iteration-and-collection-operations) | [Note 65](#grammar-note-65) |
+| <code>CONDITIONAL</code> | <code>WHILE</code> | <code>EVALUATION.ITERATIVE &#124; [CONDITION] &#124; CLAUSE.IMPERATIVE</code> | rejected | [Iteration rejection](../spec/control-flow.md#iteration-and-collection-operations) | [Note 62](#grammar-note-62) |
 
 ## conditional.other
 
@@ -1012,7 +1012,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>CONDITIONAL</code> | <code>OTHER</code> | <code>EVALUATION.ALTERNATIVE &#124; [CLAUSE.IMPERATIVE]</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 64](#grammar-note-64) |
+| <code>CONDITIONAL</code> | <code>OTHER</code> | <code>EVALUATION.ALTERNATIVE &#124; [CLAUSE.IMPERATIVE]</code> | partial | [Conditions](../spec/control-flow.md#comparisons) | [Note 61](#grammar-note-61) |
 
 ## predicate.imperative
 
@@ -1020,7 +1020,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>PREDICATE</code> | <code>IMPERATIVE</code> | <code>CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
+| <code>PREDICATE</code> | <code>IMPERATIVE</code> | <code>CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1048,7 +1048,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>PREDICATE</code> | <code>ACTIVE</code> | <code>CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
+| <code>PREDICATE</code> | <code>ACTIVE</code> | <code>CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1076,7 +1076,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>PREDICATE</code> | <code>PASSIVE</code> | <code>VERB.PASSIVE &#124; CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
+| <code>PREDICATE</code> | <code>PASSIVE</code> | <code>VERB.PASSIVE &#124; CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1105,7 +1105,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>PREDICATE</code> | <code>APPLICATIVE</code> | <code>CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
+| <code>PREDICATE</code> | <code>APPLICATIVE</code> | <code>CASE &#124; [CLAUSE]*</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1133,7 +1133,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>PREDICATE</code> | <code>CONDITIONAL</code> | <code>CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
+| <code>PREDICATE</code> | <code>CONDITIONAL</code> | <code>CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1147,7 +1147,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>STATEMENT</code> | <code>OBJECTIVE.IMPERATIVE</code> | <code>CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
+| <code>STATEMENT</code> | <code>OBJECTIVE.IMPERATIVE</code> | <code>CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1175,7 +1175,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>STATEMENT</code> | <code>OBJECTIVE.CONDITIONAL</code> | <code>CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
+| <code>STATEMENT</code> | <code>OBJECTIVE.CONDITIONAL</code> | <code>CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1189,7 +1189,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>STATEMENT</code> | <code>SUBJECTIVE.ACTIVE</code> | <code>SUBJECT &#124; CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
+| <code>STATEMENT</code> | <code>SUBJECTIVE.ACTIVE</code> | <code>SUBJECT &#124; CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1217,7 +1217,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>STATEMENT</code> | <code>SUBJECTIVE.PASSIVE</code> | <code>SUBJECT &#124; CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 66](#grammar-note-66) |
+| <code>STATEMENT</code> | <code>SUBJECTIVE.PASSIVE</code> | <code>SUBJECT &#124; CASE</code> | partial | [Predicates and statements](../spec/grammar.md#predicates-and-statements) | [Note 63](#grammar-note-63) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
@@ -1246,12 +1246,13 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>PHRASE</code> | <code>SIGNATURE</code> | <code>PREPOSITION.CONSIGNMENT.ASSOCIATIVE &#124; CASE</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 67](#grammar-note-67) |
+| <code>PHRASE</code> | <code>SIGNATURE</code> | <code>PREPOSITION.CONSIGNMENT.ASSOCIATIVE &#124; CASE &#124; PHRASE.DIRECTIVE*</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 64](#grammar-note-64) |
 
 | Named case | Sequence | Semantic context |
 | --- | --- | --- |
 | <code>both</code> | <code>NOUN.FUNCTIONAL.INFLECTIVE &#124; PREPOSITION.DEFINEMENT.DEFINITIVE &#124; [SUBJECT.SIGNATURE] &#124; CONJUNCTION.MUTUAL &#124; NOUN.FUNCTIONAL.DEFLECTIVE &#124; PREPOSITION.DEFINEMENT.DEFINITIVE &#124; [OBJECT]</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 | <code>inputs</code> | <code>NOUN.FUNCTIONAL.INFLECTIVE &#124; PREPOSITION.DEFINEMENT.DEFINITIVE &#124; [SUBJECT.SIGNATURE] &#124; CONJUNCTION.MUTUAL &#124; ARTICLE.NONE &#124; NOUN.FUNCTIONAL.DEFLECTIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
+| <code>inputs_only</code> | <code>NOUN.FUNCTIONAL.INFLECTIVE &#124; PREPOSITION.DEFINEMENT.DEFINITIVE &#124; [SUBJECT.SIGNATURE]</code> | [Scoped Process inputs](../reference/builtins/definitions.md#process) · supported |
 | <code>outputs</code> | <code>ARTICLE.NONE &#124; NOUN.FUNCTIONAL.INFLECTIVE &#124; CONJUNCTION.MUTUAL &#124; NOUN.FUNCTIONAL.DEFLECTIVE &#124; PREPOSITION.DEFINEMENT.DEFINITIVE &#124; [OBJECT]</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 | <code>empty</code> | <code>ARTICLE.NONE &#124; NOUN.FUNCTIONAL.INFLECTIVE &#124; CONJUNCTION.MUTUAL &#124; ARTICLE.NONE &#124; NOUN.FUNCTIONAL.DEFLECTIVE</code> | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) · supported |
 
@@ -1261,7 +1262,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>PHRASE</code> | <code>ARGUMENTS</code> | <code>PREPOSITION &#124; [VALUE]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 68](#grammar-note-68) |
+| <code>PHRASE</code> | <code>ARGUMENTS</code> | <code>PREPOSITION &#124; [VALUE]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 65](#grammar-note-65) |
 
 ## phrase.results
 
@@ -1269,7 +1270,7 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Category | Class | Structure | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- |
-| <code>PHRASE</code> | <code>RESULTS</code> | <code>PREPOSITION.DEFINEMENT.DECLARATIVE &#124; [SUBJECT.DECLARATION]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 69](#grammar-note-69) |
+| <code>PHRASE</code> | <code>RESULTS</code> | <code>PREPOSITION.DEFINEMENT.DECLARATIVE &#124; [SUBJECT.DECLARATION]</code> | supported | [Typed Functions](../spec/applicational-types.md#functions-properties-and-operations) | [Note 66](#grammar-note-66) |
 
 ## Support notes
 
@@ -1302,45 +1303,42 @@ This mechanical reference preserves the configured English recognizers. It does 
 | <a id="grammar-note-25"></a>25 | Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
 | <a id="grammar-note-26"></a>26 | Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
 | <a id="grammar-note-27"></a>27 | Put/Place resolve typed runtime updates. Keys, element/field types and ownership cycles are checked; this recognizer does not add iteration or removal. |
-| <a id="grammar-note-28"></a>28 | This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-29"></a>29 | This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-30"></a>30 | This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-31"></a>31 | This configured collection form is not an additional operation API. Use the documented Put/Place and typed-read forms; removal and iteration remain unsupported. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-32"></a>32 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-33"></a>33 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-34"></a>34 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-35"></a>35 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-36"></a>36 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-37"></a>37 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-38"></a>38 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-39"></a>39 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-40"></a>40 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-41"></a>41 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-42"></a>42 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-43"></a>43 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-44"></a>44 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-45"></a>45 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-46"></a>46 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-47"></a>47 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-48"></a>48 | Stop requests termination without joining. Final output still requires the Await contract. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-49"></a>49 | Stop requests termination without joining. Final output still requires the Await contract. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-50"></a>50 | Stop requests termination without joining. Final output still requires the Await contract. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-51"></a>51 | Stop requests termination without joining. Final output still requires the Await contract. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-52"></a>52 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-53"></a>53 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-54"></a>54 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-55"></a>55 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-56"></a>56 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-57"></a>57 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-58"></a>58 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-59"></a>59 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-60"></a>60 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-61"></a>61 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-62"></a>62 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-63"></a>63 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
-| <a id="grammar-note-64"></a>64 | Scalar conditions have specific type constraints. Joined conditions are rejected by outer lowering; no general short-circuit Boolean expression language is established. |
-| <a id="grammar-note-65"></a>65 | The parser recognizes this shape, but outer instruction lowering explicitly rejects while. Rust backend iteration cases do not establish source-language loop support. |
-| <a id="grammar-note-66"></a>66 | This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support. |
-| <a id="grammar-note-67"></a>67 | An ordinary Function signature declares ordered named inputs and ordered result types, or explicit No Inputs/No Outputs. Nested runtime and callable identities remain complete. |
-| <a id="grammar-note-68"></a>68 | Invocation words bind ordered values and prepositional arguments. Argument counts and complete types are checked. |
-| <a id="grammar-note-69"></a>69 | An invocation declares one result name per output, assigned only after the invocation completes. |
+| <a id="grammar-note-28"></a>28 | Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration; recognizing a grammatical form does not establish another operation API. |
+| <a id="grammar-note-29"></a>29 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-30"></a>30 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-31"></a>31 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-32"></a>32 | Association names an existing canonical value or definition. It does not create an independent runtime copy. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-33"></a>33 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-34"></a>34 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-35"></a>35 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-36"></a>36 | Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-37"></a>37 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-38"></a>38 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-39"></a>39 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-40"></a>40 | Run launches the selected process. The grammar does not imply that every applicative category is runnable. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-41"></a>41 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-42"></a>42 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-43"></a>43 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-44"></a>44 | Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-45"></a>45 | Stop requests termination without joining. Final output still requires the Await contract. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-46"></a>46 | Stop requests termination without joining. Final output still requires the Await contract. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-47"></a>47 | Stop requests termination without joining. Final output still requires the Await contract. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-48"></a>48 | Stop requests termination without joining. Final output still requires the Await contract. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-49"></a>49 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-50"></a>50 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-51"></a>51 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-52"></a>52 | Import/Export-style configured vocabulary is not a native outer instruction. The supported Use dictionary/source import path is documented separately. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-53"></a>53 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-54"></a>54 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-55"></a>55 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-56"></a>56 | Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-57"></a>57 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The imperative case is the imperative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-58"></a>58 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The active case is the active grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-59"></a>59 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The passive case is the passive grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-60"></a>60 | Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs. The applicative case is the applicative grammatical structure shown below; it must still satisfy the same semantic binding and lowering boundaries. |
+| <a id="grammar-note-61"></a>61 | Scalar conditions have specific type constraints. Joined conditions are rejected by outer lowering; no general short-circuit Boolean expression language is established. |
+| <a id="grammar-note-62"></a>62 | The parser recognizes this shape, but outer instruction lowering explicitly rejects while. Rust backend iteration cases do not establish source-language loop support. |
+| <a id="grammar-note-63"></a>63 | This wrapper selects a clause or conditional family. Complete statements must consume their associated tokens; a named alternative is not proof of native operational support. |
+| <a id="grammar-note-64"></a>64 | Function signatures declare ordered named inputs and result types, or explicit No Inputs/No Outputs. Structured Process bodies accept typed input bindings without callable outputs. Nested runtime and callable identities remain complete. |
+| <a id="grammar-note-65"></a>65 | Invocation words bind ordered values and prepositional arguments. Argument counts and complete types are checked. |
+| <a id="grammar-note-66"></a>66 | An invocation declares one result name per output, assigned only after the invocation completes. |

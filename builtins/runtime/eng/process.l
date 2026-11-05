@@ -18,7 +18,6 @@ It describes any Runtime's Pinner as `<DEF>MOB{|Key: ~<@Name|Label@>~, Type: ~cr
 Define "Pending" as a New Adjective describing any Function.
 It describes a Generic Function of a New Process of a New Function's Returner of a New Runtime's Pinner of a New Runtime's Future of any Process.
 Define Runtime's "Completion" as `<DEF>COB{|Key: ~<@Name|Label@>~|}^DV{|Key: ~<@Future@>~|}<DEF>`.
-Define "Dispose|-s|-d|--ing|--er" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~std::mem::drop~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Use Storage.Success as "Success".
 Use Storage.Rejection as "Failure".
 Use Storage.Nothing as "Nothing".
@@ -33,7 +32,6 @@ Define Runtime's "Shared" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::s
 Define Runtime's "Weak" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::sync::Arc::downgrade~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Mutex" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::sync::Mutex::new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Ascend|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~upgrade~, Receiver: ~<@Value@>~|}<DEF>`.
-Use Storage.App.Retain as Runtime's "Retain".
 Define Runtime's Handle's "Content" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^Y{|Key: ~Runtime~, Props: ~&[Prop{Key: inner, Value: <@Inner@>}Prop]&~|}<DEF>`.
 Define Runtime's App's "Parent" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.runtime~|}<DEF>`.
 Define Runtime's App's "Admission" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.state~|}<DEF>`.
@@ -76,12 +74,12 @@ Define Runtime's Invocation's "Mark" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: 
 Define Runtime's "Byte" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: as, Operands: &[<@Value@>, u8]&}Op]&~|}<DEF>`.
 Define Runtime's "Fault" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~is_err~, Receiver: ~<@Value@>~|}<DEF>`.
 
-    Create Runtime's "Reject|-s|-ed|-ing|-er" as a Generic Storage.Fallible `reject_result` Storage.Routine with Inputs of "value" as `std::result::Result<T, E>` and Outputs of `E`.
+    Create Runtime's "Reject|-s|-ed|-ing|-er" as a Generic `reject_result` Storage.Routine of `T, E` with Inputs of "value" as `std::result::Result<T, E>` and Outputs of `E`.
 Create "Optional" as a New Runtime's Failure of Value.
 Return a New Contents of Optional and `checked error result`.
 
     Publicly create Runtime's "Copy|--ies|--ied|-ing|--ier" as a Generic `runtime_copy` Function with Inputs of "value" as `&Runtime` and Outputs of Runtime's Handle.
-Return a New Runtime's Handle's Content of a New Runtime's Retainer of a New Runtime's Reference of Value.
+Return a New Runtime's Handle's Content of a New Retainer of a New Runtime's Reference of Value.
 
     Create Runtime's Invocation's "Own|-s|-ed|-ing|-er" as a Generic `invocation_owner` Function with Inputs of "value" as `&Invocation` and Outputs of `Result<Runtime>`.
 Create "Optional" as a New Runtime's Ascender of a New Runtime's Invocation's Parent of Value.
@@ -132,7 +130,7 @@ If Phase isnt One, Return Unit.
 Create "Two" as a New Runtime's Byte of 2.
 Create "Target" as a New Runtime's Invocation's Mark of Guard.
 Runtime.Replace Target and Two.
-Dispose Guard.
+Storage.Release Guard.
 Create "Optional" as a New Runtime's Ascender of a New Runtime's Invocation's App of Value.
 Create "Available" as a New Presence of Optional.
 If Available, Create "App" as a New Contents of Optional and `present invocation App` and then Create "Borrowed" as a New Storage's Borrower of App and then Create "Released" as a New Runtime's App's Releaser of Borrowed and Value.
@@ -145,8 +143,8 @@ Define Runtime's Snapshot's "Status" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: 
 Define Runtime's Snapshot's "Content" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^Y{|Key: ~Snapshot~, Props: ~&[Prop{Key: stdout, Value: <@Output@>}Prop, Prop{Key: stderr, Value: <@Error@>}Prop, Prop{Key: error, Value: <@Fault@>}Prop, Prop{Key: status, Value: <@Status@>}Prop]&~|}<DEF>`.
 
     Publicly create Runtime's Snapshot's "Copy|--ies|--ied|-ing|--ier" as a Generic `snapshot_copy` Function with Inputs of "value" as `&Snapshot` and Outputs of Runtime's Snapshot.
-Create "Stdout" as a New Runtime's Retainer of a New Runtime's Snapshot's Output of Value.
-Create "Stderr" as a New Runtime's Retainer of a New Runtime's Snapshot's Error of Value.
+Create "Stdout" as a New Retainer of a New Runtime's Snapshot's Output of Value.
+Create "Stderr" as a New Retainer of a New Runtime's Snapshot's Error of Value.
 Create "Copied" as a New Storage's Copier of a New Runtime's Snapshot's Fault of Value.
 Create "Status" as a New Runtime's Snapshot's Status of Value.
 Return a New Runtime's Snapshot's Content of Stdout and Stderr and Copied and Status.
@@ -186,11 +184,11 @@ Define Runtime's Invocation's "Content" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^Y{
 Create "Completion" as a New Runtime's Watch of false.
 Create "Done" as a New First of Completion.
 Create "Unused" as a New Second of Completion.
-Dispose Unused.
+Storage.Release Unused.
 Create "Deadline" as a New Runtime's Watch of a New Absent.
 Create "Bound" as a New First of Deadline.
 Create "Unobserved" as a New Second of Deadline.
-Dispose Unobserved.
+Storage.Release Unobserved.
 Create "Channel" as a New Runtime's Channel.
 Create "Requests" as a New First of Channel.
 Create "Receiver" as a New Second of Channel.
@@ -249,11 +247,11 @@ Create "State" as a New Runtime's Mutex of a New Runtime's Initializer.
 Create "Cancellation" as a New Runtime's Watch of false.
 Create "Cancel" as a New First of Cancellation.
 Create "Unobserved" as a New Second of Cancellation.
-Dispose Unobserved.
+Storage.Release Unobserved.
 Create "Completion" as a New Runtime's Watch of a New Absent.
 Create "Done" as a New First of Completion.
 Create "Unused" as a New Second of Completion.
-Dispose Unused.
+Storage.Release Unused.
 Create "Task" as a New Runtime's Mutex of a New Absent.
 Create "Stdout" as a New Runtime.Asynchronous Runtime's Mutex of Output.
 Create "Stderr" as a New Runtime.Asynchronous Runtime's Mutex of Error.
@@ -374,13 +372,13 @@ Use Runtime.Notify as Runtime's Invocation's "Notify".
     Publicly create Runtime's Invocation's "Publish|-es|-ed|-ing|-er" as a Generic `invocation_publish` Function with Inputs of "value" as `&std::sync::Arc<Invocation>` and "snapshot" as `Snapshot` and Outputs of `()`.
 Create "Dependencies" as a New Runtime's Invocation's Dependencies of Value.
 Create "Event" as a New Runtime's Invocation's Publication.
-Create "Retained" as a New Runtime's Retainer of Value.
+Create "Retained" as a New Retainer of Value.
 Runtime.Checkpoint.Enter Dependencies, Event, and Retained.
 Create "Guard" as a New Mutable Binding of a New Locker of a New Runtime's Invocation's Admission of Value.
 Create "Target" as a New Runtime's Invocation's Capture of Guard.
 Create "Wrapped" as a New Present of Snapshot.
 Runtime.Replace Target and Wrapped.
-Dispose Guard.
+Storage.Release Guard.
 Create "Done" as a New Runtime's Invocation's Done of Value.
 Runtime.Invocation.Notify Done and true.
 Return a New Nothing.

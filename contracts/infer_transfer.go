@@ -4,7 +4,7 @@ package contracts
 // stays with the event or already-composed callee summary, never both.
 func (a *inference) observeEffect(p *PathSummary, effect Effect) {
 	switch effect.Kind {
-	case "read", "write", "replace", "release", "allocate", "block", "io", "panic", "spawn", "signal", "wait", "suspend", "retain", "escape", "close":
+	case "read", "write", "replace", "release", "allocate", "block", "io", "panic", "spawn", EffectSignal, "wait", "suspend", "retain", "escape", "close":
 	default:
 		a.unknown(p, Node{Origin: effect.Origin, Phase: effect.Phase}, "unsupported_effect", "typed event has an unsupported effect classification: "+string(effect.Kind))
 	}

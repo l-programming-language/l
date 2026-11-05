@@ -36,13 +36,13 @@ Shared frontend tests also load these fixture paths directly. Source-origin expe
 
 ## Verification
 
-The [local validation pause](../../docs/development-harness.md#temporary-validation-pause)
-requires an explicit request before full package or completion checks. Automatic
-Linux PR validation is authorized for the documented PR events; manual dispatch
-requires explicit authorization. When requested, package-level frontend checks
-use `GOMAXPROCS=4 go test -mod=readonly -count=1 -timeout=10m -json ./lyger`.
+Follow [task validation authorization](../../docs/development-harness.md#validation-authorization)
+without repeated permission requests. Automatic Linux PR validation is authorized
+for the documented PR events; manual dispatch requires explicit authorization.
+Package-level frontend checks use
+`scripts/l-go test -mod=readonly -count=1 -timeout=10m -json ./lyger`.
 Go runs the compiler tests; generated Apps and their orchestrator execute as Rust binaries.
-For full validation, follow the [development guide](../../docs/development-harness.md#full-validation-when-requested):
+For full validation, follow the [development guide](../../docs/development-harness.md#full-validation):
 `scripts/l-check` includes workflow lint, both Go lint profiles, unfiltered
 acceptance and complete tagged native compilation. The
 [implementation ledger](../../testdata/integration/IMPLEMENTATION.md) records

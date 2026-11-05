@@ -86,9 +86,9 @@ Create "Chunk" as a New Storage.Editable Storage's Borrower of Buffer.
 Create "Errors" as a New Storage.Editable Storage's Borrower of Failure.
 Runtime.Repeat a New Process for Runtime.Halting a New Runtime's Completion of
  a New Runtime's Capture's Advancer of Source, Schedule, Writer, Chunk, and Errors.
-Dispose Input.
-Dispose Notifications.
-Dispose Destination.
+Storage.Release Input.
+Storage.Release Notifications.
+Storage.Release Destination.
 Return a New Runtime's Capture's Content of Bytes and Failure.
 
     Publicly create Runtime's Capture's "Read|-s||-ing|-er" as a Generic Runtime.Capture.Readable `capture` Storage.Routine with Inputs of "reader" as `Option<R>` and "deadline" as `tokio::sync::watch::Receiver<Option<tokio::time::Instant>>` and "dependencies" as `std::sync::Arc<dyn crate::runtime::host::Dependencies>` and "stream" as `crate::runtime::host::Stream` and Outputs of `impl std::future::Future<Output=Capture> + Send`.
@@ -97,7 +97,7 @@ Return a New Runtime's Capture's Starter of Adapted, Deadline, Dependencies, and
 
     Create Runtime's Capture's "Follow|-s|-ed|-ing|-er" as a Generic Runtime.Capture.Readable Storage.Routine with Inputs of "value" as `&std::sync::Arc<Invocation>` and "reader" as `Option<R>` and "stream" as `crate::runtime::host::Stream` and Outputs of `tokio::task::JoinHandle<Capture>`.
 Create "Deadline" as a New Runtime's Subscriber of a New Runtime's Invocation's Notification of Value.
-Create "Dependencies" as a New Runtime's Retainer of a New Runtime's Invocation's Dependencies of Value.
+Create "Dependencies" as a New Retainer of a New Runtime's Invocation's Dependencies of Value.
 Return a New Runtime's Spawner of a New Runtime's Capture's Reader of Reader, Deadline, Dependencies, and Stream.
 
     Publicly create Runtime's Capture's "Join|-s|-ed|-ing|-er" as a Generic `captured` Function with Inputs of "result" as `std::result::Result<Capture, tokio::task::JoinError>` and "stream" as `&str` and Outputs of `(std::sync::Arc<[u8]>, Option<Error>)`.

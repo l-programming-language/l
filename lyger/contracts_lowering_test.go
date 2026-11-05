@@ -17,10 +17,7 @@ func contractWalk(node contracts.Node, visit func(contracts.Node)) {
 }
 
 func TestContractsClosureSurvivesTerminalSource(t *testing.T) {
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte("Exit.\n"), "/project/exit.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte("Exit.\n"), "/project/exit.l", ContractAnalysisOptions{})
 	found := false
 	for _, boundary := range analysis.Summary.NativeBoundaries {
 		found = found || boundary.ID == "backend-support-pending"
@@ -36,10 +33,7 @@ func TestContractsClosureSurvivesTerminalSource(t *testing.T) {
 }
 
 func TestContractsRefreshIncludesFinalCoordinatorHelpers(t *testing.T) {
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte("Exit.\n"), "/project/exit.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte("Exit.\n"), "/project/exit.l", ContractAnalysisOptions{})
 	before := len(analysis.Lowering.Steps)
 	if _, err := analysis.Compilation.OrchestratorUnit("selected_final_entry", nil); err != nil {
 		t.Fatal(err)
@@ -68,10 +62,7 @@ func TestContractsRefreshIncludesFinalCoordinatorHelpers(t *testing.T) {
 }
 
 func TestContractsSourceLifecycleTransitionsRetainOwnership(t *testing.T) {
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte("Create \"Worker\" as a New Basic App.\nRun Worker.\nStop Worker.\nAwait Worker.\n"), "/project/lifecycle.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte("Create \"Worker\" as a New Basic App.\nRun Worker.\nStop Worker.\nAwait Worker.\n"), "/project/lifecycle.l", ContractAnalysisOptions{})
 	joined, unjoined, startupFailure := false, false, false
 	roots := make(map[string]bool)
 	for _, state := range analysis.Lifecycle {
@@ -105,10 +96,7 @@ func TestContractsSourceLifecycleTransitionsRetainOwnership(t *testing.T) {
 }
 
 func TestContractsSourceLifecycleDoubleRunKeepsGuard(t *testing.T) {
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte("Create \"Worker\" as a New Basic App.\nRun Worker.\nRun Worker.\n"), "/project/repeat-run.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte("Create \"Worker\" as a New Basic App.\nRun Worker.\nRun Worker.\n"), "/project/repeat-run.l", ContractAnalysisOptions{})
 	failed := false
 	for _, obligation := range analysis.LifecycleObligations {
 		failed = failed || obligation.Claim.Predicate.Subject == "Run" && obligation.Status == contracts.Contradicted
@@ -125,10 +113,7 @@ func TestContractsBASE058BASE059PointerNativeClosure(t *testing.T) {
 			source = fixture.source
 		}
 	}
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), "/project/pointer.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), "/project/pointer.l", ContractAnalysisOptions{})
 	assertContractSelectedNative(t, analysis, "Storage.Pointer.Copy")
 	assertContractSelectedNative(t, analysis, "Storage.Pointer.Update")
 	assertContractSelectedNative(t, analysis, "Storage.Value.Protect")
@@ -170,10 +155,7 @@ func TestContractsSevenPilotSelectionsRemainUnapproved(t *testing.T) {
 			source += "\n    " + fixture.source
 		}
 	}
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), "/project/pilots.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), "/project/pilots.l", ContractAnalysisOptions{})
 	for _, name := range []string{"Storage.Require", "Storage.Pointer.Copy", "Storage.Pointer.Update", "Storage.Traverse"} {
 		assertContractSelectedNative(t, analysis, name)
 	}
@@ -202,10 +184,7 @@ func TestContractsSevenPilotSelectionsRemainUnapproved(t *testing.T) {
 
 func TestContractsCanonicalSameNamedAppTargets(t *testing.T) {
 	source := "Create \"Worker\" as a New Basic App.\nRun Worker.\nAwait Worker.\n\n    Create \"Worker\" as a New Basic App.\nRun Worker.\nAwait Worker.\n"
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), "/project/targets.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), "/project/targets.l", ContractAnalysisOptions{})
 	roots := make(map[string]bool)
 	// The second source paragraph is a retained App continuation, not another
 	// outer activation. Exercise the adapter using both actual canonical Apps.
@@ -252,10 +231,7 @@ func TestContractsBASE025SnapshotAndPointerProjection(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			analysis, err := service.AnalyzeContracts([]byte(source), "/project/values.l", ContractAnalysisOptions{})
-			if err != nil {
-				t.Fatal(err)
-			}
+			analysis := analyzeContractSource(t, service, []byte(source), "/project/values.l", ContractAnalysisOptions{})
 			if !bytes.Equal(ordinary.BackendAML, analysis.Compilation.BackendAML) || !bytes.Equal(ordinary.ExpandedSource, analysis.Compilation.ExpandedSource) {
 				t.Fatal("contract projection changed source semantics")
 			}
@@ -283,10 +259,7 @@ func TestContractsBASE025SnapshotAndPointerProjection(t *testing.T) {
 
 func TestContractsSourceFunctionBodyProjection(t *testing.T) {
 	source := functionSource("Echo", "\"Value\" as Text", "Text", "Show Value.\nReturn Value.") + "Echo `hello` as \"Result\".\nShow Result.\n"
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), "/project/function.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), "/project/function.l", ContractAnalysisOptions{})
 	if len(analysis.Plan.Definitions) == 0 {
 		t.Fatal("source Function body omitted")
 	}
@@ -309,10 +282,7 @@ func TestContractsSourceFunctionBodyProjection(t *testing.T) {
 }
 
 func TestContractsActivationStorageTargets(t *testing.T) {
-	comp, _, err := NewLygerService(Options{}).ResolveContractBindings([]byte("Define \"value\" as `text`.\n"), "/project/storage.l")
-	if err != nil {
-		t.Fatal(err)
-	}
+	comp, _ := resolveContractSource(t, NewLygerService(Options{}), []byte("Define \"value\" as `text`.\n"), "/project/storage.l")
 	rec := comp.Memory["value"]
 	if rec == nil {
 		t.Fatal("missing source value")

@@ -65,10 +65,7 @@ func TestLexicalAcceptance(t *testing.T) {
 	t.Run("LEX-006", func(t *testing.T) {
 		candidates := []Candidate{lexicalCandidate("selected", lexicalType("Theme")), lexicalCandidate("quiet", lexicalType("Client"))}
 		before := lexicalSelection(candidates...)
-		summary, err := Infer(Plan{Entry: Node{Kind: Event, Effects: []Effect{{Kind: "block", Definite: true}}}}, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
+		summary := reviewInfer(t, Plan{Entry: Node{Kind: Event, Effects: []Effect{{Kind: "block", Definite: true}}}}, AnalysisOptions{})
 		if AllEstablished(CheckProfile(summary, Profile{Name: "NoBlocking"})) {
 			t.Fatal("blocking selected implementation passed")
 		}
@@ -100,10 +97,7 @@ func TestLexicalAcceptance(t *testing.T) {
 	})
 	t.Run("LEX-010", func(t *testing.T) {
 		body := Node{Kind: Sequence, Children: []Node{{Kind: Acquire, ID: "occurrence:1", Meaning: "constructor", Resource: ResourceRef{ID: "resource:1"}}, {Kind: Acquire, ID: "occurrence:2", Meaning: "constructor", Resource: ResourceRef{ID: "resource:2"}}}}
-		summary, err := Infer(Plan{Entry: body}, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
+		summary := reviewInfer(t, Plan{Entry: body}, AnalysisOptions{})
 		if len(summary.Paths) != 1 || len(summary.Paths[0].Owned) != 2 {
 			t.Fatalf("same meaning deduplicated construction: %+v", summary)
 		}
@@ -253,10 +247,7 @@ func TestFacetAcceptance(t *testing.T) {
 		if !AllEstablished(result.Obligations) {
 			t.Fatal("fixture configuration inconsistent")
 		}
-		summary, err := Infer(Plan{Entry: Node{Kind: Event, Effects: []Effect{{Kind: "io", Definite: true}}}}, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
+		summary := reviewInfer(t, Plan{Entry: Node{Kind: Event, Effects: []Effect{{Kind: "io", Definite: true}}}}, AnalysisOptions{})
 		if AllEstablished(CheckProfile(summary, Profile{Name: "NoExternalIO"})) {
 			t.Fatal("facet consistency certified external IO")
 		}
@@ -313,10 +304,7 @@ func TestFrameAcceptance(t *testing.T) {
 		}
 	})
 	t.Run("FALS-007", func(t *testing.T) {
-		summary, err := Infer(Plan{Entry: Node{Kind: Event, Effects: []Effect{{Kind: "write", Target: backend, Definite: true}}}}, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
+		summary := reviewInfer(t, Plan{Entry: Node{Kind: Event, Effects: []Effect{{Kind: "write", Target: backend, Definite: true}}}}, AnalysisOptions{})
 		if !hasStatus(CheckFrame(frame, FootprintsFromEffects(summary.Effects), FrameContext{}), Contradicted) {
 			t.Fatal("favorable frame contribution hid actual body write")
 		}
@@ -324,24 +312,22 @@ func TestFrameAcceptance(t *testing.T) {
 }
 
 func TestProviderAcceptance(t *testing.T) {
-	t.Run("LEX-030", func(t *testing.T) {
-		guarantee := Predicate{Kind: "eq", Subject: "result", Value: Atom{Kind: "enum", Text: "unchanged"}}
-		role := RoleInterface{ID: "store", Version: "1", Operations: []RoleOperation{{Name: "update", Ensures: []Predicate{guarantee}, Profiles: []Profile{{Name: "NoBlocking"}}, Outcomes: []Outcome{Normal}}}}
-		provider := ProviderImplementation{ID: "provider", Target: lexicalTarget("store"), Operations: map[string]Plan{"update": {Entry: Node{Kind: Event, Facts: []Predicate{guarantee}}}}}
-		good, err := CheckProvider(role, provider, nil, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if !AllEstablished(good.Obligations) {
-			t.Fatalf("supported provider did not conform: %+v", good)
-		}
-		provider.Operations["update"] = Plan{Entry: Node{Kind: Event, Effects: []Effect{{Kind: "block", Definite: true}}, Facts: []Predicate{{Kind: "eq", Subject: "result", Value: Atom{Kind: "enum", Text: "changed"}}}}}
-		bad, err := CheckProvider(role, provider, nil, AnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if !hasStatus(bad.Obligations, Contradicted) {
-			t.Fatal("operation names proved provider conformance")
-		}
-	})
+	guarantee := Predicate{Kind: "eq", Subject: "result", Value: Atom{Kind: "enum", Text: "unchanged"}}
+	role := RoleInterface{ID: "store", Version: "1", Operations: []RoleOperation{{Name: "update", Ensures: []Predicate{guarantee}, Profiles: []Profile{{Name: "NoBlocking"}}, Outcomes: []Outcome{Normal}}}}
+	provider := ProviderImplementation{ID: "provider", Target: lexicalTarget("store"), Operations: map[string]Plan{"update": {Entry: Node{Kind: Event, Facts: []Predicate{guarantee}}}}}
+	good, err := CheckProvider(role, provider, nil, AnalysisOptions{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !AllEstablished(good.Obligations) {
+		t.Fatalf("supported provider did not conform: %+v", good)
+	}
+	provider.Operations["update"] = Plan{Entry: Node{Kind: Event, Effects: []Effect{{Kind: "block", Definite: true}}, Facts: []Predicate{{Kind: "eq", Subject: "result", Value: Atom{Kind: "enum", Text: "changed"}}}}}
+	bad, err := CheckProvider(role, provider, nil, AnalysisOptions{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !hasStatus(bad.Obligations, Contradicted) {
+		t.Fatal("operation names proved provider conformance")
+	}
 }

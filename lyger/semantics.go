@@ -18,6 +18,7 @@ type semanticProgram struct {
 	Instructions  []*instruction
 	Continuations map[*App]*scopedInstructions
 	Functions     map[*record]*sourceFunction
+	Returns       map[*record]bool
 }
 
 type descriptorDefinition struct {
@@ -44,7 +45,7 @@ type runtimeReference struct {
 }
 
 func newSemanticProgram() *semanticProgram {
-	return &semanticProgram{Functions: make(map[*record]*sourceFunction), Descriptors: make(map[*record]*descriptorDefinition), Declarations: make(map[*record]*lStatement), Aliases: make(map[*record]*record), Subjects: make(map[*token]*record)}
+	return &semanticProgram{Functions: make(map[*record]*sourceFunction), Returns: make(map[*record]bool), Descriptors: make(map[*record]*descriptorDefinition), Declarations: make(map[*record]*lStatement), Aliases: make(map[*record]*record), Subjects: make(map[*token]*record)}
 }
 
 func symbolRoot(tok *token) string {
@@ -136,7 +137,8 @@ func (c *Compilation) prepareAlias(site registrationSite) (extractedDeclaration,
 		return extractedDeclaration{}, lerrors.UnresolvedReference.Errorf("alias source %q is unresolved", source.rawBytes)
 	}
 	target := binding.Record
-	if _, err := canonicalRecord(target, c.Semantics.Aliases); err != nil {
+	canonical, err := canonicalRecord(target, c.Semantics.Aliases)
+	if err != nil {
 		return extractedDeclaration{}, err
 	}
 	if _, err := target.Value.value(); err != nil {
@@ -148,7 +150,7 @@ func (c *Compilation) prepareAlias(site registrationSite) (extractedDeclaration,
 	if value.Lexeme != nil {
 		value.Lexeme.Root = strings.ToLower(id)
 	}
-	return extractedDeclaration{Token: alias, Record: &record{ID: id, Type: target.Type, Value: value}, Alias: target}, nil
+	return extractedDeclaration{Token: alias, Record: &record{ID: id, Type: target.Type, Value: value, function: canonical.function}, Alias: target}, nil
 }
 
 func (c *Compilation) prepareDescriptor(stmt *lStatement, site registrationSite, prepared *statementRegistration) error {
@@ -303,6 +305,9 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 }
 
 func (c *Compilation) registerStatement(stmt *lStatement) error {
+	if err := c.prepareProcessInputs(stmt); err != nil {
+		return err
+	}
 	sites, err := stmt.sGram.registrationSites()
 	if err != nil {
 		return err

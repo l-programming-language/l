@@ -2,8 +2,8 @@ package contracts
 
 import (
 	"fmt"
-	"reflect"
-	"sort"
+	"maps"
+	"slices"
 )
 
 // TrustPolicy is selected explicitly by the caller. A native manifest is a
@@ -59,7 +59,7 @@ func ApproveNativeClaim(policy TrustPolicy, witness NativeWitness, claim Claim, 
 	if policy.Version != SchemaVersion || policy.ID == "" {
 		return unknown("no explicitly selected supported trust policy")
 	}
-	if witness.ID == "" || !evidenceContains(policy.ApprovedWitnesses, witness.ID) || witness.Authority == "" || !evidenceContains(policy.Authorities, witness.Authority) {
+	if witness.ID == "" || !containsString(policy.ApprovedWitnesses, witness.ID) || witness.Authority == "" || !containsString(policy.Authorities, witness.Authority) {
 		return unknown("native witness is not approved by the selected trust policy")
 	}
 	if witness.TestOnly && !policy.AllowTestOnly {
@@ -85,27 +85,11 @@ func ApproveNativeClaim(policy TrustPolicy, witness NativeWitness, claim Claim, 
 }
 
 func validEvidenceFingerprints(value EvidenceFingerprints) bool {
-	if value.Contract == "" || value.Implementation == "" || value.Target == "" {
-		return false
-	}
-	for name, fingerprint := range value.Dependencies {
-		if name == "" || fingerprint == "" {
-			return false
-		}
-	}
-	return true
+	return value.Contract != "" && value.Implementation != "" && value.Target != "" && validFingerprintDependencies(value.Dependencies)
 }
 
 func sameEvidenceFingerprints(left, right EvidenceFingerprints) bool {
-	if left.Contract != right.Contract || left.Implementation != right.Implementation || left.Target != right.Target || len(left.Dependencies) != len(right.Dependencies) {
-		return false
-	}
-	for name, fingerprint := range left.Dependencies {
-		if right.Dependencies[name] != fingerprint {
-			return false
-		}
-	}
-	return true
+	return left.Contract == right.Contract && left.Implementation == right.Implementation && left.Target == right.Target && maps.Equal(left.Dependencies, right.Dependencies)
 }
 
 type EvidenceNode struct {
@@ -242,7 +226,7 @@ func evaluateEvidenceNode(node EvidenceNode, claim Claim, nodes map[string]Evide
 			return unresolved("runtime guard requires an explicit covered normal outcome")
 		}
 		for _, outcome := range claim.Outcomes {
-			if outcome != Normal || !evidenceOutcomeContains(guard.Outcomes, outcome) {
+			if outcome != Normal || !containsOutcome(guard.Outcomes, outcome) {
 				return unresolved("runtime guard covers only its normal continuation")
 			}
 		}
@@ -312,41 +296,8 @@ func guardResourcesCovered(predicate Predicate, versions map[string]string) bool
 	return true
 }
 
-func evidenceOutcomeContains(values []Outcome, value Outcome) bool {
-	for _, candidate := range values {
-		if candidate == value {
-			return true
-		}
-	}
-	return false
-}
-
-func evidenceContains(values []string, value string) bool {
-	for _, candidate := range values {
-		if candidate == value {
-			return true
-		}
-	}
-	return false
-}
-
 func evidenceUnique(values []string) []string {
-	if len(values) == 0 {
-		return nil
-	}
-	copyValues := append([]string(nil), values...)
-	sort.Strings(copyValues)
-	result := copyValues[:0]
-	for _, value := range copyValues {
-		if len(result) == 0 || result[len(result)-1] != value {
-			result = append(result, value)
-		}
-	}
-	return result
-}
-
-// SameClaim is useful when joining evidence without relying on display labels.
-func SameClaim(left, right Claim) bool {
-	left.ID, right.ID = "", ""
-	return reflect.DeepEqual(left, right)
+	sorted := append([]string(nil), values...)
+	slices.Sort(sorted)
+	return slices.Compact(sorted)
 }

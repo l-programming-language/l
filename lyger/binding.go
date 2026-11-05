@@ -171,13 +171,16 @@ func (b *tokenBinding) lexicalType() string {
 	return "nouns.generic.root"
 }
 
-func resolveTokenBinding(contents []byte, memory map[string]*record) (*tokenBinding, error) {
+func resolveTokenBinding(contents []byte, memory map[string]*record, expected ...partOfSpeech) (*tokenBinding, error) {
 	query := newBindingQuery(contents)
 	var first, second *tokenBinding
 	var firstKey, secondKey string
 	for key, rec := range memory {
 		binding, ok := rec.binding(query)
 		if !ok {
+			continue
+		}
+		if len(expected) > 0 && expected[0] != posInvalid && !strings.HasPrefix(binding.lexicalType(), expected[0].String()+"s.") {
 			continue
 		}
 		// Preserve the sorted scan's first two distinct matching records
@@ -194,7 +197,46 @@ func resolveTokenBinding(contents []byte, memory map[string]*record) (*tokenBind
 	if second != nil {
 		return nil, lerrors.AmbiguousReference.Errorf("ambiguous reference %q: %s and %s", contents, first.Record.ID, second.Record.ID)
 	}
+	if first == nil && len(expected) > 0 && expected[0] != posInvalid {
+		return resolveTokenBinding(contents, memory)
+	}
 	return first, nil
+}
+
+// Only a configured constructor modifier prefix supplies adjective context.
+// This does not prefer exact roots over inflections in other grammar positions.
+func constructorModifierPOS(tokens []*token, index int) partOfSpeech {
+	if index+1 >= len(tokens) {
+		return posInvalid
+	}
+	followingNominal := false
+	for _, next := range tokens[index+1:] {
+		if next.getPOS(true) == "adjective" || next.isPossessive() {
+			continue
+		}
+		followingNominal = next.getPOS(true) == "noun" || next.getPOS(true) == "type" || next.getPOS(true) == "unknown"
+		break
+	}
+	if !followingNominal {
+		return posInvalid
+	}
+	for prior := index - 1; prior >= 0; prior-- {
+		current := tokens[prior]
+		if current.hasRole("adjective", "initialization") || current.hasRole("adjective", "abstraction") {
+			return posAdjective
+		}
+		if current.getPOS(true) != "adjective" && !current.isPossessive() {
+			break
+		}
+	}
+	return posInvalid
+}
+
+func bindingContextPOS(tokens []*token, index int) partOfSpeech {
+	if index > 0 && tokens[index-1].hasRole("verb", "action.passive") {
+		return posVerb
+	}
+	return constructorModifierPOS(tokens, index)
 }
 
 // bindStatementMembers resolves the right side of possessive member access in
@@ -202,6 +244,8 @@ func resolveTokenBinding(contents []byte, memory map[string]*record) (*tokenBind
 func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, error) {
 	ready := true
 	for i, member := range statement.tokens {
+		contextual := r
+		contextual.expectedPOS = bindingContextPOS(statement.tokens, i)
 		if r.scopes != nil {
 			if binding, ok := r.scopes.Pronouns[member]; ok && binding.Kind == scopeParagraph {
 				rec, err := r.reference(member)
@@ -223,11 +267,11 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 			// Any inherited environment must reconsider local reservations, including
 			// program/dictionary roots; this does not classify an activation frame.
 			if !member.isDeclare() && !member.isPronoun() && (member.getPOS(false) == "unknown" || (member.scope != nil && member.scope.parent != nil)) {
-				state, err := r.bindToken(member)
+				state, err := contextual.bindToken(member)
 				if err != nil {
 					return false, err
 				}
-				if state == lookupPending && !bindEarlierStatementDeclaration(statement, i, member) {
+				if state != lookupFound && !contextual.bindEarlierStatementDeclaration(statement, i, member) && state == lookupPending {
 					ready = false
 				}
 			}
@@ -254,7 +298,7 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 		if member.isDeclare() {
 			continue
 		}
-		resolved, memberReady, err := r.member(resolvedOwner, member, statement)
+		resolved, memberReady, err := contextual.member(resolvedOwner, member, statement)
 		if err != nil {
 			return false, err
 		}
@@ -299,22 +343,24 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 // A later reference to a plain declaration in the same statement can be parsed
 // as a noun before atomic registration. No value or semantic record is guessed:
 // publication resolves this source edge before the statement leaves registration.
-func bindEarlierStatementDeclaration(statement *lStatement, index int, tok *token) bool {
-	for _, declaration := range tok.scope.reserved(tok.rawBytes) {
-		if declaration.Record != nil || declaration.Owner != nil || strings.Contains(string(declaration.Token.rawBytes), "|") {
+func (r semanticResolver) bindEarlierStatementDeclaration(statement *lStatement, index int, tok *token) bool {
+	if r.scopes == nil {
+		return false
+	}
+	query := newBindingQuery(tok.rawBytes)
+	for _, candidate := range statement.tokens[:index] {
+		declaration := r.scopes.declarations[candidate]
+		if declaration == nil || declaration.Record != nil || declaration.Owner != nil ||
+			(!declaration.provisional && declaration.Scope != tok.scope) ||
+			declaration.SubjectID != query.word || strings.Contains(string(candidate.rawBytes), "|") {
 			continue
 		}
-		for _, candidate := range statement.tokens[:index] {
-			if candidate != declaration.Token {
-				continue
-			}
-			word := newLexeme("noun")
-			word.Root = newBindingQuery(tok.rawBytes).word
-			tok.pendingDeclaration = declaration.Token
-			tok.mem = &entry{Type: storageLexeme, Lexeme: word}
-			tok.tType, tok.defined = "nouns.generic.root", true
-			return true
-		}
+		word := newLexeme("noun")
+		word.Root = query.word
+		tok.pendingDeclaration = candidate
+		tok.mem = &entry{Type: storageLexeme, Lexeme: word}
+		tok.tType, tok.defined = "nouns.generic.root", true
+		return true
 	}
 	return false
 }

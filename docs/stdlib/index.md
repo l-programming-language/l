@@ -18,7 +18,7 @@ The `io` key selects the indexed dictionary; a neighboring file cannot shadow it
 
 <a id="public-exports-and-evidence"></a>
 
-Each reference lists the dictionary's public members. Private helpers remain internal to the dictionary. Indexed implementation dictionaries are tracked by source coverage but excluded from this public catalog.
+Each reference lists the dictionary's public members. Private helpers remain internal to their source unit. Indexed implementation dictionaries are excluded from this public catalog; the [Storage composition reference](../internals/storage.md) explains its reusable implementation words.
 
 <a id="catalog-maintenance"></a>
 <a id="sources-and-witnesses"></a>

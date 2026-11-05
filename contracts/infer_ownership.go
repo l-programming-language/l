@@ -25,12 +25,12 @@ type OwnershipWidening struct {
 	Resources map[string]OwnershipPossibility `json:"resources"`
 }
 
-func sortedMapKeys[V any](values map[string]V) []string {
-	keys := make([]string, 0, len(values))
+func sortedMapKeys[K ~string, V any](values map[K]V) []K {
+	keys := make([]K, 0, len(values))
 	for key := range values {
 		keys = append(keys, key)
 	}
-	sort.Strings(keys)
+	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
 	return keys
 }
 
@@ -82,13 +82,12 @@ func expandOwnership(p PathSummary) []PathSummary {
 	if len(p.OwnershipAlternatives) == 0 {
 		return []PathSummary{p}
 	}
-	var paths []PathSummary
-	for _, snapshot := range p.OwnershipAlternatives {
-		path := clonePath(p)
-		path.OwnershipAlternatives = nil
-		state := cloneOwnershipSnapshot(snapshot)
-		path.Owned, path.OwnershipOrder = state.Owned, state.Order
-		paths = append(paths, path)
+	alternatives := p.OwnershipAlternatives
+	p.OwnershipAlternatives = nil
+	paths := make([]PathSummary, 0, len(alternatives))
+	for _, snapshot := range alternatives {
+		p.Owned, p.OwnershipOrder = snapshot.Owned, snapshot.Order
+		paths = append(paths, clonePath(p))
 	}
 	return paths
 }
@@ -162,15 +161,20 @@ func widenedResourceIDs(widening *OwnershipWidening) []string {
 	return sortedMapKeys(widening.Resources)
 }
 
-func (a *inference) consumeWidenedOwnership(p *PathSummary, node Node, operation string) bool {
+func (p *PathSummary) takeWidened(id string) (OwnershipPossibility, bool) {
 	if p.OwnershipWidening == nil {
-		return false
+		return OwnershipPossibility{}, false
 	}
-	owned, exists := p.OwnershipWidening.Resources[node.Resource.ID]
+	owned, ok := p.OwnershipWidening.Resources[id]
+	delete(p.OwnershipWidening.Resources, id)
+	return owned, ok
+}
+
+func (a *inference) consumeWidenedOwnership(p *PathSummary, node Node, operation string) bool {
+	owned, exists := p.takeWidened(node.Resource.ID)
 	if !exists {
 		return false
 	}
-	delete(p.OwnershipWidening.Resources, node.Resource.ID)
 	if owned.MayLive || operation == "move" {
 		p.Obligations = append(p.Obligations, Obligation{ID: StableID("widened-ownership-use", node), Claim: Claim{Predicate: Predicate{Kind: "ownership", Resource: node.Resource}, Scope: "use"}, Status: Unresolved, Reason: operation + " initialization requirement depends on widened ownership alternatives", Origin: node.Origin})
 	}
@@ -178,14 +182,10 @@ func (a *inference) consumeWidenedOwnership(p *PathSummary, node Node, operation
 }
 
 func (a *inference) releaseWidenedOwnership(p *PathSummary, node Node) bool {
-	if p.OwnershipWidening == nil {
-		return false
-	}
-	owned, exists := p.OwnershipWidening.Resources[node.Resource.ID]
+	owned, exists := p.takeWidened(node.Resource.ID)
 	if !exists {
 		return false
 	}
-	delete(p.OwnershipWidening.Resources, node.Resource.ID)
 	if !owned.MayLive {
 		return true
 	}

@@ -10,10 +10,7 @@ func TestAcceptanceInstancesBASE003(t *testing.T) {
 		Node{Kind: Call, Meaning: "setter", Substitutions: Substitutions{Targets: map[string]TargetRef{"receiver": first}, Resources: map[string]ResourceRef{"storage": {ID: "left"}}}},
 		Node{Kind: Call, Meaning: "setter", Substitutions: Substitutions{Targets: map[string]TargetRef{"receiver": second}, Resources: map[string]ResourceRef{"storage": {ID: "right"}}}},
 	), Definitions: map[MeaningKey]Node{"setter": definition}}
-	summary, err := Infer(plan, AnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	summary := reviewInfer(t, plan, AnalysisOptions{})
 	if len(summary.Effects) != 2 || summary.Effects[0].Target.String() == summary.Effects[1].Target.String() || summary.Effects[0].Resource.ID == summary.Effects[1].Resource.ID {
 		t.Fatalf("parameterized summary collapsed distinct instances: %+v", summary.Effects)
 	}
@@ -65,12 +62,12 @@ func TestAcceptanceDemandDependenciesBASE015(t *testing.T) {
 	session := NewSession()
 	key := implementationKeyFixture(logicalKeyFixture())
 	key.Dependencies["demand"] = without.Fingerprint
-	if err := session.StoreImplementation(key, EvidenceResult{Status: Established}); err != nil {
+	if err := session.store(key, EvidenceResult{Status: Established}); err != nil {
 		t.Fatal(err)
 	}
 	key.Dependencies["demand"] = with.Fingerprint
 	var stale EvidenceResult
-	if found, err := session.LoadImplementation(key, &stale); err != nil || found {
+	if found, err := session.load(key, &stale); err != nil || found {
 		t.Fatalf("demand-dependent assurance survived changed callback: %v, %v", found, err)
 	}
 }
@@ -109,10 +106,7 @@ func TestAcceptanceUninitializedCleanupBASE021(t *testing.T) {
 
 func TestAcceptanceRecursiveDestructionBASE026(t *testing.T) {
 	plan := Plan{Entry: Node{Kind: Scope, Children: []Node{{Kind: Acquire, Resource: ResourceRef{ID: "recursive"}, Cleanup: []Node{{Kind: Call, Meaning: "drop"}}}}}, Definitions: map[MeaningKey]Node{"drop": {Kind: Call, Meaning: "drop"}}}
-	summary, err := Infer(plan, AnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	summary := reviewInfer(t, plan, AnalysisOptions{})
 	if summary.Resources.Work.Kind != "unknown" || len(summary.Unknowns) == 0 {
 		t.Fatalf("recursive destruction became free: %+v", summary)
 	}

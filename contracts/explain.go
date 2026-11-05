@@ -99,15 +99,7 @@ func ExplainReport(report Report) []Explanation {
 }
 
 func uniqueExplanationOrigins(origins []Origin) []Origin {
-	seen := make(map[string]bool)
-	var result []Origin
-	for _, origin := range origins {
-		key := StableID("origin", origin)
-		if !seen[key] {
-			seen[key] = true
-			result = append(result, origin)
-		}
-	}
+	result := distinctRecords("origin", origins)
 	sort.Slice(result, func(i, j int) bool { return StableID("origin", result[i]) < StableID("origin", result[j]) })
 	return result
 }

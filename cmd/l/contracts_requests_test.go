@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -14,32 +12,13 @@ import (
 	Lyger "github.com/l-programming-language/l/lyger"
 )
 
-func scopedCLIReport(t *testing.T, input string, expected int, options ...string) contracts.Report {
-	t.Helper()
-	args := append([]string{"contracts"}, options...)
-	args = append(args, "--format", "json", input)
-	var stdout, stderr bytes.Buffer
-	if status := run(context.Background(), args, &stdout, &stderr); status != expected {
-		t.Fatalf("%v exit %d want %d: %s\n%s", args, status, expected, &stderr, &stdout)
-	}
-	var report contracts.Report
-	if err := json.Unmarshal(stdout.Bytes(), &report); err != nil {
-		t.Fatalf("decode %s: %v", &stdout, err)
-	}
-	return report
-}
-
 func scopedWrite(t *testing.T, directory, name string, value any) string {
 	t.Helper()
 	data, err := contracts.EncodeDocument(value)
 	if err != nil {
 		t.Fatal(err)
 	}
-	path := filepath.Join(directory, name)
-	if err := os.WriteFile(path, data, 0600); err != nil {
-		t.Fatal(err)
-	}
-	return path
+	return writeContractFile(t, filepath.Join(directory, name), data)
 }
 
 type scopedNativeFixture struct {
@@ -52,22 +31,16 @@ type scopedNativeFixture struct {
 	report                                                       contracts.Report
 }
 
-func newScopedNativeFixture(t *testing.T, profile, relation string) scopedNativeFixture {
-	return newScopedNativeFixtureAssets(t, profile, relation, "")
-}
-
-func newScopedNativeFixtureAssets(t *testing.T, profile, relation, assets string) scopedNativeFixture {
+func newScopedNativeFixture(t *testing.T, profile, relation, assets string) scopedNativeFixture {
 	t.Helper()
 	directory := t.TempDir()
 	f := scopedNativeFixture{input: filepath.Join(directory, "main.l"), assets: assets}
-	if err := os.WriteFile(f.input, []byte("Create \"items\" as a New List of 1 and 2.\nPlace 4 in items at 9.\nPlace 5 in items at 10.\n"), 0600); err != nil {
-		t.Fatal(err)
-	}
+	writeContractFile(t, f.input, []byte("Create \"items\" as a New List of 1 and 2.\nPlace 4 in items at 9.\nPlace 5 in items at 10.\n"))
 	inspection := []string{"inspect"}
 	if assets != "" {
 		inspection = append(inspection, "--assets", assets)
 	}
-	f.report = scopedCLIReport(t, f.input, 0, inspection...)
+	f.report, _ = contractJSON(t, f.input, 0, inspection...)
 	f.environment = contracts.SealNativeEnvironment(contracts.NativeEnvironment{SchemaVersion: contracts.SchemaVersion, Kind: "native_environment", Producer: "explicit-test-only-fixture", Version: "1", Method: "test-only", Host: "fixture-host", Target: "fixture-target", Compiler: "fixture-toolchain", PanicPolicy: "fixture-unwind", Runtime: "fixture-runtime", Allocator: "fixture-allocator", Inputs: f.report.Inputs, Dependencies: f.report.Lowering.Fingerprints, Limitations: []string{"Synthetic test data, no production authority or executed build"}})
 	f.manifest = contracts.NativeContractManifest{SchemaVersion: contracts.SchemaVersion, Kind: "native_contract_manifest", Producer: "test-only-fixture"}
 	f.trust = contracts.TrustPolicyDocument{SchemaVersion: contracts.SchemaVersion, Kind: "trust_policy", Producer: "test-only-fixture", Policy: contracts.TrustPolicy{Version: contracts.SchemaVersion, ID: "test-only-policy", Authorities: []string{"fixture-author"}, AllowTestOnly: true}}
@@ -91,7 +64,7 @@ func newScopedNativeFixtureAssets(t *testing.T, profile, relation, assets string
 			f.manifest.Declarations = append(f.manifest.Declarations, declaration)
 			seen[use.Meaning] = true
 		}
-		for _, claim := range contracts.NativeComponentClaims(use, declaration, f.environment) {
+		for _, claim := range evaluateNativeUse(use, declaration, f.environment).Components {
 			witness := contracts.NativeWitness{ID: "test-only:" + claim.Claim.ID, ClaimFingerprint: contracts.ClaimFingerprint(claim.Claim), ContractFingerprint: claim.Current.Contract, ImplementationFingerprint: claim.Current.Implementation, TargetFingerprint: claim.Current.Target, Dependencies: claim.Current.Dependencies, Authority: "fixture-author", Rationale: "Explicit test-only native assumption, never production approval", TestOnly: true}
 			f.trust.Witnesses = append(f.trust.Witnesses, witness)
 			f.trust.Policy.ApprovedWitnesses = append(f.trust.Policy.ApprovedWitnesses, witness.ID)
@@ -123,7 +96,8 @@ func (f scopedNativeFixture) check(t *testing.T, status int, extra ...string) co
 	if f.assets != "" {
 		args = append(args, "--assets", f.assets)
 	}
-	return scopedCLIReport(t, f.input, status, append(args, extra...)...)
+	report, _ := contractJSON(t, f.input, status, append(args, extra...)...)
+	return report
 }
 
 func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
@@ -132,10 +106,7 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 		t.Fatal(err)
 	}
 	path := filepath.Join(assets, "stdlib", "eng", "storage", "dictionary.l")
-	data, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatal(err)
-	}
+	data := readContractFile(t, path)
 	text := string(data)
 	start := strings.Index(text, "Publicly create Storage's List's \"Update")
 	if start < 0 {
@@ -152,11 +123,9 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 		t.Fatal("custom fixture mutation point is not unique")
 	}
 	body = strings.Replace(body, needle, mutation+needle, 1)
-	if err := os.WriteFile(path, []byte(text[:start]+body+text[end:]), 0600); err != nil {
-		t.Fatal(err)
-	}
+	writeContractFile(t, path, []byte(text[:start]+body+text[end:]))
 	composeScopedTestProvider(t, assets)
-	f := newScopedNativeFixtureAssets(t, "PreservesOnFailure", "different", assets)
+	f := newScopedNativeFixture(t, "PreservesOnFailure", "different", assets)
 	f.requests.Checks = f.requests.Checks[:1]
 	scopedWrite(t, filepath.Dir(f.input), "requests.json", f.requests)
 	report := f.check(t, 1)
@@ -165,9 +134,7 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 	}
 	// Restoring the provider invalidates its native witness rather than reusing
 	// a relation for a different implementation.
-	if err := os.WriteFile(path, data, 0600); err != nil {
-		t.Fatal(err)
-	}
+	writeContractFile(t, path, data)
 	composeScopedTestProvider(t, assets)
 	report = f.check(t, 1)
 	if report.Requests[0].Status != contracts.Unresolved {
@@ -181,10 +148,7 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 func composeScopedTestProvider(t *testing.T, root string) {
 	t.Helper()
 	path := filepath.Join(root, "builtins", "runtime", "eng", "dictionary.l")
-	source, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatal(err)
-	}
+	source := readContractFile(t, path)
 	c := Lyger.NewLygerService(Lyger.Options{Resources: os.DirFS(root), AssetRoot: root}).NewCompilation(source, path)
 	c.Make()
 	if c.Error != nil {
@@ -209,16 +173,12 @@ func composeScopedTestProvider(t *testing.T, root string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(root, "builtins", "runtime", "support.aml"), aml, 0600); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(filepath.Join(root, "builtins", "runtime", "support.json"), metadata, 0600); err != nil {
-		t.Fatal(err)
-	}
+	writeContractFile(t, filepath.Join(root, "builtins", "runtime", "support.aml"), aml)
+	writeContractFile(t, filepath.Join(root, "builtins", "runtime", "support.json"), metadata)
 }
 
 func TestScopedNativeCLIApprovalAndRemoval(t *testing.T) {
-	f := newScopedNativeFixture(t, "NoBlocking", "")
+	f := newScopedNativeFixture(t, "NoBlocking", "", "")
 	report := f.check(t, 0)
 	if len(report.Requests) != 2 || len(report.Summary.Unknowns) == 0 || len(report.Assumptions) == 0 {
 		t.Fatal("scoped success lost outside unknowns or displayed test-only assumptions")
@@ -242,7 +202,7 @@ func TestScopedNativeCLIFailureCompletionRelations(t *testing.T) {
 		want     contracts.Status
 	}{{"unchanged", 0, contracts.Established}, {"different", 1, contracts.Contradicted}, {"unknown", 1, contracts.Unresolved}} {
 		t.Run(test.relation, func(t *testing.T) {
-			f := newScopedNativeFixture(t, "PreservesOnFailure", test.relation)
+			f := newScopedNativeFixture(t, "PreservesOnFailure", test.relation, "")
 			// A propagated failure ends the first invocation. Select that actual
 			// reachable boundary; a later unreachable selector must be rejected.
 			f.requests.Checks = f.requests.Checks[:1]
@@ -256,7 +216,7 @@ func TestScopedNativeCLIFailureCompletionRelations(t *testing.T) {
 }
 
 func TestScopedNativeCLIStaleEvidenceAndOfflineCommands(t *testing.T) {
-	f := newScopedNativeFixture(t, "NoBlocking", "")
+	f := newScopedNativeFixture(t, "NoBlocking", "", "")
 	trap := t.TempDir()
 	marker := filepath.Join(trap, "executed")
 	for _, name := range []string{"cargo", "rustc", "rustup", "git", "curl", "sh"} {
@@ -273,9 +233,9 @@ func TestScopedNativeCLIStaleEvidenceAndOfflineCommands(t *testing.T) {
 	if _, err := os.Stat(marker); !os.IsNotExist(err) {
 		t.Fatal("offline contract checking executed an external tool")
 	}
-	var stdout, stderr bytes.Buffer
-	if status := run(context.Background(), []string{"contracts", "check", "--profile", "PreservesOnFailure", f.input}, &stdout, &stderr); status != 2 || !strings.Contains(stderr.String(), "footprint") {
-		t.Fatalf("missing footprint: %d %s", status, &stderr)
+	_, stderr := contractOutput(t, 2, "check", "--profile", "PreservesOnFailure", f.input)
+	if !strings.Contains(stderr, "footprint") {
+		t.Fatalf("missing footprint diagnostic: %s", stderr)
 	}
 }
 
@@ -283,10 +243,8 @@ func TestScopedNativeCLIMultiOperationInvocation(t *testing.T) {
 	directory := t.TempDir()
 	input := filepath.Join(directory, "call.l")
 	source := "    Publicly create \"Identity\" as a New Function with Inputs of \"Value\" as Number and Outputs of Number.\nReturn Value.\n\nIdentity 7 as \"Result\".\nShow Result.\n"
-	if err := os.WriteFile(input, []byte(source), 0600); err != nil {
-		t.Fatal(err)
-	}
-	report := scopedCLIReport(t, input, 0, "inspect")
+	writeContractFile(t, input, []byte(source))
+	report, _ := contractJSON(t, input, 0, "inspect")
 	var selected contracts.AnalysisScope
 	for _, scope := range report.Scopes {
 		if scope.Boundary == "source_invocation" {
@@ -323,7 +281,7 @@ func TestScopedNativeCLIMultiOperationInvocation(t *testing.T) {
 			declarations[use.Meaning] = declaration
 			manifest.Declarations = append(manifest.Declarations, declaration)
 		}
-		for _, component := range contracts.NativeComponentClaims(use, declaration, environment) {
+		for _, component := range evaluateNativeUse(use, declaration, environment).Components {
 			witness := contracts.NativeWitness{ID: "test-only:" + component.Claim.ID, ClaimFingerprint: contracts.ClaimFingerprint(component.Claim), ContractFingerprint: component.Current.Contract, ImplementationFingerprint: component.Current.Implementation, TargetFingerprint: component.Current.Target, Dependencies: component.Current.Dependencies, Authority: "test-only", Rationale: "Synthetic individually approved invocation component; no production approval", TestOnly: true}
 			trust.Witnesses = append(trust.Witnesses, witness)
 			trust.Policy.ApprovedWitnesses = append(trust.Policy.ApprovedWitnesses, witness.ID)
@@ -334,7 +292,7 @@ func TestScopedNativeCLIMultiOperationInvocation(t *testing.T) {
 	}
 	request := contracts.CheckRequests{SchemaVersion: contracts.SchemaVersion, Kind: "contract_check_requests", Version: "1", Producer: "test-only", Checks: []contracts.CheckRequest{{ID: "composed-invocation", Scope: selected.ID, Profile: contracts.Profile{Name: "NoBlocking"}}}}
 	args := []string{"check", "--native-environment", scopedWrite(t, directory, "environment.json", environment), "--manifest", scopedWrite(t, directory, "manifest.json", manifest), "--trust-policy", scopedWrite(t, directory, "trust.json", trust), "--request-file", scopedWrite(t, directory, "request.json", request)}
-	checked := scopedCLIReport(t, input, 0, args...)
+	checked, _ := contractJSON(t, input, 0, args...)
 	if len(checked.Requests[0].Summary.Assumptions) < 2 || len(checked.Summary.Unknowns) == 0 {
 		t.Fatal("composition dropped assumptions or outside unknowns")
 	}
@@ -343,5 +301,5 @@ func TestScopedNativeCLIMultiOperationInvocation(t *testing.T) {
 	trust.Policy.ApprovedWitnesses = trust.Policy.ApprovedWitnesses[1:]
 	trust.Witnesses = trust.Witnesses[1:]
 	scopedWrite(t, directory, "trust.json", trust)
-	scopedCLIReport(t, input, 1, args...)
+	contractJSON(t, input, 1, args...)
 }

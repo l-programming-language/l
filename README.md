@@ -72,7 +72,7 @@ Go/Rust toolchains. See the [CLI guide](docs/cli/build.md) for build options.
 Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the
 [development guide](docs/development-harness.md). Pull requests run Linux CI;
 expensive local validation remains subject to the
-[validation policy](docs/development-harness.md#temporary-validation-pause).
+[validation policy](docs/development-harness.md#validation-authorization).
 
 Maintainers can find publication prerequisites and recovery steps in the
 [release activation guide](website/DEPLOYMENT.md).

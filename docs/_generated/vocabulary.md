@@ -247,7 +247,7 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 | Note | Reviewed explanation |
 | --- | --- |
 | <a id="vocabulary-note-1"></a>1 | Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply. |
-| <a id="vocabulary-note-2"></a>2 | Inputs name ordinary Function parameters or native signature metadata. They do not introduce process stdin/argument transport. |
+| <a id="vocabulary-note-2"></a>2 | Inputs name ordinary Function parameters, native signature metadata, or scoped structured Process bindings. They do not introduce process stdin/argument transport. |
 | <a id="vocabulary-note-3"></a>3 | Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries. |
 | <a id="vocabulary-note-4"></a>4 | Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API. |
 | <a id="vocabulary-note-5"></a>5 | This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target. |

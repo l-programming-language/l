@@ -9,6 +9,9 @@ const pages = [
   ['apps-services', '/docs/guide/apps-and-services/'],
   ['lifecycle', '/docs/guide/lifecycle/'],
   ['internals', '/docs/internals/'],
+  ['definitions', '/docs/guide/definitions/'],
+  ['builtins', '/docs/reference/builtins/definitions/'],
+  ['storage', '/docs/internals/storage/'],
   ['primitives', '/docs/spec/values/'],
   ['grammar', '/docs/spec/grammar/'],
   ['logemes', '/docs/reference/logemes/alphabet/'],
@@ -55,7 +58,7 @@ test('built Pagefind searches, no-results behavior and keyboard interaction', as
   await expect(dialog).toBeVisible();
   const input = dialog.getByRole('textbox', { name: 'Search', exact: true });
   await expect(input).toBeFocused();
-  for (const query of ['Number', 'Await', 'IO.Print', 'logeme']) {
+  for (const query of ['Number', 'Await', 'IO.Print', 'logeme', 'Require', 'Lined']) {
     await input.fill(query);
     await expect(dialog.locator('.pagefind-ui__result-link').first()).toBeVisible();
     await expect(dialog.locator('.pagefind-ui__message')).not.toContainText('No results');
@@ -115,6 +118,12 @@ test('mobile navigation and visible keyboard focus', async ({ page }) => {
   await expect(page.locator('#starlight__sidebar')).toBeVisible();
   await page.locator('#starlight__sidebar a[href="/docs/spec/grammar/"]').click();
   await expect(page).toHaveURL(/\/docs\/spec\/grammar\/$/);
+  await page.goto('/docs/reference/builtins/definitions/#storage-source-compositions');
+  await expect(page.locator('#storage-source-compositions')).toBeVisible();
+  await page.locator('main a[href="/docs/internals/storage/"]').first().click();
+  await expect(page).toHaveURL(/\/docs\/internals\/storage\/$/);
+  await page.locator('main a[href="/docs/reference/builtins/definitions/#functionreturn"]').click();
+  await expect(page.locator('#functionreturn')).toBeVisible();
   await page.goto('/docs/reference/logemes/alphabet/');
   const table = page.locator('main table').first();
   await table.focus();
@@ -126,8 +135,11 @@ test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ 
   for (const [route, fixture, start, end] of [
     ['/docs/guide/apps-and-services/', '../cmd/l/test/runnable_service/canonical-io.l', 0, undefined],
     ['/docs/guide/apps-and-services/', '../lyger/test/workspace/services.l', 1, 12],
-    ['/docs/guide/native-definitions/', '../cmd/l/test/runnable_service/probe.l', 0, 3],
-    ['/docs/guide/native-definitions/', '../cmd/l/test/runnable_service/basic.l', 0, 4],
+    ['/docs/spec/definitions/', '../cmd/l/test/runnable_service/probe.l', 0, 3],
+    ['/docs/guide/definitions/', '../docs/examples/composed-functions.l', 0, undefined],
+    ['/docs/guide/definitions/', '../stdlib/eng/storage/dictionary.l', 177, 179],
+    ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 16, 19],
+    ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 20, 24],
     ['/docs/guide/first-program/', '../demo/basic/main.l', 0, undefined],
   ] as const) {
     await page.goto(route);

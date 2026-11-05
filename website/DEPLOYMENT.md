@@ -20,8 +20,8 @@ lint, acceptance, and tagged-native reports for every target. Full gates keep
 the existing pins, both unfiltered test phases, watchdogs and concurrency. A
 manual dry run prepares validation and packages without enabling publication.
 Do not dispatch it merely to inspect this implementation: the
-[validation pause](../docs/development-harness.md#temporary-validation-pause)
-still governs expensive local runs and hosted dispatches.
+[validation policy](../docs/development-harness.md#validation-authorization)
+keeps hosted dispatch authorization separate from local checks.
 
 [Documentation release](../.github/workflows/docs-release-pages.yml) runs after
 native validation, installer checks and proof sealing. It builds and tests the
