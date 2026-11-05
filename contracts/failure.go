@@ -1,7 +1,5 @@
 package contracts
 
-import "strings"
-
 type FailureLocation struct {
 	Resource ResourceRef `json:"resource"`
 	Path     []string    `json:"path,omitempty"`
@@ -36,7 +34,7 @@ type FailureResourcePair struct {
 
 func CheckFailurePreservation(summary FailureSummary, footprint FailureFootprint, disjoint []FailureResourcePair) Obligation {
 	result := Obligation{ID: StableID("failure-preservation", footprint), Status: Established, Reason: "covered failure leaves the specified observable footprint unchanged"}
-	if summary.Coverage != Known || footprint.Observation == "" || summary.Observation != footprint.Observation || !evidenceOutcomeContains(footprint.Outcomes, summary.Outcome) || len(footprint.Locations) == 0 {
+	if summary.Coverage != Known || footprint.Observation == "" || summary.Observation != footprint.Observation || !containsOutcome(footprint.Outcomes, summary.Outcome) || len(footprint.Locations) == 0 {
 		result.Status, result.Reason = Unresolved, "failure outcome, observation boundary or complete footprint coverage is missing"
 		return result
 	}
@@ -76,22 +74,10 @@ func failureLocationRelation(left, right FailureLocation, disjoint []FailureReso
 		}
 		return "unknown"
 	}
-	if failurePathPrefix(left.Path, right.Path) || failurePathPrefix(right.Path, left.Path) {
+	if pathPrefix(left.Path, right.Path) || pathPrefix(right.Path, left.Path) {
 		return "overlap"
 	}
 	return "disjoint"
-}
-
-func failurePathPrefix(left, right []string) bool {
-	if len(left) > len(right) {
-		return false
-	}
-	for i, part := range left {
-		if part != right[i] {
-			return false
-		}
-	}
-	return true
 }
 
 // CheckRetryFailureBeforeEffect supports the bounded failure-before-effect
@@ -164,17 +150,6 @@ func RuntimeCleanupReportWithCauses(primary string, primaryCauses []string, acce
 	return result
 }
 
-func (report CleanupReport) Explanation() string {
-	parts := []string{}
-	if report.Primary != "" {
-		parts = append(parts, report.Primary)
-	}
-	for _, failure := range report.Secondary {
-		parts = append(parts, failure.Message)
-	}
-	return strings.Join(parts, "; ")
-}
-
 // CheckFailureSummaryProfile projects actual outcome effects onto an explicit
 // runtime resource footprint. Structural target paths are not resource paths.
 func CheckFailureSummaryProfile(summary DerivedSummary, profile Profile, footprint FailureFootprint, disjoint []FailureResourcePair) []Obligation {
@@ -189,7 +164,7 @@ func CheckFailureSummaryProfile(summary DerivedSummary, profile Profile, footpri
 		if profile.Scope == "native_body" && path.Outcome == Normal && path.ObservedOutcome != "" {
 			outcome = path.ObservedOutcome
 		}
-		if !evidenceOutcomeContains(footprint.Outcomes, outcome) {
+		if !containsOutcome(footprint.Outcomes, outcome) {
 			continue
 		}
 		obligation := checkPathFinalState(path, footprint, disjoint)
@@ -200,13 +175,14 @@ func CheckFailureSummaryProfile(summary DerivedSummary, profile Profile, footpri
 		obligation.Claim = claim
 		results = append(results, obligation)
 	}
+	incomplete := hasWorkCutoff(summary.Unknowns) || hasOutcomeUnknown(summary.Paths)
 	if len(results) == 0 {
 		status, reason := Established, "closed outcome summary contains no covered failure path"
-		if len(summary.Paths) == 0 || hasOutcomeUnknown(summary.Paths) {
+		if len(summary.Paths) == 0 || incomplete {
 			status, reason = Unresolved, "failure outcome coverage is incomplete"
 		}
 		results = append(results, Obligation{ID: claim.ID, Claim: claim, Status: status, Reason: reason})
-	} else if hasOutcomeUnknown(summary.Paths) {
+	} else if incomplete {
 		results = append(results, Obligation{ID: claim.ID + ":outcome-coverage", Claim: claim, Status: Unresolved, Reason: "additional failure outcomes remain unknown"})
 	}
 	return results
@@ -249,7 +225,7 @@ func checkPathFinalState(path PathSummary, footprint FailureFootprint, disjoint 
 		}
 		proven := false
 		for _, relation := range path.StateRelations {
-			if relation.Observation != footprint.Observation || len(relation.Evidence) == 0 || relation.Location.Resource.Unknown || relation.Location.Resource.ID != location.Resource.ID || !failurePathPrefix(relation.Location.Path, location.Path) {
+			if relation.Observation != footprint.Observation || len(relation.Evidence) == 0 || relation.Location.Resource.Unknown || relation.Location.Resource.ID != location.Resource.ID || !pathPrefix(relation.Location.Path, location.Path) {
 				continue
 			}
 			if relation.Relation == "different" && len(relation.Location.Path) == len(location.Path) {

@@ -114,7 +114,7 @@ func cargoBuild(ctx context.Context, directory string) (result []cargoArtifact, 
 		if err := recorder.verifyLauncher(command.Path); err != nil {
 			return nil, err
 		}
-		inputFingerprint, err = nativeWorkspaceFingerprint(directory)
+		inputFingerprint, err = nativeWorkspaceFingerprint(inputs)
 		if err != nil {
 			return nil, lerrors.IO.Wrap(err, "fingerprint native workspace")
 		}

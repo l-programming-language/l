@@ -69,7 +69,7 @@ func TestProviderAuthoritativeTargetType(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if got := obligationStatus(result.Obligations); got != test.want {
+		if got := ObligationStatus(result.Obligations); got != test.want {
 			t.Fatalf("provider type %q: got %s, want %s: %+v", test.typeName, got, test.want, result.Obligations)
 		}
 	}

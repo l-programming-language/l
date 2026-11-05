@@ -113,6 +113,61 @@ func NewReport(entry string) Report {
 	return Report{SchemaVersion: SchemaVersion, Kind: "contract_report", Producer: AnalyzerVersion, Entry: entry, ResolutionPolicy: TrackAPolicy, Inputs: make(map[string]string), Summary: DerivedSummary{Coverage: Unknown}, Lowering: LoweringInventory{BoundaryCoverage: Unknown, TransitiveCoverage: Unknown}, Scope: ReportScope{Phase: Invocation, Boundary: "whole_region", Target: "unspecified"}}
 }
 
+// DictionaryVerification combines only the supplied scope's evidence. Missing
+// rules are returned to the originating frontend or CLI for its diagnostic.
+func (report *Report) DictionaryVerification(assurance string, selected []MeaningKey) (*SourceVerificationResult, []MeaningKey, error) {
+	result := &SourceVerificationResult{Selected: append([]MeaningKey(nil), selected...), Assurance: assurance, Scope: "source_elaboration", Status: Established}
+	addStatus := func(status Status) {
+		if status == Contradicted || result.Status == Established {
+			result.Status = status
+		}
+	}
+	var missing []MeaningKey
+	for _, meaning := range selected {
+		found := false
+		for _, cert := range report.SourceCertificates {
+			if cert.Meaning != meaning {
+				continue
+			}
+			if found {
+				return nil, nil, fmt.Errorf("ambiguous compiler-derived source certificates for %s", meaning)
+			}
+			result.Obligations = append(result.Obligations, cert.LogicalObligations...)
+			addStatus(cert.LogicalStatus)
+			found = true
+		}
+		if !found {
+			missing = append(missing, meaning)
+			addStatus(Unresolved)
+		}
+	}
+	switch assurance {
+	case "symbolic":
+		if len(selected) == 0 {
+			return nil, nil, fmt.Errorf("source verification requires an explicit nonempty adjective selection")
+		}
+	case "implementation":
+		result.Scope = "whole_dictionary"
+		result.Obligations = append(result.Obligations, report.Obligations...)
+		for _, cert := range report.Certificates {
+			addStatus(cert.Status)
+			result.Obligations = append(result.Obligations, cert.Obligations...)
+		}
+		for _, cert := range report.SourceCertificates {
+			addStatus(cert.LogicalStatus)
+			result.Obligations = append(result.Obligations, cert.LogicalObligations...)
+			result.Obligations = append(result.Obligations, cert.LoweringObligations...)
+		}
+	default:
+		return nil, nil, fmt.Errorf("unsupported assurance %q", assurance)
+	}
+	if len(selected) > 0 {
+		result.Obligations = distinctRecords("verification-obligation", result.Obligations)
+	}
+	addStatus(ObligationStatus(result.Obligations))
+	return result, missing, nil
+}
+
 func (report Report) Validate() error {
 	if err := validateDocumentHeader(report.SchemaVersion, report.Kind, "contract_report", report.Producer); err != nil {
 		return err
@@ -203,18 +258,12 @@ func (report Report) Validate() error {
 		if request.Scope == nil && request.Request.Scope != "whole_entry" || request.Scope != nil && (request.Request.Scope == "whole_entry" || scopes[request.Scope.ID] != StableID("report-scope", *request.Scope)) {
 			return fmt.Errorf("request result references absent or changed execution scope")
 		}
-		status := Established
 		for i, obligation := range request.Obligations {
 			if request.Required[i] != obligation.ID {
 				return fmt.Errorf("request result hides controlling obligation")
 			}
-			if obligation.Status == Contradicted {
-				status = Contradicted
-			} else if obligation.Status != Established && status != Contradicted {
-				status = Unresolved
-			}
 		}
-		if request.Status != status {
+		if request.Status != ObligationStatus(request.Obligations) {
 			return fmt.Errorf("request result status disagrees with controlling obligations")
 		}
 		obligations = append(obligations, request.Obligations...)

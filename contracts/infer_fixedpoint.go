@@ -11,7 +11,7 @@ func (a *inference) inferDefinitions() error {
 	for _, component := range components {
 		cyclic := len(component) > 1
 		if len(component) == 1 {
-			for _, callee := range definitionCalls(a.plan.Definitions[component[0]], a.plan.Callbacks, nil) {
+			for _, callee := range definitionCalls(a.plan.Definitions[component[0]], a.plan.Callbacks) {
 				cyclic = cyclic || callee == component[0]
 			}
 		}
@@ -34,8 +34,8 @@ func (a *inference) inferDefinitions() error {
 				}
 				if cyclic {
 					for i := range paths {
-						paths[i].Effects = uniqueEffects(paths[i].Effects)
-						paths[i].Unknowns = uniqueUnknowns(paths[i].Unknowns)
+						paths[i].Effects = distinctRecords("effect", paths[i].Effects)
+						paths[i].Unknowns = distinctRecords("unknown", paths[i].Unknowns)
 						if round >= a.options.WidenAfter {
 							paths[i].Resources = UnknownResourceCost("recursive quantitative inference widened; no finite bound established")
 							for callback, demand := range paths[i].Demand {
@@ -96,38 +96,61 @@ func summaryKey(summary DerivedSummary) string {
 	return StableID("paths", sortedStrings(keys))
 }
 
-func definitionCalls(node Node, callbacks map[string]Node, seen map[string]bool) []MeaningKey {
-	var result []MeaningKey
-	if node.Body != nil {
-		result = append(result, definitionCalls(*node.Body, callbacks, seen)...)
-	}
-	if node.Kind == Call {
-		result = append(result, node.Meaning)
-	}
-	if node.Kind == Callback {
-		if seen == nil {
-			seen = make(map[string]bool)
-		}
-		if body, ok := callbacks[node.Callback]; ok && !seen[node.Callback] {
-			seen[node.Callback] = true
-			result = append(result, definitionCalls(body, callbacks, seen)...)
-			delete(seen, node.Callback)
-		}
+// walk short-circuits on the first match; callback and definition references
+// are handled by the caller, separate from the finite stored node tree.
+func (node Node) walk(match func(Node) bool) bool {
+	if match(node) || node.Body != nil && node.Body.walk(match) {
+		return true
 	}
 	for _, children := range [][]Node{node.Children, node.Then, node.Else, node.Cleanup} {
 		for _, child := range children {
-			result = append(result, definitionCalls(child, callbacks, seen)...)
+			if child.walk(match) {
+				return true
+			}
 		}
 	}
+	return false
+}
+
+func (plan Plan) anyNode(match func(Node) bool) bool {
+	if plan.Entry.walk(match) {
+		return true
+	}
+	for _, n := range plan.Definitions {
+		if n.walk(match) {
+			return true
+		}
+	}
+	for _, n := range plan.Callbacks {
+		if n.walk(match) {
+			return true
+		}
+	}
+	return false
+}
+
+func definitionCalls(node Node, callbacks map[string]Node) []MeaningKey {
+	var result []MeaningKey
+	seen := make(map[string]bool)
+	var visit func(Node) bool
+	visit = func(n Node) bool {
+		if n.Kind == Call {
+			result = append(result, n.Meaning)
+		}
+		if n.Kind == Callback && !seen[n.Callback] {
+			seen[n.Callback] = true
+			if body, ok := callbacks[n.Callback]; ok {
+				body.walk(visit)
+			}
+		}
+		return false
+	}
+	node.walk(visit)
 	return result
 }
 
 func definitionSCCs(plan Plan) [][]MeaningKey {
-	keys := make([]string, 0, len(plan.Definitions))
-	for meaning := range plan.Definitions {
-		keys = append(keys, string(meaning))
-	}
-	sort.Strings(keys)
+
 	indices, low := make(map[MeaningKey]int), make(map[MeaningKey]int)
 	onStack := make(map[MeaningKey]bool)
 	var stack []MeaningKey
@@ -140,7 +163,7 @@ func definitionSCCs(plan Plan) [][]MeaningKey {
 		low[meaning] = index
 		stack = append(stack, meaning)
 		onStack[meaning] = true
-		for _, next := range definitionCalls(plan.Definitions[meaning], plan.Callbacks, nil) {
+		for _, next := range definitionCalls(plan.Definitions[meaning], plan.Callbacks) {
 			if _, ok := plan.Definitions[next]; !ok {
 				continue
 			}
@@ -169,9 +192,9 @@ func definitionSCCs(plan Plan) [][]MeaningKey {
 		sort.Slice(component, func(i, j int) bool { return component[i] < component[j] })
 		result = append(result, component)
 	}
-	for _, key := range keys {
-		if indices[MeaningKey(key)] == 0 {
-			visit(MeaningKey(key))
+	for _, key := range sortedMapKeys(plan.Definitions) {
+		if indices[key] == 0 {
+			visit(key)
 		}
 	}
 	return result

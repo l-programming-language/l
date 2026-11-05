@@ -261,7 +261,7 @@ func VerifySourceAdjective(projection SourceAdjectiveProjection, declaration Sou
 		certificate.Mode = "instantiation_only"
 		add(Unresolved, "source structural projection includes unsupported runtime or opaque behavior", Predicate{Kind: "source_fragment"})
 	}
-	summary, err := Infer(projection.Plan, sourceLogicalOptions(options))
+	summary, err := Infer(projection.Plan, options.logical())
 	if err != nil {
 		return certificate, err
 	}
@@ -295,7 +295,7 @@ func VerifySourceAdjective(projection SourceAdjectiveProjection, declaration Sou
 		add(Unresolved, "source declaration requests no structural postcondition or frame", Predicate{Kind: "source_guarantee"})
 	}
 	certificate.Assumptions = evidenceUnique(append(certificate.Assumptions, summary.Assumptions...))
-	certificate.LogicalStatus = obligationStatus(certificate.LogicalObligations)
+	certificate.LogicalStatus = ObligationStatus(certificate.LogicalObligations)
 	return certificate, nil
 }
 
@@ -384,46 +384,21 @@ func sourceStructuralFrame(frame FrameContract, target TargetRef) bool {
 	return true
 }
 
-func sourceLogicalOptions(options AnalysisOptions) AnalysisOptions {
-	options.NativeSummaries = nil
-	options.NativeWitnesses = nil
-	options.ApprovedAssumptions = nil
-	return options
-}
-
 func sourcePlanElaboration(plan Plan) bool {
 	if len(plan.NativeClosure) != 0 || len(plan.Residuals) != 0 || len(plan.Callbacks) != 0 {
 		return false
 	}
-	var supported func(Node) bool
-	supported = func(node Node) bool {
-		if node.Kind != Sequence && node.Kind != Event && node.Kind != Require || node.Phase != "" && node.Phase != Elaboration {
-			return false
-		}
-		if node.Outcome != "" && node.Outcome != Normal {
-			return false
+	return !plan.anyNode(func(node Node) bool {
+		if node.Kind != Sequence && node.Kind != Event && node.Kind != Require || node.Phase != "" && node.Phase != Elaboration || node.Outcome != "" && node.Outcome != Normal {
+			return true
 		}
 		for _, effect := range node.Effects {
 			if effect.Phase != Elaboration || effect.Kind != "write" && effect.Kind != "replace" || effect.Target.Unknown || effect.Target.Root == "" {
-				return false
+				return true
 			}
 		}
-		for _, child := range node.Children {
-			if !supported(child) {
-				return false
-			}
-		}
-		return node.Body == nil && len(node.Then) == 0 && len(node.Else) == 0 && len(node.Cleanup) == 0
-	}
-	if !supported(plan.Entry) {
-		return false
-	}
-	for _, body := range plan.Definitions {
-		if !supported(body) {
-			return false
-		}
-	}
-	return true
+		return node.Body != nil || len(node.Then) > 0 || len(node.Else) > 0 || len(node.Cleanup) > 0
+	})
 }
 
 func invalidateSourceFacts(facts []Predicate, writes []FrameFootprint) []Predicate {
@@ -546,6 +521,6 @@ func instantiateVerifiedSourceAdjective(projection SourceAdjectiveProjection, ve
 		transformer := rebaseTransformer(ContractTransformer{Target: projection.Target, Frame: declaration.Frame}, instance.Target)
 		result.Obligations = append(result.Obligations, CheckFrame(*transformer.Frame, instance.Footprints, FrameContext{})...)
 	}
-	result.Status = obligationStatus(result.Obligations)
+	result.Status = ObligationStatus(result.Obligations)
 	return result
 }

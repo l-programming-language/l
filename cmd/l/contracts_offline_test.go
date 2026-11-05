@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"syscall"
 	"testing"
 	"time"
@@ -21,6 +22,11 @@ const contractsOfflineHelper = "L_CONTRACTS_OFFLINE_CAPABILITY_HELPER"
 // The child runs real source-only commands with kernel-enforced process and
 // socket denial. No PATH shim can stand in for this capability boundary.
 func TestContractsOfflineNoProcessOrNetwork(t *testing.T) {
+	runOfflineHelper(t)
+}
+
+func runOfflineHelper(t *testing.T, env ...string) {
+	t.Helper()
 	executable, err := os.Executable()
 	if err != nil {
 		t.Fatal(err)
@@ -31,7 +37,7 @@ func TestContractsOfflineNoProcessOrNetwork(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	command.Env = append(os.Environ(), contractsOfflineHelper+"=1")
+	command.Env = append(append(os.Environ(), contractsOfflineHelper+"=1"), env...)
 	output, err := command.CombinedOutput()
 	if err != nil {
 		t.Fatalf("offline capability subprocess failed: %v\n%s", err, output)
@@ -66,6 +72,25 @@ func TestContractsOfflineCapabilitiesHelper(t *testing.T) {
 		t.Fatalf("network capability was not denied: %v", err)
 	}
 
+	if record := os.Getenv("L_CONTRACTS_BUILD_RECORD"); record != "" {
+		source := os.Getenv("L_CONTRACTS_BUILD_SOURCE")
+		report, _ := contractJSON(t, source, 0, "inspect", "--native-environment", record)
+		if status, reason := contracts.EnvironmentApplicability(*report.NativeEnvironment, report.Inputs, report.Lowering.Fingerprints); status != contracts.Established ||
+			!slices.Contains(report.Scope.Exclusions, reason) {
+			t.Fatalf("offline build evidence: %s, %s, %v", status, reason, report.Scope.Exclusions)
+		}
+		changed := *report.NativeEnvironment
+		token := "10"
+		if changed.Configuration["companion-generation"] == token {
+			token = "11"
+		}
+		changed.Configuration["companion-generation"] = token
+		replaced := scopedWrite(t, t.TempDir(), "different-generation.json", contracts.SealNativeEnvironment(changed))
+		other, _ := contractJSON(t, source, 0, "inspect", "--native-environment", replaced)
+		if status, _ := contracts.EnvironmentApplicability(*other.NativeEnvironment, other.Inputs, other.Lowering.Fingerprints); status != contracts.Unresolved {
+			t.Fatal("changed artifact placement retained build assurance")
+		}
+	}
 	directory := t.TempDir()
 	input := filepath.Join(directory, "main.l")
 	writeContractFile(t, input, []byte("Create \"items\" as a New List of 1 and 2.\nPlace 4 in items at 0.\n"))

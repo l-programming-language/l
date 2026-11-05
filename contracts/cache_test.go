@@ -22,14 +22,14 @@ func TestSeparateCacheBoundaries(t *testing.T) {
 			implementation := implementationKeyFixture(logical)
 			conditional := EvidenceResult{Status: Established, Reason: "conditional logical theorem", Assumptions: []string{"native-spec"}}
 			assurance := EvidenceResult{Status: Established, Reason: "current conformance", Assumptions: []string{"test-only-native"}}
-			if err := session.storeLogical(logical, conditional); err != nil {
+			if err := session.store(logical, conditional); err != nil {
 				t.Fatal(err)
 			}
-			if err := session.storeImplementation(implementation, assurance); err != nil {
+			if err := session.store(implementation, assurance); err != nil {
 				t.Fatal(err)
 			}
 			var result EvidenceResult
-			if found, err := session.loadImplementation(implementation, &result); err != nil || !found || !reflect.DeepEqual(result, assurance) {
+			if found, err := session.load(implementation, &result); err != nil || !found || !reflect.DeepEqual(result, assurance) {
 				t.Fatalf("warm lookup = %v, %v, %+v", found, err, result)
 			}
 			switch id {
@@ -40,14 +40,14 @@ func TestSeparateCacheBoundaries(t *testing.T) {
 			case "LEX-031":
 				implementation.Dependencies = map[string]string{"provider": "provider-v2", "drop": "drop-v2"}
 			}
-			if found, err := session.loadImplementation(implementation, &result); err != nil || found {
+			if found, err := session.load(implementation, &result); err != nil || found {
 				t.Fatalf("stale assurance reused: %v, %v", found, err)
 			}
-			if found, err := session.loadLogical(logical, &result); err != nil || !found || !reflect.DeepEqual(result, conditional) {
+			if found, err := session.load(logical, &result); err != nil || !found || !reflect.DeepEqual(result, conditional) {
 				t.Fatalf("conditional theorem unnecessarily discarded: %v, %v, %+v", found, err, result)
 			}
 			logical.Specification = "spec-v2"
-			if found, err := session.loadLogical(logical, &result); err != nil || found {
+			if found, err := session.load(logical, &result); err != nil || found {
 				t.Fatalf("stale logical theorem reused: %v, %v", found, err)
 			}
 		})
@@ -98,7 +98,7 @@ func TestCacheInvalidationAndImmutability(t *testing.T) {
 			t.Run(changed, func(t *testing.T) {
 				session := NewSession()
 				key := implementationKeyFixture(logicalKeyFixture())
-				if err := session.storeImplementation(key, EvidenceResult{Status: Established}); err != nil {
+				if err := session.store(key, EvidenceResult{Status: Established}); err != nil {
 					t.Fatal(err)
 				}
 				switch changed {
@@ -112,7 +112,7 @@ func TestCacheInvalidationAndImmutability(t *testing.T) {
 					key.Dependencies["binding"] = "changed-selection"
 				}
 				var got EvidenceResult
-				found, err := session.loadImplementation(key, &got)
+				found, err := session.load(key, &got)
 				if found || got.Status == Established || (err != nil) != (changed == "schema") {
 					t.Fatalf("stale assurance reused: found=%v error=%v result=%+v", found, err, got)
 				}
@@ -122,16 +122,16 @@ func TestCacheInvalidationAndImmutability(t *testing.T) {
 	session := NewSession()
 	key := logicalKeyFixture()
 	value := EvidenceResult{Status: Established, Assumptions: []string{"fixture-only"}}
-	if err := session.storeLogical(key, value); err != nil {
+	if err := session.store(key, value); err != nil {
 		t.Fatal(err)
 	}
 	value.Assumptions[0] = "mutated"
 	var got EvidenceResult
-	if found, err := session.loadLogical(key, &got); err != nil || !found || got.Assumptions[0] != "fixture-only" {
+	if found, err := session.load(key, &got); err != nil || !found || got.Assumptions[0] != "fixture-only" {
 		t.Fatalf("cache aliased caller memory: %v, %v, %+v", found, err, got)
 	}
 	got.Assumptions[0] = "mutated-again"
-	if found, err := session.loadLogical(key, &got); err != nil || !found || got.Assumptions[0] != "fixture-only" {
+	if found, err := session.load(key, &got); err != nil || !found || got.Assumptions[0] != "fixture-only" {
 		t.Fatalf("cache leaked mutable output: %v, %v, %+v", found, err, got)
 	}
 }
@@ -149,11 +149,11 @@ func TestUnsupportedOrIncompleteRecordsRequireFreshAnalysis(t *testing.T) {
 		session := NewSession()
 		key := logicalKeyFixture()
 		key.Substitutions = ""
-		if err := session.storeLogical(key, EvidenceResult{Status: Established}); err == nil {
+		if err := session.store(key, EvidenceResult{Status: Established}); err == nil {
 			t.Fatal("incomplete logical dependencies admitted")
 		}
 		var stale EvidenceResult
-		if found, err := session.loadLogical(key, &stale); found || err == nil || stale.Status == Established {
+		if found, err := session.load(key, &stale); found || err == nil || stale.Status == Established {
 			t.Fatalf("incomplete record manufactured proof: found=%v error=%v result=%+v", found, err, stale)
 		}
 		plan := Plan{Entry: Node{Kind: Native, Native: "opaque"}}

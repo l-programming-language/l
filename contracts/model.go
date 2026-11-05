@@ -10,7 +10,7 @@ import (
 )
 
 const SchemaVersion = "1.1"
-const AnalyzerVersion = "l-contracts-1.1/4"
+const AnalyzerVersion = "l-contracts-1.1/5"
 const TrackAPolicy = "l-existing-resolution/1"
 const ReferencePolicy = "unique-applicable/1"
 
@@ -24,6 +24,9 @@ type Status string
 type Outcome string
 type Phase string
 type EffectKind string
+
+// EffectSignal requests process termination without joining the process.
+const EffectSignal EffectKind = "signal"
 
 const (
 	Known           Coverage = "known"
@@ -206,11 +209,20 @@ func StableID(prefix string, value any) string {
 	return prefix + ":" + hash
 }
 
-func AllEstablished(obligations []Obligation) bool {
+// ObligationStatus returns the controlling status across a set of obligations.
+func ObligationStatus(obligations []Obligation) Status {
+	status := Established
 	for _, obligation := range obligations {
+		if obligation.Status == Contradicted {
+			return Contradicted
+		}
 		if obligation.Status != Established {
-			return false
+			status = Unresolved
 		}
 	}
-	return true
+	return status
+}
+
+func AllEstablished(obligations []Obligation) bool {
+	return ObligationStatus(obligations) == Established
 }

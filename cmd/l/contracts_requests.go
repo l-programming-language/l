@@ -41,19 +41,6 @@ func prepareNativeApplications(report *contracts.Report, metadata contractMetada
 	return options, evaluations, nil
 }
 
-func resultStatus(obligations []contracts.Obligation) contracts.Status {
-	status := contracts.Established
-	for _, obligation := range obligations {
-		if obligation.Status == contracts.Contradicted {
-			return contracts.Contradicted
-		}
-		if obligation.Status != contracts.Established {
-			status = contracts.Unresolved
-		}
-	}
-	return status
-}
-
 func applyContractRequests(report *contracts.Report, analysis *Lyger.ContractAnalysis, metadata contractMetadata, options contracts.AnalysisOptions) error {
 	if metadata.Requests == nil {
 		return nil
@@ -103,7 +90,7 @@ func applyContractRequests(report *contracts.Report, analysis *Lyger.ContractAna
 			}
 		}
 		result.Obligations = append(result.Obligations, checkContractProfile(analysis, result.Summary, profile, request.Footprint)...)
-		result.Status = resultStatus(result.Obligations)
+		result.Status = contracts.ObligationStatus(result.Obligations)
 		for _, obligation := range result.Obligations {
 			result.Required = append(result.Required, obligation.ID)
 		}

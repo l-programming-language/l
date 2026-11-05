@@ -7,30 +7,21 @@ import (
 )
 
 func inferContractAnalysis(analysis *ContractAnalysis, options ContractAnalysisOptions) error {
+	var summary contracts.DerivedSummary
+	var err error
 	if options.Session == nil {
-		return inferContractAnalysisCold(analysis, options.Inference)
+		summary, err = contracts.Infer(analysis.Plan, options.Inference)
+	} else {
+		// Track A always resolves first. A cache entry only checks this resolution.
+		if err := cacheContractBindings(analysis.Bindings, options.Session); err != nil {
+			return err
+		}
+		summary, err = options.Session.Infer(analysis.Plan, options.Inference, analysis.Bindings.Inputs, analysis.Lowering)
 	}
-	// Track A resolution always runs against current source/providers. A cache
-	// snapshot never supplies record pointers or changes the resolver's choice.
-	// Replayed binding records must agree with that newly resolved snapshot.
-	if err := cacheContractBindings(analysis.Bindings, options.Session); err != nil {
-		return err
+	if err == nil {
+		analysis.Summary = summary
 	}
-	summary, err := options.Session.Infer(analysis.Plan, options.Inference, analysis.Bindings.Inputs, analysis.Lowering)
-	if err != nil {
-		return err
-	}
-	analysis.Summary = summary
-	return nil
-}
-
-func inferContractAnalysisCold(analysis *ContractAnalysis, options contracts.AnalysisOptions) error {
-	summary, err := contracts.Infer(analysis.Plan, options)
-	if err != nil {
-		return err
-	}
-	analysis.Summary = summary
-	return nil
+	return err
 }
 
 func cacheContractBindings(snapshot ContractBindings, session *contracts.Session) error {

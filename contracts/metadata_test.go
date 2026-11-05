@@ -49,9 +49,13 @@ func TestMetadataStrictness(t *testing.T) {
 		if _, err := DecodeDocument(invalid); err == nil {
 			t.Fatal("favorable misspelling ignored")
 		}
-		loaded, err := ReadNativeManifest(data)
+		document, err := DecodeDocument(data)
 		if err != nil {
 			t.Fatal(err)
+		}
+		loaded, ok := document.(NativeContractManifest)
+		if !ok {
+			t.Fatalf("expected native manifest, got %T", document)
 		}
 		if got := NormalizeNativeContract(loaded.Declarations[0]); got.Assurance != Unresolved || got.Effects.UnknownTail == nil || !*got.Effects.UnknownTail {
 			t.Fatalf("omission granted no-allocation: %+v", got)

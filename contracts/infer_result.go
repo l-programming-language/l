@@ -6,7 +6,7 @@ package contracts
 func (a *inference) checkResult(node Node, entry PathSummary) ([]PathSummary, error) {
 	values, err := a.sequence(node.Children, []PathSummary{entry})
 	if err != nil {
-		return nil, err
+		return pending(values), err
 	}
 	var result []PathSummary
 	for _, value := range values {
@@ -16,9 +16,6 @@ func (a *inference) checkResult(node Node, entry PathSummary) ([]PathSummary, er
 		}
 		observed := value.ObservedOutcome
 		checked, err := a.sequence(node.Cleanup, []PathSummary{value})
-		if err != nil {
-			return nil, err
-		}
 		for i := range checked {
 			if checked[i].Outcome == Normal && !checked[i].ControlReturn {
 				if observed == ReturnedFailure || checked[i].ObservedOutcome == ReturnedFailure {
@@ -29,6 +26,9 @@ func (a *inference) checkResult(node Node, entry PathSummary) ([]PathSummary, er
 			}
 		}
 		result = append(result, checked...)
+		if err != nil {
+			return result, err
+		}
 	}
 	return result, nil
 }

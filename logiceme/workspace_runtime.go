@@ -22,40 +22,11 @@ type WorkspaceRuntime struct {
 // Optional libraries are fully framed AML, consumed as ordinary library books;
 // the allocated runtime library replaces the canonical full-support composition.
 func (ls *LogicemeService) EvaluateWorkspaceEntry(jit []byte, runtime WorkspaceRuntime, libraries ...[]byte) (entry, support Executable, err error) {
-	if ls == nil || ls.resources == nil {
-		return Executable{}, Executable{}, lerrors.InvalidConfiguration.Errorf("source generator configuration is required")
-	}
-	if err := validateWorkspaceRuntime(runtime); err != nil {
-		return Executable{}, Executable{}, err
-	}
-	system, err := loadSegmentalSystem(ls.resources)
-	if err != nil {
-		return Executable{}, Executable{}, fmt.Errorf("load source generator: %w", err)
-	}
-	if len(libraries) > 1 {
-		return Executable{}, Executable{}, lerrors.InvalidInput.Errorf("workspace entry accepts one runtime library")
-	}
-	templates, err := loadSupportAssets(ls.resources, true)
+	prepared, err := ls.prepareGeneration(jit, GenerationOptions{IncludeRuntime: true}, &runtime, false, libraries...)
 	if err != nil {
 		return Executable{}, Executable{}, err
 	}
-	if len(libraries) == 0 {
-		templates["runtime/runtime.rs"], err = loadRuntimeComposition(ls.resources, templates)
-	} else {
-		templates["runtime/runtime.rs"], err = generateRuntimeComposition(libraries[0], system, templates, runtime.Package)
-	}
-	if err != nil {
-		return Executable{}, Executable{}, err
-	}
-	entry, err = evaluateSourceWithSupport(jit, system, templates, true, &runtime)
-	if err != nil {
-		return Executable{}, Executable{}, err
-	}
-	support, err = workspaceRuntimeLibrary(runtime.Package, templates)
-	if err != nil {
-		return Executable{}, Executable{}, err
-	}
-	return entry, support, nil
+	return prepared.RenderWorkspace()
 }
 
 func validateWorkspaceRuntime(runtime WorkspaceRuntime) error {

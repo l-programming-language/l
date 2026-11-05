@@ -339,7 +339,11 @@ func (a *ContractAnalysis) verifySourceContracts(options ContractAnalysisOptions
 		if declaration.Meaning != "" && declaration.TargetNominal != projection.TargetNominal {
 			return fmt.Errorf("%w: declared nominal differs from selected rule %s", ErrSourceContractMetadata, entry.meaning)
 		}
-		certificate, err := verifySourceWithSession(projection, declaration, options)
+		verify := contracts.VerifySourceAdjective
+		if options.Session != nil && declaration.Meaning != "" {
+			verify = options.Session.VerifySourceAdjective
+		}
+		certificate, err := verify(projection, declaration, options.Inference)
 		if err != nil {
 			return err
 		}
@@ -367,26 +371,15 @@ func (a *ContractAnalysis) verifySourceContracts(options ContractAnalysisOptions
 		target.Phase = contracts.Elaboration
 		target.Nominal = r.sourceNominal(use.Rule.Target)
 		instance := contracts.SourceAdjectiveInstance{Meaning: meaning, Target: target, TargetNominal: target.Nominal, Before: r.sourceShape(use.Before, target), After: r.sourceShape(use.After, target), Footprints: r.sourceFootprints(use.Operations, target), Origin: r.origin(use.Token), LoweringObligations: projections[meaning].LoweringObligations}
-		var result contracts.SourceAdjectiveInstantiation
-		var err error
+		verify := contracts.VerifySourceAdjectiveInstance
 		if options.Session != nil {
-			result, err = options.Session.VerifySourceAdjectiveInstance(projections[meaning], certificates[meaning], declaration, instance, options.Inference)
-		} else {
-			result, err = contracts.VerifySourceAdjectiveInstance(projections[meaning], certificates[meaning], declaration, instance, options.Inference)
+			verify = options.Session.VerifySourceAdjectiveInstance
 		}
+		result, err := verify(projections[meaning], certificates[meaning], declaration, instance, options.Inference)
 		if err != nil {
 			return err
 		}
 		a.SourceInstantiations = append(a.SourceInstantiations, result)
 	}
 	return nil
-}
-
-func verifySourceWithSession(projection contracts.SourceAdjectiveProjection, declaration contracts.SourceTransformerDeclaration, options ContractAnalysisOptions) (contracts.SourceAdjectiveCertificate, error) {
-	if options.Session == nil || declaration.Meaning == "" {
-		logicalOptions := options.Inference
-		logicalOptions.NativeSummaries, logicalOptions.NativeWitnesses, logicalOptions.ApprovedAssumptions = nil, nil, nil
-		return contracts.VerifySourceAdjective(projection, declaration, logicalOptions)
-	}
-	return options.Session.VerifySourceAdjective(projection, declaration, options.Inference)
 }

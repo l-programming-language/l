@@ -62,12 +62,12 @@ func TestAcceptanceDemandDependenciesBASE015(t *testing.T) {
 	session := NewSession()
 	key := implementationKeyFixture(logicalKeyFixture())
 	key.Dependencies["demand"] = without.Fingerprint
-	if err := session.storeImplementation(key, EvidenceResult{Status: Established}); err != nil {
+	if err := session.store(key, EvidenceResult{Status: Established}); err != nil {
 		t.Fatal(err)
 	}
 	key.Dependencies["demand"] = with.Fingerprint
 	var stale EvidenceResult
-	if found, err := session.loadImplementation(key, &stale); err != nil || found {
+	if found, err := session.load(key, &stale); err != nil || found {
 		t.Fatalf("demand-dependent assurance survived changed callback: %v, %v", found, err)
 	}
 }

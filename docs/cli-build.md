@@ -35,9 +35,10 @@ This explicit option records pinned tool identity/version observations, selected
 source and backend fingerprints, relevant Cargo configuration, the actual Cargo
 invocation and output digests, and compiled artifact hashes. It does not run the
 published executable or any App. A failed Cargo invocation is retained in the
-evidence document once initial environment capture has succeeded. An evidence
-write failure is reported separately, including if executable publication has
-already succeeded.
+evidence document once initial environment capture has succeeded. On a successful compile, the coordinator replaces the requested evidence file
+before publishing the executable. An evidence-write failure preserves the
+previous executable and evidence. If publication subsequently fails, the
+record still identifies the compiled artifacts.
 
 Choose a destination outside source inputs, the executable, companion generations
 and custom assets. The ordinary build path performs no additional observation or

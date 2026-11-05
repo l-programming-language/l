@@ -122,12 +122,13 @@ Credential variables and other unlisted variables are omitted entirely, includin
 their hashes; non-test evidence containing unlisted environment keys rejects.
 Conventional Cargo configuration files and their absence are tracked separately.
 
-The optional build flag produces the same versioned environment document, adding
-actual Cargo command/results, exact workspace-input identity and compiled
-artifact hashes. It does not run generated programs. A Cargo failure retains its
-failed execution record once capture has succeeded; it produces no successful
-artifact evidence. Recorded staging paths are historical provenance and may no
-longer exist after cleanup.
+Build evidence uses record version 2 and includes the actual Cargo invocation,
+locked workspace input digest, artifact hashes and companion generation.
+Offline checks reconstruct that placement in memory. Environment-only capture
+remains at record version 1.
+A build record without the required generation cannot establish current build
+assurance. Failed Cargo invocations remain visible. Artifact evidence records
+compilation even if subsequent publication fails.
 
 Neither document approves native behavior. Panic strategy, allocator behavior,
 linker internals and transitive native conformance remain unproved by these
@@ -238,9 +239,11 @@ and profile enforcement:
 | `--native-environment PATH` | Read a previously captured native environment without executing recorded commands or probing tool versions. |
 | `--request-file PATH` | For `check`, load explicit scoped checks and failure-preservation footprints. |
 
-Report destinations must not replace the source input. Reports can be written
-before enforcement returns a failure status, so retain both the report and exit
-status when recording a check.
+Both destinations are checked together against physical imports, selected
+metadata and compiler assets, including file aliases. When both flags are used,
+the destinations must be distinct. Relative paths resolve from the working
+directory. Successful file replacement uses private permissions (0600). Keep the exit status alongside the
+report when recording an enforced check.
 
 `--assets` selects one complete resource provider; missing optional contract
 metadata does not trigger embedded metadata fallback. An optional
@@ -388,8 +391,9 @@ failure requires an explicit observable footprint and selected failure outcomes.
 
 The numerical policy widens growing components after eight growth rounds, caps
 updates at 64 per strongly connected component, and retains at most 32 path
-alternatives. Precision loss produces dependent unknowns, never a claim of
-unbounded execution. Resource accounting separates cumulative allocation, peak
+alternatives. Each inference has a cumulative budget of 8,192 analysis steps
+across repeats, calls and path alternatives. Exhaustion reports partial coverage
+and leaves unfinished obligations unresolved. Resource accounting separates cumulative allocation, peak
 live resources and retained resources; cost formulas can contain callback cost
 variables and dependent bounds.
 

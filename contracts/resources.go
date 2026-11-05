@@ -2,7 +2,6 @@ package contracts
 
 import (
 	"math"
-	"sort"
 )
 
 // CostExpr is a bounded symbolic cost expression. Unknown is not infinity:
@@ -223,10 +222,5 @@ func sortedStrings(values []string) []string {
 			seen[value] = true
 		}
 	}
-	result := make([]string, 0, len(seen))
-	for value := range seen {
-		result = append(result, value)
-	}
-	sort.Strings(result)
-	return result
+	return sortedMapKeys(seen)
 }

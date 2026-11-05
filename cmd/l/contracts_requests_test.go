@@ -31,11 +31,7 @@ type scopedNativeFixture struct {
 	report                                                       contracts.Report
 }
 
-func newScopedNativeFixture(t *testing.T, profile, relation string) scopedNativeFixture {
-	return newScopedNativeFixtureAssets(t, profile, relation, "")
-}
-
-func newScopedNativeFixtureAssets(t *testing.T, profile, relation, assets string) scopedNativeFixture {
+func newScopedNativeFixture(t *testing.T, profile, relation, assets string) scopedNativeFixture {
 	t.Helper()
 	directory := t.TempDir()
 	f := scopedNativeFixture{input: filepath.Join(directory, "main.l"), assets: assets}
@@ -110,10 +106,7 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 		t.Fatal(err)
 	}
 	path := filepath.Join(assets, "stdlib", "eng", "storage", "dictionary.l")
-	data, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatal(err)
-	}
+	data := readContractFile(t, path)
 	text := string(data)
 	start := strings.Index(text, "Publicly create Storage's List's \"Update")
 	if start < 0 {
@@ -132,7 +125,7 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 	body = strings.Replace(body, needle, mutation+needle, 1)
 	writeContractFile(t, path, []byte(text[:start]+body+text[end:]))
 	composeScopedTestProvider(t, assets)
-	f := newScopedNativeFixtureAssets(t, "PreservesOnFailure", "different", assets)
+	f := newScopedNativeFixture(t, "PreservesOnFailure", "different", assets)
 	f.requests.Checks = f.requests.Checks[:1]
 	scopedWrite(t, filepath.Dir(f.input), "requests.json", f.requests)
 	report := f.check(t, 1)
@@ -155,10 +148,7 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 func composeScopedTestProvider(t *testing.T, root string) {
 	t.Helper()
 	path := filepath.Join(root, "builtins", "runtime", "eng", "dictionary.l")
-	source, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatal(err)
-	}
+	source := readContractFile(t, path)
 	c := Lyger.NewLygerService(Lyger.Options{Resources: os.DirFS(root), AssetRoot: root}).NewCompilation(source, path)
 	c.Make()
 	if c.Error != nil {
@@ -188,7 +178,7 @@ func composeScopedTestProvider(t *testing.T, root string) {
 }
 
 func TestScopedNativeCLIApprovalAndRemoval(t *testing.T) {
-	f := newScopedNativeFixture(t, "NoBlocking", "")
+	f := newScopedNativeFixture(t, "NoBlocking", "", "")
 	report := f.check(t, 0)
 	if len(report.Requests) != 2 || len(report.Summary.Unknowns) == 0 || len(report.Assumptions) == 0 {
 		t.Fatal("scoped success lost outside unknowns or displayed test-only assumptions")
@@ -212,7 +202,7 @@ func TestScopedNativeCLIFailureCompletionRelations(t *testing.T) {
 		want     contracts.Status
 	}{{"unchanged", 0, contracts.Established}, {"different", 1, contracts.Contradicted}, {"unknown", 1, contracts.Unresolved}} {
 		t.Run(test.relation, func(t *testing.T) {
-			f := newScopedNativeFixture(t, "PreservesOnFailure", test.relation)
+			f := newScopedNativeFixture(t, "PreservesOnFailure", test.relation, "")
 			// A propagated failure ends the first invocation. Select that actual
 			// reachable boundary; a later unreachable selector must be rejected.
 			f.requests.Checks = f.requests.Checks[:1]
@@ -226,7 +216,7 @@ func TestScopedNativeCLIFailureCompletionRelations(t *testing.T) {
 }
 
 func TestScopedNativeCLIStaleEvidenceAndOfflineCommands(t *testing.T) {
-	f := newScopedNativeFixture(t, "NoBlocking", "")
+	f := newScopedNativeFixture(t, "NoBlocking", "", "")
 	trap := t.TempDir()
 	marker := filepath.Join(trap, "executed")
 	for _, name := range []string{"cargo", "rustc", "rustup", "git", "curl", "sh"} {

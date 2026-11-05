@@ -125,12 +125,9 @@ func TestContractsSourceSymbolicVerification(t *testing.T) {
 	if err != nil || len(entries) != 2 {
 		t.Fatalf("verification created build/publication artifacts: %v, %v", entries, err)
 	}
-	var output bytes.Buffer
-	if err := writeContractText(&output, report); err != nil {
-		t.Fatal(err)
-	}
+	output := string(contractText(report))
 	for _, expected := range []string{"Source verification: symbolic assurance", "source_elaboration, symbolic", string(certificate.Meaning), "Native:"} {
-		if !strings.Contains(output.String(), expected) {
+		if !strings.Contains(output, expected) {
 			t.Fatalf("text report omitted narrow scope or residual native assurance %q", expected)
 		}
 	}
@@ -165,6 +162,35 @@ func TestContractsAuthoredTransformerCannotCertifySource(t *testing.T) {
 	if report.SourceVerification == nil || report.SourceVerification.Status != contracts.Unresolved {
 		t.Fatal("authored typed model was substituted for source conformance")
 	}
+	n := int64(32)
+	body := contracts.Node{Kind: contracts.Event}
+	for depth := 0; depth < 3; depth++ {
+		body = contracts.Node{Kind: contracts.Repeat, Count: &n, Children: []contracts.Node{body}}
+	}
+	manifest.Transformers[0].Body.Entry = body
+	file = scopedWrite(t, filepath.Dir(path), "authored-model.json", manifest)
+	for _, action := range []string{"inspect", "verify-dictionary"} {
+		args := []string{action, "--manifest", file}
+		want := 0
+		if action == "verify-dictionary" {
+			args = append(args, "--adjective", string(certificate.Meaning))
+			want = 1
+		}
+		report, _ := contractJSON(t, path, want, args...)
+		if len(report.Certificates) == 0 || report.Certificates[0].Status != contracts.Unresolved || len(report.Certificates[0].Summary.Unknowns) == 0 || report.Certificates[0].Summary.Unknowns[0].Code != "work_budget" {
+			t.Fatalf("truncated manifest: %+v", report.Certificates)
+		}
+		if action == "verify-dictionary" {
+			found := false
+			for _, o := range report.SourceVerification.Obligations {
+				found = found || o.Claim.Predicate.Kind == "analysis_complete" && o.Status == contracts.Unresolved
+			}
+			if !found {
+				t.Fatal("selected enforcement dropped budget obligation")
+			}
+		}
+	}
+
 }
 
 func TestContractsSourceInstanceExplainAndWholeEntryCheck(t *testing.T) {

@@ -6,11 +6,14 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
+	"strings"
 	"testing"
 	"testing/fstest"
 
 	"github.com/l-programming-language/l/contracts"
+	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 )
 
 func contractOutput(t *testing.T, expected int, args ...string) ([]byte, string) {
@@ -32,6 +35,15 @@ func contractJSON(t *testing.T, input string, expected int, options ...string) (
 		}
 	}
 	return report, data
+}
+
+func readContractFile(t *testing.T, path string) []byte {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return data
 }
 
 func writeContractFile(t *testing.T, path string, data []byte) string {
@@ -136,6 +148,99 @@ func TestContractsMetadataProviderAndConflicts(t *testing.T) {
 		}
 		if _, err := loadContractMetadata(resources, contractsCommand{}); err == nil {
 			t.Fatal("manifest order overrode a conflicting declaration")
+		}
+	}
+}
+
+func TestContractsProtectPhysicalInputs(t *testing.T) {
+	root := distributiontest.CompleteOverride(t)
+	input := writeContractFile(t, filepath.Join(root, "main.l"), []byte("Use `helper.l`.\nExit.\n"))
+	helper := writeContractFile(t, filepath.Join(root, "helper.l"), []byte("Use `empty.l`.\n"))
+	empty := writeContractFile(t, filepath.Join(root, "empty.l"), nil)
+	hard, sym := filepath.Join(root, "alias"), filepath.Join(root, "link")
+	if err := os.Link(empty, hard); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(helper, sym); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Mkdir(filepath.Join(root, "contracts"), 0700); err != nil {
+		t.Fatal(err)
+	}
+	index := filepath.Join(root, "contracts", "index.json")
+	manifest := writeContractFile(t, filepath.Join(root, "outside.json"), []byte(`{"schema_version":"1.1","kind":"native_contract_manifest","producer":"test","declarations":[]}`))
+	report := filepath.Join(root, "report.json")
+	t.Setenv("PATH", t.TempDir()) // A capture reaching tool discovery would fail with status 1.
+	reject := func(output string, args ...string) {
+		t.Helper()
+		before := assetTree(t, root)
+		_, diagnostic := contractOutput(t, 2, append(args, "--assets", root, "--output", output, input)...)
+		if !strings.Contains(diagnostic, "must not replace") || !reflect.DeepEqual(before, assetTree(t, root)) {
+			t.Fatalf("rejection changed inputs or missed collision: %s", diagnostic)
+		}
+	}
+	reject(index, "inspect") // A report must not become the optional provider index.
+	writeContractFile(t, index, []byte(`{"schema_version":"1.1","manifests":["outside.json"]}`))
+	for _, path := range []string{helper, empty, hard, sym, index, manifest} {
+		reject(path, "inspect", "--report", report)
+		reject(report, "inspect", "--report", path)
+	}
+	reject(empty, "evidence", "capture")
+	writeContractFile(t, report, []byte("previous report"))
+	alias := filepath.Join(root, "report-alias")
+	if err := os.Link(report, alias); err != nil {
+		t.Fatal(err)
+	}
+	reject(report, "inspect", "--report", report)
+	reject(alias, "inspect", "--report", report)
+	before := assetTree(t, root)
+	contractOutput(t, 2, "inspect", "--report", report, "--output", root, input)
+	if !reflect.DeepEqual(before, assetTree(t, root)) {
+		t.Fatal("invalid second destination caused a partial write")
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	relative, err := filepath.Rel(cwd, report)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, want := contractJSON(t, input, 0, "inspect", "--assets", root)
+	contractOutput(t, 0, "inspect", "--assets", root, "--output", relative, "--format", "json", input)
+	if got, err := os.ReadFile(report); err != nil || !bytes.Equal(got, want) {
+		t.Fatalf("relative output differs from stdout: %v", err)
+	}
+}
+
+func TestContractsInspectRepeatedStop(t *testing.T) {
+	source := filepath.Join("..", "..", "testdata", "phase1", "f23-repeat-stop-after-completion", "main.l")
+	contractOutput(t, 0, "inspect", source)
+	data, _ := contractOutput(t, 0, "inspect", "--format", "json", source)
+	if _, err := contracts.DecodeDocument(bytes.Replace(data, []byte(`"kind": "signal"`), []byte(`"kind": "signla"`), 1)); err == nil {
+		t.Fatal("strict reader accepted an unknown effect kind")
+	}
+	document, err := contracts.DecodeDocument(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	report, ok := document.(contracts.Report)
+	if !ok {
+		t.Fatalf("expected a contract report, got %T", document)
+	}
+	var events []contracts.Effect
+	for _, effect := range report.Summary.Effects {
+		if effect.Origin.Source == "source:main.l" && effect.Resource.Kind == "process" {
+			events = append(events, effect)
+		}
+	}
+	if len(events) != 4 || events[0].Origin.Start >= events[1].Origin.Start || events[0].Target.Root == "" {
+		t.Fatalf("missing distinct authored Stop occurrences and process target: %+v", events)
+	}
+	for i, kind := range []contracts.EffectKind{"signal", "signal", "wait", "suspend"} {
+		e := events[i]
+		if e.Kind != kind || e.Target.Root != events[0].Target.Root || e.Resource.ID != events[0].Resource.ID {
+			t.Fatalf("expected %s on the selected process, got %+v", kind, e)
 		}
 	}
 }

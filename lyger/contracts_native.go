@@ -2,6 +2,7 @@ package Lyger
 
 import (
 	"fmt"
+	"maps"
 	"math"
 	"sort"
 	"strconv"
@@ -459,7 +460,7 @@ func (a *ContractAnalysis) refreshNativeScopes() error {
 		return err
 	}
 	r := c.contractRecorder
-	r.nativeAnalysis = &contractNativeAnalysis{inputs: r.snapshot().Inputs}
+	r.nativeAnalysis = &contractNativeAnalysis{inputs: maps.Clone(a.Bindings.Inputs)}
 	a.Plan.Entry = contracts.Node{Kind: contracts.Sequence, ID: "entry", Children: r.contractBlock(plan.Root)}
 	a.Plan.Definitions = make(map[contracts.MeaningKey]contracts.Node)
 	r.contractFunctions(plan.Root.Body, a.Plan.Definitions)

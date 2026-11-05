@@ -61,7 +61,7 @@ func TestRuntimeFrameUsesAliasEvidence(t *testing.T) {
 	a, b := ResourceRef{ID: "a"}, ResourceRef{ID: "b"}
 	frame := FrameContract{Target: target, Resource: a, Scope: "runtime", Allowed: []TargetRef{other}, Preserves: []TargetRef{target}}
 	writes := []FrameFootprint{{Kind: "write", Target: other, Resource: b, Definite: true}}
-	result := CheckFrame(frame, writes, FrameContext{Aliases: []FrameResourcePair{{Left: a, Right: b}}})
+	result := CheckFrame(frame, writes, FrameContext{Aliases: []ResourcePair{{Left: a, Right: b}}})
 	if !hasStatus(result, Contradicted) {
 		t.Fatal("known aliases did not refute runtime preservation")
 	}

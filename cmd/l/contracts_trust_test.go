@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"strings"
 	"testing"
 
@@ -61,11 +60,8 @@ func TestContractTrustIsPropositionSpecific(t *testing.T) {
 		if _, err := contracts.EncodeDocument(report); err != nil {
 			t.Fatal(err)
 		}
-		var text bytes.Buffer
-		if err := writeContractText(&text, report); err != nil {
-			t.Fatal(err)
-		}
-		if !strings.Contains(text.String(), "Assumption: test-native-approval") || !strings.Contains(text.String(), "no production approval") {
+		text := string(contractText(report))
+		if !strings.Contains(text, "Assumption: test-native-approval") || !strings.Contains(text, "no production approval") {
 			t.Fatal("text report omitted conditional test-only approval scope")
 		}
 	})

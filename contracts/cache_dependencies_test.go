@@ -11,11 +11,11 @@ func TestLogicalCacheAllSemanticDependencies(t *testing.T) {
 			session := NewSession()
 			key := logicalKeyFixture()
 			conditional := EvidenceResult{Status: Established, Assumptions: []string{"declared-interface"}}
-			if err := session.storeLogical(key, conditional); err != nil {
+			if err := session.store(key, conditional); err != nil {
 				t.Fatal(err)
 			}
 			var got EvidenceResult
-			if found, err := session.loadLogical(key, &got); err != nil || !found || !reflect.DeepEqual(got, conditional) {
+			if found, err := session.load(key, &got); err != nil || !found || !reflect.DeepEqual(got, conditional) {
 				t.Fatalf("initial logical cache: %v %v %+v", found, err, got)
 			}
 			switch component {
@@ -34,7 +34,7 @@ func TestLogicalCacheAllSemanticDependencies(t *testing.T) {
 			case "contract":
 				key.Specification = "spec-v2"
 			}
-			if found, err := session.loadLogical(key, &got); err != nil || found {
+			if found, err := session.load(key, &got); err != nil || found {
 				t.Fatalf("changed %s reused theorem: found=%v error=%v", component, found, err)
 			}
 		})

@@ -1,6 +1,9 @@
 package contracts
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
 // CheckProfile is enforcement over the closed, outcome-sensitive summary.
 // Possible effects block assurance but do not constitute proven counterexamples.
@@ -16,15 +19,25 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 		base.Reason = "unsupported effect profile or scope: " + profile.Name + " / " + profile.Scope
 		return []Obligation{base}
 	}
-	if len(summary.Paths) == 0 {
-		base.Status = Unresolved
-		base.Reason = "summary has no established outcome coverage"
+	paths := summary.Paths
+	if hasWorkCutoff(summary.Unknowns) {
+		base.Status, base.Reason = Unresolved, errWorkLimit.Error()
+		if len(profile.Outcomes) == 0 {
+			// Witnessed prefix effects can refute an unrestricted check.
+			paths = append(append([]PathSummary(nil), paths...), PathSummary{Reachable: true, Effects: summary.Effects})
+		}
+	}
+	if len(paths) == 0 {
+		base.Status, base.Reason = Unresolved, "summary has no established outcome coverage"
 		return []Obligation{base}
 	}
+	includesPhase := func(phase Phase) bool {
+		return profile.Scope != "body_only" || phase != Construction && phase != Destruction && phase != Cleanup
+	}
 	matched := false
-	for _, path := range summary.Paths {
+	for _, path := range paths {
 		for _, unknown := range path.Unknowns {
-			if profile.Scope == "body_only" && (unknown.Phase == Construction || unknown.Phase == Destruction || unknown.Phase == Cleanup) {
+			if !includesPhase(unknown.Phase) {
 				continue
 			}
 			for _, component := range unknown.Components {
@@ -54,7 +67,7 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 			selectFinding(&base, status, "covered path may panic or unwind", Origin{})
 		}
 		for _, effect := range path.Effects {
-			if profile.Scope == "body_only" && (effect.Phase == Construction || effect.Phase == Destruction || effect.Phase == Cleanup) {
+			if !includesPhase(effect.Phase) {
 				continue
 			}
 			if effect.Kind != descriptor.ForbiddenEffect {
@@ -71,12 +84,12 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 			selectFinding(&base, status, reason, effect.Origin)
 		}
 		for _, unknown := range path.Unknowns {
-			if profile.Scope == "body_only" && (unknown.Phase == Construction || unknown.Phase == Destruction || unknown.Phase == Cleanup) {
+			if !includesPhase(unknown.Phase) {
 				continue
 			}
 			relevant := len(unknown.Components) == 0
 			for _, component := range unknown.Components {
-				relevant = relevant || component == "outcomes" || component == "effects" && !unknownExcludesEffect(unknown, descriptor.ForbiddenEffect)
+				relevant = relevant || component == "outcomes" || component == "effects" && !slices.Contains(unknown.ExcludedEffects, descriptor.ForbiddenEffect)
 			}
 			if relevant {
 				selectFinding(&base, Unresolved, unknown.Message, unknown.Origin)
@@ -90,15 +103,6 @@ func CheckProfile(summary DerivedSummary, profile Profile) []Obligation {
 		base.Reason = "established conditional on the displayed approved native assumptions"
 	}
 	return []Obligation{base}
-}
-
-func unknownExcludesEffect(unknown UnknownReason, kind EffectKind) bool {
-	for _, excluded := range unknown.ExcludedEffects {
-		if excluded == kind {
-			return true
-		}
-	}
-	return false
 }
 
 func selectFinding(obligation *Obligation, status Status, reason string, origin Origin) {

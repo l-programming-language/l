@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"reflect"
-	"strings"
 )
 
 type DeclaredEffectRow struct {
@@ -282,22 +281,7 @@ func (document AdjectiveCertificateDocument) Validate() error {
 	return nil
 }
 
-func ReadNativeManifest(data []byte) (NativeContractManifest, error) {
-	value, err := DecodeDocument(data)
-	if err != nil {
-		return NativeContractManifest{}, err
-	}
-	manifest, ok := value.(NativeContractManifest)
-	if !ok {
-		return NativeContractManifest{}, fmt.Errorf("expected native_contract_manifest")
-	}
-	return manifest, nil
-}
-
 func DecodeDocument(data []byte) (any, error) {
-	if err := rejectDuplicateJSONKeys(data); err != nil {
-		return nil, err
-	}
 	var header struct {
 		SchemaVersion string `json:"schema_version"`
 		Kind          string `json:"kind"`
@@ -308,35 +292,13 @@ func DecodeDocument(data []byte) (any, error) {
 	if header.SchemaVersion != SchemaVersion {
 		return nil, fmt.Errorf("unsupported contracts schema version %q", header.SchemaVersion)
 	}
-	var target any
-	switch header.Kind {
-	case "native_environment":
-		target = &NativeEnvironment{}
-	case "contract_check_requests":
-		target = &CheckRequests{}
-	case "native_contract_manifest":
-		target = &NativeContractManifest{}
-	case "facet_and_role_manifest":
-		target = &FacetRoleManifest{}
-	case "trust_policy":
-		target = &TrustPolicyDocument{}
-	case "contract_report":
-		target = &Report{}
-	case "adjective_certificate":
-		target = &AdjectiveCertificateDocument{}
-	default:
+	model := documentModels[header.Kind]
+	if model == nil {
 		return nil, fmt.Errorf("unsupported contract document kind %q", header.Kind)
 	}
-	if err := validateJSONShape(data, reflect.TypeOf(target).Elem(), "document", 0); err != nil {
+	target := reflect.New(model).Interface()
+	if err := decodeModel(data, target); err != nil {
 		return nil, err
-	}
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(target); err != nil {
-		return nil, fmt.Errorf("contract document: %w", err)
-	}
-	if decoder.Decode(new(any)) != io.EOF {
-		return nil, fmt.Errorf("contract document requires exactly one JSON value")
 	}
 	if err := validateDocument(target); err != nil {
 		return nil, err
@@ -363,127 +325,109 @@ func validateDocument(document any) error {
 	return validatable.Validate()
 }
 
-func rejectDuplicateJSONKeys(data []byte) error {
+// ReadManifestIndex uses the same closed-object and duplicate-key rules as
+// contract documents. An empty manifest array is valid; a null one is not.
+func ReadManifestIndex(data []byte) ([]string, error) {
+	var index struct {
+		Version   string   `json:"schema_version"`
+		Manifests []string `json:"manifests"`
+	}
+	if err := decodeModel(data, &index); err != nil {
+		return nil, err
+	}
+	if index.Version != SchemaVersion || index.Manifests == nil {
+		return nil, fmt.Errorf("contract index requires version %s and a manifests array", SchemaVersion)
+	}
+	return index.Manifests, nil
+}
+
+func decodeModel(data []byte, target any) error {
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.UseNumber()
-	var value func(int) error
-	value = func(depth int) error {
-		if depth > 256 {
-			return fmt.Errorf("contract JSON nesting exceeds supported bound")
-		}
-		token, err := decoder.Token()
-		if err != nil {
-			return err
-		}
-		delimiter, compound := token.(json.Delim)
-		if !compound {
-			return nil
-		}
-		switch delimiter {
-		case '{':
-			keys := make(map[string]bool)
-			for decoder.More() {
-				keyToken, err := decoder.Token()
-				if err != nil {
-					return err
-				}
-				key, ok := keyToken.(string)
-				if !ok || keys[key] {
-					return fmt.Errorf("duplicate or invalid contract JSON key %q", key)
-				}
-				keys[key] = true
-				if err := value(depth + 1); err != nil {
-					return err
-				}
-			}
-		case '[':
-			for decoder.More() {
-				if err := value(depth + 1); err != nil {
-					return err
-				}
-			}
-		default:
-			return fmt.Errorf("unexpected contract JSON delimiter %q", delimiter)
-		}
-		_, err = decoder.Token()
+	if err := checkWireValue(decoder, reflect.TypeOf(target).Elem(), "document", 0); err != nil {
 		return err
-	}
-	if err := value(0); err != nil {
-		return fmt.Errorf("contract JSON: %w", err)
 	}
 	if _, err := decoder.Token(); err != io.EOF {
 		return fmt.Errorf("contract JSON requires exactly one value")
 	}
-	return nil
+	return json.Unmarshal(data, target)
 }
 
-func validateJSONShape(data []byte, typ reflect.Type, path string, depth int) error {
+// Check keys before unmarshalling can discard duplicates, accept alternate
+// casing, or substitute zero values for missing and non-nullable fields.
+func checkWireValue(decoder *json.Decoder, typ reflect.Type, path string, depth int) error {
 	if depth > 256 {
 		return fmt.Errorf("contract document exceeds supported depth at %s", path)
 	}
-	if bytes.Equal(bytes.TrimSpace(data), []byte("null")) {
-		if typ.Kind() == reflect.Pointer || typ.Kind() == reflect.Slice || typ.Kind() == reflect.Map {
+	token, err := decoder.Token()
+	if err != nil {
+		return err
+	}
+	if token == nil {
+		switch typ.Kind() {
+		case reflect.Pointer, reflect.Slice, reflect.Map:
 			return nil
 		}
 		return fmt.Errorf("required contract value %s cannot be null", path)
 	}
-	if typ.Kind() == reflect.Pointer {
-		return validateJSONShape(data, typ.Elem(), path, depth+1)
+	for typ.Kind() == reflect.Pointer {
+		typ = typ.Elem()
 	}
-	switch typ.Kind() {
-	case reflect.Struct:
-		var fields map[string]json.RawMessage
-		if err := json.Unmarshal(data, &fields); err != nil {
-			return fmt.Errorf("%s requires an object: %w", path, err)
+	switch token {
+	case json.Delim('{'):
+		if typ.Kind() != reflect.Struct && typ.Kind() != reflect.Map {
+			return fmt.Errorf("unexpected object at %s", path)
 		}
-		expected := make(map[string]reflect.StructField)
-		for i := 0; i < typ.NumField(); i++ {
-			field := typ.Field(i)
-			if !field.IsExported() {
-				continue
-			}
-			parts := strings.Split(field.Tag.Get("json"), ",")
-			if parts[0] == "-" {
-				continue
-			}
-			name := parts[0]
-			if name == "" {
-				name = field.Name
-			}
-			expected[name] = field
-			if _, exists := fields[name]; !exists && !containsString(parts[1:], "omitempty") {
-				return fmt.Errorf("required contract field %s.%s is missing", path, name)
-			}
+		seen := make(map[string]bool)
+		var fields []modelField
+		if typ.Kind() == reflect.Struct {
+			fields = modelFields(typ)
 		}
-		for name, raw := range fields {
-			field, exists := expected[name]
-			if !exists {
-				return fmt.Errorf("unknown contract field %s.%s", path, name)
+		for decoder.More() {
+			key, err := decoder.Token()
+			if err != nil {
+				return err
 			}
-			if err := validateJSONShape(raw, field.Type, path+"."+name, depth+1); err != nil {
+			name, ok := key.(string)
+			if !ok || seen[name] {
+				return fmt.Errorf("duplicate or invalid contract JSON key %q at %s", key, path)
+			}
+			seen[name] = true
+			var child reflect.Type
+			if typ.Kind() == reflect.Map {
+				child = typ.Elem()
+			} else {
+				for _, field := range fields {
+					if field.name == name {
+						child = field.typ
+						break
+					}
+				}
+				if child == nil {
+					return fmt.Errorf("unknown contract field %s.%s", path, name)
+				}
+			}
+			if err := checkWireValue(decoder, child, path+"."+name, depth+1); err != nil {
 				return err
 			}
 		}
-	case reflect.Slice, reflect.Array:
-		var values []json.RawMessage
-		if err := json.Unmarshal(data, &values); err != nil {
-			return err
+		for _, field := range fields {
+			if !field.optional && !seen[field.name] {
+				return fmt.Errorf("required contract field %s.%s is missing", path, field.name)
+			}
 		}
-		for i, raw := range values {
-			if err := validateJSONShape(raw, typ.Elem(), fmt.Sprintf("%s[%d]", path, i), depth+1); err != nil {
+	case json.Delim('['):
+		if typ.Kind() != reflect.Array && typ.Kind() != reflect.Slice {
+			return fmt.Errorf("unexpected array at %s", path)
+		}
+		for i := 0; decoder.More(); i++ {
+			if err := checkWireValue(decoder, typ.Elem(), fmt.Sprintf("%s[%d]", path, i), depth+1); err != nil {
 				return err
 			}
 		}
-	case reflect.Map:
-		var values map[string]json.RawMessage
-		if err := json.Unmarshal(data, &values); err != nil {
-			return err
-		}
-		for name, raw := range values {
-			if err := validateJSONShape(raw, typ.Elem(), path+"["+name+"]", depth+1); err != nil {
-				return err
-			}
-		}
+	default:
+		return nil // json.Unmarshal checks the concrete scalar type and range.
 	}
-	return nil
+	_, err = decoder.Token()
+	return err
 }

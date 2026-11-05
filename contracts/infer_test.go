@@ -373,3 +373,61 @@ func TestInferenceUnrecognizedClassificationsRemainUnknown(t *testing.T) {
 		statusTest(t, summary, "NoBlocking", Unresolved)
 	}
 }
+
+func TestCumulativeInferenceBudget(t *testing.T) {
+	zero, count := int64(0), int64(2)
+	origin := Origin{Source: "manifest.json", Label: "repeat"}
+	repeat := func(child Node) Node {
+		return Node{Kind: Repeat, Origin: origin, Count: &count, Children: []Node{child}}
+	}
+	// One sequence, two sibling repeats, four iteration charges and four leaves.
+	leaf := Node{Kind: Event, Origin: origin}
+	plan := Plan{Entry: sequenceTest(repeat(leaf), repeat(leaf))}
+	for _, limit := range []int{10, 11, 12} {
+		s, err := inferPlan(plan, AnalysisOptions{}, "", limit)
+		if err != nil || (s.Coverage == Known) != (limit >= 11) {
+			t.Fatalf("budget %d: %+v, %v", limit, s, err)
+		}
+	}
+	large := int64(1024)
+	nested := repeat(repeat(leaf))
+	nested.Count, nested.Children[0].Count = &large, &large
+	target := TargetRef{Root: "target", Phase: Invocation}
+	footprint := FailureFootprint{Observation: "state_at_completion", Locations: []FailureLocation{{Resource: ResourceRef{ID: "protected"}}}, Outcomes: []Outcome{ReturnedFailure}}
+	plan.Entry = Node{Kind: Scope, Children: []Node{
+		{Kind: Acquire, Resource: ResourceRef{ID: "owner"}, Cleanup: []Node{eventTest("block", Destruction)}}, nested,
+		{Kind: Callback, ID: "late", Callback: "work"},
+	}}
+	session := NewSession()
+	cold := reviewInfer(t, plan, AnalysisOptions{})
+	for i := 0; i < 2; i++ {
+		result, err := session.Infer(plan, AnalysisOptions{}, nil, LoweringInventory{})
+		if err != nil || result.Fingerprint != cold.Fingerprint || !hasWorkCutoff(result.Unknowns) || result.Unknowns[len(result.Unknowns)-1].Origin.Source != origin.Source || result.Resources.Work.Kind != "unknown" || len(result.Paths) != 0 || ObligationStatus(result.Obligations) != Unresolved {
+			t.Fatalf("budget result: %+v, %v", result, err)
+		}
+		statusTest(t, result, "NoBlocking", Unresolved)
+		if got := CheckFailureSummaryProfile(result, Profile{Name: "PreservesOnFailure", Scope: "whole_region"}, footprint, nil); ObligationStatus(got) != Unresolved {
+			t.Fatal(got)
+		}
+		for _, o := range checkTransformerSummary(ContractTransformer{Target: target, Demand: map[string]Multiplicity{"work": {Upper: &zero}}, Provides: []Predicate{factTest("final", 1)}}, result) {
+			if o.Status != Unresolved {
+				t.Fatalf("truncated promise or demand: %+v", o)
+			}
+		}
+	}
+	if s, err := InferScope(plan, "late", AnalysisOptions{}); err != nil || !hasWorkCutoff(s.Unknowns) {
+		t.Fatalf("valid selected region: %+v, %v", s, err)
+	}
+	if _, err := InferScope(plan, "absent", AnalysisOptions{}); err == nil {
+		t.Fatal("missing region accepted on exhaustion")
+	}
+	plan.Entry = sequenceTest(eventTest("block", Invocation), nested)
+	s, err := inferPlan(plan, AnalysisOptions{}, "", 5)
+	if err != nil {
+		t.Fatal(err)
+	}
+	statusTest(t, s, "NoBlocking", Contradicted)
+	if got := CheckProfile(s, Profile{Name: "NoBlocking", Outcomes: []Outcome{Normal}}); ObligationStatus(got) != Unresolved {
+		t.Fatal("truncated prefix acquired a completion outcome")
+	}
+}
