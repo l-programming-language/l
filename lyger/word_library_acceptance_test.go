@@ -2,11 +2,13 @@ package Lyger
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"strings"
 	"testing"
 	"testing/fstest"
 
+	"github.com/l-programming-language/l/lerrors"
 	Logiceme "github.com/l-programming-language/l/logiceme"
 )
 
@@ -76,7 +78,11 @@ func TestWordLibraryCatalog(t *testing.T) {
 					if found, lookupErr := wordLibraryRecord(c, name); lookupErr == nil && found != nil {
 						t.Errorf("retired spelling %s still resolves to %s", name, found.ID)
 					}
+					t.Run(form, func(t *testing.T) {
+						wordLibraryRetiredSource(t, name)
+					})
 				}
+				wordLibraryUserHomonyms(t, test.word, test.pos, strings.Fields(test.forms))
 				return
 			}
 			if err != nil || rec == nil {
@@ -104,6 +110,62 @@ func TestWordLibraryCatalog(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func wordLibraryRetiredSource(t *testing.T, name string) {
+	t.Helper()
+	if strings.HasPrefix(name, "IO.") {
+		// Check and Stream used to be private in IO. Probe their original scope,
+		// rather than accepting an unrelated public-import visibility rejection.
+		files := dictionaryIndexFilesystem(t)
+		const path = "stdlib/eng/io/dictionary.l"
+		files[path] = &fstest.MapFile{Data: append(bytes.Clone(files[path].Data), []byte("\nUse "+strings.TrimPrefix(name, "IO.")+" as \"Retired\".\n")...)}
+		c := NewLygerService(Options{Language: "eng", Resources: files}).NewCompilation([]byte("Use IO from `io`.\n"), "word-retired.l")
+		c.Make()
+		if !errors.Is(c.Error, lerrors.UnresolvedReference) || !strings.Contains(c.Error.Error(), "dictionary.l:") || !strings.Contains(strings.ToLower(c.Error.Error()), strings.ToLower(strings.TrimPrefix(name, "IO."))) {
+			t.Fatalf("retired private %s did not reject at its source use: %v", name, c.Error)
+		}
+		return
+	}
+	for _, source := range []string{
+		"Use Storage from `storage`.\nUse " + name + " as \"Retired\".\n",
+		"Use " + name + " from `storage` as \"Retired\".\n",
+	} {
+		c := NewLygerService(Options{Language: "eng"}).NewCompilation([]byte(source), "word-retired.l")
+		c.Make()
+		if !errors.Is(c.Error, lerrors.UnresolvedReference) || !strings.Contains(c.Error.Error(), "word-retired.l:") || !strings.Contains(strings.ToLower(c.Error.Error()), strings.ToLower(name[strings.LastIndex(name, ".")+1:])) {
+			t.Fatalf("retired source use %q did not reject its selected word: %v", source, c.Error)
+		}
+	}
+}
+
+func wordLibraryUserHomonyms(t *testing.T, name, pos string, forms []string) {
+	t.Helper()
+	declaration := "Define Userwords's \"" + forms[0] + "\" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~7~|}<DEF>`.\n"
+	if pos == "verb" {
+		family := forms[0] + "|-s|-ed|-ing|-er"
+		if forms[0] == "Propagate" {
+			family = "Propagate|-s|-d|--ing|--or"
+		}
+		declaration = "Define Userwords's \"" + family + "\" to `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}<DEF>`.\n"
+	} else if pos == "adjective" {
+		declaration = "Define Userwords's \"" + forms[0] + "\" as a New Adjective describing any Process.\n"
+	}
+	source := "Create \"Userwords\" as a Dictionary.\n" + declaration
+	for index, form := range forms {
+		source += fmt.Sprintf("Use Userwords.%s as \"Selected%d\".\n", form, index)
+	}
+	c := compileDefinitionSource(t, source, "word-homonyms.l")
+	want, err := c.exportedRecord("Userwords." + forms[0])
+	if err != nil || want == nil || want.bindingWord() == nil || want.bindingWord().POS != pos {
+		t.Fatalf("user homonym of %s lost its lexical role: %v", name, err)
+	}
+	for index := range forms {
+		got, err := canonicalRecord(c.Memory[fmt.Sprintf("Selected%d", index)], c.Semantics.Aliases)
+		if err != nil || got != want || c.Semantics.Declarations[got] == nil || !strings.HasSuffix(c.Semantics.Declarations[got].source.Span.Path, "word-homonyms.l") {
+			t.Fatalf("user homonym of %s lost its independent source identity: %v", name, err)
+		}
 	}
 }
 
@@ -560,12 +622,25 @@ func TestWordLibrarySelectorScopes(t *testing.T) {
 		"Storage.Option.Select a New Offer, a New Process with Inputs of \"Payload\" as `crate::Payload` for Returning a New Acceptedpayload of Payload, and a New Process for Returning a New Missingpayload.\n\n" +
 		"    Publicly create Checks's \"Results\" as a Generic `results` Function with No Inputs and Outputs of `u8`.\n" +
 		"Storage.Result.Select a New Response, a New Process with Inputs of \"Payload\" as `crate::Payload` for Returning a New Acceptedpayload of Payload, and a New Process with Inputs of \"Failure\" as `crate::Payload` for Returning a New Rejectedpayload of Failure.\n"
+	source += "\n\nDefine \"Localvalue\" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::local~, Inputs: ~&[<@Tag@>]&~|}<DEF>`.\n"
+	for _, test := range []struct{ name, carrier, selector, rejected string }{
+		{"Optiondrops", "Option<crate::Payload>", "Option", "a New Process for Creating \"Local\" as a New Localvalue of 2 and then Storage.Releasing Caller and then Returning a New Missingpayload"},
+		{"Resultdrops", "Result<crate::Payload,crate::Payload>", "Result", "a New Process with Inputs of \"Failure\" as `crate::Payload` for Creating \"Local\" as a New Localvalue of 2 and then Storage.Releasing Caller and then Returning a New Rejectedpayload of Failure"},
+	} {
+		source += fmt.Sprintf("\n    Publicly create Checks's %q as a Generic `%s` Function with Inputs of \"value\" as `%s` and \"caller\" as `crate::Caller` and Outputs of `u8`.\nStorage.%s.Select Value, a New Process with Inputs of \"Payload\" as `crate::Payload` for Creating \"Local\" as a New Localvalue of 1 and then Returning a New Acceptedpayload of Payload, and %s.\n", test.name, strings.ToLower(test.name), test.carrier, test.selector, test.rejected)
+	}
 	c := compileDefinitionSource(t, source, "selector-scopes.l")
 	testNativeDefinitionLibrary(t, c, "Checks", "selectors", `use std::sync::{Mutex, atomic::{AtomicBool, Ordering}};
 static PRESENT: AtomicBool = AtomicBool::new(true);
 static EVENTS: Mutex<Vec<(&'static str,u8)>> = Mutex::new(Vec::new());
 pub struct Payload(u8);
 impl Drop for Payload { fn drop(&mut self) { EVENTS.lock().unwrap().push(("drop",self.0)); } }
+pub struct Caller;
+impl Drop for Caller { fn drop(&mut self) { EVENTS.lock().unwrap().push(("caller-drop",0)); } }
+pub struct Local(u8);
+impl Drop for Local { fn drop(&mut self) { EVENTS.lock().unwrap().push(("local-drop",self.0)); } }
+pub fn local(tag: f64) -> Local { EVENTS.lock().unwrap().push(("local-new",tag as u8)); Local(tag as u8) }
+fn caller() -> Caller { EVENTS.lock().unwrap().push(("caller-new",0)); Caller }
 pub fn take_option() -> Option<Payload> { EVENTS.lock().unwrap().push(("option",0)); if PRESENT.load(Ordering::SeqCst) { Some(Payload(7)) } else { None } }
 pub fn take_result() -> Result<Payload,Payload> { EVENTS.lock().unwrap().push(("result",0)); if PRESENT.load(Ordering::SeqCst) { Ok(Payload(8)) } else { Err(Payload(9)) } }
 pub fn accepted_payload(value: Payload) -> u8 { EVENTS.lock().unwrap().push(("accepted",value.0)); value.0 }
@@ -583,5 +658,16 @@ fn events(expected: &[(&'static str,u8)]) { assert_eq!(&*EVENTS.lock().unwrap(),
  PRESENT.store(false,Ordering::SeqCst);
  assert_eq!(generated::options(),42); events(&[("option",0),("absent",0)]);
  assert_eq!(generated::results(),9); events(&[("result",0),("rejected",9),("drop",9)]);
+ // Caller is constructed before selection and referenced only in the other arm.
+ // Its normal drop remains observable even when that arm's Local never exists.
+ for result in [false,true] {
+  let owned=caller();
+  let value=if result { generated::resultdrops(Ok(Payload(7)),owned) } else { generated::optiondrops(Some(Payload(7)),owned) };
+  assert_eq!(value,7); events(&[("caller-new",0),("local-new",1),("accepted",7),("drop",7),("local-drop",1),("caller-drop",0)]);
+ }
+ assert_eq!(generated::optiondrops(None,caller()),42);
+ events(&[("caller-new",0),("local-new",2),("caller-drop",0),("absent",0),("local-drop",2)]);
+ assert_eq!(generated::resultdrops(Err(Payload(9)),caller()),9);
+ events(&[("caller-new",0),("local-new",2),("caller-drop",0),("rejected",9),("drop",9),("local-drop",2)]);
 }`)
 }

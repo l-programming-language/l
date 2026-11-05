@@ -3,21 +3,23 @@
   "sourceHashes": {
     "builtins/eng/core.l": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
-    "lyger/construction.go": "192da2c2dc96741f707b32a8ba0e469f9e3ec028ae58f0dae6711d47df9ef2df",
-    "lyger/constructor_grammar.go": "0756d02c04134ce5732dad7b5bc06de129909b5c9957509ee08c2ce41cf144cb",
-    "lyger/function_composition.go": "709ee22c5bd2c2074276f0d3be6613e632915a022c21a5cab84d71f1b9c47cba",
-    "lyger/function_definitions.go": "27f58f97f26bdfdb51fe62fa6e969a0797131132b411a83e4b8721eeb53efa7b",
+    "lyger/binding.go": "ae768960f2e1e9bb6dea5e5154844dc3a4d3638cc2f8815572c99dafc348ab35",
+    "lyger/construction.go": "d9112edcd3c28d508b6d0849dedd7d746ee6179d585fe88571f51a1341734bd9",
+    "lyger/constructor_grammar.go": "5a4b766982a31035bb298e6adf4e2014c406a3fd11213ad42c8144b64e642156",
+    "lyger/function_composition.go": "028b2b49eb47681cc23e3b3272fa2ba5b689d2ca8c7596453471e1a69f06f4ea",
+    "lyger/function_definitions.go": "1888437b6c54abf864ee600cb576e7a2bf905204777e044d86382da8ff8595dd",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
     "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
-    "lyger/instructions.go": "f320b4904175adf721b8fcc67b6c9e67353ee77aa97ad49af72d33ee5641adeb",
+    "lyger/instructions.go": "efb8cc58f9665652dd8a1aa480ae7cc4b9d71e0b3bf4c14b22787deb8cc9884e",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
-    "lyger/lowering.go": "03a829d0d5dd9c2fdf15b2f881803bb4f3787100a645c42eaf9bdaefe50f0e53",
-    "lyger/process_inputs.go": "d19c3ce67ca0215d097868591aef667c2d15db48c1cc766f48f04e19c14aefad",
+    "lyger/lowering.go": "a3b2bec3b690d9192a3da0fabd5fe863586d95e5aba035a0a98ca42fb5278ef2",
+    "lyger/process_inputs.go": "8d694eebf5de74b5585f10a04c24146426918036ebec3906d97cf4602721dfce",
     "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
+    "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
     "lyger/semantic_resolution.go": "9e340190c53baaf3e73cdbfd7887d2bdf8c0619f2980dd59cff2a2132ab144c6",
-    "lyger/source_body.go": "935279b83718227289fc0e9b21c4bd874f445aea65afbf77f14a9a186df6e6e1",
-    "lyger/source_descriptors.go": "148c24029662f7dd3f8f39a0798d5aa5b69b18ae3ad297dfc7c47d6dad1387cf",
+    "lyger/source_body.go": "81da3955864cfb1526647733fd5acc2900fd0d29a662fa1b69425d67f865cbb0",
+    "lyger/source_descriptors.go": "7f9a47a50d5fa679e7323d1c5e485174e2080d3c885ccfcd3f687a56e436b98e",
     "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
     "lyger/types.go": "8d1c5403e26386b560c2bad36d8e5b3aaed28174708f46dda470f572fcf75859",
     "lyger/word_values.go": "449b35c1a97327533fa663131fa3817c71b30675cce7cf63d387eb27578e1240"
@@ -989,7 +991,7 @@
           "doc": "docs/reference/builtins/definitions.md#process",
           "topic": "Scoped Process inputs",
           "support": "supported",
-          "notes": "Typed input-only Process signatures bind pattern or iteration values within the directive body. Positive native selection/pair cases and scope-escape/output rejection witnesses constrain this support; no general closure or Process output signature is added."
+          "notes": "Input-only Process signatures bind pattern or iteration values within their directive body. Provisional labels cannot shadow enclosing inputs before their owner is resolved. Native selection/pair, mixed-nesting and scope-escape/output rejection witnesses constrain support; no general closure or Process output signature is added."
         }
       }
     },

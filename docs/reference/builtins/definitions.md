@@ -24,7 +24,7 @@ Invocation words use normal grammatical binding, as Print does. Captures, snapsh
 
 ## Function.Return
 
-Return, Returns, Returned, Returning, and Returner are Function members. A Function body resolves Return to its selected member definition and checks the declared result types and counts. A returning source action defined outside a Function uses its enclosing caller's Return; a Return defined within a Function retains that constructor contract and rejects an incompatible caller.
+Return, Returns, Returned, Returning, and Returner are Function members. Root-authored returning actions select their caller's Return; that selected implementation preserves its own lexical delegates. Function-owned actions retain their constructor contract and reject incompatible callers. Each Function establishes its own return context and checks declared result types and counts. Known unconditional exits through source actors and transparent Processes enter the typed plan; opaque or conditional bodies do not establish unconditional exits.
 
 Return completes that invocation; Exit terminates the enclosing program. Neither transports runtime captures into an App process.
 
