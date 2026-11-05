@@ -1,6 +1,9 @@
 package contracts
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type NativeToolIdentity struct {
 	Name    string `json:"name"`
@@ -50,8 +53,16 @@ func (value NativeEnvironment) Validate() error {
 	if err := validateDocumentHeader(value.SchemaVersion, value.Kind, "native_environment", value.Producer); err != nil {
 		return err
 	}
-	if value.Version != "1" || !containsString([]string{"capture", "build", "test-only"}, value.Method) || value.Host == "" || value.Target == "" || value.Compiler == "" || value.PanicPolicy == "" || value.Runtime == "" || value.Allocator == "" || len(value.Inputs) == 0 {
+	expectedVersion := "1"
+	if value.Method == "build" {
+		expectedVersion = "2"
+	}
+	if value.Version != expectedVersion || !containsString([]string{"capture", "build", "test-only"}, value.Method) || value.Host == "" || value.Target == "" || value.Compiler == "" || value.PanicPolicy == "" || value.Runtime == "" || value.Allocator == "" || len(value.Inputs) == 0 {
 		return fmt.Errorf("native environment requires a supported version, method and explicit configuration/input identities")
+	}
+	generation, placed := value.Configuration["companion-generation"]
+	if placed != (value.Method == "build") || placed && (len(generation) == 0 || len(generation) > 20 || strings.Trim(generation, "0123456789") != "") {
+		return fmt.Errorf("only build evidence carries a required decimal companion generation")
 	}
 	if value.Fingerprint == "" || SealNativeEnvironment(value).Fingerprint != value.Fingerprint {
 		return fmt.Errorf("native environment fingerprint is missing or stale")
@@ -74,7 +85,7 @@ func (value NativeEnvironment) Validate() error {
 		for _, execution := range value.Executions {
 			found = found || execution.ID == artifact.Execution && execution.Kind == "build" && execution.Status == "passed"
 		}
-		if artifact.Path == "" || artifact.SHA256 == "" || artifact.Inputs == "" || !found {
+		if artifact.Path == "" || artifact.SHA256 == "" || artifact.Inputs == "" || artifact.Inputs != value.Configuration["workspace-inputs"] || !found {
 			return fmt.Errorf("native artifact lacks a successful recorded build and input identity")
 		}
 	}

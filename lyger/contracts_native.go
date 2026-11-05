@@ -2,6 +2,7 @@ package Lyger
 
 import (
 	"fmt"
+	"maps"
 	"math"
 	"sort"
 	"strconv"
@@ -228,7 +229,7 @@ func (r *contractRecorder) contractRepresentationDestruction(slot *orchestration
 	typ := r.contractRuntimeType(slot.RuntimeType)
 	meaning := contracts.MeaningKey(contracts.StableID("representation-destruction", typ))
 	resources := map[string]contracts.ResourceRef{"Value": contractStorageResource(target)}
-	use := contracts.NativeUse{Meaning: meaning, Name: "representation-destruction:" + slot.Type.String(), Target: target, Origin: origin, Phase: contracts.Destruction,
+	use := contracts.NativeUse{Meaning: meaning, Name: "representation-destruction:" + slot.Type.String(), Target: target, Origin: origin, Phase: contracts.Destruction, Boundary: "native_body",
 		Signature: &contracts.NativeSignature{Inputs: []string{slot.Type.String()}, Outputs: []string{}, InputTypes: []contracts.NativeType{typ}},
 		Implementation: contracts.StableID("selected-representation-implementation", struct {
 			Type   contracts.NativeType
@@ -459,7 +460,7 @@ func (a *ContractAnalysis) refreshNativeScopes() error {
 		return err
 	}
 	r := c.contractRecorder
-	r.nativeAnalysis = &contractNativeAnalysis{inputs: r.snapshot().Inputs}
+	r.nativeAnalysis = &contractNativeAnalysis{inputs: maps.Clone(a.Bindings.Inputs)}
 	a.Plan.Entry = contracts.Node{Kind: contracts.Sequence, ID: "entry", Children: r.contractBlock(plan.Root)}
 	a.Plan.Definitions = make(map[contracts.MeaningKey]contracts.Node)
 	r.contractFunctions(plan.Root.Body, a.Plan.Definitions)

@@ -52,3 +52,28 @@ func TestTypedCompletionValuesRequireExactLocationAndEntry(t *testing.T) {
 		t.Fatal("arbitrary predicate label became a typed value observation")
 	}
 }
+
+func TestBudgetRetainsOnlyCompletedFailureWitnesses(t *testing.T) {
+	location := FailureLocation{Resource: ResourceRef{ID: "slot"}}
+	entry := ResourceValueFact(location, Atom{Kind: "number", Number: 1})
+	changed := ResourceValueFact(location, Atom{Kind: "number", Number: 2})
+	count := int64(32)
+	failed := []Node{eventTest("block", Invocation), {Kind: Event, Facts: []Predicate{changed}, Effects: []Effect{{Kind: "write", Resource: location.Resource, Definite: true}}, Outcome: ReturnedFailure}}
+	branch := Node{Kind: Branch, Then: failed, Else: []Node{{Kind: Repeat, Count: &count, Children: []Node{{Kind: Event}}}}}
+	region := Node{Kind: Scope, ID: "operation", Children: []Node{branch}, CleanupOutcomes: []Outcome{ReturnedFailure}}
+	footprint := FailureFootprint{Locations: []FailureLocation{location}, Outcomes: region.CleanupOutcomes, Observation: "state_at_completion"}
+	for _, want := range []Status{Contradicted, Unresolved} {
+		plan := Plan{Entry: sequenceTest(Node{Kind: Event, Facts: []Predicate{entry}}, region)}
+		s, err := inferPlan(plan, AnalysisOptions{}, region.ID, 14)
+		if err != nil || !hasWorkCutoff(s.Unknowns) {
+			t.Fatalf("missing cutoff: %+v, %v", s, err)
+		}
+		if got := CheckFailureSummaryProfile(s, Profile{Name: "PreservesOnFailure", Scope: "body_only"}, footprint, nil); ObligationStatus(got) != want {
+			t.Fatalf("preservation: %+v, want %s", got, want)
+		}
+		if got := CheckProfile(s, Profile{Name: "NoBlocking", Outcomes: region.CleanupOutcomes}); ObligationStatus(got) != want {
+			t.Fatalf("returned failure: %+v, want %s", got, want)
+		}
+		region.Cleanup = []Node{{Kind: Event, Facts: []Predicate{entry}}}
+	}
+}

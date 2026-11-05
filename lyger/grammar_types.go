@@ -561,7 +561,11 @@ func (sb *subjectGram) getAssociatedTokens(update bool) []*token {
 func (sb *subjectGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyPhrase:
-		return buildGrammarChild(&sb.phrase, initPhraseGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
+		phrase, err := buildConstructorPhrase(term, sb.noun, sb.adjectives, false, sb.getUnassociatedTokens(), sb.gram)
+		if err != nil {
+			return err
+		}
+		sb.phrase = phrase
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
 			return sb.caseBuild()
@@ -582,7 +586,10 @@ func (sb *subjectGram) lexSwitch(term grammarTerm) error {
 		// modifier with a missing noun. Keep its lexical identity on the token.
 		if sb.cType == "definitive" {
 			for i, tok := range available {
-				if tok.getPOS(true) != "adjective" || tok.isPossessive() {
+				if tok.isPossessive() {
+					continue
+				}
+				if tok.getPOS(true) != "adjective" {
 					break
 				}
 				if tok.binding != nil && (i+1 == len(available) || available[i+1].getPOS(true) == "preposition" || available[i+1].getPOS(true) == "conjunction") {
@@ -663,6 +670,27 @@ type objectGram struct {
 	name       *valueGram
 }
 
+// Constructor arguments, signatures and directive bodies retain their authored
+// order through the existing relation chain. Each relation owns its own fields.
+func (sb *objectGram) signaturePhrase() *phraseGram {
+	return sb.relationPhrase("phrase.signature")
+}
+
+func (sb *objectGram) directivePhrase() *phraseGram {
+	return sb.relationPhrase("phrase.directive")
+}
+
+func (sb *objectGram) relationPhrase(kind string) *phraseGram {
+	if sb != nil {
+		for phrase := sb.phrase; phrase != nil; phrase = phrase.phrase {
+			if phrase.gType == kind {
+				return phrase
+			}
+		}
+	}
+	return nil
+}
+
 // loadTyping parses sType into gType (grammar type) and cType (case type)
 func (sb *objectGram) loadTyping(sType string) error {
 	return (grammarTyping{&sb.sType, &sb.gType, &sb.cType}).load(sType, familyObject, grammarCaseInferred)
@@ -690,7 +718,12 @@ func (sb *objectGram) gramSwitch(term grammarTerm) error {
 	case term.Kind == termGrammar && term.Family == familyClause:
 		return buildGrammarChild(&sb.clause, initClauseGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyPhrase:
-		return buildGrammarChild(&sb.phrase, initPhraseGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
+		phrase, err := buildConstructorPhrase(term, sb.noun, sb.adjectives, sb.name != nil, sb.getUnassociatedTokens(), sb.gram)
+		if err != nil {
+			return err
+		}
+		sb.phrase = phrase
+		return nil
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
 			return sb.caseBuild()
@@ -761,7 +794,13 @@ func (sb *objectGram) caseBuild() error {
 }
 
 func (sb *objectGram) build() error {
-	return buildGrammarPrefix(sb.rule, sb.cType, &sb.tokens, sb.buildProcess, sb.getUnassociatedTokens)
+	if err := buildGrammarPrefix(sb.rule, sb.cType, &sb.tokens, sb.buildProcess, sb.getUnassociatedTokens); err != nil {
+		return err
+	}
+	if sb.cType == "callable" && sb.signaturePhrase() == nil {
+		return lerrors.Syntax.Errorf("callable constructor requires an explicit signature")
+	}
+	return nil
 }
 
 func initObjectGram(gType string, tokens []*token, gram *grammar) (*objectGram, error) {
@@ -797,11 +836,12 @@ type phraseGram struct {
 	gram         *grammar
 	conjunctions []*token
 
-	objects  []*objectGram
-	values   []*valueGram
-	subjects []*subjectGram
-	markers  []*token
-	phrases  []*phraseGram
+	objects     []*objectGram
+	values      []*valueGram
+	subjects    []*subjectGram
+	markers     []*token
+	phrases     []*phraseGram
+	objectLimit grammarArity
 }
 
 func (phrase *phraseGram) orderedObjects() []*objectGram {
@@ -820,6 +860,15 @@ func (phrase *phraseGram) orderedObjects() []*objectGram {
 // subTypeSwitch checks for a phraseGram subType if one isn't provided in the sType
 func (sb *phraseGram) subTypeSwitch() string {
 	if len(sb.tokens) > 0 && sb.tokens[0].getPOS(true) == "preposition" {
+		if sb.tokens[0].hasRole("preposition", "consignment.associative") && len(sb.tokens) > 1 {
+			at := 1
+			if sb.tokens[at].hasRole("article", "none") && len(sb.tokens) > at+1 {
+				at++
+			}
+			if sb.tokens[at].hasRole("noun", "functional.inflective") && (at == 2 || len(sb.tokens) > at+2 && sb.tokens[at+2].isDeclare()) {
+				return "signature"
+			}
+		}
 		chkVal, _ := generalizePrepTokenType(sb.tokens[0].tType)
 		switch chkVal {
 		case "prepositions.conjoinment.objective":
@@ -925,7 +974,7 @@ func (sb *phraseGram) gramSwitch(term grammarTerm) error {
 				return object, object.tokens, nil
 			})
 		} else {
-			objects, conjunctions, err = buildGrammarObjects(term, sb.getUnassociatedTokens(), sb.gram)
+			objects, conjunctions, err = buildBoundedGrammarObjects(term, sb.getUnassociatedTokens(), sb.gram, sb.objectLimit)
 		}
 		if err != nil {
 			return err
@@ -1161,7 +1210,15 @@ func (sb *clauseGram) gramSwitch(term grammarTerm) error {
 				term.Multiple = true
 			}
 		}
-		objects, conjunctions, err := buildGrammarObjects(term, sb.getUnassociatedTokens(), sb.gram)
+		limit := grammarArity{}
+		if strings.Contains(sb.gType, ".applicative") {
+			var err error
+			limit, err = definitionGrammarSignature(sb.verb, false, false)
+			if err != nil {
+				return err
+			}
+		}
+		objects, conjunctions, err := buildBoundedGrammarObjects(term, sb.getUnassociatedTokens(), sb.gram, limit)
 		if err != nil {
 			return err
 		}

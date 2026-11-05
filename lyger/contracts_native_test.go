@@ -2,7 +2,6 @@ package Lyger
 
 import (
 	"bytes"
-	"encoding/json"
 	"reflect"
 	"strings"
 	"testing"
@@ -14,10 +13,7 @@ const contractNativeUpdateSource = "Create \"items\" as a New List of 1 and 2.\n
 
 func TestContractsNativeUsesPreserveSelectedUpdateAndSnapshots(t *testing.T) {
 	service := NewLygerService(Options{})
-	analysis, err := service.AnalyzeContracts([]byte(contractNativeUpdateSource), "/project/native-uses.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, service, []byte(contractNativeUpdateSource), "/project/native-uses.l", ContractAnalysisOptions{})
 	var updates []contracts.NativeUse
 	for _, use := range analysis.NativeUses {
 		if use.Name == "Storage.List.Update" {
@@ -71,10 +67,7 @@ func TestContractsNativeScopeSelectorsAndDeterminism(t *testing.T) {
 	service := NewLygerService(Options{})
 	var previous []byte
 	for i := 0; i < 3; i++ {
-		analysis, err := service.AnalyzeContracts([]byte(contractNativeUpdateSource), "/project/native-uses.l", ContractAnalysisOptions{})
-		if err != nil {
-			t.Fatal(err)
-		}
+		analysis := analyzeContractSource(t, service, []byte(contractNativeUpdateSource), "/project/native-uses.l", ContractAnalysisOptions{})
 		for _, scope := range analysis.Scopes {
 			selected, err := analysis.FindContractScope(scope.ID)
 			if err != nil || selected.NodeID != scope.NodeID || !scope.Complete {
@@ -87,13 +80,10 @@ func TestContractsNativeScopeSelectorsAndDeterminism(t *testing.T) {
 		if _, err := analysis.FindContractScope("absent"); err == nil {
 			t.Fatal("missing scope silently selected another operation")
 		}
-		encoded, err := json.Marshal(struct {
+		encoded := contractJSON(t, struct {
 			Uses   []contracts.NativeUse
 			Scopes []contracts.AnalysisScope
 		}{analysis.NativeUses, analysis.Scopes})
-		if err != nil {
-			t.Fatal(err)
-		}
 		if i > 0 && !bytes.Equal(previous, encoded) {
 			t.Fatal("native records depend on map order or incidental identities")
 		}
@@ -103,10 +93,7 @@ func TestContractsNativeScopeSelectorsAndDeterminism(t *testing.T) {
 
 func TestContractsNativeBuiltinSelectionResistsCallerShadowing(t *testing.T) {
 	source := "Define \"Update\" to `<DEF>E{|Statement: ~caller_only~|}<DEF>`.\n" + contractNativeUpdateSource
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), "/project/shadow.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), "/project/shadow.l", ContractAnalysisOptions{})
 	rec, err := analysis.Compilation.Compilation.builtinRecord("Storage.List.Update")
 	if err != nil {
 		t.Fatal(err)
@@ -120,10 +107,7 @@ func TestContractsNativeBuiltinSelectionResistsCallerShadowing(t *testing.T) {
 }
 
 func TestContractsNativeUpdateRecordsEverySelectedHelper(t *testing.T) {
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(contractNativeUpdateSource), "/project/native-uses.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(contractNativeUpdateSource), "/project/native-uses.l", ContractAnalysisOptions{})
 	byID := make(map[string]contracts.NativeUse)
 	for _, use := range analysis.NativeUses {
 		byID[use.ID] = use
@@ -158,20 +142,14 @@ func TestContractsNativeUpdateRecordsEverySelectedHelper(t *testing.T) {
 	if operations != 2 {
 		t.Fatalf("expected two exact statement scopes, got %d", operations)
 	}
-	before, err := json.Marshal(analysis.NativeUses)
-	if err != nil {
-		t.Fatal(err)
-	}
+	before := contractJSON(t, analysis.NativeUses)
 	if _, err := analysis.Compilation.OrchestratorUnit("late_entry", nil); err != nil {
 		t.Fatal(err)
 	}
 	if err := analysis.RefreshLoweringInventory(); err != nil {
 		t.Fatal(err)
 	}
-	after, err := json.Marshal(analysis.NativeUses)
-	if err != nil {
-		t.Fatal(err)
-	}
+	after := contractJSON(t, analysis.NativeUses)
 	if !bytes.Equal(before, after) {
 		t.Fatal("late emission changed or duplicated native occurrences")
 	}
@@ -179,10 +157,7 @@ func TestContractsNativeUpdateRecordsEverySelectedHelper(t *testing.T) {
 
 func TestContractsNativeInvocationIncludesEvaluationAndCleanup(t *testing.T) {
 	source := functionSource("Identity", "\"Value\" as Number", "Number", "Return Value.") + "Identity 7 as \"Result\".\n"
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), "/project/invocation.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), "/project/invocation.l", ContractAnalysisOptions{})
 	uses := make(map[string]contracts.NativeUse)
 	for _, use := range analysis.NativeUses {
 		uses[use.ID] = use
@@ -228,10 +203,7 @@ func TestContractsNativeInvocationIncludesEvaluationAndCleanup(t *testing.T) {
 
 func TestContractsNativeInvocationsHaveDistinctCalleeResources(t *testing.T) {
 	source := functionSource("Identity", "\"Value\" as Number", "Number", "Return Value.") + "Identity 7 as \"First\".\nIdentity 9 as \"Second\".\n"
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), "/project/instances.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), "/project/instances.l", ContractAnalysisOptions{})
 	uses := make(map[string]contracts.NativeUse)
 	for _, use := range analysis.NativeUses {
 		uses[use.ID] = use
@@ -261,10 +233,7 @@ func TestContractsNativeInvocationsHaveDistinctCalleeResources(t *testing.T) {
 
 func TestContractsNativeReturnErrorIsValueAndStopsBody(t *testing.T) {
 	source := functionSource("EchoFailure", "\"Value\" as Error", "Error", "Return Value.") + "Create \"problem\" as a New Error of `ordinary value`.\nEchoFailure problem as \"Result\".\n"
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), "/project/error-value.l", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), "/project/error-value.l", ContractAnalysisOptions{})
 	foundReturn := false
 	for _, definition := range analysis.Plan.Definitions {
 		contractWalk(definition, func(node contracts.Node) {

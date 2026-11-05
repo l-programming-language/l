@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/l-programming-language/l/contracts"
@@ -47,56 +48,38 @@ func (ls *LygerService) VerifyDictionaryContractsWithOptions(input string, optio
 	if err != nil {
 		return nil, err
 	}
-	verification := &contracts.SourceVerificationResult{Assurance: assurance, Scope: "whole_dictionary", Status: contracts.Established}
-	selected := make(map[contracts.MeaningKey]bool)
+	counts := make(map[contracts.MeaningKey]int)
+	for _, def := range result.Definitions {
+		if def.Descriptor {
+			counts[def.Meaning]++
+		}
+	}
+	var selected []contracts.MeaningKey
 	for _, meaning := range options.Meanings {
-		if selected[meaning] {
+		if slices.Contains(selected, meaning) {
 			continue
 		}
-		count := 0
-		for _, definition := range result.Definitions {
-			if definition.Meaning == meaning && definition.Descriptor {
-				count++
-			}
-		}
-		if count != 1 {
+		if counts[meaning] != 1 {
 			return nil, fmt.Errorf("%w: selected meaning %s is absent, ambiguous or not a descriptor in this dictionary", ErrSourceContractMetadata, meaning)
 		}
-		selected[meaning] = true
-		verification.Selected = append(verification.Selected, meaning)
+		selected = append(selected, meaning)
 	}
-	if assurance == "symbolic" {
-		verification.Scope = "source_elaboration"
-		for _, meaning := range verification.Selected {
-			found := false
-			for _, certificate := range result.SourceCertificates {
-				if certificate.Meaning == meaning {
-					verification.Obligations = append(verification.Obligations, certificate.LogicalObligations...)
-					found = true
-				}
-			}
-			if !found {
-				verification.Obligations = append(verification.Obligations, contracts.Obligation{ID: contracts.StableID("source-projection-missing", meaning), Status: contracts.Unresolved, Reason: "selected descriptor has no supported source projection"})
-			}
-		}
-	} else {
-		verification.Obligations = append(verification.Obligations, result.Obligations...)
-		for _, certificate := range result.SourceCertificates {
-			verification.Obligations = append(verification.Obligations, certificate.LogicalObligations...)
-			verification.Obligations = append(verification.Obligations, certificate.LoweringObligations...)
-		}
+	report := contracts.Report{SourceCertificates: result.SourceCertificates}
+	scope := selected
+	if assurance == "implementation" {
+		scope = nil // This API covers the whole frontend inventory, including native residuals.
+		report.Obligations = append(report.Obligations, result.Obligations...)
 		for _, boundary := range result.Analysis.Summary.NativeBoundaries {
-			verification.Obligations = append(verification.Obligations, contracts.Obligation{ID: contracts.StableID("dictionary-native", boundary), Claim: contracts.Claim{Target: boundary.Target, Scope: "implementation", Predicate: contracts.Predicate{Kind: "native_conformance", Subject: boundary.ID}}, Status: boundary.Status, Reason: boundary.Reason, Origin: boundary.Origin})
+			report.Obligations = append(report.Obligations, contracts.Obligation{ID: contracts.StableID("dictionary-native", boundary), Claim: contracts.Claim{Target: boundary.Target, Scope: "implementation", Predicate: contracts.Predicate{Kind: "native_conformance", Subject: boundary.ID}}, Status: boundary.Status, Reason: boundary.Reason, Origin: boundary.Origin})
 		}
 	}
-	for _, obligation := range verification.Obligations {
-		if obligation.Status == contracts.Contradicted {
-			verification.Status = contracts.Contradicted
-			break
-		}
-		if obligation.Status != contracts.Established {
-			verification.Status = contracts.Unresolved
-		}
+	verification, missing, err := report.DictionaryVerification(assurance, scope)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", ErrSourceContractMetadata, err)
+	}
+	verification.Selected = selected
+	for _, meaning := range missing {
+		verification.Obligations = append(verification.Obligations, contracts.Obligation{ID: contracts.StableID("source-projection-missing", meaning), Status: contracts.Unresolved, Reason: "selected descriptor has no supported source projection"})
 	}
 	result.Verification = verification
 	return result, nil
@@ -108,7 +91,7 @@ func (ls *LygerService) VerifyDictionaryContractsWithOptions(input string, optio
 // Indexed dictionaries retain their private definition-site environment.
 func (ls *LygerService) VerifyDictionaryContracts(input string, options ContractAnalysisOptions) (*DictionaryContractAnalysis, error) {
 	var source []byte
-	var sourcePath, selectedSource, provider string
+	var sourcePath, selectedSource string
 	if strings.HasSuffix(input, ".l") {
 		absolute, err := filepath.Abs(input)
 		if err != nil {
@@ -118,7 +101,7 @@ func (ls *LygerService) VerifyDictionaryContracts(input string, options Contract
 		if err != nil {
 			return nil, lerrors.IO.Wrap(err, "read dictionary source")
 		}
-		source, sourcePath, provider = data, absolute, input
+		source, sourcePath = data, absolute
 		selectedSource = "source:" + filepath.Base(absolute)
 	} else {
 		index, err := readDictionaryIndex(ls.options.Resources)
@@ -129,7 +112,6 @@ func (ls *LygerService) VerifyDictionaryContracts(input string, options Contract
 		if !ok {
 			return nil, lerrors.UnresolvedReference.Errorf("dictionary %q is not indexed for %s", input, ls.options.Language)
 		}
-		provider = input
 		selectedSource = "resource:" + entry.Entry
 		// Use the language's existing dictionary import, not a new import mode.
 		source = []byte(fmt.Sprintf("Use %s from `%s`.\n", entry.Dictionary, strings.ReplaceAll(input, "`", "\\`")))
@@ -139,11 +121,12 @@ func (ls *LygerService) VerifyDictionaryContracts(input string, options Contract
 	if err != nil {
 		return nil, err
 	}
-	result := &DictionaryContractAnalysis{Analysis: analysis, Provider: provider, Source: selectedSource}
+	result := &DictionaryContractAnalysis{Analysis: analysis, Provider: input, Source: selectedSource}
 	selected := make(map[contracts.MeaningKey]bool)
 	for _, definition := range analysis.Bindings.Definitions {
 		if definition.Origin.Source == selectedSource {
 			selected[definition.Meaning] = true
+			result.Definitions = append(result.Definitions, definition)
 		}
 	}
 	for _, projection := range analysis.SourceProjections {
@@ -161,11 +144,7 @@ func (ls *LygerService) VerifyDictionaryContracts(input string, options Contract
 			result.SourceInstantiations = append(result.SourceInstantiations, instance)
 		}
 	}
-	for _, definition := range analysis.Bindings.Definitions {
-		if definition.Origin.Source != selectedSource {
-			continue
-		}
-		result.Definitions = append(result.Definitions, definition)
+	for _, definition := range result.Definitions {
 		claim := contracts.Claim{ID: contracts.StableID("dictionary-verification", definition.Meaning), Predicate: contracts.Predicate{Kind: "definition_conformance", Subject: string(definition.Meaning)}, Target: contracts.TargetRef{Root: string(definition.Definition), Type: definition.Applicability, Phase: contracts.Elaboration}, Scope: "definition", Phase: contracts.Elaboration}
 		obligation := contracts.Obligation{ID: claim.ID, Claim: claim, Status: contracts.Unresolved, Reason: "canonical source declaration discovered; no supported source-body symbolic certificate or approved native conformance witness is available", Origin: definition.Origin, Dependencies: []string{string(definition.Environment), string(definition.Meaning)}}
 		for _, certificate := range result.SourceCertificates {

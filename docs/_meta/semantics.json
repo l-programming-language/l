@@ -5,62 +5,69 @@
   ],
   "executedStages": [],
   "sourceHashes": {
-    "builtins/eng/core.l": "dc87c9fcf637ffc13803b266453d10fedebb0f853040666616b6b0d16c43e6b3",
+    "builtins/eng/core.l": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
     "builtins/runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
     "builtins/runtime/eng/foundations.l": "3f21a1e80f4249af50a48d35149f2144b00fa3c448eae1a3ab465b97b6044fd7",
     "builtins/runtime/eng/number.l": "7d9f41f3990343b3ec6c63f5b03ca4762c5fab7207641d20515327ff71012f2b",
-    "docs/cli-build.md": "fa515cf585caa8fa96ea3210ee5a997a2532cedbac02cee6f5643f10a57d7045",
-    "lexicon/eng/grammar.json": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b",
+    "docs/cli-build.md": "d66aacb6e7996bd4860ad7b60fe96a157227fc5cfe442dd8c40e9e5a1c5fe7e9",
+    "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-    "logiceme/logiceme_service.go": "50239cca836811b93039570c16e0380220ebcae24237a9c725d809e8d7f311f7",
+    "logiceme/logiceme_service.go": "415866d9fc5a7d12b76aed7c42b87554d9d93d06a1b14835bb8f848299b46776",
     "logiceme/runtime_composition.go": "24f443bd4fba2d87f7031c1acf3e39d02657c6fe4fb368449ac6a193ffe9b0b7",
     "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
-    "lyger/binding.go": "be5070f9f04486c61ecae6e832ac09e85339df355b3eb2a4f157e553f4ac1b87",
+    "lyger/binding.go": "ae768960f2e1e9bb6dea5e5154844dc3a4d3638cc2f8815572c99dafc348ab35",
     "lyger/builder.go": "4ac944a308bb7f0e940013c32488a2cbb89f450de2fec15e1b7558c33c004845",
-    "lyger/builtin_operations.go": "2f025da178c6f59db2aa098f90d83cd81fd3e28e1d5cf50b71330a73a923e376",
-    "lyger/construction.go": "e01de48db67121acf6ddaee35ea778a4dd5c29a618f685156954ae578c1eb9f7",
-    "lyger/definition_bindings.go": "c239e4939718346ed7db8b7677167f3a8fdcad97da3b0001afd1dbd20cf4377c",
+    "lyger/builtin_app_selection.go": "d27277189643bcb740dc4cd064aefa8fd810f5bff073a7d9d434f9bfec1f092f",
+    "lyger/builtin_bindings.go": "702ae6b5a81caf0bf482feb43138372a0ad026bf26952a8526a6f548160b37f6",
+    "lyger/builtin_operations.go": "c05bed44bfd03a5ede642e0fc785056eb743959039dede7305da625cc90d42c9",
+    "lyger/construction.go": "d9112edcd3c28d508b6d0849dedd7d746ee6179d585fe88571f51a1341734bd9",
+    "lyger/constructor_grammar.go": "5a4b766982a31035bb298e6adf4e2014c406a3fd11213ad42c8144b64e642156",
+    "lyger/contracts_lowering.go": "6bb0190727db25891a178b9a7343a69a74a5b870ad01536e5ea1d03167fe5cfa",
+    "lyger/definition_bindings.go": "7729518ee61aad720085adb17bb201bfdcecaffd068625fda7b9dfd57e9586b8",
     "lyger/entry_composition.go": "561579d280ba920406d3f38b0c96aa8ffe324eca0be7877071783340d8f23214",
     "lyger/execution_composition.go": "16488cc98b137f93c910a795d891131614cea18314b428ba1089ec86c032e7e7",
-    "lyger/function_composition.go": "f51800bb1c0dedf03d76a36eea5adb053300332742bb81c86da6be57e4ef25cb",
-    "lyger/function_definitions.go": "5bb1ca5803d502f66122d7c4faf0d36e2074876bf896b7a58e5a27018f106f2b",
-    "lyger/grammar.go": "5879aa138ee902f20463aa57ee5fe470c848b2f0ede945417d8487c8253b4f02",
+    "lyger/function_composition.go": "028b2b49eb47681cc23e3b3272fa2ba5b689d2ca8c7596453471e1a69f06f4ea",
+    "lyger/function_definitions.go": "1888437b6c54abf864ee600cb576e7a2bf905204777e044d86382da8ff8595dd",
+    "lyger/grammar.go": "0e24157ab96bed610a8914f962646c1a1d38eea70c8c1f655ae6023b47e72ec5",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
     "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
     "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
-    "lyger/grammar_types.go": "c57ca69f9748e991cd757cf567ee45c996ab57da9699afbef57fb6ac31970f1e",
-    "lyger/instruction_captures.go": "04f088e7411621e8a9261626485903aa426b574b1bd6dd0e16881a1dbc26006d",
-    "lyger/instructions.go": "332533abf53ad83ee0d209bb88d95d310028ce913b08f59c5f12b0f28d9f4f58",
+    "lyger/grammar_types.go": "a14fd3aac73b9a66a087f0e0eada9d09f37c6e1a08b2295fe9119044a480b8ae",
+    "lyger/instruction_captures.go": "d22fa76784237c14aac180a9ee92c9838c101e52586026657bb8453b4f0616d2",
+    "lyger/instructions.go": "efb8cc58f9665652dd8a1aa480ae7cc4b9d71e0b3bf4c14b22787deb8cc9884e",
     "lyger/ir_kinds.go": "d552e2cd21079344f25317d13aec439bb665d269678a879169ac065b45058a79",
-    "lyger/lexical_scope.go": "2d2690c205ef1da8e1868a10d57eeb222018172fda7da9de76c0dc9c84c78288",
+    "lyger/lexical_scope.go": "9de4a95cbc9d4923f880330ac178717152008d8c604e50d7a7c744bebf26fa96",
     "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
     "lyger/lexicon.go": "e6c61d41351f3116573742fbe107f87de188c9b36e0b6fc0cb14a8b74e60c2c7",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
-    "lyger/lowering.go": "075874475402f5d7569903642042e023fa0c88c2f972f2a1df325dcf59e1ec37",
+    "lyger/lowering.go": "a3b2bec3b690d9192a3da0fabd5fe863586d95e5aba035a0a98ca42fb5278ef2",
     "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
     "lyger/orchestration_plan.go": "5a9fbaa1d0e0eaf132720b960db17a216a11c65e90cf2ddb79e039200dc9ac0d",
-    "lyger/publication.go": "9ead493a6787b091e7f86e21d43a2b08cf7d19c6d790a02c829990c4c800a298",
-    "lyger/registration.go": "2ef2c5f1d08897b7754d16bf56b8a0ff069a17c2f6171985e6374150de8ca4d5",
+    "lyger/process_inputs.go": "8d694eebf5de74b5585f10a04c24146426918036ebec3906d97cf4602721dfce",
+    "lyger/publication.go": "9da8cdfa67fd9225890e374fcefa455263a1dc80aeaa42568e0b45668a331a54",
+    "lyger/registration.go": "e55d5e4e001d863ab082b8415e4a84c7d573b493a6bfe8fb0df015fcec738898",
     "lyger/runtime_types.go": "4334d0bc85798b5afac5fa32ba1dd33dc1b95e887a707e5e6f3995a635e363fc",
     "lyger/runtime_value_words.go": "820e42f8b6a8ef2ddf18b756bb54528ff36b18764108db4d3abce4714812670c",
     "lyger/runtime_values_plan.go": "91ff1b5e9143c06fd85f883a2130a06abb10a7777b4d534b99625f6c35536671",
     "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
-    "lyger/scope.go": "c8fdbeb575b95e77f5785072ff8b15ad070af862033e48acd07346c0c980fdef",
-    "lyger/semantic_resolution.go": "f924c2f40bc24b5d9c9d3b763c0d56e8027564ff8623e2da4c1ebc178114cabf",
-    "lyger/semantics.go": "cdbd1b22d181b3026ddfd97d73dd5a13567d8a9b60da56822b423d49a73be383",
-    "lyger/source_body.go": "41cbf8f1711709cfdc86ceec733a495c027c03b9b3dd60c0f6d7ee9376f336b0",
-    "lyger/source_functions.go": "9e19b22b4d6614c38160528e67e7c426b8c1b5a658bd16be4073336957ee0fbf",
+    "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
+    "lyger/semantic_resolution.go": "9e340190c53baaf3e73cdbfd7887d2bdf8c0619f2980dd59cff2a2132ab144c6",
+    "lyger/semantics.go": "db528f999f22cf3ab5c2ff04fbca7709f270d321ae6350341c1d69feb72658b9",
+    "lyger/source_body.go": "81da3955864cfb1526647733fd5acc2900fd0d29a662fa1b69425d67f865cbb0",
+    "lyger/source_descriptors.go": "7f9a47a50d5fa679e7323d1c5e485174e2080d3c885ccfcd3f687a56e436b98e",
+    "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
+    "lyger/source_return_context.go": "cd0d682596f6d0859c423f0701e9a295ef0794dd39c5f24b42f09f66a86c8c8b",
     "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
     "lyger/source_units_topology.go": "eb006bc1866daab6eba15a67c0e35b8c2bee94a15328927d388e54789c002ff5",
-    "lyger/storage_words.go": "c22cd50d27415e75bed937d40fa469736d2963d7376144af2c2d124d61fabcfc",
+    "lyger/storage_words.go": "27daf80e13a829b55c4cfc41ee2b12d3006b622eb2a1eaf3ee79d3b0cd79d557",
     "lyger/types.go": "8d1c5403e26386b560c2bad36d8e5b3aaed28174708f46dda470f572fcf75859",
     "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
     "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
     "lyger/word_values.go": "449b35c1a97327533fa663131fa3817c71b30675cce7cf63d387eb27578e1240",
     "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
-    "stdlib/eng/io/dictionary.l": "0aee928628163ae6deebcf061cb7a61680cb4da36177202694e739062ca56d82",
-    "stdlib/eng/storage/dictionary.l": "5d658412b1684a59d585ef6139302cf5dbd3a3458eaf2e78df06d40ce6ff57e2",
+    "stdlib/eng/io/dictionary.l": "52d59eea2f063372f2ed55e2fd9673bccf32f21595ddc7530a2363175dc29664",
+    "stdlib/eng/storage/dictionary.l": "939f4e9f5180f9962b4bc1b44b48fb08f0e6c0536f35b41f5800cc5b4e81201d",
     "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4"
   },
   "entries": [
@@ -550,12 +557,17 @@
         "lyger/value_kinds.go",
         "lyger/utilities.go",
         "lexicon/eng/vocabulary.json",
-        "lyger/semantics.go"
+        "lyger/semantics.go",
+        "lyger/source_descriptors.go",
+        "lyger/builtin_bindings.go"
       ],
       "witnesses": [
-        "lyger/paragraph_descriptor_identity_test.go"
+        "lyger/paragraph_descriptor_identity_test.go",
+        "lyger/word_library_constructor_test.go",
+        "lyger/word_library_pos_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Descriptors retain canonical targets through aliases and qualified imports. One selected construction signature governs operand roles, arity and result labels; source forwarding inherits its open requirements. Value operands, including transparent forwarding, evaluate once in authored order. Structured bodies retain their execution placement; native moves and borrows remain checked. This is not a resource-cost certificate."
     },
     {
       "id": "type:adverb",
@@ -1207,15 +1219,24 @@
         "lyger/construction.go",
         "lyger/definition_bindings.go",
         "lyger/source_body.go",
-        "lyger/function_definitions.go"
+        "lyger/function_definitions.go",
+        "lyger/process_inputs.go",
+        "lyger/lowering.go",
+        "lyger/constructor_grammar.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/binding.go",
+        "lyger/scope.go",
+        "lyger/source_return_context.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
-        "lyger/scoped_definition_test.go"
+        "lyger/scoped_definition_test.go",
+        "lyger/process_inputs_test.go",
+        "lyger/word_library_acceptance_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Native metadata Functions can bind ordered source operations through directive compositions; locals retain their enclosing Function scope."
+      "notes": "Ordered source operations use the shared instruction path. Provisional input labels acquire their actual Process scope before semantic use and cannot shadow enclosing Function parameters or escape into siblings. Explicit annotations preserve declared types and dependencies for native type and borrow checking. No callable outputs or closure runtime are added."
     },
     {
       "id": "builtin:function",
@@ -1259,17 +1280,40 @@
         "lyger/scope.go",
         "lyger/function_definitions.go",
         "lyger/lowering.go",
-        "lyger/instructions.go"
+        "lyger/instructions.go",
+        "lyger/source_return_context.go",
+        "lyger/contracts_lowering.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
         "lyger/function_composition_test.go",
         "lyger/function_contract_regression_test.go",
-        "lyger/nested_definition_test.go"
+        "lyger/nested_definition_test.go",
+        "lyger/word_library_reject_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Return retains its definition-site member through word expansion; different constructor contracts reject. Output counts and types remain checked."
+      "notes": "Root-authored returning actions use their caller\u2019s selected Return. Its implementation keeps lexical delegates; Function-owned Returns retain their constructor contract and reject incompatible callers. Known unconditional source-actor and transparent-Process exits terminate typed caller flow. Real Function calls, conditional and opaque bodies retain their own boundaries and native obligations."
+    },
+    {
+      "id": "builtin:retain",
+      "kind": "builtin",
+      "name": "Retain",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/reference/builtins/definitions.md#retain",
+      "sources": [
+        "builtins/eng/core.l",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/builtin_app_selection.go",
+        "lyger/storage_words.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_ownership_test.go"
+      ],
+      "notes": "Core Retain consumes a borrowed Arc and returns another handle to the same allocation without cloning its payload. The App source wrapper delegates to core Retain without lifecycle effects; Storage.Retain remains Rc-based. Atomic ownership does not certify payload Send/Sync or destructor costs.",
+      "evidence": "static-inspection; word-library native ownership witnesses"
     },
     {
       "id": "builtin:objective",
@@ -1455,12 +1499,15 @@
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "sources": [
         "lexicon/eng/vocabulary.json",
-        "lyger/construction.go"
+        "lyger/construction.go",
+        "lyger/constructor_grammar.go"
       ],
       "witnesses": [
-        "lyger/construction_test.go"
+        "lyger/construction_test.go",
+        "lyger/word_library_constructor_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Native source constructors accept explicit ordered parameter atoms through their declared slots. GenericTypes and Lifetimes retain their approved local native-input contract; this does not infer parameters or introduce general L generics."
     },
     {
       "id": "builtin:input",
@@ -1472,12 +1519,15 @@
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/construction.go",
-        "docs/cli-build.md"
+        "docs/cli-build.md",
+        "lyger/process_inputs.go"
       ],
       "witnesses": [
-        "lyger/construction_test.go"
+        "lyger/construction_test.go",
+        "lyger/process_inputs_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "notes": "Input metadata covers Function parameters and scoped structured Process bindings. No App process input transport is supplied."
     },
     {
       "id": "builtin:put",
@@ -1637,9 +1687,11 @@
         "lyger/configured_import_test.go",
         "lyger/raw_text_test.go",
         "lyger/io_numeric_test.go",
-        "lyger/nested_definition_test.go"
+        "lyger/nested_definition_test.go",
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_io_policy_test.go"
       ],
-      "notes": "IO.Print composes the operand's selected Render member with Write; implementation dependencies retain their private owners.",
+      "notes": "Print retains Render then private Write. Write obtains one stdout guard, invokes the source Lined Sender and applies shared Result.Expect with the existing failure message; bytes, formatting and LF policy remain unchanged.",
       "evidence": "static-inspection; existing-witness-not-run",
       "dictionary": {
         "lexicon": "eng",
@@ -1659,6 +1711,174 @@
       "effect": "Writes the selected typed rendering and appends LF; no L return value is declared."
     },
     {
+      "id": "stdlib-export:eng:io:IO.Output",
+      "kind": "stdlib-export",
+      "name": "IO.Output",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/io/dictionary.l",
+        "lyger/source_units.go",
+        "lyger/function_definitions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_io_policy_test.go"
+      ],
+      "notes": "One selected std::io::stdout call. Resource identity does not establish authority or isolation.",
+      "evidence": "static-inspection; word-library native and import witnesses",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Output"
+      ],
+      "argumentRoles": [],
+      "effect": "Obtains the standard-output handle; does not lock, write or flush."
+    },
+    {
+      "id": "stdlib-export:eng:io:IO.Diagnostic",
+      "kind": "stdlib-export",
+      "name": "IO.Diagnostic",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/io/dictionary.l",
+        "lyger/source_units.go",
+        "lyger/function_definitions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_io_policy_test.go"
+      ],
+      "notes": "One selected std::io::stderr call. It supplies an alternate native writer handle without adding an input or networking API.",
+      "evidence": "static-inspection; word-library native and import witnesses",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Diagnostic"
+      ],
+      "argumentRoles": [],
+      "effect": "Obtains the standard-error handle; does not redirect Print."
+    },
+    {
+      "id": "stdlib-export:eng:io:IO.Send",
+      "kind": "stdlib-export",
+      "name": "IO.Send",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/io/dictionary.l",
+        "lyger/source_units.go",
+        "lyger/function_definitions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go"
+      ],
+      "notes": "The source Function composes a borrowed byte view with write_all. Its native operation handles short writes and Interrupted, and rejects zero progress with WriteZero; L adds no extra retry policy. A failure can follow partial output; allocation and blocking remain native obligations.",
+      "evidence": "static-inspection; word-library native and import witnesses",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Send",
+        "Sends",
+        "Sent",
+        "Sending",
+        "Sender"
+      ],
+      "argumentRoles": [
+        "Writer (&mut W: std::io::Write + ?Sized)",
+        "Payload (&P: AsRef<[u8]> + ?Sized)"
+      ],
+      "effect": "Writes the borrowed byte view and returns std::io::Result<()>; no added LF, lock, flush or panic."
+    },
+    {
+      "id": "stdlib-export:eng:io:IO.Lined",
+      "kind": "stdlib-export",
+      "name": "IO.Lined",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/io/dictionary.l",
+        "lyger/source_units.go",
+        "lyger/function_definitions.go",
+        "stdlib/eng/storage/dictionary.l",
+        "lyger/source_descriptors.go",
+        "lyger/builtin_bindings.go",
+        "lyger/process_inputs.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_constructor_test.go",
+        "lyger/word_library_io_policy_test.go"
+      ],
+      "notes": "Targets the actual derived Sender. Its private L-authored helper selects the retained Result; base evaluation, generic arguments, result binding and helper provenance are preserved. It adds no output transaction or lifecycle operation.",
+      "evidence": "static-inspection; word-library native and import witnesses",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Lined"
+      ],
+      "argumentRoles": [
+        "Selected Sender invocation"
+      ],
+      "effect": "After payload success, sends LF through the same writer; returns the first error or unit success."
+    },
+    {
+      "id": "stdlib-export:eng:io:IO.Flush",
+      "kind": "stdlib-export",
+      "name": "IO.Flush",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "sources": [
+        "stdlib/index.json",
+        "stdlib/eng/io/dictionary.l",
+        "lyger/source_units.go",
+        "lyger/function_definitions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go"
+      ],
+      "notes": "One Write::flush call. Flushing may block or fail and does not establish durable storage.",
+      "evidence": "static-inspection; word-library native and import witnesses",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "io"
+      },
+      "visibility": "public",
+      "inflections": [
+        "Flush",
+        "Flushes",
+        "Flushed",
+        "Flushing",
+        "Flusher"
+      ],
+      "argumentRoles": [
+        "Writer (&mut std::io::Write)"
+      ],
+      "effect": "Requests an explicit native writer flush and returns its IO Result."
+    },
+    {
       "id": "stdlib-internal:eng:io:output",
       "kind": "stdlib-export",
       "name": "Render / Write",
@@ -1672,9 +1892,10 @@
       ],
       "witnesses": [
         "lyger/dictionary_ownership_test.go",
-        "lyger/dictionary_dependency_capture_test.go"
+        "lyger/dictionary_dependency_capture_test.go",
+        "lyger/word_library_io_policy_test.go"
       ],
-      "notes": "Private source Functions and small host operations selected by IO.Print, not additional imported API.",
+      "notes": "Render, Write, Lock, byte view and line-completion source helpers remain private dependencies. Stream, Check and Slice have no compatibility aliases; public byte IO is classified separately.",
       "evidence": "static-inspection; existing-witness-not-run",
       "dictionary": {
         "lexicon": "eng",
@@ -1839,7 +2060,7 @@
       "witnesses": [
         "lyger/runtime_values_test.go"
       ],
-      "notes": "Put/Place lower to checked runtime updates. Typed constructor reads supply indexed access; Get/Take, iteration and general removal are not established.",
+      "notes": "Put/Place lower to checked runtime updates; typed constructor reads supply indexed access. Get/Take, general source loop syntax and general removal remain unsupported. Storage traversal inside native Functions is a separate source composition.",
       "evidence": "static-inspection; existing-witness-not-run"
     },
     {
@@ -2089,16 +2310,19 @@
       "name": "Storage",
       "role": "implementation",
       "support": "internal",
-      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "doc": "docs/internals/storage.md#results-and-errors",
       "sources": [
         "stdlib/index.json",
         "stdlib/eng/storage/dictionary.l"
       ],
       "witnesses": [
         "lyger/private_dictionary_test.go",
-        "lyger/definition_export_test.go"
+        "lyger/definition_export_test.go",
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_library_ownership_test.go",
+        "lyger/source_formal_composition_test.go"
       ],
-      "notes": "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog.",
+      "notes": "Explicitly importable implementation vocabulary, not an implicit builtin or public dictionary catalog. Source compositions own typed traversal, result binding, lazy failures, release sequencing, byte appends and caller returns. Native allocation, blocking and destructor costs remain separate obligations.",
       "evidence": "static-inspection; existing-witness-not-run",
       "dictionary": {
         "lexicon": "eng",

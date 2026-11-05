@@ -2,12 +2,18 @@
   "schemaVersion": 1,
   "reviewPolicy": "Manually reviewed command/option surface from the current parser. A changed parser hash requires review of its behavior and documentation before this manifest is edited. references:generate never updates this approval hash. Aliases and flag-parser spelling variants are grouped with the corresponding option.",
   "sourceHashes": {
-    "cmd/l/build.go": "cb8fc1fb73efe6080f8531bda5987a5e3be0f6c498c3461d1cc9b393eab1a0a7",
-    "cmd/l/cargo.go": "1a970fca9701660e6a17ee855e68a6b107b72ed019a7760da8e36b1d09e5d24b",
+    "VERSION": "e6635045e1d2478ec4ca712d8c0e1dfcef8bb7b5b1e8e3bb560d37fe399a9e72",
+    "cmd/l/build.go": "1ff3d8454cd3e5edac07482a7db8507184bd9309c4b968a14323a8e87d527445",
+    "cmd/l/cargo.go": "accf87ab91696319cbd4ff00fa71ba47ddfd2b4a83b3bf5b6e07bb9b415238b7",
     "cmd/l/command.go": "fc6e07ba875c7c41e62aec111a2efe12220c5aa19199c061ed3352513d551761",
-    "cmd/l/contracts.go": "de5304a1900b5d258b895dc4551da400bd415d4aea171ccba27b3be16ed13759",
-    "cmd/l/contracts_requests.go": "12fcea7b7b94634ade374cb91e63046533209660f41153ea65c28aa409fb3532",
-    "cmd/l/native_environment.go": "c0d0f721ecec4263ea77a626bc5b2e30f33feb2463a621f7d6045d0838cbdc00"
+    "cmd/l/compiler.go": "597c8d7796d951f748771aa02ed02c730b64bb6a7c15a0648c94128a6daa9ec8",
+    "cmd/l/contracts.go": "d9b4adb6d2ca8fde948b67f0041e99257bc18e7da4cbf8bf9e28b08a9cc05dfd",
+    "cmd/l/contracts_requests.go": "5a4f6357b0033f28264f93f3c1ca579e8c0483aa502d6fa5c43807697845c5a6",
+    "cmd/l/native_environment.go": "41e1f6ae1a83d724747a6629122fff4aa9ef8fe251fe97413104170de9f9b4a0",
+    "contracts/environment.go": "7b8a68eba1d93526c425a66cc8d7c06b73b0733e856724c03921a14d7fae295f",
+    "contracts/profiles.go": "b96ec8e4309c3b954fcb29f1b02ee2c4e5a68c29b9eaa5a1ec2baa30b4e4e96b",
+    "contracts/requests.go": "e340b959ca32e629d3ac538a5b6d3e3fb272b3dd254e291a730f991d3856143f",
+    "version.go": "34f1fdb048e75894fbf7acc14863ec97b125f9a6769c2b73fa91e178e4120ef5"
   },
   "entries": [
     {
@@ -219,11 +225,16 @@
       "doc": "docs/contracts.md#check",
       "sources": [
         "cmd/l/command.go",
-        "cmd/l/contracts.go"
+        "cmd/l/contracts.go",
+        "contracts/profiles.go",
+        "contracts/requests.go",
+        "cmd/l/contracts_requests.go"
       ],
       "witnesses": [
         "cmd/l/contracts_test.go",
-        "cmd/l/contracts_source_test.go"
+        "cmd/l/contracts_source_test.go",
+        "contracts/profiles_test.go",
+        "cmd/l/contracts_profiles_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "Requires --profile or --request-file; checks whole entry by default or exact published scopes in explicit requests. Contradicted or unresolved controlling obligations return 1 without semantic fallback."
@@ -298,7 +309,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Write the display in its selected format to a file instead of stdout; cannot replace source input."
+      "notes": "Writes the display to a distinct destination outside selected inputs and protected assets. Paths are resolved from the working directory."
     },
     {
       "id": "cli:contracts --report",
@@ -316,7 +327,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Write an additional JSON report independently of display format; cannot replace source input."
+      "notes": "Writes structured JSON. Both file destinations are validated together against selected source and metadata inputs."
     },
     {
       "id": "cli:contracts --assets",
@@ -399,11 +410,15 @@
       "doc": "docs/contracts.md#check",
       "sources": [
         "cmd/l/command.go",
-        "cmd/l/contracts.go"
+        "cmd/l/contracts.go",
+        "contracts/profiles.go",
+        "contracts/requests.go"
       ],
       "witnesses": [
         "cmd/l/contracts_test.go",
-        "cmd/l/contracts_source_test.go"
+        "cmd/l/contracts_source_test.go",
+        "contracts/profiles_test.go",
+        "cmd/l/contracts_profiles_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "Repeatable supported whole-entry profiles; check requires these or --request-file. PreservesOnFailure requires an explicit request footprint. Whole-entry profiles reject in symbolic assurance mode."
@@ -509,14 +524,16 @@
         "cmd/l/command.go",
         "cmd/l/native_environment.go",
         "cmd/l/build.go",
-        "cmd/l/cargo.go"
+        "cmd/l/cargo.go",
+        "cmd/l/compiler.go",
+        "contracts/environment.go"
       ],
       "witnesses": [
         "cmd/l/native_environment_test.go",
         "cmd/l/native_environment_native_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Optional build evidence records tool identities, the actual frozen Cargo invocation and artifact hashes. Failed Cargo invocations remain recorded after initial capture; no App execution is introduced."
+      "notes": "Version 2 build evidence binds the recorded inputs, companion placement, Cargo invocation and artifact digests to the same compilation. Required evidence is written before executable publication. Failed Cargo invocations remain recorded."
     },
     {
       "id": "cli:contracts evidence capture",
@@ -547,14 +564,15 @@
         "cmd/l/command.go",
         "cmd/l/contracts.go",
         "cmd/l/contracts_requests.go",
-        "cmd/l/native_environment.go"
+        "cmd/l/native_environment.go",
+        "contracts/environment.go"
       ],
       "witnesses": [
         "cmd/l/native_environment_test.go",
         "cmd/l/contracts_requests_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Loads versioned native-environment provenance. Source/selected dependency and relevant Cargo configuration changes invalidate applicability; checking never replays commands or probes historical binaries."
+      "notes": "Checks version 1 captures or version 2 build records against current inputs and dependencies. Offline inspection reconstructs companion placement in memory and executes no historical commands."
     },
     {
       "id": "cli:contracts --request-file",
@@ -566,10 +584,14 @@
       "sources": [
         "cmd/l/command.go",
         "cmd/l/contracts.go",
-        "cmd/l/contracts_requests.go"
+        "cmd/l/contracts_requests.go",
+        "contracts/profiles.go",
+        "contracts/requests.go"
       ],
       "witnesses": [
-        "cmd/l/contracts_requests_test.go"
+        "cmd/l/contracts_requests_test.go",
+        "contracts/profiles_test.go",
+        "cmd/l/contracts_profiles_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "notes": "Check-only versioned requests select whole_entry or exact published scopes; PreservesOnFailure requires a supported observation, nonempty exact resource footprint and failure outcomes. Every controlling obligation remains in the report."

@@ -199,14 +199,14 @@ func (r *contractRecorder) sourceProjection(rec *record, rule *descriptorRule) c
 	projection.Before, projection.After = before, before
 	projection.LoweringObligations = []contracts.Obligation{{ID: contracts.StableID("source-lowering", meaning), Claim: contracts.Claim{Predicate: contracts.Predicate{Kind: "native_lowering_conformance"}, Target: target, Scope: "implementation", Phase: contracts.Invocation}, Status: contracts.Unresolved, Reason: "source topology and parameter forwarding do not establish executable template behavior, callback demand or native resource/lifetime conformance", Origin: origin}}
 	var delta *constructionNode
-	var err error
-	if rule.Template != nil {
+	sourceWrapper, err := r.compilation.sourceDescriptorObject(rule)
+	if err == nil && (rule.Template != nil || sourceWrapper != nil) {
 		// The real template-rule branch only appends a wrapper. Its described
 		// object's other spelling is not a constructor mutation.
 		delta = &constructionNode{Nominal: rule.Target.String(), Source: rule.Object, Wrappers: []*descriptorRule{rule}}
 		delta.contractWrite("wrappers", rule.Object.noun, true)
-	} else {
-		delta, err = r.compilation.constructObjectMode(rule.Object, make(map[*descriptorRule]bool), true)
+	} else if err == nil {
+		delta, err = r.compilation.constructObjectMode(rule.Object, make(map[*descriptorRule]bool), constructionSymbolic)
 	}
 	if err != nil {
 		projection.ProjectionObligations = append(projection.ProjectionObligations, contracts.Obligation{ID: contracts.StableID("unsupported-source", meaning), Claim: contracts.Claim{Predicate: contracts.Predicate{Kind: "source_projection", Subject: string(meaning), Target: target}, Target: target, Scope: "source_elaboration", Phase: contracts.Elaboration}, Status: contracts.Unresolved, Origin: origin, Reason: "source structural projection is unsupported: " + err.Error()})
@@ -339,7 +339,11 @@ func (a *ContractAnalysis) verifySourceContracts(options ContractAnalysisOptions
 		if declaration.Meaning != "" && declaration.TargetNominal != projection.TargetNominal {
 			return fmt.Errorf("%w: declared nominal differs from selected rule %s", ErrSourceContractMetadata, entry.meaning)
 		}
-		certificate, err := verifySourceWithSession(projection, declaration, options)
+		verify := contracts.VerifySourceAdjective
+		if options.Session != nil && declaration.Meaning != "" {
+			verify = options.Session.VerifySourceAdjective
+		}
+		certificate, err := verify(projection, declaration, options.Inference)
 		if err != nil {
 			return err
 		}
@@ -367,26 +371,15 @@ func (a *ContractAnalysis) verifySourceContracts(options ContractAnalysisOptions
 		target.Phase = contracts.Elaboration
 		target.Nominal = r.sourceNominal(use.Rule.Target)
 		instance := contracts.SourceAdjectiveInstance{Meaning: meaning, Target: target, TargetNominal: target.Nominal, Before: r.sourceShape(use.Before, target), After: r.sourceShape(use.After, target), Footprints: r.sourceFootprints(use.Operations, target), Origin: r.origin(use.Token), LoweringObligations: projections[meaning].LoweringObligations}
-		var result contracts.SourceAdjectiveInstantiation
-		var err error
+		verify := contracts.VerifySourceAdjectiveInstance
 		if options.Session != nil {
-			result, err = options.Session.VerifySourceAdjectiveInstance(projections[meaning], certificates[meaning], declaration, instance, options.Inference)
-		} else {
-			result, err = contracts.VerifySourceAdjectiveInstance(projections[meaning], certificates[meaning], declaration, instance, options.Inference)
+			verify = options.Session.VerifySourceAdjectiveInstance
 		}
+		result, err := verify(projections[meaning], certificates[meaning], declaration, instance, options.Inference)
 		if err != nil {
 			return err
 		}
 		a.SourceInstantiations = append(a.SourceInstantiations, result)
 	}
 	return nil
-}
-
-func verifySourceWithSession(projection contracts.SourceAdjectiveProjection, declaration contracts.SourceTransformerDeclaration, options ContractAnalysisOptions) (contracts.SourceAdjectiveCertificate, error) {
-	if options.Session == nil || declaration.Meaning == "" {
-		logicalOptions := options.Inference
-		logicalOptions.NativeSummaries, logicalOptions.NativeWitnesses, logicalOptions.ApprovedAssumptions = nil, nil, nil
-		return contracts.VerifySourceAdjective(projection, declaration, logicalOptions)
-	}
-	return options.Session.VerifySourceAdjective(projection, declaration, options.Inference)
 }

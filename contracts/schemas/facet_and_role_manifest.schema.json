@@ -228,43 +228,13 @@
           "type": "boolean"
         },
         "kind": {
-          "enum": [
-            "read",
-            "write",
-            "allocate",
-            "deallocate",
-            "release",
-            "io",
-            "spawn",
-            "transfer",
-            "wait",
-            "block",
-            "suspend",
-            "time",
-            "random",
-            "environment",
-            "foreign",
-            "panic",
-            "opaque",
-            "synchronize",
-            "replace",
-            "cleanup"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/EffectKind"
         },
         "origin": {
           "$ref": "#/$defs/Origin"
         },
         "phase": {
-          "enum": [
-            "",
-            "elaboration",
-            "construction",
-            "invocation",
-            "destruction",
-            "cleanup"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Phase"
         },
         "resource": {
           "$ref": "#/$defs/ResourceRef"
@@ -282,6 +252,32 @@
         "origin"
       ],
       "type": "object"
+    },
+    "EffectKind": {
+      "enum": [
+        "read",
+        "write",
+        "allocate",
+        "deallocate",
+        "release",
+        "io",
+        "spawn",
+        "signal",
+        "transfer",
+        "wait",
+        "block",
+        "suspend",
+        "time",
+        "random",
+        "environment",
+        "foreign",
+        "panic",
+        "opaque",
+        "synchronize",
+        "replace",
+        "cleanup"
+      ],
+      "type": "string"
     },
     "FacetRoleManifest": {
       "additionalProperties": false,
@@ -497,15 +493,7 @@
           "$ref": "#/$defs/Origin"
         },
         "phase": {
-          "enum": [
-            "",
-            "elaboration",
-            "construction",
-            "invocation",
-            "destruction",
-            "cleanup"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Phase"
         },
         "preserves": {
           "items": {
@@ -566,12 +554,7 @@
       "additionalProperties": false,
       "properties": {
         "capacity_enough": {
-          "enum": [
-            "established",
-            "contradicted",
-            "unresolved"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Status"
         },
         "copy_on_write": {
           "type": "boolean"
@@ -589,12 +572,7 @@
           ]
         },
         "sharing": {
-          "enum": [
-            "established",
-            "contradicted",
-            "unresolved"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Status"
         }
       },
       "required": [
@@ -624,12 +602,7 @@
           "type": "string"
         },
         "status": {
-          "enum": [
-            "established",
-            "contradicted",
-            "unresolved"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Status"
         },
         "target": {
           "$ref": "#/$defs/TargetRef"
@@ -683,16 +656,7 @@
         },
         "cleanup_outcomes": {
           "items": {
-            "enum": [
-              "normal",
-              "returned_failure",
-              "guard_rejected",
-              "panic",
-              "abort",
-              "cancelled",
-              "process_failure"
-            ],
-            "type": "string"
+            "$ref": "#/$defs/Outcome"
           },
           "type": [
             "array",
@@ -753,36 +717,13 @@
           ]
         },
         "final_owner": {
-          "enum": [
-            "established",
-            "contradicted",
-            "unresolved"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Status"
         },
         "id": {
           "type": "string"
         },
         "kind": {
-          "enum": [
-            "sequence",
-            "branch",
-            "event",
-            "call",
-            "callback",
-            "native",
-            "guard",
-            "require",
-            "acquire",
-            "move",
-            "release",
-            "scope",
-            "repeat",
-            "mutation",
-            "return",
-            "check_result"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/NodeKind"
         },
         "meaning": {
           "type": "string"
@@ -804,30 +745,13 @@
           "$ref": "#/$defs/Origin"
         },
         "outcome": {
-          "enum": [
-            "normal",
-            "returned_failure",
-            "guard_rejected",
-            "panic",
-            "abort",
-            "cancelled",
-            "process_failure"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Outcome"
         },
         "ownership": {
           "type": "string"
         },
         "phase": {
-          "enum": [
-            "",
-            "elaboration",
-            "construction",
-            "invocation",
-            "destruction",
-            "cleanup"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Phase"
         },
         "requires": {
           "items": {
@@ -869,6 +793,27 @@
       ],
       "type": "object"
     },
+    "NodeKind": {
+      "enum": [
+        "sequence",
+        "branch",
+        "event",
+        "call",
+        "callback",
+        "native",
+        "guard",
+        "require",
+        "acquire",
+        "move",
+        "release",
+        "scope",
+        "repeat",
+        "mutation",
+        "return",
+        "check_result"
+      ],
+      "type": "string"
+    },
     "Origin": {
       "additionalProperties": false,
       "properties": {
@@ -903,6 +848,29 @@
         "end"
       ],
       "type": "object"
+    },
+    "Outcome": {
+      "enum": [
+        "normal",
+        "returned_failure",
+        "guard_rejected",
+        "panic",
+        "abort",
+        "cancelled",
+        "process_failure"
+      ],
+      "type": "string"
+    },
+    "Phase": {
+      "enum": [
+        "",
+        "elaboration",
+        "construction",
+        "invocation",
+        "destruction",
+        "cleanup"
+      ],
+      "type": "string"
     },
     "Plan": {
       "additionalProperties": false,
@@ -1013,16 +981,7 @@
         },
         "outcomes": {
           "items": {
-            "enum": [
-              "normal",
-              "returned_failure",
-              "guard_rejected",
-              "panic",
-              "abort",
-              "cancelled",
-              "process_failure"
-            ],
-            "type": "string"
+            "$ref": "#/$defs/Outcome"
           },
           "type": [
             "array",
@@ -1194,16 +1153,7 @@
         },
         "outcomes": {
           "items": {
-            "enum": [
-              "normal",
-              "returned_failure",
-              "guard_rejected",
-              "panic",
-              "abort",
-              "cancelled",
-              "process_failure"
-            ],
-            "type": "string"
+            "$ref": "#/$defs/Outcome"
           },
           "type": [
             "array",
@@ -1295,6 +1245,14 @@
       ],
       "type": "object"
     },
+    "Status": {
+      "enum": [
+        "established",
+        "contradicted",
+        "unresolved"
+      ],
+      "type": "string"
+    },
     "Substitutions": {
       "additionalProperties": false,
       "properties": {
@@ -1364,16 +1322,7 @@
         },
         "outcomes": {
           "items": {
-            "enum": [
-              "normal",
-              "returned_failure",
-              "guard_rejected",
-              "panic",
-              "abort",
-              "cancelled",
-              "process_failure"
-            ],
-            "type": "string"
+            "$ref": "#/$defs/Outcome"
           },
           "type": [
             "array",
@@ -1414,15 +1363,7 @@
           ]
         },
         "phase": {
-          "enum": [
-            "",
-            "elaboration",
-            "construction",
-            "invocation",
-            "destruction",
-            "cleanup"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Phase"
         },
         "root": {
           "type": "string"
@@ -1459,29 +1400,7 @@
         },
         "excluded_effects": {
           "items": {
-            "enum": [
-              "read",
-              "write",
-              "allocate",
-              "deallocate",
-              "release",
-              "io",
-              "spawn",
-              "transfer",
-              "wait",
-              "block",
-              "suspend",
-              "time",
-              "random",
-              "environment",
-              "foreign",
-              "panic",
-              "opaque",
-              "synchronize",
-              "replace",
-              "cleanup"
-            ],
-            "type": "string"
+            "$ref": "#/$defs/EffectKind"
           },
           "type": [
             "array",
@@ -1495,15 +1414,7 @@
           "$ref": "#/$defs/Origin"
         },
         "phase": {
-          "enum": [
-            "",
-            "elaboration",
-            "construction",
-            "invocation",
-            "destruction",
-            "cleanup"
-          ],
-          "type": "string"
+          "$ref": "#/$defs/Phase"
         }
       },
       "required": [

@@ -19,30 +19,9 @@ type FrameContract struct {
 	Origin    Origin      `json:"origin"`
 }
 
-type FrameResourcePair struct {
-	Left  ResourceRef `json:"left"`
-	Right ResourceRef `json:"right"`
-}
-
 type FrameContext struct {
-	Disjoint []FrameResourcePair `json:"disjoint,omitempty"`
-	Aliases  []FrameResourcePair `json:"aliases,omitempty"`
-}
-
-func frameResourcesDisjoint(left, right ResourceRef, context FrameContext) bool {
-	return frameResourceRelation(left, right, context) == Contradicted
-}
-
-func frameResourceRelation(left, right ResourceRef, context FrameContext) Status {
-	aliases := make([]ResourcePair, 0, len(context.Aliases))
-	disjoint := make([]ResourcePair, 0, len(context.Disjoint))
-	for _, pair := range context.Aliases {
-		aliases = append(aliases, ResourcePair(pair))
-	}
-	for _, pair := range context.Disjoint {
-		disjoint = append(disjoint, ResourcePair(pair))
-	}
-	return AliasRelation(left, right, aliases, disjoint)
+	Disjoint []ResourcePair `json:"disjoint,omitempty"`
+	Aliases  []ResourcePair `json:"aliases,omitempty"`
 }
 
 // CheckFrame checks actual typed writes and replacements. Structural identity
@@ -61,7 +40,11 @@ func CheckFrame(frame FrameContract, writes []FrameFootprint, context FrameConte
 				}
 				continue
 			}
-			if frame.Scope == "runtime" && !frameResourcesDisjoint(frame.Resource, write.Resource, context) && frameResourceRelation(frame.Resource, write.Resource, context) != Established {
+			var alias Status
+			if frame.Scope == "runtime" {
+				alias = AliasRelation(frame.Resource, write.Resource, context.Aliases, context.Disjoint)
+			}
+			if alias == Unresolved {
 				if status != Contradicted {
 					status, reason = Unresolved, "runtime resources may alias despite different structural paths"
 				}
@@ -69,10 +52,7 @@ func CheckFrame(frame FrameContract, writes []FrameFootprint, context FrameConte
 			}
 			violation := false
 			if preserved != nil {
-				violation = pathContains(*preserved, write.Target) || pathContains(write.Target, *preserved)
-				if frame.Scope == "runtime" && frameResourceRelation(frame.Resource, write.Resource, context) == Established {
-					violation = true
-				}
+				violation = alias == Established || pathContains(*preserved, write.Target) || pathContains(write.Target, *preserved)
 			} else {
 				inside := false
 				for _, allowed := range frame.Allowed {
@@ -120,4 +100,12 @@ func FootprintsFromEffects(effects []Effect) []FrameFootprint {
 		}
 	}
 	return footprints
+}
+
+func checkSummaryFrame(frame FrameContract, summary DerivedSummary, origin Origin) []Obligation {
+	writes := FootprintsFromEffects(summary.Effects)
+	if len(summary.Unknowns) > 0 {
+		writes = append(writes, FrameFootprint{Kind: "unknown", Origin: origin})
+	}
+	return CheckFrame(frame, writes, FrameContext{})
 }

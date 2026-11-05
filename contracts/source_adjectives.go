@@ -261,7 +261,7 @@ func VerifySourceAdjective(projection SourceAdjectiveProjection, declaration Sou
 		certificate.Mode = "instantiation_only"
 		add(Unresolved, "source structural projection includes unsupported runtime or opaque behavior", Predicate{Kind: "source_fragment"})
 	}
-	summary, err := Infer(projection.Plan, sourceLogicalOptions(options))
+	summary, err := Infer(projection.Plan, options.logical())
 	if err != nil {
 		return certificate, err
 	}
@@ -295,7 +295,7 @@ func VerifySourceAdjective(projection SourceAdjectiveProjection, declaration Sou
 		add(Unresolved, "source declaration requests no structural postcondition or frame", Predicate{Kind: "source_guarantee"})
 	}
 	certificate.Assumptions = evidenceUnique(append(certificate.Assumptions, summary.Assumptions...))
-	certificate.LogicalStatus = obligationStatus(certificate.LogicalObligations)
+	certificate.LogicalStatus = ObligationStatus(certificate.LogicalObligations)
 	return certificate, nil
 }
 
@@ -384,46 +384,21 @@ func sourceStructuralFrame(frame FrameContract, target TargetRef) bool {
 	return true
 }
 
-func sourceLogicalOptions(options AnalysisOptions) AnalysisOptions {
-	options.NativeSummaries = nil
-	options.NativeWitnesses = nil
-	options.ApprovedAssumptions = nil
-	return options
-}
-
 func sourcePlanElaboration(plan Plan) bool {
 	if len(plan.NativeClosure) != 0 || len(plan.Residuals) != 0 || len(plan.Callbacks) != 0 {
 		return false
 	}
-	var supported func(Node) bool
-	supported = func(node Node) bool {
-		if node.Kind != Sequence && node.Kind != Event && node.Kind != Require || node.Phase != "" && node.Phase != Elaboration {
-			return false
-		}
-		if node.Outcome != "" && node.Outcome != Normal {
-			return false
+	return !plan.anyNode(func(node Node) bool {
+		if node.Kind != Sequence && node.Kind != Event && node.Kind != Require || node.Phase != "" && node.Phase != Elaboration || node.Outcome != "" && node.Outcome != Normal {
+			return true
 		}
 		for _, effect := range node.Effects {
 			if effect.Phase != Elaboration || effect.Kind != "write" && effect.Kind != "replace" || effect.Target.Unknown || effect.Target.Root == "" {
-				return false
+				return true
 			}
 		}
-		for _, child := range node.Children {
-			if !supported(child) {
-				return false
-			}
-		}
-		return node.Body == nil && len(node.Then) == 0 && len(node.Else) == 0 && len(node.Cleanup) == 0
-	}
-	if !supported(plan.Entry) {
-		return false
-	}
-	for _, body := range plan.Definitions {
-		if !supported(body) {
-			return false
-		}
-	}
-	return true
+		return node.Body != nil || len(node.Then) > 0 || len(node.Else) > 0 || len(node.Cleanup) > 0
+	})
 }
 
 func invalidateSourceFacts(facts []Predicate, writes []FrameFootprint) []Predicate {
@@ -501,10 +476,16 @@ func structuralFactTargets(fact Predicate) []TargetRef {
 
 func VerifySourceAdjectiveInstance(projection SourceAdjectiveProjection, certificate SourceAdjectiveCertificate, declaration SourceTransformerDeclaration, instance SourceAdjectiveInstance, options AnalysisOptions) (SourceAdjectiveInstantiation, error) {
 	verified, err := VerifySourceAdjective(projection, declaration, options)
-	result := SourceAdjectiveInstantiation{Meaning: projection.Meaning, Target: instance.Target, Status: Unresolved, CertificateFingerprint: StableID("source-certificate", verified), LoweringObligations: append(append([]Obligation(nil), verified.LoweringObligations...), instance.LoweringObligations...)}
 	if err != nil {
-		return result, err
+		return SourceAdjectiveInstantiation{}, err
 	}
+	return instantiateVerifiedSourceAdjective(projection, verified, certificate, declaration, instance), nil
+}
+
+// verified comes only from the current verifier or its private session cache;
+// the caller-supplied certificate remains a dependency check, never proof.
+func instantiateVerifiedSourceAdjective(projection SourceAdjectiveProjection, verified, certificate SourceAdjectiveCertificate, declaration SourceTransformerDeclaration, instance SourceAdjectiveInstance) SourceAdjectiveInstantiation {
+	result := SourceAdjectiveInstantiation{Meaning: projection.Meaning, Target: instance.Target, Status: Unresolved, CertificateFingerprint: StableID("source-certificate", verified), LoweringObligations: append(append([]Obligation(nil), verified.LoweringObligations...), instance.LoweringObligations...)}
 	result.Obligations = append(result.Obligations, verified.LogicalObligations...)
 	add := func(status Status, reason string, predicate Predicate) {
 		result.Obligations = append(result.Obligations, sourceObligation(instance.Target, instance.Origin, status, reason, predicate))
@@ -520,16 +501,17 @@ func VerifySourceAdjectiveInstance(projection SourceAdjectiveProjection, certifi
 	if TargetRelation(instance.Before.Target, instance.Target) != Established || TargetRelation(instance.After.Target, instance.Target) != Established || instance.Before.Nominal != instance.TargetNominal || instance.After.Nominal != instance.TargetNominal || instance.Target.Nominal != "" && instance.Target.Nominal != instance.TargetNominal {
 		add(Unresolved, "concrete before/after snapshots do not identify the selected nominal target", Predicate{Kind: "attachment"})
 	}
+	beforeFacts := SourceShapeFacts(instance.Before)
 	requirements := rebasePredicates(declaration.Requires, projection.Target, instance.Target)
 	for _, requirement := range requirements {
-		status, reason := Entails(SourceShapeFacts(instance.Before), requirement)
+		status, reason := Entails(beforeFacts, requirement)
 		add(status, "concrete before-rule requirement: "+reason, requirement)
 	}
 	for _, required := range rebasePredicates(projection.RequiredAssumptions, projection.Target, instance.Target) {
-		status, reason := Entails(SourceShapeFacts(instance.Before), required)
+		status, reason := Entails(beforeFacts, required)
 		add(status, "concrete ordinal/shape premise: "+reason, required)
 	}
-	post := invalidateSourceFacts(SourceShapeFacts(instance.Before), instance.Footprints)
+	post := invalidateSourceFacts(beforeFacts, instance.Footprints)
 	post = postFacts(post, SourceShapeFacts(instance.After))
 	for _, promise := range rebasePredicates(declaration.Provides, projection.Target, instance.Target) {
 		status, reason := Entails(post, promise)
@@ -539,6 +521,6 @@ func VerifySourceAdjectiveInstance(projection SourceAdjectiveProjection, certifi
 		transformer := rebaseTransformer(ContractTransformer{Target: projection.Target, Frame: declaration.Frame}, instance.Target)
 		result.Obligations = append(result.Obligations, CheckFrame(*transformer.Frame, instance.Footprints, FrameContext{})...)
 	}
-	result.Status = obligationStatus(result.Obligations)
-	return result, nil
+	result.Status = ObligationStatus(result.Obligations)
+	return result
 }

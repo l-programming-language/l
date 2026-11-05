@@ -52,10 +52,7 @@ func sourceCertificateFor(t *testing.T, analysis *ContractAnalysis, meaning cont
 func TestSourceAdjectiveStandaloneCertificateAndCompatibility(t *testing.T) {
 	service := NewLygerService(Options{})
 	source := []byte(sourceCompact)
-	initial, err := service.AnalyzeContracts(source, sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	initial := analyzeContractSource(t, service, source, sourceAdjectivePath, ContractAnalysisOptions{})
 	projection := sourceProjectionNamed(t, initial, "Compact")
 	if len(projection.After.Children) != 1 || len(projection.RequiredAssumptions) == 0 {
 		t.Fatal("standalone source body not projected")
@@ -66,10 +63,7 @@ func TestSourceAdjectiveStandaloneCertificateAndCompatibility(t *testing.T) {
 	constructor := projection.Target
 	constructor.Path = []string{"constructor"}
 	declaration.Frame = &contracts.FrameContract{Target: projection.Target, Allowed: []contracts.TargetRef{constructor, projection.After.Children[0].Target}, Preserves: []contracts.TargetRef{name}, Scope: "elaboration", Phase: contracts.Elaboration}
-	checked, err := service.AnalyzeContracts(source, sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
-	if err != nil {
-		t.Fatal(err)
-	}
+	checked := analyzeContractSource(t, service, source, sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
 	certificate := sourceCertificateFor(t, checked, declaration.Meaning)
 	if certificate.LogicalStatus != contracts.Established || len(certificate.LoweringObligations) == 0 {
 		t.Fatalf("structural theorem or separate native obligations missing: %+v", certificate)
@@ -85,10 +79,7 @@ func TestSourceAdjectiveStandaloneCertificateAndCompatibility(t *testing.T) {
 		t.Fatal("source certificate changed normal compilation")
 	}
 	declaration.Requires = nil
-	missing, err := service.AnalyzeContracts(source, sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
-	if err != nil {
-		t.Fatal(err)
-	}
+	missing := analyzeContractSource(t, service, source, sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
 	if sourceCertificateFor(t, missing, declaration.Meaning).LogicalStatus == contracts.Established {
 		t.Fatal("empty structural premise was invented")
 	}
@@ -96,17 +87,11 @@ func TestSourceAdjectiveStandaloneCertificateAndCompatibility(t *testing.T) {
 
 func TestSourceAdjectiveDefinitionFrameRejection(t *testing.T) {
 	service := NewLygerService(Options{})
-	initial, err := service.AnalyzeContracts([]byte(sourceCompact), sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	initial := analyzeContractSource(t, service, []byte(sourceCompact), sourceAdjectivePath, ContractAnalysisOptions{})
 	projection := sourceProjectionNamed(t, initial, "Compact")
 	declaration := sourceDeclarationFor(projection)
 	declaration.Frame = &contracts.FrameContract{Target: projection.Target, Allowed: []contracts.TargetRef{projection.Target}, Preserves: []contracts.TargetRef{projection.Target}, Scope: "elaboration", Phase: contracts.Elaboration}
-	checked, err := service.AnalyzeContracts([]byte(sourceCompact), sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
-	if err != nil {
-		t.Fatal(err)
-	}
+	checked := analyzeContractSource(t, service, []byte(sourceCompact), sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
 	if sourceCertificateFor(t, checked, declaration.Meaning).LogicalStatus != contracts.Contradicted {
 		t.Fatal("actual constructor writes accepted a whole-target preservation promise")
 	}
@@ -115,16 +100,10 @@ func TestSourceAdjectiveDefinitionFrameRejection(t *testing.T) {
 func TestSourceAdjectiveActualInstanceUsesBeforeShape(t *testing.T) {
 	service := NewLygerService(Options{})
 	source := []byte(sourceCompact + "Create \"Worker\" as a New Compact App.\n")
-	initial, err := service.AnalyzeContracts(source, sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	initial := analyzeContractSource(t, service, source, sourceAdjectivePath, ContractAnalysisOptions{})
 	projection := sourceProjectionNamed(t, initial, "Compact")
 	declaration := sourceDeclarationFor(projection)
-	checked, err := service.AnalyzeContracts(source, sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
-	if err != nil {
-		t.Fatal(err)
-	}
+	checked := analyzeContractSource(t, service, source, sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
 	if len(checked.SourceInstantiations) != 1 || checked.SourceInstantiations[0].Status != contracts.Established {
 		t.Fatalf("actual source attachment not verified: %+v", checked.SourceInstantiations)
 	}
@@ -157,10 +136,7 @@ func TestSourceAdjectiveActualInstanceUsesBeforeShape(t *testing.T) {
 func TestSourceAdjectiveCanonicalNominalAndMetadata(t *testing.T) {
 	source := paragraphDescriptorWidget + "\"Outer\" describes a Generic `main` Widget of any Process with No Inputs and No Outputs.\n\n    " + paragraphDescriptorWidget + "\"Inner\" describes a Generic `main` Widget of any Process with No Inputs and No Outputs.\n"
 	service := NewLygerService(Options{})
-	analysis, err := service.AnalyzeContracts([]byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, service, []byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
 	outer, inner := sourceProjectionNamed(t, analysis, "Outer"), sourceProjectionNamed(t, analysis, "Inner")
 	if outer.Target.Type != inner.Target.Type || outer.TargetNominal == inner.TargetNominal {
 		t.Fatal("same-spelled scoped nominal definitions were conflated")
@@ -174,10 +150,7 @@ func TestSourceAdjectiveCanonicalNominalAndMetadata(t *testing.T) {
 
 func TestSourceAdjectiveOrderedWritesAndDefinitionSiteHelper(t *testing.T) {
 	source := "\"Named\" describes a Generic `first` Service.\nIt describes a Generic `second` Service.\n\"Composite\" describes a Generic Named Service.\n\"Pair\" describes a Generic App with a New Main Service and a New Main Service.\n\n    \"Named\" describes a Generic `captured` Service.\n"
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
 	composite := sourceProjectionNamed(t, analysis, "Composite")
 	if composite.After.Name != "second" {
 		t.Fatalf("caller-local helper captured definition-site helper: %s", composite.After.Name)
@@ -208,10 +181,7 @@ func TestSourceAdjectiveOrderedWritesAndDefinitionSiteHelper(t *testing.T) {
 
 func TestSourceAdjectiveNativeWrapperOnlyAppends(t *testing.T) {
 	source := "\"Marked\" describes any Function as `<DEF>[[\"A\", \"<@Function@>\"]]<DEF>`.\n\"Twice\" describes a Generic Marked Function.\nIt describes a Generic Marked Function.\n\"Combined\" describes a Generic Twice Function.\n"
-	analysis, err := NewLygerService(Options{}).AnalyzeContracts([]byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
 	projection := sourceProjectionNamed(t, analysis, "Marked")
 	if projection.After.Constructor != "" || projection.After.NameKnown || len(projection.Footprints) != 1 || projection.Footprints[0].Target.Path[0] != "wrappers" {
 		t.Fatal("raw wrapper invented constructor/name writes")
@@ -240,20 +210,14 @@ func TestSourceAdjectiveNativeWrapperOnlyAppends(t *testing.T) {
 func TestSourceAdjectiveSignatureAndParameterForwarding(t *testing.T) {
 	source := "\"Entrypoint\" describes a Generic `entry` Function of any Process with No Inputs and No Outputs.\n"
 	service := NewLygerService(Options{})
-	analysis, err := service.AnalyzeContracts([]byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, service, []byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
 	projection := sourceProjectionNamed(t, analysis, "Entrypoint")
 	if !projection.After.InputsDefined || !projection.After.OutputsDefined || len(projection.After.Parameters) != 1 || !projection.After.Parameters[0].Formal {
 		t.Fatalf("signature or Process formal lost: %+v", projection.After)
 	}
 	declaration := sourceDeclarationFor(projection)
 	declaration.Provides = []contracts.Predicate{{Kind: "eq", Subject: "name", Target: projection.Target, Value: contracts.Atom{Kind: "text", Text: "entry"}}, {Kind: "eq", Subject: "inputs.count", Target: projection.Target, Value: contracts.Atom{Kind: "number", Number: 0}}, {Kind: "eq", Subject: "parameters.count", Target: projection.Target, Value: contracts.Atom{Kind: "number", Number: 1}}}
-	checked, err := service.AnalyzeContracts([]byte(source), sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
-	if err != nil {
-		t.Fatal(err)
-	}
+	checked := analyzeContractSource(t, service, []byte(source), sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
 	certificate := sourceCertificateFor(t, checked, declaration.Meaning)
 	if certificate.LogicalStatus != contracts.Established {
 		t.Fatalf("explicit signature premises did not establish source facts: %+v", certificate.LogicalObligations)
@@ -268,16 +232,10 @@ func TestSourceAdjectiveSignatureAndParameterForwarding(t *testing.T) {
 func TestSourceAdjectiveExistingSourceChildRejectsOrdinalPremise(t *testing.T) {
 	source := sourceCompact + "\"Extra\" describes a Generic App with a New `extra` Service.\nCreate \"Worker\" as a New Extra Compact App.\n"
 	service := NewLygerService(Options{})
-	initial, err := service.AnalyzeContracts([]byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	initial := analyzeContractSource(t, service, []byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
 	projection := sourceProjectionNamed(t, initial, "Compact")
 	declaration := sourceDeclarationFor(projection)
-	checked, err := service.AnalyzeContracts([]byte(source), sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
-	if err != nil {
-		t.Fatal(err)
-	}
+	checked := analyzeContractSource(t, service, []byte(source), sourceAdjectivePath, ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}})
 	if len(checked.SourceInstantiations) != 1 || checked.SourceInstantiations[0].Status != contracts.Contradicted {
 		t.Fatalf("existing source child reused ordinal-zero certificate: %+v", checked.SourceInstantiations)
 	}
@@ -327,16 +285,10 @@ func TestSourceAdjectiveDictionarySelectedAssuranceAPI(t *testing.T) {
 func TestSourceAdjectiveNestedHelperKeepsIntermediateTarget(t *testing.T) {
 	source := "\"Inner\" describes a Generic App with a New Main Service using any Process.\n\"Outer\" describes a Generic Inner App.\n\"Extra\" describes a Generic App with a New `extra` Service.\nCreate \"Worker\" as a New Extra Outer App.\n"
 	service := NewLygerService(Options{})
-	initial, err := service.AnalyzeContracts([]byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	initial := analyzeContractSource(t, service, []byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
 	inner, outer := sourceProjectionNamed(t, initial, "Inner"), sourceProjectionNamed(t, initial, "Outer")
 	options := ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{sourceDeclarationFor(inner), sourceDeclarationFor(outer)}}
-	checked, err := service.AnalyzeContracts([]byte(source), sourceAdjectivePath, options)
-	if err != nil {
-		t.Fatal(err)
-	}
+	checked := analyzeContractSource(t, service, []byte(source), sourceAdjectivePath, options)
 	var temporary, receiver *contracts.SourceAdjectiveInstantiation
 	for index := range checked.SourceInstantiations {
 		instance := &checked.SourceInstantiations[index]
@@ -360,10 +312,7 @@ func TestSourceAdjectiveNestedHelperKeepsIntermediateTarget(t *testing.T) {
 
 func TestSourceAdjectiveReinferenceReplacesDeclarations(t *testing.T) {
 	service := NewLygerService(Options{})
-	analysis, err := service.AnalyzeContracts([]byte(sourceCompact), sourceAdjectivePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, service, []byte(sourceCompact), sourceAdjectivePath, ContractAnalysisOptions{})
 	projection := sourceProjectionNamed(t, analysis, "Compact")
 	declaration := sourceDeclarationFor(projection)
 	if err := analysis.ReinferContracts(ContractAnalysisOptions{SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}}); err != nil {

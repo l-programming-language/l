@@ -27,45 +27,35 @@ func TestSourceAdjectiveStructuralCertificate(t *testing.T) {
 	if err != nil || certificate.LogicalStatus != Established || certificate.Scope != "source_elaboration" || len(certificate.Assumptions) != 1 || len(certificate.LoweringObligations) != 1 || certificate.LoweringObligations[0].Status != Unresolved {
 		t.Fatalf("structural logical theorem conflated with native assurance: %+v %v", certificate, err)
 	}
-	t.Run("missing-declared-shape", func(t *testing.T) {
-		declaration.Requires = nil
-		got, err := VerifySourceAdjective(projection, declaration, AnalysisOptions{})
-		if err != nil || got.LogicalStatus != Unresolved {
-			t.Fatalf("compiler invented a shape premise: %+v %v", got, err)
-		}
-	})
-	t.Run("frame-rejection", func(t *testing.T) {
-		_, decl := sourceAdjectiveFixture()
-		decl.Frame.Preserves = []TargetRef{projection.Target}
-		got, err := VerifySourceAdjective(projection, decl, AnalysisOptions{})
-		if err != nil || got.LogicalStatus != Contradicted {
-			t.Fatalf("actual child write ignored by frame: %+v %v", got, err)
-		}
-	})
-	t.Run("runtime-profile", func(t *testing.T) {
-		_, decl := sourceAdjectiveFixture()
-		decl.Profiles = []Profile{{Name: "NoHeapAllocation"}, {Name: "NoBlocking"}}
-		got, err := VerifySourceAdjective(projection, decl, AnalysisOptions{})
-		if err != nil || got.LogicalStatus != Unresolved {
-			t.Fatalf("topology became runtime assurance: %+v %v", got, err)
-		}
-	})
-	t.Run("unsupported-projection-mode", func(t *testing.T) {
-		projected, decl := sourceAdjectiveFixture()
-		projected.ProjectionObligations = []Obligation{{ID: "reflection", Status: Unresolved, Reason: "formal-dependent selection"}}
-		got, err := VerifySourceAdjective(projected, decl, AnalysisOptions{})
-		if err != nil || got.LogicalStatus != Unresolved || got.Mode != "instantiation_only" {
-			t.Fatalf("unsupported projection claims a symbolic certificate: %+v %v", got, err)
-		}
-	})
-	t.Run("unrelated-frame-target", func(t *testing.T) {
-		projected, decl := sourceAdjectiveFixture()
-		decl.Frame.Target.Root = "another-symbolic-target"
-		got, err := VerifySourceAdjective(projected, decl, AnalysisOptions{})
-		if err != nil || got.LogicalStatus != Unresolved {
-			t.Fatalf("unrelated frame attachment accepted: %+v %v", got, err)
-		}
-	})
+	for _, test := range []struct {
+		name   string
+		mutate func(*SourceAdjectiveProjection, *SourceTransformerDeclaration)
+		want   Status
+		mode   string
+	}{
+		{"missing-declared-shape", func(_ *SourceAdjectiveProjection, d *SourceTransformerDeclaration) { d.Requires = nil }, Unresolved, ""},
+		{"frame-rejection", func(p *SourceAdjectiveProjection, d *SourceTransformerDeclaration) {
+			d.Frame.Preserves = []TargetRef{p.Target}
+		}, Contradicted, ""},
+		{"runtime-profile", func(_ *SourceAdjectiveProjection, d *SourceTransformerDeclaration) {
+			d.Profiles = []Profile{{Name: "NoHeapAllocation"}, {Name: "NoBlocking"}}
+		}, Unresolved, ""},
+		{"unsupported-projection-mode", func(p *SourceAdjectiveProjection, _ *SourceTransformerDeclaration) {
+			p.ProjectionObligations = []Obligation{{ID: "reflection", Status: Unresolved, Reason: "formal-dependent selection"}}
+		}, Unresolved, "instantiation_only"},
+		{"unrelated-frame-target", func(_ *SourceAdjectiveProjection, d *SourceTransformerDeclaration) {
+			d.Frame.Target.Root = "another-symbolic-target"
+		}, Unresolved, ""},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			projection, declaration := sourceAdjectiveFixture()
+			test.mutate(&projection, &declaration)
+			got, err := VerifySourceAdjective(projection, declaration, AnalysisOptions{})
+			if err != nil || got.LogicalStatus != test.want || test.mode != "" && got.Mode != test.mode {
+				t.Fatalf("status=%s want=%s mode=%s: %+v %v", got.LogicalStatus, test.want, test.mode, got, err)
+			}
+		})
+	}
 }
 
 func TestSourcePredicateFragmentIsRecursiveAndTargeted(t *testing.T) {
@@ -195,10 +185,7 @@ func TestSourceStructuralFactInvalidation(t *testing.T) {
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			plan := Plan{Entry: Node{Kind: Sequence, Children: []Node{{Kind: Event, Facts: []Predicate{test.fact}}, {Kind: Event, Phase: Elaboration, Effects: []Effect{{Kind: EffectKind(test.kind), Target: test.write, Phase: Elaboration, Definite: true}}}, {Kind: Require, Requires: []Predicate{test.fact}}}}}
-			summary, err := Infer(plan, AnalysisOptions{})
-			if err != nil {
-				t.Fatal(err)
-			}
+			summary := reviewInfer(t, plan, AnalysisOptions{})
 			if len(summary.Obligations) != 1 || summary.Obligations[0].Status != test.want {
 				t.Fatalf("stale structural fact handling: %+v", summary.Obligations)
 			}

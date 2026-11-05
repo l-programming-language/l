@@ -35,6 +35,18 @@ several profiles over the whole selected entry and all modeled outcomes. Unknown
 contradicted required properties fail checking. A profile does not select a
 different word or provider to obtain a passing result.
 
+| Profile | Required assurance |
+| --- | --- |
+| `NoHeapAllocation` | No allocation in the selected modeled scope. |
+| `NoBlocking` | No blocking in the selected modeled scope. |
+| `NoExternalIO` | No external IO in the selected modeled scope. |
+| `NoPanic` | No panic in the selected modeled scope. |
+| `OwnedLifecycle` | Lifecycle ownership checks over `whole_entry`. |
+| `PreservesOnFailure` | An explicit request with resource footprint, observation and failure outcomes. |
+
+The profile definitions also govern request validation. Unknown names and
+unsupported profile/scope combinations reject.
+
 ### Explain
 
 ```sh
@@ -110,12 +122,13 @@ Credential variables and other unlisted variables are omitted entirely, includin
 their hashes; non-test evidence containing unlisted environment keys rejects.
 Conventional Cargo configuration files and their absence are tracked separately.
 
-The optional build flag produces the same versioned environment document, adding
-actual Cargo command/results, exact workspace-input identity and compiled
-artifact hashes. It does not run generated programs. A Cargo failure retains its
-failed execution record once capture has succeeded; it produces no successful
-artifact evidence. Recorded staging paths are historical provenance and may no
-longer exist after cleanup.
+Build evidence uses record version 2 and includes the actual Cargo invocation,
+locked workspace input digest, artifact hashes and companion generation.
+Offline checks reconstruct that placement in memory. Environment-only capture
+remains at record version 1.
+A build record without the required generation cannot establish current build
+assurance. Failed Cargo invocations remain visible. Artifact evidence records
+compilation even if subsequent publication fails.
 
 Neither document approves native behavior. Panic strategy, allocator behavior,
 linker internals and transitive native conformance remain unproved by these
@@ -184,6 +197,12 @@ dependency fingerprints. Reviewed trust witnesses must match those propositions
 individually. An approved absence of allocation cannot certify absent blocking,
 a closed outcome set, cleanup, or unchanged state.
 
+Declared `guarantees` are separate report propositions; they do not replace
+outcome-specific summary components. Both use the same exact native selection,
+signature, environment and dependency checks, with requirements checked at the
+actual invocation entry. Facts established later cannot satisfy those entry
+requirements.
+
 Native uses distinguish the selected `native_body` from
 `invocation_composition_overhead` and `source_body_lowering_overhead`. Invocation
 overhead covers the selected wrapper and its context handling. Source-body
@@ -220,9 +239,11 @@ and profile enforcement:
 | `--native-environment PATH` | Read a previously captured native environment without executing recorded commands or probing tool versions. |
 | `--request-file PATH` | For `check`, load explicit scoped checks and failure-preservation footprints. |
 
-Report destinations must not replace the source input. Reports can be written
-before enforcement returns a failure status, so retain both the report and exit
-status when recording a check.
+Both destinations are checked together against physical imports, selected
+metadata and compiler assets, including file aliases. When both flags are used,
+the destinations must be distinct. Relative paths resolve from the working
+directory. Successful file replacement uses private permissions (0600). Keep the exit status alongside the
+report when recording an enforced check.
 
 `--assets` selects one complete resource provider; missing optional contract
 metadata does not trigger embedded metadata fallback. An optional
@@ -294,6 +315,10 @@ same selected support and program objects it renders. The CLI includes late
 orchestration/runtime selections before final enforcement. No guarantee is
 inferred by parsing generated Rust.
 
+`EvaluateNativeUses` evaluates declarations against selected typed native uses.
+Its `NativeEvaluation` results supply both inference components and report
+propositions; invocation-entry requirements remain typed-analysis obligations.
+
 `LygerService.AnalyzeContracts` is additive to ordinary compilation and accepts
 separate analysis options. `ResolveContractBindings` exposes Track A records.
 `ContractAnalysisOptions.SourceTransformers` supplies bodyless source declarations;
@@ -303,6 +328,10 @@ meaning selection and assurance scope through `DictionaryVerificationOptions`,
 while the existing dictionary API retains its default behavior. Session reuse
 revalidates bindings before logical reuse and checks current native dependencies
 again at concrete assurance boundaries.
+`Session` owns private in-memory caches and returns independent snapshots. It
+reuses the current verified source certificate while checking each concrete
+instance and its lowering. It has no persisted-cache import or legacy migration
+API; incomplete dependencies require fresh analysis.
 `PrepareContractGeneration` and `PrepareWorkspaceContractGeneration` expose
 backend preparation, an immutable inventory view, and one-shot source rendering.
 `VerifyInventory` detects a changed prepared inventory. Frontend-only analysis
@@ -316,8 +345,8 @@ Direct selections, rule-derived selections and supplied facet premises share
 schema, target, domain and cardinality validation. Rule closure precedes closed
 configuration checks. Unknown contribution/rule conditions remain obligations;
 rules never perform an implicit replacement. Authorized replacements preserve
-release obligations and invalidate facts about the replaced slot. Legacy
-`facet:ID:SCOPE` predicates are accepted only when declared schema identities
+release obligations and invalidate facts about the replaced slot.
+`facet:ID:SCOPE` configuration predicates are accepted only when declared schema identities
 make the split unambiguous, including IDs or scopes containing colons.
 Adjective certificates are rechecked at instantiation; concrete callback effects,
 captures and lowering can invalidate a valid symbolic certificate. Repetition and
@@ -335,6 +364,9 @@ rule, import precedence, or contract-driven fallback.
 
 The interchange schemas in `contracts/schemas` are generated from the shared
 Go model by `go run ./tools/contracts-schema KIND`; output is written to stdout.
+The seven readable snapshots are retained for offline authoring without a Go
+toolchain and marked as generated for diff review. Their tests compare exact
+generated bytes with the shared model.
 Strict decoding rejects unknown fields, duplicate keys, unsupported versions and
 ambiguous declaration identities. Native manifests cannot contain established
 evidence. Trust documents approve named, proposition-specific witnesses with
@@ -359,19 +391,25 @@ failure requires an explicit observable footprint and selected failure outcomes.
 
 The numerical policy widens growing components after eight growth rounds, caps
 updates at 64 per strongly connected component, and retains at most 32 path
-alternatives. Precision loss produces dependent unknowns, never a claim of
-unbounded execution. Resource accounting separates cumulative allocation, peak
+alternatives. Each inference has a cumulative budget of 8,192 analysis steps
+across repeats, calls and path alternatives. Exhaustion reports partial coverage
+and leaves unfinished obligations unresolved. Resource accounting separates cumulative allocation, peak
 live resources and retained resources; cost formulas can contain callback cost
 variables and dependent bounds.
 
 Native reports distinguish enumerated compiler boundaries, transitive dependency
 closure and implementation conformance. Opaque native internals, destructors and
 external runtime behavior remain explicit unresolved boundaries without approved
-evidence. Runtime failure channels, eager `Require`, snapshot/sharing semantics,
-and App lifecycle checks are unchanged. Inspection records no build/test evidence;
-explicit validation commands and actual results belong in the implementation
-ledger and acceptance map.
+evidence. `Require` constructs a failure only on its selected failure path;
+`Accept` releases a replaced error before constructing its replacement. Those
+source compositions do not establish general allocation or destructor-cost
+bounds. Runtime failure channels, snapshot/sharing semantics and App lifecycle
+checks retain their contracts. Inspection records no build/test evidence;
+explicit validation commands and their results remain separate from requirement
+coverage and native approval.
 
-See [implementation progress](contracts-implementation.md) and the
-[acceptance mapping](../contracts/acceptance-map.json) for executed coverage and
-remaining limitations. macOS validation establishes no Linux result.
+See the [acceptance mapping](../contracts/acceptance-map.json) for test witnesses
+and current limitations, and the [evidence index](contracts-evidence.md) for
+revision-specific historical records and their availability. Platform coverage
+belongs to each recorded revision; historical results do not validate a changed
+checkout.

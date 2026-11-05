@@ -1,7 +1,6 @@
 package Lyger
 
 import (
-	"encoding/json"
 	"reflect"
 	"strings"
 	"testing"
@@ -10,7 +9,6 @@ import (
 	"github.com/l-programming-language/l/contracts"
 )
 
-const sourceCacheBody = "\"Compact\" describes a Generic App with a New Main Service using any Process.\n"
 const sourceCachePath = "/project/source-cache.l"
 
 func sourceCacheProjection(t *testing.T, analysis *ContractAnalysis) contracts.SourceAdjectiveProjection {
@@ -26,10 +24,7 @@ func sourceCacheProjection(t *testing.T, analysis *ContractAnalysis) contracts.S
 
 func sourceCacheDeclaration(t *testing.T, service *LygerService) contracts.SourceTransformerDeclaration {
 	t.Helper()
-	analysis, err := service.AnalyzeContracts([]byte(sourceCacheBody), sourceCachePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, service, []byte(sourceCompact), sourceCachePath, ContractAnalysisOptions{})
 	projection := sourceCacheProjection(t, analysis)
 	if len(projection.After.Children) != 1 {
 		t.Fatalf("expected one constructed service, got %+v", projection.After)
@@ -44,17 +39,6 @@ func sourceCacheDeclaration(t *testing.T, service *LygerService) contracts.Sourc
 		},
 		Origin: projection.Origin,
 	}
-}
-
-func sourceCacheCertificate(t *testing.T, analysis *ContractAnalysis, meaning contracts.MeaningKey) contracts.SourceAdjectiveCertificate {
-	t.Helper()
-	for _, certificate := range analysis.SourceCertificates {
-		if certificate.Meaning == meaning {
-			return certificate
-		}
-	}
-	t.Fatalf("no source certificate for %s", meaning)
-	return contracts.SourceAdjectiveCertificate{}
 }
 
 func sourceCacheCompare(t *testing.T, service *LygerService, source string, options ContractAnalysisOptions) *ContractAnalysis {
@@ -75,15 +59,12 @@ func sourceCacheCompare(t *testing.T, service *LygerService, source string, opti
 	// and unexported graph state are deliberately excluded from this comparison.
 	view := func(analysis *ContractAnalysis) []byte {
 		t.Helper()
-		data, err := json.Marshal(struct {
+		data := contractJSON(t, struct {
 			Bindings       ContractBindings
 			Certificates   []contracts.SourceAdjectiveCertificate
 			Instantiations []contracts.SourceAdjectiveInstantiation
 			Summary        contracts.DerivedSummary
 		}{analysis.Bindings, analysis.SourceCertificates, analysis.SourceInstantiations, analysis.Summary})
-		if err != nil {
-			t.Fatal(err)
-		}
 		return data
 	}
 	if string(view(warm)) != string(view(cold)) {
@@ -97,12 +78,12 @@ func TestSourceAdjectiveCacheSourceAndRequirements(t *testing.T) {
 	declaration := sourceCacheDeclaration(t, service)
 	session := contracts.NewSession()
 	options := ContractAnalysisOptions{Session: session, SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}}
-	first := sourceCacheCompare(t, service, sourceCacheBody, options)
-	certificate := sourceCacheCertificate(t, first, declaration.Meaning)
+	first := sourceCacheCompare(t, service, sourceCompact, options)
+	certificate := sourceCertificateFor(t, first, declaration.Meaning)
 	if certificate.LogicalStatus != contracts.Established {
 		t.Fatalf("nontrivial source theorem failed: %+v", certificate.LogicalObligations)
 	}
-	sourceCacheCompare(t, service, sourceCacheBody, options)
+	sourceCacheCompare(t, service, sourceCompact, options)
 	stats := session.CacheStats()
 	if stats.Binding.Hits == 0 || stats.Logical.Hits == 0 || stats.Implementation.Hits == 0 {
 		t.Fatalf("warm run did not exercise all existing cache boundaries: %+v", stats)
@@ -113,8 +94,8 @@ func TestSourceAdjectiveCacheSourceAndRequirements(t *testing.T) {
 		projection := sourceCacheProjection(t, first)
 		changed.Provides = []contracts.Predicate{{Kind: "eq", Subject: "children.count", Target: projection.Target, Value: contracts.Atom{Kind: "number", Number: 0}}}
 		options.SourceTransformers = []contracts.SourceTransformerDeclaration{changed}
-		result := sourceCacheCompare(t, service, sourceCacheBody, options)
-		updated := sourceCacheCertificate(t, result, changed.Meaning)
+		result := sourceCacheCompare(t, service, sourceCompact, options)
+		updated := sourceCertificateFor(t, result, changed.Meaning)
 		if updated.LogicalStatus == contracts.Established || updated.DeclarationFingerprint == certificate.DeclarationFingerprint {
 			t.Fatal("changed false promise reused successful source theorem")
 		}
@@ -124,10 +105,10 @@ func TestSourceAdjectiveCacheSourceAndRequirements(t *testing.T) {
 		options.SourceTransformers = []contracts.SourceTransformerDeclaration{declaration}
 		// Equal-width replacement preserves the authored rule's source extent.
 		// A missing declaration match is also conservative; a stale pass is not.
-		changed := strings.Replace(sourceCacheBody, "Main Service", "Main Object ", 1)
+		changed := strings.Replace(sourceCompact, "Main Service", "Main Object ", 1)
 		result := sourceCacheCompare(t, service, changed, options)
 		if result != nil {
-			updated := sourceCacheCertificate(t, result, declaration.Meaning)
+			updated := sourceCertificateFor(t, result, declaration.Meaning)
 			if updated.LogicalStatus == contracts.Established || updated.ProjectionFingerprint == certificate.ProjectionFingerprint {
 				t.Fatal("changed source body reused successful old structural theorem")
 			}
@@ -137,8 +118,8 @@ func TestSourceAdjectiveCacheSourceAndRequirements(t *testing.T) {
 	t.Run("new lexical candidate", func(t *testing.T) {
 		options.SourceTransformers = []contracts.SourceTransformerDeclaration{declaration}
 		before := session.CacheStats()
-		result := sourceCacheCompare(t, service, sourceCacheBody+"Define \"AdditionalHelper\" as `new candidate`.\n", options)
-		if result == nil || sourceCacheCertificate(t, result, declaration.Meaning).LogicalStatus != contracts.Established {
+		result := sourceCacheCompare(t, service, sourceCompact+"Define \"AdditionalHelper\" as `new candidate`.\n", options)
+		if result == nil || sourceCertificateFor(t, result, declaration.Meaning).LogicalStatus != contracts.Established {
 			t.Fatal("unrelated candidate changed the selected structural behavior")
 		}
 		if reflect.DeepEqual(first.Bindings.Inputs, result.Bindings.Inputs) || session.CacheStats().Binding.Misses <= before.Binding.Misses {
@@ -153,8 +134,8 @@ func TestSourceAdjectiveCacheNativeAndTrust(t *testing.T) {
 	declaration := sourceCacheDeclaration(t, service)
 	session := contracts.NewSession()
 	options := ContractAnalysisOptions{Session: session, SourceTransformers: []contracts.SourceTransformerDeclaration{declaration}}
-	first := sourceCacheCompare(t, service, sourceCacheBody, options)
-	certificate := sourceCacheCertificate(t, first, declaration.Meaning)
+	first := sourceCacheCompare(t, service, sourceCompact, options)
+	certificate := sourceCertificateFor(t, first, declaration.Meaning)
 	if certificate.LogicalStatus != contracts.Established || len(certificate.LoweringObligations) == 0 {
 		t.Fatal("expected structural theorem with independent unresolved native lowering")
 	}
@@ -166,8 +147,8 @@ func TestSourceAdjectiveCacheNativeAndTrust(t *testing.T) {
 	}
 	core.Data = []byte(changed)
 	before := session.CacheStats()
-	updated := sourceCacheCompare(t, service, sourceCacheBody, options)
-	actual := sourceCacheCertificate(t, updated, declaration.Meaning)
+	updated := sourceCacheCompare(t, service, sourceCompact, options)
+	actual := sourceCertificateFor(t, updated, declaration.Meaning)
 	if actual.LogicalStatus != contracts.Established || len(actual.LoweringObligations) == 0 {
 		t.Fatal("native bytes must not turn a structural theorem into native approval")
 	}
@@ -185,8 +166,8 @@ func TestSourceAdjectiveCacheNativeAndTrust(t *testing.T) {
 		NativeWitnesses:     map[string]string{"test-only-unapproved-boundary": "changed-witness"},
 		ApprovedAssumptions: map[string]bool{"test-only-unused-assumption": true},
 	}
-	trusted := sourceCacheCompare(t, service, sourceCacheBody, options)
-	if sourceCacheCertificate(t, trusted, declaration.Meaning).LogicalStatus != contracts.Established {
+	trusted := sourceCacheCompare(t, service, sourceCompact, options)
+	if sourceCertificateFor(t, trusted, declaration.Meaning).LogicalStatus != contracts.Established {
 		t.Fatal("irrelevant trust change altered structural proof")
 	}
 	if session.CacheStats().Implementation.Misses <= before.Implementation.Misses {
@@ -198,10 +179,7 @@ func TestSourceAdjectiveDictionaryHelperIsolation(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
 	files["stdlib/eng/io/dictionary.l"] = &fstest.MapFile{Data: []byte("Create \"IO\" as a Dictionary.\n\"Trimmed\" describes a Generic `dictionary_owned` Service.\n\"Compact\" describes a Generic Trimmed Service.\n")}
 	source := "Use IO from `io`.\n\"Trimmed\" describes a Generic `caller_owned` Service.\n\"Wrapped\" describes a Generic Trimmed Service.\n"
-	analysis, err := NewLygerService(Options{Resources: files}).AnalyzeContracts([]byte(source), sourceCachePath, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	analysis := analyzeContractSource(t, NewLygerService(Options{Resources: files}), []byte(source), sourceCachePath, ContractAnalysisOptions{})
 	projection := sourceProjectionNamed(t, analysis, "Compact")
 	if projection.After.Name != "dictionary_owned" || projection.Origin.Source != "resource:stdlib/eng/io/dictionary.l" {
 		t.Fatalf("dictionary adjective helper was captured by caller: %+v", projection)

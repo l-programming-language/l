@@ -21,7 +21,7 @@ func TestFacetDerivedClosureAndProvenance(t *testing.T) {
 		t.Fatalf("validated derivation failed closure or lost repeated rule origins: %+v", result)
 	}
 	reversed := requireConfiguration(t, []FacetSchema{schema}, []FacetSlot{slot}, nil, []FacetRule{rules[1], rules[0]})
-	if !AllEstablished(reversed.Obligations) || !SameConfiguration(result, reversed) {
+	if !AllEstablished(reversed.Obligations) || !reflect.DeepEqual(result.Facts, reversed.Facts) {
 		t.Fatalf("rule order changed finite closure: %+v", reversed)
 	}
 }
@@ -48,7 +48,7 @@ func TestFacetDirectDerivedValidationParity(t *testing.T) {
 			if (directErr == nil) != (derivedErr == nil) {
 				t.Fatalf("direct/rule error mismatch: %v / %v", directErr, derivedErr)
 			}
-			if directErr == nil && (AllEstablished(direct.Obligations) || AllEstablished(derived.Obligations) || obligationStatus(direct.Obligations) != obligationStatus(derived.Obligations)) {
+			if directErr == nil && (AllEstablished(direct.Obligations) || AllEstablished(derived.Obligations) || ObligationStatus(direct.Obligations) != ObligationStatus(derived.Obligations)) {
 				t.Fatalf("direct/rule validation mismatch: %+v / %+v", direct, derived)
 			}
 		})
@@ -72,7 +72,7 @@ func TestFacetConditionsAreNotIgnored(t *testing.T) {
 				}
 				result := requireConfiguration(t, []FacetSchema{schema}, []FacetSlot{slot}, contributions, rules)
 				want := map[string]Status{"true": Contradicted, "false": Established, "capability": Unresolved}[condition]
-				if got := obligationStatus(result.Obligations); got != want {
+				if got := ObligationStatus(result.Obligations); got != want {
 					t.Fatalf("condition %s produced %s, want %s: %+v", condition, got, want, result)
 				}
 				if condition != "true" && len(result.Selections[0].Values) != 1 {
@@ -239,10 +239,7 @@ func TestFacetRulesMetadataAndInstantiation(t *testing.T) {
 		t.Fatalf("decoded rule could not certify configuration: %+v, %v", certificate, err)
 	}
 	instance := AdjectiveInstance{Target: TargetRef{Root: "concrete", Path: []string{"role"}, Type: slot.Target.Type, Phase: slot.Target.Phase}}
-	result, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-	if err != nil || result.Status != Established {
-		t.Fatalf("concrete rule rebasing failed: %+v, %v", result, err)
-	}
+	requireInstantiation(t, transformer, certificate, instance, Established)
 	concrete := rebaseTransformer(transformer, instance.Target)
 	configuration := requireConfiguration(t, concrete.Facets, concrete.Slots, concrete.Contributions, concrete.Rules)
 	expected := instance.Target
@@ -251,10 +248,7 @@ func TestFacetRulesMetadataAndInstantiation(t *testing.T) {
 		t.Fatalf("rule retained symbolic target: %+v", configuration)
 	}
 	transformer.Rules = append(transformer.Rules, FacetRule{Consequences: []Predicate{FacetFact(slot, Atom{Kind: "enum", Text: "light"})}})
-	stale, err := InstantiateAdjective(transformer, certificate, instance, AnalysisOptions{})
-	if err != nil || stale.Status != Contradicted {
-		t.Fatalf("cached positive certificate hid changed conflicting rule: %+v, %v", stale, err)
-	}
+	stale := requireInstantiation(t, transformer, certificate, instance, Contradicted)
 	cold, err := VerifyAdjective(transformer, AnalysisOptions{})
 	if err != nil || cold.Status != stale.Status {
 		t.Fatalf("cold and stale-certificate verification disagreed: %+v / %+v, %v", cold, stale, err)

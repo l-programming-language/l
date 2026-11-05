@@ -200,6 +200,9 @@ func (catalog *builtinProcessCatalog) instantiate(operation builtinProcessOperat
 }
 
 func builtinProcessExpressions(template *DefinitionTemplate, instance DefinitionInstance) ([]string, error) {
+	if instance.result != nil && instance.Expression == "" && instance.Words == nil {
+		return nil, lerrors.TypeMismatch.Errorf("a value reference is not an executable definition")
+	}
 	if len(instance.before) > 0 {
 		var expressions []string
 		for _, step := range definitionSteps(instance) {
@@ -237,5 +240,8 @@ func definitionSteps(instance DefinitionInstance) []DefinitionInstance {
 		steps = append(steps, definitionSteps(prior)...)
 	}
 	instance.before = nil
+	if instance.result != nil && instance.Expression == "" && instance.Words == nil {
+		return steps
+	}
 	return append(steps, instance)
 }

@@ -5,7 +5,7 @@ description: Run and interpret the repository acceptance gate and verify current
 
 # Check acceptance
 
-The [temporary validation pause](../../../docs/development-harness.md#temporary-validation-pause) governs this workflow. Expensive local validation requires explicit user authorization; configured pull-request events already authorize hosted CI. Follow that canonical policy for requested runs and report unrun stages accurately.
+The [validation policy](../../../docs/development-harness.md#validation-authorization) governs this workflow. Explicit task authorization covers its bounded baseline, regression, native and completion checks without repeated permission requests. Configured pull-request events authorize hosted CI; manual dispatch requires explicit authorization. Report unrun stages accurately.
 
 Read [development and acceptance](../../../docs/development-harness.md). Use `scripts/l-check` for completion and `scripts/l-harness` for its acceptance stages; do not duplicate the harness runner or manifest logic. Bootstrap pinned tools/dependencies with `scripts/l-ci bootstrap` when needed.
 

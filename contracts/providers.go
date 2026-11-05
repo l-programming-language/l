@@ -96,11 +96,7 @@ func CheckProvider(role RoleInterface, provider ProviderImplementation, facts []
 		result.Obligations = append(result.Obligations, summary.Obligations...)
 		result.Obligations = append(result.Obligations, checkSummaryPromises(summary, operation, provider.Target, provider.Origin)...)
 		if role.Frame != nil {
-			writes := FootprintsFromEffects(summary.Effects)
-			if len(summary.Unknowns) > 0 {
-				writes = append(writes, FrameFootprint{Kind: "unknown", Origin: provider.Origin})
-			}
-			result.Obligations = append(result.Obligations, CheckFrame(*role.Frame, writes, FrameContext{})...)
+			result.Obligations = append(result.Obligations, checkSummaryFrame(*role.Frame, summary, provider.Origin)...)
 		}
 	}
 	return result, nil
@@ -110,6 +106,9 @@ func checkSummaryPromises(summary DerivedSummary, operation RoleOperation, targe
 	var obligations []Obligation
 	for _, guarantee := range operation.Ensures {
 		status, reason := Established, "postcondition holds on every covered return path"
+		if hasWorkCutoff(summary.Unknowns) {
+			status, reason = Unresolved, errWorkLimit.Error()
+		}
 		covered := false
 		for _, path := range summary.Paths {
 			if path.Outcome != Normal {
@@ -128,13 +127,7 @@ func checkSummaryPromises(summary DerivedSummary, operation RoleOperation, targe
 	}
 	if len(operation.Outcomes) > 0 {
 		for _, path := range summary.Paths {
-			allowed := false
-			for _, outcome := range operation.Outcomes {
-				if path.Outcome == outcome {
-					allowed = true
-				}
-			}
-			if !allowed {
+			if !containsOutcome(operation.Outcomes, path.Outcome) {
 				obligations = append(obligations, facetObligation(target, origin, Contradicted, "provider admits an outcome excluded by its role", Predicate{Kind: "outcome", Subject: string(path.Outcome)}))
 			}
 		}

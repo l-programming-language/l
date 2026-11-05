@@ -39,10 +39,14 @@ func (document CheckRequests) Validate() error {
 			return fmt.Errorf("check requests require unique IDs and explicit scopes")
 		}
 		seen[check.ID] = true
-		if !SupportedProfile(check.Profile.Name) && check.Profile.Name != "PreservesOnFailure" && check.Profile.Name != "OwnedLifecycle" {
+		descriptor, supported := LookupProfile(check.Profile.Name)
+		if !supported || !descriptor.SupportsScope(check.Profile.Scope) {
 			return fmt.Errorf("unsupported requested profile %s", check.Profile.Name)
 		}
-		if check.Profile.Name == "PreservesOnFailure" {
+		if descriptor.WholeEntryOnly && check.Scope != "whole_entry" {
+			return fmt.Errorf("%s requires whole_entry", check.Profile.Name)
+		}
+		if descriptor.RequiresFootprint {
 			if check.Footprint == nil || len(check.Footprint.Locations) == 0 || len(check.Footprint.Outcomes) == 0 || check.Footprint.Observation == "" {
 				return fmt.Errorf("PreservesOnFailure requires a nonempty resource footprint, observation and failure outcomes")
 			}

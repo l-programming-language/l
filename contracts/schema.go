@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"sync"
 )
 
 var contractEnums = map[reflect.Type][]string{
@@ -12,46 +13,67 @@ var contractEnums = map[reflect.Type][]string{
 	reflect.TypeOf(Status("")):            {string(Established), string(Contradicted), string(Unresolved)},
 	reflect.TypeOf(Outcome("")):           {string(Normal), string(ReturnedFailure), string(GuardRejected), string(Panic), string(Abort), string(Cancelled), string(ProcessFailure)},
 	reflect.TypeOf(Phase("")):             {"", string(Elaboration), string(Construction), string(Invocation), string(Destruction), string(Cleanup)},
-	reflect.TypeOf(EffectKind("")):        {"read", "write", "allocate", "deallocate", "release", "io", "spawn", "transfer", "wait", "block", "suspend", "time", "random", "environment", "foreign", "panic", "opaque", "synchronize", "replace", "cleanup"},
+	reflect.TypeOf(EffectKind("")):        {"read", "write", "allocate", "deallocate", "release", "io", "spawn", string(EffectSignal), "transfer", "wait", "block", "suspend", "time", "random", "environment", "foreign", "panic", "opaque", "synchronize", "replace", "cleanup"},
 	reflect.TypeOf(ProtocolAuthority("")): {string(TransitionOwner), string(Observer), string(SharedTransition), string(UnknownAuthority)},
 	reflect.TypeOf(AppStage("")):          {string(AppIdle), string(AppRunning), string(AppDraining), string(AppFinalized)},
 	reflect.TypeOf(ContinuationClaim("")): {string(ClaimUnclaimed), string(ClaimActive), string(ClaimFinished)},
 	reflect.TypeOf(NodeKind("")):          {string(Sequence), string(Branch), string(Event), string(Call), string(Callback), string(Native), string(Guard), string(Require), string(Acquire), string(Move), string(Release), string(Scope), string(Repeat), string(Mutation), string(Return), string(CheckedResult)},
 }
 
-func documentModel(kind string) (reflect.Type, error) {
-	switch kind {
-	case "native_environment":
-		return reflect.TypeOf(NativeEnvironment{}), nil
-	case "contract_check_requests":
-		return reflect.TypeOf(CheckRequests{}), nil
-	case "native_contract_manifest":
-		return reflect.TypeOf(NativeContractManifest{}), nil
-	case "facet_and_role_manifest":
-		return reflect.TypeOf(FacetRoleManifest{}), nil
-	case "trust_policy":
-		return reflect.TypeOf(TrustPolicyDocument{}), nil
-	case "contract_report":
-		return reflect.TypeOf(Report{}), nil
-	case "adjective_certificate":
-		return reflect.TypeOf(AdjectiveCertificateDocument{}), nil
-	default:
-		return nil, fmt.Errorf("unsupported schema document kind %q", kind)
+// The same model selects the strict decoder and the offline schema.
+var documentModels = map[string]reflect.Type{
+	"native_environment":       reflect.TypeOf(NativeEnvironment{}),
+	"contract_check_requests":  reflect.TypeOf(CheckRequests{}),
+	"native_contract_manifest": reflect.TypeOf(NativeContractManifest{}),
+	"facet_and_role_manifest":  reflect.TypeOf(FacetRoleManifest{}),
+	"trust_policy":             reflect.TypeOf(TrustPolicyDocument{}),
+	"contract_report":          reflect.TypeOf(Report{}),
+	"adjective_certificate":    reflect.TypeOf(AdjectiveCertificateDocument{}),
+}
+
+type modelField struct {
+	name     string
+	typ      reflect.Type
+	index    int
+	optional bool
+}
+
+var fieldLayouts sync.Map // reflect.Type -> []modelField, immutable after publication
+
+func modelFields(typ reflect.Type) []modelField {
+	cached, _ := fieldLayouts.Load(typ)
+	if fields, ok := cached.([]modelField); ok {
+		return fields
 	}
+	fields := make([]modelField, 0, typ.NumField())
+	for i := 0; i < typ.NumField(); i++ {
+		field := typ.Field(i)
+		name, options, _ := strings.Cut(field.Tag.Get("json"), ",")
+		if !field.IsExported() || name == "-" {
+			continue
+		}
+		if name == "" {
+			name = field.Name
+		}
+		fields = append(fields, modelField{name, field.Type, i, containsString(strings.Split(options, ","), "omitempty")})
+	}
+	fieldLayouts.Store(typ, fields)
+	return fields
 }
 
 // JSONSchema derives every property and enum from the actual interchange model.
 // Semantic reference/provenance checks remain in the same types' Validate methods.
 func JSONSchema(kind string) ([]byte, error) {
-	model, err := documentModel(kind)
-	if err != nil {
-		return nil, err
+	model := documentModels[kind]
+	if model == nil {
+		return nil, fmt.Errorf("unsupported contract document kind %q", kind)
 	}
 	definitions := make(map[string]any)
 	var schema func(reflect.Type) map[string]any
 	schema = func(typ reflect.Type) map[string]any {
 		if values, exists := contractEnums[typ]; exists {
-			return map[string]any{"type": "string", "enum": values}
+			definitions[typ.Name()] = map[string]any{"type": "string", "enum": values}
+			return map[string]any{"$ref": "#/$defs/" + typ.Name()}
 		}
 		if typ.Kind() == reflect.Pointer {
 			return map[string]any{"anyOf": []any{schema(typ.Elem()), map[string]any{"type": "null"}}}
@@ -77,22 +99,10 @@ func JSONSchema(kind string) ([]byte, error) {
 			definitions[name] = map[string]any{}
 			properties := make(map[string]any)
 			var required []string
-			for i := 0; i < typ.NumField(); i++ {
-				field := typ.Field(i)
-				if !field.IsExported() {
-					continue
-				}
-				parts := strings.Split(field.Tag.Get("json"), ",")
-				if parts[0] == "-" {
-					continue
-				}
-				fieldName := parts[0]
-				if fieldName == "" {
-					fieldName = field.Name
-				}
-				properties[fieldName] = schema(field.Type)
-				if !containsString(parts[1:], "omitempty") {
-					required = append(required, fieldName)
+			for _, field := range modelFields(typ) {
+				properties[field.name] = schema(field.typ)
+				if !field.optional {
+					required = append(required, field.name)
 				}
 			}
 			definition := map[string]any{"type": "object", "properties": properties, "additionalProperties": false}
@@ -147,15 +157,12 @@ func validateModelEnums(value any) error {
 				return visit(current.Elem(), path, depth+1)
 			}
 		case reflect.Struct:
-			for i := 0; i < current.NumField(); i++ {
-				field := current.Type().Field(i)
-				if !field.IsExported() || field.Tag.Get("json") == "-" {
+			for _, field := range modelFields(current.Type()) {
+				value := current.Field(field.index)
+				if field.optional && value.IsZero() {
 					continue
 				}
-				if containsString(strings.Split(field.Tag.Get("json"), ",")[1:], "omitempty") && current.Field(i).IsZero() {
-					continue
-				}
-				if err := visit(current.Field(i), path+"."+field.Name, depth+1); err != nil {
+				if err := visit(value, path+"."+field.name, depth+1); err != nil {
 					return err
 				}
 			}

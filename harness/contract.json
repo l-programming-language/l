@@ -220,7 +220,7 @@
     },
     {
       "path": "lexicon/eng/grammar.json",
-      "sha256": "77f9b75e237949e30f45efe94e5fea43b236c75387b97ce11f6278921d71225b"
+      "sha256": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c"
     },
     {
       "path": "lexicon/eng/vocabulary.json",
@@ -984,7 +984,7 @@
     },
     {
       "path": "cmd/l/test/runnable_service/README.md",
-      "sha256": "0499d0370cea11d8b5c7df5c7591be56ef17a22aac421eef3693f97e33a673cb"
+      "sha256": "14b0d6c8ef1508e0b6ff7200c3833cccbdedf0ab4e7dec54d0146ad53e9f2372"
     },
     {
       "path": "cmd/l/test/runnable_service/alias.l",

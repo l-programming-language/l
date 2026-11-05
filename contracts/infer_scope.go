@@ -10,7 +10,7 @@ func InferScope(plan Plan, nodeID string, options AnalysisOptions) (DerivedSumma
 	if nodeID == "" {
 		return DerivedSummary{}, fmt.Errorf("scoped inference requires a selected typed node identity")
 	}
-	return inferPlan(plan, options, nodeID)
+	return inferPlan(plan, options, nodeID, inferenceWorkLimit)
 }
 
 func (a *inference) measureScope(node Node, entry PathSummary) error {
@@ -29,10 +29,9 @@ func (a *inference) measureScope(node Node, entry PathSummary) error {
 	a.measuringScope = true
 	paths, err := a.step(node, path)
 	a.measuringScope = false
-	if err != nil {
-		return err
-	}
 	a.scopedPaths = append(a.scopedPaths, paths...)
-	a.scopedPaths = a.bound(a.scopedPaths)
-	return nil
+	if err == nil {
+		a.scopedPaths = a.bound(a.scopedPaths)
+	}
+	return err
 }
