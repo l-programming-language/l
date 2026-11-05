@@ -58,11 +58,15 @@ never regenerate expectations or hashes just to make a failure pass.
 Logeme changes need particular care. Read the
 [builtin contracts](builtins/CONTRACTS.md), [logeme semantics](builtins/LOGEMES.md),
 and [Lucid suite](logiceme/testdata/lucid/README.md) before proposing changes.
-The 18 Rust segments and their interfaces are frozen; any amendment must be
-explicitly scoped. Prefer composition through existing syllables and definitions.
-Identify changed segments, metadata interfaces, and support assets in the issue
-and PR. Keep exact source generation, independent expected/generated native
-compilation, runtime verification, and full acceptance evidence separate.
+Keep `builtins/segments/`, `builtins/templates/`, their interfaces and frozen hash
+expectations unchanged. Compose behavior through existing syllables and L
+definitions. Native leaves perform single operations; branches, loops, error
+policy and resource sequencing remain L algorithms. Preserve typed binding
+provenance and canonical descriptor targets. A requested clean break removes
+retired words after migrating callers, without compatibility aliases or adapters
+unless explicitly required. Keep exact source generation, independent
+expected/generated native compilation, runtime verification, and full acceptance
+evidence separate.
 
 ## Update documentation with behavior
 
@@ -80,17 +84,15 @@ alone does not establish that documentation is correct.
 
 ## Validate and report evidence
 
-**Expensive local validation is temporarily paused unless explicitly requested.**
-Do not automatically run bootstrap, full-module lint, full ordinary/native
-suites, or `scripts/l-check`. Use lightweight inspection appropriate to the
-change and state what was not run. See the
-[current validation policy](docs/development-harness.md#temporary-validation-pause).
+Follow the [validation policy](docs/development-harness.md#validation-authorization).
+Explicit task authorization covers its bounded baseline, regression, native and
+completion checks without repeated permission requests. Report unrun stages.
 
-When full local validation is explicitly requested, run from the repository root:
+For authorized full validation, run from the repository root:
 
 ```sh
 scripts/l-ci bootstrap
-GOMAXPROCS=4 scripts/l-check
+scripts/l-check
 ```
 
 The full command requires workflow lint, both complete Go lint profiles,

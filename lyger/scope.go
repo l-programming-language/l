@@ -47,12 +47,13 @@ type pronounBinding struct {
 }
 
 type scopeDeclaration struct {
-	SubjectID  string
-	Token      *token
-	TokenIndex int
-	Scope      *lexicalScope
-	Owner      *token
-	Record     *record
+	SubjectID   string
+	Token       *token
+	TokenIndex  int
+	Scope       *lexicalScope
+	Owner       *token
+	Record      *record
+	provisional bool // grammar has not assigned a signature/body owner yet
 }
 
 type scopedStatement struct {
@@ -163,9 +164,20 @@ func scopeDeclarations(statement *lStatement, incoming scopedSubject) ([]scopeDe
 	pending, directive := false, -1
 	invocation := false
 	for index, current := range statement.tokens {
+		if current.hasRole("preposition", "consignment.associative") {
+			next := index + 1
+			if next < len(statement.tokens) && statement.tokens[next].hasRole("article", "none") {
+				next++
+			}
+			if next < len(statement.tokens) && statement.tokens[next].hasRole("noun", "functional.inflective") {
+				break // Signature labels await their grammatical owner, not this paragraph.
+			}
+		}
 		invocation = invocation || (current.hasRole("preposition", "definement.declarative") && len(declarations) == 0)
-		if current.hasRole("preposition", "conjoinment.directive") && len(declarations) > 0 {
-			directive = index
+		if current.hasRole("preposition", "conjoinment.directive") {
+			if len(declarations) > 0 {
+				directive = index
+			}
 			break
 		}
 		if current.hasRole("verb", "action.declarative") || current.hasRole("verb", "action.definitive") || current.hasRole("verb", "action.associative") {
@@ -253,6 +265,7 @@ func planSourceScopes(statements []*lStatement, memory map[string]*record, occur
 		}
 		incoming := paragraphs[key]
 		declarations, directive := scopeDeclarations(statement, incoming)
+		reservations := reserveSignatureDeclarations(statement, declarations)
 		ordered := scopedStatement{Statement: statement, Scope: environment, Order: order, Source: source, IncomingSubjectID: incoming.id, IncomingSubjectToken: incoming.token, Declarations: declarations}
 		var arguments []scopedSubject
 		for index, current := range statement.tokens {
@@ -287,8 +300,8 @@ func planSourceScopes(statements []*lStatement, memory map[string]*record, occur
 		}
 		ordered.Scope = environment
 		plan.Ordered = append(plan.Ordered, ordered)
-		for index := range declarations {
-			declaration := &declarations[index]
+		for index := range reservations {
+			declaration := &reservations[index]
 			declaration.Scope = environment
 			if declaration.TokenIndex > 0 {
 				prior := statement.tokens[declaration.TokenIndex-1]
@@ -296,7 +309,9 @@ func planSourceScopes(statements []*lStatement, memory map[string]*record, occur
 					declaration.Owner = prior
 				}
 			}
-			environment.declarations = append(environment.declarations, declaration)
+			if !declaration.provisional {
+				environment.declarations = append(environment.declarations, declaration)
+			}
 			plan.declarations[declaration.Token] = declaration
 		}
 	}

@@ -126,4 +126,4 @@ There is no blanket recovery, severity system, serialization API, recursive
 classifier, status mapping, retry policy or centralized message catalog.
 
 Follow the [development guide](development-harness.md) for validation commands
-and the current local-validation pause.
+and task validation authorization.

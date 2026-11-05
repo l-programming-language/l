@@ -74,11 +74,13 @@ func statementTypeMap(sType string) (string, error) {
 
 // grammar structures the vocabulary and statement methods required for compilation
 type grammar struct {
-	resources  fs.FS
-	assetRoot  string
-	language   string
-	lex        *lexicon
-	grammarMap map[string]grammeme
+	constructorSignature func(*token, []*token, bool) (grammarArity, error)
+	signatureError       error
+	resources            fs.FS
+	assetRoot            string
+	language             string
+	lex                  *lexicon
+	grammarMap           map[string]grammeme
 }
 
 // grammeme lookup preprocess to ensure "root" clause types are transformed into imperative
@@ -318,6 +320,7 @@ func (l *lStatement) determineType() {
 
 // loadGram initializes a new initStatementGram structure for the lStatement
 func (l *lStatement) loadGram() error {
+	l.gram.signatureError = nil
 	// Native roots are configuration entries rather than bindable declarations.
 	// Diagnose aliasing that unsupported capability before the generic ID rule
 	// obscures the cause; source-defined actions remain freely aliasable.
@@ -336,6 +339,12 @@ func (l *lStatement) loadGram() error {
 	l.sGram = rGram
 	err = l.sGram.build()
 	if err != nil {
+		// Optional phrases may swallow a dependency failure while looking for
+		// another grammar case. Only a failed whole statement needs that cause;
+		// a successful alternative owns its parse and discards speculation.
+		if l.gram.signatureError != nil {
+			return l.gram.signatureError
+		}
 		family, _ := statementTypeMap(l.sType) //nolint:errcheck // The original grammar error stays primary; unknown is the intended fallback diagnostic prefix.
 		return fmt.Errorf("%s: %w", family, err)
 	}

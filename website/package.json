@@ -16,6 +16,7 @@
     "test": "node --test tests/*.test.mjs",
     "test:archive": "node scripts/archive-smoke.mjs",
     "test:e2e": "node scripts/browser.mjs test",
+    "test:install": "node scripts/install-smoke.mjs",
     "test:browsers:install": "node scripts/browser.mjs install chromium",
     "references:check": "node scripts/references.mjs --check",
     "references:generate": "node scripts/references.mjs --write",

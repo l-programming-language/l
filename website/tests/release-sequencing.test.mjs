@@ -7,6 +7,7 @@ import { verifyReleaseWorkflow } from '../scripts/verify-disabled.mjs';
 const policy = JSON.parse(await readFile(new URL('../ci-templates/release-policy.json', import.meta.url)));
 const readWorkflow = async (name) => YAML.parse(await readFile(new URL(`../../.github/workflows/${name}`, import.meta.url), 'utf8'));
 const native = await readWorkflow('release.yml'), docs = await readWorkflow('docs-release-pages.yml');
+const recovery = await readWorkflow('docs-recover-pages.yml');
 
 test('manual release seals native and docs bytes before its sole publication transaction', () => {
   verifyReleaseWorkflow(native, 'release.yml', policy);
@@ -55,4 +56,45 @@ test('deployment consumes the published immutable archive and compares its seale
   assert.match(steps[verify].run, /cmp "\$RUNNER_TEMP\/sealed\/promotion\.json" "\$RUNNER_TEMP\/published\/promotion\.json"/);
   assert.match(steps[verify].run, /tar -xzf "\$RUNNER_TEMP\/published\/site\.tar\.gz"/);
   assert.match(steps[verify].run, /verify-promotion[^\n]+--manifest "\$RUNNER_TEMP\/published\/promotion\.json"/);
+});
+
+test('postdeployment verification uses the current Pages deployment without waiting for its environment job', () => {
+  const postdeploy = docs.jobs.deploy.steps.find((step) => step.run?.includes('release.mjs postdeploy '));
+  assert.match(postdeploy.run, /--deployment-sha "\$GITHUB_SHA"/);
+  for (const job of [docs.jobs.prepare, docs.jobs.publish, docs.jobs.deploy, recovery.jobs.recover]) {
+    assert(['read', 'write'].includes(job.permissions.pages), 'Production reconciliation needs Pages API access');
+  }
+});
+
+test('already-live recovery verifies without uploading or deploying again', () => {
+  verifyReleaseWorkflow(recovery, 'docs-recover-pages.yml', policy);
+  const job = recovery.jobs.recover, steps = job.steps;
+  const plan = steps.find((step) => step.id === 'plan');
+  assert(plan, 'Recovery must publish its checked promotion decision');
+  assert.match(plan.run, /guard-promotion[^\n]+--output "\$RUNNER_TEMP\/promotion-plan\.json"/);
+  assert.match(plan.run, /GITHUB_OUTPUT/);
+  for (const action of ['upload-pages-artifact', 'deploy-pages']) {
+    const step = steps.find((item) => item.uses?.startsWith(`actions/${action}@`));
+    assert.equal(step.if, "steps.plan.outputs.action == 'deploy'");
+    assert(steps.indexOf(step) > steps.indexOf(plan));
+  }
+  const verify = steps.find((step) => step.run?.includes('release.mjs postdeploy '));
+  assert.equal(verify.if, undefined, 'Live verification is required for both plan outcomes');
+  assert.equal(verify.env.PROMOTION_ACTION, '${{ steps.plan.outputs.action }}');
+  assert.match(verify.run, /if \[\[ "\$PROMOTION_ACTION" == deploy \]\]; then/);
+  assert.match(verify.run, /--deployment-sha "\$GITHUB_SHA"/);
+  assert.equal(job.environment.url, 'https://ldocs.org');
+});
+
+test('workflow policy rejects recovery that bypasses its promotion decision or live verification', () => {
+  for (const mutate of [
+    (w) => { delete w.jobs.recover.steps.find((step) => step.uses?.startsWith('actions/upload-pages-artifact@')).if; },
+    (w) => { delete w.jobs.recover.steps.find((step) => step.uses?.startsWith('actions/deploy-pages@')).if; },
+    (w) => { w.jobs.recover.steps.find((step) => step.run?.includes('release.mjs postdeploy ')).if = "steps.plan.outputs.action == 'deploy'"; },
+    (w) => { delete w.jobs.recover.steps.find((step) => step.id === 'plan')?.id; },
+    (w) => { delete w.jobs.recover.permissions.pages; },
+  ]) {
+    const changed = structuredClone(recovery); mutate(changed);
+    assert.throws(() => verifyReleaseWorkflow(changed, 'docs-recover-pages.yml', policy));
+  }
 });

@@ -26,10 +26,10 @@ Start expands Build/Run for First, then Second. Their processes may overlap. Awa
 
 ## Branches and value availability
 
-A value must be assigned on every path that continues to its use; Exit paths cannot reach later reads. The compiler supplies neither hidden defaults nor blanket cloning. Output readiness is checked separately at runtime.
+A value must be assigned on every path that continues to its use. Return ends the enclosing Function invocation; Exit terminates the program. Neither path reaches later reads. A conditional Return still leaves its other path continuing. The compiler supplies neither hidden defaults nor blanket cloning. Output readiness is checked separately at runtime.
 
 ## Iteration has a bounded implementation surface
 
-`While` is rejected in the enclosing program; general source collection iteration is unsupported. Backend loop compositions do not supply L `for`/`while` syntax, arithmetic precedence or short-circuit guarantees. The [iteration reference](../reference/logemes/iteration.md) and [Lucid suite](../../logiceme/testdata/lucid/README.md) document compile-only backend witnesses and unsupported forms.
+`While` is rejected in the enclosing program. In Functions with native signatures, the Storage implementation dictionary composes bounded traversal and selection from typed Process bodies. These [source compositions](../internals/storage.md#iteration-and-continuations) have specific contracts; they do not introduce general L `for`/`while` syntax. The [authoring guide](definitions.md#keep-branch-data-inside-its-process) shows branch-local dataflow, while the [iteration reference](../reference/logemes/iteration.md) documents the backend surface.
 
 Continue with [imports and dictionaries](imports.md).

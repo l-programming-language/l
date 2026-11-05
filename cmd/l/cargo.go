@@ -105,11 +105,30 @@ func cargoBuild(ctx context.Context, directory string) (result []cargoArtifact, 
 	command := exec.CommandContext(ctx, "cargo", "+"+nativeToolchainVersion, "build", "--workspace", "--frozen", "--message-format=json", "--manifest-path", filepath.Join(inputs, "Cargo.toml"), "--target", "host-tuple", "--target-dir", target)
 	command.Dir, command.Env = directory, cargoBuildEnvironment()
 	configureBuildCommand(command)
+	recorder := nativeBuildEvidence(ctx)
+	var inputFingerprint string
+	if recorder != nil {
+		if err := recorder.verifyTools(); err != nil {
+			return nil, err
+		}
+		if err := recorder.verifyLauncher(command.Path); err != nil {
+			return nil, err
+		}
+		inputFingerprint, err = nativeWorkspaceFingerprint(inputs)
+		if err != nil {
+			return nil, lerrors.IO.Wrap(err, "fingerprint native workspace")
+		}
+		recorder.environment.Configuration["workspace-inputs"] = inputFingerprint
+		if err := nativeConfiguration(recorder.environment.Configuration, directory, command.Env); err != nil {
+			return nil, err
+		}
+	}
 	// Cargo's stdout is a framed machine stream. Human diagnostics may arrive
 	// on stderr between parts of a JSON record and must never be merged into it.
 	var stdout, stderr bytes.Buffer
 	command.Stdout, command.Stderr = &stdout, &stderr
 	invoke := timing.Start("cargo.wrapper", directory)
+	started := time.Now().UTC()
 	err = command.Run()
 	invoke(err)
 	cleanup := timing.Start("build.cleanup", directory)
@@ -120,6 +139,10 @@ func cargoBuild(ctx context.Context, directory string) (result []cargoArtifact, 
 		}
 	}
 	cleanup(nil)
+	var execution string
+	if recorder != nil {
+		execution = recorder.record(command, started, stdout.Bytes(), stderr.Bytes(), err)
+	}
 	artifacts, sourceError := cargoMessages(stdout.Bytes())
 	diagnostics := append(bytes.Clone(stdout.Bytes()), stderr.Bytes()...)
 	if ctx.Err() != nil {
@@ -130,6 +153,11 @@ func cargoBuild(ctx context.Context, directory string) (result []cargoArtifact, 
 			return nil, lerrors.Internal.Errorf("invalid generated Rust: %w\n%s", err, diagnostics)
 		}
 		return nil, lerrors.Tool.Errorf("Rust compilation: %w\n%s", err, diagnostics)
+	}
+	if recorder != nil {
+		if err := recorder.verifyTools(); err != nil {
+			return nil, err
+		}
 	}
 	// Cargo's target-name paths may be reused by another workspace. Snapshot
 	// every actual executable while the cross-process lock is still held.
@@ -150,6 +178,11 @@ func cargoBuild(ctx context.Context, directory string) (result []cargoArtifact, 
 			return nil, err
 		}
 		artifacts[index].Executable = snapshot
+		if recorder != nil {
+			if err := recorder.artifact(snapshot, inputFingerprint, execution); err != nil {
+				return nil, lerrors.IO.Wrap(err, "fingerprint compiled artifact")
+			}
+		}
 	}
 	return artifacts, nil
 }

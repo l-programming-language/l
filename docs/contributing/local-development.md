@@ -40,10 +40,37 @@ Preview serves `http://127.0.0.1:4321/`, including the Pagefind search index tha
 
 ## Keep native work opt-in
 
-Compiler bootstrap and expensive native validation follow the [temporary validation pause](../development-harness.md#temporary-validation-pause). The optional example verifier requires explicit authorization and an existing compiler with its native prerequisites:
+Compiler bootstrap and native validation follow the [validation policy](../development-harness.md#validation-authorization); task authorization persists through its checks. The optional example verifier requires authorization and an existing compiler with its native prerequisites:
 
 ```sh
 npm run examples:verify -- --compiler /absolute/path/to/l --id basic
 ```
 
-This checks approved examples, not arbitrary Markdown fences or the full acceptance gate. Documentation CI runs website checks on pull requests. The legacy-named `ci:verify-disabled` command validates approved manual release paths and publication authorization. Publication requires an authorized manual dispatch from main; see [deployment](../../website/DEPLOYMENT.md) for activation and recovery.
+Omit `--id` to check every complete registered example. This does not execute
+arbitrary Markdown fences or replace full compiler acceptance.
+`website/reports/examples-verification.json` is replaced on each invocation;
+`running` is incomplete, `failed` names the failed stage, and only `passed` records
+a completed selection.
+
+### Test the installation flow
+
+The separate `test:install` command also requires explicit authorization. It downloads a real GitHub release and its Rust tools, then builds and runs the canonical [basic program](../../demo/basic/main.l). It is excluded from routine `verify:website` and documentation CI.
+
+Use a supported native host with C/linker tools already installed. The release named by root `VERSION` must already be published. First build the current website and keep its preview running:
+
+```sh
+npm run build
+npm run preview
+```
+
+In another terminal, from `website/`, run:
+
+```sh
+npm run test:install
+```
+
+The check requires `http://127.0.0.1:4321/install.sh` to serve the exact bootstrap from the current build. Only that local preview request uses HTTP; release and Rust downloads use HTTPS. It installs into a disposable home with separate Cargo, Rustup, and native-cache directories, using a custom executable location. It checks immediate activation and fresh Bash/Zsh sessions, then compiles the unchanged canonical program offline and checks its exact output. Linux hosts without Zsh record that shell check as unavailable.
+
+Per-stage logs and `report.json` are retained under `website/reports/install-smoke-*/`; temporary installation files are removed afterward. Report the host, released version, completed stages, unavailable shell checks, and evidence path. This verifies the installation flow on that host; it is not the full compiler acceptance gate or evidence for other platforms.
+
+Documentation CI runs routine website checks on pull requests. The legacy-named `ci:verify-disabled` command validates approved manual release paths and publication authorization. Publication requires an authorized manual dispatch from main; see [deployment](../../website/DEPLOYMENT.md) for activation and recovery.

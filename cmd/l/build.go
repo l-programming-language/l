@@ -8,15 +8,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
 
+	"github.com/l-programming-language/l/contracts"
 	"github.com/l-programming-language/l/internal/timing"
 	"github.com/l-programming-language/l/lerrors"
-	Logiceme "github.com/l-programming-language/l/logiceme"
-	Lyger "github.com/l-programming-language/l/lyger"
 )
 
 const companionOwner = "l-executable-v1\n"
@@ -42,7 +40,16 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 		return "", lerrors.Unsupported.Errorf("only native macOS and Linux executable builds are supported")
 	}
 	frontend := timing.Start("frontend.generate", c.cli.mainPath)
-	generated := c.process()
+	var generated *generatedProgram
+	var inventory *contracts.LoweringInventory
+	if options.NativeEvidenceOutput == "" {
+		generated = c.process()
+	} else {
+		inventory = &contracts.LoweringInventory{}
+		if result := c.compileSource(true); result != nil {
+			generated, c.err = generatePackages(c.log, result, inventory)
+		}
+	}
 	frontend(c.err)
 	if c.err != nil {
 		return "", c.err
@@ -53,10 +60,6 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 	setup := timing.Start("workspace.prepare", c.cli.mainPath)
 	defer func() { setup(resultErr) }()
 	ids := generated.ApplicationIDs
-	sources := generated.Sources
-	if len(ids) != len(sources.ByteArrays) || len(ids) != len(sources.MapArrays) || len(ids) != len(sources.DependencyArrays) || len(ids) != len(sources.EnvDepArrays) {
-		return "", lerrors.Internal.Errorf("application source bundle dimensions do not match")
-	}
 	stem := strings.TrimSuffix(filepath.Base(c.cli.mainPath), ".l")
 	if stem == "" || stem == "." || stem == ".." {
 		return "", lerrors.InvalidInput.Errorf("source has no usable executable name")
@@ -96,31 +99,9 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 			return "", err
 		}
 	}
-	bundles := make([]*sourceBundle, len(ids))
-	for index, id := range ids {
-		var err error
-		bundles[index], err = planSourceBundle(sources.ByteArrays[index], sources.MapArrays[index])
-		if err != nil {
-			return "", fmt.Errorf("application %s: %w", id, err)
-		}
-		if len(sources.EnvDepArrays[index]) != 0 {
-			return "", lerrors.Unsupported.Errorf("application %s requires unsupported environment dependencies", id)
-		}
-	}
-	librarySources := generated.LibrarySources
-	if len(librarySources.ByteArrays) != len(generated.LibraryIDs) || len(librarySources.MapArrays) != len(generated.LibraryIDs) || len(librarySources.DependencyArrays) != len(generated.LibraryIDs) || len(librarySources.EnvDepArrays) != len(generated.LibraryIDs) {
-		return "", lerrors.Internal.Errorf("generated library source dimensions disagree")
-	}
-	libraries := make([]*sourceBundle, len(generated.LibraryIDs))
-	for index, id := range generated.LibraryIDs {
-		var err error
-		libraries[index], err = planSourceBundle(librarySources.ByteArrays[index], librarySources.MapArrays[index])
-		if err != nil {
-			return "", fmt.Errorf("Service library %s: %w", id, err)
-		}
-		if len(librarySources.EnvDepArrays[index]) != 0 {
-			return "", lerrors.Unsupported.Errorf("Service library %s requires unsupported environment dependencies", id)
-		}
+	options.NativeEvidenceOutput, err = resolveNativeEvidenceOutput(options.NativeEvidenceOutput, generated.Compilation.Compilation.SourcePaths, canonicalOutput, canonicalCompanion, c.options.AssetRoot)
+	if err != nil {
+		return "", err
 	}
 	if err := os.MkdirAll(options.OutputDir, 0755); err != nil {
 		return "", lerrors.IO.Errorf("create output directory: %w", err)
@@ -136,58 +117,44 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 		return "", lerrors.IO.Wrap(err, "")
 	}
 	manifest := generationManifest{Version: 1, Entrypoint: stem, GOOS: options.GOOS, GOARCH: options.GOARCH}
-	artifacts := make([]Lyger.AppArtifact, len(ids))
 	destinations := make([]string, len(ids))
-	for index, id := range ids {
-		name := fmt.Sprintf("app-%03d", index)
-		artifacts[index] = Lyger.AppArtifact{ID: id, RelativeExecutable: path.Join(stem+".apps", "generations", generation, name)}
-		destinations[index] = filepath.Join(generationDir, name)
+	for i := range ids {
+		destinations[i] = filepath.Join(generationDir, fmt.Sprintf("app-%03d", i))
 	}
-	// The published filename is user-facing; a Cargo package identifier is a
-	// separate compiler namespace and cannot contain arbitrary filename bytes.
-	packageNames := append(append([]*sourceBundle(nil), bundles...), libraries...)
-	entryPackage := orchestratorPackageName(stem, packageNames)
-	unit, err := generated.Compilation.OrchestratorUnit(entryPackage, artifacts)
+	workspace, err := generated.workspace(c.log, stem, generation, inventory)
 	if err != nil {
-		return "", fmt.Errorf("lower orchestrator: %w", err)
+		return "", err
 	}
-	runtimePackage := runtimePackageName(entryPackage, packageNames)
-	imports, err := c.log.ReadImports(unit.BackendAML)
-	if err != nil {
-		return "", fmt.Errorf("read orchestrator imports: %w", err)
-	}
-	library, err := generated.Compilation.RuntimeLibrary(runtimePackage, imports)
-	if err != nil {
-		return "", fmt.Errorf("select runtime library: %w", err)
-	}
-	var selected [][]byte
-	if library != nil {
-		selected = append(selected, library)
-	}
-	orchestrator, runtimeSupport, err := c.log.EvaluateWorkspaceEntry(unit.BackendAML, Logiceme.WorkspaceRuntime{
-		Package: runtimePackage, RelativeDirectory: "../support/runtime",
-	}, selected...)
-	if err != nil {
-		return "", fmt.Errorf("generate orchestrator: %w", err)
-	}
-	if len(orchestrator.ByteArrays) != 1 || len(orchestrator.MapArrays) != 1 {
-		return "", lerrors.Internal.Errorf("orchestrator source bundle dimensions do not match")
-	}
-	orchestratorBundle, err := planSourceBundle(orchestrator.ByteArrays[0], orchestrator.MapArrays[0])
-	if err != nil {
-		return "", fmt.Errorf("orchestrator: %w", err)
-	}
-	if len(runtimeSupport.ByteArrays) != 1 || len(runtimeSupport.MapArrays) != 1 || len(runtimeSupport.EnvDepArrays) != 1 || len(runtimeSupport.EnvDepArrays[0]) != 0 {
-		return "", lerrors.Internal.Errorf("runtime library source bundle dimensions do not match")
-	}
-	runtimeBundle, err := planSourceBundle(runtimeSupport.ByteArrays[0], runtimeSupport.MapArrays[0])
-	if err != nil {
-		return "", fmt.Errorf("runtime library: %w", err)
+	var recorder *nativeBuildRecorder
+	if inventory != nil {
+		report := contracts.NewReport(c.cli.mainPath)
+		bindings, lowering, err := generated.Compilation.RecordedInventory()
+		if err != nil {
+			return "", err
+		}
+		report.Inputs, report.Lowering = bindings.Inputs, lowering
+		mergeLowering(&report.Lowering, "backend", *inventory)
+		environment, err := captureNativeEnvironment(ctx, report, "")
+		if err != nil {
+			return "", fmt.Errorf("prepare native build evidence: %w", err)
+		}
+		environment.Method, environment.Version = "build", "2"
+		environment.Configuration["companion-generation"] = generation
+		environment.Limitations[0] = "Compilation records artifact identity, not executable publication or App execution."
+		recorder = &nativeBuildRecorder{environment: environment}
+		ctx = context.WithValue(ctx, nativeBuildEvidenceKey{}, recorder)
 	}
 	entry := filepath.Join(stage, "orchestrator")
 	setup(nil)
-	if err := compileCargoWorkspace(ctx, bundles, orchestratorBundle, libraries, runtimeBundle, filepath.Join(stage, "workspace"), destinations, entry); err != nil {
-		return "", fmt.Errorf("build Rust workspace: %w", err)
+	buildErr := compileCargoWorkspace(ctx, workspace.apps, workspace.entry, workspace.libraries, workspace.support, filepath.Join(stage, "workspace"), destinations, entry)
+	if buildErr != nil {
+		buildErr = fmt.Errorf("build Rust workspace: %w", buildErr)
+	}
+	if err := recorder.write(options.NativeEvidenceOutput); err != nil {
+		return "", errors.Join(buildErr, fmt.Errorf("write requested native evidence: %w", err))
+	}
+	if buildErr != nil {
+		return "", buildErr
 	}
 	for index, destination := range destinations {
 		content, err := os.ReadFile(destination)

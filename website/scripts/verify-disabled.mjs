@@ -52,6 +52,15 @@ export function verifyReleaseWorkflow(value, name, policy) {
   } else if (name === 'docs-release-pages.yml') {
     if (needs(value.jobs.publish) !== 'prepare' || needs(value.jobs.deploy) !== 'prepare,publish') fail('Documentation must seal before publication and publish before deployment');
     if (Object.values(value.jobs.prepare?.permissions || {}).includes('write')) fail('Documentation preparation cannot publish');
+  } else if (name === 'docs-recover-pages.yml') {
+    const steps = value.jobs.recover?.steps || [], plan = steps.findIndex((step) => step.id === 'plan');
+    if (plan < 0 || !/guard-promotion[^\n]+--output/.test(steps[plan].run || '') || !steps[plan].run.includes('GITHUB_OUTPUT')) fail('Recovery must expose its checked promotion decision');
+    for (const action of ['upload-pages-artifact', 'deploy-pages']) {
+      const index = steps.findIndex((step) => step.uses?.startsWith(`actions/${action}@`));
+      if (index <= plan || steps[index].if !== "steps.plan.outputs.action == 'deploy'") fail('Recovery must skip upload and deployment when exact content is already live');
+    }
+    const verify = steps.find((step) => step.run?.includes('release.mjs postdeploy '));
+    if (!verify || verify.if !== undefined || verify['continue-on-error']) fail('Recovery must verify production after either promotion decision');
   }
   for (const [id, job] of Object.entries(value.jobs)) {
     if (job.uses) {
@@ -59,6 +68,7 @@ export function verifyReleaseWorkflow(value, name, policy) {
       continue;
     }
     const writes = Object.values(job.permissions || {}).some((permission) => permission === 'write');
+    if (job.steps?.some((step) => /release\.mjs (?:fetch-current|postdeploy) /.test(step.run || '')) && !['read', 'write'].includes(job.permissions?.pages)) fail(`Production verification requires Pages API access: ${name}/${id}`);
     if (name === 'release.yml' && writes) fail('Native publication belongs after documentation sealing in the reusable workflow');
     if (name !== 'release.yml' || writes) {
       const steps = job.steps || [], guardIndex = steps.findIndex((step) => step.run?.trim() === publicationGuard);

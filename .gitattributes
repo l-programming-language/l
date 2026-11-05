@@ -1,0 +1,7 @@
+contracts/schemas/adjective_certificate.schema.json linguist-generated=true
+contracts/schemas/contract_check_requests.schema.json linguist-generated=true
+contracts/schemas/contract_report.schema.json linguist-generated=true
+contracts/schemas/facet_and_role_manifest.schema.json linguist-generated=true
+contracts/schemas/native_contract_manifest.schema.json linguist-generated=true
+contracts/schemas/native_environment.schema.json linguist-generated=true
+contracts/schemas/trust_policy.schema.json linguist-generated=true

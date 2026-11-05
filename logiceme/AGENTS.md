@@ -29,7 +29,8 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
   L instructions or hide Function bodies in native strings. Keep preparation
   outside small segments and preserve Func/Prop/Op.
   Compose existing syllables and builtin definitions; unused fields grant no authority.
-  Template interfaces, cases and forwarding remain frozen pending explicit review.
+  Do not edit `builtins/segments/`, `builtins/templates/`, their interfaces, cases,
+  forwarding or frozen hash expectations.
 - Rust's [Lifetimes/GenericTypes inputs](../builtins/README.md#lifetime-and-generic-inputs)
   are local native String interiors on FW/HY/MY/Y/named KY. Preserve their bytes,
   declaration/application roles and explicit forwarding. Inherited file metadata
@@ -69,9 +70,9 @@ Evaluate, every source/support artifact, target/resource isolation, and relevant
 native compilation. The maintained Rust corpus preserves its composed baseline
 and scoped extensions. Follow the
 [Rust stage instructions](testdata/lucid/README.md) for exact bundle checks
-and separate compilation. The 18 Rust segments are frozen by that suite; do not
-change them outside an explicitly scoped amendment or substitute a different matrix
-to make the current tests pass.
+and separate compilation. The 18 Rust segments are frozen by that suite; keep
+their bytes, interfaces and hash expectations unchanged. Do not substitute a
+different matrix to make the current tests pass.
 The [result ledger](testdata/lucid/FAILURES.md) records exact generation,
 expected/actual native compilation and acceptance separately; it does not establish
 correctness of every compiler branch. Runtime behavior is checked
@@ -85,7 +86,7 @@ scripts are artifacts, never local validation commands. Keep process supervision
 and raw stdout/continuation semantics in dedicated support, not glyphs.
 
 Root [acceptance instructions](../AGENTS.md#current-contract) and the
-[validation policy](../docs/development-harness.md#temporary-validation-pause)
+[validation policy](../docs/development-harness.md#validation-authorization)
 govern local and hosted checks. Report proposed, implemented, generated, compiled
 and runtime-verified separately, including unrun stages. Focused checks do not
 establish full validation; documentation checks establish no native result.

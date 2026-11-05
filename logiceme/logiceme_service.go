@@ -3,7 +3,6 @@
 package Logiceme
 
 import (
-	"fmt"
 	"io/fs"
 
 	distribution "github.com/l-programming-language/l"
@@ -41,56 +40,34 @@ func (ls *LogicemeService) Evaluate(jit []byte, options ...GenerationOptions) (E
 	if len(options) == 1 {
 		selected = options[0]
 	}
-	segSys, err := loadSegmentalSystem(ls.resources)
-	if err != nil {
-		return Executable{}, fmt.Errorf("load source generator: %w", err)
-	}
-	return evaluateSource(jit, segSys, ls.resources, selected.IncludeRuntime)
-}
-
-// Support assembly is deliberately separate from ordinary source linking. It renders
-// only the existing support-template inputs; it does not translate source,
-// prepare signatures, infer dependencies, or resolve dependency versions.
-func evaluateSource(input []byte, system SegmentalSystem, resources fs.FS, includeRuntime bool) (Executable, error) {
-	templates, err := loadSupportTemplates(resources, includeRuntime)
+	prepared, err := ls.prepareGeneration(jit, selected, nil, false)
 	if err != nil {
 		return Executable{}, err
 	}
-	return evaluateSourceWithSupport(input, system, templates, includeRuntime, nil)
+	return prepared.Render()
 }
 
-func evaluateSourceWithSupport(input []byte, system SegmentalSystem, templates map[string][]byte, includeRuntime bool, workspace *WorkspaceRuntime) (Executable, error) {
-	scanner, err := loadScannerBytes(input)
-	if err != nil {
-		return Executable{}, err
-	}
-	if err := scanSourceProgram(&scanner); err != nil {
-		return Executable{}, err
-	}
-	return evaluateScannedSource(scanner, system, templates, includeRuntime, workspace)
-}
-
-func evaluateScannedSource(scanner Scanner, system SegmentalSystem, templates map[string][]byte, includeRuntime bool, workspace *WorkspaceRuntime) (Executable, error) {
+func prepareScannedSource(scanner Scanner, system SegmentalSystem, templates map[string][]byte, includeRuntime bool, workspace *WorkspaceRuntime) (*Program, error) {
 	if workspace != nil && len(scanner.Program.Books) != 1 {
-		return Executable{}, lerrors.InvalidInput.Errorf("Rust workspace entry requires exactly one application book")
+		return nil, lerrors.InvalidInput.Errorf("Rust workspace entry requires exactly one application book")
 	}
 	if workspace != nil && scanner.Program.Books[0].Name == workspace.Package {
-		return Executable{}, lerrors.InvalidInput.Errorf("Rust workspace runtime package collides with entry package %q", workspace.Package)
+		return nil, lerrors.InvalidInput.Errorf("Rust workspace runtime package collides with entry package %q", workspace.Package)
 	}
 	program := Program{SegmentalSystem: system, Scanner: scanner}
 	if err := program.Compile(); err != nil {
-		return Executable{}, err
+		return nil, err
 	}
 	for i := range program.Compiler.Apps {
 		if err := prepareSourceHeaders(&program.Compiler.Apps[i], includeRuntime && i == 0, workspace); err != nil {
-			return Executable{}, sourceGraphError(program.Compiler.Apps[i].Name, err)
+			return nil, sourceGraphError(program.Compiler.Apps[i].Name, err)
 		}
 		settings, err := bookSettings(program.Scanner.Program.Tags, program.Scanner.Program.Books[i])
 		if err != nil {
-			return Executable{}, sourceGraphError(program.Compiler.Apps[i].Name, err)
+			return nil, sourceGraphError(program.Compiler.Apps[i].Name, err)
 		}
 		if libraryOnlyTargets(program.Compiler.Apps[i].sourceTargets) && len(settings) != 0 {
-			return Executable{}, sourceGraphError(program.Compiler.Apps[i].Name, lerrors.InvalidInput.Errorf("library-only package cannot supply executable configuration"))
+			return nil, sourceGraphError(program.Compiler.Apps[i].Name, lerrors.InvalidInput.Errorf("library-only package cannot supply executable configuration"))
 		}
 		// Explicit Settings require startup before application effects. The
 		// runtime entry already owns this operation; plain composed entries
@@ -103,16 +80,18 @@ func evaluateScannedSource(scanner Scanner, system SegmentalSystem, templates ma
 				}
 				return nil
 			}); err != nil {
-				return Executable{}, err
+				return nil, err
 			}
 		}
 	}
-	if err := program.Assemble(); err != nil {
+	return &program, nil
+}
+
+func evaluateScannedSource(scanner Scanner, system SegmentalSystem, templates map[string][]byte, includeRuntime bool, workspace *WorkspaceRuntime) (Executable, error) {
+	program, err := prepareScannedSource(scanner, system, templates, includeRuntime, workspace)
+	if err != nil {
 		return Executable{}, err
 	}
-	program.Link()
-	if err := program.linkBundleSupport(templates, includeRuntime, workspace); err != nil {
-		return Executable{}, err
-	}
-	return program.Executable, nil
+	prepared := ContractGeneration{program: program, templates: templates, includeRuntime: includeRuntime, workspace: workspace}
+	return prepared.Render()
 }

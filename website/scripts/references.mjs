@@ -25,7 +25,11 @@ const semanticLink = (review) => {
   const [file, fragment] = review.doc.split('#');
   return `[${review.topic}](${path.posix.relative('docs/_generated', file)}${fragment ? '#' + fragment : ''})`;
 };
-export const referenceInputs = ['lexicon/eng/grammar.json', 'lexicon/eng/vocabulary.json', 'stdlib/index.json', 'cmd/l/command.go', 'lyger/value_kinds.go', 'logiceme/lucid_generation_test.go', 'logiceme/testdata/lucid/templates.sha256.json'];
+const cliHelpSources = [
+  ['cmd/l/command.go', 'buildUsage', 'Build and top-level help'],
+  ['cmd/l/contracts.go', 'contractsUsage', 'Contracts help'],
+];
+export const referenceInputs = ['lexicon/eng/grammar.json', 'lexicon/eng/vocabulary.json', 'stdlib/index.json', ...cliHelpSources.map(([file]) => file), 'lyger/value_kinds.go', 'logiceme/lucid_generation_test.go', 'logiceme/testdata/lucid/templates.sha256.json'];
 
 // Catalog repeated fields without changing the expanded review entries.
 const evidenceFields = ['sources', 'witnesses', 'evidence', 'checkedStages', 'executedStages'];
@@ -136,19 +140,24 @@ export async function generateReferences(root) {
   }
   for (const key of Object.keys(lexicalReview.entries)) { const dot = key.indexOf('.'); const section = key.slice(0, dot); const name = key.slice(dot + 1); if (!vocabulary[section]?.[name]) throw new Error(`Stale reviewed vocabulary entry: ${key}`); }
   files['docs/_generated/vocabulary.md'] = (v.trimEnd() + '\n' + vocabularyNotes.table()).trimEnd() + '\n';
-  const cli = await fs.readFile(path.join(root, 'cmd/l/command.go'), 'utf8');
   // The command parser is unstructured source, so its public surface is a
   // reviewed mapping. Mechanical refresh must never approve a changed parser.
   const cliReview = await json(path.join(root, 'docs/_meta/cli-review.json'));
-  if (cliReview.schemaVersion !== 1 || !Array.isArray(cliReview.entries) || !cliReview.entries.length || !cliReview.sourceHashes?.['cmd/l/command.go']) throw new Error('CLI review requires schemaVersion 1, a reviewed command.go hash and surface entries.');
+  if (cliReview.schemaVersion !== 1 || !Array.isArray(cliReview.entries) || !cliReview.entries.length) throw new Error('CLI review requires schemaVersion 1 and surface entries.');
+  for (const [file] of cliHelpSources) if (!/^[a-f0-9]{64}$/.test(cliReview.sourceHashes?.[file] ?? '')) throw new Error(`CLI review requires a reviewed ${path.posix.basename(file)} hash.`);
   for (const [file, hash] of Object.entries(cliReview.sourceHashes)) if (sha256(await fs.readFile(await safeFile(root, file))) !== hash) throw new Error(`Reviewed CLI dependency changed: ${file}. Review command/option semantics and mappings before updating its hash; snapshot generation cannot approve this change.`);
   for (const entry of cliReview.entries) {
     if (entry.kind !== 'cli' || !entry.name || entry.id !== `cli:${entry.name}` || !entry.sources?.includes('cmd/l/command.go')) throw new Error(`Invalid reviewed CLI entry: ${entry.id}`);
     entries.push(entry);
   }
-  const help = cli.match(/const buildUsage = `([^`]*)`/);
-  if (!help) throw new Error('CLI help extraction no longer matches its reviewed raw-string constant. Review command.go.');
-  files['docs/_generated/cli-help.md'] = `# Source-derived CLI help\n\nExtracted mechanically from the actual \`buildUsage\` constant in [the command parser](../../cmd/l/command.go). This is **source-derived**, not runtime-captured.\n\n\`\`\`text\n${help[1]}\`\`\`\n`;
+  let cliHelp = '# Source-derived CLI help\n\nExtracted mechanically from the actual usage constants below. This is **source-derived**, not runtime-captured.\n';
+  for (const [file, constant, heading] of cliHelpSources) {
+    const source = await fs.readFile(path.join(root, file), 'utf8');
+    const help = source.match(new RegExp('const ' + constant + ' = `([^`]*)`'));
+    if (!help) throw new Error(`CLI help extraction no longer matches its reviewed raw-string constant ${constant}. Review ${file}.`);
+    cliHelp += `\n## ${heading}\n\nFrom \`${constant}\` in [${file}](${path.posix.relative('docs/_generated', file)}).\n\n\`\`\`text\n${help[1]}\`\`\`\n`;
+  }
+  files['docs/_generated/cli-help.md'] = cliHelp;
   // This is extraction of a fixed string table, not inference of Go or L type semantics.
   const kinds = await fs.readFile(path.join(root, 'lyger/value_kinds.go'), 'utf8');
   const namesBlock = kinds.match(/var valueTypeNames = \[valueTypeCount\]string\{([\s\S]*?)\n\}/);

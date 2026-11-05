@@ -71,4 +71,4 @@ Compilation prerequisites remain bounded at 40 seconds. Ordinary native runs
 retain a 20-second watchdog; readiness-gated observers and the Stop probe retain
 their 5-second watchdogs. Cumulative runtime allowances across rebuilding,
 process-group cleanup and all test-owned protocol bytes are unchanged. The
-repository's validation pause remains in force.
+[task validation policy](../../../../docs/development-harness.md#validation-authorization) governs requested checks.
