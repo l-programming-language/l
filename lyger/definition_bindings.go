@@ -73,7 +73,8 @@ type DefinitionArgument struct {
 	reference    string
 	atoms        *[]DefinitionArgument
 	typeAtom     string
-	processType  *DefinitionArgument // declared type of a structured Process input; never an executable operand
+	formal       *definitionParameter // exact source declaration parameter, carried only by its invocation
+	processType  *DefinitionArgument  // declared type of a structured Process input; never an executable operand
 	index        *uint64
 	sequence     []DefinitionInstance
 	source       SourceSpan
@@ -369,11 +370,29 @@ func definitionName(name string) bool {
 	return true
 }
 
+// O with a final B declares a named definition. A callable's Key is an
+// operand, even when it happens to occupy the first metadata slot.
+func (t *DefinitionTemplate) hasDeclarationName() bool {
+	if len(t.parts) == 0 {
+		return false
+	}
+	form, metadata, found := strings.Cut(t.parts[0].text, "{|")
+	return found && strings.HasSuffix(strings.TrimSpace(form), "OB") && !strings.ContainsAny(form, "^*(") && strings.TrimSpace(metadata) == "Key: ~"
+}
+
+func (t *DefinitionTemplate) identitySlot() *DefinitionSlot {
+	if len(t.parts) == 3 && t.parts[0].text == "" && t.parts[2].text == "" && t.parts[1].slot != nil && t.parts[1].slot.Type == "" {
+		return t.parts[1].slot
+	}
+	return nil
+}
+
 // Instantiate binds every slot by name. Values are emitted only at parsed slot
 // locations, so a replacement never reinterprets argument text as another slot.
 func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument) (DefinitionInstance, error) {
 	instance := DefinitionInstance{Original: bytes.Clone(t.Original), Span: t.Span, Dependencies: append([]DefinitionInstance(nil), t.dependencies...)}
 	values := make(map[string]string, len(t.Slots))
+	referenceIdentity := false
 	for _, slot := range t.Slots {
 		argument, ok := bindings[slot.Name]
 		if !ok {
@@ -386,7 +405,7 @@ func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument)
 				return DefinitionInstance{}, t.failure(fmt.Errorf("parameter %q: %w", slot.Name, err))
 			}
 		}
-		if t.metadataSlots[slot.Name] && slot.Type != "Type" {
+		if (t.metadataSlots[slot.Name] || t.identitySlot() != nil && argument.Definition != nil && argument.Definition.result != nil) && slot.Type != "Type" {
 			var before []DefinitionInstance
 			argument, before = argument.boundResult()
 			instance.before = append(instance.before, before...)
@@ -402,8 +421,12 @@ func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument)
 			return DefinitionInstance{}, t.failure(fmt.Errorf("parameter %q: %w", slot.Name, err))
 		}
 		// Only exact identity rendering preserves the operand's structural proof.
-		if child := argument.Definition; child != nil && value == child.Expression && len(t.parts) == 3 && t.parts[0].text == "" && t.parts[1].slot != nil && t.parts[1].slot.Name == slot.Name && t.parts[2].text == "" {
+		if child := argument.Definition; child != nil && value == child.Expression && t.identitySlot() != nil {
 			instance.sequence, instance.result = child.sequence, child.result
+		}
+		if t.identitySlot() != nil && argument.reference != "" {
+			result := argument
+			instance.result, referenceIdentity = &result, true
 		}
 		values[slot.Name] = value
 		instance.Dependencies = append(instance.Dependencies, argument.dependencies...)
@@ -427,6 +450,9 @@ func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument)
 			binding.Sources = append(binding.Sources, child.Span)
 		}
 		instance.Bindings = append(instance.Bindings, binding)
+	}
+	if referenceIdentity {
+		return instance, nil
 	}
 	render := func(parts []definitionPart) (string, string, error) {
 		var result strings.Builder

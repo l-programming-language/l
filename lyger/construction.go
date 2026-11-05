@@ -72,16 +72,25 @@ func (dst *constructionNode) mergeDescriptor(src *constructionNode) {
 	dst.Outputs = append(dst.Outputs, src.Outputs...)
 }
 
+type constructionMode uint8
+
+const (
+	constructionConcrete constructionMode = iota
+	constructionSymbolic
+	constructionHeaderOnly
+)
+
 func (c *Compilation) constructObject(obj *objectGram, active map[*descriptorRule]bool) (*constructionNode, error) {
-	return c.constructObjectMode(obj, active, false)
+	return c.constructObjectMode(obj, active, constructionConcrete)
 }
 
 // Symbolic construction shares source selection and ordered merging with real
 // construction. It produces a structural delta, never an App or emitted body.
-func (c *Compilation) constructObjectMode(obj *objectGram, active map[*descriptorRule]bool, symbolic bool) (*constructionNode, error) {
+func (c *Compilation) constructObjectMode(obj *objectGram, active map[*descriptorRule]bool, mode constructionMode) (*constructionNode, error) {
 	if obj == nil || obj.noun == nil {
 		return nil, lerrors.Internal.Errorf("cannot construct an object without a nominal type")
 	}
+	recording := mode == constructionSymbolic || mode == constructionConcrete && c.contractRecorder != nil
 	nominal, err := nominalType(obj.noun)
 	if err != nil {
 		return nil, err
@@ -92,11 +101,11 @@ func (c *Compilation) constructObjectMode(obj *objectGram, active map[*descripto
 		if err != nil {
 			return nil, err
 		}
-		node.contractWrite("constructor", obj.noun, symbolic || c.contractRecorder != nil)
+		node.contractWrite("constructor", obj.noun, recording)
 	}
 	if obj.name != nil && obj.name.noun != nil {
 		node.Name = unquoteImportWord(obj.name.noun.rawBytes)
-		node.contractWrite("name", obj.name.noun, symbolic || c.contractRecorder != nil)
+		node.contractWrite("name", obj.name.noun, recording)
 	}
 	for _, adjective := range valueModifiers(obj.adjectives) {
 		descriptor, err := c.descriptorFor(adjective)
@@ -110,52 +119,24 @@ func (c *Compilation) constructObjectMode(obj *objectGram, active map[*descripto
 		if err != nil {
 			return nil, err
 		}
-		matched := false
-		for _, rule := range descriptor.Rules {
-			if rule.Target != target {
-				continue
-			}
-			matched = true
-			if symbolic || c.contractRecorder != nil {
-				node.contractRules = append(node.contractRules, rule)
-			}
-			var before *constructionNode
-			if c.contractRecorder != nil && !symbolic {
-				before = cloneContractConstruction(node)
-				c.contractRecorder.descriptors = append(c.contractRecorder.descriptors, contractDescriptorUse{Token: adjective, Rule: rule, Target: node})
-			}
-			sourceWrapper, err := c.sourceDescriptorObject(rule)
-			if err != nil {
+		if mode == constructionHeaderOnly {
+			if err := c.descriptorGrammarReady(descriptor.Record, target); err != nil {
 				return nil, err
 			}
-			if rule.Template != nil || sourceWrapper != nil {
-				node.Wrappers = append(node.Wrappers, rule)
-				node.contractWrite("wrappers", adjective, symbolic || c.contractRecorder != nil)
-				if before != nil {
-					c.contractRecorder.recordSourceConstruction(adjective, descriptor.Record, rule, node, before)
-				}
-				continue
-			}
-			if active[rule] {
-				return nil, lerrors.Cycle.Errorf("recursive descriptor %s for %s", descriptor.Record.ID, node.Nominal)
-			}
-			active[rule] = true
-			instance, err := c.constructObjectMode(rule.Object, active, symbolic)
-			delete(active, rule)
-			if err != nil {
-				return nil, err
-			}
-			node.mergeDescriptor(instance)
-			if c.contractRecorder != nil && !symbolic {
-				c.contractRecorder.rebaseConstruction(instance, node)
-				c.contractRecorder.recordSourceConstruction(adjective, descriptor.Record, rule, node, before)
-			}
+		}
+		matched, err := c.applyDescriptor(node, descriptor, target, active, mode, adjective)
+		if err != nil {
+			return nil, err
 		}
 		if !matched {
 			return nil, lerrors.Unsupported.Errorf("descriptor %s has no constructor for %s", descriptor.Record.ID, node.Nominal)
 		}
 	}
-	if err := c.constructRelationsMode(node, obj.phrase, active, symbolic); err != nil {
+	if mode == constructionHeaderOnly {
+		node.Arguments = append(node.Arguments, constructorOperands(obj)...)
+		return node, nil
+	}
+	if err := c.constructRelationsMode(node, obj.phrase, active, mode); err != nil {
 		return nil, err
 	}
 	if obj.clause != nil {
@@ -164,13 +145,59 @@ func (c *Compilation) constructObjectMode(obj *objectGram, active map[*descripto
 		node.Parameters = append(node.Parameters, obj.clause.orderedObjects()...)
 		node.Arguments = append(node.Arguments, obj.clause.orderedObjects()...)
 		for _, parameter := range obj.clause.orderedObjects() {
-			node.contractWrite("parameters", parameter.noun, symbolic || c.contractRecorder != nil)
+			node.contractWrite("parameters", parameter.noun, recording)
 		}
 	}
 	return node, nil
 }
 
-func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phraseGram, active map[*descriptorRule]bool, symbolic bool) error {
+func (c *Compilation) applyDescriptor(node *constructionNode, descriptor *descriptorDefinition, target nominalIdentity, active map[*descriptorRule]bool, mode constructionMode, adjective *token) (bool, error) {
+	recording := adjective != nil && (mode == constructionSymbolic || mode == constructionConcrete && c.contractRecorder != nil)
+	matched := false
+	for _, rule := range descriptor.Rules {
+		if rule.Target != target {
+			continue
+		}
+		matched = true
+		if recording {
+			node.contractRules = append(node.contractRules, rule)
+		}
+		var before *constructionNode
+		if adjective != nil && c.contractRecorder != nil && mode == constructionConcrete {
+			before = cloneContractConstruction(node)
+			c.contractRecorder.descriptors = append(c.contractRecorder.descriptors, contractDescriptorUse{Token: adjective, Rule: rule, Target: node})
+		}
+		sourceWrapper, err := c.sourceDescriptorObject(rule)
+		if err != nil {
+			return false, err
+		}
+		if rule.Template != nil || sourceWrapper != nil {
+			node.Wrappers = append(node.Wrappers, rule)
+			node.contractWrite("wrappers", adjective, recording)
+		} else {
+			if active[rule] {
+				return false, lerrors.Cycle.Errorf("recursive descriptor %s for %s", descriptor.Record.ID, node.Nominal)
+			}
+			active[rule] = true
+			instance, err := c.constructObjectMode(rule.Object, active, mode)
+			delete(active, rule)
+			if err != nil {
+				return false, err
+			}
+			node.mergeDescriptor(instance)
+			if before != nil {
+				c.contractRecorder.rebaseConstruction(instance, node)
+			}
+		}
+		if before != nil {
+			c.contractRecorder.recordSourceConstruction(adjective, descriptor.Record, rule, node, before)
+		}
+	}
+	return matched, nil
+}
+
+func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phraseGram, active map[*descriptorRule]bool, mode constructionMode) error {
+	symbolic := mode == constructionSymbolic
 	if phrase == nil {
 		return nil
 	}
@@ -215,7 +242,7 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 				node.Dependencies = append(node.Dependencies, *dependency)
 			}
 		}
-		return c.constructRelationsMode(node, phrase.phrase, active, symbolic)
+		return c.constructRelationsMode(node, phrase.phrase, active, mode)
 	}
 	association := false
 	for _, prep := range phrase.prepositions {
@@ -235,7 +262,7 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 		}
 		node.Arguments = append(node.Arguments, obj)
 		if association {
-			child, err := c.constructObjectMode(obj, active, symbolic)
+			child, err := c.constructObjectMode(obj, active, mode)
 			if err != nil {
 				return err
 			}
@@ -249,13 +276,13 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 			// Nested operands belong to their own constructor. Existing topology
 			// descriptors still expose their signature relations to this owner.
 			count := len(node.Arguments)
-			if err := c.constructRelationsMode(node, obj.phrase, active, symbolic); err != nil {
+			if err := c.constructRelationsMode(node, obj.phrase, active, mode); err != nil {
 				return err
 			}
 			node.Arguments = node.Arguments[:count]
 		}
 	}
-	return c.constructRelationsMode(node, phrase.phrase, active, symbolic)
+	return c.constructRelationsMode(node, phrase.phrase, active, mode)
 }
 
 func (c *Compilation) constructionSignatureType(tok *token, symbolic bool) (string, *DefinitionInstance, error) {
@@ -370,61 +397,6 @@ func (c *Compilation) bindConstructorSignatureMode(node *constructionNode, objec
 	return nil
 }
 
-// declarationObject selects the value belonging to one source declaration,
-// including coordinated passive declarations and conditional declaration clauses.
-func declarationObject(statement *statementGram, target *token) *objectGram {
-	var clauseObject func(*clauseGram) *objectGram
-	predicateObject := func(predicate *predicateGram) *objectGram {
-		if predicate == nil {
-			return nil
-		}
-		for _, clause := range predicate.clauses {
-			if obj := clauseObject(clause); obj != nil {
-				return obj
-			}
-		}
-		for _, conditional := range predicate.conditionals {
-			for _, clause := range conditional.clauses {
-				if obj := clauseObject(clause); obj != nil {
-					return obj
-				}
-			}
-		}
-		return nil
-	}
-	clauseObject = func(clause *clauseGram) *objectGram {
-		if clause.subject != nil && clause.subject.noun == target {
-			if clause.predicate != nil {
-				return clause.predicate.obj
-			}
-			if clause.subject.phrase != nil {
-				return clause.subject.phrase.obj
-			}
-		}
-		if obj := predicateObject(clause.predicate); obj != nil {
-			return obj
-		}
-		for _, child := range clause.clauses {
-			if obj := clauseObject(child); obj != nil {
-				return obj
-			}
-		}
-		return nil
-	}
-	if statement.subject != nil && statement.subject.noun == target && statement.predicate != nil {
-		return statement.predicate.obj
-	}
-	if obj := predicateObject(statement.predicate); obj != nil {
-		return obj
-	}
-	for _, clause := range statement.clauses {
-		if obj := clauseObject(clause); obj != nil {
-			return obj
-		}
-	}
-	return nil
-}
-
 func (c *Compilation) constructApplications() error {
 	// Registration can retry forward references; emission follows declarations.
 	var constructions []*applicationConstruction
@@ -449,7 +421,14 @@ func (c *Compilation) constructApplications() error {
 			if seen[app] {
 				continue
 			}
-			node, err := c.constructObject(declarationObject(source.sGram, tok), make(map[*descriptorRule]bool))
+			_, site, err := c.Semantics.definitionSite(rec)
+			if err != nil {
+				return err
+			}
+			if site == nil {
+				return lerrors.Internal.Errorf("application %s has no source declaration", app.ID)
+			}
+			node, err := c.constructObject(site.valueObject(), make(map[*descriptorRule]bool))
 			if err != nil {
 				return fmt.Errorf("construct %s: %w", app.ID, err)
 			}

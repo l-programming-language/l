@@ -9,6 +9,167 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
+// Grammar-only tests have no published records; use the same direct site bodies.
+func directiveClauses(statement *lStatement) []*clauseGram {
+	sites, err := statement.sGram.registrationSites()
+	if err != nil {
+		panic(err)
+	}
+	var body []*clauseGram
+	for _, site := range sites {
+		body = append(body, site.actionClauses()...)
+	}
+	return body
+}
+
+func TestWordLibraryComposedReturnDelegation(t *testing.T) {
+	for name, delegate := range map[string]string{"direct": "Function.Returning", "source helper": "Finishing"} {
+		t.Run(name, func(t *testing.T) {
+			source := "Define \"Alternate\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n" +
+				"Define \"Witness\" as `<DEF>KY{|Key: ~crate::selected~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+				"Create \"Finish|-es|-ed|-ing|-er\" for Function.Returning any Number.\n" +
+				"Create Alternate's \"Return|-s|-ed|-ing|-er\" for " + delegate + " a New Witness of any Number.\n" +
+				"Use Function.Invoke as Alternate's \"Invoke\".\n\n" +
+				"    Publicly create \"Choose\" as a Generic `choose` Alternate with No Inputs and Outputs of `f64`.\nReturn 7.\n"
+			c := compileDefinitionSource(t, source, "composed-return-delegation.l")
+			if _, err := c.ComposeDefinition("Choose"); err != nil {
+				t.Fatalf("selected Return could not delegate to the core Return: %v", err)
+			}
+			testNativeDefinitionLibrary(t, c, "Choose", "return_delegation", `use std::sync::atomic::{AtomicUsize,Ordering}; static RETURNS:AtomicUsize=AtomicUsize::new(0); pub fn selected(value:f64)->f64{RETURNS.fetch_add(1,Ordering::SeqCst);value} #[path="src/return_delegation.rs"] mod generated; fn main(){assert_eq!(generated::choose(),7.0);assert_eq!(RETURNS.load(Ordering::SeqCst),1);}`)
+		})
+	}
+}
+
+func TestWordLibraryRecursiveReturnRejectsUnresolvedMember(t *testing.T) {
+	source := "Define \"Alternate\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n" +
+		"Create \"Repeat|-s|-ed|-ing|-er\" for Repeating any Number.\nCreate Alternate's \"Return|-s|-ed|-ing|-er\" for Repeating any Number.\nUse Function.Invoke as Alternate's \"Invoke\".\n\n" +
+		"    Publicly create \"Choose\" as a Generic `choose` Alternate with No Inputs and Outputs of `f64`.\nReturn 7.\n"
+	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "composed-return-cycle.l")
+	c.Make()
+	if !errors.Is(c.Error, lerrors.UnresolvedReference) || !strings.Contains(c.Error.Error(), "Function constructor has no Return definition") {
+		t.Fatalf("recursive Return member must remain unresolved: %v", c.Error)
+	}
+}
+
+func TestWordLibraryFunctionActorKeepsCallerLive(t *testing.T) {
+	source := "Define \"Mark|-s|-ed|-ing|-er\" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~crate::mark~|}<DEF>`.\n\n" +
+		"    Publicly create \"Finish|-es|-ed|-ing|-er\" as a Generic `finish` Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n" +
+		"Create \"Forward|-s|-ed|-ing|-er\" for Processing a New Process for Creating \"Finished\" as a New Finisher of any Number.\n\n" +
+		"    Publicly create \"Choose\" as a Generic `choose` Function with No Inputs and Outputs of `f64`.\nForward 7.\nMark.\nReturn 42.\n"
+	c := compileDefinitionSource(t, source, "function-actor-boundary.l")
+	rec, err := c.exportedRecord("Choose")
+	if err != nil {
+		t.Fatal(err)
+	}
+	planner := &orchestrationPlanner{semantics: c.Semantics}
+	planned, _, err := planner.instructions(rec.function.Body, newOrchestrationFlow())
+	if err != nil || rec.function.Body[0].Kind != instructionCall || len(planned) != 3 || !planned[0].ReachesNext {
+		t.Fatalf("Function actor terminated its caller: %+v, %v", planned, err)
+	}
+	testNativeDefinitionLibrary(t, c, "Choose", "function_actor", `use std::sync::atomic::{AtomicUsize,Ordering}; static MARKS:AtomicUsize=AtomicUsize::new(0); pub fn mark(){MARKS.fetch_add(1,Ordering::SeqCst);} #[path="src/function_actor.rs"] mod generated; fn main(){assert_eq!(generated::choose(),42.0);assert_eq!(MARKS.load(Ordering::SeqCst),1);}`)
+}
+
+func TestWordLibraryCompatibleOwnedReturn(t *testing.T) {
+	source := "    Publicly create \"Owner\" as a Generic `owner` Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nPublicly create \"Finish|-es|-ed|-ing|-er\" for Returning any Number.\nReturn Value.\n\n" +
+		"    Publicly create \"Other\" as a Generic `other` Function with No Inputs and Outputs of `f64`.\nFinish 7.\n"
+	c := compileDefinitionSource(t, source, "compatible-owned-return.l")
+	testNativeDefinitionLibrary(t, c, "Other", "compatible_return", `#[path="src/compatible_return.rs"] mod generated; fn main(){assert_eq!(generated::other(),7.0);}`)
+}
+
+func TestWordLibraryActorRejectsForeignReturn(t *testing.T) {
+	source := "Define \"Alternate\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n" +
+		"Use Function.Return as Alternate's \"Return\".\nUse Function.Invoke as Alternate's \"Invoke\".\n\n" +
+		"    Publicly create \"Owner\" as a Generic Alternate with Inputs of \"value\" as `f64` and Outputs of `f64`.\nPublicly create \"Finish|-es|-ed|-ing|-er\" for Returning any Number.\nReturn Value.\n\n" +
+		"Create \"Forward|-s|-ed|-ing|-er\" for Processing a New Finisher of any Number.\n\n" +
+		"    Publicly create \"Other\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nForward Value.\n"
+	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "foreign-actor-return.l")
+	c.Make()
+	if !errors.Is(c.Error, lerrors.TypeMismatch) || !strings.Contains(c.Error.Error(), "Return belongs to a different Function constructor contract") {
+		t.Fatalf("actor bypassed its definition-site Return contract: %v", c.Error)
+	}
+}
+
+func TestWordLibraryDefinitionSitesKeepBodiesSeparate(t *testing.T) {
+	source := "Define \"Message\" as `kept`.\n\n" +
+		"    Publicly create \"Choose\" as a New Function with No Inputs and Outputs of Text and then Create \"Finish|-es|-ed|-ing|-er\" for Function.Returning Message.\nFinish.\n\nChoose as \"Result\".\nShow Result.\n"
+	c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
+	if c.Error != nil {
+		t.Fatal(c.Error)
+	}
+	var declarations int
+	for rec, statement := range c.Semantics.Declarations {
+		if !strings.Contains(string(statement.source.Raw), "and then Create \"Finish") {
+			continue
+		}
+		body, err := c.Semantics.definitionActions(rec)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if rec.function != nil {
+			if len(body) != 0 {
+				t.Fatal("Function declaration acquired its sibling action's body")
+			}
+		} else if strings.EqualFold(rec.bindingWord().Root, "finish") {
+			if len(body) != 1 || !c.Semantics.Returns[body[0].verb.binding.Record] {
+				t.Fatalf("action lost its selected body: %+v", body)
+			}
+		}
+		declarations++
+	}
+	if declarations != 2 {
+		t.Fatalf("fixture requires two independent declaration sites, got %d", declarations)
+	}
+	captureNativeResult(t, c, "kept")
+}
+
+func TestWordLibraryExactSourceFormals(t *testing.T) {
+	for name, test := range map[string]struct{ source, call string }{
+		"two declarations":  {"Create \"First\" for Function.Returning any Text and then Create \"Second\" for Function.Returning any Number.\n\n    Publicly create \"Choose\" as a Generic `choose` Function with No Inputs and Outputs of `f64`.\nSecond 7.\n", "generated::choose()"},
+		"header and action": {"    Publicly create \"Choose\" as a Generic `choose` Function with Inputs of \"value\" as `f64` and Outputs of `f64` and then Create \"Finish|-es|-ed|-ing|-er\" for Function.Returning any Number.\nFinish Value.\n", "generated::choose(7.0)"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			c := compileDefinitionSource(t, test.source, "exact-source-formals.l")
+			if _, err := c.ComposeDefinition("Choose"); err != nil {
+				t.Fatal(err)
+			}
+			testNativeDefinitionLibrary(t, c, "Choose", "source_formals", `#[path="src/source_formals.rs"] mod generated; fn main(){assert_eq!(`+test.call+`,7.0);}`)
+		})
+	}
+}
+
+func TestWordLibraryRejectActorExit(t *testing.T) {
+	for name, action := range map[string]string{
+		"Rejector":            "Processing a New Storage's Rejector of any Text",
+		"authored actor":      "Processing a New Checks's Finisher of any Text",
+		"actor alias":         "Processing a New Checks's Decliner of any Text",
+		"nested directive":    "Processing a New Process for Processing a New Storage's Rejector of any Text",
+		"constructed Process": "Processing a New Process of a New Storage's Rejector of any Text",
+	} {
+		t.Run(name, func(t *testing.T) {
+			source := "Use Storage from `storage`.\nCreate \"Checks\" as a Dictionary.\n" +
+				"Define \"Mark|-s|-ed|-ing|-er\" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~crate::word_observer::mark~|}<DEF>`.\n" +
+				"Create Checks's \"Finish|-es|-ed|-ing|-er\" for Function.Returning a New Storage's Rejection of a New Storage's Failure of any Text.\n" +
+				"Use Storage.Rejector as Checks's \"Decliner\".\n" +
+				"Create Checks's \"Refuse|-s|-d|--ing|--er\" for " + action + ".\n\n" +
+				"    Publicly create Checks's \"Choose\" as a Generic `choose` Function with Inputs of \"message\" as `&str` and Outputs of `runtime::Result<f64>`.\nChecks.Refuse Message.\nMark.\nReturn a New Storage's Success of 42.\n"
+			c := compileDefinitionSource(t, source, "reject-actor-return.l")
+			rec, err := c.exportedRecord("Checks.Choose")
+			if err != nil {
+				t.Fatal(err)
+			}
+			planner := &orchestrationPlanner{semantics: c.Semantics}
+			planned, _, err := planner.instructions(rec.function.Body, newOrchestrationFlow())
+			if err != nil {
+				t.Fatal(err)
+			}
+			wordLibraryRuntimeObserver(t, c, "Checks", `use std::sync::atomic::{AtomicUsize,Ordering}; static MARKS:AtomicUsize=AtomicUsize::new(0); pub(crate) fn mark(){MARKS.fetch_add(1,Ordering::SeqCst);} pub(crate) fn exercise(){assert_eq!(super::choose("actor").unwrap_err().to_string(),"actor");assert_eq!(MARKS.load(Ordering::SeqCst),0);println!("word-library error assertions reached");}`)
+			if rec.function.Body[0].Kind != instructionReturn || len(planned) != 1 || planned[0].ReachesNext {
+				t.Fatalf("returning actor lost typed caller exit: kind=%v, planned=%+v", rec.function.Body[0].Kind, planned)
+			}
+		})
+	}
+}
+
 func TestWordLibraryRejectReturnsFromCaller(t *testing.T) {
 	for _, action := range []string{"Storage.Reject Message", "Checks.Refuse Message", "Checks.Finish Message", "Checks.Nested Message"} {
 		t.Run(action, func(t *testing.T) {

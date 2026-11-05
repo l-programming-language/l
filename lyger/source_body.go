@@ -39,6 +39,9 @@ func (c *Compilation) directiveComposition(object *objectGram, inherited []Defin
 			if err != nil {
 				return err
 			}
+			if instance.result != nil && instance.Expression == "" && instance.Words == nil {
+				return lerrors.TypeMismatch.Errorf("source action requires an executable definition")
+			}
 			forwarded = forwarded || used
 			for _, step := range definitionSteps(instance) {
 				expressions = append(expressions, step.Expression)

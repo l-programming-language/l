@@ -486,64 +486,6 @@ func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) 
 	return append([]*instruction{current}, following...), nil
 }
 
-// directiveClauses follows grammar ownership to the source-defined action
-// body. The grammar retains argument tokens and source spans needed for scoped
-// references and attribution in addition to the lexical action metadata.
-func directiveClauses(statement *lStatement) []*clauseGram {
-	var result []*clauseGram
-	seen := make(map[*phraseGram]bool)
-	var phrase func(*phraseGram)
-	var clause func(*clauseGram)
-	object := func(current *objectGram) {
-		if current != nil {
-			phrase(current.phrase)
-			clause(current.clause)
-		}
-	}
-	clause = func(current *clauseGram) {
-		if current == nil {
-			return
-		}
-		if current.subject != nil {
-			phrase(current.subject.phrase)
-		}
-		phrase(current.phrase)
-		object(current.obj)
-		for _, child := range current.clauses {
-			clause(child)
-		}
-	}
-	phrase = func(current *phraseGram) {
-		if current == nil || seen[current] {
-			return
-		}
-		seen[current] = true
-		if current.gType == "phrase.directive" {
-			result = append(result, current.clauses...)
-			return
-		}
-		if current.subject != nil {
-			phrase(current.subject.phrase)
-		}
-		phrase(current.phrase)
-		object(current.obj)
-		for _, child := range current.clauses {
-			clause(child)
-		}
-	}
-	if statement.sGram != nil {
-		if statement.sGram.subject != nil {
-			phrase(statement.sGram.subject.phrase)
-		}
-		if predicate := statement.sGram.predicate; predicate != nil {
-			for _, child := range predicate.clauses {
-				clause(child)
-			}
-		}
-	}
-	return result
-}
-
 func (b *instructionBuilder) customCall(clause *clauseGram, ctx instructionContext) ([]*instruction, error) {
 	callee, err := canonicalRecord(clause.verb.binding.Record, b.semantics.Aliases)
 	if err != nil {
@@ -556,7 +498,10 @@ func (b *instructionBuilder) customCall(clause *clauseGram, ctx instructionConte
 	if b.activeCalls[callee] {
 		return nil, lerrors.Cycle.Errorf("recursive source action %s", callee.ID)
 	}
-	body := directiveClauses(definition)
+	body, err := b.semantics.definitionActions(callee)
+	if err != nil {
+		return nil, err
+	}
 	if len(body) == 0 {
 		return nil, lerrors.InvalidInput.Errorf("action %s has no directive clauses", callee.ID)
 	}

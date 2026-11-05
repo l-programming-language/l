@@ -271,7 +271,7 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 				if err != nil {
 					return false, err
 				}
-				if state == lookupPending && !bindEarlierStatementDeclaration(statement, i, member) {
+				if state != lookupFound && !contextual.bindEarlierStatementDeclaration(statement, i, member) && state == lookupPending {
 					ready = false
 				}
 			}
@@ -343,22 +343,24 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 // A later reference to a plain declaration in the same statement can be parsed
 // as a noun before atomic registration. No value or semantic record is guessed:
 // publication resolves this source edge before the statement leaves registration.
-func bindEarlierStatementDeclaration(statement *lStatement, index int, tok *token) bool {
-	for _, declaration := range tok.scope.reserved(tok.rawBytes) {
-		if declaration.Record != nil || declaration.Owner != nil || strings.Contains(string(declaration.Token.rawBytes), "|") {
+func (r semanticResolver) bindEarlierStatementDeclaration(statement *lStatement, index int, tok *token) bool {
+	if r.scopes == nil {
+		return false
+	}
+	query := newBindingQuery(tok.rawBytes)
+	for _, candidate := range statement.tokens[:index] {
+		declaration := r.scopes.declarations[candidate]
+		if declaration == nil || declaration.Record != nil || declaration.Owner != nil ||
+			(!declaration.provisional && declaration.Scope != tok.scope) ||
+			declaration.SubjectID != query.word || strings.Contains(string(candidate.rawBytes), "|") {
 			continue
 		}
-		for _, candidate := range statement.tokens[:index] {
-			if candidate != declaration.Token {
-				continue
-			}
-			word := newLexeme("noun")
-			word.Root = newBindingQuery(tok.rawBytes).word
-			tok.pendingDeclaration = declaration.Token
-			tok.mem = &entry{Type: storageLexeme, Lexeme: word}
-			tok.tType, tok.defined = "nouns.generic.root", true
-			return true
-		}
+		word := newLexeme("noun")
+		word.Root = query.word
+		tok.pendingDeclaration = candidate
+		tok.mem = &entry{Type: storageLexeme, Lexeme: word}
+		tok.tType, tok.defined = "nouns.generic.root", true
+		return true
 	}
 	return false
 }

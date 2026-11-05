@@ -49,146 +49,27 @@ func definitionGrammarSignature(tok *token, constructor, named bool) (grammarAri
 			}
 		}
 	}
-	record := tok.binding.Record
-	if function := record.function; function != nil && function.Native {
-		return grammarArity{Count: len(function.Constructor.Inputs), Fixed: true}, nil
-	}
-	word := record.bindingWord()
-	if word == nil {
-		return grammarArity{}, nil
-	}
-	if word.Value == "" {
-		// Source actions without explicit formals inherit caller operands through
-		// their composition. They do not declare a fixed zero-operand signature.
-		return grammarArity{Count: len(word.Inputs), Fixed: len(word.Inputs) > 0}, nil
-	}
-	template, err := ParseDefinitionTemplate([]byte(word.Value), SourceSpan{})
-	if err != nil {
-		return grammarArity{}, err
-	}
-	return templateGrammarSignature(template, constructor, named), nil
+	header, err := recordHeader(tok.binding.Record, constructor, named)
+	return header.arity(), err
 }
 
-func templateGrammarSignature(template *DefinitionTemplate, constructor, named bool) grammarArity {
-	arity := grammarArity{Fixed: true}
-	for index, slot := range template.Slots {
-		if slot.Type == "Syllables" || slot.Type == "Atoms" {
-			return grammarArity{}
-		}
-		if template.scopedLabels[slot.Name] || constructor && index == 0 && (slot.Type == "Label" || named) {
-			continue
-		}
-		if constructor && template.IsFunction() && template.signatureSlots[slot.Name] != "" {
-			continue
-		}
-		arity.Count++
-	}
-	return arity
-}
-
-// Select the same canonical descriptor rules as construction, without emitting
-// declarations, binding values, or allocating definition labels during grammar.
+// Grammar and lowering select the same header without allocating value labels.
 func (c *Compilation) constructorGrammarSignature(noun *token, modifiers []*token, named bool) (grammarArity, error) {
-	if len(valueModifiers(modifiers)) == 0 {
-		return definitionGrammarSignature(noun, true, named)
-	}
-	node, err := c.grammarConstruction(noun, modifiers, make(map[*descriptorRule]bool))
+	node, err := c.constructObjectMode(&objectGram{noun: noun, adjectives: modifiers}, make(map[*descriptorRule]bool), constructionHeaderOnly)
 	if err != nil {
 		return grammarArity{}, err
 	}
-	selectedNoun := *noun
-	if node.Definition != nil {
-		selectedNoun.binding = &tokenBinding{Record: node.Definition}
-	}
-	arity, err := definitionGrammarSignature(&selectedNoun, true, named || node.Name != "")
+	header, _, _, err := c.constructionHeader(node, named, make(map[*record]bool))
 	if err != nil {
-		return arity, err
+		return grammarArity{}, err
 	}
-	templates, selected, err := c.constructionTemplates(node)
-	if err != nil {
-		return arity, err
-	}
-	if selected >= 0 {
-		arity = templateGrammarSignature(templates[selected], true, named || node.Name != "")
-	}
+	arity := header.arity()
 	for _, argument := range node.Arguments {
 		if arity.Fixed && arity.Count > 0 && (argument.article == nil || !argument.article.hasRole("article", "variable")) {
 			arity.Count--
 		}
 	}
 	return arity, nil
-}
-
-// Select only the construction header. Value binding, native type resolution,
-// dependencies and body construction remain in the ordinary construction pass.
-func (c *Compilation) grammarConstruction(noun *token, modifiers []*token, active map[*descriptorRule]bool) (*constructionNode, error) {
-	nominal, err := nominalType(noun)
-	if err != nil {
-		return nil, err
-	}
-	node := &constructionNode{Nominal: nominal}
-	if noun.binding != nil {
-		node.Definition, err = canonicalRecord(noun.binding.Record, c.Semantics.Aliases)
-		if err != nil {
-			return nil, err
-		}
-	}
-	for _, modifier := range valueModifiers(modifiers) {
-		descriptor, err := c.descriptorFor(modifier)
-		if err != nil {
-			return nil, err
-		}
-		if descriptor == nil {
-			continue
-		}
-		target, err := c.resolver().nominalIdentity(noun)
-		if err != nil {
-			return nil, err
-		}
-		if err := c.descriptorGrammarReady(descriptor.Record, target); err != nil {
-			return nil, err
-		}
-		matched := false
-		for _, rule := range descriptor.Rules {
-			if rule.Target != target {
-				continue
-			}
-			matched = true
-			wrapper, err := c.sourceDescriptorObject(rule)
-			if err != nil {
-				return nil, err
-			}
-			if rule.Template != nil || wrapper != nil {
-				node.Wrappers = append(node.Wrappers, rule)
-				continue
-			}
-			if active[rule] {
-				return nil, lerrors.Cycle.Errorf("recursive descriptor %s for %s", descriptor.Record.ID, target)
-			}
-			active[rule] = true
-			selected, err := c.grammarConstruction(rule.Object.noun, rule.Object.adjectives, active)
-			delete(active, rule)
-			if err != nil {
-				return nil, err
-			}
-			if rule.Object.name != nil && rule.Object.name.noun != nil {
-				selected.Name = unquoteImportWord(rule.Object.name.noun.rawBytes)
-			}
-			for phrase := rule.Object.phrase; phrase != nil; phrase = phrase.phrase {
-				if phrase.gType != "phrase.signature" && phrase.gType != "phrase.directive" {
-					selected.Arguments = append(selected.Arguments, phrase.orderedObjects()...)
-				}
-			}
-			if rule.Object.clause != nil {
-				selected.Arguments = append(selected.Arguments, rule.Object.clause.orderedObjects()...)
-			}
-			node.mergeDescriptor(selected)
-		}
-		if !matched {
-			return nil, lerrors.Unsupported.Errorf("descriptor %s has no constructor for %s", descriptor.Record.ID, target)
-		}
-	}
-	return node, nil
 }
 
 // The source-scope plan already fixes pronoun subjects before retries. Retain
@@ -249,17 +130,21 @@ func (c *Compilation) descriptorGrammarReady(descriptor *record, target nominalI
 }
 
 func (c *Compilation) sourceActionInputs(statement *lStatement, target *token) ([]string, error) {
-	for _, source := range c.Scope.Ordered {
-		if source.Statement != statement || len(source.Declarations) == 0 || source.Declarations[0].Token != target {
+	sites, err := statement.sGram.registrationSites()
+	if err != nil {
+		return nil, err
+	}
+	for _, site := range sites {
+		if site.subject == nil || site.subject.noun != target {
 			continue
 		}
-		inputs := make([]string, len(source.Arguments))
-		for index, argument := range source.Arguments {
-			name, err := nominalType(argument.Token)
-			if err != nil {
-				return nil, err
-			}
-			inputs[index] = name
+		formals, err := site.actionParameters(statement)
+		if err != nil {
+			return nil, err
+		}
+		inputs := make([]string, len(formals))
+		for index, formal := range formals {
+			inputs[index] = formal.Name
 		}
 		return inputs, nil
 	}

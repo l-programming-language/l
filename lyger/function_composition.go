@@ -320,6 +320,7 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 
 func (e *orchestrationEmitter) constructFunction(current *orchestrationInstruction) ([]string, error) {
 	function := current.Function
+	defer e.compilation.withDefinitionReturn(functionReturnContext(function.Source))()
 	captureTypes, captures, err := e.captureEnvironment(function.Captures, function.CaptureHandles)
 	if err != nil {
 		return nil, err

@@ -206,7 +206,7 @@ func (r *contractRecorder) sourceProjection(rec *record, rule *descriptorRule) c
 		delta = &constructionNode{Nominal: rule.Target.String(), Source: rule.Object, Wrappers: []*descriptorRule{rule}}
 		delta.contractWrite("wrappers", rule.Object.noun, true)
 	} else if err == nil {
-		delta, err = r.compilation.constructObjectMode(rule.Object, make(map[*descriptorRule]bool), true)
+		delta, err = r.compilation.constructObjectMode(rule.Object, make(map[*descriptorRule]bool), constructionSymbolic)
 	}
 	if err != nil {
 		projection.ProjectionObligations = append(projection.ProjectionObligations, contracts.Obligation{ID: contracts.StableID("unsupported-source", meaning), Claim: contracts.Claim{Predicate: contracts.Predicate{Kind: "source_projection", Subject: string(meaning), Target: target}, Target: target, Scope: "source_elaboration", Phase: contracts.Elaboration}, Status: contracts.Unresolved, Origin: origin, Reason: "source structural projection is unsupported: " + err.Error()})

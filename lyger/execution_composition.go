@@ -499,9 +499,6 @@ func (e *orchestrationEmitter) returned(value string) ([]string, error) {
 
 func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([]string, error) {
 	if current.Source.Application != nil || current.Source.Constructor != nil {
-		if current.Source.Function != nil {
-			defer e.compilation.withDefinitionReturn(functionReturnContext(current.Source.Function))()
-		}
 		var instance DefinitionInstance
 		var err error
 		if current.Source.Constructor != nil {

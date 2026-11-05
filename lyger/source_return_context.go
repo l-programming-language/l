@@ -3,8 +3,9 @@ package Lyger
 import "github.com/l-programming-language/l/lerrors"
 
 type sourceReturnContext struct {
-	returned    *record
-	constructor *record
+	returned       *record
+	constructor    *record
+	implementation *record
 }
 
 func functionReturnContext(function *sourceFunction) sourceReturnContext {
@@ -15,8 +16,8 @@ func functionReturnContext(function *sourceFunction) sourceReturnContext {
 }
 
 // Source actions retain their lexical Return contract when authored inside a
-// Function. Root-authored actions receive the caller's selected Return instead.
-// The context is private to one expansion and never changes the source tokens.
+// Function. Root-authored actions receive the caller's selected Return; its
+// implementation preserves authored delegates. Context never changes tokens.
 func (c *Compilation) withDefinitionReturn(context sourceReturnContext) func() {
 	previous := c.definitionReturn
 	c.definitionReturn = context
@@ -56,77 +57,71 @@ func sourceReturnBinding(semantics *semanticProgram, tok *token, context sourceR
 		}
 		return bound, true, nil
 	}
-	if selected != nil {
+	if selected != nil && context.implementation == nil {
 		return selected, true, nil
 	}
 	return bound, true, nil
 }
 
-func (c *Compilation) sourceActionReturn(tok *token) (*record, bool, error) {
-	return sourceReturnBinding(c.Semantics, tok, c.definitionReturn)
+// Follow the selected source body, never a real Function body or an opaque
+// constructor's supplied directive. Only transparent W sequences execute those
+// operands unconditionally; source actors share the action's canonical record.
+func (b *instructionBuilder) sourceActionReturns(action *clauseGram, context sourceReturnContext, active map[*record]bool) (bool, error) {
+	if action.subject != nil && action.subject.noun.isDeclare() {
+		site := registrationSite{subject: action.subject, predicate: action.predicate, clause: action}
+		return b.sourceObjectReturns(site.valueObject(), context, active)
+	}
+	selected, _, err := sourceReturnBinding(b.semantics, action.verb, context)
+	if err != nil {
+		return false, err
+	}
+	return b.sourceDefinitionReturns(selected, action.orderedObjects(), nil, context, active)
 }
 
-// Classify source-composed unconditional returns before planning. Native
-// Function invocations and opaque native leaves do not return from their caller.
-// Only actual selected Return operations in a source action sequence terminate it.
-func (b *instructionBuilder) sourceActionReturns(action *clauseGram, context sourceReturnContext, active map[*record]bool) (bool, error) {
-	selected, isReturn, err := sourceReturnBinding(b.semantics, action.verb, context)
-	if err != nil || isReturn {
-		return isReturn, err
-	}
+func (b *instructionBuilder) sourceDefinitionReturns(selected *record, objects []*objectGram, body []*clauseGram, context sourceReturnContext, active map[*record]bool) (bool, error) {
 	if selected.function != nil || active[selected] {
 		return false, nil
 	}
-	if word := selected.bindingWord(); word != nil && word.Value != "" {
-		template, err := ParseDefinitionTemplate([]byte(word.Value), SourceSpan{})
-		if err != nil {
-			return false, err
+	if b.semantics.Returns[selected] {
+		return true, nil
+	}
+	shape, err := b.semantics.selectedDefinition(selected)
+	if err != nil || shape.site == nil {
+		return false, err
+	}
+	if shape.template != nil {
+		if !isProcessDefinitionTemplate(shape.template) {
+			return false, nil
 		}
-		if isProcessDefinitionTemplate(template) {
-			for _, object := range action.orderedObjects() {
-				transparent, err := b.sourceProcessObject(object)
-				if err != nil {
-					return false, err
-				}
-				if !transparent {
-					continue
-				}
-				if body := object.directivePhrase(); body != nil {
-					for _, child := range body.clauses {
-						terminates, err := b.sourceActionReturns(child, context, active)
-						if err != nil || terminates {
-							return terminates, err
-						}
-					}
-				}
+		for _, object := range objects {
+			returns, err := b.sourceObjectReturns(object, context, active)
+			if err != nil || returns {
+				return returns, err
 			}
 		}
-		return false, nil
+	} else {
+		active[selected] = true
+		defer delete(active, selected)
+		body = shape.site.actionClauses()
+		if len(body) == 0 {
+			return b.sourceObjectReturns(shape.object, context, active)
+		}
 	}
-	definition := b.semantics.Declarations[selected]
-	if definition == nil {
-		return false, nil
-	}
-	active[selected] = true
-	defer delete(active, selected)
-	for _, child := range directiveClauses(definition) {
-		terminates, err := b.sourceActionReturns(child, context, active)
-		if err != nil || terminates {
-			return terminates, err
+	for _, child := range body {
+		returns, err := b.sourceActionReturns(child, context, active)
+		if err != nil || returns {
+			return returns, err
 		}
 	}
 	return false, nil
 }
 
-// A directive body's ownership does not prove that its constructor executes it.
-// Only an unmodified, transparent W sequence can carry unconditional exit facts
-// across this boundary; descriptors and other native templates remain opaque.
-func (b *instructionBuilder) sourceProcessObject(object *objectGram) (bool, error) {
+func (b *instructionBuilder) sourceObjectReturns(object *objectGram, context sourceReturnContext, active map[*record]bool) (bool, error) {
 	if object == nil || object.noun == nil || object.noun.binding == nil {
 		return false, nil
 	}
 	for _, modifier := range valueModifiers(object.adjectives) {
-		if !modifier.hasRole("adjective", "initialization") {
+		if !modifier.hasRole("adjective", "initialization") && !modifier.isPossessive() {
 			return false, nil
 		}
 	}
@@ -134,10 +129,9 @@ func (b *instructionBuilder) sourceProcessObject(object *objectGram) (bool, erro
 	if err != nil {
 		return false, err
 	}
-	word := selected.bindingWord()
-	if selected.function != nil || word == nil || word.Value == "" {
-		return false, nil
+	var body []*clauseGram
+	if phrase := object.directivePhrase(); phrase != nil {
+		body = phrase.clauses
 	}
-	template, err := ParseDefinitionTemplate([]byte(word.Value), SourceSpan{})
-	return isProcessDefinitionTemplate(template), err
+	return b.sourceDefinitionReturns(selected, constructorOperands(object), body, context, active)
 }

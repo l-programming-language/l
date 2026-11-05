@@ -6,8 +6,8 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-// Reserve signature labels before grammar classification. Publication assigns
-// each label to its actual Function or structured Process; no value is invented.
+// Retain signature/body labels before grammar classification without reserving
+// them in the enclosing scope. Publication assigns their actual lexical owner.
 func reserveSignatureDeclarations(stmt *lStatement, declarations []scopeDeclaration) []scopeDeclaration {
 	seen := make(map[*token]bool)
 	for _, declaration := range declarations {
@@ -15,7 +15,7 @@ func reserveSignatureDeclarations(stmt *lStatement, declarations []scopeDeclarat
 	}
 	for index, tok := range stmt.tokens {
 		if tok.isDeclare() && !seen[tok] {
-			declarations = append(declarations, scopeDeclaration{SubjectID: tok.declarationRoot(), Token: tok, TokenIndex: index})
+			declarations = append(declarations, scopeDeclaration{SubjectID: tok.declarationRoot(), Token: tok, TokenIndex: index, provisional: true})
 			seen[tok] = true
 		}
 	}
@@ -176,8 +176,10 @@ func (c *Compilation) bindProcessInputs(stmt *lStatement, object *objectGram) er
 			}
 			resolver := c.resolver()
 			resolver.expectedPOS = bindingContextPOS(body.tokens, index)
-			if _, err := resolver.bindToken(tok); err != nil {
+			if state, err := resolver.bindToken(tok); err != nil {
 				return err
+			} else if state == lookupFound {
+				tok.pendingDeclaration = nil // Actual lexical ownership supersedes grammar scaffolding.
 			}
 		}
 	}
@@ -194,6 +196,7 @@ func moveProcessReservation(reservation *scopeDeclaration, scope *lexicalScope) 
 		}
 	}
 	reservation.Scope = scope
+	reservation.provisional = false
 	scope.declarations = append(scope.declarations, reservation)
 }
 

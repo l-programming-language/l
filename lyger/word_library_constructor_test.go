@@ -435,3 +435,191 @@ func TestWordLibraryConstructorGrammarDiscardsFailedAlternative(t *testing.T) {
 		t.Fatalf("valid constructor alternative was not selected: %d attempts", attempts)
 	}
 }
+
+func TestWordLibraryInheritedConstructorSibling(t *testing.T) {
+	const words = "Define \"Choose|-s|-d|--ing|-r\" to `<DEF>BOG^GI{|Key: ~<@Condition@>~|}^(E{|Statement: ~true~|}*<@Left@>*E{|Statement: ~false~|}*<@Right@>)<DEF>`.\n" +
+		"Define \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Expression@><DEF>`.\n" +
+		"Define \"Pass\" as `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+		"Create \"Transmit|-s|-ted|-ting|-ter\" for Forwarding a New Pass.\n\n" +
+		"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"condition\" as `bool` and \"value\" as `f64` and Outputs of `f64`.\n"
+	for _, test := range []struct{ name, body, observer string }{
+		{"simple-control", "Return a New Transmitter of Value.\n", `assert_eq!(generated::exercise(true,3.0),3.0);`},
+		{"sibling", "Choose Condition, a New Process for Returning a New Transmitter of Value, and a New Process for Returning 7.\n", `assert_eq!(generated::exercise(true,3.0),3.0);assert_eq!(generated::exercise(false,3.0),7.0);`},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			c := compileDefinitionSource(t, words+test.body, "word-library-open-constructor.l")
+			testNativeDefinitionLibrary(t, c, "Exercise", "open_constructor", `#[path="src/open_constructor.rs"] mod generated; fn main(){`+test.observer+`}`)
+		})
+	}
+}
+
+func TestWordLibraryTransparentValueWrapper(t *testing.T) {
+	const words = "Define \"Acquire\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\n" +
+		"Define \"Transmit|-s|-ted|-ting|-ter\" to `<DEF><@Value@><DEF>`.\n" +
+		"Define \"Finish|-es|-ed|-ing|-er\" to `<DEF>KY{|Key: ~crate::finish~, Inputs: ~&[<@Original@>, <@Receipt@>]&~|}<DEF>`.\n" +
+		"Define \"Tracked\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Finisher of any Thing and any Transmitter.\n\n" +
+		"    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `f64`.\n"
+	for _, test := range []struct{ name, declaration, expression string }{
+		{"control", "", "a New Transmitter"},
+		{"wrapped", "", "a New Tracked Transmitter"},
+		{"source-value", "Define \"Routed\" as a New Transmitter.\nDefine \"Observed\" as a New Adjective describing any Routed.\nIt describes any Routed as a New Finisher of any Thing and any Routed.\n", "a New Observed Routed"},
+		{"source-action", "Create \"Route|-s|-d|--ing|-r\" for Transmitting a New Transmitter.\nDefine \"Observed\" as a New Adjective describing any Router.\nIt describes any Router as a New Finisher of any Thing and any Router.\n", "a New Observed Router"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			declarations, body, _ := strings.Cut(words, "    Publicly create")
+			c := compileDefinitionSource(t, declarations+test.declaration+"\n    Publicly create"+body+"Return "+test.expression+" of a New Acquire.\n", "word-library-transparent-value.l")
+			testNativeDefinitionLibrary(t, c, "Exercise", "transparent_value", `static CALLS:std::sync::atomic::AtomicUsize=std::sync::atomic::AtomicUsize::new(0);pub fn acquire()->f64{CALLS.fetch_add(1,std::sync::atomic::Ordering::SeqCst);7.0}pub fn finish(original:f64,receipt:f64)->f64{assert_eq!(original,receipt);receipt}#[path="src/transparent_value.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),7.0);assert_eq!(CALLS.load(std::sync::atomic::Ordering::SeqCst),1);}`)
+		})
+	}
+}
+
+func TestWordLibraryReplacementResultSignature(t *testing.T) {
+	const named = "<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>"
+	const expression = "<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>"
+	for _, tc := range []struct{ name, base, replacement string }{{"removes-name", named, expression}, {"adds-name", expression, named}} {
+		t.Run(tc.name, func(t *testing.T) {
+			for _, mode := range []string{"direct-control", "replaced"} {
+				t.Run(mode, func(t *testing.T) {
+					definition, modifiers := tc.replacement, ""
+					if mode == "replaced" {
+						definition, modifiers = tc.base, "Changed "
+					}
+					source := "Define \"Transmit|-s|-ted|-ting|-ter\" to `" + definition + "`.\n" +
+						"Define \"Changed\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as `" + tc.replacement + "`.\n\n" +
+						"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn a New " + modifiers + "Transmitter of Value.\n"
+					c := compileDefinitionSource(t, source, "word-library-result-signature.l")
+					testNativeDefinitionLibrary(t, c, "Exercise", "result_signature", `#[path="src/result_signature.rs"]mod generated;fn main(){assert_eq!(generated::exercise(7.0),7.0);}`)
+				})
+			}
+		})
+	}
+}
+
+func TestWordLibraryReplacementNamedResult(t *testing.T) {
+	const named = "<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>"
+	const expression = "<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>"
+	for _, pair := range [][2]string{{named, expression}, {expression, named}} {
+		source := "Define \"Transmit|-s|-ted|-ting|-ter\" to `" + pair[0] + "`.\nDefine \"Changed\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as `" + pair[1] + "`.\n\n    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nCreate \"Receipt\" as a New Changed Transmitter of Value.\nReturn Receipt.\n"
+		c := compileDefinitionSource(t, source, "replacement-named-result.l")
+		testNativeDefinitionLibrary(t, c, "Exercise", "named_result", `#[path="src/named_result.rs"]mod generated;fn main(){assert_eq!(generated::exercise(7.0),7.0);}`)
+	}
+}
+
+func TestWordLibraryInheritedSignatures(t *testing.T) {
+	for _, test := range []struct {
+		name, leaf, declaration, expression, expected string
+		count                                         int
+		fixed                                         bool
+	}{
+		{"zero", "<DEF>KY{|Key: ~crate::constant~|}<DEF>", "Create \"Transmit|-s|-ted|-ting|-ter\" for Forwarding a New Pass.", "a New Transmitter", "7.0", 0, true},
+		{"variadic", "<DEF>KY{|Key: ~crate::sum~, Inputs: ~&[<@Values|Atoms@>]&~|}<DEF>", "Create \"Transmit|-s|-ted|-ting|-ter\" for Forwarding a New Pass.", "a New Transmitter of 2 and 3", "5.0", 1, false},
+		{"source-value-alias", "<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>", "Define \"Transmitter\" as a New Pass.\nUse Transmitter as \"Routed\".", "a New Routed of 3", "3.0", 1, true},
+		{"callable-member", "<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>", "Create Function's \"Transmit|-s|-ted|-ting|-ter\" for Forwarding a New Pass.", "a New Function's Transmitter of 3", "3.0", 1, true},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			source := "Define \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Expression@><DEF>`.\nDefine \"Pass\" as `" + test.leaf + "`.\n" + test.declaration + "\n\n    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `f64`.\nReturn " + test.expression + ".\n"
+			c := compileDefinitionSource(t, source, "inherited-signature.l")
+			name := "Transmit"
+			if test.name == "callable-member" {
+				name = "Function.Transmit"
+			}
+			if test.name == "source-value-alias" {
+				name = "Transmitter"
+			}
+			var selected *record
+			for rec := range c.Semantics.Declarations {
+				if strings.EqualFold(rec.ID, name) {
+					selected = rec
+				}
+			}
+			if selected == nil {
+				t.Fatalf("no declaration %s", name)
+			}
+			header, err := c.sourceHeader(selected, false, make(map[*record]bool))
+			if err != nil || header.arity() != (grammarArity{Count: test.count, Fixed: test.fixed}) {
+				t.Fatalf("selected signature: %+v, %v", header.arity(), err)
+			}
+			testNativeDefinitionLibrary(t, c, "Exercise", "inherited_signature", `pub fn constant()->f64{7.0}pub fn sum(x:f64,y:f64)->f64{x+y}#[path="src/inherited_signature.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),`+test.expected+`);}`)
+		})
+	}
+}
+
+func TestWordLibraryTransparentProcessPlacement(t *testing.T) {
+	source := "Define \"Choose|-s|-d|--ing|-r\" to `<DEF>BOG^GI{|Key: ~<@Condition@>~|}^(E{|Statement: ~true~|}*<@Left@>*E{|Statement: ~false~|}*<@Right@>)<DEF>`.\n" +
+		"Define \"Tick|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~crate::tick();~|}<DEF>`.\nDefine \"Work\" as a New Process for Ticking.\n" +
+		"Define \"Transmit|-s|-ted|-ting|-ter\" to `<DEF><@Value@><DEF>`.\n" +
+		"Create \"Finish|-es|-ed|-ing|-er\" for Processing any Process and any Process.\n" +
+		"Define \"Tracked\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Finisher of any Process and any Transmitter.\n\n" +
+		"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"condition\" as `bool` and Outputs of `f64`.\nChoose Condition, a New Tracked Transmitter of a New Work, and a New Process for Returning 7.\nReturn 7.\n"
+	c := compileDefinitionSource(t, source, "transparent-process.l")
+	testNativeDefinitionLibrary(t, c, "Exercise", "transparent_process", `static CALLS:std::sync::atomic::AtomicUsize=std::sync::atomic::AtomicUsize::new(0);pub fn tick(){CALLS.fetch_add(1,std::sync::atomic::Ordering::SeqCst);}#[path="src/transparent_process.rs"]mod generated;fn main(){assert_eq!(generated::exercise(false),7.0);assert_eq!(CALLS.load(std::sync::atomic::Ordering::SeqCst),0);assert_eq!(generated::exercise(true),7.0);assert_eq!(CALLS.load(std::sync::atomic::Ordering::SeqCst),2);}`)
+}
+
+func TestWordLibraryNamedCallableKeyIsOperand(t *testing.T) {
+	source := "Define \"Relay|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~<@Target@>~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n\n    Publicly create \"Exercise\" as a Generic Function with Inputs of \"target\" as `fn(f64)->f64` and \"value\" as `f64` and Outputs of `f64`.\nCreate \"Receipt\" as a New Relayer of Target and Value.\nReturn Receipt.\n"
+	c := compileDefinitionSource(t, source, "callable-key.l")
+	testNativeDefinitionLibrary(t, c, "Exercise", "callable_key", `#[path="src/callable_key.rs"]mod generated;fn main(){assert_eq!(generated::exercise(std::convert::identity,7.0),7.0);}`)
+}
+
+func TestWordLibraryReferenceOnlyActionRejects(t *testing.T) {
+	source := "Define \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Value@><DEF>`.\n\n    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nForward Value.\nReturn 7.\n"
+	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "reference-only-action.l")
+	c.Make()
+	err := c.Error
+	if err == nil {
+		_, err = c.ComposeDefinition("Exercise")
+	}
+	if err == nil || !strings.Contains(err.Error(), "value reference is not an executable") {
+		t.Fatalf("reference-only action: %v", err)
+	}
+}
+
+func TestWordLibraryIdentityRetainsPrerequisites(t *testing.T) {
+	template, err := ParseDefinitionTemplate([]byte("<DEF><@Body@><DEF>"), SourceSpan{Path: "identity.l"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	prior := DefinitionInstance{Expression: "MOB{|Key: ~value~|}^KY{|Key: ~crate::acquire~|}", Span: SourceSpan{Path: "operand.l"}}
+	body := DefinitionInstance{Expression: "BOD^E{|Statement: ~crate::consume(value);~|}", before: []DefinitionInstance{prior}, Span: SourceSpan{Path: "body.l"}}
+	instance, err := template.Instantiate(map[string]DefinitionArgument{"Body": {Kind: "Definition", Definition: &body}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	steps := definitionSteps(instance)
+	if len(steps) != 2 || steps[0].Expression != prior.Expression || steps[0].Span != prior.Span || steps[1].Expression != body.Expression {
+		t.Fatalf("identity lost or reordered an operand prerequisite: %+v", steps)
+	}
+}
+
+func TestWordLibraryTransparentOwnedValueIsNotCloned(t *testing.T) {
+	source := "Define \"Acquire\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\nDefine \"Transmit|-s|-ted|-ting|-ter\" to `<DEF><@Value@><DEF>`.\nDefine \"Finish|-es|-ed|-ing|-er\" to `<DEF>KY{|Key: ~crate::finish~, Inputs: ~&[<@Original@>, <@Receipt@>]&~|}<DEF>`.\nDefine \"Tracked\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Finisher of any Thing and any Transmitter.\n\n    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `String`.\nReturn a New Tracked Transmitter of a New Acquire.\n"
+	c := compileDefinitionSource(t, source, "transparent-owned.l")
+	aml, err := c.ComposeLibrary("Exercise", "transparent_owned")
+	if err != nil {
+		t.Fatal(err)
+	}
+	bundle, err := Logiceme.NewLogicemeService(c.Gram.resources).Evaluate(aml)
+	if err != nil {
+		t.Fatal(err)
+	}
+	files := make(map[string][]byte)
+	for index, name := range bundle.MapArrays[0] {
+		files[strings.TrimPrefix(name, "/")] = bundle.ByteArrays[0][index]
+	}
+	files["observe.rs"] = []byte(`pub fn acquire()->String{String::from("value")}pub fn finish(_:String,value:String)->String{value}#[path="src/transparent_owned.rs"]mod generated;fn main(){let _ = generated::exercise();}`)
+	directory := nativetest.Materialize(t, files)
+	tools := nativetest.Toolchain(t)
+	_, diagnostic, err := nativetest.BuildPrerequisite.Run(t, tools.Rustc, directory, nativetest.CleanEnvironment(tools.Rustc), "--edition=2024", "observe.rs", "-o", filepath.Join(directory, "observe"))
+	if err == nil || !strings.Contains(string(diagnostic), "use of moved value") {
+		t.Fatalf("transparent operand was cloned or evaluated again: %v: %s", err, diagnostic)
+	}
+}
+
+// Retain existing characterization entry points while production uses the shared binder.
+func (c *Compilation) instantiateNamedDefinition(rec *record, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
+	return c.instantiateSourceCall(rec, values, arguments, used, active, nil)
+}
+
+func definitionArguments(template *DefinitionTemplate, args []DefinitionArgument) (map[string]DefinitionArgument, error) {
+	return bindDefinitionArguments(template, args, nil, nil)
+}

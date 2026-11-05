@@ -46,20 +46,17 @@ func (c *Compilation) invokeFunctionDefinition(function *sourceFunction, args []
 	if len(args) != len(function.Constructor.Inputs) {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("Function %s requires %d arguments, got %d", function.Record.ID, len(function.Constructor.Inputs), len(args))
 	}
-	var before []DefinitionInstance
-	args = append([]DefinitionArgument(nil), args...)
-	for index, argument := range args {
-		argument, err := c.atomArgument(argument)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		var steps []DefinitionInstance
-		args[index], steps = argument.boundResult()
-		before = append(before, steps...)
+	header, err := c.sourceHeader(function.Record, false, nil)
+	if err != nil {
+		return DefinitionInstance{}, err
+	}
+	args, _, before, err := c.bindWrapperOperands(header, args, nil)
+	if err != nil {
+		return DefinitionInstance{}, err
 	}
 	bindings := map[string]DefinitionArgument{"Target": definitionReferenceArgument(function.Constructor.Name), "Arguments": definitionAtomListArgument(args...)}
 	used := make(map[string]bool)
-	invocation, err := c.instantiateNamedDefinition(function.Invoke, bindings, used, active)
+	invocation, err := c.instantiateSourceCall(function.Invoke, nil, bindings, used, active, dynamic)
 	if err == nil {
 		err = validateDefinitionArguments(function.Invoke, bindings, used)
 	}
