@@ -77,6 +77,11 @@ func definitionArguments(template *DefinitionTemplate, args []DefinitionArgument
 // Explicit operands fill the selected signature's open slots; named operands
 // remain available through source constructors and are marked only when used.
 func bindDefinitionArguments(template *DefinitionTemplate, args []DefinitionArgument, named map[string]DefinitionArgument, used map[string]bool) (map[string]DefinitionArgument, error) {
+	var err error
+	args, err = scopedDefinitionArguments(template, args)
+	if err != nil {
+		return nil, err
+	}
 	bindings := make(map[string]DefinitionArgument)
 	next := 0
 	for _, slot := range template.Slots {
@@ -367,7 +372,11 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 		}
 		arguments = append(arguments, argument)
 	}
-	instance, err := c.instantiateStaticCall(action.verb.binding.Record, arguments, active, dynamic)
+	selected, _, err := c.sourceActionReturn(action.verb)
+	if err != nil {
+		return DefinitionInstance{}, false, err
+	}
+	instance, err := c.instantiateStaticCall(selected, arguments, active, dynamic)
 	if err != nil {
 		return DefinitionInstance{}, false, err
 	}
@@ -457,7 +466,7 @@ func (c *Compilation) instantiateStaticObject(object *objectGram, inherited []De
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}
-		if template != nil && len(template.Slots) > 0 && template.Slots[0].Type == "Label" {
+		if template != nil && len(template.Slots) > 0 && template.Slots[0].Type == "Label" && !template.scopedLabels[template.Slots[0].Name] {
 			node.Name = c.definitionLabel()
 		}
 	}
@@ -515,9 +524,17 @@ func (c *Compilation) bindFormalMember(object *objectGram, arguments []Definitio
 }
 
 func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inherited []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionInstance, bool, error) {
+	inputs := c.processInputArguments(node.Source)
 	template, err := c.recordTemplate(node.Definition)
 	if err != nil {
 		return DefinitionInstance{}, false, err
+	}
+	wrappers, selected, err := c.constructionTemplates(node)
+	if err != nil {
+		return DefinitionInstance{}, false, err
+	}
+	if selected >= 0 {
+		template = wrappers[selected]
 	}
 	arguments := inherited
 	forwarded := len(node.Arguments) == 0
@@ -535,16 +552,24 @@ func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inhe
 			arguments = append(arguments, argument)
 		}
 	}
-	if instructions, exists, err := c.directiveInstructions(node.Source); err != nil {
-		return DefinitionInstance{}, false, err
-	} else if exists {
-		body, err := c.composeInstructions(instructions, active, dynamic)
+	if node.Source != nil && node.Source.directivePhrase() != nil {
+		body, used, err := c.directiveComposition(node.Source, inherited, active, dynamic)
 		if err != nil {
 			return DefinitionInstance{}, false, err
+		}
+		body, err = c.annotateProcessInputs(body, inputs)
+		if err != nil {
+			return DefinitionInstance{}, false, err
+		}
+		if len(node.Arguments) == 0 {
+			arguments, forwarded = nil, used
+		} else {
+			forwarded = forwarded || used
 		}
 		arguments = append(arguments, DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &body})
 	}
 	var instance DefinitionInstance
+	var before []DefinitionInstance
 	if template != nil && template.IsFunction() {
 		if len(arguments) != 1 {
 			return DefinitionInstance{}, false, lerrors.InvalidInput.Errorf("Function constructor must own one body composition")
@@ -553,8 +578,21 @@ func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inhe
 		constructor.Arguments = nil // The explicit body was composed above.
 		instance, err = c.instantiateFunctionConstructor(&constructor, arguments[0], false, active)
 		return instance, forwarded, err
-	} else if function := node.Definition.function; function != nil && function.Native {
-		instance, err = c.invokeFunctionDefinition(function, arguments, active, dynamic)
+	} else if template == nil {
+		if len(node.Wrappers) > 0 {
+			arguments, _, before, err = c.bindWrapperOperands(node.Definition, nil, arguments, nil)
+			if err != nil {
+				return DefinitionInstance{}, false, err
+			}
+			if node.Name == "" {
+				node.Name = c.definitionLabel()
+			}
+		}
+		if function := node.Definition.function; function != nil && function.Native {
+			instance, err = c.invokeFunctionDefinition(function, arguments, active, dynamic)
+		} else {
+			instance, err = c.instantiateStaticCall(node.Definition, arguments, active, dynamic)
+		}
 		if err == nil && node.Name != "" {
 			instance, err = c.instantiateDescribedBuiltin("Storage.Binding", []string{"Storage.Produced"}, map[string]DefinitionArgument{"Name": definitionReferenceArgument(node.Name), "Value": {Kind: definitionArgDefinition.String(), Definition: &instance}})
 		}
@@ -564,43 +602,63 @@ func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inhe
 			if node.Source.name != nil {
 				argument.source = c.operandSource(node.Source.name.noun)
 			}
-			if template != nil && len(template.Slots) > 0 && template.Slots[0].Type == definitionArgText.String() {
+			if len(template.Slots) > 0 && template.Slots[0].Type == definitionArgText.String() {
 				argument = DefinitionArgument{Kind: definitionArgText.String(), Text: node.Name}
 			}
 			arguments = append([]DefinitionArgument{argument}, arguments...)
 		}
-		if template != nil {
-			if dynamic[node.Definition] || node.Definition.Value != nil && node.Definition.Value.Runtime != nil {
-				return DefinitionInstance{}, false, lerrors.Unsupported.Errorf("runtime value %s cannot be captured by an App body", node.Definition.ID)
+		var ledger []DefinitionBinding
+		for _, argument := range arguments {
+			if argument.Definition != nil {
+				ledger = append(ledger, argument.Definition.Bindings...)
 			}
-			bindings, bindErr := definitionArguments(template, arguments)
-			if bindErr != nil {
-				return DefinitionInstance{}, false, bindErr
-			}
-			instance, err = c.instantiateNamedConstruction(node, bindings, make(map[string]bool), active)
-			if err == nil && node.Name != "" {
-				result := definitionReferenceArgument(node.Name)
-				result.source = c.operandSource(node.Source.noun)
-				instance.result = &result
-			}
-			return instance, forwarded, err
 		}
-		instance, err = c.instantiateStaticCall(node.Definition, arguments, active, dynamic)
+		if dynamic[node.Definition] || node.Definition.Value != nil && node.Definition.Value.Runtime != nil {
+			return DefinitionInstance{}, false, lerrors.Unsupported.Errorf("runtime value %s cannot be captured by an App body", node.Definition.ID)
+		}
+		bindings, bindErr := definitionArguments(template, arguments)
+		if bindErr != nil {
+			return DefinitionInstance{}, false, bindErr
+		}
+		instance, err = c.instantiateNamedConstruction(node, bindings, make(map[string]bool), active)
+		instance.Bindings = append(ledger, instance.Bindings...)
+		instance.inputs = inputs
+		if err == nil && node.Name != "" {
+			result := definitionReferenceArgument(node.Name)
+			result.source = c.operandSource(node.Source.noun)
+			instance.result = &result
+		}
+		return instance, forwarded, err
 	}
 	if err != nil {
 		return DefinitionInstance{}, false, err
 	}
+	local := make(map[string]DefinitionArgument)
+	if node.Name != "" {
+		result := definitionReferenceArgument(node.Name)
+		result.source = c.operandSource(node.Source.noun)
+		instance.result = &result
+		local["Name"] = result
+	}
+	if function := node.Definition.function; function != nil && function.Native {
+		for index, input := range function.Constructor.Inputs {
+			local[input.Key] = arguments[index]
+		}
+	}
 	for i := len(node.Wrappers) - 1; i >= 0; i-- {
 		rule := node.Wrappers[i]
+		if rule.Template == nil {
+			instance, err = c.instantiateSourceDescriptor(rule, instance, arguments, node.Name, active, dynamic)
+			if err != nil {
+				return DefinitionInstance{}, false, err
+			}
+			continue
+		}
 		wrapper, err := ParseDefinitionTemplate(rule.Template.rawBytes, rule.Source.source.Span)
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}
-		bindings, err := definitionArguments(wrapper, []DefinitionArgument{{Kind: definitionArgDefinition.String(), Definition: &instance}})
-		if err != nil {
-			return DefinitionInstance{}, false, err
-		}
-		instance, err = c.instantiateTemplate(wrapper, bindings)
+		instance, err = c.instantiateDescriptorWrapper(rule, wrapper, instance, local, nil)
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}
@@ -609,6 +667,7 @@ func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inhe
 	if err != nil {
 		return DefinitionInstance{}, false, err
 	}
+	instance.before = append(before, instance.before...)
 	instance.Symbol = instance.definition.ID
 	if node.Name != "" {
 		result := definitionReferenceArgument(node.Name)
@@ -778,7 +837,7 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 	if template == nil || !template.IsFunction() {
 		return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s does not define a function structure", node.Nominal)
 	}
-	wrappers, selected, err := constructionTemplates(node)
+	wrappers, selected, err := c.constructionTemplates(node)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}

@@ -20,24 +20,33 @@ func (e *orchestrationEmitter) composeAppSelection(name string, value *orchestra
 	if returned == nil {
 		return nil, lerrors.InvalidConfiguration.Errorf("App selection requires its enclosing Function's Return definition")
 	}
+	borrowed, err := e.word("Storage.Borrow", map[string]DefinitionArgument{
+		"Name": definitionReferenceArgument(name + "Borrowed"), "Value": definitionReferenceArgument(target),
+	})
+	if err != nil {
+		return nil, err
+	}
 	retained, err := e.word("Retain", map[string]DefinitionArgument{
-		"Name": definitionReferenceArgument(name), "Target": definitionReferenceArgument(target),
+		"Name": definitionReferenceArgument(name), "Target": definitionReferenceArgument(name + "Borrowed"),
 	})
 	if err != nil {
 		return nil, err
 	}
-	result, err := e.compilation.instantiateDefinition(returned, map[string]DefinitionArgument{"Statement": definitionReferenceArgument(name + "Result")})
+	reject, err := e.compilation.builtinRecord("Storage.Reject")
 	if err != nil {
 		return nil, err
 	}
-	rejected, err := e.word("Storage.Reject", map[string]DefinitionArgument{
-		"Name": definitionReferenceArgument(name), "Message": {Kind: "Text", Text: "App handle is not owned by this program"},
-		"Return": {Kind: "Syllable", Definition: &result},
-	})
+	defer e.compilation.withDefinitionReturn(sourceReturnContext{returned: returned})()
+	rejected, err := e.compilation.instantiateCall(reject, []DefinitionArgument{{Kind: "Text", Text: "App handle is not owned by this program"}}, make(map[*record]bool))
 	if err != nil {
 		return nil, err
 	}
-	fallback := rejected
+	fallback, err := builtinProcessExpressions(nil, rejected)
+	if err != nil {
+		return nil, err
+	}
+	e.dependencies = append(e.dependencies, rejected.Dependencies...)
+	e.definitionBindings = append(e.definitionBindings, rejected.Bindings...)
 	for index := len(cases) - 1; index >= 0; index-- {
 		candidate := cases[index]
 		matchName := name + "Match" + strconv.Itoa(index)
@@ -54,5 +63,6 @@ func (e *orchestrationEmitter) composeAppSelection(name string, value *orchestra
 		}
 		fallback = append(matches, selected...)
 	}
+	retained = append(borrowed, retained...)
 	return append(retained, fallback...), nil
 }

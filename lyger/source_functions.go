@@ -1,8 +1,9 @@
 package Lyger
 
 import (
-	"github.com/l-programming-language/l/lerrors"
 	"strings"
+
+	"github.com/l-programming-language/l/lerrors"
 )
 
 type functionParameter struct {
@@ -120,14 +121,15 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		return false, nil
 	}
 	native := object.name != nil
-	if object.phrase != nil && object.phrase.gType == "phrase.signature" {
+	signaturePhrase := object.signaturePhrase()
+	if signaturePhrase != nil {
 		var types []*objectGram
-		for _, input := range object.phrase.subjects {
+		for _, input := range signaturePhrase.subjects {
 			if input.phrase != nil && input.phrase.obj != nil {
 				types = append(types, input.phrase.obj)
 			}
 		}
-		types = append(types, object.phrase.orderedObjects()...)
+		types = append(types, signaturePhrase.orderedObjects()...)
 		for _, typ := range types {
 			name, _, err := c.nativeTypeDefinition(typ.noun)
 			if err != nil {
@@ -136,7 +138,7 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 			native = native || typ.cType == "text" || name != ""
 		}
 	}
-	if !native && object.cType != "callable" && (object.phrase == nil || object.phrase.gType != "phrase.signature") {
+	if !native && object.cType != "callable" && signaturePhrase == nil {
 		return false, nil
 	}
 	template, err := c.callableTemplate(object.noun.binding.Record, make(map[*record]bool))
@@ -223,7 +225,7 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 	function.Record = rec
 	prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: target, Record: rec})
 	seen := make(map[string]bool)
-	for _, parameter := range object.phrase.subjects {
+	for _, parameter := range signaturePhrase.subjects {
 		name := parameter.noun.declarationRoot()
 		if name == "" || seen[name] {
 			return true, lerrors.DuplicateDeclaration.Errorf("duplicate or unnamed Function parameter %s", name)
@@ -247,7 +249,7 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		function.Inputs = append(function.Inputs, functionParameter{record, typ})
 		prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: parameter.noun, Record: record})
 	}
-	for _, output := range object.phrase.orderedObjects() {
+	for _, output := range signaturePhrase.orderedObjects() {
 		typ, err := sourceTypeFromObject(output)
 		if err == nil {
 			typ, err = canonicalRuntimeType(typ, c.Semantics.Aliases)
@@ -270,7 +272,11 @@ func (b *instructionBuilder) functionOperation(clause *clauseGram, ctx instructi
 		if ctx.function == nil {
 			return nil, lerrors.InvalidInput.Errorf("Return requires a Function activation")
 		}
-		if !ctx.function.bindsReturn(clause.verb) {
+		_, isReturn, err := sourceReturnBinding(b.semantics, clause.verb, functionReturnContext(ctx.function))
+		if err != nil {
+			return nil, err
+		}
+		if !isReturn {
 			return nil, lerrors.TypeMismatch.Errorf("Return belongs to a different Function constructor contract")
 		}
 		current.Function = ctx.function
@@ -280,6 +286,17 @@ func (b *instructionBuilder) functionOperation(clause *clauseGram, ctx instructi
 				return nil, err
 			}
 			current.Arguments = append(current.Arguments, operand)
+		}
+		// A Return authored in a source action retains ordinary object grammar;
+		// its formal objects resolve through the caller's scoped arguments.
+		if len(clause.values) == 0 {
+			for _, object := range clause.orderedObjects() {
+				operand, err := b.objectValue(object, ctx)
+				if err != nil {
+					return nil, err
+				}
+				current.Arguments = append(current.Arguments, operand)
+			}
 		}
 		if err := checkFunctionValues("Return", ctx.function.Outputs, current.Arguments); err != nil {
 			return nil, err
@@ -452,11 +469,11 @@ func (b *instructionBuilder) functionCaptures(function *sourceFunction) ([]*inst
 	return captures, calls
 }
 
-// A signature owns its ordered items; collection type phrases cannot consume
-// the next parameter or result as another collection operand.
+// A signature owns its ordered items; type phrases cannot consume the next
+// parameter/result or the enclosing constructor's directive body.
 func signatureTypePrefix(tokens []*token) []*token {
 	for index, tok := range tokens {
-		if index > 0 && tok.hasRole("conjunction", "mutual") {
+		if index > 0 && (tok.hasRole("conjunction", "mutual") || tok.hasRole("preposition", "conjoinment.directive")) {
 			return tokens[:index]
 		}
 	}

@@ -31,6 +31,7 @@ const (
 	lexicalBuiltin
 	lexicalDictionary
 	lexicalParagraph
+	lexicalProcess
 )
 
 // An explicit callable signature determines how its paragraph declarations bind.
@@ -46,7 +47,7 @@ func (s *lexicalScope) waitsForHeader(statement *lStatement) bool {
 
 func (s *lexicalScope) isParagraph() bool { return s != nil && s.kind == lexicalParagraph }
 func (s *lexicalScope) unitRoot() *lexicalScope {
-	for s != nil && s.isParagraph() {
+	for s != nil && (s.isParagraph() || s.kind == lexicalProcess) {
 		s = s.parent
 	}
 	return s
@@ -74,7 +75,7 @@ type sourceParagraphKey struct {
 	Number     int
 }
 
-func (s *lexicalScope) lookupLocal(raw []byte) (*tokenBinding, lookupState, error) {
+func (s *lexicalScope) lookupLocal(raw []byte, expected ...partOfSpeech) (*tokenBinding, lookupState, error) {
 	// An unresolved local reserves every declared surface form before retries.
 	// This is inheritance, not activation: program/dictionary unit roots
 	// also reserve their local words before looking in the builtin parent.
@@ -89,7 +90,7 @@ func (s *lexicalScope) lookupLocal(raw []byte) (*tokenBinding, lookupState, erro
 	if s.bindings != nil {
 		records = s.bindings.words[newBindingQuery(raw).word]
 	}
-	binding, err := resolveTokenBinding(raw, records)
+	binding, err := resolveTokenBinding(raw, records, expected...)
 	if err != nil || binding == nil {
 		return nil, lookupAbsent, err
 	}

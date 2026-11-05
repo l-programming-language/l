@@ -336,12 +336,18 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 			node.Children = append(node.Children, contracts.Node{Kind: contracts.Branch, Origin: origin, Then: r.contractInstructions(current.Then), Else: r.contractInstructions(current.Else)})
 		case instructionBlock:
 			node.Children = append(node.Children, r.contractBlock(current.Block)...)
-		case instructionCall:
+		case instructionCall, instructionReturn:
 			node.Children = append(node.Children, r.contractInstructions(current.Actions)...)
 			if source.Application != nil && source.Application.verb != nil && source.Application.verb.binding != nil {
 				selected := source.Application.verb.binding.Record
 				scopeMeaning = r.meaning(selected, nil)
 				node.Children = append(node.Children, r.contractNativeUse(selected, selected.ID, r.recordTarget(selected, contracts.Invocation), origin, nil, nil, "value"))
+			}
+			if source.Kind == instructionReturn {
+				for _, value := range current.Results {
+					node.Children = append(node.Children, r.contractValue(value, origin)...)
+				}
+				node.Children = append(node.Children, contracts.Node{Kind: contracts.Return, Origin: origin, Phase: contracts.Invocation})
 			}
 		case instructionAssign:
 			if current.Target != nil && current.Target.Storage != nil && !resource.Unknown {
@@ -433,11 +439,6 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 					}
 				}
 			}
-		case instructionReturn:
-			for _, value := range current.Results {
-				node.Children = append(node.Children, r.contractValue(value, origin)...)
-			}
-			node.Children = append(node.Children, contracts.Node{Kind: contracts.Return, Origin: origin, Phase: contracts.Invocation})
 		default:
 			node.Children = append(node.Children, contracts.Node{Kind: contracts.Native, Native: "unmodeled-instruction:" + source.Kind.String(), Origin: origin})
 		}
@@ -459,6 +460,10 @@ func (r *contractRecorder) contractInstructions(instructions []*orchestrationIns
 		switch source.Kind {
 		case instructionUpdate, instructionInvoke, instructionCall:
 			r.recordContractScope(node, target, origin, firstUse, scopeMeaning)
+		case instructionReturn:
+			if source.Application != nil {
+				r.recordContractScope(node, target, origin, firstUse, scopeMeaning)
+			}
 		}
 	}
 	return result

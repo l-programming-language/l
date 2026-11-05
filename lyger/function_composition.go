@@ -181,12 +181,16 @@ func (e *orchestrationEmitter) functionOperation(function *sourceFunction, membe
 		return nil, lerrors.InvalidConfiguration.Errorf("Function requires its %s composition", member)
 	}
 	if member == "Yield" || member == "Exit" {
-		name := "lSuccess"
-		if member == "Exit" {
-			name = "lExit"
+		if len(e.compilation.definitionTemporaries) == 0 {
+			defer e.compilation.definitionScope()()
 		}
 		if function.Return == nil {
 			return nil, lerrors.InvalidConfiguration.Errorf("Function requires its Return composition")
+		}
+		name := e.compilation.definitionLabel()
+		bindings["Name"] = definitionReferenceArgument(name)
+		if member == "Yield" {
+			bindings["Value"] = definitionReferenceArgument(name)
 		}
 		returned, err := e.compilation.instantiateDefinition(function.Return, map[string]DefinitionArgument{"Statement": definitionReferenceArgument(name)})
 		if err != nil {

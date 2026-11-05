@@ -199,13 +199,13 @@ func (r *contractRecorder) sourceProjection(rec *record, rule *descriptorRule) c
 	projection.Before, projection.After = before, before
 	projection.LoweringObligations = []contracts.Obligation{{ID: contracts.StableID("source-lowering", meaning), Claim: contracts.Claim{Predicate: contracts.Predicate{Kind: "native_lowering_conformance"}, Target: target, Scope: "implementation", Phase: contracts.Invocation}, Status: contracts.Unresolved, Reason: "source topology and parameter forwarding do not establish executable template behavior, callback demand or native resource/lifetime conformance", Origin: origin}}
 	var delta *constructionNode
-	var err error
-	if rule.Template != nil {
+	sourceWrapper, err := r.compilation.sourceDescriptorObject(rule)
+	if err == nil && (rule.Template != nil || sourceWrapper != nil) {
 		// The real template-rule branch only appends a wrapper. Its described
 		// object's other spelling is not a constructor mutation.
 		delta = &constructionNode{Nominal: rule.Target.String(), Source: rule.Object, Wrappers: []*descriptorRule{rule}}
 		delta.contractWrite("wrappers", rule.Object.noun, true)
-	} else {
+	} else if err == nil {
 		delta, err = r.compilation.constructObjectMode(rule.Object, make(map[*descriptorRule]bool), true)
 	}
 	if err != nil {

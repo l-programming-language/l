@@ -253,6 +253,7 @@ func planSourceScopes(statements []*lStatement, memory map[string]*record, occur
 		}
 		incoming := paragraphs[key]
 		declarations, directive := scopeDeclarations(statement, incoming)
+		reservations := reserveSignatureDeclarations(statement, declarations)
 		ordered := scopedStatement{Statement: statement, Scope: environment, Order: order, Source: source, IncomingSubjectID: incoming.id, IncomingSubjectToken: incoming.token, Declarations: declarations}
 		var arguments []scopedSubject
 		for index, current := range statement.tokens {
@@ -287,8 +288,8 @@ func planSourceScopes(statements []*lStatement, memory map[string]*record, occur
 		}
 		ordered.Scope = environment
 		plan.Ordered = append(plan.Ordered, ordered)
-		for index := range declarations {
-			declaration := &declarations[index]
+		for index := range reservations {
+			declaration := &reservations[index]
 			declaration.Scope = environment
 			if declaration.TokenIndex > 0 {
 				prior := statement.tokens[declaration.TokenIndex-1]

@@ -110,7 +110,11 @@ func (c *Compilation) instantiateDefinition(rec *record, arguments map[string]De
 				continue
 			}
 			matched = true
-			if rule.Template != nil {
+			sourceWrapper, err := c.sourceDescriptorObject(rule)
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			if rule.Template != nil || sourceWrapper != nil {
 				node.Wrappers = append(node.Wrappers, rule)
 				continue
 			}
@@ -172,9 +176,20 @@ func (c *Compilation) namedObjectArgument(object *objectGram, arguments map[stri
 }
 
 func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local map[string]DefinitionArgument, localUsed map[string]bool, active map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
-	wrappers, selected, err := constructionTemplates(node)
+	wrappers, selected, err := c.constructionTemplates(node)
 	if err != nil {
 		return DefinitionInstance{}, err
+	}
+	var before []DefinitionInstance
+	var parameterTemplate *DefinitionTemplate
+	if selected >= 0 {
+		parameterTemplate = wrappers[selected]
+	}
+	if len(wrappers) > 0 {
+		values, local, before, err = c.bindWrapperOperands(node.Definition, parameterTemplate, values, local)
+		if err != nil {
+			return DefinitionInstance{}, err
+		}
 	}
 	var instance DefinitionInstance
 	if selected < 0 {
@@ -191,32 +206,64 @@ func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
+	if node.Name != "" && instance.result == nil {
+		template, templateErr := c.recordTemplate(node.Definition)
+		if templateErr != nil {
+			return DefinitionInstance{}, templateErr
+		}
+		if template != nil && len(template.Slots) > 0 && template.Slots[0].Type == "Label" {
+			result := definitionReferenceArgument(node.Name)
+			if node.Source != nil {
+				result.source = c.operandSource(node.Source.noun)
+			}
+			instance.result = &result
+		}
+	}
 	for i := selected - 1; i >= 0; i-- {
 		wrapper := wrappers[i]
-		bindings := map[string]DefinitionArgument{wrapper.Slots[0].Name: {Kind: definitionArgDefinition.String(), Definition: &instance}}
-		instance, err = c.instantiateTemplate(wrapper, bindings)
+		if wrapper == nil {
+			arguments := values
+			if len(arguments) == 0 {
+				arguments, err = c.namedDescriptorArguments(node.Definition, parameterTemplate, local)
+				if err != nil {
+					return DefinitionInstance{}, err
+				}
+			}
+			instance, err = c.instantiateSourceDescriptor(node.Wrappers[i], instance, arguments, node.Name, active, nil)
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			continue
+		}
+		instance, err = c.instantiateDescriptorWrapper(node.Wrappers[i], wrapper, instance, local, localUsed)
 		if err != nil {
 			return DefinitionInstance{}, err
 		}
 	}
+	instance.before = append(before, instance.before...)
 	instance.Symbol = node.Definition.ID
 	instance.definition = node.Definition
 	return instance, nil
 }
 
-func constructionTemplates(node *constructionNode) ([]*DefinitionTemplate, int, error) {
+func (c *Compilation) constructionTemplates(node *constructionNode) ([]*DefinitionTemplate, int, error) {
 	var err error
 	wrappers := make([]*DefinitionTemplate, len(node.Wrappers))
 	selected := -1
 	for i, rule := range node.Wrappers {
+		if rule.Template == nil {
+			continue
+		}
 		wrappers[i], err = ParseDefinitionTemplate(rule.Template.rawBytes, rule.Source.source.Span)
 		if err != nil {
 			return nil, -1, err
 		}
 		wrapper := wrappers[i]
-		nominal := rule.Target.String()
-		nominal = nominal[strings.LastIndex(nominal, ".")+1:]
-		if len(wrapper.Slots) != 1 || wrapper.Slots[0].Type != "" || !strings.EqualFold(wrapper.Slots[0].Name, nominal) {
+		base, err := c.descriptorBaseSlot(rule, wrapper)
+		if err != nil {
+			return nil, -1, err
+		}
+		if base == "" {
 			if selected >= 0 {
 				return nil, -1, lerrors.InvalidInput.Errorf("constructor %s has competing descriptor definitions", node.Nominal)
 			}
@@ -224,6 +271,79 @@ func constructionTemplates(node *constructionNode) ([]*DefinitionTemplate, int, 
 		}
 	}
 	return wrappers, selected, nil
+}
+
+// A wrapper refers to its base by a word from the target's canonical family.
+// The rule's lexical environment owns aliases and inflections; a same-spelled
+// foreign declaration is not the original target.
+func (c *Compilation) descriptorBaseSlot(rule *descriptorRule, wrapper *DefinitionTemplate) (string, error) {
+	base := ""
+	for _, slot := range wrapper.Slots {
+		if slot.Type != "" {
+			continue
+		}
+		matches := false
+		if rule.Target.definition == nil {
+			matches = strings.EqualFold(slot.Name, rule.Target.String())
+		} else if rule.Object != nil && rule.Object.noun != nil {
+			query := &token{rawBytes: []byte(slot.Name), scope: rule.Object.noun.scope}
+			binding, _, err := (semanticResolver{scopes: c.Scope, semantics: c.Semantics}).lookup(query)
+			if err != nil {
+				return "", err
+			}
+			if binding != nil {
+				record, err := canonicalRecord(binding.Record, c.Semantics.Aliases)
+				if err != nil {
+					return "", err
+				}
+				matches = record == rule.Target.definition
+			}
+		}
+		if matches {
+			if base != "" {
+				return "", lerrors.InvalidInput.Errorf("descriptor for %s has multiple base parameters", rule.Target)
+			}
+			base = slot.Name
+		}
+	}
+	return base, nil
+}
+
+func (c *Compilation) instantiateDescriptorWrapper(rule *descriptorRule, wrapper *DefinitionTemplate, base DefinitionInstance, local map[string]DefinitionArgument, used map[string]bool) (DefinitionInstance, error) {
+	baseSlot, err := c.descriptorBaseSlot(rule, wrapper)
+	if err != nil {
+		return DefinitionInstance{}, err
+	}
+	bindings := make(map[string]DefinitionArgument, len(wrapper.Slots))
+	for _, slot := range wrapper.Slots {
+		if slot.Name == baseSlot {
+			bindings[slot.Name] = DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &base}
+			continue
+		}
+		name := slot.Name
+		if _, ok := local[name]; !ok {
+			name = ""
+			for candidate := range local {
+				if strings.EqualFold(candidate, slot.Name) {
+					if name != "" {
+						return DefinitionInstance{}, lerrors.AmbiguousReference.Errorf("descriptor parameter %s matches multiple input bindings", slot.Name)
+					}
+					name = candidate
+				}
+			}
+		}
+		if argument, ok := local[name]; ok {
+			bindings[slot.Name] = argument
+			if used != nil {
+				used[name] = true
+			}
+		}
+	}
+	instance, err := c.instantiateTemplate(wrapper, bindings)
+	if err == nil && instance.result == nil {
+		instance.result = base.result
+	}
+	return instance, err
 }
 
 // Callable structure follows authored constructors. This borrows the selected
@@ -250,7 +370,7 @@ func (c *Compilation) callableTemplate(rec *record, active map[*record]bool) (*D
 	if err != nil || template == nil || !template.IsFunction() {
 		return nil, err
 	}
-	wrappers, selected, err := constructionTemplates(node)
+	wrappers, selected, err := c.constructionTemplates(node)
 	if err != nil {
 		return nil, err
 	}

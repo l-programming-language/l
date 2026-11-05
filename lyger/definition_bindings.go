@@ -73,6 +73,7 @@ type DefinitionArgument struct {
 	reference    string
 	atoms        *[]DefinitionArgument
 	typeAtom     string
+	processType  *DefinitionArgument // declared type of a structured Process input; never an executable operand
 	index        *uint64
 	sequence     []DefinitionInstance
 	source       SourceSpan
@@ -89,6 +90,7 @@ type DefinitionBinding struct {
 // DefinitionInstance owns fresh output and an argument ledger. Expression is
 // a glyph expression; Words preserves an explicit word/sentence grouping.
 type DefinitionInstance struct {
+	inputs             []DefinitionArgument // lexical parameters awaiting a structured pattern/iteration owner
 	result             *DefinitionArgument
 	before             []DefinitionInstance
 	Symbol             string  // source-defined spelling, retained for diagnostics
@@ -111,6 +113,8 @@ type definitionPart struct {
 // DefinitionTemplate retains the raw source prototype. Instantiation uses its
 // parsed private parts and never substitutes into or updates the prototype.
 type DefinitionTemplate struct {
+	scopedLabels   map[string]bool
+	scopedIndex    string
 	Original       []byte
 	Span           SourceSpan
 	Slots          []DefinitionSlot
@@ -276,6 +280,8 @@ func (t *DefinitionTemplate) parseParts(source string) ([]definitionPart, error)
 			break
 		}
 		metadata := source[start:end]
+		pattern := strings.TrimSpace(source[:start]) == "E"
+		iteration := start > 0 && source[start-1] == 'X'
 		for {
 			opening := strings.Index(metadata, "<@")
 			if opening < 0 {
@@ -286,7 +292,21 @@ func (t *DefinitionTemplate) parseParts(source string) ([]definitionPart, error)
 				break
 			}
 			closing += opening + 2
-			t.metadataSlots[strings.SplitN(metadata[opening+2:closing], "|", 2)[0]] = true
+			fields := strings.SplitN(metadata[opening+2:closing], "|", 2)
+			t.metadataSlots[fields[0]] = true
+			field := metadata[:opening]
+			if comma := strings.LastIndexByte(field, ','); comma >= 0 {
+				field = field[comma+1:]
+			}
+			if len(fields) == 2 && fields[1] == "Label" && (pattern || iteration && (strings.Contains(field, "Key:") || strings.Contains(field, "Index:"))) {
+				if t.scopedLabels == nil {
+					t.scopedLabels = make(map[string]bool)
+				}
+				t.scopedLabels[fields[0]] = true
+				if iteration && strings.Contains(field, "Index:") {
+					t.scopedIndex = fields[0]
+				}
+			}
 			metadata = metadata[closing+2:]
 		}
 		position = end + 2
@@ -461,17 +481,23 @@ func (argument DefinitionArgument) orderedSequence() (DefinitionArgument, []Defi
 		if child.Expression != argument.Syllables[i] {
 			return argument, nil
 		}
-		if child.sequence == nil {
-			children = append(children, child)
-		} else {
-			children = append(children, child.sequence...)
-		}
+		children = appendDefinitionSequence(children, child)
 	}
 	argument.Syllables = make([]string, len(children))
 	for i, child := range children {
 		argument.Syllables[i] = child.Expression
 	}
 	return argument, children
+}
+
+func appendDefinitionSequence(children []DefinitionInstance, child DefinitionInstance) []DefinitionInstance {
+	if child.sequence == nil {
+		return append(children, child)
+	}
+	for _, step := range child.sequence {
+		children = appendDefinitionSequence(children, step)
+	}
+	return children
 }
 
 // Source wrappers retain the same proof only when all their authored actions
@@ -482,7 +508,9 @@ func pureDefinitionSequence(actions []DefinitionInstance) []DefinitionInstance {
 		if action.sequence == nil {
 			return nil
 		}
-		children = append(children, action.sequence...)
+		for _, step := range definitionSteps(action) {
+			children = appendDefinitionSequence(children, step)
+		}
 	}
 	return children
 }
@@ -1102,7 +1130,8 @@ func normalizeDefinitionGroups(source string) (string, error) {
 			case '(':
 				// A sibling's transparent grouping does not introduce a child
 				// level. Groups after ^ still own their complete child sequence.
-				sameLevel := strings.HasSuffix(strings.TrimSpace(output.String()), "*")
+				prefix := strings.TrimSpace(output.String())
+				sameLevel := prefix == "" || strings.HasSuffix(prefix, "*")
 				inner, many, err := group(true)
 				if err != nil {
 					return "", false, err
@@ -1111,6 +1140,9 @@ func normalizeDefinitionGroups(source string) (string, error) {
 					output.WriteByte('(')
 				}
 				output.WriteString(inner)
+				if many && sameLevel {
+					siblings = true
+				}
 				if many && !sameLevel {
 					output.WriteByte(')')
 				}

@@ -124,7 +124,11 @@ func (c *Compilation) constructObjectMode(obj *objectGram, active map[*descripto
 				before = cloneContractConstruction(node)
 				c.contractRecorder.descriptors = append(c.contractRecorder.descriptors, contractDescriptorUse{Token: adjective, Rule: rule, Target: node})
 			}
-			if rule.Template != nil {
+			sourceWrapper, err := c.sourceDescriptorObject(rule)
+			if err != nil {
+				return nil, err
+			}
+			if rule.Template != nil || sourceWrapper != nil {
 				node.Wrappers = append(node.Wrappers, rule)
 				node.contractWrite("wrappers", adjective, symbolic || c.contractRecorder != nil)
 				if before != nil {
@@ -171,7 +175,10 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 		return nil
 	}
 	if phrase.gType == "phrase.signature" {
-		node.InputsDefined, node.OutputsDefined = true, true
+		for _, marker := range phrase.markers {
+			node.InputsDefined = node.InputsDefined || marker.hasRole("noun", "functional.inflective")
+			node.OutputsDefined = node.OutputsDefined || marker.hasRole("noun", "functional.deflective")
+		}
 		node.contractWrite("inputs", node.Source.noun, symbolic || c.contractRecorder != nil)
 		node.contractWrite("outputs", node.Source.noun, symbolic || c.contractRecorder != nil)
 		for _, input := range phrase.subjects {
@@ -208,7 +215,7 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 				node.Dependencies = append(node.Dependencies, *dependency)
 			}
 		}
-		return nil
+		return c.constructRelationsMode(node, phrase.phrase, active, symbolic)
 	}
 	association := false
 	for _, prep := range phrase.prepositions {

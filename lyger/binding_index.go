@@ -59,7 +59,7 @@ func (s *lexicalScope) storeBinding(key string, rec *record) {
 	}
 }
 
-func (p *scopePlan) resolveMemberBinding(owner *record, raw []byte) (*tokenBinding, error) {
+func (p *scopePlan) resolveMemberBinding(owner *record, raw []byte, expected ...partOfSpeech) (*tokenBinding, error) {
 	records := owner.members
 	if p != nil && p.memberBindings != nil {
 		index := p.memberBindings[owner]
@@ -69,7 +69,7 @@ func (p *scopePlan) resolveMemberBinding(owner *record, raw []byte) (*tokenBindi
 		}
 		records = index.words[newBindingQuery(raw).word]
 	}
-	return resolveTokenBinding(raw, records)
+	return resolveTokenBinding(raw, records, expected...)
 }
 
 // Semantic analysis has a single publication path. Drop its indexes when it

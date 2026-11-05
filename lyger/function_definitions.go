@@ -1,19 +1,23 @@
 package Lyger
 
 import (
-	"github.com/l-programming-language/l/lerrors"
 	"strconv"
 	"strings"
+
+	"github.com/l-programming-language/l/lerrors"
 )
 
 // A local constructor declaration names its result through the selected
 // definition's existing name slot. The binding is lexical and source-owned.
 func (c *Compilation) prepareDefinitionBindingSite(statement *lStatement, site registrationSite, prepared *statementRegistration) (bool, error) {
+	if site.parameter || site.isDescriptor() {
+		return false, nil
+	}
 	target, err := site.target()
 	if err != nil {
 		return false, err
 	}
-	if target == nil || target.scope == nil || target.scope.function == nil || !target.scope.function.Native || target.scope.function.Header == statement {
+	if target == nil || target.scope == nil || target.scope.kind != lexicalProcess && (target.scope.function == nil || !target.scope.function.Native || target.scope.function.Header == statement) {
 		return false, nil
 	}
 	object := site.valueObject()
@@ -106,6 +110,7 @@ func (c *Compilation) functionReferenceArgument(object *objectGram, active, dyna
 }
 
 func (c *Compilation) functionDefinition(function *sourceFunction, active, dynamic map[*record]bool) (result DefinitionInstance, resultErr error) {
+	defer c.withDefinitionReturn(functionReturnContext(function))()
 	defer func() {
 		if resultErr == nil && c.contractRecorder != nil {
 			c.contractRecorder.recordLowering(function.Record, result, nil)

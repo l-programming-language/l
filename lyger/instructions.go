@@ -331,10 +331,15 @@ func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) 
 		} else if !site.isAlias() && !site.isDescriptor() {
 			current = ctx.newInstruction(instructionCall)
 			current.Application, current.Synchronous = clause, true
+			current.Function = ctx.function
 			if clause.verb == nil || clause.verb.binding == nil {
 				return nil, lerrors.UnresolvedReference.Errorf("source operation has no definition")
 			}
-			if ctx.function.bindsReturn(clause.verb) {
+			returns, err := b.sourceActionReturns(clause, functionReturnContext(ctx.function), make(map[*record]bool))
+			if err != nil {
+				return nil, err
+			}
+			if returns {
 				current.Kind = instructionReturn
 			}
 		}
@@ -368,8 +373,14 @@ func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) 
 	if clause.verb == nil {
 		return nil, lerrors.Internal.Errorf("instruction clause %s has no verb", clause.sType)
 	}
-	if clause.verb.isFunctionReturn() {
-		return b.functionOperation(clause, ctx, instructionReturn)
+	if clause.verb.binding != nil {
+		_, isReturn, err := sourceReturnBinding(b.semantics, clause.verb, functionReturnContext(ctx.function))
+		if err != nil {
+			return nil, err
+		}
+		if isReturn {
+			return b.functionOperation(clause, ctx, instructionReturn)
+		}
 	}
 	if clause.verb.binding != nil && clause.verb.binding.Record.isFunction() {
 		return b.functionOperation(clause, ctx, instructionInvoke)
