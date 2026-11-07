@@ -44,7 +44,7 @@ Use new documentation-only `.l` fragments only when the maintained example is em
 
 ## Update coverage and snapshots
 
-The coverage manifest connects inventory entries to meaningful documentation anchors and source/test evidence. Mechanical extraction is suitable for JSON grammar rules, vocabulary records, stdlib index entries and known source-derived CLI help. Public visibility, overload behavior, type semantics and operational support require reviewed mappings to frontend behavior and witnesses.
+The coverage manifest connects inventory entries to meaningful documentation anchors and source/test evidence. Mechanical extraction is suitable for JSON grammar rules, vocabulary records, root dictionary-registry entries and known source-derived CLI help. Public visibility, overload behavior, type semantics and operational support require reviewed mappings to frontend behavior and witnesses. Include foundational and runtime entries in coverage while preserving their internal classification; registry membership does not add them to the public standard-library catalog.
 
 After relevant source changes, run `npm run references:check` from `website/`. A mismatch must lead to review of the affected prose and mappings. Use `npm run references:generate` to refresh mechanical snapshots only after that review; changing a fingerprint alone cannot establish semantic correctness.
 

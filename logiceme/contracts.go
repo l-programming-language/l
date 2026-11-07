@@ -113,7 +113,7 @@ func prepareContractGeneration(input []byte, system SegmentalSystem, templates m
 			return nil, err
 		}
 		if options.IncludeRuntime && i == 0 {
-			add(app.Name+"/runtime-finalization", "implicit-runtime-lifecycle", target, templates["runtime/main.lu"], contracts.Cleanup)
+			add(app.Name+"/runtime-finalization", "implicit-runtime-lifecycle", target, templates["runtime/main.rs"], contracts.Cleanup)
 		}
 	}
 	var names []string

@@ -188,8 +188,10 @@ library targets; native EA contents remain opaque. See the
 [topology contract](../builtins/README.md#frontend-topology-and-library-packages).
 
 Validate normalized final paths, duplicates and reserved support collisions.
-Do not infer cross-App modules. Keep source bundles atomic on failure. Support
-templates may contain complete runtime implementations; segment templates may not.
+Do not infer cross-App modules. Keep source bundles atomic on failure. Runtime
+policy is composed from L source into `runtime/generated/`; `runtime/rust/`
+retains native executor and host/platform inputs. Non-runtime support templates
+own configuration and packaging. Segment templates do not contain runtime policy.
 
 Each Rust package has a Cargo manifest. Explicit topology supports binary targets
 and a sole library-only package. A library-only package has declared sources and
@@ -214,6 +216,8 @@ runtime library under the [runtime selection contract](../docs/cli-build.md#sour
 It selects the runtime import before rendering the header, then links the entry
 wrapper. Allocated package identities and dependency paths stay outside AML
 metadata. Ordinary `Evaluate`/`IncludeRuntime` retain inline-runtime bundles.
+Both paths select the same native inputs and generated composition from the
+complete resource provider, without probing obsolete resource paths.
 
 The runtime wrapper supplies configuration startup before creating Tokio and
 executes the composed future through Runtime supervision. Plain composed entries

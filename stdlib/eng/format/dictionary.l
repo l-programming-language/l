@@ -69,7 +69,7 @@ Return a New Agreement of Equal and Aligned.
 Create "Ten" as a New Wide Integer of 10.
 Create "Rest" as a New Remainder of Coefficient and Ten.
 Create "Zero" as a New Wide Integer of 0.
-Create "Original" as a New Pair of Coefficient and Exponent.
+Create "Original" as a New Storage's Tuple of Coefficient and Exponent.
 If Rest isnt Zero, Return Original.
 Create "Shortened" as a New Quotient of Coefficient and Ten.
 Create "One" as a New Integer of 1.
@@ -118,15 +118,15 @@ Return a New Encoding of Buffer.
 
     Create Formatting's "Render|-s|-ed|-ing|-er" as a Generic Function with Inputs of "digits" as `&str` and "exponent" as `&str` and "value" as `f64` and Outputs of `Vec<u8>`.
 Create "Reading" as a New Parser of Exponent.
-Create "Power" as a New Contents of Reading and `native finite float exponent`.
+Create "Power" as a New Storage's Result's Expecter of Reading and `native finite float exponent`.
 Create "Magnitude" as a New Trimmer of Digits and `-`.
 Create "Separated" as a New Splitter of Magnitude and `.`.
-Create "Default" as a New Pair of Magnitude and ``.
+Create "Default" as a New Storage's Tuple of Magnitude and ``.
 Create "Size" as a New Length of a New Second of a New Alternative of Separated and Default.
 Create "Places" as a New Integer of Size.
 Create "Decimal" as a New Difference of Power and Places.
 Create "Amount" as a New Wide Parser of a New Replacement of Magnitude and `.` and ``.
-Create "Whole" as a New Contents of Amount and `native finite float digits`.
+Create "Whole" as a New Storage's Result's Expecter of Amount and `native finite float digits`.
 Create "Two" as a New Wide Integer of 2.
 Create "Rest" as a New Remainder of Whole and Two.
 Create "One" as a New Wide Integer of 1.
@@ -152,7 +152,7 @@ Create "Spelling" as a New Notation of Value.
 Create "Separated" as a New Splitter of Spelling and `e`.
 Create "Exists" as a New Presence of Separated.
 If Exists is false, Create "Encoded" as a New Encoding of Spelling and then Return Encoded.
-Create "Components" as a New Contents of Separated and `native scientific notation`.
+Create "Components" as a New Storage's Result's Expecter of Separated and `native scientific notation`.
 Create "Characters" as a New First of Components.
 Create "Order" as a New Second of Components.
 Return a New Formatting's Renderer of Characters and Order and Value.

@@ -10,7 +10,7 @@ Return a New Runtime's Error's Explainer of `terminate application leader` and E
 
     Create Runtime's Supervision's "Terminate|-s|-d|--ing|--or" as a Generic `supervision_terminate_leader` Function with Inputs of "pid" as `Option<u32>` and Outputs of `Result<()>`.
 Create "Available" as a New Presence of Pid.
-If Available, Create "Leader" as a New Contents of Pid and `supervised child pid` and then Create "Signalled" as a New Runtime's Supervision's Signaler of Leader and then Create "Result" as a New Runtime's Explainer of Signalled and Runtime's Supervision's Explainer and then Return Result.
+If Available, Create "Leader" as a New Storage's Result's Expecter of Pid and `supervised child pid` and then Create "Signalled" as a New Runtime's Supervision's Signaler of Leader and then Create "Result" as a New Runtime's Explainer of Signalled and Runtime's Supervision's Explainer and then Return Result.
 Return a New Success of a New Nothing.
 
     Create Runtime's Supervision's "Poll|-s|-ed|-ing|-er" as a Generic Pending `supervision_poll` Function with Inputs of "wait" as `&mut crate::runtime::host::Wait<'_>` and "requests" as `&mut tokio::sync::mpsc::UnboundedReceiver<tokio::sync::oneshot::Sender<Result<()>>>` and "pid" as `Option<u32>` and "result" as `&mut Option<std::io::Result<std::process::ExitStatus>>` and Outputs of `impl std::future::Future<Output = bool> + Send`.
@@ -21,7 +21,7 @@ Create "Waited" as a New Runtime's Valid of Ready.
 If Waited, Create "Primary" as a New Storage's Optional of Ready and then Runtime.Replace Result and Primary and then Return true.
 Create "Received" as a New Runtime's Rejecter of Ready.
 Create "Available" as a New Presence of Received.
-If Available, Create "Reply" as a New Contents of Received and `pending leader request` and then Create "Replyresult" as a New Runtime's Supervision's Terminator of Pid and then Runtime.Supervision.Discard Reply and Replyresult and then Return false.
+If Available, Create "Reply" as a New Storage's Result's Expecter of Received and `pending leader request` and then Create "Replyresult" as a New Runtime's Supervision's Terminator of Pid and then Runtime.Supervision.Discard Reply and Replyresult and then Return false.
 Create "Wrapped" as a New Present of a New Runtime's Completion of Wait.
 Runtime.Replace Result and Wrapped.
 Return true.
@@ -30,7 +30,7 @@ Return true.
 Create "Received" as a New Runtime's Supervision's Reader of Requests.
 Create "Failed" as a New Runtime's Fault of Received.
 If Failed, Return true.
-Create "Reply" as a New Contents of Received and `queued leader request`.
+Create "Reply" as a New Storage's Result's Expecter of Received and `queued leader request`.
 Create "Accepted" as a New Success of a New Nothing.
 Runtime.Supervision.Discard Reply and Accepted.
 Return false.
@@ -47,7 +47,7 @@ Runtime.Repeat a New Process for Runtime.Halting a New Runtime's Completion of
 Runtime.Supervision.Close Incoming.
 Runtime.Repeat a New Process for Runtime.Halting a New Runtime's Supervision's Releaser of Incoming.
 Create "Optional" as a New Runtime's Taker of Result.
-Return a New Contents of Optional and `completed supervisor wait`.
+Return a New Storage's Result's Expecter of Optional and `completed supervisor wait`.
 
 Define Runtime's Supervision's "Stdout" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~take~, Receiver: ~<@Child@>.stdout~|}<DEF>`.
 Define Runtime's Supervision's "Stderr" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~take~, Receiver: ~<@Child@>.stderr~|}<DEF>`.
@@ -64,7 +64,7 @@ Define Runtime's Supervision's "Remove|-s|-d|--ing|-r" to `<DEF>MOB{|Key: ~_~|}^
     Create Runtime's Supervision's "Inspect|-s|-ed|-ing|-or" as a Generic `supervision_status` Function with Inputs of "waited" as `std::io::Result<std::process::ExitStatus>` and "errors" as `&mut Vec<Error>` and Outputs of `Option<i32>`.
 Create "Failed" as a New Runtime's Fault of Waited.
 If Failed, Create "Cause" as a New Runtime's Rejecter of Waited and then Create "Fault" as a New Runtime's Error's Explainer of `wait for application` and Cause and then Runtime.Push Errors and Fault and then Create "Missing" as a New Absent and then Return Missing.
-Create "Status" as a New Contents of Waited and `completed application status`.
+Create "Status" as a New Storage's Result's Expecter of Waited and `completed application status`.
 Create "Success" as a New Runtime's Supervision's Success of Status.
 If Success is false, Create "Description" as a New Runtime's Supervision's Description of Status and then Create "Text" as a New Runtime's Text of Description and then Create "Failure" as a New Runtime's Error's Describer of Text and then Runtime.Push Errors and Failure.
 Return a New Runtime's Supervision's Code of Status.
@@ -90,7 +90,7 @@ Return a New Nothing.
     Create Runtime's Supervision's "Decorate|-s|-d|--ing|--or" as a Generic `supervision_stderr` Function with Inputs of "error" as `Option<Error>` and "bytes" as `&[u8]` and Outputs of `Option<Error>`.
 Create "Available" as a New Presence of Error.
 If Available is false, Return Error.
-Create "Fault" as a New Contents of Error and `joined invocation error`.
+Create "Fault" as a New Storage's Result's Expecter of Error and `joined invocation error`.
 Return a New Present of a New Runtime's Error's Attacher of Fault and Bytes.
 
     Publicly create Runtime's Invocation's "Supervise|-s|-d|--ing|-r" as a Generic Pending `invocation_supervise` Function with Inputs of "value" as `std::sync::Arc<Invocation>` and "process" as `tokio::process::Child` and "requests" as `tokio::sync::mpsc::UnboundedReceiver<tokio::sync::oneshot::Sender<Result<()>>>` and "owner" as `Runtime` and Outputs of `impl std::future::Future<Output = ()> + Send`.
@@ -106,7 +106,7 @@ Create "Mutableref" as a New Storage.Editable Storage's Borrower of Child.
 Create "Wait" as a New Runtime's Supervision's Waiter of Dependencies and Mutableref.
 Create "Waited" as a New Runtime's Completion of a New Runtime's Supervision's Awaiter of Wait, Requests, and Pid.
 Create "Now" as a New Runtime's Now.
-Create "Bounded" as a New Runtime's Invocation's Bounder of Reference and a New Sum of Now and a New Runtime's Duration of a New Unsigned Integer of 2.
+Create "Bounded" as a New Runtime's Invocation's Bounder of Reference and a New Sum of Now and a New Runtime's Duration of a New Storage's Integral of 2 and `u64`.
 Create "Outcompleted" as a New Runtime's Completion of Out.
 Create "Errcompleted" as a New Runtime's Completion of Err.
 Create "Outputcapture" as a New Runtime's Capture's Joiner of Outcompleted and `stdout`.
@@ -117,7 +117,7 @@ Create "Errors" as a New First of Errorcapture.
 Create "Errerror" as a New Second of Errorcapture.
 Create "Cleanup" as a New Runtime's Failure of a New Runtime's Completion of a New Runtime's Invocation's Terminator of Reference and true.
 Create "Available" as a New Presence of Cleanup.
-If Available, Create "Cleanupref" as a New Storage's Referrer of Cleanup and then Create "Fault" as a New Contents of Cleanupref and `present cleanup error` and then Create "Copied" as a New Runtime's Error's Copier of Fault and then Create "Recorded" as a New Runtime's Invocation's Recorder of Reference and Copied.
+If Available, Create "Cleanupref" as a New Storage's Referrer of Cleanup and then Create "Fault" as a New Storage's Result's Expecter of Cleanupref and `present cleanup error` and then Create "Copied" as a New Runtime's Error's Copier of Fault and then Create "Recorded" as a New Runtime's Invocation's Recorder of Reference and Copied.
 Create "Retained" as a New Storage's Borrower of Owner.
 Create "Finished" as a New Runtime's Supervision's Completer of Reference, Retained, Waited, Bytes, Errors, Outerror, Errerror, and Cleanup.
 Return a New Nothing.

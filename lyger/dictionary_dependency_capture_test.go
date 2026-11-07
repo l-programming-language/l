@@ -14,7 +14,7 @@ import (
 func TestDictionaryImportsCannotCaptureCallerAddedMembers(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
 	var index dictionaryIndex
-	if err := json.Unmarshal(files["stdlib/index.json"].Data, &index); err != nil {
+	if err := json.Unmarshal(files["dictionaries.json"].Data, &index); err != nil {
 		t.Fatal(err)
 	}
 	const entry = "stdlib/eng/tools/dictionary.l"
@@ -23,7 +23,7 @@ func TestDictionaryImportsCannotCaptureCallerAddedMembers(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	files["stdlib/index.json"] = &fstest.MapFile{Data: encoded}
+	files["dictionaries.json"] = &fstest.MapFile{Data: encoded}
 	const prefix = "Create \"Tools\" as a Dictionary.\n"
 	files[entry] = &fstest.MapFile{Data: []byte(prefix + "Define Tools's \"Gift\" as `module|`.\n")}
 	cfg := Options{Resources: files}

@@ -151,10 +151,10 @@ func (p *Program) linkBundleSupport(templates map[string][]byte, includeRuntime 
 			// The AML supplies l_main, not another entry point. The fixed
 			// wrapper owns configuration startup and Tokio initialization.
 			if literalEntry {
-				main := append(bytes.Clone(templates["runtime/main.lu"]), '\n')
+				main := append(bytes.Clone(templates["runtime/main.rs"]), '\n')
 				p.Executable.ByteArrays[i][mainIndex] = append(main, p.Executable.ByteArrays[i][mainIndex]...)
 			} else {
-				wrapper := templates["runtime/main.lu"]
+				wrapper := templates["runtime/main.rs"]
 				boundary := bytes.Index(wrapper, []byte(runtimeHeaderBoundary))
 				if boundary < 0 {
 					return lerrors.InvalidConfiguration.Errorf("runtime entry template lacks its generated-body contract boundary")
@@ -276,7 +276,7 @@ func runtimeSupportSource(templates map[string][]byte, name string) []byte {
 		return templates["runtime/runtime.rs"]
 	}
 	if name == "runtime/host" {
-		return templates["runtime/host.lu"]
+		return templates["runtime/host.rs"]
 	}
-	return templates["runtime/"+name+".lu"]
+	return templates["runtime/"+name+".rs"]
 }

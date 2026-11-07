@@ -2,7 +2,7 @@
   "inputs": {
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-    "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
+    "dictionaries.json": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
     "cmd/l/command.go": "fc6e07ba875c7c41e62aec111a2efe12220c5aa19199c061ed3352513d551761",
     "cmd/l/contracts.go": "d9b4adb6d2ca8fde948b67f0041e99257bc18e7da4cbf8bf9e28b08a9cc05dfd",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
@@ -375,15 +375,15 @@
           "dictionary": "IO"
         },
         "format": {
-          "entry": "builtins/runtime/eng/number.l",
+          "entry": "stdlib/eng/format/dictionary.l",
           "dictionary": "Formatting"
         },
         "runtime": {
-          "entry": "builtins/runtime/eng/dictionary.l",
+          "entry": "runtime/eng/dictionary.l",
           "dictionary": "Runtime"
         },
         "storage": {
-          "entry": "stdlib/eng/storage/dictionary.l",
+          "entry": "builtins/eng/storage/dictionary.l",
           "dictionary": "Storage"
         }
       }
@@ -7737,7 +7737,7 @@
       "name": "Bytes",
       "doc": "docs/spec/values.md#byte-and-bytes",
       "classification": 16,
-      "evidenceSet": 283,
+      "evidenceSet": 285,
       "note": 186
     },
     {
@@ -7745,7 +7745,7 @@
       "name": "Pointer",
       "doc": "docs/spec/values.md#pointer",
       "classification": 16,
-      "evidenceSet": 283,
+      "evidenceSet": 286,
       "note": 186
     },
     {
@@ -7809,7 +7809,7 @@
       "name": "Function",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 16,
-      "evidenceSet": 285,
+      "evidenceSet": 287,
       "note": 187
     },
     {
@@ -7833,7 +7833,7 @@
       "name": "List",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 16,
-      "evidenceSet": 283,
+      "evidenceSet": 286,
       "note": 186
     },
     {
@@ -7849,7 +7849,7 @@
       "name": "Error",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 283,
+      "evidenceSet": 288,
       "note": 186
     },
     {
@@ -7881,7 +7881,7 @@
       "name": "Null",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 286,
+      "evidenceSet": 289,
       "note": 186
     },
     {
@@ -7889,21 +7889,21 @@
       "name": "Start",
       "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
       "classification": 17,
-      "evidenceSet": 287
+      "evidenceSet": 290
     },
     {
       "id": "builtin:execute",
       "name": "Execute",
       "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
       "classification": 17,
-      "evidenceSet": 287
+      "evidenceSet": 290
     },
     {
       "id": "builtin:build",
       "name": "Build",
       "doc": "docs/reference/builtins/lifecycle.md#build",
       "classification": 17,
-      "evidenceSet": 288,
+      "evidenceSet": 291,
       "note": 188
     },
     {
@@ -7911,7 +7911,7 @@
       "name": "Run",
       "doc": "docs/reference/builtins/lifecycle.md#run",
       "classification": 17,
-      "evidenceSet": 289,
+      "evidenceSet": 292,
       "note": 188
     },
     {
@@ -7919,7 +7919,7 @@
       "name": "Stop",
       "doc": "docs/reference/builtins/lifecycle.md#stop",
       "classification": 17,
-      "evidenceSet": 290,
+      "evidenceSet": 293,
       "note": 188
     },
     {
@@ -7927,7 +7927,7 @@
       "name": "Await",
       "doc": "docs/reference/builtins/lifecycle.md#await",
       "classification": 17,
-      "evidenceSet": 291,
+      "evidenceSet": 294,
       "note": 188
     },
     {
@@ -7935,21 +7935,21 @@
       "name": "Show",
       "doc": "docs/reference/builtins/lifecycle.md#show",
       "classification": 17,
-      "evidenceSet": 292
+      "evidenceSet": 295
     },
     {
       "id": "builtin:exit",
       "name": "Exit",
       "doc": "docs/reference/builtins/lifecycle.md#exit",
       "classification": 17,
-      "evidenceSet": 293
+      "evidenceSet": 296
     },
     {
       "id": "builtin:output",
       "name": "Output",
       "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
       "classification": 17,
-      "evidenceSet": 294,
+      "evidenceSet": 297,
       "note": 188
     },
     {
@@ -7957,7 +7957,7 @@
       "name": "Error",
       "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
       "classification": 17,
-      "evidenceSet": 295,
+      "evidenceSet": 298,
       "note": 188
     },
     {
@@ -7965,7 +7965,7 @@
       "name": "Process",
       "doc": "docs/reference/builtins/definitions.md#process",
       "classification": 17,
-      "evidenceSet": 296,
+      "evidenceSet": 299,
       "note": 189
     },
     {
@@ -7973,7 +7973,7 @@
       "name": "Function",
       "doc": "docs/reference/builtins/definitions.md#function",
       "classification": 18,
-      "evidenceSet": 297,
+      "evidenceSet": 300,
       "note": 190
     },
     {
@@ -7981,7 +7981,7 @@
       "name": "Function.Return",
       "doc": "docs/reference/builtins/definitions.md#functionreturn",
       "classification": 18,
-      "evidenceSet": 298,
+      "evidenceSet": 301,
       "note": 191
     },
     {
@@ -7989,7 +7989,7 @@
       "name": "Retain",
       "doc": "docs/reference/builtins/definitions.md#retain",
       "classification": 17,
-      "evidenceSet": 299,
+      "evidenceSet": 302,
       "note": 192
     },
     {
@@ -7997,14 +7997,14 @@
       "name": "Objective",
       "doc": "docs/reference/builtins/definitions.md#objective",
       "classification": 17,
-      "evidenceSet": 300
+      "evidenceSet": 303
     },
     {
       "id": "builtin:main",
       "name": "Main",
       "doc": "docs/reference/builtins/definitions.md#main",
       "classification": 17,
-      "evidenceSet": 300,
+      "evidenceSet": 303,
       "note": 193
     },
     {
@@ -8012,63 +8012,63 @@
       "name": "Basic",
       "doc": "docs/reference/builtins/definitions.md#basic",
       "classification": 17,
-      "evidenceSet": 300
+      "evidenceSet": 303
     },
     {
       "id": "builtin:create",
       "name": "Create",
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 17,
-      "evidenceSet": 301
+      "evidenceSet": 304
     },
     {
       "id": "builtin:define",
       "name": "Define",
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 17,
-      "evidenceSet": 302
+      "evidenceSet": 305
     },
     {
       "id": "builtin:describe",
       "name": "Describe",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 17,
-      "evidenceSet": 303
+      "evidenceSet": 306
     },
     {
       "id": "builtin:use",
       "name": "Use",
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "classification": 17,
-      "evidenceSet": 304
+      "evidenceSet": 307
     },
     {
       "id": "builtin:public",
       "name": "Public",
       "doc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 17,
-      "evidenceSet": 305
+      "evidenceSet": 308
     },
     {
       "id": "builtin:publicly",
       "name": "Publicly",
       "doc": "docs/spec/names-and-scope.md#paragraph-scope",
       "classification": 17,
-      "evidenceSet": 305
+      "evidenceSet": 308
     },
     {
       "id": "builtin:new",
       "name": "New",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 17,
-      "evidenceSet": 306
+      "evidenceSet": 309
     },
     {
       "id": "builtin:generic",
       "name": "Generic",
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "classification": 18,
-      "evidenceSet": 307,
+      "evidenceSet": 310,
       "note": 194
     },
     {
@@ -8076,7 +8076,7 @@
       "name": "Input",
       "doc": "docs/reference/builtins/index.md#runtime-members",
       "classification": 18,
-      "evidenceSet": 308,
+      "evidenceSet": 311,
       "note": 195
     },
     {
@@ -8084,7 +8084,7 @@
       "name": "Put",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 17,
-      "evidenceSet": 309,
+      "evidenceSet": 312,
       "note": 196
     },
     {
@@ -8092,7 +8092,7 @@
       "name": "Place",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 17,
-      "evidenceSet": 309,
+      "evidenceSet": 312,
       "note": 196
     },
     {
@@ -8100,7 +8100,7 @@
       "name": "Get",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 310,
+      "evidenceSet": 313,
       "note": 197
     },
     {
@@ -8108,7 +8108,7 @@
       "name": "Take",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 310,
+      "evidenceSet": 313,
       "note": 197
     },
     {
@@ -8116,7 +8116,7 @@
       "name": "Import",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 310,
+      "evidenceSet": 313,
       "note": 197
     },
     {
@@ -8124,7 +8124,7 @@
       "name": "Export",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 19,
-      "evidenceSet": 310,
+      "evidenceSet": 313,
       "note": 197
     },
     {
@@ -8137,7 +8137,7 @@
       },
       "visibility": "namespace",
       "classification": 20,
-      "evidenceSet": 311,
+      "evidenceSet": 314,
       "note": 198
     },
     {
@@ -8161,7 +8161,7 @@
       ],
       "effect": "Writes the selected typed rendering and appends LF; no L return value is declared.",
       "classification": 20,
-      "evidenceSet": 312,
+      "evidenceSet": 315,
       "note": 199
     },
     {
@@ -8179,7 +8179,7 @@
       "argumentRoles": [],
       "effect": "Obtains the standard-output handle; does not lock, write or flush.",
       "classification": 20,
-      "evidenceSet": 313,
+      "evidenceSet": 316,
       "note": 200
     },
     {
@@ -8197,7 +8197,7 @@
       "argumentRoles": [],
       "effect": "Obtains the standard-error handle; does not redirect Print.",
       "classification": 20,
-      "evidenceSet": 313,
+      "evidenceSet": 316,
       "note": 201
     },
     {
@@ -8222,7 +8222,7 @@
       ],
       "effect": "Writes the borrowed byte view and returns std::io::Result<()>; no added LF, lock, flush or panic.",
       "classification": 20,
-      "evidenceSet": 314,
+      "evidenceSet": 317,
       "note": 202
     },
     {
@@ -8242,7 +8242,7 @@
       ],
       "effect": "After payload success, sends LF through the same writer; returns the first error or unit success.",
       "classification": 20,
-      "evidenceSet": 315,
+      "evidenceSet": 318,
       "note": 203
     },
     {
@@ -8266,7 +8266,7 @@
       ],
       "effect": "Requests an explicit native writer flush and returns its IO Result.",
       "classification": 20,
-      "evidenceSet": 314,
+      "evidenceSet": 317,
       "note": 204
     },
     {
@@ -8279,7 +8279,7 @@
       },
       "visibility": "private",
       "classification": 21,
-      "evidenceSet": 316,
+      "evidenceSet": 319,
       "note": 205
     },
     {
@@ -8287,7 +8287,7 @@
       "name": "values-subjects-objects",
       "doc": "docs/spec/grammar.md#values-subjects-and-objects",
       "classification": 22,
-      "evidenceSet": 317,
+      "evidenceSet": 320,
       "note": 206
     },
     {
@@ -8295,7 +8295,7 @@
       "name": "phrases",
       "doc": "docs/spec/grammar.md#phrases",
       "classification": 22,
-      "evidenceSet": 318,
+      "evidenceSet": 321,
       "note": 206
     },
     {
@@ -8303,7 +8303,7 @@
       "name": "declarations",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 319,
+      "evidenceSet": 322,
       "note": 206
     },
     {
@@ -8311,7 +8311,7 @@
       "name": "definitions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 320,
+      "evidenceSet": 323,
       "note": 206
     },
     {
@@ -8319,7 +8319,7 @@
       "name": "descriptors",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 321,
+      "evidenceSet": 324,
       "note": 206
     },
     {
@@ -8327,7 +8327,7 @@
       "name": "aliases-imports",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 322,
+      "evidenceSet": 325,
       "note": 206
     },
     {
@@ -8335,7 +8335,7 @@
       "name": "process-lifecycle",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 23,
-      "evidenceSet": 323,
+      "evidenceSet": 326,
       "note": 188
     },
     {
@@ -8343,7 +8343,7 @@
       "name": "collection-actions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
       "classification": 22,
-      "evidenceSet": 324,
+      "evidenceSet": 327,
       "note": 207
     },
     {
@@ -8351,7 +8351,7 @@
       "name": "conditions",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 22,
-      "evidenceSet": 325,
+      "evidenceSet": 328,
       "note": 206
     },
     {
@@ -8359,7 +8359,7 @@
       "name": "while",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 24,
-      "evidenceSet": 323,
+      "evidenceSet": 326,
       "note": 206
     },
     {
@@ -8367,7 +8367,7 @@
       "name": "joined-conditions",
       "doc": "docs/spec/grammar.md#conditions",
       "classification": 24,
-      "evidenceSet": 323,
+      "evidenceSet": 326,
       "note": 206
     },
     {
@@ -8375,7 +8375,7 @@
       "name": "predicates-statements",
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "classification": 22,
-      "evidenceSet": 323,
+      "evidenceSet": 326,
       "note": 206
     },
     {
@@ -8383,7 +8383,7 @@
       "name": "vocabulary",
       "doc": "docs/spec/grammar.md#vocabulary-reference",
       "classification": 22,
-      "evidenceSet": 326,
+      "evidenceSet": 329,
       "note": 206
     },
     {
@@ -8391,7 +8391,7 @@
       "name": "notation",
       "doc": "docs/spec/grammar.md#configuration-notation",
       "classification": 23,
-      "evidenceSet": 327,
+      "evidenceSet": 330,
       "note": 206
     },
     {
@@ -8399,7 +8399,7 @@
       "name": "matching",
       "doc": "docs/spec/grammar.md#matching-and-ambiguity",
       "classification": 23,
-      "evidenceSet": 328,
+      "evidenceSet": 331,
       "note": 206
     },
     {
@@ -8407,7 +8407,7 @@
       "name": "Invalid zero sentinel",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 16,
-      "evidenceSet": 329,
+      "evidenceSet": 332,
       "note": 208
     },
     {
@@ -8415,7 +8415,7 @@
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "classification": 13,
-      "evidenceSet": 330,
+      "evidenceSet": 333,
       "note": 209
     },
     {
@@ -8423,7 +8423,7 @@
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "classification": 16,
-      "evidenceSet": 331,
+      "evidenceSet": 334,
       "note": 210
     },
     {
@@ -8431,7 +8431,7 @@
       "name": "Error",
       "doc": "docs/spec/execution.md#output-and-error",
       "classification": 13,
-      "evidenceSet": 267,
+      "evidenceSet": 335,
       "note": 211
     },
     {
@@ -8439,7 +8439,7 @@
       "name": "runtime-captures",
       "doc": "docs/spec/names-and-scope.md#runtime-storage-and-definite-assignment",
       "classification": 23,
-      "evidenceSet": 332,
+      "evidenceSet": 336,
       "note": 212
     },
     {
@@ -8452,7 +8452,7 @@
       },
       "visibility": "namespace",
       "classification": 21,
-      "evidenceSet": 333,
+      "evidenceSet": 337,
       "note": 213
     },
     {
@@ -8465,7 +8465,7 @@
       },
       "visibility": "namespace",
       "classification": 21,
-      "evidenceSet": 334,
+      "evidenceSet": 338,
       "note": 214
     },
     {
@@ -8478,7 +8478,7 @@
       },
       "visibility": "namespace",
       "classification": 21,
-      "evidenceSet": 335,
+      "evidenceSet": 339,
       "note": 215
     },
     {
@@ -8486,238 +8486,238 @@
       "name": "B / declare",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 25,
-      "evidenceSet": 336
+      "evidenceSet": 340
     },
     {
       "id": "logeme.segment.A",
       "name": "A / declaration",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 25,
-      "evidenceSet": 337
+      "evidenceSet": 341
     },
     {
       "id": "logeme.segment.D",
       "name": "D / calculate",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 25,
-      "evidenceSet": 338
+      "evidenceSet": 342
     },
     {
       "id": "logeme.segment.E",
       "name": "E / calculation",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 25,
-      "evidenceSet": 339
+      "evidenceSet": 343
     },
     {
       "id": "logeme.segment.G",
       "name": "G / evaluate",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 25,
-      "evidenceSet": 340
+      "evidenceSet": 344
     },
     {
       "id": "logeme.segment.I",
       "name": "I / evaluation",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 25,
-      "evidenceSet": 341
+      "evidenceSet": 345
     },
     {
       "id": "logeme.segment.F",
       "name": "F / define",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 25,
-      "evidenceSet": 342
+      "evidenceSet": 346
     },
     {
       "id": "logeme.segment.O",
       "name": "O / definition",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 25,
-      "evidenceSet": 343
+      "evidenceSet": 347
     },
     {
       "id": "logeme.segment.H",
       "name": "H / describe",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 344
+      "evidenceSet": 348
     },
     {
       "id": "logeme.segment.U",
       "name": "U / description",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 345
+      "evidenceSet": 349
     },
     {
       "id": "logeme.segment.K",
       "name": "K / operate",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 25,
-      "evidenceSet": 346
+      "evidenceSet": 350
     },
     {
       "id": "logeme.segment.W",
       "name": "W / operation",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 25,
-      "evidenceSet": 347
+      "evidenceSet": 351
     },
     {
       "id": "logeme.segment.P",
       "name": "P / iterate",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 25,
-      "evidenceSet": 348
+      "evidenceSet": 352
     },
     {
       "id": "logeme.segment.X",
       "name": "X / iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 25,
-      "evidenceSet": 349
+      "evidenceSet": 353
     },
     {
       "id": "logeme.segment.M",
       "name": "M / instantiate",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 25,
-      "evidenceSet": 350
+      "evidenceSet": 354
     },
     {
       "id": "logeme.segment.Y",
       "name": "Y / instantiation",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 25,
-      "evidenceSet": 351
+      "evidenceSet": 355
     },
     {
       "id": "logeme.segment.C",
       "name": "C / execute",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 352
+      "evidenceSet": 356
     },
     {
       "id": "logeme.segment.V",
       "name": "V / execution",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 353
+      "evidenceSet": 357
     },
     {
       "id": "logeme.family.declaration-adapters",
       "name": "A/BA/DA/KA/HA/GA/MA/PA",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 26,
-      "evidenceSet": 354
+      "evidenceSet": 358
     },
     {
       "id": "logeme.family.definition-adapters",
       "name": "O/OB/FO/FOB/KO/KOB/DO/DOB/GO/GOB/MO/MOB/CO/COB/BO/BOD/BOK/BOH/BOG/BOM/BOP/BOC",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 26,
-      "evidenceSet": 355
+      "evidenceSet": 359
     },
     {
       "id": "logeme.family.literal-file",
       "name": "EA complete literal file",
       "doc": "docs/reference/logemes/declarations.md#ea-complete-literal-file",
       "classification": 26,
-      "evidenceSet": 356
+      "evidenceSet": 360
     },
     {
       "id": "logeme.family.communication",
       "name": "CE communication calculations",
       "doc": "docs/reference/logemes/calculations.md#communication-calculations",
       "classification": 25,
-      "evidenceSet": 357
+      "evidenceSet": 361
     },
     {
       "id": "logeme.family.description",
       "name": "U/MU description and updates",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 25,
-      "evidenceSet": 358
+      "evidenceSet": 362
     },
     {
       "id": "logeme.family.selection",
       "name": "I/GE/GI ordered selection",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 26,
-      "evidenceSet": 359
+      "evidenceSet": 363
     },
     {
       "id": "logeme.family.readiness",
       "name": "CI/BI/OC/DOC readiness selection",
       "doc": "docs/reference/logemes/selection.md#ci-and-bi-bounded-readiness-selection",
       "classification": 25,
-      "evidenceSet": 360
+      "evidenceSet": 364
     },
     {
       "id": "logeme.family.callables",
       "name": "W/FW/BW/KY/KO/KOB callables",
       "doc": "docs/reference/logemes/callables.md#invocation-through-ky",
       "classification": 25,
-      "evidenceSet": 361
+      "evidenceSet": 365
     },
     {
       "id": "logeme.family.iteration",
       "name": "X/I/OG/DOG/PO four-category iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 26,
-      "evidenceSet": 362
+      "evidenceSet": 366
     },
     {
       "id": "logeme.family.unsupported-loops",
       "name": "Three-part loops",
       "doc": "docs/reference/logemes/iteration.md#unsupported-forms-and-native-failures",
       "classification": 27,
-      "evidenceSet": 363
+      "evidenceSet": 367
     },
     {
       "id": "logeme.family.instantiation",
       "name": "Y/HY empty and populated records",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 26,
-      "evidenceSet": 364
+      "evidenceSet": 368
     },
     {
       "id": "logeme.family.traits",
       "name": "MY required signatures",
       "doc": "docs/reference/logemes/instantiation.md#required-trait-signatures",
       "classification": 25,
-      "evidenceSet": 365
+      "evidenceSet": 369
     },
     {
       "id": "logeme.family.generics",
       "name": "Local FW/HY/MY/Y/named KY parameters",
       "doc": "docs/reference/logemes/metadata.md#lifetimes-and-generictypes",
       "classification": 25,
-      "evidenceSet": 366
+      "evidenceSet": 370
     },
     {
       "id": "logeme.family.scheduling",
       "name": "V/MV scheduling",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 25,
-      "evidenceSet": 367
+      "evidenceSet": 371
     },
     {
       "id": "logeme.family.deferred",
       "name": "Deferred metadata",
       "doc": "docs/reference/logemes/instantiation.md#deferred-is-rejected",
       "classification": 27,
-      "evidenceSet": 363
+      "evidenceSet": 367
     },
     {
       "id": "logeme.family.futures",
       "name": "CV/DV/CO/COB future composition",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 28,
-      "evidenceSet": 368,
+      "evidenceSet": 372,
       "note": 216
     }
   ],
@@ -8937,8 +8937,8 @@
     "Error values can be constructed, stored, captured and placed in typed containers. App Error is optional until inspected; extracting an absent Error rejects. Direct Show remains unsupported.",
     "Activation-specific environments snapshot ordinary captures and retain shared Pointer targets. Actual arguments evaluate once in caller scope before callee entry; copies retain environments until last-owner release. App-process capture transport is not inferred.",
     "Explicitly importable implementation vocabulary, not an implicit builtin or public dictionary catalog. Source compositions own typed traversal, result binding, lazy failures, release sequencing, byte appends and caller returns. Native allocation, blocking and destructor costs remain separate obligations.",
-    "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog.",
-    "IO and Runtime select one canonical formatting Function and its source-owned dependencies; importing IO does not load process supervision.",
+    "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog. Runtime privately imports canonical Storage leaves and the shared Formatting implementation; native host/platform inputs and generated composition retain separate ownership.",
+    "IO and Runtime select one canonical Formatting Function. Shared bindings, control and numeric operators use Storage; formatter-only leaves and fixed-signature nominal cast descriptors stay private, distinct from the generic Storage.Integral casts used by Runtime. No Numeric dictionary or implicit arithmetic vocabulary is added. Importing Formatting or IO does not source-load process supervision.",
     "CV constructs one unscheduled future; local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing; this adds no async-FW modifier or Function dispatcher."
   ],
   "evidenceSets": [
@@ -11468,7 +11468,10 @@
         "lexicon/eng/vocabulary.json",
         "lyger/literal_atoms.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/traversal.l",
         "lyger/definition_bindings.go",
         "lyger/grammar.go",
         "lyger/runtime_types.go"
@@ -11492,7 +11495,9 @@
         "lexicon/eng/vocabulary.json",
         "lyger/literal_atoms.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
         "lyger/definition_bindings.go",
         "lyger/runtime_types.go"
       ],
@@ -11516,7 +11521,8 @@
         "lexicon/eng/vocabulary.json",
         "lyger/literal_atoms.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
         "lyger/definition_bindings.go",
         "lyger/runtime_types.go"
       ],
@@ -11538,7 +11544,12 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -11559,7 +11570,9 @@
         "lexicon/eng/vocabulary.json",
         "lyger/literal_atoms.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
         "lyger/definition_bindings.go"
       ],
       "witnesses": [
@@ -11580,7 +11593,9 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -11600,7 +11615,11 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -11623,7 +11642,8 @@
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
         "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -11643,7 +11663,11 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -11775,7 +11799,11 @@
         "lyger/storage_words.go",
         "lyger/binding.go",
         "lyger/scope.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l",
         "lyger/function_definitions.go",
         "lyger/lowering.go"
       ],
@@ -11894,7 +11922,12 @@
         "lyger/types.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -11926,12 +11959,60 @@
       "sources": [
         "lyger/value_kinds.go",
         "lyger/types.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l"
+      ],
+      "witnesses": [
+        "lyger/stored_values_test.go",
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/types.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
+      ],
+      "witnesses": [
+        "lyger/stored_values_test.go",
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/types.go",
         "lyger/source_functions.go",
         "lyger/function_composition.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
         "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l"
       ],
       "witnesses": [
         "lyger/source_functions_test.go"
@@ -11948,8 +12029,31 @@
         "lyger/types.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/execution.l"
+      ],
+      "witnesses": [
+        "lyger/stored_values_test.go",
+        "lyger/refactor_value_characterization_test.go",
+        "lyger/runtime_values_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lyger/value_kinds.go",
+        "lyger/types.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
         "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -12107,7 +12211,11 @@
         "lyger/process_inputs.go",
         "lyger/lowering.go",
         "lyger/constructor_grammar.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/bindings.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l",
         "lyger/binding.go",
         "lyger/scope.go",
         "lyger/source_return_context.go"
@@ -12179,7 +12287,9 @@
     {
       "sources": [
         "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/execution.l",
         "lyger/builtin_app_selection.go",
         "lyger/storage_words.go"
       ],
@@ -12258,7 +12368,10 @@
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/builder.go",
-        "lyger/source_units.go"
+        "lyger/source_units.go",
+        "builtins/eng/prelude.l",
+        "lyger/dictionary_index.go",
+        "internal/sourcepaths/sourcepaths.go"
       ],
       "witnesses": [
         "lyger/configured_import_test.go"
@@ -12341,7 +12454,8 @@
         "lyger/runtime_values_plan.go",
         "lyger/runtime_value_words.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/collections.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -12368,7 +12482,7 @@
     },
     {
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/lexical_scope.go"
@@ -12385,7 +12499,7 @@
     },
     {
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/definition_bindings.go",
@@ -12408,7 +12522,7 @@
     },
     {
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/function_definitions.go"
@@ -12425,7 +12539,7 @@
     },
     {
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/function_definitions.go"
@@ -12441,11 +12555,12 @@
     },
     {
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/function_definitions.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
         "lyger/source_descriptors.go",
         "lyger/builtin_bindings.go",
         "lyger/process_inputs.go"
@@ -12565,7 +12680,10 @@
       "sources": [
         "lexicon/eng/grammar.json",
         "lexicon/eng/vocabulary.json",
-        "lyger/builder.go"
+        "lyger/builder.go",
+        "builtins/eng/prelude.l",
+        "lyger/dictionary_index.go",
+        "internal/sourcepaths/sourcepaths.go"
       ],
       "witnesses": [
         "lyger/grammar_terms_test.go",
@@ -12603,7 +12721,8 @@
         "lyger/runtime_values_plan.go",
         "lyger/runtime_value_words.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/collections.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -12700,7 +12819,11 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -12721,7 +12844,11 @@
         "lyger/types.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -12734,10 +12861,37 @@
     },
     {
       "sources": [
+        "lyger/value_kinds.go",
+        "lyger/utilities.go",
+        "lyger/runtime_types.go",
+        "lyger/word_values.go",
+        "lyger/runtime_values_source.go",
+        "lyger/runtime_values_plan.go",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/execution.l"
+      ],
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
         "lyger/instruction_captures.go",
         "lyger/orchestration_captures.go",
         "lyger/storage_words.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/program.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l"
       ],
       "witnesses": [
         "lyger/orchestration_captures_test.go",
@@ -12753,8 +12907,17 @@
     },
     {
       "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/storage/dictionary.l"
+        "dictionaries.json",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/bindings.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/program.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l",
+        "builtins/eng/prelude.l"
       ],
       "witnesses": [
         "lyger/private_dictionary_test.go",
@@ -12771,10 +12934,18 @@
     },
     {
       "sources": [
-        "stdlib/index.json",
-        "builtins/runtime/eng/dictionary.l",
+        "dictionaries.json",
+        "runtime/eng/dictionary.l",
         "logiceme/runtime_composition.go",
-        "logiceme/logiceme_service.go"
+        "logiceme/logiceme_service.go",
+        "runtime/eng/foundations.l",
+        "runtime/eng/errors.l",
+        "runtime/eng/process.l",
+        "runtime/eng/shutdown.l",
+        "runtime/eng/app.l",
+        "runtime/eng/start.l",
+        "runtime/eng/supervision.l",
+        "runtime/eng/capture.l"
       ],
       "witnesses": [
         "lyger/private_dictionary_test.go",
@@ -12788,9 +12959,12 @@
     },
     {
       "sources": [
-        "stdlib/index.json",
-        "builtins/runtime/eng/number.l",
-        "builtins/runtime/eng/foundations.l"
+        "dictionaries.json",
+        "stdlib/eng/format/dictionary.l",
+        "stdlib/eng/format/foundations.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/values.l"
       ],
       "witnesses": [
         "lyger/format_dictionary_test.go",
@@ -13475,13 +13649,18 @@
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
     "lyger/word_values.go": "449b35c1a97327533fa663131fa3817c71b30675cce7cf63d387eb27578e1240",
-    "stdlib/eng/storage/dictionary.l": "939f4e9f5180f9962b4bc1b44b48fb08f0e6c0536f35b41f5800cc5b4e81201d",
+    "builtins/eng/storage/dictionary.l": "e30dd60bbab640adadc3dd79dbaf4ab58660b1eae3bfe7281498168f2d3a6ca0",
+    "builtins/eng/storage/values.l": "f7ace59aa9505e38ad39d2dac33cabdee0e53085cf0665b3a764b8fadf40d2d7",
+    "builtins/eng/storage/display.l": "aff3a5c119d08fd809855fcddd99ecefae5c6094a5bf9675effdba2ec0102c60",
+    "builtins/eng/storage/traversal.l": "f32222d8882e68b16148bd4ff3b14dc8a13b44c39e3a7b2454fe2d71413d66be",
     "lyger/definition_bindings.go": "7729518ee61aad720085adb17bb201bfdcecaffd068625fda7b9dfd57e9586b8",
     "lyger/grammar.go": "0e24157ab96bed610a8914f962646c1a1d38eea70c8c1f655ae6023b47e72ec5",
     "lyger/runtime_types.go": "4334d0bc85798b5afac5fa32ba1dd33dc1b95e887a707e5e6f3995a635e363fc",
+    "builtins/eng/storage/collections.l": "9e6ca1a3fb0f0c951cfc3663bb2d361c562d28de191f513446205ab169e5dee4",
     "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
     "lyger/runtime_values_plan.go": "91ff1b5e9143c06fd85f883a2130a06abb10a7777b4d534b99625f6c35536671",
-    "builtins/eng/core.l": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
+    "builtins/eng/storage/control.l": "841c844e82849eb7e62271fa82bdc9014338a4f4de4f8b0d12a825ac22917502",
+    "builtins/eng/core.l": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
     "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
     "lyger/semantic_resolution.go": "9e340190c53baaf3e73cdbfd7887d2bdf8c0619f2980dd59cff2a2132ab144c6",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
@@ -13495,13 +13674,14 @@
     "lyger/storage_words.go": "27daf80e13a829b55c4cfc41ee2b12d3006b622eb2a1eaf3ee79d3b0cd79d557",
     "lyger/binding.go": "ae768960f2e1e9bb6dea5e5154844dc3a4d3638cc2f8815572c99dafc348ab35",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
+    "builtins/eng/storage/execution.l": "3f96fd783601f0dfc8fc3743b05e89d4387ecd0388536b2ebb04ab48ce1e7837",
     "lyger/function_definitions.go": "1888437b6c54abf864ee600cb576e7a2bf905204777e044d86382da8ff8595dd",
     "lyger/lowering.go": "a3b2bec3b690d9192a3da0fabd5fe863586d95e5aba035a0a98ca42fb5278ef2",
     "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
     "lyger/semantics.go": "db528f999f22cf3ab5c2ff04fbca7709f270d321ae6350341c1d69feb72658b9",
     "lyger/source_descriptors.go": "7f9a47a50d5fa679e7323d1c5e485174e2080d3c885ccfcd3f687a56e436b98e",
     "lyger/builtin_bindings.go": "702ae6b5a81caf0bf482feb43138372a0ad026bf26952a8526a6f548160b37f6",
-    "docs/cli-build.md": "d66aacb6e7996bd4860ad7b60fe96a157227fc5cfe442dd8c40e9e5a1c5fe7e9",
+    "docs/cli-build.md": "0afad681153834033d84c14eaa2c29827fed549c7d466728e65b06e0b7c34db0",
     "lyger/builtin_operations.go": "c05bed44bfd03a5ede642e0fc785056eb743959039dede7305da625cc90d42c9",
     "lyger/execution_composition.go": "16488cc98b137f93c910a795d891131614cea18314b428ba1089ec86c032e7e7",
     "lyger/entry_composition.go": "561579d280ba920406d3f38b0c96aa8ffe324eca0be7877071783340d8f23214",
@@ -13509,17 +13689,21 @@
     "lyger/source_body.go": "81da3955864cfb1526647733fd5acc2900fd0d29a662fa1b69425d67f865cbb0",
     "lyger/process_inputs.go": "8d694eebf5de74b5585f10a04c24146426918036ebec3906d97cf4602721dfce",
     "lyger/constructor_grammar.go": "5a4b766982a31035bb298e6adf4e2014c406a3fd11213ad42c8144b64e642156",
+    "builtins/eng/storage/bindings.l": "95b15eb60900ef99d54f22b8f3afb924a02ed00f11d88de783c910cee2d68a33",
     "lyger/source_return_context.go": "cd0d682596f6d0859c423f0701e9a295ef0794dd39c5f24b42f09f66a86c8c8b",
     "lyger/contracts_lowering.go": "6bb0190727db25891a178b9a7343a69a74a5b870ad01536e5ea1d03167fe5cfa",
     "lyger/builtin_app_selection.go": "d27277189643bcb740dc4cd064aefa8fd810f5bff073a7d9d434f9bfec1f092f",
     "lyger/registration.go": "e55d5e4e001d863ab082b8415e4a84c7d573b493a6bfe8fb0df015fcec738898",
-    "lyger/builder.go": "4ac944a308bb7f0e940013c32488a2cbb89f450de2fec15e1b7558c33c004845",
+    "lyger/builder.go": "3156d47c598437a3be4ba1aa8717551e9b689a15609babc317706376fec8d27a",
+    "builtins/eng/prelude.l": "629dea3c07781aebbdf5a9712debf1004212bf1725c985e0a829fc8e31696bba",
+    "lyger/dictionary_index.go": "e05610d60740cc4f89703b8167bf5c10ce0b6ca3470685dd4879b582ca539f7e",
+    "internal/sourcepaths/sourcepaths.go": "57d39aacf36251725151e67821f956f2a6c87171b0dc0e936dafe5310c698301",
     "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
     "lyger/publication.go": "9da8cdfa67fd9225890e374fcefa455263a1dc80aeaa42568e0b45668a331a54",
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lyger/ir_kinds.go": "d552e2cd21079344f25317d13aec439bb665d269678a879169ac065b45058a79",
     "lyger/runtime_value_words.go": "820e42f8b6a8ef2ddf18b756bb54528ff36b18764108db4d3abce4714812670c",
-    "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
+    "dictionaries.json": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
     "stdlib/eng/io/dictionary.l": "52d59eea2f063372f2ed55e2fd9673bccf32f21595ddc7530a2363175dc29664",
     "lyger/lexical_scope.go": "9de4a95cbc9d4923f880330ac178717152008d8c604e50d7a7c744bebf26fa96",
     "lyger/grammar_types.go": "a14fd3aac73b9a66a087f0e0eada9d09f37c6e1a08b2295fe9119044a480b8ae",
@@ -13528,13 +13712,22 @@
     "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
     "lyger/instruction_captures.go": "d22fa76784237c14aac180a9ee92c9838c101e52586026657bb8453b4f0616d2",
     "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
-    "builtins/runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
+    "builtins/eng/storage/program.l": "5665b43aa601d0f9e9e2ddf8e76cd78f35f35ac38a9024af97037b1290df6f5e",
+    "runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
     "logiceme/runtime_composition.go": "24f443bd4fba2d87f7031c1acf3e39d02657c6fe4fb368449ac6a193ffe9b0b7",
     "logiceme/logiceme_service.go": "415866d9fc5a7d12b76aed7c42b87554d9d93d06a1b14835bb8f848299b46776",
-    "builtins/runtime/eng/number.l": "7d9f41f3990343b3ec6c63f5b03ca4762c5fab7207641d20515327ff71012f2b",
-    "builtins/runtime/eng/foundations.l": "3f21a1e80f4249af50a48d35149f2144b00fa3c448eae1a3ab465b97b6044fd7",
+    "runtime/eng/foundations.l": "fac52e8716f286cc07c01b479a7d9d56a663841543406291300911549069af7e",
+    "runtime/eng/errors.l": "ba4dcc92cc54009ad2991d729a0531a511db3610c8b4dd0dafb7648c391f03db",
+    "runtime/eng/process.l": "9e4975a74ef06e73c447edd64de43c6e68b20c9cfbb8ba2afc35724c15575bb9",
+    "runtime/eng/shutdown.l": "ed0b042b7912fca7bbe21b3f1bbdf388f1fe7f873c319a9d3516da37ead70b25",
+    "runtime/eng/app.l": "41288946e7401c189f60a7139d207db42ae600bdc56bc630fef8a19e268730bd",
+    "runtime/eng/start.l": "fa211457bad0501d9f216f90d0c821bbf9cbf60c612d30baf547f06a3b14f377",
+    "runtime/eng/supervision.l": "e048ee6c23a980433a915c845957975af7555cb2c5b9a7f95734dec858857fc3",
+    "runtime/eng/capture.l": "fb8bb143404f4bb3d6707f30c9785504a126347e9f8ab2ad7f9897078d4ddadb",
+    "stdlib/eng/format/dictionary.l": "3ee48ea6485dddb429641273be99872621734c358cfe7ba78aedda41525cbde3",
+    "stdlib/eng/format/foundations.l": "af93705b7a048387f3319c8334a7afae3c6ca12a78c28485b5758e7005bb4582",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
-    "builtins/README.md": "c19436cf7bfb39e8c1d8980f5c792702cffd6633739a8e0d387c66a18f2614a6",
+    "builtins/README.md": "57bdf182d7f278994414622d475d4fb492df88ed6523372ad861785f4c060bcb",
     "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",
     "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
     "builtins/segments/vowels/calculation.lu": "18fa1ec1c7e13df95c5581646418aaa457f7779dac06fc44015ae20f1d4ebf86",

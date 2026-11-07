@@ -11,13 +11,13 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 
 	distribution "github.com/l-programming-language/l"
+	"github.com/l-programming-language/l/internal/sourcepaths"
 	Lyger "github.com/l-programming-language/l/lyger"
 )
 
-const runtimeSource = "builtins/runtime/eng/dictionary.l"
+const runtimeSource = "runtime/eng/dictionary.l"
 
 func main() {
 	check := flag.Bool("check", false, "verify the committed composition without writing")
@@ -36,7 +36,7 @@ func run(root string, check bool) error {
 	for _, output := range []struct {
 		name string
 		data []byte
-	}{{"builtins/runtime/support.aml", aml}, {"builtins/runtime/support.json", metadata}} {
+	}{{"runtime/generated/support.aml", aml}, {"runtime/generated/support.json", metadata}} {
 		path := filepath.Join(root, filepath.FromSlash(output.name))
 		if check {
 			committed, err := os.ReadFile(path)
@@ -73,6 +73,11 @@ func generate(root string) ([]byte, []byte, error) {
 		return nil, nil, err
 	}
 	metadata := distribution.RuntimeComposition{Version: 1, SHA256: fingerprint(aml), Sources: make(map[string]string), Selection: selection}
+	registry, err := fs.ReadFile(resources, "dictionaries.json")
+	if err != nil {
+		return nil, nil, err
+	}
+	metadata.Sources["dictionaries.json"] = fingerprint(registry)
 	for _, origin := range c.SourceOrigins {
 		name := origin.Name
 		if filepath.IsAbs(name) {
@@ -82,7 +87,7 @@ func generate(root string) ([]byte, []byte, error) {
 			}
 		}
 		name = filepath.ToSlash(name)
-		if !fs.ValidPath(name) || !strings.HasSuffix(name, ".l") || !(strings.HasPrefix(name, "builtins/") || strings.HasPrefix(name, "stdlib/")) {
+		if !sourcepaths.Canonical(name) {
 			return nil, nil, fmt.Errorf("composition source %q is outside canonical source resources", origin.Name)
 		}
 		current, err := fs.ReadFile(resources, name)

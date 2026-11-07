@@ -1,0 +1,320 @@
+{
+  "version": 1,
+  "sha256": "3656a55f821ea90cd8ad9d199b5f603637e99650aaf02b2538471175b223264c",
+  "sources": {
+    "builtins/eng/core.l": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
+    "builtins/eng/prelude.l": "629dea3c07781aebbdf5a9712debf1004212bf1725c985e0a829fc8e31696bba",
+    "builtins/eng/storage/bindings.l": "95b15eb60900ef99d54f22b8f3afb924a02ed00f11d88de783c910cee2d68a33",
+    "builtins/eng/storage/collections.l": "9e6ca1a3fb0f0c951cfc3663bb2d361c562d28de191f513446205ab169e5dee4",
+    "builtins/eng/storage/control.l": "841c844e82849eb7e62271fa82bdc9014338a4f4de4f8b0d12a825ac22917502",
+    "builtins/eng/storage/dictionary.l": "e30dd60bbab640adadc3dd79dbaf4ab58660b1eae3bfe7281498168f2d3a6ca0",
+    "builtins/eng/storage/display.l": "aff3a5c119d08fd809855fcddd99ecefae5c6094a5bf9675effdba2ec0102c60",
+    "builtins/eng/storage/execution.l": "3f96fd783601f0dfc8fc3743b05e89d4387ecd0388536b2ebb04ab48ce1e7837",
+    "builtins/eng/storage/program.l": "5665b43aa601d0f9e9e2ddf8e76cd78f35f35ac38a9024af97037b1290df6f5e",
+    "builtins/eng/storage/traversal.l": "f32222d8882e68b16148bd4ff3b14dc8a13b44c39e3a7b2454fe2d71413d66be",
+    "builtins/eng/storage/values.l": "f7ace59aa9505e38ad39d2dac33cabdee0e53085cf0665b3a764b8fadf40d2d7",
+    "dictionaries.json": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
+    "runtime/eng/app.l": "41288946e7401c189f60a7139d207db42ae600bdc56bc630fef8a19e268730bd",
+    "runtime/eng/capture.l": "fb8bb143404f4bb3d6707f30c9785504a126347e9f8ab2ad7f9897078d4ddadb",
+    "runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
+    "runtime/eng/errors.l": "ba4dcc92cc54009ad2991d729a0531a511db3610c8b4dd0dafb7648c391f03db",
+    "runtime/eng/foundations.l": "fac52e8716f286cc07c01b479a7d9d56a663841543406291300911549069af7e",
+    "runtime/eng/process.l": "9e4975a74ef06e73c447edd64de43c6e68b20c9cfbb8ba2afc35724c15575bb9",
+    "runtime/eng/shutdown.l": "ed0b042b7912fca7bbe21b3f1bbdf388f1fe7f873c319a9d3516da37ead70b25",
+    "runtime/eng/start.l": "fa211457bad0501d9f216f90d0c821bbf9cbf60c612d30baf547f06a3b14f377",
+    "runtime/eng/supervision.l": "e048ee6c23a980433a915c845957975af7555cb2c5b9a7f95734dec858857fc3",
+    "stdlib/eng/format/dictionary.l": "3ee48ea6485dddb429641273be99872621734c358cfe7ba78aedda41525cbde3",
+    "stdlib/eng/format/foundations.l": "af93705b7a048387f3319c8334a7afae3c6ca12a78c28485b5758e7005bb4582"
+  },
+  "selection": {
+    "": [
+      [
+        19285,
+        28933
+      ],
+      [
+        30406,
+        35472
+      ],
+      [
+        39547,
+        64680
+      ],
+      [
+        71656,
+        71918
+      ],
+      [
+        84550,
+        84906
+      ],
+      [
+        95692,
+        95830
+      ],
+      [
+        128315,
+        129152
+      ],
+      [
+        135288,
+        135613
+      ],
+      [
+        140044,
+        166214
+      ]
+    ],
+    "app_build": [
+      [
+        35992,
+        39547
+      ],
+      [
+        64680,
+        71161
+      ]
+    ],
+    "app_error": [
+      [
+        74307,
+        76537
+      ]
+    ],
+    "app_output": [
+      [
+        35992,
+        36917
+      ],
+      [
+        38474,
+        39547
+      ],
+      [
+        64680,
+        66763
+      ],
+      [
+        71161,
+        71656
+      ],
+      [
+        71918,
+        74307
+      ]
+    ],
+    "app_run": [
+      [
+        28933,
+        30406
+      ],
+      [
+        35992,
+        39547
+      ],
+      [
+        64680,
+        69590
+      ],
+      [
+        76537,
+        77108
+      ],
+      [
+        83809,
+        84550
+      ],
+      [
+        84906,
+        95692
+      ],
+      [
+        95830,
+        128315
+      ]
+    ],
+    "app_set_source": [
+      [
+        35472,
+        35992
+      ]
+    ],
+    "app_stop": [
+      [
+        35992,
+        39547
+      ],
+      [
+        64680,
+        66763
+      ],
+      [
+        71161,
+        71656
+      ],
+      [
+        76537,
+        81164
+      ]
+    ],
+    "app_wait": [
+      [
+        35992,
+        39547
+      ],
+      [
+        64680,
+        66763
+      ],
+      [
+        71161,
+        71656
+      ],
+      [
+        77108,
+        78961
+      ],
+      [
+        81164,
+        83809
+      ]
+    ],
+    "capture": [
+      [
+        95830,
+        107941
+      ]
+    ],
+    "captured": [
+      [
+        96719,
+        97210
+      ],
+      [
+        114232,
+        116164
+      ]
+    ],
+    "error_bytes": null,
+    "error_cancelled": null,
+    "error_causes": null,
+    "error_context": null,
+    "error_copy": null,
+    "error_display": null,
+    "error_from_io": null,
+    "error_identity": null,
+    "error_is_cancelled": null,
+    "error_join": null,
+    "error_native_cause": null,
+    "error_new": null,
+    "error_new_text": null,
+    "error_render": null,
+    "error_with_stderr": [
+      [
+        28933,
+        30406
+      ]
+    ],
+    "format_number": [
+      [
+        702,
+        19285
+      ]
+    ],
+    "invocation_allocate": [
+      [
+        84906,
+        87247
+      ]
+    ],
+    "invocation_claim": [
+      [
+        36917,
+        37602
+      ],
+      [
+        129152,
+        132632
+      ]
+    ],
+    "invocation_completed": null,
+    "invocation_finish": [
+      [
+        132632,
+        135288
+      ]
+    ],
+    "invocation_kill": null,
+    "invocation_publish": [
+      [
+        90685,
+        91798
+      ]
+    ],
+    "invocation_record": null,
+    "invocation_snapshot": null,
+    "invocation_supervise": [
+      [
+        28933,
+        30406
+      ],
+      [
+        90685,
+        91798
+      ],
+      [
+        95830,
+        123853
+      ]
+    ],
+    "invocation_terminate": null,
+    "runtime_app": [
+      [
+        135613,
+        136639
+      ]
+    ],
+    "runtime_begin_shutdown": null,
+    "runtime_check": [
+      [
+        36917,
+        38474
+      ]
+    ],
+    "runtime_copy": null,
+    "runtime_exit": [
+      [
+        136639,
+        137297
+      ]
+    ],
+    "runtime_fail": [
+      [
+        64680,
+        66265
+      ]
+    ],
+    "runtime_finish": null,
+    "runtime_new": null,
+    "runtime_observed": null,
+    "runtime_request_exit": null,
+    "runtime_run": null,
+    "runtime_show": [
+      [
+        36917,
+        38474
+      ],
+      [
+        64680,
+        65457
+      ],
+      [
+        137297,
+        140044
+      ]
+    ],
+    "runtime_shutdown": null,
+    "snapshot_copy": null,
+    "terminal_copy": null
+  }
+}

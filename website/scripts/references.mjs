@@ -29,7 +29,7 @@ const cliHelpSources = [
   ['cmd/l/command.go', 'buildUsage', 'Build and top-level help'],
   ['cmd/l/contracts.go', 'contractsUsage', 'Contracts help'],
 ];
-export const referenceInputs = ['lexicon/eng/grammar.json', 'lexicon/eng/vocabulary.json', 'stdlib/index.json', ...cliHelpSources.map(([file]) => file), 'lyger/value_kinds.go', 'logiceme/lucid_generation_test.go', 'logiceme/testdata/lucid/templates.sha256.json'];
+export const referenceInputs = ['lexicon/eng/grammar.json', 'lexicon/eng/vocabulary.json', 'dictionaries.json', ...cliHelpSources.map(([file]) => file), 'lyger/value_kinds.go', 'logiceme/lucid_generation_test.go', 'logiceme/testdata/lucid/templates.sha256.json'];
 
 // Catalog repeated fields without changing the expanded review entries.
 const evidenceFields = ['sources', 'witnesses', 'evidence', 'checkedStages', 'executedStages'];
@@ -81,7 +81,7 @@ export async function generateReferences(root) {
   for (const name of referenceInputs) inputs[name] = sha256(await fs.readFile(await safeFile(root, name)));
   const grammar = await json(path.join(root, referenceInputs[0]));
   const vocabulary = await json(path.join(root, referenceInputs[1]));
-  const stdlib = await json(path.join(root, 'stdlib/index.json'));
+  const stdlib = await json(path.join(root, 'dictionaries.json'));
   const grammarReview = await json(path.join(root, 'docs/_meta/grammar-review.json'));
   const lexicalReview = await json(path.join(root, 'docs/_meta/vocabulary-review.json'));
   for (const review of [grammarReview, lexicalReview]) for (const [file, hash] of Object.entries(review.sourceHashes)) if (sha256(await fs.readFile(await safeFile(root, file))) !== hash) throw new Error(`Reviewed grammar/vocabulary dependency changed: ${file}. Review classifications before updating hashes.`);

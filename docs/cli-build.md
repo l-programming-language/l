@@ -17,8 +17,9 @@ The compiler prints the published executable's absolute path on success. Buildin
 
 Embedded English resources work with relocated binaries, symlinks and `go run`, independently of CWD. Relative output paths use invocation CWD. [Developer overrides](development-harness.md#compiler-defaults) support compiler resource development.
 
-Builtins are implicit. Bare dictionary paths such as `io` resolve only through
-the selected bundle's `stdlib/index.json`; neighboring `io` or `io.l` cannot
+Builtins are implicit through the source prelude, which includes core and loads
+Storage privately. Bare dictionary paths such as `io` resolve only through
+the selected bundle's `dictionaries.json`; neighboring `io` or `io.l` cannot
 shadow them. Explicit `.l` imports resolve relative to their importing source.
 Imported dictionary helpers resolve relative to their resource provider and do
 not read unrelated host files. Install instructions are in [README](../README.md).
@@ -92,10 +93,13 @@ The CLI accepts Rust source bundles only. Whole bundles are checked for matching
 
 The lifecycle runtime is a library at `support/runtime`, linked into the
 orchestrator under an allocated package name that avoids workspace collisions.
-Its policy comes from authored [L words](../builtins/runtime/eng/dictionary.l).
-Resource generation produces [support.aml](../builtins/runtime/support.aml) and
-[support.json](../builtins/runtime/support.json), containing source fingerprints
-and a dependency-selection index. These are derived resources; the index adds no
+Its policy comes from authored [L words](../runtime/eng/dictionary.l).
+Resource generation produces [support.aml](../runtime/generated/support.aml) and
+[support.json](../runtime/generated/support.json), containing fingerprints of the
+root registry and actual source inputs, plus a dependency-selection index.
+Changing a registry mapping, even to add a dictionary in an explicit assets
+bundle, requires explicit support regeneration. Offline contract inspection
+does not repair stale resources. These are derived resources; the index adds no
 AML fields or logeme interfaces.
 
 With unmodified embedded definitions, the CLI selects runtime declarations from
@@ -104,7 +108,8 @@ requirements. When selection is unavailable—including explicit resource provid
 user-authored native definitions or unrecognized runtime imports—it uses the
 selected provider's full composition. Missing or stale resources reject without
 falling back to embedded files. Logiceme renders complete framed AML in either
-case; only the host/process adapters are copied unchanged.
+case. The native entry and host/process inputs live under `runtime/rust/`; their
+relocation does not change generated native filenames or module topology.
 
 The runtime builds with the workspace and needs no separately installed launcher.
 Cargo can reuse it when only the entry changes and the library's actual inputs

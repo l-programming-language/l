@@ -245,11 +245,18 @@ test('a second indexed dictionary requires both a dedicated page and reviewed pu
 });
 
 test('reviewed internal dictionaries retain coverage without becoming public catalog entries', () => {
-  const index = { format: 1, languages: { eng: { support: { entry: 'stdlib/eng/support.l', dictionary: 'Support' } } } };
-  const entries = [{ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'support' }, visibility: 'namespace', support: 'internal', sources: ['stdlib/eng/support.l'] }];
-  assert.deepEqual(validateStdlib(index, [], entries), []);
-  entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'support' }, visibility: 'public', support: 'supported', sources: ['stdlib/eng/support.l'] });
-  assert.throws(() => validateStdlib(index, [], entries), /conflicting public documentation classifications/);
+  for (const [key, dictionary, entry] of [
+    ['support', 'Support', 'stdlib/eng/support.l'],
+    ['storage', 'Storage', 'builtins/eng/storage/dictionary.l'],
+    ['runtime', 'Runtime', 'runtime/eng/dictionary.l'],
+    ['format', 'Formatting', 'stdlib/eng/format/dictionary.l'],
+  ]) {
+    const index = { format: 1, languages: { eng: { [key]: { entry, dictionary } } } };
+    const entries = [{ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key }, visibility: 'namespace', support: 'internal', sources: [entry] }];
+    assert.deepEqual(validateStdlib(index, [], entries), []);
+    entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key }, visibility: 'public', support: 'supported', sources: [entry] });
+    assert.throws(() => validateStdlib(index, [], entries), /conflicting public documentation classifications/);
+  }
 });
 
 test('export ownership is distinct from reviewed source dependencies', () => {

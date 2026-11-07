@@ -10,11 +10,11 @@ Create "Optional" as a New Runtime's Ascender of Owner.
 Create "Available" as a New Presence of Optional.
 Create "Unit" as a New Nothing.
 If Available is false, Return Unit.
-Create "Handle" as a New Runtime's Handle's Content of a New Contents of Optional and `present signal runtime`.
+Create "Handle" as a New Runtime's Handle's Content of a New Storage's Result's Expecter of Optional and `present signal runtime`.
 Create "Reference" as a New Storage's Borrower of Handle.
 Create "Failed" as a New Runtime's Fault of Event.
 If Failed, Create "Cause" as a New Runtime's Rejecter of Event and then Create "Fault" as a New Runtime's Error's Explainer of `receive application signal` and Cause and then Create "Wrapped" as a New Present of Fault and then Create "One" as a New Runtime's Byte of 1 and then Create "Requested" as a New Runtime's Requester of Reference, One, and Wrapped and then Return Unit.
-Create "Status" as a New Contents of Event and `received application signal`.
+Create "Status" as a New Storage's Result's Expecter of Event and `received application signal`.
 Create "Error" as a New Runtime's Signals' Interpreter of Status.
 Create "Request" as a New Runtime's Signal of Status.
 Create "Dependencies" as a New Runtime's Authority of a New Runtime's Reference of Handle.

@@ -137,7 +137,7 @@ test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ 
     ['/docs/guide/apps-and-services/', '../lyger/test/workspace/services.l', 1, 12],
     ['/docs/spec/definitions/', '../cmd/l/test/runnable_service/probe.l', 0, 3],
     ['/docs/guide/definitions/', '../docs/examples/composed-functions.l', 0, undefined],
-    ['/docs/guide/definitions/', '../stdlib/eng/storage/dictionary.l', 177, 179],
+    ['/docs/guide/definitions/', '../builtins/eng/storage/control.l', 24, 26],
     ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 16, 19],
     ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 20, 24],
     ['/docs/guide/first-program/', '../demo/basic/main.l', 0, undefined],
@@ -150,7 +150,7 @@ test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ 
   }
   await expect(page.locator('pre[data-language="sh"]').first()).toContainText(/^l build main\.l/);
   await page.goto('/docs/stdlib/');
-  expect(JSON.parse((await page.locator('pre[data-language="json"] code').textContent())!)).toEqual(JSON.parse(await fs.readFile('../stdlib/index.json', 'utf8')));
+  expect(JSON.parse((await page.locator('pre[data-language="json"] code').textContent())!)).toEqual(JSON.parse(await fs.readFile('../dictionaries.json', 'utf8')));
   await page.goto('/docs/reference/logemes/rust-contract/');
   await expect(page.locator('pre[data-language="rust"]')).toContainText("'outer: loop {");
   await page.goto('/docs/internals/aml-protocol/');

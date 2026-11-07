@@ -47,13 +47,13 @@ Return a New Runtime's Error's Wrapper of Bytes and Causes and Cancelled and Nat
     Publicly create Runtime's Error's "Trace|-s|-d|--ing|--er" as a Generic `error_native_cause` Function with Inputs of "value" as `&Error` and Outputs of `Option<&(dyn std::error::Error + 'static)>`.
 Create "Native" as a New Runtime's Error's Native of Value.
 Create "Available" as a New Presence of Native.
-If Available, Create "Cause" as a New Contents of Native and `present native cause` and then Create "Borrowed" as a New Storage's Referrer of Cause and then Create "Source" as a New Runtime's Error's Source of Borrowed and then Create "Wrapped" as a New Present of Source and then Return Wrapped.
+If Available, Create "Cause" as a New Storage's Result's Expecter of Native and `present native cause` and then Create "Borrowed" as a New Storage's Referrer of Cause and then Create "Source" as a New Runtime's Error's Source of Borrowed and then Create "Wrapped" as a New Present of Source and then Return Wrapped.
 Create "Iterator" as a New Runtime's Error's Iterator of a New Runtime's Error's Inspector of Value.
 Return a New Runtime's Error's Searcher of Iterator and Runtime's Error's Tracer.
 
     Publicly create Runtime's Error's "Attach|-es|-ed|-ing|-er" as a Generic `error_with_stderr` Function with Inputs of "value" as `Error` and "bytes" as `&[u8]` and Outputs of Runtime's Error.
 Create "Size" as a New Length of Bytes.
-Create "Zero" as a New Indexed Integer of 0.
+Create "Zero" as a New Storage's Integral of 0 and `usize`.
 If Size is Zero, Return Value.
 Create "Description" as a New Runtime's Error's Lossy of a New Runtime's Error's Renderer of a New Storage's Borrower of Value.
 Create "Message" as a New Mutable Binding of a New Storage's Owner of a New Storage's Text's Bytes of Description.
@@ -108,7 +108,7 @@ Create "Message" as a New Runtime's Error's Reader of Value.
 Create "Children" as a New Runtime's Error's Inspector of Value.
 Create "Size" as a New Length of Message.
 Create "Count" as a New Length of Children.
-Create "Zero" as a New Indexed Integer of 0.
+Create "Zero" as a New Storage's Integral of 0 and `usize`.
 Create "Empty" as a New Equality of Size and Zero.
 Create "Childless" as a New Equality of Count and Zero.
 Create "Joined" as a New Agreement of Empty and a New Equality of Childless and false.
@@ -140,7 +140,7 @@ Create "Cancelled" as a New Runtime's Error's Cancellation of true.
 Return a New Runtime's Error's Wrapper of Message and Causes and Cancelled and a New Absent.
 
     Publicly create Runtime's Error's "Identify|--ies|--ied|-ing|--ier" as a Generic `error_identity` Function with Inputs of "value" as `&Error` and Outputs of `usize`.
-Return a New Indexed Integer of a New Runtime's Error's Address of Value.
+Return a New Storage's Integral of a New Runtime's Error's Address of Value and `usize`.
 
     Publicly create Runtime's Error's "Check|-s|-ed|-ing|-er" as a Generic `error_is_cancelled` Function with Inputs of "value" as `&Error` and Outputs of `bool`.
 Return a New Runtime's Error's Status of Value.
@@ -155,9 +155,9 @@ Return a New Runtime's Error's Wrapper of Message and Causes and Cancelled and a
 
     Publicly create Runtime's Error's "Join|-s|-ed|-ing|-er" as a Generic `error_join` Function with Inputs of "causes" as `Vec<Error>` and Outputs of `Option<Error>`.
 Create "Count" as a New Storage's Length of Causes.
-Create "Zero" as a New Indexed Integer of 0.
+Create "Zero" as a New Storage's Integral of 0 and `usize`.
 If Count is Zero, Create "Missing" as a New Absent and then Return Missing.
-Create "One" as a New Indexed Integer of 1.
+Create "One" as a New Storage's Integral of 1 and `usize`.
 If Count is One, Create "Iterator" as a New Runtime's Error's Iterator of Causes and then Create "Sole" as a New Runtime's Error's First of Iterator and then Return Sole.
 Create "Message" as a New Runtime's Error's Message.
 Create "Cancelled" as a New Runtime's Error's Cancellation of false.

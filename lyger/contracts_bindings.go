@@ -59,9 +59,9 @@ func (r *contractRecorder) logicalSource(path string) string {
 	if strings.HasPrefix(path, "resource:") {
 		return path
 	}
-	for _, unit := range r.compilation.SourceUnits {
-		if unit.Origin.Name == path && strings.HasPrefix(unit.Origin.Identity, "resource:") {
-			return unit.Origin.Identity
+	for _, origin := range r.compilation.SourceOrigins {
+		if origin.Name == path && strings.HasPrefix(origin.Identity, "resource:") {
+			return origin.Identity
 		}
 	}
 	if relative, err := filepath.Rel(r.compilation.RootDir, path); err == nil {

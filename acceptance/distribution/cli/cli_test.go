@@ -109,7 +109,7 @@ func TestDistributionCLI(t *testing.T) {
 		t.Parallel()
 		// Each missing-resource case has an independent valid-bundle control. No
 		// fallback assertion can pass on an unrelated builtin or syntax failure.
-		for _, resource := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "stdlib/eng/io/dictionary.l", "stdlib/index.json", "builtins/segments/vowels/execution.lu", "builtins/templates/config/config.lu", "builtins/runtime/support.aml"} {
+		for _, resource := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "stdlib/eng/io/dictionary.l", "dictionaries.json", "builtins/segments/vowels/execution.lu", "builtins/templates/config/config.lu", "runtime/generated/support.aml"} {
 			resource := resource
 			t.Run(resource, func(t *testing.T) {
 				nativeCases.Parallel(t)
@@ -198,7 +198,7 @@ func TestDistributionCLI(t *testing.T) {
 			t.Run(alias, func(t *testing.T) {
 				nativeCases.Parallel(t)
 				assets := distributiontest.CompleteOverride(t)
-				indexPath := filepath.Join(assets, "stdlib/index.json")
+				indexPath := filepath.Join(assets, "dictionaries.json")
 				var index struct {
 					Format    int `json:"format"`
 					Languages map[string]map[string]struct {
@@ -222,6 +222,7 @@ func TestDistributionCLI(t *testing.T) {
 				}
 				write(t, indexPath, string(data))
 				write(t, filepath.Join(assets, "stdlib/eng/joins/dictionary.l"), "Create \"Joins\" as a Dictionary.\nCreate Joins's \"Join|-s|-ed|-ing|-er\" for Awaiting any App and then Showing it's Output.\n")
+				regenerateProvider(t, assets)
 				source := "Use IO's Print from `io` as \"Print\".\nUse Joins's Join from `joins` as \"" + alias + "\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints `worker`.\nStart Worker.\nCreate \"Other\" as a New Basic App.\nThe App Prints `other`.\n" + alias + " Worker.\n"
 				dir := project(t, source, nil)
 				binary := buildProgram(t, phase1.CLI(t), dir, "main.l", assets)

@@ -38,7 +38,7 @@ func TestComposedFunctionMembers(t *testing.T) {
 				source = strings.Replace(source, ", Inputs: ~&[<@Arguments|Atoms@>]&~", "", 1)
 			}
 			if variant == "recursive value binding" {
-				const storage = "stdlib/eng/storage/dictionary.l"
+				const storage = "builtins/eng/storage/bindings.l"
 				data := strings.Replace(string(files[storage].Data), "MOB{|Key: ~<@Name|Label@>~|}^(<@Value@>)", "OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}", 1)
 				files[storage] = &fstest.MapFile{Data: []byte(data)}
 			}

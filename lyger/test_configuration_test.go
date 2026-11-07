@@ -109,8 +109,8 @@ func assertFrontendResources(t *testing.T, c *Compilation) {
 		return
 	}
 	for _, unit := range c.SourceUnits {
-		if unit.Kind == SourceBuiltin && unit.Origin.Name != "builtins/"+c.Gram.language+"/core.l" {
-			t.Errorf("Rust source selection: builtin origin=%q; expected configured-language/core.l", unit.Origin.Name)
+		if unit.Kind == SourceBuiltin && unit.Origin.Name != "builtins/"+c.Gram.language+"/prelude.l" {
+			t.Errorf("Rust source selection: builtin origin=%q; expected configured-language/prelude.l", unit.Origin.Name)
 		}
 		if unit.Kind == SourceDictionary && unit.Dictionary == "IO" && unit.Origin.Name != "stdlib/"+c.Gram.language+"/io/dictionary.l" {
 			t.Errorf("Rust source selection: IO origin=%q; expected stdlib/<language>/io/dictionary.l", unit.Origin.Name)

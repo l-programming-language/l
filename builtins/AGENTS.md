@@ -7,10 +7,13 @@ The repository root instructions remain applicable.
 
 ## Scope and ownership
 
-- `segments/` and `templates/` contain native syntax and support assets.
-  `eng/core.l` contains L-level source definitions; the matching dictionaries
-  live under `../stdlib/eng`. Keep source libraries distinct from native
-  backend assets. Rust is the sole generated language.
+- `segments/` and non-runtime `templates/` contain native syntax and support
+  assets. `eng/prelude.l` includes `eng/core.l` and privately loads the one
+  foundational Storage dictionary under `eng/storage/`. Root `dictionaries.json`
+  selects dictionaries across this foundation, `../runtime/eng` and `../stdlib/eng`.
+  Authored runtime policy, native inputs and generated support are separate under
+  `../runtime/{eng,rust,generated}`. Keep shared leaves canonical and Formatting
+  independent of process supervision. Rust is the sole generated language.
 - Source definitions own vocabulary, typed placeholders, declaration order and
   composition. Functions use this same path, including typed inputs/results and
   capture/lifetime bindings supplied through approved AML. A separate frontend
@@ -133,8 +136,9 @@ it does not parse opaque native leaves or infer arbitrary user lifetimes. Sectio
 general ownership inference and new mutability metadata remain separate work.
 Do not introduce unsafe generated implementation code as part of Rust development.
 
-Dedicated support templates own Cargo files, startup configuration, process
-supervision, stream capture and cleanup. The supervised runtime and frontend
+Dedicated support templates own Cargo files and startup configuration. L runtime
+definitions own process supervision, stream capture and cleanup policy; native
+runtime inputs retain executor and host/platform mechanisms. The supervised runtime and frontend
 parity tests exercise actual native binaries; read their [implementation evidence](../testdata/integration/IMPLEMENTATION.md)
 separately from the compile-only Lucid suite. Sole-library packages omit executable
 support and export nonprivate composed items. Dependency/build policy belongs to

@@ -27,7 +27,7 @@ Each reference lists the dictionary's public members. Private helpers remain int
 <details>
 <summary>Dictionary registry and maintenance</summary>
 
-The [source index](../../stdlib/index.json) maps import keys to entry files and namespaces. Contributors should follow the [coverage and snapshot requirements](../contributing/documentation.md#update-coverage-and-snapshots).
+The [distribution dictionary registry](../../dictionaries.json) maps import keys to entry files and namespaces across foundations, runtime support and standard libraries. Contributors should follow the [coverage and snapshot requirements](../contributing/documentation.md#update-coverage-and-snapshots).
 
 <!-- example:stdlib-index -->
 

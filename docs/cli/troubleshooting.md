@@ -8,7 +8,7 @@ Status 2 with usage usually means a missing `build` command, an unknown command/
 
 Check source paths relative to the invocation directory. Released binaries embed English resources. If testing modified compiler resources, see [developer overrides](../development-harness.md#compiler-defaults).
 
-Bare imports resolve through the selected [stdlib index](../../stdlib/index.json). An adjacent `io.l` does not override the indexed `io` dictionary. Explicit `.l` paths resolve relative to the importing source.
+Bare imports resolve through the selected [dictionary registry](../../dictionaries.json). An adjacent `io.l` does not override the indexed `io` dictionary. Explicit `.l` paths resolve relative to the importing source.
 
 ## Syntax, bindings and types
 

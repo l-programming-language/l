@@ -39,7 +39,7 @@ func canonicalRuntimeSources(t testing.TB) map[string][]byte {
 		}
 	}
 	for name, asset := range map[string]string{"runtime/host.rs": "host", "process_unix.rs": "process_unix", "process_other.rs": "process_other"} {
-		want, err := os.ReadFile(filepath.Join(root, "builtins/templates/runtime", asset+".lu"))
+		want, err := os.ReadFile(filepath.Join(root, "runtime/rust", asset+".rs"))
 		if err != nil || !bytes.Equal(files[name], want) {
 			t.Fatalf("selected support changed canonical %s bytes: %v", name, err)
 		}

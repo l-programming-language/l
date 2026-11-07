@@ -229,7 +229,7 @@ func validateAssetDestinations(assetRoot string, destinations ...string) error {
 		}
 		return nil
 	}
-	for _, asset := range []string{"builtins", "lexicon", "stdlib"} {
+	for _, asset := range []string{"dictionaries.json", "builtins", "lexicon", "runtime", "stdlib"} {
 		if err := visit(filepath.Join(assetRoot, asset)); err != nil {
 			return err
 		}

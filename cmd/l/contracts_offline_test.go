@@ -119,6 +119,7 @@ func TestContractsOfflineCapabilitiesHelper(t *testing.T) {
 	if len(report.Executions) != 0 {
 		t.Fatal("inspection fabricated execution evidence")
 	}
+	assertOfflineRuntimeResources(t)
 	if _, err := fmt.Println("offline capability checks completed"); err != nil {
 		t.Fatal(err)
 	}

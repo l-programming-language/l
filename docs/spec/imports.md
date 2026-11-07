@@ -4,11 +4,11 @@ Builtins are implicit; optional library vocabulary is imported explicitly. Resol
 
 ## Implicit builtins
 
-Released compilers load the embedded English `builtins/eng/core.l`. The builtin unit owns its canonical definitions and supplies an inherited lexical environment to the program and each imported dictionary. No project bootstrap or lexicon copy is needed; [resource overrides](../development-harness.md#compiler-defaults) are for compiler development.
+Released compilers load the embedded English `builtins/eng/prelude.l`. It includes `core.l` in one builtin unit and privately imports the foundational Storage dictionary. Core retains its definitions without loading support itself. The builtin unit supplies an inherited lexical environment to the program and each imported dictionary; bootstrap support is not an implicit public export. App behavior requires no explicit Storage or Runtime import. No project bootstrap or lexicon copy is needed; [resource overrides](../development-harness.md#compiler-defaults) are for compiler development.
 
 ## Indexed dictionaries
 
-Bare dictionary names resolve through the selected `stdlib/index.json`. The current format is version 1, with language keys containing dictionary keys. Each entry names a repository/resource-relative `.l` entry and the registered Dictionary it exports.
+Bare dictionary names resolve through the selected `dictionaries.json`. The current format is version 1, with language keys containing dictionary keys. Each entry names a repository/resource-relative `.l` entry and the registered Dictionary it exports.
 
 For example:
 
@@ -16,7 +16,7 @@ For example:
 
 This imports the public member from the registered IO dictionary and binds a local alias. It does not search for a neighboring `io` directory or `io.l`, nor does it expose private rendering and writing helpers. Importing the dictionary itself retains a namespace instead of flattening all members into the program.
 
-The index validates duplicate JSON keys, safe resource paths, format, actual entry files, and consistent dictionary identity. An unknown key is an unresolved dictionary; an unsupported provider-style name reports its bounded unsupported-provider diagnostic. There is no package download or unrestricted remote dependency resolver hidden in Use.
+The registry validates duplicate JSON keys, supported source roots, safe resource paths, format, actual entry files, and consistent dictionary identity. It selects foundational dictionaries under `builtins/<language>/`, runtime source under `runtime/<language>/`, and standard libraries under `stdlib/<language>/`. There is one selected registry and no legacy registry lookup. An unknown key is an unresolved dictionary; an unsupported provider-style name reports its bounded unsupported-provider diagnostic. There is no package download or unrestricted remote dependency resolver hidden in Use.
 
 Each indexed dictionary owns a private lexical root inheriting builtins. Its public export must resolve to the registered Dictionary. Imported member aliases resolve in that dictionary's environment; helper definitions do not capture caller-added members. Repeated dictionary dependencies reuse canonical dictionary identity while preserving import-site attribution.
 
@@ -76,4 +76,4 @@ The [public catalog](../stdlib/index.md) excludes internal implementation dictio
 
 ## Sources and witnesses
 
-Implementations: [builder expansion](../../lyger/builder.go), [source units](../../lyger/source_units.go), [index validation](../../lyger/dictionary_index.go), [lexical roots](../../lyger/lexical_scope.go), [member resolution](../../lyger/semantic_resolution.go), and [index](../../stdlib/index.json). Existing witnesses: [configured imports](../../lyger/configured_import_test.go), [case-insensitive imports](../../lyger/dictionary_case_test.go), [collisions](../../lyger/dictionary_collision_test.go), [private ownership](../../lyger/dictionary_ownership_test.go), [dependency capture](../../lyger/dictionary_dependency_capture_test.go), and [source-unit origins](../../lyger/source_unit_origins_test.go).
+Implementations: [builder expansion](../../lyger/builder.go), [source units](../../lyger/source_units.go), [index validation](../../lyger/dictionary_index.go), [lexical roots](../../lyger/lexical_scope.go), [member resolution](../../lyger/semantic_resolution.go), and [index](../../dictionaries.json). Existing witnesses: [configured imports](../../lyger/configured_import_test.go), [case-insensitive imports](../../lyger/dictionary_case_test.go), [collisions](../../lyger/dictionary_collision_test.go), [private ownership](../../lyger/dictionary_ownership_test.go), [dependency capture](../../lyger/dictionary_dependency_capture_test.go), and [source-unit origins](../../lyger/source_unit_origins_test.go).

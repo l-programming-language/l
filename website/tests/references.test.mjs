@@ -34,7 +34,7 @@ async function fixture(t) {
   const files = {
     'lexicon/eng/grammar.json': jsonText(grammar),
     'lexicon/eng/vocabulary.json': jsonText(vocabulary),
-    'stdlib/index.json': jsonText(index),
+    'dictionaries.json': jsonText(index),
     'stdlib/eng/io/dictionary.l': 'Create "IO" as a Dictionary.\n',
     'cmd/l/command.go': 'package main\nconst buildUsage = `l build [SOURCE]\nOptions: --help\n`\n',
     'cmd/l/contracts.go': 'package main\nconst contractsUsage = `l contracts inspect INPUT\nl contracts verify-dictionary --assurance symbolic --adjective MEANING DICTIONARY\n`\n',

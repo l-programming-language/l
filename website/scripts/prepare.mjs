@@ -29,7 +29,7 @@ export async function prepare({ root = repository, site = website, verifyReferen
   return withLock(path.join(site, '.generated'), async () => {
     const map = validateMap(await json(path.join(site, 'content-map.json')));
     if (verifyReferences) await references({ root });
-    const dictionaries = verifyReferences ? validateStdlib(await json(path.join(root, 'stdlib/index.json')), map.pages, await semanticEntries(root)) : [];
+    const dictionaries = verifyReferences ? validateStdlib(await json(path.join(root, 'dictionaries.json')), map.pages, await semanticEntries(root)) : [];
     const version = await identity(root, site, { production: process.env.DOCS_CHANNEL === 'production' });
     const examples = (await json(path.join(root, 'docs/_meta/examples.json'))).examples;
     const sourceTexts = new Map();

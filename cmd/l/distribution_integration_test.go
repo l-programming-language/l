@@ -138,7 +138,7 @@ type distributionIndex struct {
 
 func addDistributionDictionary(t testing.TB, assets, key, dictionary, source string) string {
 	t.Helper()
-	path := filepath.Join(assets, "stdlib/index.json")
+	path := filepath.Join(assets, "dictionaries.json")
 	data, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)

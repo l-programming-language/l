@@ -1,6 +1,6 @@
 # Storage source compositions
 
-The [Storage dictionary](../../stdlib/eng/storage/dictionary.l) supplies reusable source words for the compiler's value, ownership and control-flow implementations. Core imports it privately; source code that names its members uses ``Use Storage from `storage`.`` These are native-backed composition facilities, with native types checked at their Function boundaries.
+The [Storage dictionary](../../builtins/eng/storage/dictionary.l) supplies reusable source words for the compiler's value, ownership and control-flow implementations. Prelude imports it privately; source code that names its members uses ``Use Storage from `storage`.`` Its cohesive source includes share one dictionary unit and preserve declaration order, paragraph scope and canonical targets. These are native-backed composition facilities, with native types checked at their Function boundaries.
 
 The groups below explain the shared policies rather than cataloging every representation helper. Native leaves perform individual calls, operators, borrows or patterns; source Functions and Processes own their sequencing, branches and loops. Member paths below are relative to Storage unless fully qualified.
 
@@ -38,7 +38,7 @@ Iteration is a noun; Paired is an adjective describing Iteration or the actor fo
 
 Enumerate consumes pair-shaped items; it does not generate numeric indexes. Empty iterators invoke no callback. Callback panics are not caught. Successful callback payloads discarded by Inspect/Audit are released before the next iteration.
 
-Search does not inherently stop at the first true result. A continuation that falls through runs for every true result; a returning continuation can end the enclosing Function. For example, the [Value.Search composition](../../stdlib/eng/storage/dictionary.l) supplies a Returner to implement first-match behavior. Iteration bodies use scoped Process Inputs, so nested bodies can reuse labels such as Item and Outcome without sharing their bindings.
+Search does not inherently stop at the first true result. A continuation that falls through runs for every true result; a returning continuation can end the enclosing Function. For example, the [Value.Search composition](../../builtins/eng/storage/traversal.l) supplies a Returner to implement first-match behavior. Iteration bodies use scoped Process Inputs, so nested bodies can reuse labels such as Item and Outcome without sharing their bindings.
 
 ## Returns and control flow
 
@@ -64,4 +64,6 @@ Enclose builds one output buffer from the opening delimiter, then extends it wit
 
 ## Sources and witnesses
 
-The [source dictionary](../../stdlib/eng/storage/dictionary.l) owns these compositions. Existing tests cover [namespaces, lazy failures, selectors, bytes and retention](../../lyger/word_library_acceptance_test.go), [traversal and continuation policies](../../lyger/word_library_traversal_test.go), [caller returns](../../lyger/word_library_reject_test.go), and [selected App retention](../../lyger/word_library_ownership_test.go). These implementation contracts complement the language's [copying and aliasing rules](../spec/values.md#conversion-and-aliasing-boundaries).
+The [source dictionary](../../builtins/eng/storage/dictionary.l) includes bindings, value representations, control, scalar display, collections, program storage, traversal and execution compositions in source order. These files add no namespaces or export wrappers. Shared runtime/formatting bindings and operators use Storage's canonical definitions. The existing Function.Target binding resolves to Tuple.Second's canonical by-value projection. Runtime casts use Storage.Integral; Formatting retains its private fixed-signature nominal cast descriptors and formatter-only leaves. There is no separate Numeric dictionary or new implicit arithmetic vocabulary.
+
+Existing tests cover [namespaces, lazy failures, selectors, bytes and retention](../../lyger/word_library_acceptance_test.go), [traversal and continuation policies](../../lyger/word_library_traversal_test.go), [caller returns](../../lyger/word_library_reject_test.go), and [selected App retention](../../lyger/word_library_ownership_test.go). These implementation contracts complement the language's [copying and aliasing rules](../spec/values.md#conversion-and-aliasing-boundaries).

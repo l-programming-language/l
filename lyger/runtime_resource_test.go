@@ -28,6 +28,11 @@ func deriveTestRuntime(t *testing.T, resources fstest.MapFS) {
 		SHA256  string            `json:"sha256"`
 		Sources map[string]string `json:"sources"`
 	}{Version: 1, SHA256: fmt.Sprintf("%x", sha256.Sum256(aml)), Sources: make(map[string]string)}
+	registry, err := fs.ReadFile(resources, "dictionaries.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	metadata.Sources["dictionaries.json"] = fmt.Sprintf("%x", sha256.Sum256(registry))
 	for _, origin := range c.SourceOrigins {
 		if origin.Name == c.MainPath {
 			continue
@@ -45,6 +50,6 @@ func deriveTestRuntime(t *testing.T, resources fstest.MapFS) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	resources["builtins/runtime/support.aml"] = &fstest.MapFile{Data: aml}
-	resources["builtins/runtime/support.json"] = &fstest.MapFile{Data: manifest}
+	resources["runtime/generated/support.aml"] = &fstest.MapFile{Data: aml}
+	resources["runtime/generated/support.json"] = &fstest.MapFile{Data: manifest}
 }

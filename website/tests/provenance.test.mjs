@@ -110,6 +110,21 @@ test('the root embedded distribution implementation is a release-relevant input'
   assert.notEqual((await identity(root, site)).sourceFingerprint, initial.sourceFingerprint);
 });
 
+test('the dictionary registry and all runtime layers participate in source identity', async (t) => {
+  for (const name of ['dictionaries.json', 'runtime/eng/dictionary.l', 'runtime/rust/host.rs', 'runtime/generated/support.aml', 'runtime/generated/support.json']) {
+    await t.test(name, async (t) => {
+      const root = await fixture(t, { [name]: 'before\n', 'docs/guide.md': '# Guide\n', 'website/package.json': '{}\n' });
+      const site = path.join(root, 'website');
+      assert.ok((await inputInventory(root)).includes(name), `${name} must participate in language identity`);
+      const initial = await identity(root, site);
+      await fs.writeFile(path.join(root, name), 'after\n');
+      const changed = await identity(root, site);
+      assert.notEqual(changed.sourceFingerprint, initial.sourceFingerprint);
+      assert.equal(changed.docsRevision, initial.docsRevision);
+    });
+  }
+});
+
 test('VERSION support does not convert an archive into a validated production release', async (t) => {
   const root = await fixture(t, { VERSION: '2.4.1\n', 'docs/guide.md': '# Guide', 'website/package.json': '{}' });
   const site = path.join(root, 'website');
@@ -120,4 +135,16 @@ test('VERSION support does not convert an archive into a validated production re
   await assert.rejects(identity(root, site, { production: true }), /production|release|ENOENT/i);
   await fs.writeFile(path.join(root, 'VERSION'), 'official latest\n');
   await assert.rejects(identity(root, site), /VERSION/);
+});
+
+test('contract implementation inputs are present in source archives and affect source identity', async (t) => {
+  const name = 'contracts/environment.go';
+  const root = await fixture(t, { [name]: 'package contracts\n', 'docs/guide.md': '# Guide\n', 'website/package.json': '{}\n' });
+  const site = path.join(root, 'website');
+  assert.ok((await inputInventory(root)).includes(name), `${name} must be staged by the archive source inventory`);
+  const initial = await identity(root, site);
+  await fs.writeFile(path.join(root, name), 'package contracts\n// changed environment identity\n');
+  const changed = await identity(root, site);
+  assert.notEqual(changed.sourceFingerprint, initial.sourceFingerprint);
+  assert.equal(changed.docsRevision, initial.docsRevision);
 });

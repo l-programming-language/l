@@ -9,11 +9,12 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/l-programming-language/l/internal/sourcepaths"
 	"github.com/l-programming-language/l/lerrors"
 )
 
 func readDictionaryIndex(resources fs.FS) (*dictionaryIndex, error) {
-	const name = "stdlib/index.json"
+	const name = "dictionaries.json"
 	data, err := fs.ReadFile(resources, name)
 	if err != nil {
 		return nil, lerrors.IO.Errorf("read dictionary index %s: %w", name, err)
@@ -59,7 +60,7 @@ func readDictionaryIndex(resources fs.FS) (*dictionaryIndex, error) {
 		sort.Strings(keys)
 		for _, key := range keys {
 			entry := dictionaries[key]
-			if !validPath(key) || !validPath(entry.Entry) || !strings.HasSuffix(entry.Entry, ".l") || strings.TrimSpace(entry.Dictionary) == "" {
+			if !validPath(key) || !sourcepaths.Canonical(entry.Entry) || strings.TrimSpace(entry.Dictionary) == "" {
 				return nil, lerrors.InvalidConfiguration.Errorf("dictionary index %s has invalid entry %s/%s", name, language, key)
 			}
 			if prior := entries[entry.Entry]; prior != "" {

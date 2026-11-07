@@ -384,7 +384,7 @@ func TestWordLibraryLazyErrorBehavior(t *testing.T) {
 	// invokes the real runtime error constructor; neither the error model nor any
 	// tested selection, conversion, release or return is replaced by a test stub.
 	resources := dictionaryIndexFilesystem(t)
-	const storage = "stdlib/eng/storage/dictionary.l"
+	const storage = "builtins/eng/storage/control.l"
 	from := []byte("Key: ~runtime::error_new_text~")
 	if bytes.Count(resources[storage].Data, from) != 1 {
 		t.Fatal("Failure must own the sole runtime error-construction leaf")

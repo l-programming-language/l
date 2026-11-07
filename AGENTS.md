@@ -6,7 +6,7 @@ Read [architecture](docs/architecture.md), [CLI/runtime semantics](docs/cli-buil
 
 - [cmd/l/AGENTS.md](cmd/l/AGENTS.md): CLI, publication and tested compiler state.
 - [lyger/AGENTS.md](lyger/AGENTS.md): frontend, grammar and bindings.
-- [logiceme/AGENTS.md](logiceme/AGENTS.md): backend and `builtins/` integration.
+- [logiceme/AGENTS.md](logiceme/AGENTS.md): backend and native resource integration.
 
 ## Validation authorization
 
@@ -34,7 +34,9 @@ Apps execute in separate OS processes owned by the orchestrator. Run launches; S
 
 Version-2 source topology and the build coordinator separate App executable crates from their additional constructed Service libraries. Standalone Service declarations remain structural: they produce no package or process, and standalone Service bodies and native lifecycle/runtime-member use reject. Only Apps own process lifecycle and continuations. Preserve Main/Basic construction, primary Service topology, raw AML library/bin targets, and version-1 App publication. Objects remain files and Classes remain module/source groups, not runtime scopes.
 
-The CLI uses embedded resources by default or one complete `--assets` filesystem, without changing CWD. Builtins are implicit; IO is imported explicitly. Explicit `.l` imports remain relative to their source provider. Tests retain package-local fixture loading. Preserve source-unit ownership, descriptor targets, typed parameters and source order after expansion.
+The CLI uses embedded resources by default or one complete `--assets` filesystem, without changing CWD. The library layout uses one root `dictionaries.json` registry and `builtins/<language>/prelude.l` bootstrap. Prelude includes core and privately imports foundational Storage; core owns definitions only. Storage stays one dictionary with same-unit includes under `builtins/<language>/storage/`. Runtime policy belongs in `runtime/<language>/`, unchanged native host/platform mechanisms in `runtime/rust/`, and explicitly regenerated AML/provenance in `runtime/generated/`. Formatting and IO remain explicit standard libraries; Formatting must not source-load process supervision. Keep one canonical owner for shared leaves, without global vocabulary expansion, duplicate resources or old-path fallback.
+
+Preserve source-unit ownership, descriptor targets, typed parameters and source order after expansion. Explicit `.l` imports remain confined to their resource provider and dictionary root; tests retain package-local fixture loading. Establish layout and behavior regressions before production migration, preserve initial native input bytes, and regenerate derived support at every checkpoint whose inputs change. Resource moves do not authorize changes to frozen segments, behavioral expectations or unrelated locks.
 
 A requested vocabulary clean break migrates all callers and removes the retired definitions and generated-name dependencies. Do not retain compatibility aliases or adapters unless explicitly required. Keep lexical entries scoped and single-word; actor nouns use the existing verb inflection family. Explicit typed Process inputs and intermediate bindings retain canonical identity, lexical scope and source provenance. Never recover these bindings from rendered Rust or use process-wide temporary counters.
 

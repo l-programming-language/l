@@ -42,7 +42,7 @@ export function validateMap(map) {
 }
 
 export function validateStdlib(index, pages, semanticEntries) {
-  if (index.format !== 1 || !index.languages || typeof index.languages !== 'object') throw new Error('Unsupported stdlib index format.');
+  if (index.format !== 1 || !index.languages || typeof index.languages !== 'object') throw new Error('Unsupported dictionary registry format.');
   const exports = semanticEntries.filter((entry) => entry.kind === 'stdlib-export');
   for (const entry of exports) {
     const owner = entry.dictionary;

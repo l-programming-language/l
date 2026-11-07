@@ -428,7 +428,7 @@
     },
     {
       "path": "testdata/distribution/api/probe_test.go.txt",
-      "sha256": "e694aaf49aff9cd5f7bb9288083657d98a09451c362eb1ec8e78f9f6f5c23a84"
+      "sha256": "4ad61fcf8a568d692c03ba9cbf9dd68fed9f0bd118de93e42876dbbef29fe676"
     },
     {
       "path": "testdata/distribution/observers/Build-only.l",

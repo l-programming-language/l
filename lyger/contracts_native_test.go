@@ -2,11 +2,13 @@ package Lyger
 
 import (
 	"bytes"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/l-programming-language/l/contracts"
+	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 )
 
 const contractNativeUpdateSource = "Create \"items\" as a New List of 1 and 2.\nPlace 4 in items at 0.\nPlace 5 in items at 1.\n"
@@ -103,6 +105,39 @@ func TestContractsNativeBuiltinSelectionResistsCallerShadowing(t *testing.T) {
 		if use.Name == "Storage.List.Update" && (use.Meaning != want || !strings.HasPrefix(analysis.Compilation.Compilation.contractRecorder.definitionOrigin(rec).Source, "resource:")) {
 			t.Fatal("caller shadow captured selected dictionary helper")
 		}
+	}
+}
+
+func TestContractsIncludedResourcesKeepOrigins(t *testing.T) {
+	for _, external := range []bool{false, true} {
+		name := "embedded"
+		if external {
+			name = "external"
+		}
+		t.Run(name, func(t *testing.T) {
+			options := Options{}
+			if external {
+				root := distributiontest.CompleteOverride(t)
+				options = Options{Resources: os.DirFS(root), AssetRoot: root}
+			}
+			source := "Use IO's Print from `io` as \"Print\".\n" + contractNativeUpdateSource
+			analysis := analyzeContractSource(t, NewLygerService(options), []byte(source), "/project/included.l", ContractAnalysisOptions{})
+			compilation := analysis.Compilation.Compilation
+			seen := make(map[string]bool)
+			for _, origin := range compilation.SourceOrigins {
+				if strings.HasPrefix(origin.Identity, "resource:") {
+					if got := compilation.contractRecorder.logicalSource(origin.Name); got != origin.Identity {
+						t.Errorf("included resource %s became %s; want %s", origin.Name, got, origin.Identity)
+					}
+					seen[origin.Name] = true
+				}
+			}
+			for _, path := range []string{"builtins/eng/core.l", "builtins/eng/storage/collections.l", "stdlib/eng/format/foundations.l"} {
+				if !seen[path] {
+					t.Errorf("actual source closure omitted %s", path)
+				}
+			}
+		})
 	}
 }
 

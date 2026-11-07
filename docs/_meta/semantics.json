@@ -5,18 +5,27 @@
   ],
   "executedStages": [],
   "sourceHashes": {
-    "builtins/eng/core.l": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
-    "builtins/runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
-    "builtins/runtime/eng/foundations.l": "3f21a1e80f4249af50a48d35149f2144b00fa3c448eae1a3ab465b97b6044fd7",
-    "builtins/runtime/eng/number.l": "7d9f41f3990343b3ec6c63f5b03ca4762c5fab7207641d20515327ff71012f2b",
-    "docs/cli-build.md": "d66aacb6e7996bd4860ad7b60fe96a157227fc5cfe442dd8c40e9e5a1c5fe7e9",
+    "builtins/eng/core.l": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
+    "builtins/eng/prelude.l": "629dea3c07781aebbdf5a9712debf1004212bf1725c985e0a829fc8e31696bba",
+    "builtins/eng/storage/bindings.l": "95b15eb60900ef99d54f22b8f3afb924a02ed00f11d88de783c910cee2d68a33",
+    "builtins/eng/storage/collections.l": "9e6ca1a3fb0f0c951cfc3663bb2d361c562d28de191f513446205ab169e5dee4",
+    "builtins/eng/storage/control.l": "841c844e82849eb7e62271fa82bdc9014338a4f4de4f8b0d12a825ac22917502",
+    "builtins/eng/storage/dictionary.l": "e30dd60bbab640adadc3dd79dbaf4ab58660b1eae3bfe7281498168f2d3a6ca0",
+    "builtins/eng/storage/display.l": "aff3a5c119d08fd809855fcddd99ecefae5c6094a5bf9675effdba2ec0102c60",
+    "builtins/eng/storage/execution.l": "3f96fd783601f0dfc8fc3743b05e89d4387ecd0388536b2ebb04ab48ce1e7837",
+    "builtins/eng/storage/program.l": "5665b43aa601d0f9e9e2ddf8e76cd78f35f35ac38a9024af97037b1290df6f5e",
+    "builtins/eng/storage/traversal.l": "f32222d8882e68b16148bd4ff3b14dc8a13b44c39e3a7b2454fe2d71413d66be",
+    "builtins/eng/storage/values.l": "f7ace59aa9505e38ad39d2dac33cabdee0e53085cf0665b3a764b8fadf40d2d7",
+    "dictionaries.json": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
+    "docs/cli-build.md": "0afad681153834033d84c14eaa2c29827fed549c7d466728e65b06e0b7c34db0",
+    "internal/sourcepaths/sourcepaths.go": "57d39aacf36251725151e67821f956f2a6c87171b0dc0e936dafe5310c698301",
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
     "logiceme/logiceme_service.go": "415866d9fc5a7d12b76aed7c42b87554d9d93d06a1b14835bb8f848299b46776",
     "logiceme/runtime_composition.go": "24f443bd4fba2d87f7031c1acf3e39d02657c6fe4fb368449ac6a193ffe9b0b7",
     "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
     "lyger/binding.go": "ae768960f2e1e9bb6dea5e5154844dc3a4d3638cc2f8815572c99dafc348ab35",
-    "lyger/builder.go": "4ac944a308bb7f0e940013c32488a2cbb89f450de2fec15e1b7558c33c004845",
+    "lyger/builder.go": "3156d47c598437a3be4ba1aa8717551e9b689a15609babc317706376fec8d27a",
     "lyger/builtin_app_selection.go": "d27277189643bcb740dc4cd064aefa8fd810f5bff073a7d9d434f9bfec1f092f",
     "lyger/builtin_bindings.go": "702ae6b5a81caf0bf482feb43138372a0ad026bf26952a8526a6f548160b37f6",
     "lyger/builtin_operations.go": "c05bed44bfd03a5ede642e0fc785056eb743959039dede7305da625cc90d42c9",
@@ -24,6 +33,7 @@
     "lyger/constructor_grammar.go": "5a4b766982a31035bb298e6adf4e2014c406a3fd11213ad42c8144b64e642156",
     "lyger/contracts_lowering.go": "6bb0190727db25891a178b9a7343a69a74a5b870ad01536e5ea1d03167fe5cfa",
     "lyger/definition_bindings.go": "7729518ee61aad720085adb17bb201bfdcecaffd068625fda7b9dfd57e9586b8",
+    "lyger/dictionary_index.go": "e05610d60740cc4f89703b8167bf5c10ce0b6ca3470685dd4879b582ca539f7e",
     "lyger/entry_composition.go": "561579d280ba920406d3f38b0c96aa8ffe324eca0be7877071783340d8f23214",
     "lyger/execution_composition.go": "16488cc98b137f93c910a795d891131614cea18314b428ba1089ec86c032e7e7",
     "lyger/function_composition.go": "028b2b49eb47681cc23e3b3272fa2ba5b689d2ca8c7596453471e1a69f06f4ea",
@@ -66,9 +76,18 @@
     "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
     "lyger/word_values.go": "449b35c1a97327533fa663131fa3817c71b30675cce7cf63d387eb27578e1240",
     "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
-    "stdlib/eng/io/dictionary.l": "52d59eea2f063372f2ed55e2fd9673bccf32f21595ddc7530a2363175dc29664",
-    "stdlib/eng/storage/dictionary.l": "939f4e9f5180f9962b4bc1b44b48fb08f0e6c0536f35b41f5800cc5b4e81201d",
-    "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4"
+    "runtime/eng/app.l": "41288946e7401c189f60a7139d207db42ae600bdc56bc630fef8a19e268730bd",
+    "runtime/eng/capture.l": "fb8bb143404f4bb3d6707f30c9785504a126347e9f8ab2ad7f9897078d4ddadb",
+    "runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
+    "runtime/eng/errors.l": "ba4dcc92cc54009ad2991d729a0531a511db3610c8b4dd0dafb7648c391f03db",
+    "runtime/eng/foundations.l": "fac52e8716f286cc07c01b479a7d9d56a663841543406291300911549069af7e",
+    "runtime/eng/process.l": "9e4975a74ef06e73c447edd64de43c6e68b20c9cfbb8ba2afc35724c15575bb9",
+    "runtime/eng/shutdown.l": "ed0b042b7912fca7bbe21b3f1bbdf388f1fe7f873c319a9d3516da37ead70b25",
+    "runtime/eng/start.l": "fa211457bad0501d9f216f90d0c821bbf9cbf60c612d30baf547f06a3b14f377",
+    "runtime/eng/supervision.l": "e048ee6c23a980433a915c845957975af7555cb2c5b9a7f95734dec858857fc3",
+    "stdlib/eng/format/dictionary.l": "3ee48ea6485dddb429641273be99872621734c358cfe7ba78aedda41525cbde3",
+    "stdlib/eng/format/foundations.l": "af93705b7a048387f3319c8334a7afae3c6ca12a78c28485b5758e7005bb4582",
+    "stdlib/eng/io/dictionary.l": "52d59eea2f063372f2ed55e2fd9673bccf32f21595ddc7530a2363175dc29664"
   },
   "entries": [
     {
@@ -85,7 +104,10 @@
         "lexicon/eng/vocabulary.json",
         "lyger/literal_atoms.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/traversal.l",
         "lyger/definition_bindings.go",
         "lyger/grammar.go",
         "lyger/runtime_types.go"
@@ -111,7 +133,9 @@
         "lexicon/eng/vocabulary.json",
         "lyger/literal_atoms.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
         "lyger/definition_bindings.go",
         "lyger/runtime_types.go"
       ],
@@ -137,7 +161,8 @@
         "lexicon/eng/vocabulary.json",
         "lyger/literal_atoms.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
         "lyger/definition_bindings.go",
         "lyger/runtime_types.go"
       ],
@@ -161,7 +186,12 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -185,7 +215,9 @@
         "lexicon/eng/vocabulary.json",
         "lyger/literal_atoms.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
         "lyger/definition_bindings.go"
       ],
       "witnesses": [
@@ -208,7 +240,9 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -231,7 +265,11 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -257,7 +295,8 @@
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
         "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -280,7 +319,11 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -447,7 +490,11 @@
         "lyger/storage_words.go",
         "lyger/binding.go",
         "lyger/scope.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l",
         "lyger/function_definitions.go",
         "lyger/lowering.go"
       ],
@@ -600,7 +647,12 @@
         "lyger/types.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -676,7 +728,9 @@
         "lyger/types.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -698,7 +752,11 @@
         "lyger/types.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -849,7 +907,11 @@
         "lyger/runtime_types.go",
         "lyger/word_values.go",
         "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l"
       ],
       "witnesses": [
         "lyger/source_functions_test.go"
@@ -905,7 +967,11 @@
         "lyger/types.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -945,7 +1011,10 @@
         "lyger/types.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/execution.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -1022,7 +1091,8 @@
         "lyger/runtime_types.go",
         "lyger/word_values.go",
         "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/display.l"
       ],
       "witnesses": [
         "lyger/stored_values_test.go",
@@ -1223,7 +1293,11 @@
         "lyger/process_inputs.go",
         "lyger/lowering.go",
         "lyger/constructor_grammar.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/bindings.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l",
         "lyger/binding.go",
         "lyger/scope.go",
         "lyger/source_return_context.go"
@@ -1293,7 +1367,7 @@
         "lyger/word_library_reject_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Root-authored returning actions use their caller\u2019s selected Return. Its implementation keeps lexical delegates; Function-owned Returns retain their constructor contract and reject incompatible callers. Known unconditional source-actor and transparent-Process exits terminate typed caller flow. Real Function calls, conditional and opaque bodies retain their own boundaries and native obligations."
+      "notes": "Root-authored returning actions use their caller’s selected Return. Its implementation keeps lexical delegates; Function-owned Returns retain their constructor contract and reject incompatible callers. Known unconditional source-actor and transparent-Process exits terminate typed caller flow. Real Function calls, conditional and opaque bodies retain their own boundaries and native obligations."
     },
     {
       "id": "builtin:retain",
@@ -1304,7 +1378,9 @@
       "doc": "docs/reference/builtins/definitions.md#retain",
       "sources": [
         "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/execution.l",
         "lyger/builtin_app_selection.go",
         "lyger/storage_words.go"
       ],
@@ -1431,7 +1507,10 @@
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/builder.go",
-        "lyger/source_units.go"
+        "lyger/source_units.go",
+        "builtins/eng/prelude.l",
+        "lyger/dictionary_index.go",
+        "internal/sourcepaths/sourcepaths.go"
       ],
       "witnesses": [
         "lyger/configured_import_test.go"
@@ -1544,7 +1623,8 @@
         "lyger/runtime_values_plan.go",
         "lyger/runtime_value_words.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/collections.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -1567,7 +1647,8 @@
         "lyger/runtime_values_plan.go",
         "lyger/runtime_value_words.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/collections.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -1651,7 +1732,7 @@
       "support": "supported",
       "doc": "docs/stdlib/eng/io.md#public-and-private-names",
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/lexical_scope.go"
@@ -1676,7 +1757,7 @@
       "support": "supported",
       "doc": "docs/stdlib/eng/io.md#import-and-calling-forms",
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/definition_bindings.go",
@@ -1718,7 +1799,7 @@
       "support": "supported",
       "doc": "docs/stdlib/eng/io.md#public-and-private-names",
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/function_definitions.go"
@@ -1748,7 +1829,7 @@
       "support": "supported",
       "doc": "docs/stdlib/eng/io.md#public-and-private-names",
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/function_definitions.go"
@@ -1778,7 +1859,7 @@
       "support": "supported",
       "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/function_definitions.go"
@@ -1814,11 +1895,12 @@
       "support": "supported",
       "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/function_definitions.go",
-        "stdlib/eng/storage/dictionary.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
         "lyger/source_descriptors.go",
         "lyger/builtin_bindings.go",
         "lyger/process_inputs.go"
@@ -1851,7 +1933,7 @@
       "support": "supported",
       "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
       "sources": [
-        "stdlib/index.json",
+        "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
         "lyger/source_units.go",
         "lyger/function_definitions.go"
@@ -2011,7 +2093,10 @@
       "sources": [
         "lexicon/eng/grammar.json",
         "lexicon/eng/vocabulary.json",
-        "lyger/builder.go"
+        "lyger/builder.go",
+        "builtins/eng/prelude.l",
+        "lyger/dictionary_index.go",
+        "internal/sourcepaths/sourcepaths.go"
       ],
       "witnesses": [
         "lyger/grammar_terms_test.go",
@@ -2055,7 +2140,8 @@
         "lyger/runtime_values_plan.go",
         "lyger/runtime_value_words.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/collections.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -2227,7 +2313,11 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -2251,7 +2341,11 @@
         "lyger/types.go",
         "lyger/runtime_types.go",
         "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/traversal.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go"
@@ -2273,7 +2367,10 @@
         "lyger/word_values.go",
         "lyger/runtime_values_source.go",
         "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/execution.l"
       ],
       "witnesses": [
         "lyger/runtime_values_test.go",
@@ -2293,7 +2390,11 @@
         "lyger/instruction_captures.go",
         "lyger/orchestration_captures.go",
         "lyger/storage_words.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/program.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l"
       ],
       "witnesses": [
         "lyger/orchestration_captures_test.go",
@@ -2312,8 +2413,17 @@
       "support": "internal",
       "doc": "docs/internals/storage.md#results-and-errors",
       "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/storage/dictionary.l"
+        "dictionaries.json",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/bindings.l",
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/display.l",
+        "builtins/eng/storage/collections.l",
+        "builtins/eng/storage/program.l",
+        "builtins/eng/storage/traversal.l",
+        "builtins/eng/storage/execution.l",
+        "builtins/eng/prelude.l"
       ],
       "witnesses": [
         "lyger/private_dictionary_test.go",
@@ -2338,16 +2448,24 @@
       "support": "internal",
       "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
       "sources": [
-        "stdlib/index.json",
-        "builtins/runtime/eng/dictionary.l",
+        "dictionaries.json",
+        "runtime/eng/dictionary.l",
         "logiceme/runtime_composition.go",
-        "logiceme/logiceme_service.go"
+        "logiceme/logiceme_service.go",
+        "runtime/eng/foundations.l",
+        "runtime/eng/errors.l",
+        "runtime/eng/process.l",
+        "runtime/eng/shutdown.l",
+        "runtime/eng/app.l",
+        "runtime/eng/start.l",
+        "runtime/eng/supervision.l",
+        "runtime/eng/capture.l"
       ],
       "witnesses": [
         "lyger/private_dictionary_test.go",
         "lyger/definition_export_test.go"
       ],
-      "notes": "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog.",
+      "notes": "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog. Runtime privately imports canonical Storage leaves and the shared Formatting implementation; native host/platform inputs and generated composition retain separate ownership.",
       "evidence": "static-inspection; existing-witness-not-run",
       "dictionary": {
         "lexicon": "eng",
@@ -2363,15 +2481,18 @@
       "support": "internal",
       "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
       "sources": [
-        "stdlib/index.json",
-        "builtins/runtime/eng/number.l",
-        "builtins/runtime/eng/foundations.l"
+        "dictionaries.json",
+        "stdlib/eng/format/dictionary.l",
+        "stdlib/eng/format/foundations.l",
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "builtins/eng/storage/values.l"
       ],
       "witnesses": [
         "lyger/format_dictionary_test.go",
         "lyger/io_numeric_test.go"
       ],
-      "notes": "IO and Runtime select one canonical formatting Function and its source-owned dependencies; importing IO does not load process supervision.",
+      "notes": "IO and Runtime select one canonical Formatting Function. Shared bindings, control and numeric operators use Storage; formatter-only leaves and fixed-signature nominal cast descriptors stay private, distinct from the generic Storage.Integral casts used by Runtime. No Numeric dictionary or implicit arithmetic vocabulary is added. Importing Formatting or IO does not source-load process supervision.",
       "evidence": "static-inspection; existing-witness-not-run",
       "dictionary": {
         "lexicon": "eng",

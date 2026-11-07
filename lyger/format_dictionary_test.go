@@ -28,7 +28,7 @@ func TestFormatterImportsRetainCanonicalDefinition(t *testing.T) {
 			}
 			origins := 0
 			for _, origin := range c.SourceOrigins {
-				if origin.Name == "builtins/runtime/eng/number.l" {
+				if origin.Name == "stdlib/eng/format/dictionary.l" {
 					origins++
 				}
 			}

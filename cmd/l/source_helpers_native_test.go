@@ -36,7 +36,7 @@ func assertFrontendResources(t testing.TB, c *Lyger.Compilation) {
 		t.Fatal("missing compilation")
 	}
 	for _, u := range c.SourceUnits {
-		if u.Kind == Lyger.SourceBuiltin && !strings.HasSuffix(u.Origin.Name, "builtins/eng/core.l") {
+		if u.Kind == Lyger.SourceBuiltin && !strings.HasSuffix(u.Origin.Name, "builtins/eng/prelude.l") {
 			t.Errorf("Rust builtin selection: %q", u.Origin.Name)
 		}
 		if u.Kind == Lyger.SourceDictionary && u.Dictionary == "IO" && !strings.HasSuffix(u.Origin.Name, "stdlib/eng/io/dictionary.l") {

@@ -38,8 +38,8 @@ func runtimeSourceFiles(t testing.TB) map[string][]byte {
 	return map[string][]byte{
 		"src/runtime.rs":      runtime,
 		"src/runtime_api.rs":  api,
-		"src/runtime/host.rs": bytes.Clone(templates["runtime/host.lu"]),
-		"src/process_unix.rs": bytes.Clone(templates["runtime/process_unix.lu"]),
+		"src/runtime/host.rs": bytes.Clone(templates["runtime/host.rs"]),
+		"src/process_unix.rs": bytes.Clone(templates["runtime/process_unix.rs"]),
 	}
 }
 

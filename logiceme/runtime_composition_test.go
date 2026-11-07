@@ -19,7 +19,7 @@ func compositionResources(t *testing.T, value string) fstest.MapFS {
 	t.Helper()
 	resources := runtimeGenerationResources(t)
 	files := fstest.MapFS{}
-	for _, root := range []string{"builtins/segments", "builtins/templates"} {
+	for _, root := range []string{"builtins/segments", "builtins/templates", "runtime/rust"} {
 		if err := fs.WalkDir(resources, root, func(name string, entry fs.DirEntry, err error) error {
 			if err != nil || entry.IsDir() {
 				return err
@@ -33,16 +33,17 @@ func compositionResources(t *testing.T, value string) fstest.MapFS {
 			t.Fatal(err)
 		}
 	}
-	const sourcePath = "builtins/runtime/eng/number.l"
+	const sourcePath = "stdlib/eng/format/dictionary.l"
 	source := []byte("source-owned composition " + value)
 	aml := []byte(`<PROGRAM><STRUCTURE><BOOK "support"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src","StructureVersion":"2"}}</JSON><JSON>{"Services":[{"Name":"library","Location":"/src/","GenericObjects":["runtime"],"Target":{"Kind":"lib","Name":"support","Root":"runtime","Primary":false}}]}</JSON><JSON>{"Objects":[{"Name":"runtime","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "library"><SENTENCE "runtime"><|W|><|S|>` + "`A`" + `</S|><|S|>` + "`FW{|Key: ~identity~, Outputs: ~&[u8]&~|}^W^BOD^E{|Statement: ~return " + value + ";~|}`" + `</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`)
-	manifest, err := json.Marshal(distribution.RuntimeComposition{Version: 1, SHA256: compositionHash(aml), Sources: map[string]string{sourcePath: compositionHash(source)}})
+	manifest, err := json.Marshal(distribution.RuntimeComposition{Version: 1, SHA256: compositionHash(aml), Sources: map[string]string{sourcePath: compositionHash(source), "dictionaries.json": compositionHash([]byte("{}"))}})
 	if err != nil {
 		t.Fatal(err)
 	}
 	files[sourcePath] = &fstest.MapFile{Data: source, Mode: 0600}
-	files["builtins/runtime/support.aml"] = &fstest.MapFile{Data: aml, Mode: 0600}
-	files["builtins/runtime/support.json"] = &fstest.MapFile{Data: manifest, Mode: 0600}
+	files["dictionaries.json"] = &fstest.MapFile{Data: []byte("{}"), Mode: 0600}
+	files["runtime/generated/support.aml"] = &fstest.MapFile{Data: aml, Mode: 0600}
+	files["runtime/generated/support.json"] = &fstest.MapFile{Data: manifest, Mode: 0600}
 	// There must be no dependency on the former static runtime source.
 	return files
 }
@@ -71,7 +72,7 @@ func TestRuntimeCompositionUsesSelectedResources(t *testing.T) {
 }
 
 func TestRuntimeCompositionRejectsStaleInputs(t *testing.T) {
-	for _, name := range []string{"builtins/runtime/eng/number.l", "builtins/runtime/support.aml"} {
+	for _, name := range []string{"stdlib/eng/format/dictionary.l", "runtime/generated/support.aml"} {
 		t.Run(name, func(t *testing.T) {
 			files := compositionResources(t, "7")
 			files[name].Data = append(files[name].Data, '\n')
@@ -81,7 +82,7 @@ func TestRuntimeCompositionRejectsStaleInputs(t *testing.T) {
 		})
 	}
 	files := compositionResources(t, "7")
-	delete(files, "builtins/runtime/support.aml")
+	delete(files, "runtime/generated/support.aml")
 	if _, err := loadSupportTemplates(files, true); !errors.Is(err, fs.ErrNotExist) {
 		t.Fatalf("missing selected composition = %v", err)
 	}
@@ -92,17 +93,17 @@ func TestRuntimeCompositionRejectsStaleInputs(t *testing.T) {
 
 func TestRuntimeCompositionRequiresLibraryTarget(t *testing.T) {
 	files := compositionResources(t, "7")
-	files["builtins/runtime/support.aml"].Data = bytes.Replace(files["builtins/runtime/support.aml"].Data, []byte(`"Kind":"lib"`), []byte(`"Kind":"bin"`), 1)
+	files["runtime/generated/support.aml"].Data = bytes.Replace(files["runtime/generated/support.aml"].Data, []byte(`"Kind":"lib"`), []byte(`"Kind":"bin"`), 1)
 	var manifest distribution.RuntimeComposition
-	if err := json.Unmarshal(files["builtins/runtime/support.json"].Data, &manifest); err != nil {
+	if err := json.Unmarshal(files["runtime/generated/support.json"].Data, &manifest); err != nil {
 		t.Fatal(err)
 	}
-	manifest.SHA256 = compositionHash(files["builtins/runtime/support.aml"].Data)
+	manifest.SHA256 = compositionHash(files["runtime/generated/support.aml"].Data)
 	updated, err := json.Marshal(manifest)
 	if err != nil {
 		t.Fatal(err)
 	}
-	files["builtins/runtime/support.json"].Data = updated
+	files["runtime/generated/support.json"].Data = updated
 	if _, err := loadSupportTemplates(files, true); !errors.Is(err, lerrors.InvalidConfiguration) || !strings.Contains(err.Error(), "library target") {
 		t.Fatalf("binary composition = %v", err)
 	}

@@ -34,7 +34,7 @@ func TestNamedCompositionUsesConstructorMetadata(t *testing.T) {
 
 func TestNamedCompositionSelectsScopedWords(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
-	const core = "stdlib/eng/storage/dictionary.l"
+	const core = "builtins/eng/storage/dictionary.l"
 	original := string(files[core].Data)
 	original += "\nDefine Storage's \"Place\" as `<DEF>OB{|Key: ~<@Name@>~, Value: ~<@Value@>~|}<DEF>`.\nCreate Storage's \"Keep|-s|-t|-ing|-er\" for Processing a New Storage's Place.\nDefine Storage's \"Unique\" as a New Adjective describing any Storage's Place.\nIt describes any Storage's Place as `<DEF>OB{|Key: ~mut <@Name@>~, Value: ~<@Value@>~|}<DEF>`.\n"
 	files[core] = &fstest.MapFile{Data: []byte(original)}

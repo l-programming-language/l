@@ -26,9 +26,11 @@ Apps run as separate OS processes while the orchestrator preserves ordered sourc
 | `lexicon/eng` | Configured lexical roots, inflections, grammatical structures and cases |
 | `lyger` | Source preparation, vocabulary, grammar, bindings, types, ownership/activation analysis and AML composition |
 | `logiceme` | AML interpretation, glyph/template evaluation, callable declaration rendering, support assembly and linking |
-| `builtins/eng` and `stdlib/eng` | English L source compositions, small native leaves and construction descriptors |
+| `builtins/eng` | Source bootstrap, implicit core definitions and foundational Storage compositions |
+| `stdlib/eng` | Explicit IO and Formatting dictionaries with their private helpers |
+| `runtime/eng`, `runtime/rust` and `runtime/generated` | L-authored runtime policy, native host/platform inputs and derived AML/provenance |
 | `builtins/operations/rust` | Typed builtin process-operation compositions selected by the frontend |
-| `builtins/segments` and `builtins/templates` | Frozen Rust templates with reviewed composition amendments and retained Cargo/configuration/runtime support assets; the maintained Lucid suite defines verified scope |
+| `builtins/segments` and `builtins/templates` | Frozen Rust syntax and retained Cargo/configuration/start/stop templates; the maintained Lucid suite defines verified scope |
 
 Logeme is implemented in `logiceme/`. Frontend fields named ASM or AML hold structured markup rather than machine assembly. The backend's `Executable` holds source bundles; the caller owns persistence, building, and execution. The AML and template protocol is described below.
 
@@ -54,17 +56,23 @@ Embedded resources are the default; an explicit complete directory
 override is useful for development. Resource files stay in their native JSON, L
 and template formats, and generated programs do not depend on them at runtime.
 
-`builtins/<configured-language>/core.l` supplies the implicit builtin unit.
+`builtins/<configured-language>/prelude.l` supplies the implicit builtin unit
+and includes `core.l` in that same unit.
 The [core reference](reference/builtins/index.md) describes its implicit vocabulary.
-Core privately imports [Storage](internals/storage.md); that implementation namespace
-requires an explicit import at a source use. The [dictionary index](../stdlib/index.json)
+Prelude privately imports [Storage](internals/storage.md); that implementation namespace
+requires an explicit import at a source use. The [dictionary index](../dictionaries.json)
 also selects [IO](stdlib/eng/io.md) and private support dictionaries. Adding an
 indexed dictionary does not make its words implicit.
 
-Runtime lifecycle, errors and captures are composed in [L source](../builtins/runtime/eng).
-Its fingerprinted AML is rendered with the same frozen logemes; host adapters
-retain OS and async access. Selected source declarations carry their dependencies
-into AML without an unconditional library aggregate.
+Runtime lifecycle, errors and captures are composed in [L source](../runtime/eng).
+Its [generated support](../runtime/generated) is rendered with the same frozen
+logemes; [native inputs](../runtime/rust) retain executor, host, OS and async access.
+Formatting has one implementation under `stdlib/<language>/format/`, shared by
+IO and Runtime without source-loading process supervision. Storage's same-unit
+includes retain one canonical dictionary and lexical ownership. A native
+`runtime::` symbol reference inside Storage is a linking dependency, not a source
+import of Runtime. Selected source declarations carry their dependencies into
+AML without an unconditional library aggregate.
 
 Build, Run, Stop and Await retain their semantic operation identities. The
 [private builtin catalog](../lyger/builtin_operations.go) loads their process

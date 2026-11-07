@@ -65,10 +65,10 @@ func TestDictionaryIndexValidation(t *testing.T) {
 			if err := loadIndexDictionary(t, files); err != nil {
 				t.Fatalf("valid dictionary prerequisite: %v", err)
 			}
-			files["stdlib/index.json"] = &fstest.MapFile{Data: []byte(tc.index)}
+			files["dictionaries.json"] = &fstest.MapFile{Data: []byte(tc.index)}
 			files["stdlib/eng/directory.l"] = &fstest.MapFile{Mode: fs.ModeDir}
 			err := loadIndexDictionary(t, files)
-			if err == nil || !errors.Is(err, tc.kind) || !strings.Contains(err.Error(), tc.context) || !strings.Contains(err.Error(), "stdlib/index.json") {
+			if err == nil || !errors.Is(err, tc.kind) || !strings.Contains(err.Error(), tc.context) || !strings.Contains(err.Error(), "dictionaries.json") {
 				t.Fatalf("invalid registry must fail before selected dictionary expansion, with index/entry provenance: %v", err)
 			}
 		})

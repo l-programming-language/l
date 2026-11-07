@@ -18,7 +18,7 @@ Define Runtime's Capture's "Description" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^K
 
     Create Runtime's Capture's "Adapt|-s|-ed|-ing|-er" as a Generic Runtime.Capture.Readable Storage.Routine with Inputs of "reader" as `Option<R>` and Outputs of `Option<Box<dyn tokio::io::AsyncRead + Unpin + Send>>`.
 Create "Available" as a New Presence of Reader.
-If Available, Create "Value" as a New Contents of Reader and `present capture reader` and then Create "Boxed" as a New Runtime's Capture's Box of Value and then Create "Interface" as a New Runtime's Capture's Channel of Boxed and then Create "Wrapped" as a New Present of Interface and then Return Wrapped.
+If Available, Create "Value" as a New Storage's Result's Expecter of Reader and `present capture reader` and then Create "Boxed" as a New Runtime's Capture's Box of Value and then Create "Interface" as a New Runtime's Capture's Channel of Boxed and then Create "Wrapped" as a New Present of Interface and then Return Wrapped.
 Return a New Absent.
 
     Create Runtime's Capture's "Fail|-s|-ed|-ing|-er" as a Generic Function with Inputs of "errors" as `&mut Option<Error>` and "cause" as `Error` and Outputs of `bool`.
@@ -31,26 +31,26 @@ Return a New Runtime's Capture's Content of a New Runtime's Error's Message and 
 
     Create Runtime's Capture's "Share|-s|-d|--ing|-r" as a Generic Function with Inputs of "value" as `Capture` and Outputs of `(std::sync::Arc<[u8]>, Option<Error>)`.
 Create "Bytes" as a New Runtime's Capture's Output of a New Runtime's Capture's Bytes of Value.
-Return a New Pair of Bytes and a New Runtime's Capture's Error of Value.
+Return a New Storage's Tuple of Bytes and a New Runtime's Capture's Error of Value.
 
     Create Runtime's Capture's "Explain|-s|-ed|-ing|-er" as a Generic Function with Inputs of "errors" as `&mut Option<Error>` and "error" as `std::io::Error` and Outputs of `bool`.
 Return a New Runtime's Capture's Failer of Errors and a New Runtime's Error's Explainer of `capture application stream` and Error.
 
     Create Runtime's Capture's "Receive|-s|-d|--ing|-r" as a Generic Function with Inputs of "destination" as `&mut (dyn std::io::Write + Send)` and "buffer" as `&[u8]` and "errors" as `&mut Option<Error>` and "read" as `std::io::Result<usize>` and Outputs of `bool`.
 Create "Readfailed" as a New Runtime's Fault of Read.
-If Readfailed, Create "Failure" as a New Runtime's Failure of Read and then Create "Error" as a New Contents of Failure and `failed stream read` and then Create "Complete" as a New Runtime's Capture's Explainer of Errors and Error and then Return Complete.
+If Readfailed, Create "Failure" as a New Runtime's Failure of Read and then Create "Error" as a New Storage's Result's Expecter of Failure and `failed stream read` and then Create "Complete" as a New Runtime's Capture's Explainer of Errors and Error and then Return Complete.
 Create "Count" as a New Storage's Optional of Read.
-Create "Size" as a New Contents of Count and `successful stream read`.
-Create "Zero" as a New Indexed Integer of 0.
+Create "Size" as a New Storage's Result's Expecter of Count and `successful stream read`.
+Create "Zero" as a New Storage's Integral of 0 and `usize`.
 If Size is Zero, Return true.
 Create "Written" as a New Runtime's Capture's Writer of Destination, Buffer, and Size.
 Create "Writefailed" as a New Runtime's Fault of Written.
-If Writefailed, Create "Writefailure" as a New Runtime's Failure of Written and then Create "Writeerror" as a New Contents of Writefailure and `failed stream write` and then Create "Finished" as a New Runtime's Capture's Explainer of Errors and Writeerror and then Return Finished.
+If Writefailed, Create "Writefailure" as a New Runtime's Failure of Written and then Create "Writeerror" as a New Storage's Result's Expecter of Writefailure and `failed stream write` and then Create "Finished" as a New Runtime's Capture's Explainer of Errors and Writeerror and then Return Finished.
 Return false.
 
     Create Runtime's Capture's "Timeout" as a Generic Pending Function with Inputs of "until" as `Option<tokio::time::Instant>` and Outputs of `impl std::future::Future<Output=()> + Send`.
 Create "Available" as a New Presence of Until.
-If Available, Create "Instant" as a New Contents of Until and `present cleanup deadline` and then Create "Sleep" as a New Runtime's Capture's Sleep of Instant and then Create "Elapsed" as a New Runtime's Completion of Sleep and then Return Elapsed.
+If Available, Create "Instant" as a New Storage's Result's Expecter of Until and `present cleanup deadline` and then Create "Sleep" as a New Runtime's Capture's Sleep of Instant and then Create "Elapsed" as a New Runtime's Completion of Sleep and then Return Elapsed.
 Return a New Runtime's Completion of a New Runtime's Capture's Wait.
 
     Create Runtime's Capture's "Observe|-s|-d|--ing|--er" as a Generic Function with Inputs of "errors" as `&mut Option<Error>` and "notice" as `std::result::Result<(), tokio::sync::watch::error::RecvError>` and Outputs of `bool`.
@@ -67,13 +67,13 @@ Create "Expired" as a New Runtime's Valid of Outcome.
 If Expired, Create "Expiredresult" as a New Runtime's Capture's Failer of Errors and a New Runtime's Error's Describer of `application output pipe remained open beyond cleanup deadline` and then Return Expiredresult.
 Create "Changed" as a New Runtime's Rejecter of Outcome.
 Create "Notified" as a New Runtime's Valid of Changed.
-If Notified, Create "Notice" as a New Storage's Optional of Changed and then Create "Noticeoutcome" as a New Contents of Notice and `ready deadline change` and then Create "Observed" as a New Runtime's Capture's Observer of Errors and Noticeoutcome and then Return Observed.
+If Notified, Create "Notice" as a New Storage's Optional of Changed and then Create "Noticeoutcome" as a New Storage's Result's Expecter of Notice and `ready deadline change` and then Create "Observed" as a New Runtime's Capture's Observer of Errors and Noticeoutcome and then Return Observed.
 Return a New Runtime's Capture's Receiver of Destination, Buffer, Errors, and a New Runtime's Rejecter of Changed.
 
     Create Runtime's Capture's "Start|-s|-ed|-ing|-er" as a Generic Pending Function with Inputs of "reader" as `Option<Box<dyn tokio::io::AsyncRead + Unpin + Send>>` and "deadline" as `tokio::sync::watch::Receiver<Option<tokio::time::Instant>>` and "dependencies" as `std::sync::Arc<dyn crate::runtime::host::Dependencies>` and "stream" as `crate::runtime::host::Stream` and Outputs of `impl std::future::Future<Output=Capture> + Send`.
 Create "Available" as a New Presence of Reader.
 If Available is false, Create "Missing" as a New Runtime's Capture's Rejecter of a New Runtime's Error's Describer of `application capture pipe is unavailable` and then Return Missing.
-Create "Input" as a New Mutable Binding of a New Contents of Reader and `present capture reader`.
+Create "Input" as a New Mutable Binding of a New Storage's Result's Expecter of Reader and `present capture reader`.
 Create "Notifications" as a New Mutable Binding of Deadline.
 Create "Bytes" as a New Mutable Binding of a New Runtime's Error's Message.
 Create "Destination" as a New Mutable Binding of a New Runtime's Capture's Destination of Dependencies, Stream, and a New Runtime's Capture's Borrow of Bytes.
@@ -102,6 +102,6 @@ Return a New Runtime's Spawner of a New Runtime's Capture's Reader of Reader, De
 
     Publicly create Runtime's Capture's "Join|-s|-ed|-ing|-er" as a Generic `captured` Function with Inputs of "result" as `std::result::Result<Capture, tokio::task::JoinError>` and "stream" as `&str` and Outputs of `(std::sync::Arc<[u8]>, Option<Error>)`.
 Create "Failed" as a New Runtime's Fault of Result.
-If Failed, Create "Failure" as a New Runtime's Failure of Result and then Create "Cause" as a New Contents of Failure and `failed capture task` and then Create "Message" as a New Encoding of a New Runtime's Capture's Description of Stream and Cause and then Create "Capture" as a New Runtime's Capture's Rejecter of a New Runtime's Error's Former of Message and then Create "Rejected" as a New Runtime's Capture's Sharer of Capture and then Return Rejected.
+If Failed, Create "Failure" as a New Runtime's Failure of Result and then Create "Cause" as a New Storage's Result's Expecter of Failure and `failed capture task` and then Create "Message" as a New Encoding of a New Runtime's Capture's Description of Stream and Cause and then Create "Capture" as a New Runtime's Capture's Rejecter of a New Runtime's Error's Former of Message and then Create "Rejected" as a New Runtime's Capture's Sharer of Capture and then Return Rejected.
 Create "Optional" as a New Storage's Optional of Result.
-Return a New Runtime's Capture's Sharer of a New Contents of Optional and `successful capture task`.
+Return a New Runtime's Capture's Sharer of a New Storage's Result's Expecter of Optional and `successful capture task`.

@@ -40,8 +40,8 @@ func TestSourceUnitOriginsAndPhysicalProjection(t *testing.T) {
 			if !bytes.Equal(c.MainBytes, []byte(source)) || !bytes.Equal(c.Prepared.Original, []byte(source)) {
 				t.Fatal("unit preparation changed original main bytes")
 			}
-			if len(c.SourceUnits) != 5 || len(c.SourceOrigins) != 8 {
-				t.Fatalf("units/origins=%d/%d; want5/8", len(c.SourceUnits), len(c.SourceOrigins))
+			if len(c.SourceUnits) != 5 || len(c.SourceOrigins) != 17 {
+				t.Fatalf("units/origins=%d/%d; want5/17", len(c.SourceUnits), len(c.SourceOrigins))
 			}
 			units := map[SourceKind]*SourceUnit{}
 			dictionaries := map[string]*SourceUnit{}
@@ -134,7 +134,7 @@ func checkSourceOrigin(t *testing.T, c *Compilation, origin SourceOrigin, overri
 func TestSourceUnitDiamondIdentity(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
 	var index dictionaryIndex
-	if err := json.Unmarshal(files["stdlib/index.json"].Data, &index); err != nil {
+	if err := json.Unmarshal(files["dictionaries.json"].Data, &index); err != nil {
 		t.Fatal(err)
 	}
 	for _, name := range []string{"Left", "Right"} {
@@ -147,7 +147,7 @@ func TestSourceUnitDiamondIdentity(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	files["stdlib/index.json"].Data = raw
+	files["dictionaries.json"].Data = raw
 	cfg := Options{Resources: files}
 	source := "Use Left's Print from `left` as \"FirstPrint\".\nUse Right's Print from `right` as \"SecondPrint\".\n"
 	result, err := NewLygerService(cfg).Compile([]byte(source), filepath.Join(t.TempDir(), "main.l"))

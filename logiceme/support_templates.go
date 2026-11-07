@@ -14,18 +14,24 @@ import (
 func loadSupportAssets(resources fs.FS, includeRuntime bool) (map[string][]byte, error) {
 	names := []string{"config/config.lu", "install/cargo.lu", "operate/start.lu", "operate/stop.lu"}
 	if includeRuntime {
-		names = append(names, "runtime/main.lu", "runtime/host.lu", "runtime/process_unix.lu", "runtime/process_other.lu")
+		names = append(names, "runtime/main.rs", "runtime/host.rs", "runtime/process_unix.rs", "runtime/process_other.rs")
 	}
 	result := make(map[string][]byte, len(names))
 	for _, name := range names {
 		asset := path.Join("builtins/templates", name)
+		native := strings.HasPrefix(name, "runtime/")
+		if native {
+			asset = path.Join("runtime/rust", path.Base(name))
+		}
 		content, err := readAsset(resources, asset)
 		if err != nil {
-			return nil, fmt.Errorf("load Rust support template %s: %w", asset, err)
+			return nil, fmt.Errorf("load Rust support asset %s: %w", asset, err)
 		}
-		requiresTags := name == "config/config.lu" || name == "install/cargo.lu"
-		if err := validateLucidTemplate(content, requiresTags); err != nil {
-			return nil, fmt.Errorf("load Rust support template %s: %w", asset, err)
+		if !native {
+			requiresTags := name == "config/config.lu" || name == "install/cargo.lu"
+			if err := validateLucidTemplate(content, requiresTags); err != nil {
+				return nil, fmt.Errorf("load Rust support template %s: %w", asset, err)
+			}
 		}
 		result[name] = content
 	}

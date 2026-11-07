@@ -33,12 +33,15 @@ composition does not widen frozen assets, their interfaces or hash expectations.
 
 ## L source library counterparts
 
-[Core](eng/core.l) supplies implicit source vocabulary; its [word reference](../docs/reference/builtins/definitions.md)
+[Prelude](eng/prelude.l) includes [core](eng/core.l), which supplies implicit source vocabulary; its [word reference](../docs/reference/builtins/definitions.md)
 owns forms, operands and behavior. [Storage](../docs/internals/storage.md) supplies
 explicitly importable implementation compositions, and [IO](../docs/stdlib/eng/io.md)
 supplies public printing and byte output. Their selection, traversal, error and
 wrapper policies remain in L over small native leaves. Source-library changes
-do not widen the frozen logeme interfaces.
+do not widen the frozen logeme interfaces. Prelude privately imports the one
+Storage dictionary. Root [dictionaries.json](../dictionaries.json) selects
+foundational, runtime and standard-library dictionaries; indexing a dictionary
+does not publish its private helpers or make its words implicit.
 
 Native source Function signatures use existing Func/Props metadata. The frontend
 `Type` slot binds a native type atom or selected source type declaration; `Atoms`
@@ -47,7 +50,7 @@ nested constructions bind that result once before their consumer. Assignment
 targets remain references. These frontend roles add no AML fields or logeme
 interfaces. Native and ordinary Function bodies share instruction lowering.
 
-Runtime policy is authored in [L source](runtime/eng/dictionary.l). Run
+Runtime policy is authored in [L source](../runtime/eng/dictionary.l). Run
 `scripts/l-go run -mod=readonly ./tools/composition` after changing its dependencies, then
 `scripts/l-go run -mod=readonly ./tools/composition -check` to verify the derived AML,
 fingerprints and selection index. The [CLI contract](../docs/cli-build.md#source-generation-and-native-builds)
@@ -713,11 +716,11 @@ Support resources have responsibilities separate from the eighteen segment templ
 | [install/cargo.lu](templates/install/cargo.lu) | Cargo manifest. |
 | [operate/start.lu](templates/operate/start.lu) | Native build and launch script. |
 | [operate/stop.lu](templates/operate/stop.lu) | Explicit-PID stop script. |
-| [runtime/main.lu](templates/runtime/main.lu) | Runtime entry and shutdown. |
-| [runtime/host.lu](templates/runtime/host.lu) | Host process, async and trait adapters. |
-| [runtime/support.aml](runtime/support.aml), [support.json](runtime/support.json) | Derived runtime composition, source fingerprints and selection index. |
-| [runtime/process_unix.lu](templates/runtime/process_unix.lu) | Unix process support. |
-| [runtime/process_other.lu](templates/runtime/process_other.lu) | Unsupported-platform reporting. |
+| [main.rs](../runtime/rust/main.rs) | Native runtime entry and shutdown delegation. |
+| [host.rs](../runtime/rust/host.rs) | Host process, async and trait adapters. |
+| [support.aml](../runtime/generated/support.aml), [support.json](../runtime/generated/support.json) | Derived runtime composition, source fingerprints and selection index. |
+| [process_unix.rs](../runtime/rust/process_unix.rs) | Unix process support. |
+| [process_other.rs](../runtime/rust/process_other.rs) | Unsupported-platform reporting. |
 
 The six core nonruntime bundles verify the common manifest, config and start/stop
 artifact bytes. They do not execute those artifacts, exercise process supervision,

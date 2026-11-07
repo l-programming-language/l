@@ -57,6 +57,12 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
   package/path separate from AML metadata. Ordinary Evaluate/IncludeRuntime
   callers retain their inline-runtime bundles; do not rewrite completed source
   or expose the private runtime placement as a glyph input.
+- Read native runtime inputs from `runtime/rust/*.rs` and derived source support
+  from `runtime/generated/`. Both inline and workspace assembly use those same
+  selected resources. Keep native input bytes and generated module topology
+  unchanged during relocation; regenerate AML from `runtime/<language>/` through
+  the composition tool. Writer and reader must agree on canonical fingerprints,
+  and missing selected resources must fail without old-path or provider fallback.
 
 ## Workflow and verification
 

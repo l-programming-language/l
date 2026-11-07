@@ -12,5 +12,3 @@ It describes a Generic `main` Object with a New Objective Main Function using an
 It describes a Generic `main` Service with a New Main Object using any Process.
 "Basic" describes a Generic App with a New Main Service using any Process.
 Define "Retain|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::sync::Arc::clone~, Inputs: ~&[<@Target@>]&~|}<DEF>`.
-
-    Use Storage from `storage`.

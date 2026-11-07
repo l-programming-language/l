@@ -10,8 +10,8 @@ import (
 	"io"
 	"io/fs"
 	"sort"
-	"strings"
 
+	"github.com/l-programming-language/l/internal/sourcepaths"
 	"github.com/l-programming-language/l/lerrors"
 )
 
@@ -35,7 +35,7 @@ func IsEmbedded(files fs.FS) bool {
 // Mutable providers are reread on every call; neither errors nor parsed state
 // are cached by this resource reader.
 func LoadRuntimeComposition(files fs.FS) (RuntimeComposition, []byte, error) {
-	const manifestPath = "builtins/runtime/support.json"
+	const manifestPath = "runtime/generated/support.json"
 	var manifest RuntimeComposition
 	if files == nil {
 		return manifest, nil, lerrors.InvalidConfiguration.Errorf("asset filesystem is required for %s", manifestPath)
@@ -55,20 +55,23 @@ func LoadRuntimeComposition(files fs.FS) (RuntimeComposition, []byte, error) {
 	if manifest.Version != 1 || len(manifest.Sources) == 0 {
 		return manifest, nil, lerrors.InvalidConfiguration.Errorf("composed runtime manifest requires version 1 and source fingerprints")
 	}
+	if manifest.Sources["dictionaries.json"] == "" {
+		return manifest, nil, lerrors.InvalidConfiguration.Errorf("composed runtime manifest requires the dictionaries.json fingerprint")
+	}
 	names := make([]string, 0, len(manifest.Sources))
 	for name := range manifest.Sources {
 		names = append(names, name)
 	}
 	sort.Strings(names)
 	for _, name := range names {
-		if !fs.ValidPath(name) || !strings.HasSuffix(name, ".l") || !(strings.HasPrefix(name, "builtins/") || strings.HasPrefix(name, "stdlib/")) {
+		if name != "dictionaries.json" && !sourcepaths.Canonical(name) {
 			return manifest, nil, lerrors.InvalidConfiguration.Errorf("composed runtime source path %q must name a canonical source word file", name)
 		}
 		if _, err := readCompositionInput(files, name, manifest.Sources[name]); err != nil {
 			return manifest, nil, err
 		}
 	}
-	aml, err := readCompositionInput(files, "builtins/runtime/support.aml", manifest.SHA256)
+	aml, err := readCompositionInput(files, "runtime/generated/support.aml", manifest.SHA256)
 	return manifest, aml, err
 }
 

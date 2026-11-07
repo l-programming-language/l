@@ -17,11 +17,11 @@ func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 		directoryLink  bool
 		hardLink       bool
 	}{
-		{"dictionary index", "stdlib/index.json", false, false},
+		{"dictionary index", "dictionaries.json", false, false},
 		{"grammar", "lexicon/eng/grammar.json", false, false},
-		{"runtime host adapter", "builtins/templates/runtime/host.lu", false, false},
-		{"nested directory", "builtins/templates/runtime/host.lu", true, false},
-		{"hard link", "stdlib/index.json", false, true},
+		{"runtime host adapter", "runtime/rust/host.rs", false, false},
+		{"nested directory", "runtime/rust/host.rs", true, false},
+		{"hard link", "dictionaries.json", false, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			assets := distributiontest.CompleteOverride(t)

@@ -36,7 +36,7 @@ The [Storage ownership words](../../internals/storage.md#ownership-and-bytes) di
 
 ## Storage source compositions
 
-Core imports Storage privately. Its [implementation reference](../../internals/storage.md) explains reusable result selection, traversal, return, ownership and byte operations. Programs that name Storage members import that dictionary explicitly.
+Prelude includes core and imports Storage privately. Its [implementation reference](../../internals/storage.md) explains reusable result selection, traversal, return, ownership and byte operations. Programs that name Storage members import that dictionary explicitly.
 
 ## Objective
 

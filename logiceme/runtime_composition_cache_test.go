@@ -13,8 +13,9 @@ import (
 
 func TestRuntimeCompositionCacheRereadsSelectedResources(t *testing.T) {
 	for _, name := range []string{
-		"builtins/runtime/support.json", "builtins/runtime/support.aml",
-		"builtins/runtime/eng/number.l", "builtins/segments/vowels/calculation.lu",
+		"runtime/generated/support.json", "runtime/generated/support.aml",
+		"dictionaries.json",
+		"stdlib/eng/format/dictionary.l", "builtins/segments/vowels/calculation.lu",
 		"builtins/templates/install/cargo.lu",
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -70,7 +71,7 @@ func TestRuntimeCompositionCacheTracksSelectedContent(t *testing.T) {
 	}
 	files[cargo].Data = before
 	replacement := compositionResources(t, "9")
-	for _, name := range []string{"builtins/runtime/support.json", "builtins/runtime/support.aml", "builtins/runtime/eng/number.l"} {
+	for _, name := range []string{"runtime/generated/support.json", "runtime/generated/support.aml", "stdlib/eng/format/dictionary.l"} {
 		files[name] = replacement[name]
 	}
 	changed, err = loadSupportTemplates(files, true)

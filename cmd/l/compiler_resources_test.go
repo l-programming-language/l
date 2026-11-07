@@ -55,7 +55,7 @@ func TestCompilerResourceSelection(t *testing.T) {
 		if c.options.Language != "eng" || c.options.AssetRoot != "" {
 			t.Fatalf("explicit language selection = %#v", c.options)
 		}
-		if _, err := fs.Stat(c.options.Resources, "stdlib/index.json"); err != nil {
+		if _, err := fs.Stat(c.options.Resources, "dictionaries.json"); err != nil {
 			t.Fatalf("explicit language lost embedded resources: %v", err)
 		}
 	})
@@ -66,7 +66,7 @@ func TestCompilerResourceSelection(t *testing.T) {
 				t.Fatal(err)
 			}
 		}
-		indexPath := filepath.Join(assets, "stdlib/index.json")
+		indexPath := filepath.Join(assets, "dictionaries.json")
 		data, err := os.ReadFile(indexPath)
 		if err != nil {
 			t.Fatal(err)
@@ -77,6 +77,9 @@ func TestCompilerResourceSelection(t *testing.T) {
 		}
 		index.Languages["selected"] = index.Languages["eng"]
 		delete(index.Languages, "eng")
+		storage := index.Languages["selected"]["storage"]
+		storage.Entry = "builtins/selected/storage/dictionary.l"
+		index.Languages["selected"]["storage"] = storage
 		data, err = json.Marshal(index)
 		if err != nil {
 			t.Fatal(err)

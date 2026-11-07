@@ -105,7 +105,7 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 	if err := os.CopyFS(assets, distribution.Files()); err != nil {
 		t.Fatal(err)
 	}
-	path := filepath.Join(assets, "stdlib", "eng", "storage", "dictionary.l")
+	path := filepath.Join(assets, "builtins", "eng", "storage", "collections.l")
 	data := readContractFile(t, path)
 	text := string(data)
 	start := strings.Index(text, "Publicly create Storage's List's \"Update")
@@ -147,7 +147,7 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 // modified. Merely replacing a source hash would leave stale native behavior.
 func composeScopedTestProvider(t *testing.T, root string) {
 	t.Helper()
-	path := filepath.Join(root, "builtins", "runtime", "eng", "dictionary.l")
+	path := filepath.Join(root, "runtime", "eng", "dictionary.l")
 	source := readContractFile(t, path)
 	c := Lyger.NewLygerService(Lyger.Options{Resources: os.DirFS(root), AssetRoot: root}).NewCompilation(source, path)
 	c.Make()
@@ -159,6 +159,7 @@ func composeScopedTestProvider(t *testing.T, root string) {
 		t.Fatal(err)
 	}
 	manifest := distribution.RuntimeComposition{Version: 1, SHA256: nativeBytesHash(aml), Sources: make(map[string]string), Selection: selection}
+	manifest.Sources["dictionaries.json"] = nativeBytesHash(readContractFile(t, filepath.Join(root, "dictionaries.json")))
 	for _, origin := range c.SourceOrigins {
 		name := origin.Name
 		if filepath.IsAbs(name) {
@@ -173,8 +174,8 @@ func composeScopedTestProvider(t *testing.T, root string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	writeContractFile(t, filepath.Join(root, "builtins", "runtime", "support.aml"), aml)
-	writeContractFile(t, filepath.Join(root, "builtins", "runtime", "support.json"), metadata)
+	writeContractFile(t, filepath.Join(root, "runtime", "generated", "support.aml"), aml)
+	writeContractFile(t, filepath.Join(root, "runtime", "generated", "support.json"), metadata)
 }
 
 func TestScopedNativeCLIApprovalAndRemoval(t *testing.T) {

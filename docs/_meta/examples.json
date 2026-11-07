@@ -284,10 +284,10 @@
     },
     {
       "id": "stdlib-index",
-      "source": "stdlib/index.json",
+      "source": "dictionaries.json",
       "classification": "fragment",
       "description": "Exact structured registry for source lexicons and dictionary entries; this is resource configuration, not L source.",
-      "sha256": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4",
+      "sha256": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
       "validation": "static-inspection",
       "witnesses": [
         "lyger/dictionary_index_test.go"
@@ -320,7 +320,7 @@
         "start": 9,
         "end": 12
       },
-      "sha256": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
+      "sha256": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
       "lang": "l"
     },
     {
@@ -438,7 +438,7 @@
         "lyger/builtin_operations_contract_test.go",
         "lyger/distribution_frontend_test.go"
       ],
-      "sha256": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
+      "sha256": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
       "lang": "l",
       "lines": {
         "start": 1,
@@ -589,7 +589,7 @@
       "source": "builtins/eng/core.l",
       "classification": "fragment",
       "description": "Canonical Process, Function and Function.Return definitions shared by source bodies and Object construction.",
-      "sha256": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
+      "sha256": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/definition_test.go",
@@ -607,7 +607,7 @@
       "source": "builtins/eng/core.l",
       "classification": "fragment",
       "description": "Implicit Objective descriptor uses a grouped native word; the nested array is not an L collection literal.",
-      "sha256": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
+      "sha256": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/definition_test.go",
@@ -909,18 +909,18 @@
     },
     {
       "id": "source-require",
-      "source": "stdlib/eng/storage/dictionary.l",
+      "source": "builtins/eng/storage/control.l",
       "classification": "fragment",
       "description": "Require constructs a runtime failure only in the absent Option branch.",
-      "sha256": "939f4e9f5180f9962b4bc1b44b48fb08f0e6c0536f35b41f5800cc5b4e81201d",
+      "sha256": "841c844e82849eb7e62271fa82bdc9014338a4f4de4f8b0d12a825ac22917502",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/word_library_acceptance_test.go"
       ],
       "lang": "l",
       "lines": {
-        "start": 178,
-        "end": 179
+        "start": 25,
+        "end": 26
       }
     },
     {

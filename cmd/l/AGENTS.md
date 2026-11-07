@@ -19,5 +19,11 @@ package and dependency identity without collisions; use Logiceme's explicit
 workspace-entry bridge rather than editing returned source. Preserve the selected
 runtime/process bytes and ordinary direct-API bundle layout. Library reuse does
 not authorize ignoring source paths or bypassing Cargo graph/source invalidation.
+Root `dictionaries.json` is the only registry. The selected prelude privately
+loads foundational support; builtin App behavior requires no user Storage or
+Runtime import. Distribution and publication protection must include the new
+`runtime/{eng,rust,generated}` resources and foundational Storage includes.
+Offline contract inspection must never generate, compile or probe tools to repair
+missing or stale distribution resources.
 
 Follow root [acceptance instructions](../../AGENTS.md#current-contract) and the [validation policy](../../docs/development-harness.md#validation-authorization). Task-authorized validation proceeds without repeated permission requests. Focused checks aid diagnosis and do not establish full validation; report unrun stages.

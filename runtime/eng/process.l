@@ -76,7 +76,7 @@ Define Runtime's "Fault" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~is_err~
 
     Create Runtime's "Reject|-s|-ed|-ing|-er" as a Generic `reject_result` Storage.Routine of `T, E` with Inputs of "value" as `std::result::Result<T, E>` and Outputs of `E`.
 Create "Optional" as a New Runtime's Failure of Value.
-Return a New Contents of Optional and `checked error result`.
+Return a New Storage's Result's Expecter of Optional and `checked error result`.
 
     Publicly create Runtime's "Copy|--ies|--ied|-ing|--ier" as a Generic `runtime_copy` Function with Inputs of "value" as `&Runtime` and Outputs of Runtime's Handle.
 Return a New Runtime's Handle's Content of a New Retainer of a New Runtime's Reference of Value.
@@ -84,14 +84,14 @@ Return a New Runtime's Handle's Content of a New Retainer of a New Runtime's Ref
     Create Runtime's Invocation's "Own|-s|-ed|-ing|-er" as a Generic `invocation_owner` Function with Inputs of "value" as `&Invocation` and Outputs of `Result<Runtime>`.
 Create "Optional" as a New Runtime's Ascender of a New Runtime's Invocation's Parent of Value.
 Create "Available" as a New Presence of Optional.
-If Available, Create "Inner" as a New Contents of Optional and `present invocation runtime` and then Create "Handle" as a New Runtime's Handle's Content of Inner and then Create "Found" as a New Success of Handle and then Return Found.
+If Available, Create "Inner" as a New Storage's Result's Expecter of Optional and `present invocation runtime` and then Create "Handle" as a New Runtime's Handle's Content of Inner and then Create "Found" as a New Success of Handle and then Return Found.
 Return a New Failure of a New Runtime's Error's Describer of `invocation runtime is unavailable`.
 
     Publicly create Runtime's Invocation's "Claim|-s|-ed|-ing|-er" as a Generic `invocation_claim` Function with Inputs of "value" as `&Invocation` and Outputs of `Result<bool>`.
 Create "Optional" as a New Runtime's Invocation's Owner of Value.
 Create "Failed" as a New Runtime's Fault of Optional.
 If Failed, Create "Reason" as a New Runtime's Rejecter of Optional and then Create "Rejected" as a New Failure of Reason and then Return Rejected.
-Create "State" as a New Runtime's Admission of a New Runtime's Reference of a New Contents of Optional and `present invocation runtime`.
+Create "State" as a New Runtime's Admission of a New Runtime's Reference of a New Storage's Result's Expecter of Optional and `present invocation runtime`.
 Create "Admission" as a New Locker of State.
 Create "Allowed" as a New Runtime's Admitter of a New Storage's Borrower of Admission.
 If Allowed is false, Create "Cancellation" as a New Runtime's Error's Canceller and then Create "Cancelled" as a New Failure of Cancellation and then Return Cancelled.
@@ -116,7 +116,7 @@ Create "Guard" as a New Mutable Binding of a New Locker of a New Runtime's App's
 Create "Optional" as a New Runtime's App's Current of Guard.
 Create "Available" as a New Presence of Optional.
 If Available is false, Return Unit.
-Create "Current" as a New Contents of Optional and `present invocation`.
+Create "Current" as a New Storage's Result's Expecter of Optional and `present invocation`.
 Create "Same" as a New Runtime's Identical of Current and Invocation.
 If Same, Create "Target" as a New Runtime's App's Outstanding of Guard and then Runtime.Replace Target and false.
 Return Unit.
@@ -133,7 +133,7 @@ Runtime.Replace Target and Two.
 Storage.Release Guard.
 Create "Optional" as a New Runtime's Ascender of a New Runtime's Invocation's App of Value.
 Create "Available" as a New Presence of Optional.
-If Available, Create "App" as a New Contents of Optional and `present invocation App` and then Create "Borrowed" as a New Storage's Borrower of App and then Create "Released" as a New Runtime's App's Releaser of Borrowed and Value.
+If Available, Create "App" as a New Storage's Result's Expecter of Optional and `present invocation App` and then Create "Borrowed" as a New Storage's Borrower of App and then Create "Released" as a New Runtime's App's Releaser of Borrowed and Value.
 Return Unit.
 
 Define Runtime's Snapshot's "Output" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.stdout~|}<DEF>`.
@@ -195,7 +195,7 @@ Create "Receiver" as a New Second of Channel.
 Create "State" as a New Runtime's Mutex of a New Runtime's Invocation's State's Content.
 Create "Gate" as a New Runtime.Asynchronous Runtime's Mutex of a New Runtime's Invocation's Group's Content of Pid.
 Create "Shared" as a New Runtime's Shared of a New Runtime's Invocation's Content of App, Owner, Sequence, Dependencies, Delay, State, Done, Gate, Bound, and Requests.
-Return a New Pair of Shared and Receiver.
+Return a New Storage's Tuple of Shared and Receiver.
 
 Define Runtime's "Signals" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::process::Signals::new~|}<DEF>`.
 Define Runtime's "Executable" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::env::current_exe~|}<DEF>`.
@@ -216,7 +216,7 @@ Create "Canonical" as a New Runtime's Canonical of a New Storage.Checked Storage
 Create "Path" as a New Storage.Checked Storage's Binding of a New Runtime's Explainer of Canonical and Runtime's Path's Explainer.
 Create "Parent" as a New Runtime's Parent of Path.
 Create "Available" as a New Presence of Parent.
-If Available, Create "Directory" as a New Contents of Parent and `present executable directory` and then Create "Owned" as a New Runtime's Path of Directory and then Create "Result" as a New Success of Owned and then Return Result.
+If Available, Create "Directory" as a New Storage's Result's Expecter of Parent and `present executable directory` and then Create "Owned" as a New Runtime's Path of Directory and then Create "Result" as a New Success of Owned and then Return Result.
 Return a New Failure of a New Runtime's Error's Describer of `orchestrator has no parent directory`.
 
     Create Runtime's "Initialize|-s|-d|--ing|-r" as a Generic `runtime_state` Function with No Inputs and Outputs of Runtime's State.
@@ -295,7 +295,7 @@ Return a New Failure of Error.
     Create Runtime's "Limit|-s|-ed|-ing|-er" as a Generic `limit_deadline` Function with Inputs of "current" as `&mut Option<tokio::time::Instant>` and "deadline" as `tokio::time::Instant` and Outputs of `()`.
 Create "Value" as a New Runtime's Value of Current.
 Create "Available" as a New Presence of Value.
-If Available, Create "Old" as a New Contents of Value and `present cleanup deadline` and then Create "Earlier" as a New Runtime's Minimum of Old and Deadline and then Create "Selected" as a New Present of Earlier and then Runtime.Replace Current and Selected.
+If Available, Create "Old" as a New Storage's Result's Expecter of Value and `present cleanup deadline` and then Create "Earlier" as a New Runtime's Minimum of Old and Deadline and then Create "Selected" as a New Present of Earlier and then Runtime.Replace Current and Selected.
 Otherwise, Create "Wrapped" as a New Present of Deadline and then Runtime.Replace Current and Wrapped.
 Return a New Nothing.
 
@@ -313,7 +313,7 @@ If Done, Create "Acceptedvalue" as a New Success of Unit and then Return Accepte
 Create "Optional" as a New Runtime's Invocation's Pid of Guard.
 Create "Available" as a New Presence of Optional.
 If Available is false, Create "Absent" as a New Success of Unit and then Return Absent.
-Create "Pid" as a New Contents of Optional and `present invocation process`.
+Create "Pid" as a New Storage's Result's Expecter of Optional and `present invocation process`.
 Create "Attempted" as a New Runtime's Now.
 Create "Dependencies" as a New Runtime's Invocation's Dependencies of Value.
 Create "Target" as a New Runtime's Group of Pid.
@@ -358,7 +358,7 @@ Create "Optional" as a New Runtime's Ascender of a New Runtime's Invocation's Pa
 Create "Available" as a New Presence of Optional.
 Create "Unit" as a New Nothing.
 If Available is false, Return Unit.
-Create "Locked" as a New Locker of a New Runtime's Admission of a New Contents of Optional and `present invocation runtime`.
+Create "Locked" as a New Locker of a New Runtime's Admission of a New Storage's Result's Expecter of Optional and `present invocation runtime`.
 Create "Failures" as a New Runtime's Failures of a New Mutable Binding of Locked.
 Create "Sequence" as a New Runtime's Invocation's Sequence of Value.
 Create "Entry" as a New Runtime's Entry of Failures and Sequence.
