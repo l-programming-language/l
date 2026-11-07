@@ -138,7 +138,7 @@ func (c *Compilation) sourceActionInputs(statement *lStatement, target *token) (
 		if site.subject == nil || site.subject.noun != target {
 			continue
 		}
-		formals, err := site.actionParameters(statement)
+		formals, err := sourceParametersIn(statement, site.parameterTokens())
 		if err != nil {
 			return nil, err
 		}

@@ -96,11 +96,17 @@ orchestrator under an allocated package name that avoids workspace collisions.
 Its policy comes from authored [L words](../runtime/eng/dictionary.l).
 Resource generation produces [support.aml](../runtime/generated/support.aml) and
 [support.json](../runtime/generated/support.json), containing fingerprints of the
-root registry and actual source inputs, plus a dependency-selection index.
-Changing a registry mapping, even to add a dictionary in an explicit assets
-bundle, requires explicit support regeneration. Offline contract inspection
-does not repair stale resources. These are derived resources; the index adds no
-AML fields or logeme interfaces.
+root registry and actual source inputs, plus a dependency-selection index. The
+manifest's `sha256` binds that entire inventory and index to the AML bytes;
+rehashing or omitting a source entry alone cannot make stale support current.
+This is bundle integrity, not authentication of a forged manifest. Explicit
+native builds also recompose Runtime in memory for external providers and reject
+AML or metadata that differs; this adds frontend work, without repairing assets.
+The immutable embedded distribution retains its validated selection path.
+Library callers can request the same check with `Lyger.CheckRuntimeResources`;
+the raw AML backend does not parse L. Offline inspection validates recorded
+integrity without recomposition or repair. Changed assets require explicit
+regeneration; the derived index adds no AML fields or logeme interfaces.
 
 With unmodified embedded definitions, the CLI selects runtime declarations from
 that index using the orchestrator's imports, retaining shared type and host

@@ -24,6 +24,21 @@ type RuntimeComposition struct {
 	Selection map[string][][2]int `json:"selection,omitempty"`
 }
 
+// Fingerprint binds the complete source inventory and selection to their AML.
+// It detects stale bundles, not forged provenance; explicit source generation
+// remains responsible for deriving the inventory and checking the composition.
+func (m RuntimeComposition) Fingerprint(aml []byte) (string, error) {
+	m.SHA256 = ""
+	header, err := json.Marshal(m)
+	if err != nil {
+		return "", err
+	}
+	content := append([]byte("L runtime composition v1\x00"), header...)
+	content = append(content, 0)
+	content = append(content, aml...)
+	return fmt.Sprintf("%x", sha256.Sum256(content)), nil
+}
+
 // IsEmbedded identifies this immutable distribution without comparing arbitrary
 // fs.FS values, which may contain non-comparable maps or slices.
 func IsEmbedded(files fs.FS) bool {
@@ -71,22 +86,36 @@ func LoadRuntimeComposition(files fs.FS) (RuntimeComposition, []byte, error) {
 			return manifest, nil, err
 		}
 	}
-	aml, err := readCompositionInput(files, "runtime/generated/support.aml", manifest.SHA256)
+	const amlPath = "runtime/generated/support.aml"
+	aml, err := fs.ReadFile(files, amlPath)
+	if err != nil {
+		return manifest, nil, fmt.Errorf("load composed runtime input %s: %w", amlPath, lerrors.IO.Wrap(err, ""))
+	}
+	fingerprint, err := manifest.Fingerprint(aml)
+	if err == nil {
+		err = checkCompositionFingerprint(amlPath, manifest.SHA256, fingerprint)
+	}
+	if err != nil {
+		aml = nil
+	}
 	return manifest, aml, err
 }
 
 func readCompositionInput(files fs.FS, name, expected string) ([]byte, error) {
-	digest, err := hex.DecodeString(expected)
-	if err != nil || len(digest) != sha256.Size {
-		return nil, lerrors.InvalidConfiguration.Errorf("composed runtime input %s requires a SHA-256 fingerprint", name)
-	}
 	raw, err := fs.ReadFile(files, name)
 	if err != nil {
 		return nil, fmt.Errorf("load composed runtime input %s: %w", name, lerrors.IO.Wrap(err, ""))
 	}
-	actual := sha256.Sum256(raw)
-	if !bytes.Equal(actual[:], digest) {
-		return nil, lerrors.InvalidConfiguration.Errorf("composed runtime input %s is stale; regenerate its canonical AML", name)
+	return raw, checkCompositionFingerprint(name, expected, fmt.Sprintf("%x", sha256.Sum256(raw)))
+}
+
+func checkCompositionFingerprint(name, expected, actual string) error {
+	digest, err := hex.DecodeString(expected)
+	if err != nil || len(digest) != sha256.Size {
+		return lerrors.InvalidConfiguration.Errorf("composed runtime input %s requires a SHA-256 fingerprint", name)
 	}
-	return raw, nil
+	if hex.EncodeToString(digest) != actual {
+		return lerrors.InvalidConfiguration.Errorf("composed runtime input %s is stale; regenerate its canonical AML", name)
+	}
+	return nil
 }

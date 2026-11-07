@@ -73,4 +73,4 @@ The check requires `http://127.0.0.1:4321/install.sh` to serve the exact bootstr
 
 Per-stage logs and `report.json` are retained under `website/reports/install-smoke-*/`; temporary installation files are removed afterward. Report the host, released version, completed stages, unavailable shell checks, and evidence path. This verifies the installation flow on that host; it is not the full compiler acceptance gate or evidence for other platforms.
 
-Documentation CI runs routine website checks on pull requests. The legacy-named `ci:verify-disabled` command validates approved manual release paths and publication authorization. Publication requires an authorized manual dispatch from main; see [deployment](../../website/DEPLOYMENT.md) for activation and recovery.
+Documentation CI runs routine website checks on pull requests. The legacy-named `ci:verify-disabled` command validates the canonical workflows and their authorization boundaries. Publication is disabled pending separate reviewed [activation](../../website/DEPLOYMENT.md#deliberate-activation-after-review).

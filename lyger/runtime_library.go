@@ -9,8 +9,69 @@ import (
 	"strings"
 
 	distribution "github.com/l-programming-language/l"
+	"github.com/l-programming-language/l/internal/sourcepaths"
 	"github.com/l-programming-language/l/lerrors"
 )
+
+// ComposeRuntimeResources explicitly derives support from the selected registry.
+// Loading generated support and offline inspection never invoke this operation.
+func ComposeRuntimeResources(resources fs.FS) ([]byte, distribution.RuntimeComposition, error) {
+	metadata := distribution.RuntimeComposition{Version: 1, Sources: make(map[string]string)}
+	if resources == nil {
+		return nil, metadata, lerrors.InvalidConfiguration.Errorf("asset filesystem is required to compose runtime resources")
+	}
+	registry, err := fs.ReadFile(resources, "dictionaries.json")
+	if err != nil {
+		return nil, metadata, err
+	}
+	c := NewLygerService(Options{Resources: resources}).NewCompilation([]byte("Use Runtime from `runtime`.\n"), "composition.l")
+	c.Make()
+	if c.Error != nil {
+		return nil, metadata, c.Error
+	}
+	aml, selection, err := c.ComposeRuntimeLibrary()
+	if err != nil {
+		return nil, metadata, err
+	}
+	metadata.Selection = selection
+	origins := append(c.SourceOrigins, SourceOrigin{Name: "dictionaries.json", SHA256: fmt.Sprintf("%x", sha256.Sum256(registry))})
+	for _, origin := range origins {
+		if origin.Name == c.MainPath {
+			continue
+		}
+		if origin.Name != "dictionaries.json" && !sourcepaths.Canonical(origin.Name) {
+			return nil, metadata, lerrors.InvalidConfiguration.Errorf("composition source %q is outside canonical source resources", origin.Name)
+		}
+		current, err := fs.ReadFile(resources, origin.Name)
+		if err != nil {
+			return nil, metadata, err
+		}
+		if fmt.Sprintf("%x", sha256.Sum256(current)) != origin.SHA256 {
+			return nil, metadata, lerrors.InvalidConfiguration.Errorf("composition source %s changed during generation", origin.Name)
+		}
+		metadata.Sources[origin.Name] = origin.SHA256
+	}
+	metadata.SHA256, err = metadata.Fingerprint(aml)
+	return aml, metadata, err
+}
+
+// CheckRuntimeResources checks source/AML correspondence during an explicit
+// build. It neither repairs resources nor runs tools. Offline inspection uses
+// the distribution reader's byte-integrity checks without this recomposition.
+func CheckRuntimeResources(resources fs.FS) error {
+	manifest, aml, err := distribution.LoadRuntimeComposition(resources)
+	if err != nil || distribution.IsEmbedded(resources) {
+		return err
+	}
+	expectedAML, expected, err := ComposeRuntimeResources(resources)
+	if err != nil {
+		return err
+	}
+	if !bytes.Equal(aml, expectedAML) || !strings.EqualFold(manifest.SHA256, expected.SHA256) {
+		return lerrors.InvalidConfiguration.Errorf("composed runtime support is stale; regenerate its canonical AML")
+	}
+	return nil
+}
 
 // RuntimeLibrary projects complete AML from the immutable distribution's derived
 // dependency index. Custom providers and opaque authored leaves retain the full

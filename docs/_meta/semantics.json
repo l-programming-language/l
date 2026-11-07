@@ -17,7 +17,7 @@
     "builtins/eng/storage/traversal.l": "f32222d8882e68b16148bd4ff3b14dc8a13b44c39e3a7b2454fe2d71413d66be",
     "builtins/eng/storage/values.l": "f7ace59aa9505e38ad39d2dac33cabdee0e53085cf0665b3a764b8fadf40d2d7",
     "dictionaries.json": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
-    "docs/cli-build.md": "0afad681153834033d84c14eaa2c29827fed549c7d466728e65b06e0b7c34db0",
+    "docs/cli-build.md": "4b77a73357899e7d40cc5bb28a7a8f7d9c9f15ed73e4eb6b8193d9ad49a4e2e8",
     "internal/sourcepaths/sourcepaths.go": "57d39aacf36251725151e67821f956f2a6c87171b0dc0e936dafe5310c698301",
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
@@ -27,10 +27,10 @@
     "lyger/binding.go": "ae768960f2e1e9bb6dea5e5154844dc3a4d3638cc2f8815572c99dafc348ab35",
     "lyger/builder.go": "3156d47c598437a3be4ba1aa8717551e9b689a15609babc317706376fec8d27a",
     "lyger/builtin_app_selection.go": "d27277189643bcb740dc4cd064aefa8fd810f5bff073a7d9d434f9bfec1f092f",
-    "lyger/builtin_bindings.go": "702ae6b5a81caf0bf482feb43138372a0ad026bf26952a8526a6f548160b37f6",
+    "lyger/builtin_bindings.go": "437491b234989c8ce837362019163c51838a6a73538dbf2207cdbb643801ecbf",
     "lyger/builtin_operations.go": "c05bed44bfd03a5ede642e0fc785056eb743959039dede7305da625cc90d42c9",
-    "lyger/construction.go": "d9112edcd3c28d508b6d0849dedd7d746ee6179d585fe88571f51a1341734bd9",
-    "lyger/constructor_grammar.go": "5a4b766982a31035bb298e6adf4e2014c406a3fd11213ad42c8144b64e642156",
+    "lyger/construction.go": "59462e449a78c91f4f904b7359244ad379d5a400628dacea6616e774324eaaf7",
+    "lyger/constructor_grammar.go": "cbd8d830bb3a8d0625e60d237afe5749155229b058a82ad6cac2eab44f8386f8",
     "lyger/contracts_lowering.go": "6bb0190727db25891a178b9a7343a69a74a5b870ad01536e5ea1d03167fe5cfa",
     "lyger/definition_bindings.go": "7729518ee61aad720085adb17bb201bfdcecaffd068625fda7b9dfd57e9586b8",
     "lyger/dictionary_index.go": "e05610d60740cc4f89703b8167bf5c10ce0b6ca3470685dd4879b582ca539f7e",
@@ -50,7 +50,7 @@
     "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
     "lyger/lexicon.go": "e6c61d41351f3116573742fbe107f87de188c9b36e0b6fc0cb14a8b74e60c2c7",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
-    "lyger/lowering.go": "a3b2bec3b690d9192a3da0fabd5fe863586d95e5aba035a0a98ca42fb5278ef2",
+    "lyger/lowering.go": "303d677902fb4fbc21eb0e574fb5b2e564ce9eb0269741c8cefddef3664a3ff9",
     "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
     "lyger/orchestration_plan.go": "5a9fbaa1d0e0eaf132720b960db17a216a11c65e90cf2ddb79e039200dc9ac0d",
     "lyger/process_inputs.go": "8d694eebf5de74b5585f10a04c24146426918036ebec3906d97cf4602721dfce",
@@ -59,18 +59,18 @@
     "lyger/runtime_types.go": "4334d0bc85798b5afac5fa32ba1dd33dc1b95e887a707e5e6f3995a635e363fc",
     "lyger/runtime_value_words.go": "820e42f8b6a8ef2ddf18b756bb54528ff36b18764108db4d3abce4714812670c",
     "lyger/runtime_values_plan.go": "91ff1b5e9143c06fd85f883a2130a06abb10a7777b4d534b99625f6c35536671",
-    "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
+    "lyger/runtime_values_source.go": "46a2db2854dca407019d7f0a578dce89394ae3fd835996831785f05317d8bc21",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
     "lyger/semantic_resolution.go": "9e340190c53baaf3e73cdbfd7887d2bdf8c0619f2980dd59cff2a2132ab144c6",
     "lyger/semantics.go": "db528f999f22cf3ab5c2ff04fbca7709f270d321ae6350341c1d69feb72658b9",
     "lyger/source_body.go": "81da3955864cfb1526647733fd5acc2900fd0d29a662fa1b69425d67f865cbb0",
-    "lyger/source_descriptors.go": "7f9a47a50d5fa679e7323d1c5e485174e2080d3c885ccfcd3f687a56e436b98e",
+    "lyger/source_descriptors.go": "215e04ea143c33457a1664be7c760966284f11beef998fa51effb3aa2aafe8e9",
     "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
     "lyger/source_return_context.go": "cd0d682596f6d0859c423f0701e9a295ef0794dd39c5f24b42f09f66a86c8c8b",
     "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
     "lyger/source_units_topology.go": "eb006bc1866daab6eba15a67c0e35b8c2bee94a15328927d388e54789c002ff5",
     "lyger/storage_words.go": "27daf80e13a829b55c4cfc41ee2b12d3006b622eb2a1eaf3ee79d3b0cd79d557",
-    "lyger/types.go": "8d1c5403e26386b560c2bad36d8e5b3aaed28174708f46dda470f572fcf75859",
+    "lyger/types.go": "08db7741ed9a099f34f4bd84a0af3e22f4f62e44e396ca5adca8dc20b35386ba",
     "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
     "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
@@ -86,7 +86,7 @@
     "runtime/eng/start.l": "fa211457bad0501d9f216f90d0c821bbf9cbf60c612d30baf547f06a3b14f377",
     "runtime/eng/supervision.l": "e048ee6c23a980433a915c845957975af7555cb2c5b9a7f95734dec858857fc3",
     "stdlib/eng/format/dictionary.l": "3ee48ea6485dddb429641273be99872621734c358cfe7ba78aedda41525cbde3",
-    "stdlib/eng/format/foundations.l": "af93705b7a048387f3319c8334a7afae3c6ca12a78c28485b5758e7005bb4582",
+    "stdlib/eng/format/foundations.l": "29b75b994478ca1dbd8889af1dbd8dfcd2848fa4151af1df76932563afbb405e",
     "stdlib/eng/io/dictionary.l": "52d59eea2f063372f2ed55e2fd9673bccf32f21595ddc7530a2363175dc29664"
   },
   "entries": [
@@ -614,7 +614,7 @@
         "lyger/word_library_pos_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Descriptors retain canonical targets through aliases and qualified imports. One selected construction signature governs operand roles, arity and result labels; source forwarding inherits its open requirements. Value operands, including transparent forwarding, evaluate once in authored order. Structured bodies retain their execution placement; native moves and borrows remain checked. This is not a resource-cost certificate."
+      "notes": "Descriptors retain canonical targets through aliases and qualified imports. Source nouns bind typed formals and fixed operands to selected constructors. Replacements consume original operands; wrappers name and preserve the base result. Operands evaluate once in authored order; native moves and borrows remain checked. This is not a resource-cost certificate."
     },
     {
       "id": "type:adverb",
@@ -2486,13 +2486,15 @@
         "stdlib/eng/format/foundations.l",
         "builtins/eng/storage/dictionary.l",
         "builtins/eng/storage/control.l",
-        "builtins/eng/storage/values.l"
+        "builtins/eng/storage/values.l",
+        "builtins/eng/storage/collections.l"
       ],
       "witnesses": [
         "lyger/format_dictionary_test.go",
-        "lyger/io_numeric_test.go"
+        "lyger/io_numeric_test.go",
+        "lyger/library_foundations_test.go"
       ],
-      "notes": "IO and Runtime select one canonical Formatting Function. Shared bindings, control and numeric operators use Storage; formatter-only leaves and fixed-signature nominal cast descriptors stay private, distinct from the generic Storage.Integral casts used by Runtime. No Numeric dictionary or implicit arithmetic vocabulary is added. Importing Formatting or IO does not source-load process supervision.",
+      "notes": "IO and Runtime select one canonical Formatting Function. Shared bindings, control and numeric operators use Storage. Private Integer/Wide/Indexed/Unsigned preserve their nominal targets and compose through Storage.Integral without intermediate narrowing. No Numeric dictionary or implicit arithmetic vocabulary is added. Formatting and IO do not source-load process supervision.",
       "evidence": "static-inspection; existing-witness-not-run",
       "dictionary": {
         "lexicon": "eng",

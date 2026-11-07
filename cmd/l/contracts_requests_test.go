@@ -147,28 +147,9 @@ func TestScopedNativeCLICustomProviderFailureMutation(t *testing.T) {
 // modified. Merely replacing a source hash would leave stale native behavior.
 func composeScopedTestProvider(t *testing.T, root string) {
 	t.Helper()
-	path := filepath.Join(root, "runtime", "eng", "dictionary.l")
-	source := readContractFile(t, path)
-	c := Lyger.NewLygerService(Lyger.Options{Resources: os.DirFS(root), AssetRoot: root}).NewCompilation(source, path)
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
-	aml, selection, err := c.ComposeRuntimeLibrary()
+	aml, manifest, err := Lyger.ComposeRuntimeResources(os.DirFS(root))
 	if err != nil {
 		t.Fatal(err)
-	}
-	manifest := distribution.RuntimeComposition{Version: 1, SHA256: nativeBytesHash(aml), Sources: make(map[string]string), Selection: selection}
-	manifest.Sources["dictionaries.json"] = nativeBytesHash(readContractFile(t, filepath.Join(root, "dictionaries.json")))
-	for _, origin := range c.SourceOrigins {
-		name := origin.Name
-		if filepath.IsAbs(name) {
-			name, err = filepath.Rel(root, name)
-			if err != nil {
-				t.Fatal(err)
-			}
-		}
-		manifest.Sources[filepath.ToSlash(name)] = origin.SHA256
 	}
 	metadata, err := json.Marshal(manifest)
 	if err != nil {

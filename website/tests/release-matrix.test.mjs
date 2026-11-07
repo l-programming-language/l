@@ -11,6 +11,9 @@ import { targets } from '../../scripts/release/package.mjs';
 test('release policy, packaging and both runner matrices require exactly the three supported targets', async () => {
   const supported = ['darwin-arm64', 'linux-amd64', 'linux-arm64'];
   const policy = JSON.parse(await readFile(new URL('../ci-templates/release-policy.json', import.meta.url)));
+  assert.equal(policy.publicationEnabled, false, 'Publication remains disabled during builtin restructuring');
+  assert.equal(policy.nativePublisher, null);
+  assert.throws(() => assertPublicationPolicy(policy), /disabled/);
   const workflow = YAML.parse(await readFile(new URL('../../.github/workflows/release.yml', import.meta.url), 'utf8'));
   for (const inventory of [nativeTargets, targets, policy.targets, ...['native', 'installer'].map((job) => workflow.jobs[job].strategy.matrix.include.map((row) => row.target))]) {
     assert.deepEqual([...inventory].sort(), supported);

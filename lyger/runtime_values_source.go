@@ -44,19 +44,6 @@ func runtimeObjectEntry(object *objectGram) (*entry, string, bool, error) {
 	return value, strings.ToLower(category.String()) + "." + strings.ToLower(kind.String()), true, nil
 }
 
-func phraseObjects(phrase *phraseGram) []*objectGram {
-	if phrase == nil {
-		return nil
-	}
-	if len(phrase.objects) > 0 {
-		return phrase.objects
-	}
-	if phrase.obj != nil {
-		return []*objectGram{phrase.obj}
-	}
-	return nil
-}
-
 func (b *instructionBuilder) constructedValue(object *objectGram, ctx instructionContext) (*instructionValue, error) {
 	kind, _, err := runtimeObjectKind(object)
 	if err != nil {
@@ -88,7 +75,7 @@ func (b *instructionBuilder) constructedValue(object *objectGram, ctx instructio
 		result.RuntimeType, err = canonicalRuntimeType(result.RuntimeType, b.semantics.Aliases)
 		return result, err
 	}
-	objects := phraseObjects(object.phrase)
+	objects := object.phrase.orderedObjects()
 	if len(objects) == 1 && (kind == valueMap || kind == valueList && sourceTypeObject(objects[0])) {
 		element, err := sourceTypeFromObject(objects[0])
 		if err != nil {
@@ -170,7 +157,7 @@ func runtimeReadPhrase(object *objectGram) *phraseGram {
 			return object.phrase
 		}
 	}
-	objects := phraseObjects(object.phrase)
+	objects := object.phrase.orderedObjects()
 	if len(objects) == 1 && !runtimeInitialization(objects[0]) {
 		// A bound Function name denotes its signature in this type prefix.
 		if _, err := sourceTypeFromObject(objects[0]); err == nil {

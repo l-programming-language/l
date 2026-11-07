@@ -238,18 +238,10 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 		instance.definition = rec
 		return instance, err
 	}
-	if object != nil {
-		if used != nil {
+	if used != nil {
+		if object != nil {
 			return c.instantiateNamedObject(object, named, used, active, args...)
 		}
-		instance, forwarded, err := c.instantiateStaticObject(object, args, active, dynamic)
-		if err == nil && len(args) > 0 && !forwarded {
-			err = lerrors.InvalidInput.Errorf("%s received %d unused arguments", rec.ID, len(args))
-		}
-		instance.Symbol, instance.definition = rec.ID, rec
-		return instance, err
-	}
-	if used != nil {
 		if len(args) > 0 {
 			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("constructor %s requires a declared parameter signature", rec.ID)
 		}
@@ -267,7 +259,7 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 	}
 	if len(parameters) > 0 {
 		if len(args) != len(parameters) {
-			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("source action requires %d arguments, got %d", len(parameters), len(args))
+			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("source definition requires %d arguments, got %d", len(parameters), len(args))
 		}
 		args, _, before, err = c.bindWrapperOperands(definitionHeader{parameters: parameters}, args, nil)
 		if err != nil {
@@ -277,21 +269,28 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 			args[index].formal = &parameters[index]
 		}
 	}
+	var bound DefinitionInstance
 	forwarded := false
-	resultSymbol := ""
-	var resultDefinition *record
-	bound, err := c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
-		instance, used, err := c.instantiateStaticAction(action, args, active, dynamic)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		forwarded = forwarded || used
-		if resultDefinition != nil && (resultDefinition != instance.definition || resultSymbol != instance.Symbol) {
-			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("action definition %s returns incompatible nominal types", rec.ID)
-		}
-		resultSymbol, resultDefinition = instance.Symbol, instance.definition
-		return instance, nil
-	})
+	if object != nil {
+		bound, forwarded, err = c.instantiateStaticObject(object, args, active, dynamic)
+		bound.Symbol, bound.definition = rec.ID, rec
+	} else {
+		resultSymbol := ""
+		var resultDefinition *record
+		bound, err = c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
+			instance, used, err := c.instantiateStaticAction(action, args, active, dynamic)
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			forwarded = forwarded || used
+			if resultDefinition != nil && (resultDefinition != instance.definition || resultSymbol != instance.Symbol) {
+				return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("action definition %s returns incompatible nominal types", rec.ID)
+			}
+			resultSymbol, resultDefinition = instance.Symbol, instance.definition
+			return instance, nil
+		})
+		bound.Symbol, bound.definition = resultSymbol, resultDefinition
+	}
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
@@ -299,7 +298,6 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s received %d unused arguments", rec.ID, len(args))
 	}
 	bound.before = append(before, bound.before...)
-	bound.Symbol, bound.definition = resultSymbol, resultDefinition
 	return bound, nil
 }
 
@@ -752,9 +750,7 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	if template == nil || !template.IsFunction() {
-		return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s does not define a function structure", node.Nominal)
-	}
+	callable := template != nil && template.IsFunction()
 	wrappers, selected, err := c.constructionTemplates(node)
 	if err != nil {
 		return DefinitionInstance{}, err
@@ -763,6 +759,9 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 		template = wrappers[selected]
 	} else {
 		selected = len(wrappers)
+	}
+	if !callable || template == nil || !template.IsFunction() {
+		return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s does not define a function structure", node.Nominal)
 	}
 	if node.Name == "" || !node.InputsDefined || !node.OutputsDefined {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("function constructor requires name and explicit signature")

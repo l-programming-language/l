@@ -167,7 +167,7 @@ func (c *Compilation) applyDescriptor(node *constructionNode, descriptor *descri
 			before = cloneContractConstruction(node)
 			c.contractRecorder.descriptors = append(c.contractRecorder.descriptors, contractDescriptorUse{Token: adjective, Rule: rule, Target: node})
 		}
-		sourceWrapper, err := c.sourceDescriptorObject(rule)
+		sourceWrapper, _, err := c.sourceDescriptorObject(rule)
 		if err != nil {
 			return false, err
 		}

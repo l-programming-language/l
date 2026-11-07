@@ -5,11 +5,15 @@ package distribution
 import (
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
+	"testing/fstest"
+
+	release "github.com/l-programming-language/l"
 )
 
 func RepoRoot(t testing.TB) string {
@@ -35,9 +39,24 @@ func Resources(t testing.TB) []string {
 	return paths
 }
 
-// CompleteOverride copies actual production resources only. In the tests-first
-// state the future core/index/IO files are absent; that is an explicit feature
-// prerequisite failure, never permission to synthesize them from test fixtures.
+// Files returns an independently mutable copy of the actual embedded resources.
+func Files(t testing.TB) fstest.MapFS {
+	t.Helper()
+	files := fstest.MapFS{}
+	if err := fs.WalkDir(release.Files(), ".", func(name string, entry fs.DirEntry, err error) error {
+		if err != nil || entry.IsDir() {
+			return err
+		}
+		data, err := fs.ReadFile(release.Files(), name)
+		files[name] = &fstest.MapFile{Data: data}
+		return err
+	}); err != nil {
+		t.Fatal(err)
+	}
+	return files
+}
+
+// CompleteOverride copies only inventoried production resources to a fresh root.
 func CompleteOverride(t testing.TB) string {
 	t.Helper()
 	root := RepoRoot(t)

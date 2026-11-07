@@ -1,9 +1,9 @@
 # Manual releases and documentation deployment
 
-**Publication is manual-only.** The committed [release policy](ci-templates/release-policy.json)
-registers the native publisher and controls production access. A dry run validates
-and packages without publishing; production requires a public repository and an
-authorized dispatch from main. Enabling the policy does not itself create a release.
+**Publication is disabled.** The committed [release policy](ci-templates/release-policy.json)
+has no registered native publisher. The workflows below remain available for
+review and explicitly authorized dry runs; publication requires a separate
+[activation](#deliberate-activation-after-review).
 
 ## Workflows and source identity
 
@@ -246,5 +246,5 @@ The legacy-named `npm run ci:verify-disabled` command now validates the committe
 manual release policy as well as unprivileged PR checks. It permits only the three
 reviewed release workflow paths, rejects automatic release triggers, mutable
 Action pins, missing authorization and publication work before authorization.
-The `.yml.disabled` files in `ci-templates/` are retained reviewable templates;
-no runtime helper copies or activates them.
+The canonical workflows live only in `.github/workflows/`; no activation copies
+or alternate workflow templates are retained.

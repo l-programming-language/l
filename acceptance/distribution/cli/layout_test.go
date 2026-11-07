@@ -3,15 +3,12 @@
 package cli
 
 import (
-	"crypto/sha256"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
-	distribution "github.com/l-programming-language/l"
 	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 	Lyger "github.com/l-programming-language/l/lyger"
@@ -21,27 +18,9 @@ import (
 // fixture operation through the real frontend, never a CLI loading side effect.
 func regenerateProvider(t *testing.T, root string) {
 	t.Helper()
-	entry := filepath.Join(root, "runtime", "eng", "dictionary.l")
-	c := Lyger.NewLygerService(Lyger.Options{Resources: os.DirFS(root), AssetRoot: root}).NewCompilation([]byte(read(t, entry)), entry)
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
-	aml, selection, err := c.ComposeRuntimeLibrary()
+	aml, manifest, err := Lyger.ComposeRuntimeResources(os.DirFS(root))
 	if err != nil {
 		t.Fatal(err)
-	}
-	manifest := distribution.RuntimeComposition{Version: 1, SHA256: fmt.Sprintf("%x", sha256.Sum256(aml)), Sources: map[string]string{}, Selection: selection}
-	manifest.Sources["dictionaries.json"] = fmt.Sprintf("%x", sha256.Sum256([]byte(read(t, filepath.Join(root, "dictionaries.json")))))
-	for _, origin := range c.SourceOrigins {
-		name := origin.Name
-		if filepath.IsAbs(name) {
-			name, err = filepath.Rel(root, name)
-			if err != nil {
-				t.Fatal(err)
-			}
-		}
-		manifest.Sources[filepath.ToSlash(name)] = origin.SHA256
 	}
 	raw, err := json.Marshal(manifest)
 	if err != nil {

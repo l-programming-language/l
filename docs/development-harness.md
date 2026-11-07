@@ -100,8 +100,8 @@ remain separate explicit updates. This
 workflow validates code and does not publish releases or deploy applications.
 
 The separate [manual release workflow](../.github/workflows/release.yml) follows
-the committed [release policy](../website/ci-templates/release-policy.json). An explicitly
-authorized dispatch validates the captured main SHA on three native targets,
+the committed [release policy](../website/ci-templates/release-policy.json), which
+disables publication. An authorized dry run validates main on three native targets,
 preserving this full gate on each. Per-target packaging and clean-home installer
 smoke checks add distribution evidence; they do not replace canonical acceptance.
 The matching documentation is tested before native and docs assets are published

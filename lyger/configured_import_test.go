@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	distribution "github.com/l-programming-language/l"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -17,22 +15,7 @@ import (
 
 func configuredImportAssets(t *testing.T, root string, words [3]string) Options {
 	t.Helper()
-	resources := fstest.MapFS{}
-	if err := fs.WalkDir(distribution.Files(), ".", func(name string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if entry.IsDir() {
-			return nil
-		}
-		raw, err := fs.ReadFile(distribution.Files(), name)
-		if err == nil {
-			resources[name] = &fstest.MapFile{Data: raw}
-		}
-		return err
-	}); err != nil {
-		t.Fatal(err)
-	}
+	resources := dictionaryIndexFilesystem(t)
 
 	for name, file := range resources {
 		if strings.HasSuffix(name, ".l") {

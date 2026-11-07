@@ -187,6 +187,8 @@ func (c *Compilation) instantiateConstruction(node *constructionNode, header def
 	var instance DefinitionInstance
 	if selected == len(wrappers) {
 		instance, err = c.instantiateSourceCall(node.Definition, arguments, local, used, active, dynamic)
+	} else if wrappers[selected] == nil {
+		instance, err = c.instantiateSourceDescriptor(node.Wrappers[selected], DefinitionInstance{}, arguments, node.Name, active, dynamic)
 	} else {
 		bindings, bindErr := bindDefinitionArguments(header.template, arguments, local, used)
 		if bindErr != nil {
@@ -197,7 +199,7 @@ func (c *Compilation) instantiateConstruction(node *constructionNode, header def
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	if node.Name != "" && (header.implicitName == nil || header.implicitName.Type == "Label" || header.template.hasDeclarationName()) {
+	if node.Name != "" && (selected == len(wrappers) || wrappers[selected] != nil) && (header.implicitName == nil || header.implicitName.Type == "Label" || header.template.hasDeclarationName()) {
 		result := definitionReferenceArgument(node.Name)
 		if node.Source != nil {
 			result.source = c.operandSource(node.Source.noun)
@@ -246,19 +248,21 @@ func (c *Compilation) constructionTemplates(node *constructionNode) ([]*Definiti
 	wrappers := make([]*DefinitionTemplate, len(node.Wrappers))
 	selected := -1
 	for i, rule := range node.Wrappers {
+		wraps := false
 		if rule.Template == nil {
-			continue
+			_, wraps, err = c.sourceDescriptorObject(rule)
+		} else {
+			wrappers[i], err = ParseDefinitionTemplate(rule.Template.rawBytes, rule.Source.source.Span)
+			if err == nil {
+				var base string
+				base, err = c.descriptorBaseSlot(rule, wrappers[i])
+				wraps = base != ""
+			}
 		}
-		wrappers[i], err = ParseDefinitionTemplate(rule.Template.rawBytes, rule.Source.source.Span)
 		if err != nil {
 			return nil, -1, err
 		}
-		wrapper := wrappers[i]
-		base, err := c.descriptorBaseSlot(rule, wrapper)
-		if err != nil {
-			return nil, -1, err
-		}
-		if base == "" {
+		if !wraps {
 			if selected >= 0 {
 				return nil, -1, lerrors.InvalidInput.Errorf("constructor %s has competing descriptor definitions", node.Nominal)
 			}
@@ -376,6 +380,9 @@ func (c *Compilation) callableTemplate(rec *record, active map[*record]bool) (*D
 	}
 	if selected >= 0 {
 		template = wrappers[selected]
+	}
+	if template == nil {
+		return nil, nil
 	}
 	bound := *template
 	bound.Slots = nil

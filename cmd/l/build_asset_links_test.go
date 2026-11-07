@@ -3,13 +3,80 @@ package main
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	distribution "github.com/l-programming-language/l"
 	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 )
+
+func TestBuildRejectsResealedRuntime(t *testing.T) {
+	for _, warm := range []bool{false, true} {
+		for _, missing := range []bool{false, true} {
+			t.Run(fmt.Sprintf("warm=%t/missing=%t", warm, missing), func(t *testing.T) {
+				assets, project := distributiontest.CompleteOverride(t), t.TempDir()
+				main := writeContractFile(t, filepath.Join(project, "main.l"), []byte("Show `freshness`.\n"))
+				// A valid bundle reaches this guard without invoking native tools.
+				writeContractFile(t, filepath.Join(project, "main"), []byte("unrelated destination"))
+				c, options := pathTestCompiler(t, assets, main, project)
+				if _, err := buildExecutable(context.Background(), c, options); err == nil || !strings.Contains(err.Error(), "unrelated executable") {
+					t.Fatalf("valid provider failed before destination control: %v", err)
+				}
+				if warm {
+					generated := c.process()
+					if c.err != nil {
+						t.Fatal(c.err)
+					}
+					if _, err := generated.workspace(c.log, "main", "control", nil); err != nil {
+						t.Fatal(err)
+					}
+				}
+				manifest, aml, err := distribution.LoadRuntimeComposition(os.DirFS(assets))
+				if err != nil {
+					t.Fatal(err)
+				}
+				const source = "runtime/eng/errors.l"
+				path := filepath.Join(assets, filepath.FromSlash(source))
+				if missing {
+					if err := os.Remove(path); err != nil {
+						t.Fatal(err)
+					}
+					delete(manifest.Sources, source)
+				} else {
+					raw := bytes.ReplaceAll(readContractFile(t, path), []byte("source execution stopped"), []byte("changed source cancellation"))
+					writeContractFile(t, path, raw)
+					manifest.Sources[source] = fmt.Sprintf("%x", sha256.Sum256(raw))
+				}
+				manifest.SHA256, err = manifest.Fingerprint(aml)
+				if err != nil {
+					t.Fatal(err)
+				}
+				metadata, err := json.Marshal(manifest)
+				if err != nil {
+					t.Fatal(err)
+				}
+				writeContractFile(t, filepath.Join(assets, "runtime/generated/support.json"), metadata)
+				if _, _, err := distribution.LoadRuntimeComposition(os.DirFS(assets)); err != nil {
+					t.Fatalf("resealed envelope must be a valid integrity control: %v", err)
+				}
+				if _, err := buildExecutable(context.Background(), c, options); err == nil || (!strings.Contains(err.Error(), "stale") && !strings.Contains(err.Error(), source)) {
+					t.Fatalf("build did not reject stale source composition before native setup: %v", err)
+				}
+				if !missing {
+					composeScopedTestProvider(t, assets)
+					if _, err := buildExecutable(context.Background(), c, options); err == nil || !strings.Contains(err.Error(), "unrelated executable") {
+						t.Fatalf("explicitly regenerated provider failed before destination control: %v", err)
+					}
+				}
+			})
+		}
+	}
+}
 
 func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 	for _, tc := range []struct {

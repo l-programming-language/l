@@ -27,15 +27,15 @@ Define "Remainder" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Ca
 
 *** Arithmetic and storage leaves keep native atoms local. Control, ordering,
     recurrence and return behavior are authored by the Functions below. ***
-Define "Integer" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: as, Operands: &[<@Value@>, i32]&}Op]&~|}<DEF>`.
+Define "Integer" as a New Storage's Integral of any Thing and `i32`.
 Define "Parse|-s|-d|--ing|--er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~parse~, Receiver: ~<@Value@>~, GenericTypes: ~i32~|}<DEF>`.
 Define "Wide" as a New Adjective describing any Integer or Parser.
-It describes any Integer as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: as, Operands: &[<@Value@>, u128]&}Op]&~|}<DEF>`.
+It describes any Integer as a New Storage's Integral of any Thing and `u128`.
 It describes any Parser as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~parse~, Receiver: ~<@Value@>~, GenericTypes: ~u128~|}<DEF>`.
 Define "Indexed" as a New Adjective describing any Integer.
-It describes any Integer as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: as, Operands: &[<@Value@>, usize]&}Op]&~|}<DEF>`.
+It describes any Integer as a New Storage's Integral of any Thing and `usize`.
 Define "Unsigned" as a New Adjective describing any Integer.
-It describes any Integer as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: as, Operands: &[<@Value@>, u64]&}Op]&~|}<DEF>`.
+It describes any Integer as a New Storage's Integral of any Thing and `u64`.
 Define "Direction" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~is_positive~, Receiver: ~<@Value@>~|}<DEF>`.
 Define "Multiple" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~checked_mul~, Receiver: ~<@Value@>~, Inputs: ~&[<@Factor@>]&~|}<DEF>`.
 

@@ -24,7 +24,7 @@ Quoted labels list bar-separated forms. Nouns use root/plural/descriptive/active
 
 ## Descriptors and constructors
 
-Descriptors bind nominal identities to ordered child-construction or wrapper rules. Every rule matching the target applies in authored order; wrapper order and repeated construction are preserved. Same-named private declarations remain distinct; aliases preserve identity. Missing target constructors and recursive expansion reject.
+Descriptors bind nominal identities to ordered construction rules. A source noun can bind typed formals and fixed operands to another constructor, as Formatting's Integer specializes Storage.Integral. A replacement constructs directly from those operands; a wrapper explicitly names the base result and retains its evaluation. Matching rules apply in authored order. Same-named private declarations remain distinct; aliases preserve identity. Missing constructors and recursive expansion reject.
 
 The [authoring guide](../guide/definitions.md#compose-a-source-action) demonstrates separate paragraph-local actions and descriptors. New selects construction, Generic participates in source composition and Public controls visibility; none infers Rust lifetimes or generic arguments.
 

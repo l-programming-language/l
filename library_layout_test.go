@@ -11,26 +11,9 @@ import (
 	"testing/fstest"
 
 	distribution "github.com/l-programming-language/l"
+	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 	Lyger "github.com/l-programming-language/l/lyger"
 )
-
-func layoutResources(t *testing.T) fstest.MapFS {
-	t.Helper()
-	files := fstest.MapFS{}
-	if err := fs.WalkDir(distribution.Files(), ".", func(name string, entry fs.DirEntry, err error) error {
-		if err != nil || entry.IsDir() {
-			return err
-		}
-		data, err := fs.ReadFile(distribution.Files(), name)
-		if err == nil {
-			files[name] = &fstest.MapFile{Data: data}
-		}
-		return err
-	}); err != nil {
-		t.Fatal(err)
-	}
-	return files
-}
 
 // LAY-003, 005, 009, 016, 024, 044, 046: one physical distribution layout.
 func TestLibraryLayoutResources(t *testing.T) {
@@ -63,7 +46,7 @@ func TestLibraryLayoutResources(t *testing.T) {
 // LAY-006, 014, 043: a complete selected provider is the positive control;
 // a misleading former registry must not repair a missing canonical registry.
 func TestLibraryLayoutRegistryNoFallback(t *testing.T) {
-	files := layoutResources(t)
+	files := distributiontest.Files(t)
 	source := []byte("Create \"Worker\" as a New Basic App.\n")
 	compile := func() error {
 		_, err := Lyger.NewLygerService(Lyger.Options{Resources: files}).Compile(source, filepath.Join(t.TempDir(), "main.l"))
@@ -85,7 +68,7 @@ func TestLibraryLayoutRegistryNoFallback(t *testing.T) {
 // LAY-025, 027, 028: registry identity participates in runtime provenance even
 // when all old source bytes remain available to the selected provider.
 func TestLibraryLayoutCompositionRegistryIdentity(t *testing.T) {
-	files := layoutResources(t)
+	files := distributiontest.Files(t)
 	manifest, _, err := distribution.LoadRuntimeComposition(files)
 	if err != nil {
 		t.Fatalf("valid composition control: %v", err)
@@ -100,7 +83,7 @@ func TestLibraryLayoutCompositionRegistryIdentity(t *testing.T) {
 }
 
 func TestLibraryLayoutRegistryRetargetInvalidatesSupport(t *testing.T) {
-	files := layoutResources(t)
+	files := distributiontest.Files(t)
 	if _, _, err := distribution.LoadRuntimeComposition(files); err != nil {
 		t.Fatal(err)
 	}
@@ -122,7 +105,7 @@ func TestLibraryLayoutRegistryRetargetInvalidatesSupport(t *testing.T) {
 func TestLibraryLayoutManifestPathPolicy(t *testing.T) {
 	for _, name := range []string{"../source.l", "/source.l", "runtime/generated/extra.l", "runtime/rust/extra.l", "builtins/runtime/eng/extra.l", "fixture/extra.l", "other.json", "runtime/eng/bad\\file.l"} {
 		t.Run(name, func(t *testing.T) {
-			files := layoutResources(t)
+			files := distributiontest.Files(t)
 			manifest, _, err := distribution.LoadRuntimeComposition(files)
 			if err != nil {
 				t.Fatal(err)
@@ -182,7 +165,7 @@ func TestLibraryLayoutBootstrapOwnership(t *testing.T) {
 func TestLibraryLayoutSelectedSourceMissing(t *testing.T) {
 	for _, name := range []string{"builtins/eng/prelude.l", "builtins/eng/core.l", "builtins/eng/storage/dictionary.l"} {
 		t.Run(name, func(t *testing.T) {
-			files := layoutResources(t)
+			files := distributiontest.Files(t)
 			source := []byte("Create \"Worker\" as a New Basic App.\n")
 			compile := func() error {
 				_, err := Lyger.NewLygerService(Lyger.Options{Resources: files}).Compile(source, filepath.Join(t.TempDir(), "main.l"))

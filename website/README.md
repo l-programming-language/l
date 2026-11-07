@@ -2,7 +2,7 @@
 
 This independent npm package builds the canonical repository documentation with Astro and Starlight. The production origin is **https://ldocs.org/**; local navigation stays on localhost. The package's `private: true` flag prevents npm publication.
 
-[Documentation checks](../.github/workflows/docs-check.yml) run on pull requests. Publication requires an authorized manual release from main. Initial docs and binaries share one immutable release; docs corrections use separate immutable snapshots. See [deployment](DEPLOYMENT.md) for activation, release and recovery procedures.
+[Documentation checks](../.github/workflows/docs-check.yml) run on pull requests. Publication is disabled pending separate reviewed activation. See [deployment](DEPLOYMENT.md) for the retained release and recovery procedures.
 
 ## Setup and local use
 

@@ -7,29 +7,13 @@ import (
 	"testing"
 	"testing/fstest"
 
-	distribution "github.com/l-programming-language/l"
+	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 	"github.com/l-programming-language/l/lerrors"
 )
 
 func dictionaryIndexFilesystem(t *testing.T) fstest.MapFS {
 	t.Helper()
-	files := fstest.MapFS{}
-	if err := fs.WalkDir(distribution.Files(), ".", func(name string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if !entry.IsDir() {
-			data, err := fs.ReadFile(distribution.Files(), name)
-			if err != nil {
-				return err
-			}
-			files[name] = &fstest.MapFile{Data: data}
-		}
-		return nil
-	}); err != nil {
-		t.Fatal(err)
-	}
-	return files
+	return distributiontest.Files(t)
 }
 
 func loadIndexDictionary(t *testing.T, files fstest.MapFS) error {

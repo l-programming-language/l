@@ -3,21 +3,14 @@ package main
 
 import (
 	"bytes"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
 
-	distribution "github.com/l-programming-language/l"
-	"github.com/l-programming-language/l/internal/sourcepaths"
 	Lyger "github.com/l-programming-language/l/lyger"
 )
-
-const runtimeSource = "runtime/eng/dictionary.l"
 
 func main() {
 	check := flag.Bool("check", false, "verify the committed composition without writing")
@@ -29,10 +22,15 @@ func main() {
 }
 
 func run(root string, check bool) error {
-	aml, metadata, err := generate(root)
+	aml, manifest, err := Lyger.ComposeRuntimeResources(os.DirFS(root))
 	if err != nil {
 		return err
 	}
+	metadata, err := json.MarshalIndent(manifest, "", "  ")
+	if err != nil {
+		return err
+	}
+	metadata = append(metadata, '\n')
 	for _, output := range []struct {
 		name string
 		data []byte
@@ -51,62 +49,4 @@ func run(root string, check bool) error {
 		}
 	}
 	return nil
-}
-
-func generate(root string) ([]byte, []byte, error) {
-	root, err := filepath.Abs(root)
-	if err != nil {
-		return nil, nil, err
-	}
-	resources := os.DirFS(root)
-	source, err := fs.ReadFile(resources, runtimeSource)
-	if err != nil {
-		return nil, nil, err
-	}
-	c := Lyger.NewLygerService(Lyger.Options{Resources: resources, AssetRoot: root}).NewCompilation(source, filepath.Join(root, filepath.FromSlash(runtimeSource)))
-	c.Make()
-	if c.Error != nil {
-		return nil, nil, c.Error
-	}
-	aml, selection, err := c.ComposeRuntimeLibrary()
-	if err != nil {
-		return nil, nil, err
-	}
-	metadata := distribution.RuntimeComposition{Version: 1, SHA256: fingerprint(aml), Sources: make(map[string]string), Selection: selection}
-	registry, err := fs.ReadFile(resources, "dictionaries.json")
-	if err != nil {
-		return nil, nil, err
-	}
-	metadata.Sources["dictionaries.json"] = fingerprint(registry)
-	for _, origin := range c.SourceOrigins {
-		name := origin.Name
-		if filepath.IsAbs(name) {
-			name, err = filepath.Rel(root, name)
-			if err != nil {
-				return nil, nil, err
-			}
-		}
-		name = filepath.ToSlash(name)
-		if !sourcepaths.Canonical(name) {
-			return nil, nil, fmt.Errorf("composition source %q is outside canonical source resources", origin.Name)
-		}
-		current, err := fs.ReadFile(resources, name)
-		if err != nil {
-			return nil, nil, err
-		}
-		if fingerprint(current) != origin.SHA256 {
-			return nil, nil, fmt.Errorf("composition source %s changed during generation", name)
-		}
-		metadata.Sources[name] = origin.SHA256
-	}
-	raw, err := json.MarshalIndent(metadata, "", "  ")
-	if err != nil {
-		return nil, nil, err
-	}
-	return aml, append(raw, '\n'), nil
-}
-
-func fingerprint(raw []byte) string {
-	digest := sha256.Sum256(raw)
-	return hex.EncodeToString(digest[:])
 }

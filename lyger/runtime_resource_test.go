@@ -1,9 +1,8 @@
 package Lyger
 
 import (
-	"crypto/sha256"
+	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/fs"
 	"testing"
 	"testing/fstest"
@@ -14,37 +13,9 @@ import (
 // production loading still rejects stale or incomplete provider resources.
 func deriveTestRuntime(t *testing.T, resources fstest.MapFS) {
 	t.Helper()
-	c := NewLygerService(Options{Resources: resources}).NewCompilation([]byte("Use Runtime from `runtime`.\n"), "runtime-resource-test.l")
-	c.Make()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
-	aml, err := c.ComposeLibrary("Runtime", "runtime")
+	aml, metadata, err := ComposeRuntimeResources(resources)
 	if err != nil {
 		t.Fatal(err)
-	}
-	metadata := struct {
-		Version int               `json:"version"`
-		SHA256  string            `json:"sha256"`
-		Sources map[string]string `json:"sources"`
-	}{Version: 1, SHA256: fmt.Sprintf("%x", sha256.Sum256(aml)), Sources: make(map[string]string)}
-	registry, err := fs.ReadFile(resources, "dictionaries.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	metadata.Sources["dictionaries.json"] = fmt.Sprintf("%x", sha256.Sum256(registry))
-	for _, origin := range c.SourceOrigins {
-		if origin.Name == c.MainPath {
-			continue
-		}
-		current, err := fs.ReadFile(resources, origin.Name)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if fmt.Sprintf("%x", sha256.Sum256(current)) != origin.SHA256 {
-			t.Fatalf("selected source %s changed during generation", origin.Name)
-		}
-		metadata.Sources[origin.Name] = origin.SHA256
 	}
 	manifest, err := json.Marshal(metadata)
 	if err != nil {
@@ -52,4 +23,51 @@ func deriveTestRuntime(t *testing.T, resources fstest.MapFS) {
 	}
 	resources["runtime/generated/support.aml"] = &fstest.MapFile{Data: aml}
 	resources["runtime/generated/support.json"] = &fstest.MapFile{Data: manifest}
+}
+
+type changingCompositionRegistry struct {
+	fs.FS
+	reads int
+}
+
+func (r *changingCompositionRegistry) Open(name string) (fs.File, error) {
+	if name != "dictionaries.json" {
+		return r.FS.Open(name)
+	}
+	raw, err := fs.ReadFile(r.FS, name)
+	if err != nil {
+		return nil, err
+	}
+	raw = append(raw, bytes.Repeat([]byte("\n"), r.reads)...)
+	r.reads++
+	return fstest.MapFS{name: &fstest.MapFile{Data: raw}}.Open(name)
+}
+
+func TestRuntimeResourceCompositionUsesCoherentRegistry(t *testing.T) {
+	t.Run("changed", func(t *testing.T) {
+		if _, _, err := ComposeRuntimeResources(&changingCompositionRegistry{FS: dictionaryIndexFilesystem(t)}); err == nil {
+			t.Fatal("composition accepted a registry changed during generation")
+		}
+	})
+	t.Run("nil", func(t *testing.T) {
+		defer func() {
+			if value := recover(); value != nil {
+				t.Fatalf("nil provider panicked: %v", value)
+			}
+		}()
+		if _, _, err := ComposeRuntimeResources(nil); err == nil {
+			t.Fatal("composition accepted an absent selected provider")
+		}
+	})
+	t.Run("retargeted", func(t *testing.T) {
+		files := dictionaryIndexFilesystem(t)
+		const old = "runtime/eng/dictionary.l"
+		const selected = "runtime/eng/selected.l"
+		files[selected] = &fstest.MapFile{Data: bytes.Clone(files[old].Data)}
+		files["dictionaries.json"].Data = bytes.ReplaceAll(files["dictionaries.json"].Data, []byte(old), []byte(selected))
+		_, metadata, err := ComposeRuntimeResources(files)
+		if err != nil || metadata.Sources[selected] == "" || metadata.Sources[old] != "" {
+			t.Fatalf("composition ignored selected Runtime entry: %v, sources=%v", err, metadata.Sources)
+		}
+	})
 }

@@ -9,31 +9,28 @@ import (
 // An explicit variable reference to the canonical target distinguishes a source
 // wrapper from a constructor replacement. The surrounding source constructor
 // retains ordinary lexical selection, argument checking and dependencies.
-func (c *Compilation) sourceDescriptorObject(rule *descriptorRule) (*objectGram, error) {
+func (c *Compilation) sourceDescriptorObject(rule *descriptorRule) (*objectGram, bool, error) {
 	if rule.Template != nil || rule.Object == nil || rule.Object.phrase == nil || rule.Object.phrase.gType != "phrase.declarative" {
-		return nil, nil
+		return nil, false, nil
 	}
 	object := rule.Object.phrase.obj
 	if object == nil {
-		return nil, nil
+		return nil, false, nil
 	}
 	count := 0
 	for _, argument := range constructorOperands(object) {
 		base, err := c.descriptorBaseArgument(rule, argument)
 		if err != nil {
-			return nil, err
+			return nil, false, err
 		}
 		if base {
 			count++
 		}
 	}
 	if count > 1 {
-		return nil, lerrors.InvalidInput.Errorf("descriptor for %s has multiple base parameters", rule.Target)
+		return nil, false, lerrors.InvalidInput.Errorf("descriptor for %s has multiple base parameters", rule.Target)
 	}
-	if count == 1 {
-		return object, nil
-	}
-	return nil, nil
+	return object, count == 1, nil
 }
 
 func (c *Compilation) descriptorBaseArgument(rule *descriptorRule, object *objectGram) (bool, error) {
@@ -45,18 +42,26 @@ func (c *Compilation) descriptorBaseArgument(rule *descriptorRule, object *objec
 }
 
 func (c *Compilation) instantiateSourceDescriptor(rule *descriptorRule, base DefinitionInstance, original []DefinitionArgument, name string, active, dynamic map[*record]bool) (DefinitionInstance, error) {
-	object, err := c.sourceDescriptorObject(rule)
+	leave, err := c.sourceDescriptorScope(rule)
+	if err != nil {
+		return DefinitionInstance{}, err
+	}
+	defer leave()
+	object, _, err := c.sourceDescriptorObject(rule)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
 	if object == nil {
-		return DefinitionInstance{}, lerrors.Internal.Errorf("source wrapper has no explicit base parameter")
+		return DefinitionInstance{}, lerrors.Internal.Errorf("source descriptor has no constructor")
 	}
 	node, err := c.constructObject(object, make(map[*descriptorRule]bool))
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
 	var arguments []DefinitionArgument
+	if len(node.Arguments) == 0 {
+		arguments = original
+	}
 	forward := 0
 	for _, parameter := range node.Arguments {
 		isBase, err := c.descriptorBaseArgument(rule, parameter)
@@ -83,6 +88,17 @@ func (c *Compilation) instantiateSourceDescriptor(rule *descriptorRule, base Def
 	node.Arguments, node.Parameters, node.Name = nil, nil, name
 	instance, _, err := c.instantiateStaticConstruction(node, arguments, active, dynamic)
 	return instance, err
+}
+
+func (c *Compilation) sourceDescriptorScope(rule *descriptorRule) (func(), error) {
+	if c.definitionDescriptors[rule] {
+		return nil, lerrors.Cycle.Errorf("recursive source descriptor for %s", rule.Target)
+	}
+	if c.definitionDescriptors == nil {
+		c.definitionDescriptors = make(map[*descriptorRule]bool)
+	}
+	c.definitionDescriptors[rule] = true
+	return func() { delete(c.definitionDescriptors, rule) }, nil
 }
 
 // One selected header supplies grammar boundaries, result naming and the ordered
@@ -171,18 +187,44 @@ func (c *Compilation) constructionHeader(node *constructionNode, named bool, act
 		return definitionHeader{}, nil, -1, err
 	}
 	if selected >= 0 {
-		return templateHeader(wrappers[selected], true, named), wrappers, selected, nil
+		if wrappers[selected] != nil {
+			return templateHeader(wrappers[selected], true, named), wrappers, selected, nil
+		}
+		leave, err := c.sourceDescriptorScope(node.Wrappers[selected])
+		if err != nil {
+			return definitionHeader{}, nil, -1, err
+		}
+		defer leave()
+		object, _, err := c.sourceDescriptorObject(node.Wrappers[selected])
+		if err != nil {
+			return definitionHeader{}, nil, -1, err
+		}
+		parameters, err := c.sourceParametersIn(node.Wrappers[selected].Source, object.tokens)
+		if err == nil && len(parameters) == 0 {
+			header, err := c.inheritedHeader([]*objectGram{object}, node.Nominal, named, active)
+			return header, wrappers, selected, err
+		}
+		return definitionHeader{parameters: parameters, fixed: true}, wrappers, selected, err
 	}
 	header, err := c.sourceHeader(node.Definition, named, active)
 	return header, wrappers, len(wrappers), err
 }
 
-func (site registrationSite) actionParameters(source *lStatement) ([]definitionParameter, error) {
-	owned := make(map[*token]bool)
+func (site registrationSite) parameterTokens() []*token {
+	var tokens []*token
+	if object := site.valueObject(); object != nil {
+		tokens = append(tokens, object.tokens...)
+	}
 	for _, action := range site.actionClauses() {
-		for _, tok := range action.tokens {
-			owned[tok] = true
-		}
+		tokens = append(tokens, action.tokens...)
+	}
+	return tokens
+}
+
+func sourceParametersIn(source *lStatement, tokens []*token) ([]definitionParameter, error) {
+	owned := make(map[*token]bool)
+	for _, tok := range tokens {
+		owned[tok] = true
 	}
 	// A declaration nested in this body owns its own generic arguments.
 	sites, err := source.sGram.registrationSites()
@@ -191,10 +233,8 @@ func (site registrationSite) actionParameters(source *lStatement) ([]definitionP
 	}
 	for _, nested := range sites {
 		if nested.subject != nil && owned[nested.subject.noun] {
-			for _, action := range nested.actionClauses() {
-				for _, tok := range action.tokens {
-					delete(owned, tok)
-				}
+			for _, tok := range nested.parameterTokens() {
+				delete(owned, tok)
 			}
 		}
 	}
@@ -221,7 +261,11 @@ func (c *Compilation) sourceParameters(rec *record) ([]definitionParameter, erro
 	if err != nil || site == nil {
 		return nil, err
 	}
-	parameters, err := site.actionParameters(source)
+	return c.sourceParametersIn(source, site.parameterTokens())
+}
+
+func (c *Compilation) sourceParametersIn(source *lStatement, tokens []*token) ([]definitionParameter, error) {
+	parameters, err := sourceParametersIn(source, tokens)
 	if err != nil {
 		return nil, err
 	}
@@ -294,6 +338,13 @@ func (c *Compilation) sourceHeader(rec *record, named bool, active map[*record]b
 	for _, action := range shape.site.actionClauses() {
 		objects = append(objects, action.orderedObjects()...)
 	}
+	return c.inheritedHeader(objects, rec.ID, named, active)
+}
+
+// Source nouns, action bodies and descriptor replacements inherit only open
+// constructors. Fixed authored operands keep their definition-site bindings.
+func (c *Compilation) inheritedHeader(objects []*objectGram, owner string, named bool, active map[*record]bool) (definitionHeader, error) {
+	header := definitionHeader{fixed: true}
 	inherited := false
 	for index := 0; index < len(objects); index++ {
 		object := objects[index]
@@ -325,7 +376,7 @@ func (c *Compilation) sourceHeader(rec *record, named bool, active map[*record]b
 			continue
 		}
 		if inherited && header.fixed && child.fixed && len(header.parameters) != len(child.parameters) {
-			return header, lerrors.InvalidInput.Errorf("constructor %s inherits incompatible operand counts", rec.ID)
+			return header, lerrors.InvalidInput.Errorf("constructor %s inherits incompatible operand counts", owner)
 		}
 		if !inherited || !header.fixed && child.fixed {
 			header.parameters, child.parameters = child.parameters, header.parameters
@@ -357,7 +408,7 @@ func (c *Compilation) wrapperValueRoles(node *constructionNode, header *definiti
 		return nil
 	}
 	for _, rule := range node.Wrappers[:selected] {
-		object, err := c.sourceDescriptorObject(rule)
+		object, _, err := c.sourceDescriptorObject(rule)
 		if err != nil {
 			return err
 		}

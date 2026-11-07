@@ -16,6 +16,7 @@ type Compilation struct {
 	definitionReserved     map[string]bool
 	definitionStatements   int
 	definitionValues       map[*DefinitionInstance]bool
+	definitionDescriptors  map[*descriptorRule]bool
 	definitionReturn       sourceReturnContext
 	Gram                   *grammar
 	MainBytes              []byte

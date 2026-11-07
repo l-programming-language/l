@@ -20,10 +20,7 @@ func TestRuntimeCompositionCacheRereadsSelectedResources(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			files := compositionResources(t, "7")
-			original, err := loadSupportTemplates(files, true)
-			if err != nil {
-				t.Fatal(err)
-			}
+			original := composedRuntime(t, files)
 			selected := files[name]
 			delete(files, name)
 			if _, err := loadSupportTemplates(files, true); !errors.Is(err, fs.ErrNotExist) || !strings.Contains(err.Error(), name) {
@@ -36,9 +33,8 @@ func TestRuntimeCompositionCacheRereadsSelectedResources(t *testing.T) {
 				t.Fatalf("damaged selected input = %v", err)
 			}
 			selected.Data = before
-			restored, err := loadSupportTemplates(files, true)
-			if err != nil || !bytes.Equal(restored["runtime/runtime.rs"], original["runtime/runtime.rs"]) {
-				t.Fatalf("restored provider differs after errors: %v", err)
+			if !bytes.Equal(composedRuntime(t, files), original) {
+				t.Fatal("restored provider differs after errors")
 			}
 		})
 	}
@@ -46,20 +42,15 @@ func TestRuntimeCompositionCacheRereadsSelectedResources(t *testing.T) {
 
 func TestRuntimeCompositionCacheTracksSelectedContent(t *testing.T) {
 	files := compositionResources(t, "7")
-	first, err := loadSupportTemplates(files, true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	first["runtime/runtime.rs"][0] = '!'
-	second, err := loadSupportTemplates(files, true)
-	if err != nil || second["runtime/runtime.rs"][0] == '!' {
-		t.Fatalf("returned bytes alias cached output: %v", err)
+	first := composedRuntime(t, files)
+	first[0] = '!'
+	if composedRuntime(t, files)[0] == '!' {
+		t.Fatal("returned bytes alias cached output")
 	}
 	const segment = "builtins/segments/vowels/calculation.lu"
 	files[segment].Data = bytes.Replace(files[segment].Data, []byte("[|Meta.Statement|]"), []byte("/* selected segment */ [|Meta.Statement|]"), 1)
-	changed, err := loadSupportTemplates(files, true)
-	if err != nil || !bytes.Contains(changed["runtime/runtime.rs"], []byte("/* selected segment */")) {
-		t.Fatalf("selected segment did not control cached generation: %v", err)
+	if !bytes.Contains(composedRuntime(t, files), []byte("/* selected segment */")) {
+		t.Fatal("selected segment did not control cached generation")
 	}
 	// A valid Lucid template can still fail support assembly. Such failures
 	// must not be hidden behind a cached runtime with the same AML.
@@ -71,12 +62,11 @@ func TestRuntimeCompositionCacheTracksSelectedContent(t *testing.T) {
 	}
 	files[cargo].Data = before
 	replacement := compositionResources(t, "9")
-	for _, name := range []string{"runtime/generated/support.json", "runtime/generated/support.aml", "stdlib/eng/format/dictionary.l"} {
+	for _, name := range []string{"runtime/generated/support.json", "runtime/generated/support.aml", "runtime/eng/errors.l"} {
 		files[name] = replacement[name]
 	}
-	changed, err = loadSupportTemplates(files, true)
-	if err != nil || !bytes.Contains(changed["runtime/runtime.rs"], []byte("return 9;")) {
-		t.Fatalf("updated selected composition did not control generation: %v", err)
+	if !bytes.Contains(composedRuntime(t, files), []byte("selected cancellation: 9")) {
+		t.Fatal("updated selected composition did not control generation")
 	}
 }
 
@@ -94,7 +84,7 @@ func TestRuntimeCompositionCacheConcurrentResults(t *testing.T) {
 					return
 				}
 				runtime := result["runtime/runtime.rs"]
-				if runtime[0] == '!' || !bytes.Contains(runtime, []byte("return 103;")) {
+				if runtime[0] == '!' || !bytes.Contains(runtime, []byte("selected cancellation: 103")) {
 					t.Error("concurrent generation shared mutable output")
 				}
 				runtime[0] = '!'
