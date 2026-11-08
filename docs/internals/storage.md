@@ -1,8 +1,27 @@
-# Storage source compositions
+# Storage
+
+<a id="storage-source-compositions"></a>
 
 The [Storage dictionary](../../builtins/eng/storage/dictionary.l) supplies reusable source words for the compiler's value, ownership and control-flow implementations. Prelude imports it privately; source code that names its members uses ``Use Storage from `storage`.`` Its cohesive source includes share one dictionary unit and preserve declaration order, paragraph scope and canonical targets. These are native-backed composition facilities, with native types checked at their Function boundaries.
 
 The groups below explain the shared policies rather than cataloging every representation helper. Native leaves perform individual calls, operators, borrows or patterns; source Functions and Processes own their sequencing, branches and loops. Member paths below are relative to Storage unless fully qualified.
+
+## Import and calling forms
+
+```l
+Use Storage from `storage`.
+```
+
+Qualify the selected member in a Function with the required native signature, such as `a New Storage's Result's Expecter of Value and Message`. Importing Storage reuses the canonical dictionary already loaded privately by prelude; it does not publish its helpers globally. The [native callers](#native-callers) below show complete enclosing declarations and actual calls.
+
+| Task | Composition |
+| --- | --- |
+| Choose an optional or fallible outcome | [Option.Select](#optionselect), [Result.Select](#resultselect) |
+| Turn absence into a runtime failure | [Require](#require) |
+| Choose an explicit panic policy | [Result.Expect](#resultexpect) |
+| Visit values or pairs with explicit callback policy | [Iteration and continuations](#iteration-and-continuations) |
+| Construct a result or return from the caller | [Returns and control flow](#returns-and-control-flow) |
+| Retain shared identity or append exact bytes | [Ownership and bytes](#ownership-and-bytes) |
 
 ## Results and errors
 
@@ -123,6 +142,6 @@ Enclose builds one output buffer from the opening delimiter, then extends it wit
 
 ## Sources and witnesses
 
-The [source dictionary](../../builtins/eng/storage/dictionary.l) includes bindings, value representations, control, scalar display, collections, program storage, traversal and execution compositions in source order. These files add no namespaces or export wrappers. Shared runtime/formatting bindings and operators use Storage's canonical definitions. The existing Function.Target binding resolves to Tuple.Second's canonical by-value projection. Runtime casts use Storage.Integral; Formatting retains its private fixed-signature nominal cast descriptors and formatter-only leaves. There is no separate Numeric dictionary or new implicit arithmetic vocabulary.
+The [source dictionary](../../builtins/eng/storage/dictionary.l) includes bindings, value representations, control, scalar display, collections, program storage, traversal and execution compositions in source order. These files add no namespaces or export wrappers. Shared [Runtime](../stdlib/eng/runtime.md) and [Formatting](../stdlib/eng/format.md) bindings and operators use Storage's canonical definitions. The existing Function.Target binding resolves to Tuple.Second's canonical by-value projection. Runtime casts use Storage.Integral; Formatting's private fixed-signature cast descriptors compose through that same operation while retaining their nominal targets. There is no separate Numeric dictionary or new implicit arithmetic vocabulary.
 
 Existing tests cover [namespaces, lazy failures, selectors, bytes and retention](../../lyger/word_library_acceptance_test.go), [traversal and continuation policies](../../lyger/word_library_traversal_test.go), [caller returns](../../lyger/word_library_reject_test.go), and [selected App retention](../../lyger/word_library_ownership_test.go). These implementation contracts complement the language's [copying and aliasing rules](../spec/values.md#conversion-and-aliasing-boundaries).

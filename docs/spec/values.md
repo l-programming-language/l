@@ -114,7 +114,9 @@ Thing does not provide dynamically typed arithmetic, unrestricted reflection, or
 
 Name the byte-oriented lexical category whose supported owned storage form is Bytes.
 
-**Usage and limitation.** Use the plural [Bytes](#bytes) constructor for an owned byte sequence, then read an element as Number. A standalone Byte scalar constructor or integer-width arithmetic API is not established. The [byte excerpt](../examples/word-values.l) reads the `a` octet as 97.
+**Usage.** Use the plural [Bytes](#bytes) constructor for an owned byte sequence, then read an element as Number. The [byte excerpt](../examples/word-values.l) reads the `a` octet as 97.
+
+**Partial support.** The configured Byte/Bytes word family is recognized, but only the plural Bytes storage type is implemented. The source-type whitelist has no singular Byte scalar type: individual octets are read as Number, and `New Byte` does not supply a one-byte value constructor. See the [source-type boundary test](../../lyger/refactor_value_characterization_test.go).
 
 ### Bytes
 

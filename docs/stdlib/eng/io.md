@@ -122,19 +122,9 @@ Show adds no newline. In the first program, Print writes `Hello World!` plus LF 
 
 ## Number formatting
 
-Number uses binary64. Print uses the shortest round-tripping representation, including scientific notation and signed zero:
+Number uses binary64. Print selects [Formatting.Format](format.md#format) for the shortest round-tripping representation, including scientific notation and signed zero, then appends LF. For example, `1000000` prints `1e+06\n` and negative zero prints `-0\n`. The Formatting reference owns the numeric thresholds and exact byte examples.
 
-| Number | Printed bytes shown with escaped LF |
-| --- | --- |
-| `3.5` | `3.5\n` |
-| `-12.5` | `-12.5\n` |
-| `999999` | `999999\n` |
-| `1000000` | `1e+06\n` |
-| `0.0001` | `0.0001\n` |
-| `0.00001` | `1e-05\n` |
-| `-0` | `-0\n` |
-
-Large source integers may already have rounded; Print reports that binary64 value. Nonfinite Numbers are rejected.
+Large source integers may already have rounded; Print reports that binary64 value. Nonfinite L Numbers are rejected before formatting.
 
 ## Errors and return behavior
 

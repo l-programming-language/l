@@ -10,6 +10,8 @@ Add the source to `website/content-map.json` with `source`, `route`, `title`, `d
 
 Use `sidebar: false` for pages reached through a section index or footer. They retain their routes, search entries and source attribution.
 
+To nest a page beneath another sidebar page, set `parent` to that page's route. Both must be visible in the same section, with no parent cycle. The parent becomes an expandable group with an Overview link to its existing page; children retain their order and routes.
+
 Mark mechanical references as generated and attribute their reviewed snapshots and inputs. Edit links must target canonical sources, never the ignored Starlight projection. Preserve existing public routes and useful anchors.
 
 Run the content check after renaming or deleting a page. The preparation pipeline updates only files it owns; authored landing-page content is not a cleanup target. Private manifests, reports and audit maintenance data are not public routes unless deliberately represented by an authored reader-facing explanation.
@@ -31,6 +33,13 @@ Review current definitions, exports, configured vocabulary and witnesses before 
 Keep identity, qualified name, support, visibility, dictionary ownership, sources, witnesses and the exact `doc` file/anchor in `docs/_meta/semantics.json`. Add only the missing mechanical facts in `word`: `partOfSpeech`, optional `audience` (`application` by default or `authoring`), exceptional `formRoles`, and modifier `targets` referencing `{ "entry": "reviewed-id", "form": "declared-form" }`. Forms come from the existing `inflections` list; roles annotate them rather than declaring new spellings. A record ID is a documentation review identity, not automatically a compiler-resolved identity.
 
 For genuinely overlapping records, use `wordRef` to a canonical record containing `word`. The two fields are mutually exclusive; references cannot chain or cycle. Configured vocabulary mappings use the same reference in `docs/_meta/vocabulary-review.json`. Inspect Function, Error and other overlaps by meaning; do not merge distinct senses or same-spelled words to reduce counts. Modifier target links establish that a meaning/form exists, while source review and relevant tests establish its actual applicability.
+
+Apply the [support definitions](evidence.md#implementation-support) to the exact
+canonical meaning. Associated records must carry the same support label so the
+word index and vocabulary reference agree. Intentional type, target or ownership
+rules do not imply partial implementation. Every partial entry needs a
+**Partial support.** paragraph identifying the implemented subset and the exact
+missing capability or failing stage; cite the relevant source or maintained witness.
 
 Place one marker immediately after the owning heading and any supported explicit anchor. Its ID must match the record's exact `doc` target. The first substantive block must be the definition paragraph, before generated facts or example expansion:
 
@@ -92,7 +101,7 @@ Use new documentation-only `.l` fragments only when the maintained example is em
 
 ## Update coverage and snapshots
 
-The coverage manifest connects inventory entries to meaningful documentation anchors and source/test evidence. Mechanical extraction is suitable for JSON grammar rules, vocabulary records, root dictionary-registry entries and known source-derived CLI help. Public visibility, overload behavior, type semantics and operational support require reviewed mappings to frontend behavior and witnesses. Include foundational and runtime entries in coverage while preserving their internal classification; registry membership does not add them to the public standard-library catalog.
+The coverage manifest connects inventory entries to meaningful documentation anchors and source/test evidence. Mechanical extraction is suitable for JSON grammar rules, vocabulary records, root dictionary-registry entries and known source-derived CLI help. Public visibility, overload behavior, type semantics and operational support require reviewed mappings to frontend behavior and witnesses. Include foundational and runtime entries in coverage while preserving their internal classification; the combined catalog must label their implementation audience without presenting their helpers as public application vocabulary.
 
 After relevant source changes, run `npm run references:check` from `website/`. A mismatch must lead to review of the affected prose and mappings. Use `npm run references:generate` to refresh mechanical snapshots only after that review; changing a fingerprint alone cannot establish semantic correctness.
 

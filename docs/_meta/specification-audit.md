@@ -35,7 +35,7 @@ The public prose must not turn implementation gaps into intended guarantees. The
 
 ## Standard-library expansion contract
 
-New libraries are expected. Documentation must enumerate every actual `(language, key)` in `dictionaries.json`, not hardcode IO as the architecture. Each entry requires reviewed visibility, exact entry/include dependencies, witnesses where available, and support classifications. Public dictionaries require a meaningful dictionary page and reviewed export set; internal Storage, Runtime and Formatting keep their implementation references and stay out of the public catalog.
+New libraries are expected. Documentation must enumerate every actual `(language, key)` in `dictionaries.json`, not hardcode IO as the architecture. Each entry requires reviewed visibility, exact entry/include dependencies, witnesses where available, and support classifications. Public dictionaries require a meaningful dictionary page and reviewed export set; internal Storage, Runtime and Formatting keep their implementation references and audience labels in the combined catalog.
 
 A recommended stable identity is `stdlib:<language>:<key>` for a dictionary and `stdlib-export:<language>:<key>:<canonical-name>` for an export. Renaming/removing a key must invalidate the old mapping. Changed source bytes must invalidate review hashes. An unresolved public surface is a failed documentation classification check, not an invitation to classify every regex-found declaration as public.
 

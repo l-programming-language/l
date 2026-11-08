@@ -60,7 +60,9 @@ Classify a word that qualifies a noun or describes construction for exact nomina
 
 Classify a word that modifies an action, declaration, comparison or source sequence.
 
-**Usage and limitation.** Publicly on the Identity declaration in the [Function example](../examples/composed-functions.l) publishes that Function, while Then in a [source action](../guide/definitions.md#compose-a-source-action) separates composed actions. These configured cases do not establish unrestricted user-defined adverb execution or a new runtime type.
+**Usage.** Publicly on the Identity declaration in the [Function example](../examples/composed-functions.l) publishes that Function, while Then in a [source action](../guide/definitions.md#compose-a-source-action) separates composed actions.
+
+**Partial support.** The grammar recognizes adverbs, and configured roles such as visibility, condition negation, comparison and progression have specific handling. Declaring a new Adverb does not provide a general mechanism for applying its authored body to an action; adverb bodies have no counterpart to the source-defined adjective constructor rules. Use the implemented configured modifiers in their documented contexts.
 
 ## Describe with an adjective
 

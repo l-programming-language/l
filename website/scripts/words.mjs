@@ -22,10 +22,14 @@ export function deriveWords({ entries, lexical = { entries: {} }, pages, documen
     if (!entry?.word || entry.wordRef) throw new Error(`Missing direct canonical word: ${id}`);
     return entry;
   };
+  const associate = (review, label) => {
+    const owner = canonical(review.wordRef);
+    if (review.support !== owner.support) throw new Error(`Conflicting word support: ${label} (${review.support}) -> ${owner.id} (${owner.support})`);
+  };
   for (const entry of entries) {
     if (entry.word && entry.wordRef) throw new Error(`Entry has both word and wordRef: ${entry.id}`);
     if (eligible(entry) && !entry.word && !entry.wordRef) throw new Error(`Missing word coverage: ${entry.id}`);
-    if (entry.wordRef) canonical(entry.wordRef);
+    if (entry.wordRef) associate(entry, entry.id);
     if (!entry.word) continue;
     const word = entry.word;
     if (!word || typeof word !== 'object' || Array.isArray(word) || Object.keys(word).some((key) => !['partOfSpeech', 'audience', 'formRoles', 'targets'].includes(key))) throw new Error(`Invalid word metadata: ${entry.id}`);
@@ -47,7 +51,7 @@ export function deriveWords({ entries, lexical = { entries: {} }, pages, documen
     }
   }
   for (const [key, review] of Object.entries(lexical.entries)) {
-    if (review.wordRef) canonical(review.wordRef);
+    if (review.wordRef) associate(review, key);
     else if (review.support !== 'internal' || !review.notes?.trim()) throw new Error(`Missing configured word association: ${key}`);
   }
   const found = new Map();
@@ -110,7 +114,7 @@ export function wordIndex(words, selection = '', dictionaries = []) {
   if (selection === 'builtins') selected = words.filter((word) => !word.dictionary);
   else if (selection) {
     const [lexicon, key, extra] = selection.split(':');
-    if (extra || !dictionaries.some((dictionary) => dictionary.language === lexicon && dictionary.key === key)) throw new Error(`Unknown word-index library: ${selection}`);
+    if (extra || !dictionaries.some((dictionary) => !dictionary.internal && dictionary.language === lexicon && dictionary.key === key)) throw new Error(`Unknown word-index library: ${selection}`);
     selected = words.filter((word) => word.dictionary?.lexicon === lexicon && word.dictionary.key === key && word.audience === 'application');
   }
   const groups = selection ? [['Words', selected]] : [['Application vocabulary', selected.filter((word) => word.audience === 'application')], ['Advanced word authoring', selected.filter((word) => word.audience === 'authoring')]];
@@ -118,7 +122,7 @@ export function wordIndex(words, selection = '', dictionaries = []) {
     const letters = [...new Set(items.map((word) => word.root[0].toUpperCase()))];
     const id = (letter) => `words-${group}-${letter.toLowerCase()}`;
     const alphabet = letters.map((letter) => `<a href="#${escape(id(letter))}">${escape(letter)}</a>`).join(' · ');
-    const sections = letters.map((letter) => `<h3 id="${escape(id(letter))}">${escape(letter)}</h3>\n<ul>${items.filter((word) => word.root[0].toUpperCase() === letter).map((word) => `<li><a href="${escape(word.link)}"><strong>${escape(word.root)}</strong> — ${escape(word.name)}</a> <span>(${escape(word.word.partOfSpeech)}; ${escape(word.support)}${word.audience === 'authoring' ? '; authoring' : ''})</span>: ${escape(word.gloss)}</li>`).join('\n')}</ul>`).join('\n');
+    const sections = letters.map((letter) => `<h3 id="${escape(id(letter))}">${escape(letter)}</h3>\n<ul>${items.filter((word) => word.root[0].toUpperCase() === letter).map((word) => `<li><a href="${escape(word.link)}"><strong>${escape(word.root)}</strong>${word.name === word.root ? '' : ` (${escape(word.name)})`}</a> <span>(${escape(word.word.partOfSpeech)}; ${escape(word.support)}${word.audience === 'authoring' ? '; authoring' : ''})</span>: ${escape(word.gloss)}</li>`).join('\n')}</ul>`).join('\n');
     return `<nav class="l-word-index" data-pagefind-ignore aria-label="${escape(title)}"><h2>${escape(title)}</h2><p>${alphabet}</p>${sections}</nav>`;
   }).join('\n\n');
 }

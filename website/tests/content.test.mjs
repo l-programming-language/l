@@ -148,9 +148,9 @@ test('malformed or inline word indices do not silently disappear', async (t) => 
 
 test('authoring dictionaries require the same real owner and source as public library records', () => {
   const index = { format: 1, languages: { eng: { storage: { entry: 'builtins/eng/storage/dictionary.l', dictionary: 'Storage' } } } };
-  const namespace = { id: 'storage', kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'storage' }, visibility: 'namespace', support: 'internal', sources: ['builtins/eng/storage/dictionary.l'] };
+  const namespace = { id: 'storage', kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'storage' }, visibility: 'namespace', support: 'internal', doc: 'docs/storage.md#details', sources: ['builtins/eng/storage/dictionary.l'] };
   const author = { id: 'option', kind: 'authoring-word', dictionary: namespace.dictionary, sources: namespace.sources };
-  assert.deepEqual(validateStdlib(index, [], [namespace, author]), []);
+  assert.deepEqual(validateStdlib(index, [page('docs/storage.md', '/docs/internals/storage/')], [namespace, author]).map((row) => [row.key, row.internal, row.exports]), [['storage', true, []]]);
   assert.throws(() => validateStdlib(index, [], [namespace, { ...author, dictionary: { lexicon: 'eng', key: 'missing' } }]), /dictionary owner/);
   assert.throws(() => validateStdlib(index, [], [namespace, { ...author, sources: ['builtins/eng/storage/control.l'] }]), /dictionary source/);
   assert.throws(() => validateStdlib(index, [], [namespace, { ...author, dictionary: undefined }]), /dictionary owner/);
@@ -315,17 +315,21 @@ test('a second indexed dictionary requires both a dedicated page and reviewed pu
   ]);
 });
 
-test('reviewed internal dictionaries retain coverage without becoming public catalog entries', () => {
+test('catalog includes implementation references without claiming public exports', () => {
   for (const [key, dictionary, entry] of [
     ['support', 'Support', 'stdlib/eng/support.l'],
     ['storage', 'Storage', 'builtins/eng/storage/dictionary.l'],
     ['runtime', 'Runtime', 'runtime/eng/dictionary.l'],
     ['format', 'Formatting', 'stdlib/eng/format/dictionary.l'],
   ]) {
-    const index = { format: 1, languages: { eng: { [key]: { entry, dictionary } } } };
-    const entries = [{ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key }, visibility: 'namespace', support: 'internal', sources: [entry] }];
-    assert.deepEqual(validateStdlib(index, [], entries), []);
-    entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key }, visibility: 'public', support: 'supported', sources: [entry] });
+    const index = { format: 1, languages: { test: { [key]: { entry, dictionary } } } };
+    const entries = [{ kind: 'stdlib-export', dictionary: { lexicon: 'test', key }, visibility: 'namespace', support: 'internal', doc: 'docs/support.md#details', sources: [entry] }];
+    const reference = page('docs/support.md', '/docs/internals/support/');
+    const [row] = validateStdlib(index, [reference], entries);
+    assert.ok(row, 'Implementation dictionary must appear in the combined catalog.');
+    assert.deepEqual([row.language, row.key, row.internal, row.exports, row.route, row.description], ['test', key, true, [], reference.route, reference.description]);
+    assert.throws(() => validateStdlib(index, [], entries), /Missing implementation reference/);
+    entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'test', key }, visibility: 'public', support: 'supported', sources: [entry] });
     assert.throws(() => validateStdlib(index, [], entries), /conflicting public documentation classifications/);
   }
 });
@@ -335,13 +339,13 @@ test('export ownership is distinct from reviewed source dependencies', () => {
     io: { entry: 'stdlib/eng/io/dictionary.l', dictionary: 'IO' },
     support: { entry: 'stdlib/eng/support.l', dictionary: 'Support' },
   } } };
-  const pages = [page('docs/stdlib/io.md', '/docs/stdlib/eng/io/')];
+  const pages = [page('docs/stdlib/io.md', '/docs/stdlib/eng/io/'), page('docs/support.md', '/docs/internals/support/')];
   const owner = { lexicon: 'eng', key: 'io' };
   const entries = [
     { kind: 'stdlib-export', dictionary: owner, visibility: 'public', support: 'supported', name: 'IO.Lined', sources: ['stdlib/eng/io/dictionary.l', 'stdlib/eng/support.l'] },
-    { kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'support' }, visibility: 'namespace', support: 'internal', sources: ['stdlib/eng/support.l'] },
+    { kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'support' }, visibility: 'namespace', support: 'internal', doc: 'docs/support.md', sources: ['stdlib/eng/support.l'] },
   ];
-  assert.deepEqual(validateStdlib(index, pages, entries).map((row) => [row.key, row.exports]), [['io', ['IO.Lined']]]);
+  assert.deepEqual(validateStdlib(index, pages, entries).filter((row) => !row.internal).map((row) => [row.key, row.exports]), [['io', ['IO.Lined']]]);
   for (const dictionary of [undefined, { lexicon: 'eng', key: 'unknown' }]) {
     assert.throws(() => validateStdlib(index, pages, [{ ...entries[0], dictionary }]), /Invalid reviewed dictionary owner/);
   }
@@ -473,13 +477,14 @@ test('pages omitted from the sidebar retain their routes, fragments and source l
 
 test('catalog rendering handles additional languages and libraries without IO-specific code', () => {
   const rendered = stdlibCatalog([
-    { language: 'eng', key: 'io', dictionary: 'IO', exports: ['IO.Print'], route: '/docs/stdlib/eng/io/' },
-    { language: 'eng', key: 'vectors', dictionary: 'Vectors', exports: ['Vectors.Length', 'Vectors.Dot'], route: '/docs/stdlib/eng/vectors/' },
-    { language: 'test', key: 'sample', dictionary: 'Sample', exports: ['Sample.Read'], route: '/docs/stdlib/test/sample/' },
+    { language: 'eng', key: 'io', dictionary: 'IO', exports: ['IO.Print'], route: '/docs/stdlib/eng/io/', description: 'Byte output.' },
+    { language: 'eng', key: 'vectors', dictionary: 'Vectors', exports: ['Vectors.Length', 'Vectors.Dot'], route: '/docs/stdlib/eng/vectors/', description: 'Vector arithmetic.' },
+    { language: 'test', key: 'sample', dictionary: 'Sample', exports: [], internal: true, route: '/docs/internals/sample/', description: 'Internal A | B support.' },
   ]);
-  assert.match(rendered, /Vectors.Length, Vectors.Dot/);
+  assert.match(rendered, /Application \| Vector arithmetic\./);
+  assert.match(rendered, /Implementation \| Internal A &#124; B support\./);
   assert.match(rendered, /\[Vectors\]\(\/docs\/stdlib\/eng\/vectors\/\)/);
-  assert.match(rendered, /\[Sample\]\(\/docs\/stdlib\/test\/sample\/\)/);
+  assert.match(rendered, /\[Sample\]\(\/docs\/internals\/sample\/\)/);
 });
 
 test('example verification replaces prior success even when the current run fails', async (t) => {

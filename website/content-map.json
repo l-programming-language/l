@@ -579,7 +579,30 @@
       "section": "Libraries",
       "order": 1,
       "role": "explanatory",
-      "generated": false
+      "generated": false,
+      "parent": "/docs/stdlib/"
+    },
+    {
+      "source": "docs/stdlib/eng/format.md",
+      "route": "/docs/stdlib/eng/format/",
+      "title": "Formatting",
+      "description": "Shared Number formatting: native calling forms, exact bytes, ownership and limits.",
+      "section": "Libraries",
+      "order": 2,
+      "role": "implementation",
+      "generated": false,
+      "parent": "/docs/stdlib/"
+    },
+    {
+      "source": "docs/stdlib/eng/runtime.md",
+      "route": "/docs/stdlib/eng/runtime/",
+      "title": "Runtime",
+      "description": "App lifecycle, errors, capture and shutdown through the compiler-selected runtime dictionary.",
+      "section": "Libraries",
+      "order": 3,
+      "role": "implementation",
+      "generated": false,
+      "parent": "/docs/stdlib/"
     },
     {
       "source": "docs/internals/index.md",
@@ -594,12 +617,13 @@
     {
       "source": "docs/internals/storage.md",
       "route": "/docs/internals/storage/",
-      "title": "Storage compositions",
+      "title": "Storage",
       "description": "Internal source words for results, traversal, returns, ownership and bytes.",
-      "section": "Internals",
-      "order": 1,
+      "section": "Libraries",
+      "order": 4,
       "role": "implementation",
-      "generated": false
+      "generated": false,
+      "parent": "/docs/stdlib/"
     },
     {
       "source": "docs/architecture.md",

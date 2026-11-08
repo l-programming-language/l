@@ -919,7 +919,7 @@
       "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "topic": "Iteration rejection",
       "support": "rejected",
-      "notes": "The parser recognizes this shape, but outer instruction lowering explicitly rejects while. Rust backend iteration cases do not establish source-language loop support."
+      "notes": "While has configured vocabulary and a conditional grammar rule, but the documented illustration currently fails grammar processing. Outer instruction lowering also has no While operation. Rust backend iteration cases do not establish source-language loop support."
     },
     "conditional.other": {
       "doc": "docs/spec/control-flow.md#comparisons",

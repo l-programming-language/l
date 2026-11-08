@@ -16,11 +16,17 @@ A useful specification says both what readers can rely on and how that claim is 
 | Disposition | Meaning |
 | --- | --- |
 | Supported | Accepted and implemented within the documented boundary |
-| Partial | Some specific forms/stages work; the omitted boundary is named |
+| Partial | Some specific forms/stages work; the missing capability and its failing stage are named |
 | Unsupported | Recognized/rejected or unavailable |
 | Internal-only | An implementation representation, not a constructible public facility |
 | Design-only | A conceptual model with no present support claim |
 | Unresolved | Conflicting evidence requires further investigation |
+
+Classify the stated meaning, not every imaginable use of its spelling. Intentional
+operand, ownership and context rules do not make an implemented meaning partial.
+For a partial word, its canonical entry must name the implemented subset and the
+specific missing form, operation or stage. Use rejected/unsupported for a known
+unavailable operation; reserve unresolved for a question the evidence cannot settle.
 
 A single item can have distinct frontend and backend support. For example, a callable template may be accepted by the Rust backend without proving a public L closure form. A raw AML library visibility check at native Rust compilation does not establish an L frontend entry syntax.
 

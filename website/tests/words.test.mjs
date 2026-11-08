@@ -49,6 +49,18 @@ test('canonical associations are direct and internal tags cannot become applicat
   assert.equal(derive([canonical], source, { lexical: { entries: { native: { support: 'internal', notes: 'Native metadata, not a source constructor.' } } } }).length, 1);
 });
 
+test('associated reviews cannot give the same canonical meaning conflicting support labels', () => {
+  const source = '# Words\n\n## Meaning\n\n<!-- word:x -->\n\nA meaning.\n';
+  const canonical = entry('x', 'Meaning', 'meaning');
+  const alias = { ...entry('review', 'Meaning', 'meaning'), word: undefined, wordRef: 'x', support: 'partial' };
+  assert.throws(() => derive([canonical, alias], source), /Conflicting word support.*review.*x/);
+  const lexical = { entries: { root: { wordRef: 'x', support: 'partial', notes: 'Reviewed.' } } };
+  assert.throws(() => derive([canonical], source, { lexical }), /Conflicting word support.*root.*x/);
+  alias.support = 'supported';
+  lexical.entries.root.support = 'supported';
+  assert.equal(derive([canonical, alias], source, { lexical }).length, 1);
+});
+
 test('irregular and actor forms retain qualified modifier targets', () => {
   const words = derive([
     entry('send', 'IO.Send', 'send', { inflections: ['Send', 'Sends', 'Sent', 'Sending', 'Sender'], word: { partOfSpeech: 'verb', formRoles: { Sender: { partOfSpeech: 'noun', role: 'actor' } } } }),
@@ -79,6 +91,7 @@ test('one derived collection renders generic library and global navigation with 
   assert.match(local, /Z.Output/);
   assert.doesNotMatch(local, /other output|Option.Select/);
   assert.throws(() => wordIndex(words, 'fra:unknown', []), /Unknown word-index library/);
+  assert.throws(() => wordIndex(words, 'fra:math', [{ language: 'fra', key: 'math', internal: true }]), /Unknown word-index library/);
   assert.doesNotMatch(wordIndex(words, 'builtins'), /Z.Output|Option.Select/);
 });
 

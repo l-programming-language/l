@@ -28,6 +28,8 @@ Function supplies an FW native definition with Func metadata. Name is Text, Inpu
 
 Inputs and Outputs preserve their typed cardinality. Main supplies No Inputs and No Outputs; ordinary Function declarations bind their checked signatures and paragraph bodies to the same selected definition. The constructor is not a marker for a second emitter.
 
+**Supported boundary.** A Function declares one ordered signature and owns its body paragraph. A source Function with Outputs must return them on every continuing path; recursive calls and Function-valued arguments/results use that same checked signature. Generic inference, overload resolution and variadic parameters are not part of this interface.
+
 Invocation words use normal grammatical binding. Captures, snapshots and Pointer sharing follow [scope rules](../../spec/names-and-scope.md#runtime-storage-and-definite-assignment). Native signature/lifetime metadata remains bounded by the [definition contract](../../spec/definitions.md#process-function-and-return).
 
 ## Function.Invoke and Delegate

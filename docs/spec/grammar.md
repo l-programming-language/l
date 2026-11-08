@@ -4,7 +4,7 @@ The exact English grammar lives in `lexicon/eng/grammar.json`; the exact configu
 
 ## Inventory and authority
 
-The inspected English grammar has 99 rules and 306 named cases. Its categories are three NOUN rules, thirteen PHRASE rules, sixty-nine CLAUSE rules, one CONDITION rule, four CONDITIONAL rules, five PREDICATE rules, and four STATEMENT rules. The vocabulary has 72 entries across eight parts of speech. These counts describe the reviewed source snapshot; freshness checks must catch later changes.
+The inspected English grammar has 99 rules and 307 named cases. Its categories are three NOUN rules, thirteen PHRASE rules, sixty-nine CLAUSE rules, one CONDITION rule, four CONDITIONAL rules, five PREDICATE rules, and four STATEMENT rules. The vocabulary has 72 entries across eight parts of speech. These counts describe the reviewed source snapshot; freshness checks must catch later changes.
 
 The [complete rule and case inventory](../_generated/grammar.md) provides a stable entry for every configured recognizer, and the [vocabulary inventory](../_generated/vocabulary.md) retains each root, inflection, role, and handler description. These tables supplement the semantic explanations below.
 
@@ -157,17 +157,21 @@ Identify the destination of a supported insertion or update.
 
 <!-- word:grammar-word:out -->
 
-Name the configured deflective preposition without an established general executable application operation.
+Introduce a Function argument, with a separately configured deflective role that has no executable operation.
 
-**Usage and boundary.** The [configured vocabulary](../../lexicon/eng/vocabulary.json) recognizes Out. No runnable source form is claimed here; use the precise [Output member](../reference/builtins/lifecycle.md#output) or IO operations for their documented behavior.
+**Usage and boundary.** After declaring Identity in the [Function example](../examples/composed-functions.l), ``Identity out `value` as "Result".`` uses the generic argument phrase. Out does not give that call output or export behavior.
+
+**Partial support.** The [configured deflective role](../../lexicon/eng/vocabulary.json) has no corresponding operation or dedicated phrase in the current grammar. Only the generic Function argument use is implemented. Use the [Output member](../reference/builtins/lifecycle.md#output) or IO operations for their distinct documented behavior.
 
 ### By
 
 <!-- word:grammar-word:by -->
 
-Introduce the actor phrase recognized by an indicative grammatical form.
+Introduce a Function argument or name an actor in the configured indicative phrase.
 
-**Usage and boundary.** A focused `by Actor` phrase is configuration-level syntax; its enclosing clause must supply supported semantics. The [indicative grammar](../../lexicon/eng/grammar.json) is not evidence for an arbitrary executable passive callback API.
+**Usage and boundary.** After declaring Identity in the [Function example](../examples/composed-functions.l), ``Identity by `value` as "Result".`` uses the generic argument phrase. This binds an ordinary argument; it does not select an actor or callback.
+
+**Partial support.** The [indicative grammar](../../lexicon/eng/grammar.json) declares `by Actor`, but no enclosing clause uses that phrase to implement passive actor execution. Generic Function arguments work; the configured actor-specific meaning does not.
 
 ### From
 
@@ -246,7 +250,7 @@ This negative fixture deliberately puts Await in an App body:
 
 Recognize a configured receptive action without a general supported collection instruction.
 
-**Supported alternative and limitation.** Use the checked typed read form in the [value program](../examples/word-values.l), such as `Define "first" as a New Number from items at 0`. Get is not an alternate supported spelling for that operation.
+**Unsupported operation.** The configured Get action has no executable instruction and is rejected during instruction lowering. Use the checked typed read form in the [value program](../examples/word-values.l), such as `Define "first" as a New Number from items at 0`. Get is not an alternate spelling for that operation; a separately authored action must supply its own definition.
 
 ### Take
 
@@ -254,7 +258,7 @@ Recognize a configured receptive action without a general supported collection i
 
 Recognize a configured reductive action without a general supported removal instruction.
 
-**Supported alternative and limitation.** The [collection contract](collections-and-categories.md) provides insertion, replacement and typed reads, not removal. A configured Take form is not a runnable removal example.
+**Unsupported operation.** The configured Take action has no executable instruction and is rejected during instruction lowering. The [collection contract](collections-and-categories.md) provides insertion, replacement and typed reads, not removal. A separately authored action must supply its own definition; the configured word is not a runnable removal example.
 
 ### Import
 
@@ -262,7 +266,7 @@ Recognize a configured reductive action without a general supported removal inst
 
 Recognize a configured import action whose general native execution is not implemented.
 
-**Supported alternative and limitation.** Use [Use](imports.md#indexed-dictionaries) with an explicit source or registered dictionary. The [file-import program](../../demo/dictionaries/file-import/main.l) demonstrates that supported spelling; Import is not an alias for it.
+**Unsupported operation.** The configured Import action has no executable instruction and is rejected during instruction lowering. Use [Use](imports.md#indexed-dictionaries) with an explicit source or registered dictionary. The [file-import program](../../demo/dictionaries/file-import/main.l) demonstrates that supported spelling; Import is not an alias for it. A separately authored action must supply its own definition.
 
 ### Export
 
@@ -270,13 +274,13 @@ Recognize a configured import action whose general native execution is not imple
 
 Recognize a configured export action whose general native execution is not implemented.
 
-**Supported alternative and limitation.** Use [Public/Publicly](names-and-scope.md#public) to publish the selected declaration. The [public-values program](../../demo/paragraphs/public-values.l) demonstrates publication; Export is not an executable replacement.
+**Unsupported operation.** The configured Export action has no executable instruction and is rejected during instruction lowering. Use [Public/Publicly](names-and-scope.md#public) for declaration visibility, as in the [public-values program](../../demo/paragraphs/public-values.l); that is not a runtime export operation. A separately authored action must supply its own definition.
 
 ## Conditions
 
 The condition rule contains truth, has, equals, is, isnt, less, greater, less_equal, and greater_equal cases. Exact spellings arise from configured is/isnt, have/has, equal/equals, less/greater, than, not, and articles. Equality requires matching supported scalar types; ordering requires Number; has is limited to a target's Error.
 
-The configured if/else/otherwise/while families are not equally executable. If, an attached else, and paragraph-local otherwise have bounded instruction support. While currently reaches an unsupported outer conditional boundary. Multiple joined conditions reject, so the grammar's repeated CONDITION form does not establish boolean conjunction or short-circuit evaluation.
+The configured if/else/otherwise/while families are not equally executable. A single-condition If, an attached plain else, and paragraph-local otherwise have instruction support. The configured `else if` continuation and documented While example reject during grammar processing; While also has no outer instruction implementation. Multiple joined conditions reject during instruction lowering, so the grammar's repeated CONDITION form does not establish boolean conjunction or short-circuit evaluation.
 
 The [Truth conditional example](values.md#truth) shows an actual `If enabled equals true, await Worker, else exit` statement with its declarations and execution context. It compares Truth operands and attaches an else branch to that If. For complete branch examples and explicitly rejected loop forms, see [operations and control flow](control-flow.md). A branch separator comma is source punctuation; it is not the grammar configuration's `|` sequence marker.
 

@@ -29,7 +29,7 @@ Create, Define, Describe, and Use establish declarations, typed/native definitio
 
 ## Runtime members
 
-Output and Error are noun members: Output contains finalized raw stdout as Text; Error identifies the selected process operation/invocation failure. Possessive access keeps the canonical target. Input exists in vocabulary/signature metadata but runtime process argument/input transport is not provided by the current App contract.
+Output and Error are noun members: Output contains finalized raw stdout as Text; Error identifies the selected process operation/invocation failure. Possessive access keeps the canonical target. Input instead names signature parameters and typed Process bindings; it is not an implicit App member.
 
 ### Input
 
@@ -38,6 +38,8 @@ Output and Error are noun members: Output contains finalized raw stdout as Text;
 Name an ordered Function parameter or a typed binding supplied to a structured Process.
 
 **Usage and example.** `with Inputs of "Value" as Text` declares Identity's parameter in the [complete Function example](../../examples/composed-functions.l). A selector's Process Inputs bind its selected payload inside that body. `No Inputs` explicitly declares no parameters. These forms do not provide stdin or argument transport to an App; [execution limits](../../spec/execution.md#targets-and-process-ownership) remain unchanged.
+
+Function calls check input count and types. A Process input belongs only to its selected body, with native borrow and move checks at compilation. These supported bindings introduce neither an untyped argument list nor an implicit clone.
 
 ## Availability and errors
 

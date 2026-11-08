@@ -4,6 +4,10 @@ L's standard library supplies vocabulary dictionaries that you import explicitly
 
 ## Current catalog
 
+<a id="foundation-and-runtime-dictionaries"></a>
+
+All bundled dictionaries are listed below. IO provides application vocabulary; Formatting, Runtime and Storage provide implementation and word-authoring facilities. Each reference explains its imports, interfaces, examples and limits.
+
 <!-- stdlib-catalog -->
 
 ## Import model
@@ -18,7 +22,7 @@ The `io` key selects the indexed dictionary; a neighboring file cannot shadow it
 
 <a id="public-exports-and-evidence"></a>
 
-Each reference lists the dictionary's public members. Private helpers remain internal to their source unit. Indexed implementation dictionaries are excluded from this public catalog; the [Storage composition reference](../internals/storage.md) explains its reusable implementation words.
+IO's reference lists its public application members. The implementation references above describe their native support boundaries and selected authoring facilities separately. Private helpers remain internal to their source unit; required support loading does not expose their vocabulary globally.
 
 <a id="catalog-maintenance"></a>
 <a id="sources-and-witnesses"></a>

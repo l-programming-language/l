@@ -44,6 +44,17 @@ export function validateMap(map) {
     if (p.source.includes('/_meta/')) throw new Error(`Private metadata cannot be a public page: ${p.source}`);
     routes.add(p.route); sources.add(p.source);
   }
+  const pages = new Map(map.pages.map((p) => [p.route, p]));
+  for (const p of map.pages) {
+    const seen = new Set([p.route]);
+    let child = p;
+    while (child.parent !== undefined) {
+      const parent = pages.get(child.parent);
+      if (!parent || parent.sidebar === false || child.sidebar === false || parent.section !== child.section) throw new Error(`Invalid sidebar parent: ${child.route}`);
+      if (seen.has(parent.route)) throw new Error(`Cyclic sidebar parent: ${p.route}`);
+      seen.add(parent.route); child = parent;
+    }
+  }
   return map;
 }
 
@@ -61,8 +72,12 @@ export function validateStdlib(index, pages, semanticEntries) {
       if (!/^[a-z0-9-]+$/.test(language) || !/^[a-z0-9-]+$/.test(key) || !entry.entry || !entry.dictionary) throw new Error(`Invalid indexed dictionary: ${language}/${key}`);
       const reviewed = exports.filter((x) => x.dictionary.lexicon === language && x.dictionary.key === key);
       if (reviewed.some((x) => !['namespace', 'public', 'private'].includes(x.visibility))) throw new Error(`Missing reviewed export visibility for ${language}/${key}.`);
-      if (reviewed.some((x) => x.visibility === 'namespace' && x.support === 'internal')) {
+      const internal = reviewed.find((x) => x.visibility === 'namespace' && x.support === 'internal');
+      if (internal) {
         if (reviewed.some((x) => x.support !== 'internal')) throw new Error(`Internal dictionary ${language}/${key} has conflicting public documentation classifications.`);
+        const page = pages.find((p) => p.source === internal.doc?.split('#')[0]);
+        if (!page) throw new Error(`Missing implementation reference for ${language}/${key}.`);
+        dictionaries.push({ language, key, ...entry, route: page.route, source: page.source, description: page.description, internal: true, exports: [] });
         continue;
       }
       const route = `/docs/stdlib/${language}/${key}/`;
@@ -70,7 +85,7 @@ export function validateStdlib(index, pages, semanticEntries) {
       if (!page) throw new Error(`Unclassified indexed dictionary ${language}/${key}: author its documentation and add ${route} to content-map.json.`);
       if (!reviewed.length) throw new Error(`Missing reviewed export inventory for ${language}/${key}.`);
       if (!reviewed.some((entry) => entry.visibility === 'public')) throw new Error(`Missing reviewed public export inventory for ${language}/${key}.`);
-      dictionaries.push({ language, key, ...entry, route, source: page.source, exports: reviewed.filter((x) => x.visibility === 'public').map((x) => x.name) });
+      dictionaries.push({ language, key, ...entry, route, source: page.source, description: page.description, internal: false, exports: reviewed.filter((x) => x.visibility === 'public').map((x) => x.name) });
     }
   }
   return dictionaries;
@@ -78,7 +93,7 @@ export function validateStdlib(index, pages, semanticEntries) {
 
 export function stdlibCatalog(dictionaries) {
   const escape = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('|', '&#124;').replaceAll('\n', ' ');
-  return '| Source lexicon | Dictionary key | Public names | Reference |\n| --- | --- | --- | --- |\n' + dictionaries.map((item) => `| ${escape(item.language)} | ${escape(item.key)} | ${item.exports.map(escape).join(', ')} | [${escape(item.dictionary)}](${item.route}) |`).join('\n');
+  return '| Dictionary | Import key (lexicon) | Audience | Purpose |\n| --- | --- | --- | --- |\n' + dictionaries.map((item) => `| [${escape(item.dictionary)}](${item.route}) | ${escape(item.key)} (${escape(item.language)}) | ${item.internal ? 'Implementation' : 'Application'} | ${escape(item.description)} |`).join('\n');
 }
 
 export async function preparePage({ root, page, pages, identity, examples, sourceTexts, assets, dictionaries = [], documents = new Map(), words = [] }) {

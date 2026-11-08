@@ -28,7 +28,9 @@ Separate successive actions within a composed source sequence.
 
 Coordinate source operands, declarations or actions in their owning grammatical sequence.
 
-**Usage and boundary.** `Start First and Second` in the [two-App program](../../demo/phase1/main.l) expands the complete action for each operand. Joined Boolean conditions remain rejected; And supplies no general short-circuit operator.
+**Usage and boundary.** `Start First and Second` in the [two-App program](../../demo/phase1/main.l) expands the complete action for each operand.
+
+**Partial support.** Operand, declaration and action coordination work, but an `and`-joined condition such as ``If true and false, Show `value`.`` is rejected during instruction lowering. The grammar recognizes the conditions; there is no Boolean join operator or short-circuit implementation for them.
 
 ### Or
 
@@ -36,7 +38,9 @@ Coordinate source operands, declarations or actions in their owning grammatical 
 
 Join alternative nominal targets in supported descriptor declarations, or occur in recognized condition coordination.
 
-**Usage and boundary.** Main declares `Service, Object, or Function` in the [descriptor example](lexical-types.md#describe-with-an-adjective). These are alternative canonical targets. An `or`-joined runtime condition is rejected and has no promised short-circuit semantics.
+**Usage and boundary.** Main declares `Service, Object, or Function` in the [descriptor example](lexical-types.md#describe-with-an-adjective). These are alternative canonical targets.
+
+**Partial support.** Descriptor target alternatives work, but an `or`-joined runtime condition is rejected during instruction lowering. The grammar recognizes the joined conditions; there is no Boolean join operator or short-circuit implementation for them.
 
 ## Assignment
 
@@ -148,6 +152,8 @@ Select a source branch from a supported typed condition.
 
 **Usage and boundary.** The [Truth conditional program](../../testdata/phase1/language/lang-13.l) selects Await on true and Exit otherwise. Definite assignment is checked across all continuing paths.
 
+**Partial support.** A single typed condition works. The configured list of conditions joined by And or Or is rejected during instruction lowering, and the configured `else if` continuation is rejected during grammar processing. Neither form is an executable extension of the supported If/Else pair.
+
 ### Else
 
 <!-- word:grammar-word:else -->
@@ -155,6 +161,8 @@ Select a source branch from a supported typed condition.
 Attach an alternative branch to its unmatched If in the supported conditional statement.
 
 **Usage and boundary.** The [Truth conditional program](../../testdata/phase1/language/lang-13.l) puts `else exit` after its Await branch. Else is not an independent executable action or a fallback for arbitrary previous failures.
+
+**Partial support.** A plain alternative branch works, but the configured `else if` continuation does not: a source chain such as `If false, Show 1, else if true, Show 2, else Show 3` is rejected during grammar processing. It does not produce an executable conditional chain.
 
 ### Otherwise
 
@@ -172,7 +180,7 @@ While and three-part source loops remain unsupported. [Collections](collections-
 
 <!-- example:control-while-unsupported -->
 
-The [grammar](../../lexicon/eng/grammar.json) recognizes this While shape, but the [instruction builder](../../lyger/instructions.go) rejects it.
+The [grammar configuration](../../lexicon/eng/grammar.json) declares a While rule, but this source fragment is rejected during grammar processing. The [instruction builder](../../lyger/instructions.go) also has no While operation; the configured rule is not an executable loop.
 
 Within native Function bodies, the Storage implementation dictionary composes Iteration and typed Processes into Traverse, Enumerate and related [source words](../internals/storage.md#iteration-and-continuations). Their contracts specify ordering and error behavior. They do not add general source loop syntax or break/continue vocabulary. The [Rust target](../../builtins/README.md#iteration-and-definition-contract) supports their bounded iteration shapes and rejects the three-part X form.
 
@@ -180,9 +188,9 @@ Within native Function bodies, the Storage implementation dictionary composes It
 
 <!-- word:grammar-word:while -->
 
-Recognize a conditional loop form that current outer instruction lowering rejects.
+Name a configured conditional loop form with no executable source implementation.
 
-**Usage and boundary.** The [unsupported loop illustration](../examples/control-while-unsupported.l) shows the recognized shape. It is a labeled fragment, not a runnable loop or a promise of native iteration. Advanced [Storage traversal](../internals/storage.md#iteration-and-continuations) is a separate source composition facility.
+**Unsupported operation.** The [unsupported loop illustration](../examples/control-while-unsupported.l) is rejected during grammar processing, and no outer While instruction is implemented. It is a labeled fragment, not a runnable loop or a promise of native iteration. Advanced [Storage traversal](../internals/storage.md#iteration-and-continuations) is a separate source composition facility.
 
 ## Arithmetic and native calculations
 

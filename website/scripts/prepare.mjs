@@ -52,7 +52,14 @@ export async function prepare({ root = repository, site = website, verifyReferen
     for (const [name, bytes] of assets) outputs.set(`public/content-assets/${name}`, bytes);
     const navigation = map.pages.filter((p) => p.sidebar !== false);
     const groups = [...new Set(navigation.map((p) => p.section))];
-    const sidebar = groups.map((label) => ({ label, collapsed: label !== 'Learn L', items: navigation.filter((p) => p.section === label).sort((a, b) => a.order - b.order || a.route.localeCompare(b.route)).map((p) => ({ label: p.title, link: p.route })) }));
+    navigation.sort((a, b) => a.order - b.order || a.route.localeCompare(b.route));
+    const item = (p) => {
+      const children = navigation.filter((child) => child.parent === p.route);
+      return children.length
+        ? { label: p.title, collapsed: false, items: [{ label: 'Overview', link: p.route }, ...children.map(item)] }
+        : { label: p.title, link: p.route };
+    };
+    const sidebar = groups.map((label) => ({ label, collapsed: label !== 'Learn L', items: navigation.filter((p) => p.section === label && p.parent === undefined).map(item) }));
     outputs.set('.generated/sidebar.json', stable(sidebar));
     outputs.set('.generated/version.json', stable(version));
     outputs.set('public/version.json', stable(version));

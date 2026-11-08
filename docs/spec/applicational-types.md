@@ -74,7 +74,9 @@ Read descriptors inside out: Leaf supplies the Main Object; Middle and Outer enc
 
 Name a composed part of an Object in its applicational representation.
 
-**Context and illustration.** A Function inside the [Object fixture](../../lyger/test/classes/interleaved.l) becomes an Attribute containing its Definition. Use the supported Function/Object composition; this category does not establish a general `New Attribute` field-construction API.
+**Context and illustration.** A Function inside the [Object fixture](../../lyger/test/classes/interleaved.l) becomes an Attribute containing its Definition.
+
+**Partial support.** Attribute is recognized as an applicational category, and [Object projection](../../lyger/source_hierarchy.go) creates Attributes for composed Functions. It has no standalone data-field or runtime-value constructor: using Attribute as a source Function parameter or List element [rejects](../../lyger/runtime_types.go) with `Attribute is a source structure, not a runtime type`. Use Function/Object composition for the implemented form.
 
 ### Definition
 
@@ -82,7 +84,9 @@ Name a composed part of an Object in its applicational representation.
 
 Name the implementation attached to a constructed element or lexical word.
 
-**Context and illustration.** The [native definition example](definitions.md#framing-and-escaping) associates framed source with a word. Definition describes that representation; it is not an interchangeable standalone runtime constructor. [Descriptors](lexical-types.md#describe-with-an-adjective) compose the actual selected definitions.
+**Context and illustration.** The [native definition example](definitions.md#framing-and-escaping) associates framed source with a word. [Descriptors](lexical-types.md#describe-with-an-adjective) compose the actual selected definitions.
+
+**Partial support.** Framed definition templates can be parsed, bound and composed, and constructed Functions carry their Definition in the [Object representation](../../lyger/source_hierarchy.go). The recognized Definition category has no standalone runtime-value constructor: using Definition as a source Function parameter or List element [rejects](../../lyger/runtime_types.go) with `Definition is a source structure, not a runtime type`. Attach a definition to its owning word through Define instead.
 
 ## Functions, Properties, and Operations
 

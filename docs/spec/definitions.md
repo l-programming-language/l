@@ -70,6 +70,8 @@ Describe a reusable source construction pattern whose explicit operands are supp
 
 **Usage and example.** Compact in the [source-action example](../../demo/paragraphs/local-definitions.l) describes a Generic App using any Process; `New Compact App` supplies its body. Generic alone does not infer native Rust type parameters, lifetimes or unconstrained constructor support.
 
+**Supported boundary.** The selected source constructor declares the operands it accepts; its callers and refinements retain that signature and canonical target. Generic describes this reusable construction mechanism, not a promise of inferred polymorphism.
+
 ## Process, Function, and Return
 
 <!-- example:definitions-callable-core -->

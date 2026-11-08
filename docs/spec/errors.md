@@ -40,7 +40,7 @@ Generated programs have their own runtime statuses: normal fallthrough/bare Exit
 
 ## Unsupported versus unresolved
 
-A recognized While clause can reach an Unsupported instruction boundary. A missing name reaches a reference boundary. A recognized structural category such as Attribute does not by itself establish a runtime constructor; documentation must distinguish compiler representation from executable values.
+While has configured vocabulary and grammar rules but no executable loop implementation. A missing name reaches a reference boundary. A recognized structural category such as Attribute does not by itself establish a runtime constructor; documentation must distinguish compiler representation from executable values.
 
 See the [type reference](values.md) and [control-flow limits](control-flow.md) for current supported operations.
 
@@ -56,7 +56,7 @@ The backtick literal is Text. Await requires a process target, so this is a Type
 
 Here the operand is a name with no declaration. The [separate negative contract](../../testdata/phase1/n02-await-unresolved/case.json) expects unresolved-reference evidence containing `missing` and `unresolved`. Supplying a declared Text instead would change the failure to the type boundary above; the two diagnoses are not interchangeable.
 
-For a grammar-recognized but unsupported form, see the [While illustration](control-flow.md#iteration-and-collection-operations). Its limitation is an instruction-lowering boundary, not a missing vocabulary word.
+The [While illustration](control-flow.md#iteration-and-collection-operations) currently fails during grammar processing. Independently, [instruction lowering](../../lyger/instructions.go) has no While operation and rejects unsupported conditional kinds. A configured vocabulary word alone does not establish successful parsing or execution.
 
 ### Runtime failure is a separate stage
 

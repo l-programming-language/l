@@ -19,6 +19,8 @@ const pages = [
   ['logemes', '/docs/reference/logemes/alphabet/'],
   ['cli', '/docs/cli/build/'],
   ['stdlib', '/docs/stdlib/eng/io/'],
+  ['formatting', '/docs/stdlib/eng/format/'],
+  ['runtime', '/docs/stdlib/eng/runtime/'],
 ] as const;
 
 for (const width of [390, 768, 1440]) for (const theme of ['light', 'dark']) {
@@ -164,6 +166,29 @@ for (const { query, destinations } of wordSearches) {
     }
   });
 }
+
+test('library overview reaches each dictionary reference without JavaScript', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto('http://127.0.0.1:4321/docs/stdlib/');
+  await expect(page.locator('main table')).toHaveCount(1);
+  const group = page.locator('#starlight__sidebar summary').filter({ hasText: 'Standard library' }).locator('..');
+  await expect(group).toHaveAttribute('open', '');
+  await expect(group.getByRole('link')).toHaveText(['Overview', 'IO', 'Formatting', 'Runtime', 'Storage']);
+  for (const [name, route] of [
+    ['IO', '/docs/stdlib/eng/io/'],
+    ['Formatting', '/docs/stdlib/eng/format/'],
+    ['Runtime', '/docs/stdlib/eng/runtime/'],
+    ['Storage', '/docs/internals/storage/'],
+  ]) {
+    await page.goto('http://127.0.0.1:4321/docs/stdlib/');
+    await page.locator(`main table a[href="${route}"]`).click();
+    await expect(page).toHaveURL(`http://127.0.0.1:4321${route}`);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(name);
+    await expect(page.locator('main a[href*="dictionary.l"]').first()).toBeAttached();
+  }
+  await context.close();
+});
 
 test('word dictionary browsing works without JavaScript', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
