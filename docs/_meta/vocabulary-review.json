@@ -11,436 +11,505 @@
   },
   "entries": {
     "nouns.it": {
-      "doc": "docs/spec/names-and-scope.md#pronouns",
+      "doc": "docs/spec/names-and-scope.md#it",
       "topic": "Pronouns",
       "support": "partial",
-      "notes": "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply."
+      "notes": "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.",
+      "wordRef": "grammar-word:it"
     },
     "nouns.that": {
-      "doc": "docs/spec/names-and-scope.md#pronouns",
+      "doc": "docs/spec/names-and-scope.md#that",
       "topic": "Pronouns",
       "support": "partial",
-      "notes": "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply."
+      "notes": "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.",
+      "wordRef": "grammar-word:that"
     },
     "nouns.this": {
-      "doc": "docs/spec/names-and-scope.md#pronouns",
+      "doc": "docs/spec/names-and-scope.md#this",
       "topic": "Pronouns",
       "support": "partial",
-      "notes": "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply."
+      "notes": "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.",
+      "wordRef": "grammar-word:this"
     },
     "nouns.input": {
-      "doc": "docs/reference/builtins/index.md#runtime-members",
+      "doc": "docs/reference/builtins/index.md#input",
       "topic": "Input metadata and runtime boundary",
       "support": "partial",
-      "notes": "Inputs name ordinary Function parameters, native signature metadata, or scoped structured Process bindings. They do not introduce process stdin/argument transport."
+      "notes": "Inputs name ordinary Function parameters, native signature metadata, or scoped structured Process bindings. They do not introduce process stdin/argument transport.",
+      "wordRef": "builtin:input"
     },
     "nouns.output": {
-      "doc": "docs/spec/execution.md#output-and-error",
+      "doc": "docs/reference/builtins/lifecycle.md#output",
       "topic": "Process members",
       "support": "partial",
-      "notes": "Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries."
+      "notes": "Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries.",
+      "wordRef": "builtin:output"
     },
     "nouns.error": {
-      "doc": "docs/spec/execution.md#output-and-error",
+      "doc": "docs/reference/builtins/lifecycle.md#error",
       "topic": "Process members",
       "support": "partial",
-      "notes": "Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries."
+      "notes": "Runtime member access requires a compiler-resolved process target. Output is finalized raw stdout; Error has its own lifecycle and diagnostic boundaries.",
+      "wordRef": "builtin:error"
     },
     "nouns.list": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "list",
       "support": "partial",
-      "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API."
+      "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API.",
+      "wordRef": "type:list"
     },
     "nouns.dictionary": {
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
       "topic": "dictionary",
       "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.",
+      "wordRef": "type:dictionary"
     },
     "nouns.null": {
-      "doc": "docs/spec/values.md#null-and-internal-states",
+      "doc": "docs/spec/values.md#null",
       "topic": "null",
       "support": "supported",
-      "notes": "Explicit Null initializes an absence value; Show renders null. It is distinct from an unassigned slot and internal None/Unknown states."
+      "notes": "Explicit Null initializes an absence value; Show renders null. It is distinct from an unassigned slot and internal None/Unknown states.",
+      "wordRef": "type:null"
     },
     "nouns.thing": {
       "doc": "docs/spec/values.md#thing",
       "topic": "thing",
       "support": "partial",
-      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate element types and callable identities. No implicit coercion or dynamic arithmetic."
+      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate element types and callable identities. No implicit coercion or dynamic arithmetic.",
+      "wordRef": "type:thing"
     },
     "nouns.text": {
       "doc": "docs/spec/values.md#text",
       "topic": "text",
       "support": "partial",
-      "notes": "The configured text root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API."
+      "notes": "The configured text root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.",
+      "wordRef": "type:text"
     },
     "nouns.number": {
       "doc": "docs/spec/values.md#number",
       "topic": "number",
       "support": "partial",
-      "notes": "The configured number root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API."
+      "notes": "The configured number root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.",
+      "wordRef": "type:number"
     },
     "nouns.byte": {
-      "doc": "docs/spec/values.md#byte-and-bytes",
+      "doc": "docs/spec/values.md#byte",
       "topic": "byte",
       "support": "partial",
-      "notes": "The configured byte root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API."
+      "notes": "The configured byte root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.",
+      "wordRef": "type:byte"
     },
     "nouns.truth": {
       "doc": "docs/spec/values.md#truth",
       "topic": "truth",
       "support": "partial",
-      "notes": "The configured truth root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API."
+      "notes": "The configured truth root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.",
+      "wordRef": "type:truth"
     },
     "nouns.pointer": {
       "doc": "docs/spec/values.md#pointer",
       "topic": "pointer",
       "support": "supported",
-      "notes": "Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API."
+      "notes": "Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API.",
+      "wordRef": "type:pointer"
     },
     "nouns.op": {
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "op",
-      "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "support": "internal",
+      "notes": "Configured native representation spelling, not a public application constructor or alias for the source Function, Property or Operation category. Its configuration handler is not executable API evidence."
     },
     "nouns.prop": {
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "prop",
-      "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "support": "internal",
+      "notes": "Configured native representation spelling, not a public application constructor or alias for the source Function, Property or Operation category. Its configuration handler is not executable API evidence."
     },
     "nouns.func": {
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "func",
-      "support": "partial",
-      "notes": "Function declarations retain typed signatures and use the canonical builtin definition. Their invocation verbs participate in ordinary sentences."
+      "support": "internal",
+      "notes": "Configured native representation spelling, not a public application constructor or alias for the source Function, Property or Operation category. Its configuration handler is not executable API evidence."
     },
     "nouns.definition": {
-      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
+      "doc": "docs/spec/applicational-types.md#definition",
       "topic": "definition",
       "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.",
+      "wordRef": "type:definition"
     },
     "nouns.attribute": {
-      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
+      "doc": "docs/spec/applicational-types.md#attribute",
       "topic": "attribute",
       "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.",
+      "wordRef": "type:attribute"
     },
     "nouns.object": {
-      "doc": "docs/spec/applicational-types.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#object",
       "topic": "object",
       "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.",
+      "wordRef": "type:object"
     },
     "nouns.class": {
-      "doc": "docs/spec/applicational-types.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#class",
       "topic": "class",
       "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.",
+      "wordRef": "type:class"
     },
     "nouns.service": {
       "doc": "docs/spec/applicational-types.md#services",
       "topic": "service",
       "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.",
+      "wordRef": "type:service"
     },
     "nouns.app": {
       "doc": "docs/spec/applicational-types.md#apps",
       "topic": "app",
       "support": "partial",
-      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target."
+      "notes": "This lexical category must be distinguished from similarly named compiler representations. Read the construction and native-lowering boundaries at the semantic target.",
+      "wordRef": "type:app"
     },
     "verbs.passive": {
-      "doc": "docs/spec/control-flow.md#assignment",
+      "doc": "docs/spec/control-flow.md#is",
       "topic": "Assignment",
       "support": "partial",
-      "notes": "Assignment follows resolved typed-storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order."
+      "notes": "Assignment follows resolved typed-storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order.",
+      "wordRef": "grammar-word:is"
     },
     "verbs.associative": {
-      "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
+      "doc": "docs/spec/imports.md#indexed-dictionaries",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Association names an existing canonical value or definition. It does not create an independent runtime copy."
+      "notes": "Association names an existing canonical value or definition. It does not create an independent runtime copy.",
+      "wordRef": "builtin:use"
     },
     "verbs.declarative": {
-      "doc": "docs/spec/definitions.md#create-define-and-describe",
+      "doc": "docs/spec/definitions.md#create",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior."
+      "notes": "A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior.",
+      "wordRef": "builtin:create"
     },
     "verbs.definitive": {
-      "doc": "docs/spec/definitions.md#create-define-and-describe",
+      "doc": "docs/spec/definitions.md#define",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion."
+      "notes": "Definition clauses establish source vocabulary or typed native-backed forms. Accepted construction and framing are bounded by definition expansion.",
+      "wordRef": "builtin:define"
     },
     "verbs.descriptive": {
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "doc": "docs/spec/definitions.md#describe",
       "topic": "Descriptors",
       "support": "partial",
-      "notes": "Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership."
+      "notes": "Descriptive clauses apply source-defined adjective/adverb meanings. Constructor descriptors preserve the target and source-unit ownership.",
+      "wordRef": "builtin:describe"
     },
     "verbs.expansive": {
-      "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
+      "doc": "docs/spec/collections-and-categories.md#put",
       "topic": "Collection operations",
       "support": "partial",
-      "notes": "Put appends to a List, stores Map values or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries."
+      "notes": "Put appends to a List, stores Map values or replaces a Pointer target through checked runtime updates. It does not modify vocabulary Dictionaries.",
+      "wordRef": "builtin:put"
     },
     "verbs.locative": {
-      "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
+      "doc": "docs/spec/collections-and-categories.md#place",
       "topic": "Collection operations",
       "support": "partial",
-      "notes": "Place replaces a List element at a checked Number index or a keyed runtime field. Required target/key/value types are checked."
+      "notes": "Place replaces a List element at a checked Number index or a keyed runtime field. Required target/key/value types are checked.",
+      "wordRef": "builtin:place"
     },
     "verbs.receptive": {
-      "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
+      "doc": "docs/spec/grammar.md#get",
       "topic": "Collection operations",
       "support": "partial",
-      "notes": "The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API."
+      "notes": "The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API.",
+      "wordRef": "builtin:get"
     },
     "verbs.reductive": {
-      "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
+      "doc": "docs/spec/grammar.md#take",
       "topic": "Collection operations",
       "support": "partial",
-      "notes": "The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API."
+      "notes": "The configured word is recognized vocabulary, but no native outer collection instruction is supplied for this operation. Do not treat it as a supported general collection API.",
+      "wordRef": "builtin:take"
     },
     "verbs.generative": {
-      "doc": "docs/spec/execution.md#build-run-stop-and-await",
+      "doc": "docs/reference/builtins/lifecycle.md#build",
       "topic": "Build",
       "support": "partial",
-      "notes": "Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output."
+      "notes": "Build is the runtime readiness operation. It is distinct from the CLI command that compiles native output.",
+      "wordRef": "builtin:build"
     },
     "verbs.executive": {
-      "doc": "docs/spec/execution.md#build-run-stop-and-await",
+      "doc": "docs/reference/builtins/lifecycle.md#run",
       "topic": "Run",
       "support": "partial",
-      "notes": "Run launches the selected process. The grammar does not imply that every applicative category is runnable."
+      "notes": "Run launches the selected process. The grammar does not imply that every applicative category is runnable.",
+      "wordRef": "builtin:run"
     },
     "verbs.suspensive": {
-      "doc": "docs/spec/execution.md#continuations-and-activation",
+      "doc": "docs/reference/builtins/lifecycle.md#await",
       "topic": "Await",
       "support": "partial",
-      "notes": "Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement."
+      "notes": "Await joins a selected process invocation and activates its continuation once. A parsed clause alone does not establish valid activation placement.",
+      "wordRef": "builtin:await"
     },
     "verbs.interruptive": {
-      "doc": "docs/spec/execution.md#build-run-stop-and-await",
+      "doc": "docs/reference/builtins/lifecycle.md#stop",
       "topic": "Stop",
       "support": "partial",
-      "notes": "Stop requests termination without joining. Final output still requires the Await contract."
+      "notes": "Stop requests termination without joining. Final output still requires the Await contract.",
+      "wordRef": "builtin:stop"
     },
     "verbs.inflective": {
-      "doc": "docs/spec/imports.md#indexed-dictionaries",
+      "doc": "docs/spec/grammar.md#import",
       "topic": "Import/export distinction",
       "support": "partial",
-      "notes": "Configured Import/Export handlers do not replace the supported Use import syntax and are absent from native outer instruction dispatch."
+      "notes": "Configured Import/Export handlers do not replace the supported Use import syntax and are absent from native outer instruction dispatch.",
+      "wordRef": "builtin:import"
     },
     "verbs.deflective": {
-      "doc": "docs/spec/imports.md#indexed-dictionaries",
+      "doc": "docs/spec/grammar.md#export",
       "topic": "Import/export distinction",
       "support": "partial",
-      "notes": "Configured Import/Export handlers do not replace the supported Use import syntax and are absent from native outer instruction dispatch."
+      "notes": "Configured Import/Export handlers do not replace the supported Use import syntax and are absent from native outer instruction dispatch.",
+      "wordRef": "builtin:export"
     },
     "verbs.observative": {
-      "doc": "docs/spec/control-flow.md#show-and-output",
+      "doc": "docs/reference/builtins/lifecycle.md#show",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization.",
+      "wordRef": "builtin:show"
     },
     "verbs.terminative": {
-      "doc": "docs/spec/control-flow.md#exit-and-return",
+      "doc": "docs/reference/builtins/lifecycle.md#exit",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs."
+      "notes": "Exit ends the compiled program. Function-local Return uses the selected Function.Return definition and checked outputs.",
+      "wordRef": "builtin:exit"
     },
     "verbs.appropriative": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#have",
       "topic": "Comparisons",
       "support": "partial",
-      "notes": "The configured comparison/appropriation root is used in bounded condition forms. Operand types and Error-member restrictions are enforced by native lowering."
+      "notes": "The configured comparison/appropriation root is used in bounded condition forms. Operand types and Error-member restrictions are enforced by native lowering.",
+      "wordRef": "grammar-word:have"
     },
     "verbs.comparative": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#equal",
       "topic": "Comparisons",
       "support": "partial",
-      "notes": "The configured comparison/appropriation root is used in bounded condition forms. Operand types and Error-member restrictions are enforced by native lowering."
+      "notes": "The configured comparison/appropriation root is used in bounded condition forms. Operand types and Error-member restrictions are enforced by native lowering.",
+      "wordRef": "grammar-word:equal"
     },
     "adjectives.visibility.public": {
-      "doc": "docs/spec/names-and-scope.md#paragraph-scope",
+      "doc": "docs/spec/names-and-scope.md#public",
       "topic": "Visibility",
       "support": "partial",
-      "notes": "Public/Publicly marks exactly the associated declaration. It does not publish unrelated owners or sibling declarations."
+      "notes": "Public/Publicly marks exactly the associated declaration. It does not publish unrelated owners or sibling declarations.",
+      "wordRef": "builtin:public"
     },
     "adjectives.initialization": {
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "doc": "docs/spec/definitions.md#new",
       "topic": "Descriptors",
       "support": "partial",
-      "notes": "Constructor/descriptor vocabulary determines source construction roles. Its presence does not imply arbitrary type construction or inherited native metadata."
+      "notes": "Constructor/descriptor vocabulary determines source construction roles. Its presence does not imply arbitrary type construction or inherited native metadata.",
+      "wordRef": "builtin:new"
     },
     "adjectives.abstraction": {
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "doc": "docs/spec/definitions.md#generic",
       "topic": "Descriptors",
       "support": "partial",
-      "notes": "Constructor/descriptor vocabulary determines source construction roles. Its presence does not imply arbitrary type construction or inherited native metadata."
+      "notes": "Constructor/descriptor vocabulary determines source construction roles. Its presence does not imply arbitrary type construction or inherited native metadata.",
+      "wordRef": "builtin:generic"
     },
     "adverbs.visibility.public": {
-      "doc": "docs/spec/names-and-scope.md#paragraph-scope",
+      "doc": "docs/spec/names-and-scope.md#publicly",
       "topic": "Visibility",
       "support": "partial",
-      "notes": "Public/Publicly marks exactly the associated declaration. It does not publish unrelated owners or sibling declarations."
+      "notes": "Public/Publicly marks exactly the associated declaration. It does not publish unrelated owners or sibling declarations.",
+      "wordRef": "builtin:publicly"
     },
     "adverbs.nullification": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#not",
       "topic": "Conditions and modifiers",
       "support": "partial",
-      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API."
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "wordRef": "grammar-word:not"
     },
     "adverbs.comparison.subtraction": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#less",
       "topic": "Conditions and modifiers",
       "support": "partial",
-      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API."
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "wordRef": "grammar-word:less"
     },
     "adverbs.comparison.multiplication": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#greater",
       "topic": "Conditions and modifiers",
       "support": "partial",
-      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API."
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "wordRef": "grammar-word:greater"
     },
     "adverbs.progression": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#then",
       "topic": "Conditions and modifiers",
       "support": "partial",
-      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API."
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "wordRef": "grammar-word:then"
     },
     "prepositions.definement.declarative": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#as",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "wordRef": "grammar-word:as"
     },
     "prepositions.definement.definitive": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#of",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "wordRef": "grammar-word:of"
     },
     "prepositions.definement.locative": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#at",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "At selects a Number index or Text field key; its enclosing typed read/update determines the permitted key type."
+      "notes": "At selects a Number index or Text field key; its enclosing typed read/update determines the permitted key type.",
+      "wordRef": "grammar-word:at"
     },
     "prepositions.consignment.associative": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#with",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "wordRef": "grammar-word:with"
     },
     "prepositions.consignment.inflective": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#in",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "In selects a runtime update destination; the following index or field key remains part of that update."
+      "notes": "In selects a runtime update destination; the following index or field key remains part of that update.",
+      "wordRef": "grammar-word:in"
     },
     "prepositions.consignment.deflective": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#out",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "wordRef": "grammar-word:out"
     },
     "prepositions.consignment.indicative": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#by",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "wordRef": "grammar-word:by"
     },
     "prepositions.conjoinment.objective": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#from",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "wordRef": "grammar-word:from"
     },
     "prepositions.conjoinment.subjective": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#to",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "wordRef": "grammar-word:to"
     },
     "prepositions.conjoinment.comparative": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#than",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "wordRef": "grammar-word:than"
     },
     "prepositions.conjoinment.directive": {
-      "doc": "docs/spec/grammar.md#phrases",
+      "doc": "docs/spec/grammar.md#for",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules."
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "wordRef": "grammar-word:for"
     },
     "articles.variable": {
-      "doc": "docs/spec/definitions.md#typed-slots",
+      "doc": "docs/spec/grammar.md#any",
       "topic": "Articles and typed arguments",
       "support": "partial",
-      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion."
+      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.",
+      "wordRef": "grammar-word:any"
     },
     "articles.none": {
-      "doc": "docs/spec/definitions.md#typed-slots",
+      "doc": "docs/spec/grammar.md#no",
       "topic": "Articles and typed arguments",
       "support": "partial",
-      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion."
+      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.",
+      "wordRef": "grammar-word:no"
     },
     "articles.indefinite": {
-      "doc": "docs/spec/definitions.md#typed-slots",
+      "doc": "docs/spec/grammar.md#a",
       "topic": "Articles and typed arguments",
       "support": "partial",
-      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion."
+      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.",
+      "wordRef": "grammar-word:a"
     },
     "articles.definite": {
-      "doc": "docs/spec/definitions.md#typed-slots",
+      "doc": "docs/spec/grammar.md#the",
       "topic": "Articles and typed arguments",
       "support": "partial",
-      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion."
+      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.",
+      "wordRef": "grammar-word:the"
     },
     "conjunctions.mutual": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#and",
       "topic": "Conditions and modifiers",
       "support": "partial",
-      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API."
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "wordRef": "grammar-word:and"
     },
     "conjunctions.exclusive": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#or",
       "topic": "Conditions and modifiers",
       "support": "partial",
-      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API."
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "wordRef": "grammar-word:or"
     },
     "evaluations.conditional": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#if",
       "topic": "Conditions and modifiers",
       "support": "partial",
-      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API."
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "wordRef": "grammar-word:if"
     },
     "evaluations.exceptional": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#else",
       "topic": "Conditions and modifiers",
       "support": "partial",
-      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API."
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "wordRef": "grammar-word:else"
     },
     "evaluations.alternative": {
-      "doc": "docs/spec/control-flow.md#comparisons",
+      "doc": "docs/spec/control-flow.md#otherwise",
       "topic": "Conditions and modifiers",
       "support": "partial",
-      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API."
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "wordRef": "grammar-word:otherwise"
     },
     "evaluations.iterative": {
-      "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
+      "doc": "docs/spec/control-flow.md#while",
       "topic": "Iteration",
       "support": "rejected",
-      "notes": "While is recognized but explicitly rejected by outer lowering."
+      "notes": "While is recognized but explicitly rejected by outer lowering.",
+      "wordRef": "grammar-word:while"
     }
   }
 }

@@ -3,10 +3,12 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { spawnSync } from 'node:child_process';
 import { checkCoverage, generateReferences, references, referenceEntries } from '../scripts/references.mjs';
 import { sha256 } from '../scripts/lib.mjs';
 import { anchors, parseMarkdown } from '../scripts/content.mjs';
 import GithubSlugger from 'github-slugger';
+import { prepare } from '../scripts/prepare.mjs';
 
 const jsonText = (value) => JSON.stringify(value, null, 2) + '\n';
 const segment = 'builtins/segments/rust/a.def';
@@ -55,11 +57,11 @@ async function fixture(t) {
     'logiceme/testdata/lucid/rejected.rs.txt': '// intentional native rejection\n',
     'logiceme/testdata/lucid/forms-invalid/bad.aml.txt': '<PROGRAM>unclosed\n',
     'logiceme/testdata/lucid/README.md': '# Synthetic Lucid witness\n',
-    'docs/spec/grammar.md': '# Grammar\n\n## Statement structure\n\nConfigured grammar and its limits.\n',
+    'docs/spec/grammar.md': '# Grammar\n\n## Statement structure\n\nConfigured grammar and its limits.\n\n## Show\n\n<!-- word:builtin:show -->\n\nWrite a value.\n',
     'docs/spec/values.md': '# Values\n\n## Text\n\nA source-backed value category.\n',
     'docs/cli/build.md': '# Build\n\n## Command syntax\n\nBuild a source.\n\n## Target OS\n\nRejected.\n',
     'docs/reference/logemes/index.md': '# Logemes\n\n## Segment A\n\nBounded backend behavior.\n',
-    'docs/stdlib/io.md': '# IO\n\n## Print\n\nPublic output action.\n',
+    'docs/stdlib/io.md': '# IO\n\n## Print\n\n<!-- word:stdlib:IO.Print -->\n\nPublic output action.\n',
   };
   for (const [name, bytes] of Object.entries(files)) await write(root, name, bytes);
   const review = (source, entries) => ({ schemaVersion: 1, sourceHashes: { [source]: sha256(files[source]) }, entries });
@@ -67,7 +69,7 @@ async function fixture(t) {
     statement: { support: 'partial', topic: 'Statement structure', doc: 'docs/spec/grammar.md#statement-structure', notes: 'Recognition is separate from supported lowering.' },
   })));
   await write(root, 'docs/_meta/vocabulary-review.json', jsonText(review('lexicon/eng/vocabulary.json', {
-    'verbs.Show': { support: 'supported', topic: 'Statement structure', doc: 'docs/spec/grammar.md#statement-structure', notes: 'Reviewed source action.' },
+    'verbs.Show': { support: 'supported', topic: 'Statement structure', doc: 'docs/spec/grammar.md#statement-structure', notes: 'Reviewed source action.', wordRef: 'builtin:show' },
   })));
   await write(root, 'docs/_meta/cli-review.json', jsonText({
     schemaVersion: 1, sourceHashes: { 'cmd/l/command.go': sha256(files['cmd/l/command.go']), 'cmd/l/contracts.go': sha256(files['cmd/l/contracts.go']) },
@@ -85,7 +87,8 @@ async function fixture(t) {
   });
   await write(root, 'docs/_meta/semantics.json', jsonText({ schemaVersion: 3, checkedStages: ['static-source-inspection'], executedStages: [], sourceHashes: { 'lyger/value_kinds.go': sha256(files['lyger/value_kinds.go']), 'stdlib/eng/io/dictionary.l': sha256(files['stdlib/eng/io/dictionary.l']) }, entries: [
     semantic('value:Text', 'value-tag', 'Text', 'lyger/value_kinds.go', 'docs/spec/values.md#text'),
-    semantic('stdlib:IO.Print', 'stdlib-export', 'IO.Print', 'stdlib/eng/io/dictionary.l', 'docs/stdlib/io.md#print'),
+    { ...semantic('stdlib:IO.Print', 'stdlib-export', 'IO.Print', 'stdlib/eng/io/dictionary.l', 'docs/stdlib/io.md#print'), word: { partOfSpeech: 'verb' } },
+    { ...semantic('builtin:show', 'builtin', 'Show', 'lyger/value_kinds.go', 'docs/spec/grammar.md#show'), word: { partOfSpeech: 'verb' } },
   ] }));
   await write(root, 'docs/_meta/logemes.json', jsonText({ schemaVersion: 3, checkedStages: ['static-source-inspection'], executedStages: [], sourceHashes: { [segment]: sha256(files[segment]) }, entries: [
     semantic('logeme:A', 'logeme', 'A', segment, 'docs/reference/logemes/index.md#segment-a'),
@@ -143,6 +146,70 @@ test('fresh snapshots and complete meaningful coverage pass from a no-Git fixtur
     if (!['entries', 'schemaVersion', 'notes', 'evidenceSets', 'classifications'].includes(key)) assert.deepEqual(coverage[key], value);
   }
   await assert.rejects(fs.access(path.join(root, 'docs/_generated/inventory.json')), { code: 'ENOENT' });
+});
+
+test('word coverage cannot omit a public export by deleting optional word metadata', async (t) => {
+  const { root, pages } = await fixture(t);
+  const inventory = await references({ root, write: true });
+  await editJSON(root, 'docs/_meta/semantics.json', (value) => { delete value.entries.find((entry) => entry.id === 'stdlib:IO.Print').word; });
+  await assert.rejects(checkCoverage(root, pages, inventory), /Missing word coverage.*stdlib:IO.Print/);
+});
+
+test('word associations, forms, targets and canonical marker ownership fail closed', async (t) => {
+  const mutations = [
+    ['unknown part of speech', (entry) => { entry.word.partOfSpeech = 'command'; }, /part of speech/],
+    ['undeclared form', (entry) => { entry.word.formRoles = { Printer: { partOfSpeech: 'noun', role: 'actor' } }; }, /Undeclared form/],
+    ['missing target', (entry) => { entry.word.targets = [{ entry: 'missing' }]; }, /target/],
+    ['missing target form', (entry) => { entry.word.targets = [{ entry: 'builtin:show', form: 'Invented' }]; }, /target form/],
+    ['conflicting association', (entry) => { entry.wordRef = 'builtin:show'; }, /both word and wordRef/],
+    ['dangling association', (entry) => { delete entry.word; entry.wordRef = 'missing'; }, /canonical word/],
+    ['self association', (entry) => { delete entry.word; entry.wordRef = entry.id; }, /canonical word/],
+  ];
+  for (const [label, mutate, error] of mutations) await t.test(label, async (t) => {
+    const { root, pages } = await fixture(t);
+    const inventory = await references({ root, write: true });
+    await editJSON(root, 'docs/_meta/semantics.json', (value) => mutate(value.entries.find((entry) => entry.id === 'stdlib:IO.Print')));
+    await assert.rejects(checkCoverage(root, pages, inventory), error);
+  });
+  for (const [label, body, error] of [
+    ['wrong anchor', '## Other\n\n<!-- word:stdlib:IO.Print -->\n\nWrong owner.\n\n## Print\n\nOriginal anchor.', /wrong source or anchor/],
+    ['duplicate marker', '## Print\n\n<!-- word:stdlib:IO.Print -->\n\nDefinition.\n\n## Again\n\n<!-- word:stdlib:IO.Print -->\n\nDuplicate.', /Duplicate word marker/],
+    ['missing definition', '## Print\n\n<!-- word:stdlib:IO.Print -->\n\n```l\nPrint value.\n```', /definition paragraph/],
+    ['misplaced marker', '## Print\n\nAn introduction.\n\n<!-- word:stdlib:IO.Print -->\n\nDefinition.', /immediately after/],
+  ]) await t.test(label, async (t) => {
+    const { root, pages } = await fixture(t);
+    const inventory = await references({ root, write: true });
+    await write(root, 'docs/stdlib/io.md', '# IO\n\n' + body + '\n');
+    await assert.rejects(checkCoverage(root, pages, inventory), error);
+  });
+});
+
+test('normal word preparation is static and an invalid refresh preserves every owned output', async (t) => {
+  const { root } = await fixture(t);
+  const sentinel = path.join(root, 'native-work-ran');
+  const command = `${process.execPath} -e ${JSON.stringify(`require('fs').writeFileSync(${JSON.stringify(sentinel)}, 'replayed')`)}`;
+  await editJSON(root, 'docs/_meta/semantics.json', (value) => {
+    const word = value.entries.find((entry) => entry.id === 'stdlib:IO.Print');
+    word.evidence = 'Recorded only: ' + command;
+    word.commands = [command];
+  });
+  await write(root, 'docs/_meta/examples.json', jsonText({ schemaVersion: 1, examples: [] }));
+  for (const tool of ['l', 'go', 'rustc', 'cargo']) {
+    await write(root, `tools/${tool}`, `#!/bin/sh\nprintf invoked > '${sentinel.replaceAll("'", "'\\''")}'\nexit 89\n`);
+    await fs.chmod(path.join(root, 'tools', tool), 0o755);
+  }
+  await references({ root, write: true });
+  const site = path.join(root, 'website');
+  const invocation = `import {prepare} from ${JSON.stringify(new URL('../scripts/prepare.mjs', import.meta.url).href)}; await prepare(${JSON.stringify({ root, site })});`;
+  const result = spawnSync(process.execPath, ['--input-type=module', '-e', invocation], { encoding: 'utf8', timeout: 10000, env: { ...process.env, PATH: path.join(root, 'tools') + path.delimiter + process.env.PATH } });
+  assert.equal(result.status, 0, result.stderr);
+  await assert.rejects(fs.access(sentinel), { code: 'ENOENT' });
+  const owned = JSON.parse(await fs.readFile(path.join(site, '.generated/owned.json'), 'utf8'));
+  const before = new Map(await Promise.all([...owned, '.generated/owned.json'].map(async (name) => [name, await fs.readFile(path.join(site, name))])));
+  await editJSON(root, 'docs/_meta/semantics.json', (value) => { delete value.entries.find((entry) => entry.id === 'stdlib:IO.Print').word; });
+  await assert.rejects(prepare({ root, site }), /Missing word coverage/);
+  for (const [name, bytes] of before) assert.deepEqual(await fs.readFile(path.join(site, name)), bytes, name);
+  await assert.rejects(fs.access(sentinel), { code: 'ENOENT' });
 });
 
 test('changing a reviewed grammar or vocabulary dependency fails before snapshot refresh', async (t) => {

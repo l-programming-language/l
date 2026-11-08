@@ -11,6 +11,8 @@ const pages = [
   ['internals', '/docs/internals/'],
   ['definitions', '/docs/guide/definitions/'],
   ['builtins', '/docs/reference/builtins/definitions/'],
+  ['builtin-lifecycle', '/docs/reference/builtins/lifecycle/'],
+  ['words', '/docs/words/'],
   ['storage', '/docs/internals/storage/'],
   ['primitives', '/docs/spec/values/'],
   ['grammar', '/docs/spec/grammar/'],
@@ -72,6 +74,141 @@ test('built Pagefind searches, no-results behavior and keyboard interaction', as
   expect(focusedInDialog).toBe(true);
   await page.keyboard.press('Escape');
   await expect(dialog).not.toBeVisible();
+});
+
+const wordSearches = [
+  { query: 'Send', destinations: [{ url: '/docs/stdlib/eng/io/#send', context: /\bIO\b/ }] },
+  { query: 'IO.Send', destinations: [{ url: '/docs/stdlib/eng/io/#send', context: /\bIO\b/ }] },
+  { query: 'Sent', destinations: [{ url: '/docs/stdlib/eng/io/#send', context: /\bSent\b/ }] },
+  { query: 'Sender', destinations: [{ url: '/docs/stdlib/eng/io/#send', context: /\bSender\b/ }] },
+  { query: 'Lined', destinations: [{ url: '/docs/stdlib/eng/io/#lined', context: /\bLined\b/ }] },
+  { query: 'Output', destinations: [
+    { url: '/docs/reference/builtins/lifecycle/#output', context: /builtin|finalized|\bApp\b/i },
+    { url: '/docs/stdlib/eng/io/#output', context: /\bIO\b/ },
+  ] },
+  { query: 'Select', destinations: [
+    { url: '/docs/internals/storage/#optionselect', context: /Option\.Select/ },
+    { url: '/docs/internals/storage/#resultselect', context: /Result\.Select/ },
+  ] },
+  { query: 'Text', destinations: [{ url: '/docs/spec/values/#text', context: /\bText\b/ }] },
+  { query: 'From', destinations: [{ url: '/docs/spec/grammar/#from', context: /\bFrom\b/i }] },
+  { query: 'While', destinations: [{ url: '/docs/spec/control-flow/#while', context: /\bWhile\b/i }] },
+] as const;
+
+for (const { query, destinations } of wordSearches) {
+  test(`word dictionary search: ${query} reaches its canonical meanings`, async ({ page }, testInfo) => {
+    await page.goto('/docs/');
+    // Read the actual built index, including subresults the stock UI may thin
+    // to three per page. Ranking order is not a semantic contract.
+    const matches = await page.evaluate(async (term) => {
+      const modulePath = '/pagefind/pagefind.js';
+      const pagefind = await import(modulePath);
+      type Result = { url: string; excerpt: string; meta: { title: string }; sub_results: { url: string; title: string; excerpt: string }[] };
+      const found = await pagefind.search(term) as { results: { data(): Promise<Result> }[] };
+      const data = await Promise.all(found.results.map((result) => result.data()));
+      const text = (html: string) => new DOMParser().parseFromString(html, 'text/html').body.textContent ?? '';
+      return data.flatMap((result) => [
+        { url: result.url, context: text(`${result.meta.title} ${result.excerpt}`) },
+        ...result.sub_results.map((sub) => ({ url: sub.url, context: text(`${result.meta.title} ${sub.title} ${sub.excerpt}`) })),
+      ]).map((match) => {
+        const url = new URL(match.url, location.origin);
+        return { ...match, url: url.pathname + url.hash };
+      });
+    }, query);
+    await testInfo.attach('built-search-results', { body: JSON.stringify(matches, null, 2), contentType: 'application/json' });
+    for (const expected of destinations) {
+      const canonical = matches.filter((match) => match.url === expected.url);
+      expect(canonical.length, `${query}: missing ${expected.url}; complete built results are attached`).toBeGreaterThan(0);
+      expect(canonical.map((match) => match.context).join(' '), `${query}: readable meaning context`).toMatch(expected.context);
+    }
+    if (['Send', 'IO.Send', 'Sent', 'Sender'].includes(query)) {
+      expect(matches.filter((match) => match.url.startsWith('/docs/words/')), 'navigation must not compete with canonical word entries').toEqual([]);
+    }
+
+    await page.keyboard.press('Control+k');
+    const dialog = page.getByRole('dialog', { name: 'Search' });
+    await expect(dialog).toBeVisible();
+    await dialog.getByRole('textbox', { name: 'Search', exact: true }).fill(query);
+    await expect(dialog.locator('.pagefind-ui__result-link').first()).toBeVisible();
+    await expect(dialog.locator('.pagefind-ui__loading')).toHaveCount(0);
+    // The reader must be offered the actual sections, not just a page whose
+    // source happens to contain the query.
+    for (const expected of destinations) {
+      const link = dialog.locator(`.pagefind-ui__result-link[href="${expected.url}"]`);
+      const more = dialog.locator('.pagefind-ui__button');
+      while (await link.count() === 0 && await more.isVisible()) {
+        const count = await dialog.locator('.pagefind-ui__result').count();
+        await more.click();
+        await expect.poll(() => dialog.locator('.pagefind-ui__result').count()).toBeGreaterThan(count);
+        await expect(dialog.locator('.pagefind-ui__loading')).toHaveCount(0);
+      }
+      await expect(link).toBeVisible();
+      const result = link.locator('xpath=ancestor::*[contains(concat(" ", normalize-space(@class), " "), " pagefind-ui__result ")][1]');
+      await expect(result).toContainText(expected.context);
+    }
+    await dialog.locator(`.pagefind-ui__result-link[href="${destinations[0].url}"]`).click();
+    await expect(page).toHaveURL(`http://127.0.0.1:4321${destinations[0].url}`);
+    const anchor = destinations[0].url.slice(destinations[0].url.indexOf('#'));
+    await expect(page.locator(anchor)).toBeVisible();
+    const role = query === 'Text' ? /noun/i : query === 'From' ? /preposition/i : query === 'While' ? /rejected|unsupported/i : null;
+    if (role) {
+      const section = await page.locator(anchor).evaluate((heading) => {
+        const headings = [...document.querySelectorAll('main :is(h1,h2,h3,h4,h5,h6)')];
+        const next = headings.slice(headings.indexOf(heading) + 1).find((candidate) => candidate.tagName <= heading.tagName);
+        const range = document.createRange();
+        range.setStartBefore(heading);
+        if (next) range.setEndBefore(next); else range.setEndAfter(document.querySelector('main')!);
+        return range.toString();
+      });
+      expect(section).toMatch(role);
+    }
+  });
+}
+
+test('word dictionary browsing works without JavaScript', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+  await page.goto('http://127.0.0.1:4321/docs/words/');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Words');
+  const alphabet = page.locator('.l-word-index a[href^="#"]').first();
+  const fragment = await alphabet.getAttribute('href');
+  expect(fragment).toMatch(/^#[^#]+$/);
+  await alphabet.click();
+  await expect(page.locator(fragment!)).toBeVisible();
+  await page.locator('.l-word-index a[href="/docs/stdlib/eng/io/#send"]').click();
+  await expect(page.locator('#send')).toBeVisible();
+  await page.locator('.l-word-index a[href="/docs/stdlib/eng/io/#lined"]').click();
+  await expect(page.locator('#lined')).toBeVisible();
+  await expect(page.locator('main')).toContainText('IO.Sender');
+  await page.goto('http://127.0.0.1:4321/docs/words/');
+  await page.locator('.l-word-index a[href="/docs/internals/storage/#optionselect"]').click();
+  await expect(page.locator('#optionselect')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await context.close();
+});
+
+test('word navigation and source disclosures support keyboard focus', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/docs/words/');
+  const alphabet = page.locator('.l-word-index a[href^="#"]').first();
+  await alphabet.focus();
+  await page.keyboard.press('Enter');
+  const fragment = await alphabet.getAttribute('href');
+  await expect(page.locator(fragment!)).toBeVisible();
+  const send = page.locator('.l-word-index a[href="/docs/stdlib/eng/io/#send"]');
+  await send.focus();
+  await expect(send).toBeFocused();
+  expect(await send.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe('none');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#send')).toBeVisible();
+  const disclosure = page.locator('main details').first();
+  const summary = disclosure.locator('summary');
+  await summary.focus();
+  await page.keyboard.press('Enter');
+  await expect(disclosure).toHaveAttribute('open', '');
+  await expect(disclosure.locator('a').first()).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(disclosure).not.toHaveAttribute('open', '');
 });
 
 test('theme persistence, correct logos, copy controls and local cross-links', async ({ page, context }) => {

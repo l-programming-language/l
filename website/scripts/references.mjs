@@ -2,7 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import GithubSlugger from 'github-slugger';
 import { repository, website, json, sha256, stable, safeFile, atomicWrite, walk, exists, isMain } from './lib.mjs';
-import { anchors, validateStdlib } from './content.mjs';
+import { parseDocument, validateStdlib } from './content.mjs';
+import { deriveWords } from './words.mjs';
 
 const cell = (v) => String(v ?? '').replaceAll('|', '&#124;').replaceAll('\n', ' ');
 const code = (v) => `<code>${String(v ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('|', '&#124;').replaceAll('\n', ' ')}</code>`;
@@ -134,7 +135,7 @@ export async function generateReferences(root) {
       const heading = wordSlugs.slug(name);
       morphology += `| <a id="${heading}"></a><a id="${id}"></a>${cell(name)} | ${values(word, forms)} |\n`;
       meanings += `| [${cell(name)}](#${id}) | ${values(word, handlers)} | ${review.support} | ${semanticLink(review)} | ${vocabularyNotes.link(review.notes)} |\n`;
-      entries.push({ id: `vocabulary:${key}`, kind: 'vocabulary', name, role: 'implementation', support: review.support, doc: `docs/_generated/vocabulary.md#${id}`, semanticDoc: review.doc, sources: [referenceInputs[1]], witnesses: ['lyger/scanner_test.go'], evidence: 'static-inspection; existing-witness-not-run', notes: review.notes });
+      entries.push({ id: `vocabulary:${key}`, kind: 'vocabulary', name, role: 'implementation', support: review.support, doc: `docs/_generated/vocabulary.md#${id}`, semanticDoc: review.doc, ...(review.wordRef ? { wordRef: review.wordRef } : {}), sources: [referenceInputs[1]], witnesses: ['lyger/scanner_test.go'], evidence: 'static-inspection; existing-witness-not-run', notes: review.notes });
     }
     v += morphology + '\n' + meanings + '\n';
   }
@@ -217,13 +218,13 @@ export async function semanticEntries(root) {
   return (await semanticReview(root)).entries;
 }
 
-export async function checkCoverage(root, pages, inventory) {
+export async function checkCoverage(root, pages, inventory, context = {}) {
   const { entries: semantic, sourceHashes } = await semanticReview(root);
   const entries = [...referenceEntries(inventory), ...semantic];
   const ids = new Set();
   const checkedSources = new Map();
-  const docAnchors = new Map();
-  for (const page of pages) docAnchors.set(page.source, anchors(await fs.readFile(await safeFile(root, page.source), 'utf8'), page.source.endsWith('.mdx')));
+  const documents = context.documents ?? new Map();
+  for (const page of pages) if (!documents.has(page.source)) documents.set(page.source, parseDocument(await fs.readFile(await safeFile(root, page.source), 'utf8'), page.source.endsWith('.mdx')));
   for (const entry of entries) {
     if (!entry.id || ids.has(entry.id)) throw new Error(`Duplicate or missing coverage ID: ${entry.id}`); ids.add(entry.id);
     if (!['normative', 'explanatory', 'implementation', 'future'].includes(entry.role)) throw new Error(`Invalid role: ${entry.id}`);
@@ -237,16 +238,17 @@ export async function checkCoverage(root, pages, inventory) {
     for (const target of [entry.doc, entry.semanticDoc].filter(Boolean)) {
       const [file, fragment] = target.split('#');
       if (!pages.find((p) => p.source === file)) throw new Error(`Coverage points to unpublished source ${target} (${entry.id})`);
-      if (!fragment || !docAnchors.get(file)?.has(fragment)) throw new Error(`Coverage anchor does not exist: ${target} (${entry.id})`);
+      if (!fragment || !documents.get(file)?.anchors.has(fragment)) throw new Error(`Coverage anchor does not exist: ${target} (${entry.id})`);
     }
   }
   for (const name of inventory.valueNames) if (!semantic.some((e) => e.kind === 'value-tag' && e.name.toLowerCase() === name.toLowerCase())) throw new Error(`Unclassified internal value tag: ${name}`);
   for (const file of Object.keys(inventory.segments)) if (!semantic.some((e) => e.kind === 'logeme' && e.sources.includes(file))) throw new Error(`Unclassified backend segment: ${file}`);
   validateStdlib(inventory.stdlib, pages, semantic);
+  context.words = deriveWords({ entries: semantic, lexical: await json(path.join(root, 'docs/_meta/vocabulary-review.json')), pages, documents });
   return referenceSnapshot({ ...inventory, sourceHashes, description: 'Static coverage and existing witnesses; no language execution during website validation.', entries });
 }
 
-export async function references({ root = repository, write = false, coverage = true } = {}) {
+export async function references({ root = repository, write = false, coverage = true, context = {} } = {}) {
   const { files, inventory } = await generateReferences(root);
   for (const [name, bytes] of Object.entries(files)) {
     if (write) await atomicWrite(path.join(root, name), bytes);
@@ -254,7 +256,7 @@ export async function references({ root = repository, write = false, coverage = 
   }
   if (coverage) {
     const map = await json(path.join(root, 'website/content-map.json'));
-    const result = await checkCoverage(root, map.pages, inventory);
+    const result = await checkCoverage(root, map.pages, inventory, context);
     const file = path.join(root, 'docs/_meta/coverage.json');
     if (write) await atomicWrite(file, stable(result));
     else if (!await exists(file) || await fs.readFile(file, 'utf8') !== stable(result)) throw new Error('Coverage snapshot is stale. Review mappings then run references:generate.');

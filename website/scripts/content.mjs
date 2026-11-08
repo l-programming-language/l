@@ -9,6 +9,7 @@ import GithubSlugger from 'github-slugger';
 import { parse as parseYAML, stringify as yaml } from 'yaml';
 import { safeFile, sha256 } from './lib.mjs';
 import { sourceURL } from './provenance.mjs';
+import { wordFacts, wordIndex } from './words.mjs';
 
 export function parseMarkdown(text, mdx = false) {
   const parser = unified().use(remarkParse).use(remarkGfm);
@@ -16,14 +17,19 @@ export function parseMarkdown(text, mdx = false) {
   return parser.parse(text);
 }
 export function plain(node) { return node.value ?? (node.children ?? []).map(plain).join(''); }
-export function anchors(text, mdx = false) {
-  const tree = parseMarkdown(text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, ''), mdx);
+export function parseDocument(source, mdx = false) {
+  const fm = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+  const text = fm ? source.slice(fm[0].length) : source;
+  const authored = fm ? parseYAML(fm[1]) ?? {} : {};
+  const tree = parseMarkdown(text, mdx);
   const slugger = new GithubSlugger();
-  const found = new Set();
-  visit(tree, 'heading', (node) => found.add(slugger.slug(plain(node))));
-  visit(tree, 'html', (node) => { for (const m of node.value.matchAll(/<(?:a|span)\s+id=["']([^"']+)["'][^>]*>/g)) found.add(m[1]); });
-  return found;
+  const found = new Set(), headings = new Map(), anchorCounts = new Map();
+  const add = (id) => { found.add(id); anchorCounts.set(id, (anchorCounts.get(id) ?? 0) + 1); };
+  visit(tree, 'heading', (node) => { const id = slugger.slug(plain(node)); add(id); headings.set(node, id); });
+  visit(tree, 'html', (node) => { for (const m of node.value.matchAll(/<(?:a|span)\s+id=["']([^"']+)["'][^>]*>/g)) add(m[1]); });
+  return { text, authored, tree, anchors: found, anchorCounts, headings };
 }
+export function anchors(text, mdx = false) { return parseDocument(text, mdx).anchors; }
 
 export function validateMap(map) {
   if (map.schemaVersion !== 1 || !Array.isArray(map.pages)) throw new Error('content-map.json requires schemaVersion 1 and a pages array.');
@@ -44,7 +50,7 @@ export function validateMap(map) {
 export function validateStdlib(index, pages, semanticEntries) {
   if (index.format !== 1 || !index.languages || typeof index.languages !== 'object') throw new Error('Unsupported dictionary registry format.');
   const exports = semanticEntries.filter((entry) => entry.kind === 'stdlib-export');
-  for (const entry of exports) {
+  for (const entry of semanticEntries.filter((entry) => entry.dictionary || ['stdlib-export', 'authoring-word'].includes(entry.kind))) {
     const owner = entry.dictionary;
     if (!owner || !Object.hasOwn(index.languages, owner.lexicon) || !Object.hasOwn(index.languages[owner.lexicon], owner.key)) throw new Error(`Invalid reviewed dictionary owner: ${entry.id ?? entry.name}`);
     if (!Array.isArray(entry.sources) || !entry.sources.includes(index.languages[owner.lexicon][owner.key].entry)) throw new Error(`Missing reviewed dictionary source: ${entry.id ?? entry.name}`);
@@ -63,6 +69,7 @@ export function validateStdlib(index, pages, semanticEntries) {
       const page = pages.find((p) => p.route === route);
       if (!page) throw new Error(`Unclassified indexed dictionary ${language}/${key}: author its documentation and add ${route} to content-map.json.`);
       if (!reviewed.length) throw new Error(`Missing reviewed export inventory for ${language}/${key}.`);
+      if (!reviewed.some((entry) => entry.visibility === 'public')) throw new Error(`Missing reviewed public export inventory for ${language}/${key}.`);
       dictionaries.push({ language, key, ...entry, route, source: page.source, exports: reviewed.filter((x) => x.visibility === 'public').map((x) => x.name) });
     }
   }
@@ -74,13 +81,12 @@ export function stdlibCatalog(dictionaries) {
   return '| Source lexicon | Dictionary key | Public names | Reference |\n| --- | --- | --- | --- |\n' + dictionaries.map((item) => `| ${escape(item.language)} | ${escape(item.key)} | ${item.exports.map(escape).join(', ')} | [${escape(item.dictionary)}](${item.route}) |`).join('\n');
 }
 
-export async function preparePage({ root, page, pages, identity, examples, sourceTexts, assets, dictionaries = [] }) {
+export async function preparePage({ root, page, pages, identity, examples, sourceTexts, assets, dictionaries = [], documents = new Map(), words = [] }) {
   const sourcePath = await safeFile(root, page.source);
-  let text = sourceTexts.get(page.source) ?? await fs.readFile(sourcePath, 'utf8');
-  let authored = {};
-  const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
-  if (fm) { authored = parseYAML(fm[1]) ?? {}; text = text.slice(fm[0].length); }
-  const tree = parseMarkdown(text, page.source.endsWith('.mdx'));
+  const document = documents.get(page.source) ?? parseDocument(sourceTexts.get(page.source) ?? await fs.readFile(sourcePath, 'utf8'), page.source.endsWith('.mdx'));
+  const { authored, tree } = document;
+  let { text } = document;
+  const sourceAnchors = (source) => documents.get(source)?.anchors ?? anchors(sourceTexts.get(source), source.endsWith('.mdx'));
   const changes = []; const routeBySource = new Map(pages.map((p) => [p.source, p]));
   const defs = new Map(); visit(tree, 'definition', (node) => defs.set(node.identifier, node));
   const add = (node, replacement) => changes.push({ start: node.position.start.offset, end: node.position.end.offset, replacement });
@@ -92,14 +98,14 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
     const [beforeFragment, ...hashParts] = url.split('#'); const hash = hashParts.join('#');
     const [pathname, ...queryParts] = beforeFragment.split('?'); const query = queryParts.length ? `?${queryParts.join('?')}` : '';
     if (!pathname) {
-      if (hash && !anchors(text).has(decodeURIComponent(hash))) throw new Error(`Missing fragment ${page.source}#${hash}`);
+      if (hash && !document.anchors.has(decodeURIComponent(hash))) throw new Error(`Missing fragment ${page.source}#${hash}`);
       return { url };
     }
     if (pathname.startsWith('/')) {
       if (pathname.startsWith('/assets/l/')) return { url };
       const mapped = pages.find((p) => p.route === pathname);
       if (pathname !== '/' && !mapped) throw new Error(`Unknown site route in ${page.source}: ${url}`);
-      if (hash && mapped && !anchors(sourceTexts.get(mapped.source)).has(decodeURIComponent(hash))) throw new Error(`Missing fragment: ${url}`);
+      if (hash && mapped && !sourceAnchors(mapped.source).has(decodeURIComponent(hash))) throw new Error(`Missing fragment: ${url}`);
       return { url };
     }
     const relative = path.posix.normalize(path.posix.join(path.posix.dirname(page.source), decodeURIComponent(pathname)));
@@ -126,15 +132,35 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
     }
     const mapped = routeBySource.get(relative);
     if (mapped) {
-      if (hash && !anchors(sourceTexts.get(relative), relative.endsWith('.mdx')).has(decodeURIComponent(hash))) throw new Error(`Missing document fragment ${relative}#${hash} linked by ${page.source}`);
+      if (hash && !sourceAnchors(relative).has(decodeURIComponent(hash))) throw new Error(`Missing document fragment ${relative}#${hash} linked by ${page.source}`);
       return { url: mapped.route + query + (hash ? `#${hash}` : '') };
     }
     const remote = sourceURL(root, relative, identity);
     return remote ? { url: remote + query + (hash ? `#${hash}` : '') } : { source: relative };
   }
   const links = []; visit(tree, (node) => { if (['link', 'image', 'definition', 'linkReference', 'imageReference', 'html'].includes(node.type)) links.push(node); });
+  let indices = 0;
   for (const node of links) {
     if (node.type === 'html') {
+      const word = node.value.trim().match(/^<!--\s*word:([^\s<>]+)\s*-->$/);
+      if (word) {
+        const selected = words.find((entry) => entry.id === word[1] && entry.source === page.source);
+        if (!selected) throw new Error(`Unknown word marker ${word[1]} in ${page.source}`);
+        const html = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
+        add(node, wordFacts(selected, words, (source) => {
+          const url = sourceURL(root, source, identity);
+          return url ? `<a href="${html(url)}"><code>${html(source)}</code></a>` : `<code>${html(source)}</code>`;
+        }));
+        continue;
+      }
+      const index = node.value.trim().match(/^<!--\s*word-index(?::([a-z0-9:-]+))?\s*-->$/);
+      if (/<!--\s*word-index\b/.test(node.value) && (!index || !tree.children.includes(node))) throw new Error(`Invalid word-index directive in ${page.source}:${node.position.start.line}`);
+      if (index) {
+        if (++indices > 1) throw new Error(`Multiple word indices in ${page.source}`);
+        const rendered = wordIndex(words, index[1] ?? '', dictionaries);
+        for (const [, id] of rendered.matchAll(/\bid="([^"]+)"/g)) if (document.anchors.has(id)) throw new Error(`Word index conflicts with authored anchor ${id} in ${page.source}`);
+        add(node, rendered); continue;
+      }
       if (/^<!--\s*stdlib-catalog\s*-->$/.test(node.value.trim())) { add(node, stdlibCatalog(dictionaries)); continue; }
       const illustration = node.value.trim().match(/^<!--\s*illustration:(source-to-native|dictionaries)\s*-->$/);
       if (illustration) {

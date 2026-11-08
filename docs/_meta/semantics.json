@@ -117,7 +117,14 @@
         "lyger/definition_text_encoding_test.go",
         "lyger/runtime_values_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Text",
+        "Texts"
+      ]
     },
     {
       "id": "type:number",
@@ -145,7 +152,14 @@
         "lyger/io_numeric_test.go",
         "lyger/runtime_values_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Number",
+        "Numbers"
+      ]
     },
     {
       "id": "type:truth",
@@ -170,7 +184,14 @@
         "lyger/orchestrator_test.go",
         "lyger/runtime_values_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Truth",
+        "Truths"
+      ]
     },
     {
       "id": "type:thing",
@@ -199,7 +220,14 @@
         "lyger/runtime_type_boundaries_test.go"
       ],
       "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types and callable signatures. No implicit coercion or dynamic arithmetic.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Thing",
+        "Things"
+      ]
     },
     {
       "id": "type:byte",
@@ -207,7 +235,7 @@
       "name": "Byte",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/values.md#byte-and-bytes",
+      "doc": "docs/spec/values.md#byte",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -224,7 +252,14 @@
         "lyger/stored_values_test.go",
         "lyger/refactor_value_characterization_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Byte",
+        "Bytes"
+      ]
     },
     {
       "id": "type:bytes",
@@ -232,7 +267,7 @@
       "name": "Bytes",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/values.md#byte-and-bytes",
+      "doc": "docs/spec/values.md#bytes",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
@@ -249,7 +284,13 @@
         "lyger/runtime_transfer_test.go"
       ],
       "notes": "Owned byte sequences construct from Text, snapshot and support checked indexed reads as Number. Byte mutation and numeric-width families are not supplied.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Bytes"
+      ]
     },
     {
       "id": "type:pointer",
@@ -278,7 +319,14 @@
         "lyger/runtime_lifetime_test.go"
       ],
       "notes": "Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Pointer",
+        "Pointers"
+      ]
     },
     {
       "id": "type:null",
@@ -286,7 +334,7 @@
       "name": "Null",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/values.md#null-and-internal-states",
+      "doc": "docs/spec/values.md#null",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
@@ -303,7 +351,14 @@
         "lyger/runtime_transfer_test.go"
       ],
       "notes": "Null initializes an explicit absence value; typed reads preserve evaluation and type/index/key checks. Unassigned storage and the native-definition Null atom remain separate.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Null",
+        "Nulls"
+      ]
     },
     {
       "id": "type:list",
@@ -331,7 +386,14 @@
         "lyger/source_action_arguments_test.go"
       ],
       "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "List",
+        "Lists"
+      ]
     },
     {
       "id": "type:dictionary",
@@ -354,7 +416,14 @@
         "lyger/paragraph_visibility_test.go",
         "lyger/numeric_resolution_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Dictionary",
+        "Dictionaries"
+      ]
     },
     {
       "id": "type:app",
@@ -374,7 +443,14 @@
         "lyger/application_units_test.go",
         "lyger/runtime_type_boundaries_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "App",
+        "Apps"
+      ]
     },
     {
       "id": "type:service",
@@ -395,7 +471,14 @@
         "lyger/runnable_service_test.go"
       ],
       "notes": "Service declarations remain structural; standalone bodies, packages and native process operations are unsupported. App-constructed Service libraries retain their workspace topology. Static inspection; witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Service",
+        "Services"
+      ]
     },
     {
       "id": "type:class",
@@ -403,7 +486,7 @@
       "name": "Class",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/applicational-types.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#class",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -414,7 +497,14 @@
       "witnesses": [
         "lyger/recursive_classes_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Class",
+        "Classes"
+      ]
     },
     {
       "id": "type:object",
@@ -422,7 +512,7 @@
       "name": "Object",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/applicational-types.md#classes-and-objects",
+      "doc": "docs/spec/applicational-types.md#object",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -433,7 +523,14 @@
       "witnesses": [
         "lyger/recursive_classes_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Object",
+        "Objects"
+      ]
     },
     {
       "id": "type:attribute",
@@ -441,7 +538,7 @@
       "name": "Attribute",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
+      "doc": "docs/spec/applicational-types.md#attribute",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -452,7 +549,14 @@
       "witnesses": [
         "lyger/stored_values_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Attribute",
+        "Attributes"
+      ]
     },
     {
       "id": "type:definition",
@@ -460,7 +564,7 @@
       "name": "Definition",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
+      "doc": "docs/spec/applicational-types.md#definition",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -471,7 +575,14 @@
       "witnesses": [
         "lyger/definition_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Definition",
+        "Definitions"
+      ]
     },
     {
       "id": "type:function",
@@ -511,8 +622,9 @@
         "lyger/function_contract_regression_test.go",
         "lyger/nested_definition_test.go"
       ],
-      "notes": "Functions bind typed invocation verbs and private bodies. Signatures include canonical constructor identity; aliases preserve it and incompatible transfers reject. Emission uses selected builtin/logeme definitions.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Functions bind typed invocation verbs and private bodies. Signatures include canonical constructor identity; aliases preserve it and incompatible transfers reject. Emission uses selected builtin/logeme definitions. The callable type and builtin composition use the same selected Function constructor; canonical word prose is associated explicitly rather than duplicated.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "wordRef": "builtin:function"
     },
     {
       "id": "type:property",
@@ -560,7 +672,7 @@
       "name": "Noun",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/lexical-types.md#noun",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -571,7 +683,13 @@
       "witnesses": [
         "lyger/binding_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Noun"
+      ]
     },
     {
       "id": "type:verb",
@@ -579,7 +697,7 @@
       "name": "Verb",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/lexical-types.md#verb",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -590,7 +708,13 @@
       "witnesses": [
         "lyger/action_definition_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Verb"
+      ]
     },
     {
       "id": "type:adjective",
@@ -598,7 +722,7 @@
       "name": "Adjective",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/lexical-types.md#adjective",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -614,7 +738,13 @@
         "lyger/word_library_pos_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Descriptors retain canonical targets through aliases and qualified imports. Source nouns bind typed formals and fixed operands to selected constructors. Replacements consume original operands; wrappers name and preserve the base result. Operands evaluate once in authored order; native moves and borrows remain checked. This is not a resource-cost certificate."
+      "notes": "Descriptors retain canonical targets through aliases and qualified imports. Source nouns bind typed formals and fixed operands to selected constructors. Replacements consume original operands; wrappers name and preserve the base result. Operands evaluate once in authored order; native moves and borrows remain checked. This is not a resource-cost certificate.",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Adjective"
+      ]
     },
     {
       "id": "type:adverb",
@@ -622,7 +752,7 @@
       "name": "Adverb",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/spec/lexical-types.md#adverb",
       "sources": [
         "lyger/types.go",
         "lyger/value_kinds.go",
@@ -633,7 +763,13 @@
       "witnesses": [
         "lyger/grammar_terms_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Adverb"
+      ]
     },
     {
       "id": "value-tag:Thing",
@@ -1108,7 +1244,7 @@
       "name": "Start",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
+      "doc": "docs/reference/builtins/lifecycle.md#start",
       "sources": [
         "builtins/eng/core.l",
         "docs/cli-build.md"
@@ -1116,7 +1252,23 @@
       "witnesses": [
         "lyger/action_definition_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Starter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Start",
+        "Starts",
+        "Started",
+        "Starting",
+        "Starter"
+      ]
     },
     {
       "id": "builtin:execute",
@@ -1124,7 +1276,7 @@
       "name": "Execute",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
+      "doc": "docs/reference/builtins/lifecycle.md#execute",
       "sources": [
         "builtins/eng/core.l",
         "docs/cli-build.md"
@@ -1132,7 +1284,23 @@
       "witnesses": [
         "lyger/action_definition_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Executor": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Execute",
+        "Executes",
+        "Executed",
+        "Executing",
+        "Executor"
+      ]
     },
     {
       "id": "builtin:build",
@@ -1150,7 +1318,23 @@
         "lyger/builtin_operations_contract_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Builder": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Build",
+        "Builds",
+        "Built",
+        "Building",
+        "Builder"
+      ]
     },
     {
       "id": "builtin:run",
@@ -1168,7 +1352,23 @@
         "lyger/phase1_language_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Runner": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Run",
+        "Runs",
+        "Ruan",
+        "Running",
+        "Runner"
+      ]
     },
     {
       "id": "builtin:stop",
@@ -1186,7 +1386,23 @@
         "lyger/runnable_service_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Stoppper": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Stop",
+        "Stops",
+        "Stopped",
+        "Stopping",
+        "Stoppper"
+      ]
     },
     {
       "id": "builtin:await",
@@ -1204,7 +1420,16 @@
         "lyger/phase1_nested_await_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb"
+      },
+      "inflections": [
+        "Await",
+        "Awaits",
+        "Awaited",
+        "Awaiting"
+      ]
     },
     {
       "id": "builtin:show",
@@ -1221,7 +1446,23 @@
       "witnesses": [
         "lyger/orchestrator_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Shower": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Show",
+        "Shows",
+        "Showed",
+        "Showing",
+        "Shower"
+      ]
     },
     {
       "id": "builtin:exit",
@@ -1241,7 +1482,23 @@
         "lyger/phase1_shutdown_test.go",
         "lyger/source_functions_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Exiter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Exit",
+        "Exits",
+        "Exited",
+        "Exiting",
+        "Exiter"
+      ]
     },
     {
       "id": "builtin:output",
@@ -1249,7 +1506,7 @@
       "name": "Output",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
+      "doc": "docs/reference/builtins/lifecycle.md#output",
       "sources": [
         "lyger/orchestration_plan.go",
         "docs/cli-build.md"
@@ -1258,7 +1515,14 @@
         "lyger/orchestrator_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Output",
+        "Outputs"
+      ]
     },
     {
       "id": "builtin:error",
@@ -1266,7 +1530,7 @@
       "name": "Error",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
+      "doc": "docs/reference/builtins/lifecycle.md#error",
       "sources": [
         "lyger/orchestration_plan.go",
         "docs/cli-build.md"
@@ -1275,7 +1539,14 @@
         "lyger/phase1_language_test.go"
       ],
       "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Error",
+        "Errors"
+      ]
     },
     {
       "id": "builtin:process",
@@ -1307,10 +1578,31 @@
         "lyger/construction_test.go",
         "lyger/scoped_definition_test.go",
         "lyger/process_inputs_test.go",
-        "lyger/word_library_acceptance_test.go"
+        "lyger/word_library_acceptance_test.go",
+        "lyger/binding_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Ordered source operations use the shared instruction path. Provisional input labels acquire their actual Process scope before semantic use and cannot shadow enclosing Function parameters or escape into siblings. Explicit annotations preserve declared types and dependencies for native type and borrow checking. No callable outputs or closure runtime are added."
+      "notes": "Ordered source operations use the shared instruction path. Provisional input labels acquire their actual Process scope before semantic use and cannot shadow enclosing Function parameters or escape into siblings. Explicit annotations preserve declared types and dependencies for native type and borrow checking. No callable outputs or closure runtime are added.",
+      "word": {
+        "partOfSpeech": "noun",
+        "audience": "authoring",
+        "formRoles": {
+          "Processive": {
+            "partOfSpeech": "adjective",
+            "role": "descriptive"
+          },
+          "Processing": {
+            "partOfSpeech": "verb",
+            "role": "applicative (noun active form)"
+          }
+        }
+      },
+      "inflections": [
+        "Process",
+        "Processes",
+        "Processive",
+        "Processing"
+      ]
     },
     {
       "id": "builtin:function",
@@ -1326,16 +1618,37 @@
         "lyger/source_functions.go",
         "lyger/function_composition.go",
         "lyger/function_definitions.go",
-        "lyger/lowering.go"
+        "lyger/lowering.go",
+        "lyger/binding.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
         "lyger/function_composition_test.go",
-        "lyger/nested_definition_test.go"
+        "lyger/nested_definition_test.go",
+        "lyger/binding_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "The canonical Function definition supplies composed signatures and Process bodies for source declarations and constructed Objects."
+      "notes": "The canonical Function definition supplies composed signatures and Process bodies for source declarations and constructed Objects.",
+      "word": {
+        "partOfSpeech": "noun",
+        "formRoles": {
+          "Functional": {
+            "partOfSpeech": "adjective",
+            "role": "descriptive"
+          },
+          "Functioning": {
+            "partOfSpeech": "verb",
+            "role": "applicative (noun active form)"
+          }
+        }
+      },
+      "inflections": [
+        "Function",
+        "Functions",
+        "Functional",
+        "Functioning"
+      ]
     },
     {
       "id": "builtin:function.return",
@@ -1367,7 +1680,24 @@
         "lyger/word_library_reject_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Root-authored returning actions use their caller’s selected Return. Its implementation keeps lexical delegates; Function-owned Returns retain their constructor contract and reject incompatible callers. Known unconditional source-actor and transparent-Process exits terminate typed caller flow. Real Function calls, conditional and opaque bodies retain their own boundaries and native obligations."
+      "notes": "Root-authored returning actions use their caller’s selected Return. Its implementation keeps lexical delegates; Function-owned Returns retain their constructor contract and reject incompatible callers. Known unconditional source-actor and transparent-Process exits terminate typed caller flow. Real Function calls, conditional and opaque bodies retain their own boundaries and native obligations.",
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Returner": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Return",
+        "Returns",
+        "Returned",
+        "Returning",
+        "Returner"
+      ]
     },
     {
       "id": "builtin:retain",
@@ -1389,7 +1719,24 @@
         "lyger/word_library_ownership_test.go"
       ],
       "notes": "Core Retain consumes a borrowed Arc and returns another handle to the same allocation without cloning its payload. The App source wrapper delegates to core Retain without lifecycle effects; Storage.Retain remains Rc-based. Atomic ownership does not certify payload Send/Sync or destructor costs.",
-      "evidence": "static-inspection; word-library native ownership witnesses"
+      "evidence": "static-inspection; word-library native ownership witnesses",
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Retainer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Retain",
+        "Retains",
+        "Retained",
+        "Retaining",
+        "Retainer"
+      ]
     },
     {
       "id": "builtin:objective",
@@ -1407,7 +1754,19 @@
         "lyger/definition_test.go",
         "lyger/construction_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "adjective",
+        "audience": "authoring",
+        "targets": [
+          {
+            "entry": "builtin:function"
+          }
+        ]
+      },
+      "inflections": [
+        "Objective"
+      ]
     },
     {
       "id": "builtin:main",
@@ -1426,7 +1785,24 @@
         "lyger/construction_test.go"
       ],
       "notes": "Source-defined Service/Object/Function construction descriptor used by Apps; it grants no standalone Service process role.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "adjective",
+        "targets": [
+          {
+            "entry": "type:service"
+          },
+          {
+            "entry": "type:object"
+          },
+          {
+            "entry": "builtin:function"
+          }
+        ]
+      },
+      "inflections": [
+        "Main"
+      ]
     },
     {
       "id": "builtin:basic",
@@ -1444,7 +1820,18 @@
         "lyger/definition_test.go",
         "lyger/construction_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "adjective",
+        "targets": [
+          {
+            "entry": "type:app"
+          }
+        ]
+      },
+      "inflections": [
+        "Basic"
+      ]
     },
     {
       "id": "builtin:create",
@@ -1452,7 +1839,7 @@
       "name": "Create",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/definitions.md#create-define-and-describe",
+      "doc": "docs/spec/definitions.md#create",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/semantics.go",
@@ -1461,7 +1848,23 @@
       "witnesses": [
         "lyger/coordinated_registration_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Creator": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Create",
+        "Creates",
+        "Created",
+        "Creating",
+        "Creator"
+      ]
     },
     {
       "id": "builtin:define",
@@ -1469,7 +1872,7 @@
       "name": "Define",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/definitions.md#create-define-and-describe",
+      "doc": "docs/spec/definitions.md#define",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/semantics.go",
@@ -1478,7 +1881,23 @@
       "witnesses": [
         "lyger/definition_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Definer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Define",
+        "Defines",
+        "Defined",
+        "Defining",
+        "Definer"
+      ]
     },
     {
       "id": "builtin:describe",
@@ -1486,7 +1905,7 @@
       "name": "Describe",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "doc": "docs/spec/definitions.md#describe",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/semantics.go",
@@ -1495,7 +1914,23 @@
       "witnesses": [
         "lyger/paragraph_descriptor_identity_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Describer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Describe",
+        "Describes",
+        "Described",
+        "Describing",
+        "Describer"
+      ]
     },
     {
       "id": "builtin:use",
@@ -1515,7 +1950,23 @@
       "witnesses": [
         "lyger/configured_import_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "User": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Use",
+        "Uses",
+        "Used",
+        "Using",
+        "User"
+      ]
     },
     {
       "id": "builtin:public",
@@ -1523,7 +1974,7 @@
       "name": "Public",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/names-and-scope.md#paragraph-scope",
+      "doc": "docs/spec/names-and-scope.md#public",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/visibility.go",
@@ -1533,7 +1984,13 @@
         "lyger/paragraph_visibility_test.go",
         "lyger/function_publication_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "adjective"
+      },
+      "inflections": [
+        "Public"
+      ]
     },
     {
       "id": "builtin:publicly",
@@ -1541,7 +1998,7 @@
       "name": "Publicly",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/names-and-scope.md#paragraph-scope",
+      "doc": "docs/spec/names-and-scope.md#publicly",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/visibility.go",
@@ -1551,7 +2008,13 @@
         "lyger/paragraph_visibility_test.go",
         "lyger/function_publication_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "adverb"
+      },
+      "inflections": [
+        "Publicly"
+      ]
     },
     {
       "id": "builtin:new",
@@ -1559,7 +2022,7 @@
       "name": "New",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "doc": "docs/spec/definitions.md#new",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/construction.go"
@@ -1567,7 +2030,13 @@
       "witnesses": [
         "lyger/construction_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "adjective"
+      },
+      "inflections": [
+        "New"
+      ]
     },
     {
       "id": "builtin:generic",
@@ -1575,7 +2044,7 @@
       "name": "Generic",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "doc": "docs/spec/definitions.md#generic",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/construction.go",
@@ -1586,7 +2055,13 @@
         "lyger/word_library_constructor_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Native source constructors accept explicit ordered parameter atoms through their declared slots. GenericTypes and Lifetimes retain their approved local native-input contract; this does not infer parameters or introduce general L generics."
+      "notes": "Native source constructors accept explicit ordered parameter atoms through their declared slots. GenericTypes and Lifetimes retain their approved local native-input contract; this does not infer parameters or introduce general L generics.",
+      "word": {
+        "partOfSpeech": "adjective"
+      },
+      "inflections": [
+        "Generic"
+      ]
     },
     {
       "id": "builtin:input",
@@ -1594,7 +2069,7 @@
       "name": "Input",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/reference/builtins/index.md#runtime-members",
+      "doc": "docs/reference/builtins/index.md#input",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/construction.go",
@@ -1606,7 +2081,14 @@
         "lyger/process_inputs_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Input metadata covers Function parameters and scoped structured Process bindings. No App process input transport is supplied."
+      "notes": "Input metadata covers Function parameters and scoped structured Process bindings. No App process input transport is supplied.",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Input",
+        "Inputs"
+      ]
     },
     {
       "id": "builtin:put",
@@ -1614,7 +2096,7 @@
       "name": "Put",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#lists",
+      "doc": "docs/spec/collections-and-categories.md#put",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lexicon/eng/grammar.json",
@@ -1630,7 +2112,23 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Typed updates append/replace List elements, write Map values or replace a Pointer target. Destination kind, keys, element types and managed ownership cycles are checked.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Puter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Put",
+        "Puts",
+        "Put",
+        "Putting",
+        "Puter"
+      ]
     },
     {
       "id": "builtin:place",
@@ -1638,7 +2136,7 @@
       "name": "Place",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#lists",
+      "doc": "docs/spec/collections-and-categories.md#place",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lexicon/eng/grammar.json",
@@ -1654,7 +2152,23 @@
         "lyger/runtime_values_test.go"
       ],
       "notes": "Typed updates append/replace List elements, write Map values or replace a Pointer target. Destination kind, keys, element types and managed ownership cycles are checked.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Placer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Place",
+        "Places",
+        "Placed",
+        "Placing",
+        "Placer"
+      ]
     },
     {
       "id": "builtin:get",
@@ -1662,7 +2176,7 @@
       "name": "Get",
       "role": "explanatory",
       "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "doc": "docs/spec/grammar.md#get",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lexicon/eng/grammar.json",
@@ -1671,7 +2185,23 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed"
+      "evidence": "static-inspection; no-existing-witness-listed",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Getter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Get",
+        "Gets",
+        "Gotten",
+        "Getting",
+        "Getter"
+      ]
     },
     {
       "id": "builtin:take",
@@ -1679,7 +2209,7 @@
       "name": "Take",
       "role": "explanatory",
       "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "doc": "docs/spec/grammar.md#take",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lexicon/eng/grammar.json",
@@ -1688,7 +2218,23 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed"
+      "evidence": "static-inspection; no-existing-witness-listed",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Taker": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Take",
+        "Takes",
+        "Taken",
+        "Taking",
+        "Taker"
+      ]
     },
     {
       "id": "builtin:import",
@@ -1696,7 +2242,7 @@
       "name": "Import",
       "role": "explanatory",
       "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "doc": "docs/spec/grammar.md#import",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lexicon/eng/grammar.json",
@@ -1705,7 +2251,23 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed"
+      "evidence": "static-inspection; no-existing-witness-listed",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Importer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Import",
+        "Imports",
+        "Imported",
+        "Importing",
+        "Importer"
+      ]
     },
     {
       "id": "builtin:export",
@@ -1713,7 +2275,7 @@
       "name": "Export",
       "role": "explanatory",
       "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "doc": "docs/spec/grammar.md#export",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lexicon/eng/grammar.json",
@@ -1722,7 +2284,23 @@
       ],
       "witnesses": [],
       "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed"
+      "evidence": "static-inspection; no-existing-witness-listed",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Exporter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Export",
+        "Exports",
+        "Exported",
+        "Exporting",
+        "Exporter"
+      ]
     },
     {
       "id": "stdlib:eng:io",
@@ -1755,7 +2333,7 @@
       "name": "IO.Print",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#import-and-calling-forms",
+      "doc": "docs/stdlib/eng/io.md#print",
       "sources": [
         "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
@@ -1789,7 +2367,16 @@
       "argumentRoles": [
         "Output (Thing)"
       ],
-      "effect": "Writes the selected typed rendering and appends LF; no L return value is declared."
+      "effect": "Writes the selected typed rendering and appends LF; no L return value is declared.",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Printer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      }
     },
     {
       "id": "stdlib-export:eng:io:IO.Output",
@@ -1797,7 +2384,7 @@
       "name": "IO.Output",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
+      "doc": "docs/stdlib/eng/io.md#output",
       "sources": [
         "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
@@ -1819,7 +2406,10 @@
         "Output"
       ],
       "argumentRoles": [],
-      "effect": "Obtains the standard-output handle; does not lock, write or flush."
+      "effect": "Obtains the standard-output handle; does not lock, write or flush.",
+      "word": {
+        "partOfSpeech": "noun"
+      }
     },
     {
       "id": "stdlib-export:eng:io:IO.Diagnostic",
@@ -1827,7 +2417,7 @@
       "name": "IO.Diagnostic",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
+      "doc": "docs/stdlib/eng/io.md#diagnostic",
       "sources": [
         "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
@@ -1849,7 +2439,10 @@
         "Diagnostic"
       ],
       "argumentRoles": [],
-      "effect": "Obtains the standard-error handle; does not redirect Print."
+      "effect": "Obtains the standard-error handle; does not redirect Print.",
+      "word": {
+        "partOfSpeech": "noun"
+      }
     },
     {
       "id": "stdlib-export:eng:io:IO.Send",
@@ -1857,7 +2450,7 @@
       "name": "IO.Send",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "doc": "docs/stdlib/eng/io.md#send",
       "sources": [
         "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
@@ -1885,7 +2478,16 @@
         "Writer (&mut W: std::io::Write + ?Sized)",
         "Payload (&P: AsRef<[u8]> + ?Sized)"
       ],
-      "effect": "Writes the borrowed byte view and returns std::io::Result<()>; no added LF, lock, flush or panic."
+      "effect": "Writes the borrowed byte view and returns std::io::Result<()>; no added LF, lock, flush or panic.",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Sender": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      }
     },
     {
       "id": "stdlib-export:eng:io:IO.Lined",
@@ -1893,7 +2495,7 @@
       "name": "IO.Lined",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "doc": "docs/stdlib/eng/io.md#lined",
       "sources": [
         "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
@@ -1923,7 +2525,16 @@
       "argumentRoles": [
         "Selected Sender invocation"
       ],
-      "effect": "After payload success, sends LF through the same writer; returns the first error or unit success."
+      "effect": "After payload success, sends LF through the same writer; returns the first error or unit success.",
+      "word": {
+        "partOfSpeech": "adjective",
+        "targets": [
+          {
+            "entry": "stdlib-export:eng:io:IO.Send",
+            "form": "Sender"
+          }
+        ]
+      }
     },
     {
       "id": "stdlib-export:eng:io:IO.Flush",
@@ -1931,7 +2542,7 @@
       "name": "IO.Flush",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "doc": "docs/stdlib/eng/io.md#flush",
       "sources": [
         "dictionaries.json",
         "stdlib/eng/io/dictionary.l",
@@ -1958,7 +2569,16 @@
       "argumentRoles": [
         "Writer (&mut std::io::Write)"
       ],
-      "effect": "Requests an explicit native writer flush and returns its IO Result."
+      "effect": "Requests an explicit native writer flush and returns its IO Result.",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Flusher": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      }
     },
     {
       "id": "stdlib-internal:eng:io:output",
@@ -2327,7 +2947,13 @@
         "lyger/source_action_arguments_test.go"
       ],
       "notes": "Owned typed values keyed by Text bytes; insertion/replacement and checked reads preserve complete element types and deterministic byte ordering. Distinct from a vocabulary Dictionary.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Map"
+      ]
     },
     {
       "id": "value-tag:Map",
@@ -2359,7 +2985,7 @@
       "name": "Error",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/execution.md#output-and-error",
+      "doc": "docs/spec/values.md#error",
       "sources": [
         "lyger/value_kinds.go",
         "lyger/utilities.go",
@@ -2377,7 +3003,14 @@
         "lyger/runtime_transfer_test.go"
       ],
       "notes": "Error values can be constructed, stored, captured and placed in typed containers. App Error is optional until inspected; extracting an absent Error rejects. Direct Show remains unsupported.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Error",
+        "Errors"
+      ]
     },
     {
       "id": "grammar-group:runtime-captures",
@@ -2501,6 +3134,1151 @@
         "key": "format"
       },
       "visibility": "namespace"
+    },
+    {
+      "id": "builtin:function.invoke",
+      "kind": "builtin",
+      "name": "Function.Invoke",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/reference/builtins/definitions.md#functioninvoke",
+      "sources": [
+        "builtins/eng/core.l",
+        "lyger/function_definitions.go",
+        "lyger/function_composition.go"
+      ],
+      "witnesses": [
+        "lyger/function_composition_test.go"
+      ],
+      "notes": "Selected Function invocation uses resolved native target and ordered argument atoms; callers normally use their Function invocation verb.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Invoker": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Invoke",
+        "Invokes",
+        "Invoked",
+        "Invoking",
+        "Invoker"
+      ]
+    },
+    {
+      "id": "builtin:delegate",
+      "kind": "builtin",
+      "name": "Delegate",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/reference/builtins/definitions.md#delegate",
+      "sources": [
+        "builtins/eng/core.l",
+        "lyger/source_units_topology.go"
+      ],
+      "witnesses": [
+        "lyger/recursive_classes_test.go"
+      ],
+      "notes": "Selected native entry delegation receives a compiler-resolved reference and is the sole entry tail call. Quoted Text is not a native target-reference API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Delegator": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Delegate",
+        "Delegates",
+        "Delegated",
+        "Delegating",
+        "Delegator"
+      ]
+    },
+    {
+      "id": "grammar-word:it",
+      "kind": "grammar-word",
+      "name": "It",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/names-and-scope.md#it",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "It",
+        "they"
+      ],
+      "word": {
+        "partOfSpeech": "noun"
+      }
+    },
+    {
+      "id": "grammar-word:that",
+      "kind": "grammar-word",
+      "name": "That",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/names-and-scope.md#that",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "That",
+        "Those"
+      ],
+      "word": {
+        "partOfSpeech": "noun"
+      }
+    },
+    {
+      "id": "grammar-word:this",
+      "kind": "grammar-word",
+      "name": "This",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/names-and-scope.md#this",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "Pronouns bind through source paragraph antecedents, not the last dynamically evaluated value. Separate generic-action argument rules also apply.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "This",
+        "These"
+      ],
+      "word": {
+        "partOfSpeech": "noun"
+      }
+    },
+    {
+      "id": "grammar-word:is",
+      "kind": "grammar-word",
+      "name": "Is",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#is",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "Assignment follows resolved typed-storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Is",
+        "Isnt"
+      ],
+      "word": {
+        "partOfSpeech": "verb"
+      }
+    },
+    {
+      "id": "grammar-word:have",
+      "kind": "grammar-word",
+      "name": "Have",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#have",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "The configured comparison/appropriation root is used in bounded condition forms. Operand types and Error-member restrictions are enforced by native lowering.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Have",
+        "Has",
+        "Had",
+        "Having",
+        "Haver"
+      ],
+      "word": {
+        "partOfSpeech": "verb"
+      }
+    },
+    {
+      "id": "grammar-word:equal",
+      "kind": "grammar-word",
+      "name": "Equal",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#equal",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "The configured comparison/appropriation root is used in bounded condition forms. Operand types and Error-member restrictions are enforced by native lowering.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Equal",
+        "Equals",
+        "Equaled",
+        "Equaling",
+        "Equaler"
+      ],
+      "word": {
+        "partOfSpeech": "verb"
+      }
+    },
+    {
+      "id": "grammar-word:not",
+      "kind": "grammar-word",
+      "name": "Not",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#not",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Not"
+      ],
+      "word": {
+        "partOfSpeech": "adverb"
+      }
+    },
+    {
+      "id": "grammar-word:less",
+      "kind": "grammar-word",
+      "name": "Less",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#less",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Less"
+      ],
+      "word": {
+        "partOfSpeech": "adverb"
+      }
+    },
+    {
+      "id": "grammar-word:greater",
+      "kind": "grammar-word",
+      "name": "Greater",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#greater",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Greater"
+      ],
+      "word": {
+        "partOfSpeech": "adverb"
+      }
+    },
+    {
+      "id": "grammar-word:then",
+      "kind": "grammar-word",
+      "name": "Then",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#then",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Then"
+      ],
+      "word": {
+        "partOfSpeech": "adverb"
+      }
+    },
+    {
+      "id": "grammar-word:as",
+      "kind": "grammar-word",
+      "name": "As",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#as",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "As"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:of",
+      "kind": "grammar-word",
+      "name": "Of",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#of",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Of"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:at",
+      "kind": "grammar-word",
+      "name": "At",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#at",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "At selects a Number index or Text field key; its enclosing typed read/update determines the permitted key type.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "At"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:with",
+      "kind": "grammar-word",
+      "name": "With",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#with",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "With"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:in",
+      "kind": "grammar-word",
+      "name": "In",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#in",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "In selects a runtime update destination; the following index or field key remains part of that update.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "In"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:out",
+      "kind": "grammar-word",
+      "name": "Out",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#out",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Out"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:by",
+      "kind": "grammar-word",
+      "name": "By",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#by",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "By"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:from",
+      "kind": "grammar-word",
+      "name": "From",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#from",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "From"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:to",
+      "kind": "grammar-word",
+      "name": "To",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#to",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "To"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:than",
+      "kind": "grammar-word",
+      "name": "Than",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#than",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Than"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:for",
+      "kind": "grammar-word",
+      "name": "For",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#for",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "This preposition establishes the specified grammatical relationship between source elements. Interpret its category through the configured phrase rules.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "For"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      }
+    },
+    {
+      "id": "grammar-word:any",
+      "kind": "grammar-word",
+      "name": "Any",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#any",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Any"
+      ],
+      "word": {
+        "partOfSpeech": "article"
+      }
+    },
+    {
+      "id": "grammar-word:no",
+      "kind": "grammar-word",
+      "name": "No",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#no",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "No"
+      ],
+      "word": {
+        "partOfSpeech": "article"
+      }
+    },
+    {
+      "id": "grammar-word:a",
+      "kind": "grammar-word",
+      "name": "A",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#a",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "A",
+        "An"
+      ],
+      "word": {
+        "partOfSpeech": "article"
+      }
+    },
+    {
+      "id": "grammar-word:the",
+      "kind": "grammar-word",
+      "name": "The",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/grammar.md#the",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "Articles qualify source bindings and typed argument roles. The any form in source actions is not an unrestricted Rust generic or implicit conversion.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "The"
+      ],
+      "word": {
+        "partOfSpeech": "article"
+      }
+    },
+    {
+      "id": "grammar-word:and",
+      "kind": "grammar-word",
+      "name": "And",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#and",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "And"
+      ],
+      "word": {
+        "partOfSpeech": "conjunction"
+      }
+    },
+    {
+      "id": "grammar-word:or",
+      "kind": "grammar-word",
+      "name": "Or",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#or",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Or"
+      ],
+      "word": {
+        "partOfSpeech": "conjunction"
+      }
+    },
+    {
+      "id": "grammar-word:if",
+      "kind": "grammar-word",
+      "name": "If",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#if",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "If"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation"
+      }
+    },
+    {
+      "id": "grammar-word:else",
+      "kind": "grammar-word",
+      "name": "Else",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#else",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Else"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation"
+      }
+    },
+    {
+      "id": "grammar-word:otherwise",
+      "kind": "grammar-word",
+      "name": "Otherwise",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/spec/control-flow.md#otherwise",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "These tokens participate in configured grammatical conditions/modifiers. In particular, joined conditions do not yet have a native outer instruction operator; configured presence is not a general Boolean API.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Otherwise"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation"
+      }
+    },
+    {
+      "id": "grammar-word:while",
+      "kind": "grammar-word",
+      "name": "While",
+      "role": "explanatory",
+      "support": "rejected",
+      "doc": "docs/spec/control-flow.md#while",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "notes": "While is recognized but explicitly rejected by outer lowering.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "While"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation"
+      }
+    },
+    {
+      "id": "authoring:Storage.Option",
+      "kind": "authoring-word",
+      "name": "Storage.Option",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/internals/storage.md#option",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "sources": [
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "lyger/process_inputs.go",
+        "lyger/source_functions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_documentation_test.go"
+      ],
+      "notes": "Dictionary namespace for native Option operations; not an L runtime carrier type.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Option"
+      ],
+      "word": {
+        "partOfSpeech": "noun",
+        "audience": "authoring"
+      }
+    },
+    {
+      "id": "authoring:Storage.Result",
+      "kind": "authoring-word",
+      "name": "Storage.Result",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/internals/storage.md#result",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "sources": [
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "lyger/process_inputs.go",
+        "lyger/source_functions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_documentation_test.go"
+      ],
+      "notes": "Dictionary namespace for native Result operations; native payload and error types remain explicit.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Result"
+      ],
+      "word": {
+        "partOfSpeech": "noun",
+        "audience": "authoring"
+      }
+    },
+    {
+      "id": "authoring:Storage.Option.Select",
+      "kind": "authoring-word",
+      "name": "Storage.Option.Select",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/internals/storage.md#optionselect",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "sources": [
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "lyger/process_inputs.go",
+        "lyger/source_functions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_documentation_test.go"
+      ],
+      "notes": "Evaluate the supplied Option once; choose a typed Some Process or payload-free None Process without cloning.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Select",
+        "Selects",
+        "Selected",
+        "Selecting",
+        "Selector"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Selector": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      }
+    },
+    {
+      "id": "authoring:Storage.Result.Select",
+      "kind": "authoring-word",
+      "name": "Storage.Result.Select",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/internals/storage.md#resultselect",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "sources": [
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "lyger/process_inputs.go",
+        "lyger/source_functions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_documentation_test.go"
+      ],
+      "notes": "Evaluate the supplied Result once; choose a typed Ok or Err Process within the enclosing Function.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Select",
+        "Selects",
+        "Selected",
+        "Selecting",
+        "Selector"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Selector": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      }
+    },
+    {
+      "id": "authoring:Storage.Require",
+      "kind": "authoring-word",
+      "name": "Storage.Require",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/internals/storage.md#require",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "sources": [
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "lyger/process_inputs.go",
+        "lyger/source_functions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_documentation_test.go"
+      ],
+      "notes": "Consume Option<T> and &str; preserve success payload or construct runtime failure only for None. Argument evaluation remains ordinary.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Require",
+        "Requires",
+        "Required",
+        "Requiring",
+        "Requirer"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Requirer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      }
+    },
+    {
+      "id": "authoring:Storage.Result.Expect",
+      "kind": "authoring-word",
+      "name": "Storage.Result.Expect",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/internals/storage.md#resultexpect",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "sources": [
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "lyger/process_inputs.go",
+        "lyger/source_functions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_documentation_test.go"
+      ],
+      "notes": "Consume a native Result and &str; preserve successful payload or panic using native expect formatting.",
+      "evidence": "static-inspection; existing-witness-not-run",
+      "inflections": [
+        "Expect",
+        "Expects",
+        "Expected",
+        "Expecting",
+        "Expecter"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Expecter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      }
     }
   ]
 }

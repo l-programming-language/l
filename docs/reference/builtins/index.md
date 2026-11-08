@@ -4,19 +4,7 @@ Builtins are available from the selected complete distribution without an explic
 
 ## Source-defined facilities
 
-| Word and kind | Declared forms | Contract |
-| --- | --- | --- |
-| Start — verb | Start, Starts, Started, Starting, Starter | Build any App, then Run it |
-| Execute — verb | Execute, Executes, Executed, Executing, Executor | Start any App, then Await it |
-| Process — noun | Process, Processes, Processive, Processing | Compose ordered definition expressions |
-| Function — noun | Function, Functions, Functional, Functioning | Define a callable with typed inputs, outputs and body |
-| Function.Invoke — verb | Invoke, Invokes, Invoked, Invoking, Invoker | Apply a selected callable to ordered argument references |
-| Function.Return — verb | Return, Returns, Returned, Returning, Returner | Complete the current Function with its checked results |
-| Delegate — verb | Delegate, Delegates, Delegated, Delegating, Delegator | Call the selected native target |
-| Retain — verb | Retain, Retains, Retained, Retaining, Retainer | Borrow an Arc and return another handle to the same allocation |
-| Objective — adjective | Objective | Group a Function's source definition |
-| Main — adjective | Main | Construct the Service/Object/Function entry structure |
-| Basic — adjective | Basic | Construct an App with a Main Service using a Process |
+<!-- word-index:builtins -->
 
 The [construction and callable reference](definitions.md) explains their inputs and limits. Actor forms such as Invoker and Retainer construct uses of their verb; they are not separate primitives. Aliases preserve canonical identity and adjectives retain their declared targets. See [word forms](../../spec/definitions.md#inflection-declarations) for the declaration notation.
 
@@ -42,6 +30,14 @@ Create, Define, Describe, and Use establish declarations, typed/native definitio
 ## Runtime members
 
 Output and Error are noun members: Output contains finalized raw stdout as Text; Error identifies the selected process operation/invocation failure. Possessive access keeps the canonical target. Input exists in vocabulary/signature metadata but runtime process argument/input transport is not provided by the current App contract.
+
+### Input
+
+<!-- word:builtin:input -->
+
+Name an ordered Function parameter or a typed binding supplied to a structured Process.
+
+**Usage and example.** `with Inputs of "Value" as Text` declares Identity's parameter in the [complete Function example](../../examples/composed-functions.l). A selector's Process Inputs bind its selected payload inside that body. `No Inputs` explicitly declares no parameters. These forms do not provide stdin or argument transport to an App; [execution limits](../../spec/execution.md#targets-and-process-ownership) remain unchanged.
 
 ## Availability and errors
 

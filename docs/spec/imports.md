@@ -8,6 +8,12 @@ Released compilers load the embedded English `builtins/eng/prelude.l`. It includ
 
 ## Indexed dictionaries
 
+<!-- word:builtin:use -->
+
+Associate an existing canonical declaration with an alias, or load a supported explicit source or indexed dictionary dependency.
+
+**Usage and example.** The member import below selects IO.Print and names its local alias. `Use Worker as "Job"` in the [pronoun example](../../testdata/phase1/language/lang-06.l) instead aliases an existing App; neither form copies its meaning.
+
 Bare dictionary names resolve through the selected `dictionaries.json`. The current format is version 1, with language keys containing dictionary keys. Each entry names a repository/resource-relative `.l` entry and the registered Dictionary it exports.
 
 For example:

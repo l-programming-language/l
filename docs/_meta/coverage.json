@@ -4807,7 +4807,8 @@
       "id": "vocabulary:nouns.it",
       "name": "it",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-it",
-      "semanticDoc": "docs/spec/names-and-scope.md#pronouns",
+      "semanticDoc": "docs/spec/names-and-scope.md#it",
+      "wordRef": "grammar-word:it",
       "classification": 5,
       "evidenceSet": 1,
       "note": 113
@@ -4816,7 +4817,8 @@
       "id": "vocabulary:nouns.that",
       "name": "that",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-that",
-      "semanticDoc": "docs/spec/names-and-scope.md#pronouns",
+      "semanticDoc": "docs/spec/names-and-scope.md#that",
+      "wordRef": "grammar-word:that",
       "classification": 5,
       "evidenceSet": 1,
       "note": 113
@@ -4825,7 +4827,8 @@
       "id": "vocabulary:nouns.this",
       "name": "this",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-this",
-      "semanticDoc": "docs/spec/names-and-scope.md#pronouns",
+      "semanticDoc": "docs/spec/names-and-scope.md#this",
+      "wordRef": "grammar-word:this",
       "classification": 5,
       "evidenceSet": 1,
       "note": 113
@@ -4834,7 +4837,8 @@
       "id": "vocabulary:nouns.input",
       "name": "input",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-input",
-      "semanticDoc": "docs/reference/builtins/index.md#runtime-members",
+      "semanticDoc": "docs/reference/builtins/index.md#input",
+      "wordRef": "builtin:input",
       "classification": 5,
       "evidenceSet": 1,
       "note": 114
@@ -4843,7 +4847,8 @@
       "id": "vocabulary:nouns.output",
       "name": "output",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-output",
-      "semanticDoc": "docs/spec/execution.md#output-and-error",
+      "semanticDoc": "docs/reference/builtins/lifecycle.md#output",
+      "wordRef": "builtin:output",
       "classification": 5,
       "evidenceSet": 1,
       "note": 115
@@ -4852,7 +4857,8 @@
       "id": "vocabulary:nouns.error",
       "name": "error",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-error",
-      "semanticDoc": "docs/spec/execution.md#output-and-error",
+      "semanticDoc": "docs/reference/builtins/lifecycle.md#error",
+      "wordRef": "builtin:error",
       "classification": 5,
       "evidenceSet": 1,
       "note": 115
@@ -4862,6 +4868,7 @@
       "name": "list",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-list",
       "semanticDoc": "docs/spec/collections-and-categories.md#lists",
+      "wordRef": "type:list",
       "classification": 5,
       "evidenceSet": 1,
       "note": 7
@@ -4871,6 +4878,7 @@
       "name": "dictionary",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-dictionary",
       "semanticDoc": "docs/spec/collections-and-categories.md#dictionaries",
+      "wordRef": "type:dictionary",
       "classification": 5,
       "evidenceSet": 1,
       "note": 116
@@ -4879,7 +4887,8 @@
       "id": "vocabulary:nouns.null",
       "name": "null",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-null",
-      "semanticDoc": "docs/spec/values.md#null-and-internal-states",
+      "semanticDoc": "docs/spec/values.md#null",
+      "wordRef": "type:null",
       "classification": 6,
       "evidenceSet": 1,
       "note": 5
@@ -4889,6 +4898,7 @@
       "name": "thing",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-thing",
       "semanticDoc": "docs/spec/values.md#thing",
+      "wordRef": "type:thing",
       "classification": 5,
       "evidenceSet": 1,
       "note": 117
@@ -4898,6 +4908,7 @@
       "name": "text",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-text",
       "semanticDoc": "docs/spec/values.md#text",
+      "wordRef": "type:text",
       "classification": 5,
       "evidenceSet": 1,
       "note": 118
@@ -4907,6 +4918,7 @@
       "name": "number",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-number",
       "semanticDoc": "docs/spec/values.md#number",
+      "wordRef": "type:number",
       "classification": 5,
       "evidenceSet": 1,
       "note": 119
@@ -4915,7 +4927,8 @@
       "id": "vocabulary:nouns.byte",
       "name": "byte",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-byte",
-      "semanticDoc": "docs/spec/values.md#byte-and-bytes",
+      "semanticDoc": "docs/spec/values.md#byte",
+      "wordRef": "type:byte",
       "classification": 5,
       "evidenceSet": 1,
       "note": 120
@@ -4925,6 +4938,7 @@
       "name": "truth",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-truth",
       "semanticDoc": "docs/spec/values.md#truth",
+      "wordRef": "type:truth",
       "classification": 5,
       "evidenceSet": 1,
       "note": 121
@@ -4934,6 +4948,7 @@
       "name": "pointer",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-pointer",
       "semanticDoc": "docs/spec/values.md#pointer",
+      "wordRef": "type:pointer",
       "classification": 6,
       "evidenceSet": 1,
       "note": 122
@@ -4943,25 +4958,25 @@
       "name": "op",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-op",
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "classification": 5,
+      "classification": 7,
       "evidenceSet": 1,
-      "note": 116
+      "note": 123
     },
     {
       "id": "vocabulary:nouns.prop",
       "name": "prop",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-prop",
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "classification": 5,
+      "classification": 7,
       "evidenceSet": 1,
-      "note": 116
+      "note": 123
     },
     {
       "id": "vocabulary:nouns.func",
       "name": "func",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-func",
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "classification": 5,
+      "classification": 7,
       "evidenceSet": 1,
       "note": 123
     },
@@ -4969,7 +4984,8 @@
       "id": "vocabulary:nouns.definition",
       "name": "definition",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-definition",
-      "semanticDoc": "docs/spec/applicational-types.md#attributes-and-definitions",
+      "semanticDoc": "docs/spec/applicational-types.md#definition",
+      "wordRef": "type:definition",
       "classification": 5,
       "evidenceSet": 1,
       "note": 116
@@ -4978,7 +4994,8 @@
       "id": "vocabulary:nouns.attribute",
       "name": "attribute",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-attribute",
-      "semanticDoc": "docs/spec/applicational-types.md#attributes-and-definitions",
+      "semanticDoc": "docs/spec/applicational-types.md#attribute",
+      "wordRef": "type:attribute",
       "classification": 5,
       "evidenceSet": 1,
       "note": 116
@@ -4987,7 +5004,8 @@
       "id": "vocabulary:nouns.object",
       "name": "object",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-object",
-      "semanticDoc": "docs/spec/applicational-types.md#classes-and-objects",
+      "semanticDoc": "docs/spec/applicational-types.md#object",
+      "wordRef": "type:object",
       "classification": 5,
       "evidenceSet": 1,
       "note": 116
@@ -4996,7 +5014,8 @@
       "id": "vocabulary:nouns.class",
       "name": "class",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-class",
-      "semanticDoc": "docs/spec/applicational-types.md#classes-and-objects",
+      "semanticDoc": "docs/spec/applicational-types.md#class",
+      "wordRef": "type:class",
       "classification": 5,
       "evidenceSet": 1,
       "note": 116
@@ -5006,6 +5025,7 @@
       "name": "service",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-service",
       "semanticDoc": "docs/spec/applicational-types.md#services",
+      "wordRef": "type:service",
       "classification": 5,
       "evidenceSet": 1,
       "note": 116
@@ -5015,6 +5035,7 @@
       "name": "app",
       "doc": "docs/_generated/vocabulary.md#vocabulary-nouns-app",
       "semanticDoc": "docs/spec/applicational-types.md#apps",
+      "wordRef": "type:app",
       "classification": 5,
       "evidenceSet": 1,
       "note": 116
@@ -5023,7 +5044,8 @@
       "id": "vocabulary:verbs.passive",
       "name": "passive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-passive",
-      "semanticDoc": "docs/spec/control-flow.md#assignment",
+      "semanticDoc": "docs/spec/control-flow.md#is",
+      "wordRef": "grammar-word:is",
       "classification": 5,
       "evidenceSet": 1,
       "note": 124
@@ -5032,7 +5054,8 @@
       "id": "vocabulary:verbs.associative",
       "name": "associative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-associative",
-      "semanticDoc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
+      "semanticDoc": "docs/spec/imports.md#indexed-dictionaries",
+      "wordRef": "builtin:use",
       "classification": 5,
       "evidenceSet": 1,
       "note": 125
@@ -5041,7 +5064,8 @@
       "id": "vocabulary:verbs.declarative",
       "name": "declarative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-declarative",
-      "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
+      "semanticDoc": "docs/spec/definitions.md#create",
+      "wordRef": "builtin:create",
       "classification": 5,
       "evidenceSet": 1,
       "note": 126
@@ -5050,7 +5074,8 @@
       "id": "vocabulary:verbs.definitive",
       "name": "definitive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-definitive",
-      "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
+      "semanticDoc": "docs/spec/definitions.md#define",
+      "wordRef": "builtin:define",
       "classification": 5,
       "evidenceSet": 1,
       "note": 127
@@ -5059,7 +5084,8 @@
       "id": "vocabulary:verbs.descriptive",
       "name": "descriptive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-descriptive",
-      "semanticDoc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "semanticDoc": "docs/spec/definitions.md#describe",
+      "wordRef": "builtin:describe",
       "classification": 5,
       "evidenceSet": 1,
       "note": 128
@@ -5068,7 +5094,8 @@
       "id": "vocabulary:verbs.expansive",
       "name": "expansive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-expansive",
-      "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
+      "semanticDoc": "docs/spec/collections-and-categories.md#put",
+      "wordRef": "builtin:put",
       "classification": 5,
       "evidenceSet": 1,
       "note": 129
@@ -5077,7 +5104,8 @@
       "id": "vocabulary:verbs.locative",
       "name": "locative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-locative",
-      "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
+      "semanticDoc": "docs/spec/collections-and-categories.md#place",
+      "wordRef": "builtin:place",
       "classification": 5,
       "evidenceSet": 1,
       "note": 130
@@ -5086,7 +5114,8 @@
       "id": "vocabulary:verbs.receptive",
       "name": "receptive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-receptive",
-      "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
+      "semanticDoc": "docs/spec/grammar.md#get",
+      "wordRef": "builtin:get",
       "classification": 5,
       "evidenceSet": 1,
       "note": 131
@@ -5095,7 +5124,8 @@
       "id": "vocabulary:verbs.reductive",
       "name": "reductive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-reductive",
-      "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
+      "semanticDoc": "docs/spec/grammar.md#take",
+      "wordRef": "builtin:take",
       "classification": 5,
       "evidenceSet": 1,
       "note": 131
@@ -5104,7 +5134,8 @@
       "id": "vocabulary:verbs.generative",
       "name": "generative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-generative",
-      "semanticDoc": "docs/spec/execution.md#build-run-stop-and-await",
+      "semanticDoc": "docs/reference/builtins/lifecycle.md#build",
+      "wordRef": "builtin:build",
       "classification": 5,
       "evidenceSet": 1,
       "note": 132
@@ -5113,7 +5144,8 @@
       "id": "vocabulary:verbs.executive",
       "name": "executive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-executive",
-      "semanticDoc": "docs/spec/execution.md#build-run-stop-and-await",
+      "semanticDoc": "docs/reference/builtins/lifecycle.md#run",
+      "wordRef": "builtin:run",
       "classification": 5,
       "evidenceSet": 1,
       "note": 133
@@ -5122,7 +5154,8 @@
       "id": "vocabulary:verbs.suspensive",
       "name": "suspensive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-suspensive",
-      "semanticDoc": "docs/spec/execution.md#continuations-and-activation",
+      "semanticDoc": "docs/reference/builtins/lifecycle.md#await",
+      "wordRef": "builtin:await",
       "classification": 5,
       "evidenceSet": 1,
       "note": 134
@@ -5131,7 +5164,8 @@
       "id": "vocabulary:verbs.interruptive",
       "name": "interruptive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-interruptive",
-      "semanticDoc": "docs/spec/execution.md#build-run-stop-and-await",
+      "semanticDoc": "docs/reference/builtins/lifecycle.md#stop",
+      "wordRef": "builtin:stop",
       "classification": 5,
       "evidenceSet": 1,
       "note": 135
@@ -5140,7 +5174,8 @@
       "id": "vocabulary:verbs.inflective",
       "name": "inflective",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-inflective",
-      "semanticDoc": "docs/spec/imports.md#indexed-dictionaries",
+      "semanticDoc": "docs/spec/grammar.md#import",
+      "wordRef": "builtin:import",
       "classification": 5,
       "evidenceSet": 1,
       "note": 136
@@ -5149,7 +5184,8 @@
       "id": "vocabulary:verbs.deflective",
       "name": "deflective",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-deflective",
-      "semanticDoc": "docs/spec/imports.md#indexed-dictionaries",
+      "semanticDoc": "docs/spec/grammar.md#export",
+      "wordRef": "builtin:export",
       "classification": 5,
       "evidenceSet": 1,
       "note": 136
@@ -5158,7 +5194,8 @@
       "id": "vocabulary:verbs.observative",
       "name": "observative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-observative",
-      "semanticDoc": "docs/spec/control-flow.md#show-and-output",
+      "semanticDoc": "docs/reference/builtins/lifecycle.md#show",
+      "wordRef": "builtin:show",
       "classification": 5,
       "evidenceSet": 1,
       "note": 137
@@ -5167,7 +5204,8 @@
       "id": "vocabulary:verbs.terminative",
       "name": "terminative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-terminative",
-      "semanticDoc": "docs/spec/control-flow.md#exit-and-return",
+      "semanticDoc": "docs/reference/builtins/lifecycle.md#exit",
+      "wordRef": "builtin:exit",
       "classification": 5,
       "evidenceSet": 1,
       "note": 138
@@ -5176,7 +5214,8 @@
       "id": "vocabulary:verbs.appropriative",
       "name": "appropriative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-appropriative",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#have",
+      "wordRef": "grammar-word:have",
       "classification": 5,
       "evidenceSet": 1,
       "note": 139
@@ -5185,7 +5224,8 @@
       "id": "vocabulary:verbs.comparative",
       "name": "comparative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-verbs-comparative",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#equal",
+      "wordRef": "grammar-word:equal",
       "classification": 5,
       "evidenceSet": 1,
       "note": 139
@@ -5194,7 +5234,8 @@
       "id": "vocabulary:adjectives.visibility.public",
       "name": "visibility.public",
       "doc": "docs/_generated/vocabulary.md#vocabulary-adjectives-visibility.public",
-      "semanticDoc": "docs/spec/names-and-scope.md#paragraph-scope",
+      "semanticDoc": "docs/spec/names-and-scope.md#public",
+      "wordRef": "builtin:public",
       "classification": 5,
       "evidenceSet": 1,
       "note": 140
@@ -5203,7 +5244,8 @@
       "id": "vocabulary:adjectives.initialization",
       "name": "initialization",
       "doc": "docs/_generated/vocabulary.md#vocabulary-adjectives-initialization",
-      "semanticDoc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "semanticDoc": "docs/spec/definitions.md#new",
+      "wordRef": "builtin:new",
       "classification": 5,
       "evidenceSet": 1,
       "note": 141
@@ -5212,7 +5254,8 @@
       "id": "vocabulary:adjectives.abstraction",
       "name": "abstraction",
       "doc": "docs/_generated/vocabulary.md#vocabulary-adjectives-abstraction",
-      "semanticDoc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "semanticDoc": "docs/spec/definitions.md#generic",
+      "wordRef": "builtin:generic",
       "classification": 5,
       "evidenceSet": 1,
       "note": 141
@@ -5221,7 +5264,8 @@
       "id": "vocabulary:adverbs.visibility.public",
       "name": "visibility.public",
       "doc": "docs/_generated/vocabulary.md#vocabulary-adverbs-visibility.public",
-      "semanticDoc": "docs/spec/names-and-scope.md#paragraph-scope",
+      "semanticDoc": "docs/spec/names-and-scope.md#publicly",
+      "wordRef": "builtin:publicly",
       "classification": 5,
       "evidenceSet": 1,
       "note": 140
@@ -5230,7 +5274,8 @@
       "id": "vocabulary:adverbs.nullification",
       "name": "nullification",
       "doc": "docs/_generated/vocabulary.md#vocabulary-adverbs-nullification",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#not",
+      "wordRef": "grammar-word:not",
       "classification": 5,
       "evidenceSet": 1,
       "note": 142
@@ -5239,7 +5284,8 @@
       "id": "vocabulary:adverbs.comparison.subtraction",
       "name": "comparison.subtraction",
       "doc": "docs/_generated/vocabulary.md#vocabulary-adverbs-comparison.subtraction",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#less",
+      "wordRef": "grammar-word:less",
       "classification": 5,
       "evidenceSet": 1,
       "note": 142
@@ -5248,7 +5294,8 @@
       "id": "vocabulary:adverbs.comparison.multiplication",
       "name": "comparison.multiplication",
       "doc": "docs/_generated/vocabulary.md#vocabulary-adverbs-comparison.multiplication",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#greater",
+      "wordRef": "grammar-word:greater",
       "classification": 5,
       "evidenceSet": 1,
       "note": 142
@@ -5257,7 +5304,8 @@
       "id": "vocabulary:adverbs.progression",
       "name": "progression",
       "doc": "docs/_generated/vocabulary.md#vocabulary-adverbs-progression",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#then",
+      "wordRef": "grammar-word:then",
       "classification": 5,
       "evidenceSet": 1,
       "note": 142
@@ -5266,7 +5314,8 @@
       "id": "vocabulary:prepositions.definement.declarative",
       "name": "definement.declarative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-definement.declarative",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#as",
+      "wordRef": "grammar-word:as",
       "classification": 5,
       "evidenceSet": 1,
       "note": 143
@@ -5275,7 +5324,8 @@
       "id": "vocabulary:prepositions.definement.definitive",
       "name": "definement.definitive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-definement.definitive",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#of",
+      "wordRef": "grammar-word:of",
       "classification": 5,
       "evidenceSet": 1,
       "note": 143
@@ -5284,7 +5334,8 @@
       "id": "vocabulary:prepositions.definement.locative",
       "name": "definement.locative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-definement.locative",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#at",
+      "wordRef": "grammar-word:at",
       "classification": 5,
       "evidenceSet": 1,
       "note": 144
@@ -5293,7 +5344,8 @@
       "id": "vocabulary:prepositions.consignment.associative",
       "name": "consignment.associative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-consignment.associative",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#with",
+      "wordRef": "grammar-word:with",
       "classification": 5,
       "evidenceSet": 1,
       "note": 143
@@ -5302,7 +5354,8 @@
       "id": "vocabulary:prepositions.consignment.inflective",
       "name": "consignment.inflective",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-consignment.inflective",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#in",
+      "wordRef": "grammar-word:in",
       "classification": 5,
       "evidenceSet": 1,
       "note": 145
@@ -5311,7 +5364,8 @@
       "id": "vocabulary:prepositions.consignment.deflective",
       "name": "consignment.deflective",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-consignment.deflective",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#out",
+      "wordRef": "grammar-word:out",
       "classification": 5,
       "evidenceSet": 1,
       "note": 143
@@ -5320,7 +5374,8 @@
       "id": "vocabulary:prepositions.consignment.indicative",
       "name": "consignment.indicative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-consignment.indicative",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#by",
+      "wordRef": "grammar-word:by",
       "classification": 5,
       "evidenceSet": 1,
       "note": 143
@@ -5329,7 +5384,8 @@
       "id": "vocabulary:prepositions.conjoinment.objective",
       "name": "conjoinment.objective",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-conjoinment.objective",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#from",
+      "wordRef": "grammar-word:from",
       "classification": 5,
       "evidenceSet": 1,
       "note": 143
@@ -5338,7 +5394,8 @@
       "id": "vocabulary:prepositions.conjoinment.subjective",
       "name": "conjoinment.subjective",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-conjoinment.subjective",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#to",
+      "wordRef": "grammar-word:to",
       "classification": 5,
       "evidenceSet": 1,
       "note": 143
@@ -5347,7 +5404,8 @@
       "id": "vocabulary:prepositions.conjoinment.comparative",
       "name": "conjoinment.comparative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-conjoinment.comparative",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#than",
+      "wordRef": "grammar-word:than",
       "classification": 5,
       "evidenceSet": 1,
       "note": 143
@@ -5356,7 +5414,8 @@
       "id": "vocabulary:prepositions.conjoinment.directive",
       "name": "conjoinment.directive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-prepositions-conjoinment.directive",
-      "semanticDoc": "docs/spec/grammar.md#phrases",
+      "semanticDoc": "docs/spec/grammar.md#for",
+      "wordRef": "grammar-word:for",
       "classification": 5,
       "evidenceSet": 1,
       "note": 143
@@ -5365,7 +5424,8 @@
       "id": "vocabulary:articles.variable",
       "name": "variable",
       "doc": "docs/_generated/vocabulary.md#vocabulary-articles-variable",
-      "semanticDoc": "docs/spec/definitions.md#typed-slots",
+      "semanticDoc": "docs/spec/grammar.md#any",
+      "wordRef": "grammar-word:any",
       "classification": 5,
       "evidenceSet": 1,
       "note": 146
@@ -5374,7 +5434,8 @@
       "id": "vocabulary:articles.none",
       "name": "none",
       "doc": "docs/_generated/vocabulary.md#vocabulary-articles-none",
-      "semanticDoc": "docs/spec/definitions.md#typed-slots",
+      "semanticDoc": "docs/spec/grammar.md#no",
+      "wordRef": "grammar-word:no",
       "classification": 5,
       "evidenceSet": 1,
       "note": 146
@@ -5383,7 +5444,8 @@
       "id": "vocabulary:articles.indefinite",
       "name": "indefinite",
       "doc": "docs/_generated/vocabulary.md#vocabulary-articles-indefinite",
-      "semanticDoc": "docs/spec/definitions.md#typed-slots",
+      "semanticDoc": "docs/spec/grammar.md#a",
+      "wordRef": "grammar-word:a",
       "classification": 5,
       "evidenceSet": 1,
       "note": 146
@@ -5392,7 +5454,8 @@
       "id": "vocabulary:articles.definite",
       "name": "definite",
       "doc": "docs/_generated/vocabulary.md#vocabulary-articles-definite",
-      "semanticDoc": "docs/spec/definitions.md#typed-slots",
+      "semanticDoc": "docs/spec/grammar.md#the",
+      "wordRef": "grammar-word:the",
       "classification": 5,
       "evidenceSet": 1,
       "note": 146
@@ -5401,7 +5464,8 @@
       "id": "vocabulary:conjunctions.mutual",
       "name": "mutual",
       "doc": "docs/_generated/vocabulary.md#vocabulary-conjunctions-mutual",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#and",
+      "wordRef": "grammar-word:and",
       "classification": 5,
       "evidenceSet": 1,
       "note": 142
@@ -5410,7 +5474,8 @@
       "id": "vocabulary:conjunctions.exclusive",
       "name": "exclusive",
       "doc": "docs/_generated/vocabulary.md#vocabulary-conjunctions-exclusive",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#or",
+      "wordRef": "grammar-word:or",
       "classification": 5,
       "evidenceSet": 1,
       "note": 142
@@ -5419,7 +5484,8 @@
       "id": "vocabulary:evaluations.conditional",
       "name": "conditional",
       "doc": "docs/_generated/vocabulary.md#vocabulary-evaluations-conditional",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#if",
+      "wordRef": "grammar-word:if",
       "classification": 5,
       "evidenceSet": 1,
       "note": 142
@@ -5428,7 +5494,8 @@
       "id": "vocabulary:evaluations.exceptional",
       "name": "exceptional",
       "doc": "docs/_generated/vocabulary.md#vocabulary-evaluations-exceptional",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#else",
+      "wordRef": "grammar-word:else",
       "classification": 5,
       "evidenceSet": 1,
       "note": 142
@@ -5437,7 +5504,8 @@
       "id": "vocabulary:evaluations.alternative",
       "name": "alternative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-evaluations-alternative",
-      "semanticDoc": "docs/spec/control-flow.md#comparisons",
+      "semanticDoc": "docs/spec/control-flow.md#otherwise",
+      "wordRef": "grammar-word:otherwise",
       "classification": 5,
       "evidenceSet": 1,
       "note": 142
@@ -5446,8 +5514,9 @@
       "id": "vocabulary:evaluations.iterative",
       "name": "iterative",
       "doc": "docs/_generated/vocabulary.md#vocabulary-evaluations-iterative",
-      "semanticDoc": "docs/spec/control-flow.md#iteration-and-collection-operations",
-      "classification": 7,
+      "semanticDoc": "docs/spec/control-flow.md#while",
+      "wordRef": "grammar-word:while",
+      "classification": 8,
       "evidenceSet": 1,
       "note": 147
     },
@@ -5455,7 +5524,7 @@
       "id": "cli:build",
       "name": "build",
       "doc": "docs/cli/build.md#command-syntax",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 2,
       "note": 148
     },
@@ -5463,7 +5532,7 @@
       "id": "cli:--assets",
       "name": "--assets",
       "doc": "docs/development-harness.md#compiler-defaults",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 2,
       "note": 149
     },
@@ -5471,7 +5540,7 @@
       "id": "cli:--output-dir",
       "name": "--output-dir",
       "doc": "docs/cli/build.md#options",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 2,
       "note": 150
     },
@@ -5479,7 +5548,7 @@
       "id": "cli:--language",
       "name": "--language",
       "doc": "docs/development-harness.md#compiler-defaults",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 2,
       "note": 151
     },
@@ -5487,7 +5556,7 @@
       "id": "cli:--version",
       "name": "--version",
       "doc": "docs/cli/build.md#version",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 3,
       "note": 152
     },
@@ -5495,7 +5564,7 @@
       "id": "cli:--help",
       "name": "--help",
       "doc": "docs/cli/build.md#help",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 2,
       "note": 153
     },
@@ -5503,7 +5572,7 @@
       "id": "cli:-h",
       "name": "-h",
       "doc": "docs/cli/build.md#help",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 2,
       "note": 154
     },
@@ -5511,7 +5580,7 @@
       "id": "cli:-help",
       "name": "-help",
       "doc": "docs/cli/build.md#help",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 2,
       "note": 154
     },
@@ -5519,7 +5588,7 @@
       "id": "cli:--",
       "name": "--",
       "doc": "docs/cli/build.md#command-syntax",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 2,
       "note": 155
     },
@@ -5527,7 +5596,7 @@
       "id": "cli:-os",
       "name": "-os",
       "doc": "docs/cli/build.md#target-os",
-      "classification": 9,
+      "classification": 10,
       "evidenceSet": 2,
       "note": 156
     },
@@ -5535,7 +5604,7 @@
       "id": "cli:contracts",
       "name": "contracts",
       "doc": "docs/contracts.md#commands",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 157
     },
@@ -5543,7 +5612,7 @@
       "id": "cli:contracts inspect",
       "name": "contracts inspect",
       "doc": "docs/contracts.md#inspect",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 158
     },
@@ -5551,7 +5620,7 @@
       "id": "cli:contracts check",
       "name": "contracts check",
       "doc": "docs/contracts.md#check",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 5,
       "note": 159
     },
@@ -5559,7 +5628,7 @@
       "id": "cli:contracts explain",
       "name": "contracts explain",
       "doc": "docs/contracts.md#explain",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 160
     },
@@ -5567,7 +5636,7 @@
       "id": "cli:contracts verify-dictionary",
       "name": "contracts verify-dictionary",
       "doc": "docs/contracts.md#verify-a-dictionary",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 161
     },
@@ -5575,7 +5644,7 @@
       "id": "cli:contracts --format",
       "name": "contracts --format",
       "doc": "docs/contracts.md#options-and-reports",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 162
     },
@@ -5583,7 +5652,7 @@
       "id": "cli:contracts --output",
       "name": "contracts --output",
       "doc": "docs/contracts.md#options-and-reports",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 163
     },
@@ -5591,7 +5660,7 @@
       "id": "cli:contracts --report",
       "name": "contracts --report",
       "doc": "docs/contracts.md#options-and-reports",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 164
     },
@@ -5599,7 +5668,7 @@
       "id": "cli:contracts --assets",
       "name": "contracts --assets",
       "doc": "docs/contracts.md#options-and-reports",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 165
     },
@@ -5607,7 +5676,7 @@
       "id": "cli:contracts --language",
       "name": "contracts --language",
       "doc": "docs/contracts.md#options-and-reports",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 166
     },
@@ -5615,7 +5684,7 @@
       "id": "cli:contracts --manifest",
       "name": "contracts --manifest",
       "doc": "docs/contracts.md#options-and-reports",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 167
     },
@@ -5623,7 +5692,7 @@
       "id": "cli:contracts --trust-policy",
       "name": "contracts --trust-policy",
       "doc": "docs/contracts.md#options-and-reports",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 168
     },
@@ -5631,7 +5700,7 @@
       "id": "cli:contracts --profile",
       "name": "contracts --profile",
       "doc": "docs/contracts.md#check",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 6,
       "note": 169
     },
@@ -5639,7 +5708,7 @@
       "id": "cli:contracts --binding",
       "name": "contracts --binding",
       "doc": "docs/contracts.md#explain",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 170
     },
@@ -5647,7 +5716,7 @@
       "id": "cli:contracts --adjective",
       "name": "contracts --adjective",
       "doc": "docs/contracts.md#focused-symbolic-verification",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 171
     },
@@ -5655,7 +5724,7 @@
       "id": "cli:contracts --assurance",
       "name": "contracts --assurance",
       "doc": "docs/contracts.md#focused-symbolic-verification",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 172
     },
@@ -5663,7 +5732,7 @@
       "id": "cli:contracts --help",
       "name": "contracts --help",
       "doc": "docs/contracts.md#commands",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 173
     },
@@ -5671,7 +5740,7 @@
       "id": "cli:contracts --",
       "name": "contracts --",
       "doc": "docs/contracts.md#commands",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 4,
       "note": 174
     },
@@ -5679,7 +5748,7 @@
       "id": "cli:--native-evidence-output",
       "name": "--native-evidence-output",
       "doc": "docs/cli/build.md#options",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 7,
       "note": 175
     },
@@ -5687,7 +5756,7 @@
       "id": "cli:contracts evidence capture",
       "name": "contracts evidence capture",
       "doc": "docs/contracts.md#capture-native-environment-evidence",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 8,
       "note": 176
     },
@@ -5695,7 +5764,7 @@
       "id": "cli:contracts --native-environment",
       "name": "contracts --native-environment",
       "doc": "docs/contracts.md#options-and-reports",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 9,
       "note": 177
     },
@@ -5703,7 +5772,7 @@
       "id": "cli:contracts --request-file",
       "name": "contracts --request-file",
       "doc": "docs/contracts.md#scoped-checks-and-failure-footprints",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 10,
       "note": 178
     },
@@ -5711,7 +5780,7 @@
       "id": "cli:contracts --target",
       "name": "contracts --target",
       "doc": "docs/contracts.md#capture-native-environment-evidence",
-      "classification": 8,
+      "classification": 9,
       "evidenceSet": 8,
       "note": 179
     },
@@ -5720,7 +5789,7 @@
       "name": "future-composed",
       "doc": "docs/_generated/lucid.md#lucid-future-composed",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 11
     },
     {
@@ -5728,7 +5797,7 @@
       "name": "future-move",
       "doc": "docs/_generated/lucid.md#lucid-future-move",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 12
     },
     {
@@ -5736,7 +5805,7 @@
       "name": "future-infer",
       "doc": "docs/_generated/lucid.md#lucid-future-infer",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 13
     },
     {
@@ -5744,7 +5813,7 @@
       "name": "future-borrow-escape",
       "doc": "docs/_generated/lucid.md#lucid-future-borrow-escape",
       "expectedRustDiagnostic": "E0373",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 14
     },
     {
@@ -5752,7 +5821,7 @@
       "name": "future-move-reuse",
       "doc": "docs/_generated/lucid.md#lucid-future-move-reuse",
       "expectedRustDiagnostic": "E0382",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 15
     },
     {
@@ -5760,7 +5829,7 @@
       "name": "generics-functions",
       "doc": "docs/_generated/lucid.md#lucid-generics-functions",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 16
     },
     {
@@ -5768,7 +5837,7 @@
       "name": "generics-records",
       "doc": "docs/_generated/lucid.md#lucid-generics-records",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 17
     },
     {
@@ -5776,7 +5845,7 @@
       "name": "generics-traits",
       "doc": "docs/_generated/lucid.md#lucid-generics-traits",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 18
     },
     {
@@ -5784,7 +5853,7 @@
       "name": "generics-calls",
       "doc": "docs/_generated/lucid.md#lucid-generics-calls",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 19
     },
     {
@@ -5792,7 +5861,7 @@
       "name": "generics-late-bound-lifetime",
       "doc": "docs/_generated/lucid.md#lucid-generics-late-bound-lifetime",
       "expectedRustDiagnostic": "E0794",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 20
     },
     {
@@ -5800,7 +5869,7 @@
       "name": "generics-unused-parameters",
       "doc": "docs/_generated/lucid.md#lucid-generics-unused-parameters",
       "expectedRustDiagnostic": "E0392",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 21
     },
     {
@@ -5808,7 +5877,7 @@
       "name": "generics-argument-arity",
       "doc": "docs/_generated/lucid.md#lucid-generics-argument-arity",
       "expectedRustDiagnostic": "E0107",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 22
     },
     {
@@ -5816,7 +5885,7 @@
       "name": "keyed-conditionals",
       "doc": "docs/_generated/lucid.md#lucid-keyed-conditionals",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 23
     },
     {
@@ -5824,7 +5893,7 @@
       "name": "keyed-nonexhaustive",
       "doc": "docs/_generated/lucid.md#lucid-keyed-nonexhaustive",
       "expectedRustDiagnostic": "E0004",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 24
     },
     {
@@ -5832,7 +5901,7 @@
       "name": "keyed-call-pattern",
       "doc": "docs/_generated/lucid.md#lucid-keyed-call-pattern",
       "expectedRustDiagnostic": "E0164",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 25
     },
     {
@@ -5840,7 +5909,7 @@
       "name": "empty-instantiations",
       "doc": "docs/_generated/lucid.md#lucid-empty-instantiations",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 26
     },
     {
@@ -5848,7 +5917,7 @@
       "name": "trait-signature-outputs",
       "doc": "docs/_generated/lucid.md#lucid-trait-signature-outputs",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 27
     },
     {
@@ -5856,7 +5925,7 @@
       "name": "callable-output-void",
       "doc": "docs/_generated/lucid.md#lucid-callable-output-void",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 28
     },
     {
@@ -5864,7 +5933,7 @@
       "name": "callable-typed-flat",
       "doc": "docs/_generated/lucid.md#lucid-callable-typed-flat",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 29
     },
     {
@@ -5872,7 +5941,7 @@
       "name": "callable-typed-record",
       "doc": "docs/_generated/lucid.md#lucid-callable-typed-record",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 30
     },
     {
@@ -5880,7 +5949,7 @@
       "name": "callable-outputs",
       "doc": "docs/_generated/lucid.md#lucid-callable-outputs",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 31
     },
     {
@@ -5888,7 +5957,7 @@
       "name": "closure-inline",
       "doc": "docs/_generated/lucid.md#lucid-closure-inline",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 32
     },
     {
@@ -5896,7 +5965,7 @@
       "name": "closure-stored-capture",
       "doc": "docs/_generated/lucid.md#lucid-closure-stored-capture",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 33
     },
     {
@@ -5904,7 +5973,7 @@
       "name": "callable-unit-mismatch",
       "doc": "docs/_generated/lucid.md#lucid-callable-unit-mismatch",
       "expectedRustDiagnostic": "E0308",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 34
     },
     {
@@ -5912,7 +5981,7 @@
       "name": "function-void-flat",
       "doc": "docs/_generated/lucid.md#lucid-function-void-flat",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 35
     },
     {
@@ -5920,7 +5989,7 @@
       "name": "function-void-record",
       "doc": "docs/_generated/lucid.md#lucid-function-void-record",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 36
     },
     {
@@ -5928,7 +5997,7 @@
       "name": "invocation-named",
       "doc": "docs/_generated/lucid.md#lucid-invocation-named",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 37
     },
     {
@@ -5936,7 +6005,7 @@
       "name": "invocation-void",
       "doc": "docs/_generated/lucid.md#lucid-invocation-void",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 38
     },
     {
@@ -5944,7 +6013,7 @@
       "name": "declaration-operation",
       "doc": "docs/_generated/lucid.md#lucid-declaration-operation",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 39
     },
     {
@@ -5952,7 +6021,7 @@
       "name": "declaration-description",
       "doc": "docs/_generated/lucid.md#lucid-declaration-description",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 40
     },
     {
@@ -5960,7 +6029,7 @@
       "name": "declaration-evaluation",
       "doc": "docs/_generated/lucid.md#lucid-declaration-evaluation",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 41
     },
     {
@@ -5968,7 +6037,7 @@
       "name": "declaration-instantiation",
       "doc": "docs/_generated/lucid.md#lucid-declaration-instantiation",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 42
     },
     {
@@ -5976,7 +6045,7 @@
       "name": "declaration-iteration",
       "doc": "docs/_generated/lucid.md#lucid-declaration-iteration",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 43
     },
     {
@@ -5984,7 +6053,7 @@
       "name": "grouping",
       "doc": "docs/_generated/lucid.md#lucid-grouping",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 44
     },
     {
@@ -5992,7 +6061,7 @@
       "name": "statements",
       "doc": "docs/_generated/lucid.md#lucid-statements",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 45
     },
     {
@@ -6000,7 +6069,7 @@
       "name": "fields",
       "doc": "docs/_generated/lucid.md#lucid-fields",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 46
     },
     {
@@ -6008,7 +6077,7 @@
       "name": "calculations",
       "doc": "docs/_generated/lucid.md#lucid-calculations",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 47
     },
     {
@@ -6016,7 +6085,7 @@
       "name": "communication",
       "doc": "docs/_generated/lucid.md#lucid-communication",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 48
     },
     {
@@ -6024,7 +6093,7 @@
       "name": "conditionals",
       "doc": "docs/_generated/lucid.md#lucid-conditionals",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 49
     },
     {
@@ -6032,7 +6101,7 @@
       "name": "select-communication",
       "doc": "docs/_generated/lucid.md#lucid-select-communication",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 50
     },
     {
@@ -6040,7 +6109,7 @@
       "name": "select-bindings",
       "doc": "docs/_generated/lucid.md#lucid-select-bindings",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 51
     },
     {
@@ -6048,7 +6117,7 @@
       "name": "select-default-order",
       "doc": "docs/_generated/lucid.md#lucid-select-default-order",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 52
     },
     {
@@ -6056,7 +6125,7 @@
       "name": "select-degenerate",
       "doc": "docs/_generated/lucid.md#lucid-select-degenerate",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 53
     },
     {
@@ -6064,7 +6133,7 @@
       "name": "select-nesting-hygiene",
       "doc": "docs/_generated/lucid.md#lucid-select-nesting-hygiene",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 54
     },
     {
@@ -6072,7 +6141,7 @@
       "name": "select-closed-receive",
       "doc": "docs/_generated/lucid.md#lucid-select-closed-receive",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 55
     },
     {
@@ -6080,7 +6149,7 @@
       "name": "select-sync-context",
       "doc": "docs/_generated/lucid.md#lucid-select-sync-context",
       "expectedRustDiagnostic": "E0728",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 56
     },
     {
@@ -6088,7 +6157,7 @@
       "name": "select-borrow-conflict",
       "doc": "docs/_generated/lucid.md#lucid-select-borrow-conflict",
       "expectedRustDiagnostic": "E0499",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 57
     },
     {
@@ -6096,7 +6165,7 @@
       "name": "select-moved-send",
       "doc": "docs/_generated/lucid.md#lucid-select-moved-send",
       "expectedRustDiagnostic": "E0382",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 58
     },
     {
@@ -6104,7 +6173,7 @@
       "name": "iteration-conditions",
       "doc": "docs/_generated/lucid.md#lucid-iteration-conditions",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 59
     },
     {
@@ -6112,7 +6181,7 @@
       "name": "iteration-bindings",
       "doc": "docs/_generated/lucid.md#lucid-iteration-bindings",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 60
     },
     {
@@ -6120,7 +6189,7 @@
       "name": "iteration-async",
       "doc": "docs/_generated/lucid.md#lucid-iteration-async",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 61
     },
     {
@@ -6128,7 +6197,7 @@
       "name": "iteration-traversal",
       "doc": "docs/_generated/lucid.md#lucid-iteration-traversal",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 62
     },
     {
@@ -6136,7 +6205,7 @@
       "name": "iteration-labels",
       "doc": "docs/_generated/lucid.md#lucid-iteration-labels",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 63
     },
     {
@@ -6144,7 +6213,7 @@
       "name": "iteration-nesting-scope",
       "doc": "docs/_generated/lucid.md#lucid-iteration-nesting-scope",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 64
     },
     {
@@ -6152,7 +6221,7 @@
       "name": "iteration-nonboolean",
       "doc": "docs/_generated/lucid.md#lucid-iteration-nonboolean",
       "expectedRustDiagnostic": "E0308",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 65
     },
     {
@@ -6160,7 +6229,7 @@
       "name": "iteration-binding-scope",
       "doc": "docs/_generated/lucid.md#lucid-iteration-binding-scope",
       "expectedRustDiagnostic": "E0425",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 66
     },
     {
@@ -6168,7 +6237,7 @@
       "name": "iteration-sync-await",
       "doc": "docs/_generated/lucid.md#lucid-iteration-sync-await",
       "expectedRustDiagnostic": "E0728",
-      "classification": 11,
+      "classification": 12,
       "evidenceSet": 67
     },
     {
@@ -6176,7 +6245,7 @@
       "name": "schedule-direct",
       "doc": "docs/_generated/lucid.md#lucid-schedule-direct",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 68
     },
     {
@@ -6184,1394 +6253,1435 @@
       "name": "schedule-composed",
       "doc": "docs/_generated/lucid.md#lucid-schedule-composed",
       "expectedRustDiagnostic": null,
-      "classification": 10,
+      "classification": 11,
       "evidenceSet": 69
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-capture.aml.txt",
       "name": "callable-invalid/bw-capture.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-capture-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 70
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-duplicate-input-prop-key.aml.txt",
       "name": "callable-invalid/bw-duplicate-input-prop-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-duplicate-input-prop-key-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 71
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-file-kob.aml.txt",
       "name": "callable-invalid/bw-file-kob.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-file-kob-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 72
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-file-ky.aml.txt",
       "name": "callable-invalid/bw-file-ky.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-file-ky-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 73
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-file-scope.aml.txt",
       "name": "callable-invalid/bw-file-scope.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-file-scope-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 74
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-flat-name.aml.txt",
       "name": "callable-invalid/bw-flat-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-flat-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 75
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-flat-receiver.aml.txt",
       "name": "callable-invalid/bw-flat-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-flat-receiver-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 76
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-func-outputs-conflict.aml.txt",
       "name": "callable-invalid/bw-func-outputs-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-func-outputs-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 77
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-malformed-func.aml.txt",
       "name": "callable-invalid/bw-malformed-func.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-malformed-func-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 78
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-operation-body.aml.txt",
       "name": "callable-invalid/bw-operation-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-operation-body-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 79
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-parameter-header.aml.txt",
       "name": "callable-invalid/bw-parameter-header.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-parameter-header-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 80
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-record-capture.aml.txt",
       "name": "callable-invalid/bw-record-capture.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-record-capture-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 81
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-record-name.aml.txt",
       "name": "callable-invalid/bw-record-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-record-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 82
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-record-receiver.aml.txt",
       "name": "callable-invalid/bw-record-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-record-receiver-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 83
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-requirements-header.aml.txt",
       "name": "callable-invalid/bw-requirements-header.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-requirements-header-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 84
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-unknown-func-field.aml.txt",
       "name": "callable-invalid/bw-unknown-func-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-unknown-func-field-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 85
     },
     {
       "id": "lucid-invalid:callable-invalid/bw-unknown-receiver-field.aml.txt",
       "name": "callable-invalid/bw-unknown-receiver-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-bw-unknown-receiver-field-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 86
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-capture.aml.txt",
       "name": "callable-invalid/fw-capture.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-capture-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 87
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-duplicate-func-key.aml.txt",
       "name": "callable-invalid/fw-duplicate-func-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-duplicate-func-key-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 88
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-empty-func.aml.txt",
       "name": "callable-invalid/fw-empty-func.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-empty-func-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 89
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-empty-name.aml.txt",
       "name": "callable-invalid/fw-empty-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-empty-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 90
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-func-inputs-conflict.aml.txt",
       "name": "callable-invalid/fw-func-inputs-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-func-inputs-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 91
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-malformed-input-prop.aml.txt",
       "name": "callable-invalid/fw-malformed-input-prop.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-malformed-input-prop-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 92
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-malformed-receiver-prop.aml.txt",
       "name": "callable-invalid/fw-malformed-receiver-prop.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-malformed-receiver-prop-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 93
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-missing-name.aml.txt",
       "name": "callable-invalid/fw-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-missing-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 94
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-parameter-header.aml.txt",
       "name": "callable-invalid/fw-parameter-header.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-parameter-header-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 95
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-record-capture.aml.txt",
       "name": "callable-invalid/fw-record-capture.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-record-capture-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 96
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-record-empty-name.aml.txt",
       "name": "callable-invalid/fw-record-empty-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-record-empty-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 97
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-record-missing-name.aml.txt",
       "name": "callable-invalid/fw-record-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-record-missing-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 98
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-requirements-header.aml.txt",
       "name": "callable-invalid/fw-requirements-header.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-requirements-header-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 99
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-unknown-func-field.aml.txt",
       "name": "callable-invalid/fw-unknown-func-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-unknown-func-field-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 100
     },
     {
       "id": "lucid-invalid:callable-invalid/fw-whitespace-name.aml.txt",
       "name": "callable-invalid/fw-whitespace-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-fw-whitespace-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 101
     },
     {
       "id": "lucid-invalid:callable-invalid/input-empty-name.aml.txt",
       "name": "callable-invalid/input-empty-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-empty-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 102
     },
     {
       "id": "lucid-invalid:callable-invalid/input-empty-type.aml.txt",
       "name": "callable-invalid/input-empty-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-empty-type-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 103
     },
     {
       "id": "lucid-invalid:callable-invalid/input-flat-struct-tags.aml.txt",
       "name": "callable-invalid/input-flat-struct-tags.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-flat-struct-tags-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 104
     },
     {
       "id": "lucid-invalid:callable-invalid/input-flat-unknown.aml.txt",
       "name": "callable-invalid/input-flat-unknown.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-flat-unknown-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 105
     },
     {
       "id": "lucid-invalid:callable-invalid/input-flat-value.aml.txt",
       "name": "callable-invalid/input-flat-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-flat-value-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 106
     },
     {
       "id": "lucid-invalid:callable-invalid/input-missing-name.aml.txt",
       "name": "callable-invalid/input-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-missing-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 107
     },
     {
       "id": "lucid-invalid:callable-invalid/input-missing-type.aml.txt",
       "name": "callable-invalid/input-missing-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-missing-type-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 108
     },
     {
       "id": "lucid-invalid:callable-invalid/input-record-struct-tags.aml.txt",
       "name": "callable-invalid/input-record-struct-tags.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-record-struct-tags-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 109
     },
     {
       "id": "lucid-invalid:callable-invalid/input-record-unknown.aml.txt",
       "name": "callable-invalid/input-record-unknown.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-record-unknown-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 110
     },
     {
       "id": "lucid-invalid:callable-invalid/input-record-value.aml.txt",
       "name": "callable-invalid/input-record-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-input-record-value-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 111
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-anonymous-receiver.aml.txt",
       "name": "callable-invalid/ky-anonymous-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-anonymous-receiver-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 112
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-e-child.aml.txt",
       "name": "callable-invalid/ky-e-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-e-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 113
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-empty-key.aml.txt",
       "name": "callable-invalid/ky-empty-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-empty-key-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 114
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-fw-child.aml.txt",
       "name": "callable-invalid/ky-fw-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-fw-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 115
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-missing-callee.aml.txt",
       "name": "callable-invalid/ky-missing-callee.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-missing-callee-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 116
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-multiple-callees.aml.txt",
       "name": "callable-invalid/ky-multiple-callees.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-multiple-callees-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 117
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-named-child.aml.txt",
       "name": "callable-invalid/ky-named-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-named-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 118
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-w-child.aml.txt",
       "name": "callable-invalid/ky-w-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-w-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 119
     },
     {
       "id": "lucid-invalid:callable-invalid/ky-whitespace-key.aml.txt",
       "name": "callable-invalid/ky-whitespace-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-ky-whitespace-key-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 120
     },
     {
       "id": "lucid-invalid:callable-invalid/my-duplicate-func-key.aml.txt",
       "name": "callable-invalid/my-duplicate-func-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-duplicate-func-key-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 121
     },
     {
       "id": "lucid-invalid:callable-invalid/my-duplicate-input-prop-key.aml.txt",
       "name": "callable-invalid/my-duplicate-input-prop-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-duplicate-input-prop-key-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 122
     },
     {
       "id": "lucid-invalid:callable-invalid/my-empty-receiver.aml.txt",
       "name": "callable-invalid/my-empty-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-empty-receiver-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 123
     },
     {
       "id": "lucid-invalid:callable-invalid/my-input-missing-name.aml.txt",
       "name": "callable-invalid/my-input-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-input-missing-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 124
     },
     {
       "id": "lucid-invalid:callable-invalid/my-input-missing-type.aml.txt",
       "name": "callable-invalid/my-input-missing-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-input-missing-type-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 125
     },
     {
       "id": "lucid-invalid:callable-invalid/my-input-unknown-field.aml.txt",
       "name": "callable-invalid/my-input-unknown-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-input-unknown-field-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 126
     },
     {
       "id": "lucid-invalid:callable-invalid/my-malformed-func.aml.txt",
       "name": "callable-invalid/my-malformed-func.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-malformed-func-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 127
     },
     {
       "id": "lucid-invalid:callable-invalid/my-malformed-input-prop.aml.txt",
       "name": "callable-invalid/my-malformed-input-prop.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-malformed-input-prop-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 128
     },
     {
       "id": "lucid-invalid:callable-invalid/my-missing-name.aml.txt",
       "name": "callable-invalid/my-missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-missing-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 129
     },
     {
       "id": "lucid-invalid:callable-invalid/my-receiver.aml.txt",
       "name": "callable-invalid/my-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-receiver-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 130
     },
     {
       "id": "lucid-invalid:callable-invalid/my-unknown-func-field.aml.txt",
       "name": "callable-invalid/my-unknown-func-field.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-callable-invalid-my-unknown-func-field-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 131
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/hy-empty-props-parameters.aml.txt",
       "name": "empty-instantiation-invalid/hy-empty-props-parameters.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-hy-empty-props-parameters-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 132
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/hy-empty-sum.aml.txt",
       "name": "empty-instantiation-invalid/hy-empty-sum.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-hy-empty-sum-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 133
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/hy-missing-props-parameters.aml.txt",
       "name": "empty-instantiation-invalid/hy-missing-props-parameters.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-hy-missing-props-parameters-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 134
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/my-empty-funcs-parameters.aml.txt",
       "name": "empty-instantiation-invalid/my-empty-funcs-parameters.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-my-empty-funcs-parameters-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 135
     },
     {
       "id": "lucid-invalid:empty-instantiation-invalid/my-missing-funcs-method.aml.txt",
       "name": "empty-instantiation-invalid/my-missing-funcs-method.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-empty-instantiation-invalid-my-missing-funcs-method-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 136
     },
     {
       "id": "lucid-invalid:generics-invalid/anonymous-ky-generic-types.aml.txt",
       "name": "generics-invalid/anonymous-ky-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-anonymous-ky-generic-types-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 137
     },
     {
       "id": "lucid-invalid:generics-invalid/anonymous-ky-lifetimes.aml.txt",
       "name": "generics-invalid/anonymous-ky-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-anonymous-ky-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 138
     },
     {
       "id": "lucid-invalid:generics-invalid/bw-generic-types.aml.txt",
       "name": "generics-invalid/bw-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-bw-generic-types-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 139
     },
     {
       "id": "lucid-invalid:generics-invalid/bw-lifetimes.aml.txt",
       "name": "generics-invalid/bw-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-bw-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 140
     },
     {
       "id": "lucid-invalid:generics-invalid/class-generic-types.aml.txt",
       "name": "generics-invalid/class-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-class-generic-types-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 141
     },
     {
       "id": "lucid-invalid:generics-invalid/class-lifetimes.aml.txt",
       "name": "generics-invalid/class-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-class-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 142
     },
     {
       "id": "lucid-invalid:generics-invalid/duplicate-generic-types.aml.txt",
       "name": "generics-invalid/duplicate-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-duplicate-generic-types-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 143
     },
     {
       "id": "lucid-invalid:generics-invalid/duplicate-lifetimes.aml.txt",
       "name": "generics-invalid/duplicate-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-duplicate-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 144
     },
     {
       "id": "lucid-invalid:generics-invalid/e-lifetimes.aml.txt",
       "name": "generics-invalid/e-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-e-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 145
     },
     {
       "id": "lucid-invalid:generics-invalid/func-generic-types.aml.txt",
       "name": "generics-invalid/func-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-func-generic-types-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 146
     },
     {
       "id": "lucid-invalid:generics-invalid/func-lifetimes.aml.txt",
       "name": "generics-invalid/func-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-func-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 147
     },
     {
       "id": "lucid-invalid:generics-invalid/funcs-generic-types.aml.txt",
       "name": "generics-invalid/funcs-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-funcs-generic-types-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 148
     },
     {
       "id": "lucid-invalid:generics-invalid/funcs-lifetimes.aml.txt",
       "name": "generics-invalid/funcs-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-funcs-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 149
     },
     {
       "id": "lucid-invalid:generics-invalid/fw-empty-lifetimes.aml.txt",
       "name": "generics-invalid/fw-empty-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-fw-empty-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 150
     },
     {
       "id": "lucid-invalid:generics-invalid/fw-whitespace-lifetimes.aml.txt",
       "name": "generics-invalid/fw-whitespace-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-fw-whitespace-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 151
     },
     {
       "id": "lucid-invalid:generics-invalid/hy-empty-generic-types.aml.txt",
       "name": "generics-invalid/hy-empty-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-hy-empty-generic-types-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 152
     },
     {
       "id": "lucid-invalid:generics-invalid/hy-whitespace-generic-types.aml.txt",
       "name": "generics-invalid/hy-whitespace-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-hy-whitespace-generic-types-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 153
     },
     {
       "id": "lucid-invalid:generics-invalid/o-generic-types.aml.txt",
       "name": "generics-invalid/o-generic-types.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-o-generic-types-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 154
     },
     {
       "id": "lucid-invalid:generics-invalid/object-generic-types-ea.aml.txt",
       "name": "generics-invalid/object-generic-types-ea.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-object-generic-types-ea-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 155
     },
     {
       "id": "lucid-invalid:generics-invalid/object-lifetimes.aml.txt",
       "name": "generics-invalid/object-lifetimes.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-generics-invalid-object-lifetimes-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 156
     },
     {
       "id": "lucid-invalid:invocation-invalid/empty-receiver.aml.txt",
       "name": "invocation-invalid/empty-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-invocation-invalid-empty-receiver-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 157
     },
     {
       "id": "lucid-invalid:invocation-invalid/whitespace-receiver.aml.txt",
       "name": "invocation-invalid/whitespace-receiver.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-invocation-invalid-whitespace-receiver-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 158
     },
     {
       "id": "lucid-invalid:iteration-invalid/calculation-definition-conflict.aml.txt",
       "name": "iteration-invalid/calculation-definition-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-calculation-definition-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 159
     },
     {
       "id": "lucid-invalid:iteration-invalid/calculation-evaluation-conflict.aml.txt",
       "name": "iteration-invalid/calculation-evaluation-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-calculation-evaluation-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 160
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-empty-pattern.aml.txt",
       "name": "iteration-invalid/dog-empty-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-empty-pattern-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 161
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-key-keys-conflict.aml.txt",
       "name": "iteration-invalid/dog-key-keys-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-key-keys-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 162
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-missing-child.aml.txt",
       "name": "iteration-invalid/dog-missing-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-missing-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 163
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-missing-pattern.aml.txt",
       "name": "iteration-invalid/dog-missing-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-missing-pattern-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 164
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-multiple-children.aml.txt",
       "name": "iteration-invalid/dog-multiple-children.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-multiple-children-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 165
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-multiple-patterns.aml.txt",
       "name": "iteration-invalid/dog-multiple-patterns.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-multiple-patterns-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 166
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-native-value.aml.txt",
       "name": "iteration-invalid/dog-native-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-native-value-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 167
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-outside-x.aml.txt",
       "name": "iteration-invalid/dog-outside-x.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-outside-x-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 168
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-unsupported-mutable.aml.txt",
       "name": "iteration-invalid/dog-unsupported-mutable.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-unsupported-mutable-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 169
     },
     {
       "id": "lucid-invalid:iteration-invalid/dog-wrong-child.aml.txt",
       "name": "iteration-invalid/dog-wrong-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-dog-wrong-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 170
     },
     {
       "id": "lucid-invalid:iteration-invalid/evaluation-definition-conflict.aml.txt",
       "name": "iteration-invalid/evaluation-definition-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-evaluation-definition-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 171
     },
     {
       "id": "lucid-invalid:iteration-invalid/iterator-calculation-conflict.aml.txt",
       "name": "iteration-invalid/iterator-calculation-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-iterator-calculation-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 172
     },
     {
       "id": "lucid-invalid:iteration-invalid/iterator-definition-conflict.aml.txt",
       "name": "iteration-invalid/iterator-definition-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-iterator-definition-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 173
     },
     {
       "id": "lucid-invalid:iteration-invalid/iterator-evaluation-conflict.aml.txt",
       "name": "iteration-invalid/iterator-evaluation-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-iterator-evaluation-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 174
     },
     {
       "id": "lucid-invalid:iteration-invalid/missing-body.aml.txt",
       "name": "iteration-invalid/missing-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-missing-body-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 175
     },
     {
       "id": "lucid-invalid:iteration-invalid/multiple-bodies.aml.txt",
       "name": "iteration-invalid/multiple-bodies.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-multiple-bodies-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 176
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-child.aml.txt",
       "name": "iteration-invalid/og-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 177
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-empty-pattern.aml.txt",
       "name": "iteration-invalid/og-empty-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-empty-pattern-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 178
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-empty-value.aml.txt",
       "name": "iteration-invalid/og-empty-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-empty-value-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 179
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-key-keys-conflict.aml.txt",
       "name": "iteration-invalid/og-key-keys-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-key-keys-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 180
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-missing-pattern.aml.txt",
       "name": "iteration-invalid/og-missing-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-missing-pattern-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 181
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-missing-value.aml.txt",
       "name": "iteration-invalid/og-missing-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-missing-value-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 182
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-multiple-patterns.aml.txt",
       "name": "iteration-invalid/og-multiple-patterns.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-multiple-patterns-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 183
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-multiple-values.aml.txt",
       "name": "iteration-invalid/og-multiple-values.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-multiple-values-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 184
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-outside-x.aml.txt",
       "name": "iteration-invalid/og-outside-x.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-outside-x-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 185
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-unsupported-type.aml.txt",
       "name": "iteration-invalid/og-unsupported-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-unsupported-type-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 186
     },
     {
       "id": "lucid-invalid:iteration-invalid/og-value-values-conflict.aml.txt",
       "name": "iteration-invalid/og-value-values-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-og-value-values-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 187
     },
     {
       "id": "lucid-invalid:iteration-invalid/ordinary-do-condition.aml.txt",
       "name": "iteration-invalid/ordinary-do-condition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-ordinary-do-condition-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 188
     },
     {
       "id": "lucid-invalid:iteration-invalid/ordinary-dob-condition.aml.txt",
       "name": "iteration-invalid/ordinary-dob-condition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-ordinary-dob-condition-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 189
     },
     {
       "id": "lucid-invalid:iteration-invalid/ordinary-o-condition.aml.txt",
       "name": "iteration-invalid/ordinary-o-condition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-ordinary-o-condition-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 190
     },
     {
       "id": "lucid-invalid:iteration-invalid/ordinary-ob-condition.aml.txt",
       "name": "iteration-invalid/ordinary-ob-condition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-ordinary-ob-condition-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 191
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-empty-label.aml.txt",
       "name": "iteration-invalid/po-empty-label.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-empty-label-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 192
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-file-scope.aml.txt",
       "name": "iteration-invalid/po-file-scope.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-file-scope-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 193
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-key-keys-conflict.aml.txt",
       "name": "iteration-invalid/po-key-keys-conflict.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-key-keys-conflict-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 194
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-missing-child.aml.txt",
       "name": "iteration-invalid/po-missing-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-missing-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 195
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-missing-label.aml.txt",
       "name": "iteration-invalid/po-missing-label.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-missing-label-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 196
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-multiple-children.aml.txt",
       "name": "iteration-invalid/po-multiple-children.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-multiple-children-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 197
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-multiple-labels.aml.txt",
       "name": "iteration-invalid/po-multiple-labels.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-multiple-labels-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 198
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-native-values.aml.txt",
       "name": "iteration-invalid/po-native-values.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-native-values-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 199
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-unsupported-coda.aml.txt",
       "name": "iteration-invalid/po-unsupported-coda.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-unsupported-coda-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 200
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-unsupported-parameter.aml.txt",
       "name": "iteration-invalid/po-unsupported-parameter.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-unsupported-parameter-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 201
     },
     {
       "id": "lucid-invalid:iteration-invalid/po-wrong-child.aml.txt",
       "name": "iteration-invalid/po-wrong-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-po-wrong-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 202
     },
     {
       "id": "lucid-invalid:iteration-invalid/repeated-calculation.aml.txt",
       "name": "iteration-invalid/repeated-calculation.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-repeated-calculation-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 203
     },
     {
       "id": "lucid-invalid:iteration-invalid/repeated-definition.aml.txt",
       "name": "iteration-invalid/repeated-definition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-repeated-definition-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 204
     },
     {
       "id": "lucid-invalid:iteration-invalid/repeated-evaluation.aml.txt",
       "name": "iteration-invalid/repeated-evaluation.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-repeated-evaluation-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 205
     },
     {
       "id": "lucid-invalid:iteration-invalid/three-part.aml.txt",
       "name": "iteration-invalid/three-part.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-three-part-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 206
     },
     {
       "id": "lucid-invalid:iteration-invalid/unsupported-evaluation-adapter.aml.txt",
       "name": "iteration-invalid/unsupported-evaluation-adapter.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-unsupported-evaluation-adapter-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 207
     },
     {
       "id": "lucid-invalid:iteration-invalid/wrong-category-body.aml.txt",
       "name": "iteration-invalid/wrong-category-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-iteration-invalid-wrong-category-body-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 208
     },
     {
       "id": "lucid-invalid:keyed-invalid/body-without-pattern.aml.txt",
       "name": "keyed-invalid/body-without-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-body-without-pattern-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 209
     },
     {
       "id": "lucid-invalid:keyed-invalid/duplicate-composed-fallback.aml.txt",
       "name": "keyed-invalid/duplicate-composed-fallback.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-duplicate-composed-fallback-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 210
     },
     {
       "id": "lucid-invalid:keyed-invalid/duplicate-fallback.aml.txt",
       "name": "keyed-invalid/duplicate-fallback.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-duplicate-fallback-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 211
     },
     {
       "id": "lucid-invalid:keyed-invalid/empty-key.aml.txt",
       "name": "keyed-invalid/empty-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-empty-key-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 212
     },
     {
       "id": "lucid-invalid:keyed-invalid/empty-pattern.aml.txt",
       "name": "keyed-invalid/empty-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-empty-pattern-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 213
     },
     {
       "id": "lucid-invalid:keyed-invalid/excess-bodies.aml.txt",
       "name": "keyed-invalid/excess-bodies.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-excess-bodies-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 214
     },
     {
       "id": "lucid-invalid:keyed-invalid/excess-patterns.aml.txt",
       "name": "keyed-invalid/excess-patterns.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-excess-patterns-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 215
     },
     {
       "id": "lucid-invalid:keyed-invalid/no-entries.aml.txt",
       "name": "keyed-invalid/no-entries.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-no-entries-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 216
     },
     {
       "id": "lucid-invalid:keyed-invalid/nonterminal-composed-fallback.aml.txt",
       "name": "keyed-invalid/nonterminal-composed-fallback.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-nonterminal-composed-fallback-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 217
     },
     {
       "id": "lucid-invalid:keyed-invalid/nonterminal-fallback.aml.txt",
       "name": "keyed-invalid/nonterminal-fallback.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-nonterminal-fallback-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 218
     },
     {
       "id": "lucid-invalid:keyed-invalid/pattern-without-body.aml.txt",
       "name": "keyed-invalid/pattern-without-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-pattern-without-body-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 219
     },
     {
       "id": "lucid-invalid:keyed-invalid/unexpected-child.aml.txt",
       "name": "keyed-invalid/unexpected-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-unexpected-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 220
     },
     {
       "id": "lucid-invalid:keyed-invalid/whitespace-key.aml.txt",
       "name": "keyed-invalid/whitespace-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-whitespace-key-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 221
     },
     {
       "id": "lucid-invalid:keyed-invalid/whitespace-pattern.aml.txt",
       "name": "keyed-invalid/whitespace-pattern.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-keyed-invalid-whitespace-pattern-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 222
     },
     {
       "id": "lucid-invalid:scheduling-invalid/mv-deferred-false.aml.txt",
       "name": "scheduling-invalid/mv-deferred-false.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-scheduling-invalid-mv-deferred-false-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 223
     },
     {
       "id": "lucid-invalid:scheduling-invalid/mv-deferred-true.aml.txt",
       "name": "scheduling-invalid/mv-deferred-true.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-scheduling-invalid-mv-deferred-true-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 224
     },
     {
       "id": "lucid-invalid:scheduling-invalid/v-deferred-false.aml.txt",
       "name": "scheduling-invalid/v-deferred-false.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-scheduling-invalid-v-deferred-false-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 225
     },
     {
       "id": "lucid-invalid:scheduling-invalid/v-deferred-true.aml.txt",
       "name": "scheduling-invalid/v-deferred-true.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-scheduling-invalid-v-deferred-true-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 226
     },
     {
       "id": "lucid-invalid:selection-invalid/assignment-target.aml.txt",
       "name": "selection-invalid/assignment-target.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-assignment-target-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 227
     },
     {
       "id": "lucid-invalid:selection-invalid/bare-calculation.aml.txt",
       "name": "selection-invalid/bare-calculation.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-bare-calculation-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 228
     },
     {
       "id": "lucid-invalid:selection-invalid/bare-ce.aml.txt",
       "name": "selection-invalid/bare-ce.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-bare-ce-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 229
     },
     {
       "id": "lucid-invalid:selection-invalid/bi-orphan.aml.txt",
       "name": "selection-invalid/bi-orphan.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-bi-orphan-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 230
     },
     {
       "id": "lucid-invalid:selection-invalid/caller-key.aml.txt",
       "name": "selection-invalid/caller-key.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-caller-key-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 231
     },
     {
       "id": "lucid-invalid:selection-invalid/ci-file-scope.aml.txt",
       "name": "selection-invalid/ci-file-scope.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-ci-file-scope-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 232
     },
     {
       "id": "lucid-invalid:selection-invalid/ci-non-bi-child.aml.txt",
       "name": "selection-invalid/ci-non-bi-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-ci-non-bi-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 233
     },
     {
       "id": "lucid-invalid:selection-invalid/default-missing-definition.aml.txt",
       "name": "selection-invalid/default-missing-definition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-default-missing-definition-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 234
     },
     {
       "id": "lucid-invalid:selection-invalid/do-guard.aml.txt",
       "name": "selection-invalid/do-guard.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-do-guard-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 235
     },
     {
       "id": "lucid-invalid:selection-invalid/dob-guard.aml.txt",
       "name": "selection-invalid/dob-guard.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-dob-guard-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 236
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-missing-child.aml.txt",
       "name": "selection-invalid/doc-missing-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-missing-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 237
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-multiple-children.aml.txt",
       "name": "selection-invalid/doc-multiple-children.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-multiple-children-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 238
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-native-value.aml.txt",
       "name": "selection-invalid/doc-native-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-native-value-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 239
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-outside-bi.aml.txt",
       "name": "selection-invalid/doc-outside-bi.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-outside-bi-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 240
     },
     {
       "id": "lucid-invalid:selection-invalid/doc-wrong-child.aml.txt",
       "name": "selection-invalid/doc-wrong-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-doc-wrong-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 241
     },
     {
       "id": "lucid-invalid:selection-invalid/duplicate-default.aml.txt",
       "name": "selection-invalid/duplicate-default.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-duplicate-default-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 242
     },
     {
       "id": "lucid-invalid:selection-invalid/guard-mutable.aml.txt",
       "name": "selection-invalid/guard-mutable.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-guard-mutable-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 243
     },
     {
       "id": "lucid-invalid:selection-invalid/guard-parameter.aml.txt",
       "name": "selection-invalid/guard-parameter.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-guard-parameter-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 244
     },
     {
       "id": "lucid-invalid:selection-invalid/guard-type.aml.txt",
       "name": "selection-invalid/guard-type.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-guard-type-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 245
     },
     {
       "id": "lucid-invalid:selection-invalid/invalid-default.aml.txt",
       "name": "selection-invalid/invalid-default.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-invalid-default-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 246
     },
     {
       "id": "lucid-invalid:selection-invalid/missing-guard.aml.txt",
       "name": "selection-invalid/missing-guard.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-missing-guard-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 247
     },
     {
       "id": "lucid-invalid:selection-invalid/missing-name.aml.txt",
       "name": "selection-invalid/missing-name.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-missing-name-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 248
     },
     {
       "id": "lucid-invalid:selection-invalid/mixed-guards.aml.txt",
       "name": "selection-invalid/mixed-guards.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-mixed-guards-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 249
     },
     {
       "id": "lucid-invalid:selection-invalid/multiple-bodies.aml.txt",
       "name": "selection-invalid/multiple-bodies.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-multiple-bodies-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 250
     },
     {
       "id": "lucid-invalid:selection-invalid/multiple-definitions.aml.txt",
       "name": "selection-invalid/multiple-definitions.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-multiple-definitions-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 251
     },
     {
       "id": "lucid-invalid:selection-invalid/multiple-names.aml.txt",
       "name": "selection-invalid/multiple-names.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-multiple-names-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 252
     },
     {
       "id": "lucid-invalid:selection-invalid/non-w-body.aml.txt",
       "name": "selection-invalid/non-w-body.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-non-w-body-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 253
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-child.aml.txt",
       "name": "selection-invalid/oc-child.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-child-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 254
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-empty-value.aml.txt",
       "name": "selection-invalid/oc-empty-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-empty-value-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 255
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-missing-value.aml.txt",
       "name": "selection-invalid/oc-missing-value.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-missing-value-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 256
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-multiple-values.aml.txt",
       "name": "selection-invalid/oc-multiple-values.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-multiple-values-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 257
     },
     {
       "id": "lucid-invalid:selection-invalid/oc-outside-bi.aml.txt",
       "name": "selection-invalid/oc-outside-bi.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-oc-outside-bi-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 258
     },
     {
       "id": "lucid-invalid:selection-invalid/pattern-binding.aml.txt",
       "name": "selection-invalid/pattern-binding.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-pattern-binding-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 259
     },
     {
       "id": "lucid-invalid:selection-invalid/unsupported-c-qualified.aml.txt",
       "name": "selection-invalid/unsupported-c-qualified.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-unsupported-c-qualified-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 260
     },
     {
       "id": "lucid-invalid:selection-invalid/unsupported-definition.aml.txt",
       "name": "selection-invalid/unsupported-definition.aml.txt",
       "doc": "docs/_generated/lucid.md#invalid-selection-invalid-unsupported-definition-aml-txt",
-      "classification": 12,
+      "classification": 13,
       "evidenceSet": 261
     },
     {
       "id": "type:text",
       "name": "Text",
       "doc": "docs/spec/values.md#text",
-      "classification": 13,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Text",
+        "Texts"
+      ],
+      "classification": 14,
       "evidenceSet": 262
     },
     {
       "id": "type:number",
       "name": "Number",
       "doc": "docs/spec/values.md#number",
-      "classification": 13,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Number",
+        "Numbers"
+      ],
+      "classification": 14,
       "evidenceSet": 263
     },
     {
       "id": "type:truth",
       "name": "Truth",
       "doc": "docs/spec/values.md#truth",
-      "classification": 13,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Truth",
+        "Truths"
+      ],
+      "classification": 14,
       "evidenceSet": 264
     },
     {
       "id": "type:thing",
       "name": "Thing",
       "doc": "docs/spec/values.md#thing",
-      "classification": 13,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Thing",
+        "Things"
+      ],
+      "classification": 14,
       "evidenceSet": 265,
       "note": 180
     },
     {
       "id": "type:byte",
       "name": "Byte",
-      "doc": "docs/spec/values.md#byte-and-bytes",
-      "classification": 14,
+      "doc": "docs/spec/values.md#byte",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Byte",
+        "Bytes"
+      ],
+      "classification": 15,
       "evidenceSet": 266
     },
     {
       "id": "type:bytes",
       "name": "Bytes",
-      "doc": "docs/spec/values.md#byte-and-bytes",
-      "classification": 14,
+      "doc": "docs/spec/values.md#bytes",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Bytes"
+      ],
+      "classification": 15,
       "evidenceSet": 267,
       "note": 181
     },
@@ -7579,15 +7689,29 @@
       "id": "type:pointer",
       "name": "Pointer",
       "doc": "docs/spec/values.md#pointer",
-      "classification": 13,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Pointer",
+        "Pointers"
+      ],
+      "classification": 14,
       "evidenceSet": 268,
       "note": 122
     },
     {
       "id": "type:null",
       "name": "Null",
-      "doc": "docs/spec/values.md#null-and-internal-states",
-      "classification": 13,
+      "doc": "docs/spec/values.md#null",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Null",
+        "Nulls"
+      ],
+      "classification": 14,
       "evidenceSet": 269,
       "note": 182
     },
@@ -7595,7 +7719,14 @@
       "id": "type:list",
       "name": "List",
       "doc": "docs/spec/collections-and-categories.md#lists",
-      "classification": 14,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "List",
+        "Lists"
+      ],
+      "classification": 15,
       "evidenceSet": 270,
       "note": 7
     },
@@ -7603,57 +7734,107 @@
       "id": "type:dictionary",
       "name": "Dictionary",
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
-      "classification": 14,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Dictionary",
+        "Dictionaries"
+      ],
+      "classification": 15,
       "evidenceSet": 271
     },
     {
       "id": "type:app",
       "name": "App",
       "doc": "docs/spec/applicational-types.md#apps",
-      "classification": 13,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "App",
+        "Apps"
+      ],
+      "classification": 14,
       "evidenceSet": 272
     },
     {
       "id": "type:service",
       "name": "Service",
       "doc": "docs/spec/applicational-types.md#services",
-      "classification": 13,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Service",
+        "Services"
+      ],
+      "classification": 14,
       "evidenceSet": 273,
       "note": 183
     },
     {
       "id": "type:class",
       "name": "Class",
-      "doc": "docs/spec/applicational-types.md#classes-and-objects",
-      "classification": 13,
+      "doc": "docs/spec/applicational-types.md#class",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Class",
+        "Classes"
+      ],
+      "classification": 14,
       "evidenceSet": 274
     },
     {
       "id": "type:object",
       "name": "Object",
-      "doc": "docs/spec/applicational-types.md#classes-and-objects",
-      "classification": 13,
+      "doc": "docs/spec/applicational-types.md#object",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Object",
+        "Objects"
+      ],
+      "classification": 14,
       "evidenceSet": 274
     },
     {
       "id": "type:attribute",
       "name": "Attribute",
-      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
-      "classification": 14,
+      "doc": "docs/spec/applicational-types.md#attribute",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Attribute",
+        "Attributes"
+      ],
+      "classification": 15,
       "evidenceSet": 275
     },
     {
       "id": "type:definition",
       "name": "Definition",
-      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
-      "classification": 14,
+      "doc": "docs/spec/applicational-types.md#definition",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Definition",
+        "Definitions"
+      ],
+      "classification": 15,
       "evidenceSet": 276
     },
     {
       "id": "type:function",
       "name": "Function",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "classification": 13,
+      "wordRef": "builtin:function",
+      "classification": 14,
       "evidenceSet": 277,
       "note": 184
     },
@@ -7661,50 +7842,74 @@
       "id": "type:property",
       "name": "Property",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "classification": 15,
+      "classification": 16,
       "evidenceSet": 278
     },
     {
       "id": "type:operation",
       "name": "Operation",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "classification": 15,
+      "classification": 16,
       "evidenceSet": 278
     },
     {
       "id": "type:noun",
       "name": "Noun",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
-      "classification": 13,
+      "doc": "docs/spec/lexical-types.md#noun",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Noun"
+      ],
+      "classification": 14,
       "evidenceSet": 279
     },
     {
       "id": "type:verb",
       "name": "Verb",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
-      "classification": 13,
+      "doc": "docs/spec/lexical-types.md#verb",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Verb"
+      ],
+      "classification": 14,
       "evidenceSet": 280
     },
     {
       "id": "type:adjective",
       "name": "Adjective",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
-      "classification": 13,
+      "doc": "docs/spec/lexical-types.md#adjective",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Adjective"
+      ],
+      "classification": 14,
       "evidenceSet": 281,
       "note": 185
     },
     {
       "id": "type:adverb",
       "name": "Adverb",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
-      "classification": 14,
+      "doc": "docs/spec/lexical-types.md#adverb",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Adverb"
+      ],
+      "classification": 15,
       "evidenceSet": 282
     },
     {
       "id": "value-tag:Thing",
       "name": "Thing",
       "doc": "docs/spec/values.md#thing",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 283,
       "note": 186
     },
@@ -7712,7 +7917,7 @@
       "id": "value-tag:Text",
       "name": "Text",
       "doc": "docs/spec/values.md#text",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7720,7 +7925,7 @@
       "id": "value-tag:Number",
       "name": "Number",
       "doc": "docs/spec/values.md#number",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7728,7 +7933,7 @@
       "id": "value-tag:Truth",
       "name": "Truth",
       "doc": "docs/spec/values.md#truth",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7736,7 +7941,7 @@
       "id": "value-tag:Bytes",
       "name": "Bytes",
       "doc": "docs/spec/values.md#byte-and-bytes",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 285,
       "note": 186
     },
@@ -7744,7 +7949,7 @@
       "id": "value-tag:Pointer",
       "name": "Pointer",
       "doc": "docs/spec/values.md#pointer",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 286,
       "note": 186
     },
@@ -7752,7 +7957,7 @@
       "id": "value-tag:Lexeme",
       "name": "Lexeme",
       "doc": "docs/spec/values.md#null-and-internal-states",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7760,7 +7965,7 @@
       "id": "value-tag:App",
       "name": "App",
       "doc": "docs/spec/applicational-types.md#apps",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7768,7 +7973,7 @@
       "id": "value-tag:Service",
       "name": "Service",
       "doc": "docs/spec/applicational-types.md#services",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7776,7 +7981,7 @@
       "id": "value-tag:Class",
       "name": "Class",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7784,7 +7989,7 @@
       "id": "value-tag:Object",
       "name": "Object",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7792,7 +7997,7 @@
       "id": "value-tag:Attribute",
       "name": "Attribute",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7800,7 +8005,7 @@
       "id": "value-tag:Definition",
       "name": "Definition",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7808,7 +8013,7 @@
       "id": "value-tag:Function",
       "name": "Function",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 287,
       "note": 187
     },
@@ -7816,7 +8021,7 @@
       "id": "value-tag:Property",
       "name": "Property",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7824,7 +8029,7 @@
       "id": "value-tag:Operation",
       "name": "Operation",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7832,7 +8037,7 @@
       "id": "value-tag:List",
       "name": "List",
       "doc": "docs/spec/collections-and-categories.md#lists",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 286,
       "note": 186
     },
@@ -7840,7 +8045,7 @@
       "id": "value-tag:Dictionary",
       "name": "Dictionary",
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7848,7 +8053,7 @@
       "id": "value-tag:Error",
       "name": "Error",
       "doc": "docs/spec/values.md#null-and-internal-states",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 288,
       "note": 186
     },
@@ -7856,7 +8061,7 @@
       "id": "value-tag:ID",
       "name": "ID",
       "doc": "docs/spec/values.md#null-and-internal-states",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7864,7 +8069,7 @@
       "id": "value-tag:None",
       "name": "None",
       "doc": "docs/spec/values.md#null-and-internal-states",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7872,7 +8077,7 @@
       "id": "value-tag:Unknown",
       "name": "Unknown",
       "doc": "docs/spec/values.md#null-and-internal-states",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 284,
       "note": 187
     },
@@ -7880,29 +8085,77 @@
       "id": "value-tag:Null",
       "name": "Null",
       "doc": "docs/spec/values.md#null-and-internal-states",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 289,
       "note": 186
     },
     {
       "id": "builtin:start",
       "name": "Start",
-      "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
-      "classification": 17,
+      "doc": "docs/reference/builtins/lifecycle.md#start",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Starter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Start",
+        "Starts",
+        "Started",
+        "Starting",
+        "Starter"
+      ],
+      "classification": 18,
       "evidenceSet": 290
     },
     {
       "id": "builtin:execute",
       "name": "Execute",
-      "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
-      "classification": 17,
+      "doc": "docs/reference/builtins/lifecycle.md#execute",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Executor": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Execute",
+        "Executes",
+        "Executed",
+        "Executing",
+        "Executor"
+      ],
+      "classification": 18,
       "evidenceSet": 290
     },
     {
       "id": "builtin:build",
       "name": "Build",
       "doc": "docs/reference/builtins/lifecycle.md#build",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Builder": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Build",
+        "Builds",
+        "Built",
+        "Building",
+        "Builder"
+      ],
+      "classification": 18,
       "evidenceSet": 291,
       "note": 188
     },
@@ -7910,7 +8163,23 @@
       "id": "builtin:run",
       "name": "Run",
       "doc": "docs/reference/builtins/lifecycle.md#run",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Runner": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Run",
+        "Runs",
+        "Ruan",
+        "Running",
+        "Runner"
+      ],
+      "classification": 18,
       "evidenceSet": 292,
       "note": 188
     },
@@ -7918,7 +8187,23 @@
       "id": "builtin:stop",
       "name": "Stop",
       "doc": "docs/reference/builtins/lifecycle.md#stop",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Stoppper": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Stop",
+        "Stops",
+        "Stopped",
+        "Stopping",
+        "Stoppper"
+      ],
+      "classification": 18,
       "evidenceSet": 293,
       "note": 188
     },
@@ -7926,7 +8211,16 @@
       "id": "builtin:await",
       "name": "Await",
       "doc": "docs/reference/builtins/lifecycle.md#await",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "verb"
+      },
+      "inflections": [
+        "Await",
+        "Awaits",
+        "Awaited",
+        "Awaiting"
+      ],
+      "classification": 18,
       "evidenceSet": 294,
       "note": 188
     },
@@ -7934,29 +8228,75 @@
       "id": "builtin:show",
       "name": "Show",
       "doc": "docs/reference/builtins/lifecycle.md#show",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Shower": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Show",
+        "Shows",
+        "Showed",
+        "Showing",
+        "Shower"
+      ],
+      "classification": 18,
       "evidenceSet": 295
     },
     {
       "id": "builtin:exit",
       "name": "Exit",
       "doc": "docs/reference/builtins/lifecycle.md#exit",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Exiter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Exit",
+        "Exits",
+        "Exited",
+        "Exiting",
+        "Exiter"
+      ],
+      "classification": 18,
       "evidenceSet": 296
     },
     {
       "id": "builtin:output",
       "name": "Output",
-      "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
-      "classification": 17,
+      "doc": "docs/reference/builtins/lifecycle.md#output",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Output",
+        "Outputs"
+      ],
+      "classification": 18,
       "evidenceSet": 297,
       "note": 188
     },
     {
       "id": "builtin:error",
       "name": "Error",
-      "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
-      "classification": 17,
+      "doc": "docs/reference/builtins/lifecycle.md#error",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Error",
+        "Errors"
+      ],
+      "classification": 18,
       "evidenceSet": 298,
       "note": 188
     },
@@ -7964,7 +8304,27 @@
       "id": "builtin:process",
       "name": "Process",
       "doc": "docs/reference/builtins/definitions.md#process",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "noun",
+        "audience": "authoring",
+        "formRoles": {
+          "Processive": {
+            "partOfSpeech": "adjective",
+            "role": "descriptive"
+          },
+          "Processing": {
+            "partOfSpeech": "verb",
+            "role": "applicative (noun active form)"
+          }
+        }
+      },
+      "inflections": [
+        "Process",
+        "Processes",
+        "Processive",
+        "Processing"
+      ],
+      "classification": 18,
       "evidenceSet": 299,
       "note": 189
     },
@@ -7972,7 +8332,26 @@
       "id": "builtin:function",
       "name": "Function",
       "doc": "docs/reference/builtins/definitions.md#function",
-      "classification": 18,
+      "word": {
+        "partOfSpeech": "noun",
+        "formRoles": {
+          "Functional": {
+            "partOfSpeech": "adjective",
+            "role": "descriptive"
+          },
+          "Functioning": {
+            "partOfSpeech": "verb",
+            "role": "applicative (noun active form)"
+          }
+        }
+      },
+      "inflections": [
+        "Function",
+        "Functions",
+        "Functional",
+        "Functioning"
+      ],
+      "classification": 19,
       "evidenceSet": 300,
       "note": 190
     },
@@ -7980,7 +8359,24 @@
       "id": "builtin:function.return",
       "name": "Function.Return",
       "doc": "docs/reference/builtins/definitions.md#functionreturn",
-      "classification": 18,
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Returner": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Return",
+        "Returns",
+        "Returned",
+        "Returning",
+        "Returner"
+      ],
+      "classification": 19,
       "evidenceSet": 301,
       "note": 191
     },
@@ -7988,7 +8384,24 @@
       "id": "builtin:retain",
       "name": "Retain",
       "doc": "docs/reference/builtins/definitions.md#retain",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Retainer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Retain",
+        "Retains",
+        "Retained",
+        "Retaining",
+        "Retainer"
+      ],
+      "classification": 18,
       "evidenceSet": 302,
       "note": 192
     },
@@ -7996,14 +8409,43 @@
       "id": "builtin:objective",
       "name": "Objective",
       "doc": "docs/reference/builtins/definitions.md#objective",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "adjective",
+        "audience": "authoring",
+        "targets": [
+          {
+            "entry": "builtin:function"
+          }
+        ]
+      },
+      "inflections": [
+        "Objective"
+      ],
+      "classification": 18,
       "evidenceSet": 303
     },
     {
       "id": "builtin:main",
       "name": "Main",
       "doc": "docs/reference/builtins/definitions.md#main",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "adjective",
+        "targets": [
+          {
+            "entry": "type:service"
+          },
+          {
+            "entry": "type:object"
+          },
+          {
+            "entry": "builtin:function"
+          }
+        ]
+      },
+      "inflections": [
+        "Main"
+      ],
+      "classification": 18,
       "evidenceSet": 303,
       "note": 193
     },
@@ -8011,119 +8453,321 @@
       "id": "builtin:basic",
       "name": "Basic",
       "doc": "docs/reference/builtins/definitions.md#basic",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "adjective",
+        "targets": [
+          {
+            "entry": "type:app"
+          }
+        ]
+      },
+      "inflections": [
+        "Basic"
+      ],
+      "classification": 18,
       "evidenceSet": 303
     },
     {
       "id": "builtin:create",
       "name": "Create",
-      "doc": "docs/spec/definitions.md#create-define-and-describe",
-      "classification": 17,
+      "doc": "docs/spec/definitions.md#create",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Creator": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Create",
+        "Creates",
+        "Created",
+        "Creating",
+        "Creator"
+      ],
+      "classification": 18,
       "evidenceSet": 304
     },
     {
       "id": "builtin:define",
       "name": "Define",
-      "doc": "docs/spec/definitions.md#create-define-and-describe",
-      "classification": 17,
+      "doc": "docs/spec/definitions.md#define",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Definer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Define",
+        "Defines",
+        "Defined",
+        "Defining",
+        "Definer"
+      ],
+      "classification": 18,
       "evidenceSet": 305
     },
     {
       "id": "builtin:describe",
       "name": "Describe",
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
-      "classification": 17,
+      "doc": "docs/spec/definitions.md#describe",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Describer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Describe",
+        "Describes",
+        "Described",
+        "Describing",
+        "Describer"
+      ],
+      "classification": 18,
       "evidenceSet": 306
     },
     {
       "id": "builtin:use",
       "name": "Use",
       "doc": "docs/spec/imports.md#indexed-dictionaries",
-      "classification": 17,
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "User": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Use",
+        "Uses",
+        "Used",
+        "Using",
+        "User"
+      ],
+      "classification": 18,
       "evidenceSet": 307
     },
     {
       "id": "builtin:public",
       "name": "Public",
-      "doc": "docs/spec/names-and-scope.md#paragraph-scope",
-      "classification": 17,
+      "doc": "docs/spec/names-and-scope.md#public",
+      "word": {
+        "partOfSpeech": "adjective"
+      },
+      "inflections": [
+        "Public"
+      ],
+      "classification": 18,
       "evidenceSet": 308
     },
     {
       "id": "builtin:publicly",
       "name": "Publicly",
-      "doc": "docs/spec/names-and-scope.md#paragraph-scope",
-      "classification": 17,
+      "doc": "docs/spec/names-and-scope.md#publicly",
+      "word": {
+        "partOfSpeech": "adverb"
+      },
+      "inflections": [
+        "Publicly"
+      ],
+      "classification": 18,
       "evidenceSet": 308
     },
     {
       "id": "builtin:new",
       "name": "New",
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
-      "classification": 17,
+      "doc": "docs/spec/definitions.md#new",
+      "word": {
+        "partOfSpeech": "adjective"
+      },
+      "inflections": [
+        "New"
+      ],
+      "classification": 18,
       "evidenceSet": 309
     },
     {
       "id": "builtin:generic",
       "name": "Generic",
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
-      "classification": 18,
+      "doc": "docs/spec/definitions.md#generic",
+      "word": {
+        "partOfSpeech": "adjective"
+      },
+      "inflections": [
+        "Generic"
+      ],
+      "classification": 19,
       "evidenceSet": 310,
       "note": 194
     },
     {
       "id": "builtin:input",
       "name": "Input",
-      "doc": "docs/reference/builtins/index.md#runtime-members",
-      "classification": 18,
+      "doc": "docs/reference/builtins/index.md#input",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Input",
+        "Inputs"
+      ],
+      "classification": 19,
       "evidenceSet": 311,
       "note": 195
     },
     {
       "id": "builtin:put",
       "name": "Put",
-      "doc": "docs/spec/collections-and-categories.md#lists",
-      "classification": 17,
+      "doc": "docs/spec/collections-and-categories.md#put",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Puter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Put",
+        "Puts",
+        "Put",
+        "Putting",
+        "Puter"
+      ],
+      "classification": 18,
       "evidenceSet": 312,
       "note": 196
     },
     {
       "id": "builtin:place",
       "name": "Place",
-      "doc": "docs/spec/collections-and-categories.md#lists",
-      "classification": 17,
+      "doc": "docs/spec/collections-and-categories.md#place",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Placer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Place",
+        "Places",
+        "Placed",
+        "Placing",
+        "Placer"
+      ],
+      "classification": 18,
       "evidenceSet": 312,
       "note": 196
     },
     {
       "id": "builtin:get",
       "name": "Get",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 19,
+      "doc": "docs/spec/grammar.md#get",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Getter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Get",
+        "Gets",
+        "Gotten",
+        "Getting",
+        "Getter"
+      ],
+      "classification": 20,
       "evidenceSet": 313,
       "note": 197
     },
     {
       "id": "builtin:take",
       "name": "Take",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 19,
+      "doc": "docs/spec/grammar.md#take",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Taker": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Take",
+        "Takes",
+        "Taken",
+        "Taking",
+        "Taker"
+      ],
+      "classification": 20,
       "evidenceSet": 313,
       "note": 197
     },
     {
       "id": "builtin:import",
       "name": "Import",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 19,
+      "doc": "docs/spec/grammar.md#import",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Importer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Import",
+        "Imports",
+        "Imported",
+        "Importing",
+        "Importer"
+      ],
+      "classification": 20,
       "evidenceSet": 313,
       "note": 197
     },
     {
       "id": "builtin:export",
       "name": "Export",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 19,
+      "doc": "docs/spec/grammar.md#export",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Exporter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Export",
+        "Exports",
+        "Exported",
+        "Exporting",
+        "Exporter"
+      ],
+      "classification": 20,
       "evidenceSet": 313,
       "note": 197
     },
@@ -8136,14 +8780,14 @@
         "key": "io"
       },
       "visibility": "namespace",
-      "classification": 20,
+      "classification": 21,
       "evidenceSet": 314,
       "note": 198
     },
     {
       "id": "stdlib-export:eng:io:IO.Print",
       "name": "IO.Print",
-      "doc": "docs/stdlib/eng/io.md#import-and-calling-forms",
+      "doc": "docs/stdlib/eng/io.md#print",
       "dictionary": {
         "lexicon": "eng",
         "key": "io"
@@ -8160,14 +8804,23 @@
         "Output (Thing)"
       ],
       "effect": "Writes the selected typed rendering and appends LF; no L return value is declared.",
-      "classification": 20,
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Printer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "classification": 21,
       "evidenceSet": 315,
       "note": 199
     },
     {
       "id": "stdlib-export:eng:io:IO.Output",
       "name": "IO.Output",
-      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
+      "doc": "docs/stdlib/eng/io.md#output",
       "dictionary": {
         "lexicon": "eng",
         "key": "io"
@@ -8178,14 +8831,17 @@
       ],
       "argumentRoles": [],
       "effect": "Obtains the standard-output handle; does not lock, write or flush.",
-      "classification": 20,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "classification": 21,
       "evidenceSet": 316,
       "note": 200
     },
     {
       "id": "stdlib-export:eng:io:IO.Diagnostic",
       "name": "IO.Diagnostic",
-      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
+      "doc": "docs/stdlib/eng/io.md#diagnostic",
       "dictionary": {
         "lexicon": "eng",
         "key": "io"
@@ -8196,14 +8852,17 @@
       ],
       "argumentRoles": [],
       "effect": "Obtains the standard-error handle; does not redirect Print.",
-      "classification": 20,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "classification": 21,
       "evidenceSet": 316,
       "note": 201
     },
     {
       "id": "stdlib-export:eng:io:IO.Send",
       "name": "IO.Send",
-      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "doc": "docs/stdlib/eng/io.md#send",
       "dictionary": {
         "lexicon": "eng",
         "key": "io"
@@ -8221,14 +8880,23 @@
         "Payload (&P: AsRef<[u8]> + ?Sized)"
       ],
       "effect": "Writes the borrowed byte view and returns std::io::Result<()>; no added LF, lock, flush or panic.",
-      "classification": 20,
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Sender": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "classification": 21,
       "evidenceSet": 317,
       "note": 202
     },
     {
       "id": "stdlib-export:eng:io:IO.Lined",
       "name": "IO.Lined",
-      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "doc": "docs/stdlib/eng/io.md#lined",
       "dictionary": {
         "lexicon": "eng",
         "key": "io"
@@ -8241,14 +8909,23 @@
         "Selected Sender invocation"
       ],
       "effect": "After payload success, sends LF through the same writer; returns the first error or unit success.",
-      "classification": 20,
+      "word": {
+        "partOfSpeech": "adjective",
+        "targets": [
+          {
+            "entry": "stdlib-export:eng:io:IO.Send",
+            "form": "Sender"
+          }
+        ]
+      },
+      "classification": 21,
       "evidenceSet": 318,
       "note": 203
     },
     {
       "id": "stdlib-export:eng:io:IO.Flush",
       "name": "IO.Flush",
-      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
+      "doc": "docs/stdlib/eng/io.md#flush",
       "dictionary": {
         "lexicon": "eng",
         "key": "io"
@@ -8265,7 +8942,16 @@
         "Writer (&mut std::io::Write)"
       ],
       "effect": "Requests an explicit native writer flush and returns its IO Result.",
-      "classification": 20,
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Flusher": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "classification": 21,
       "evidenceSet": 317,
       "note": 204
     },
@@ -8278,7 +8964,7 @@
         "key": "io"
       },
       "visibility": "private",
-      "classification": 21,
+      "classification": 22,
       "evidenceSet": 319,
       "note": 205
     },
@@ -8286,7 +8972,7 @@
       "id": "grammar-group:values-subjects-objects",
       "name": "values-subjects-objects",
       "doc": "docs/spec/grammar.md#values-subjects-and-objects",
-      "classification": 22,
+      "classification": 23,
       "evidenceSet": 320,
       "note": 206
     },
@@ -8294,7 +8980,7 @@
       "id": "grammar-group:phrases",
       "name": "phrases",
       "doc": "docs/spec/grammar.md#phrases",
-      "classification": 22,
+      "classification": 23,
       "evidenceSet": 321,
       "note": 206
     },
@@ -8302,7 +8988,7 @@
       "id": "grammar-group:declarations",
       "name": "declarations",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 23,
+      "classification": 24,
       "evidenceSet": 322,
       "note": 206
     },
@@ -8310,7 +8996,7 @@
       "id": "grammar-group:definitions",
       "name": "definitions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 23,
+      "classification": 24,
       "evidenceSet": 323,
       "note": 206
     },
@@ -8318,7 +9004,7 @@
       "id": "grammar-group:descriptors",
       "name": "descriptors",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 23,
+      "classification": 24,
       "evidenceSet": 324,
       "note": 206
     },
@@ -8326,7 +9012,7 @@
       "id": "grammar-group:aliases-imports",
       "name": "aliases-imports",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 23,
+      "classification": 24,
       "evidenceSet": 325,
       "note": 206
     },
@@ -8334,7 +9020,7 @@
       "id": "grammar-group:process-lifecycle",
       "name": "process-lifecycle",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 23,
+      "classification": 24,
       "evidenceSet": 326,
       "note": 188
     },
@@ -8342,7 +9028,7 @@
       "id": "grammar-group:collection-actions",
       "name": "collection-actions",
       "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "classification": 22,
+      "classification": 23,
       "evidenceSet": 327,
       "note": 207
     },
@@ -8350,7 +9036,7 @@
       "id": "grammar-group:conditions",
       "name": "conditions",
       "doc": "docs/spec/grammar.md#conditions",
-      "classification": 22,
+      "classification": 23,
       "evidenceSet": 328,
       "note": 206
     },
@@ -8358,7 +9044,7 @@
       "id": "grammar-group:while",
       "name": "while",
       "doc": "docs/spec/grammar.md#conditions",
-      "classification": 24,
+      "classification": 25,
       "evidenceSet": 326,
       "note": 206
     },
@@ -8366,7 +9052,7 @@
       "id": "grammar-group:joined-conditions",
       "name": "joined-conditions",
       "doc": "docs/spec/grammar.md#conditions",
-      "classification": 24,
+      "classification": 25,
       "evidenceSet": 326,
       "note": 206
     },
@@ -8374,7 +9060,7 @@
       "id": "grammar-group:predicates-statements",
       "name": "predicates-statements",
       "doc": "docs/spec/grammar.md#predicates-and-statements",
-      "classification": 22,
+      "classification": 23,
       "evidenceSet": 326,
       "note": 206
     },
@@ -8382,7 +9068,7 @@
       "id": "grammar-group:vocabulary",
       "name": "vocabulary",
       "doc": "docs/spec/grammar.md#vocabulary-reference",
-      "classification": 22,
+      "classification": 23,
       "evidenceSet": 329,
       "note": 206
     },
@@ -8390,7 +9076,7 @@
       "id": "grammar-group:notation",
       "name": "notation",
       "doc": "docs/spec/grammar.md#configuration-notation",
-      "classification": 23,
+      "classification": 24,
       "evidenceSet": 330,
       "note": 206
     },
@@ -8398,7 +9084,7 @@
       "id": "grammar-group:matching",
       "name": "matching",
       "doc": "docs/spec/grammar.md#matching-and-ambiguity",
-      "classification": 23,
+      "classification": 24,
       "evidenceSet": 331,
       "note": 206
     },
@@ -8406,7 +9092,7 @@
       "id": "value-tag:invalid-zero",
       "name": "Invalid zero sentinel",
       "doc": "docs/spec/values.md#null-and-internal-states",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 332,
       "note": 208
     },
@@ -8414,7 +9100,13 @@
       "id": "type:map",
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
-      "classification": 13,
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Map"
+      ],
+      "classification": 14,
       "evidenceSet": 333,
       "note": 209
     },
@@ -8422,15 +9114,22 @@
       "id": "value-tag:Map",
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 334,
       "note": 210
     },
     {
       "id": "type:error",
       "name": "Error",
-      "doc": "docs/spec/execution.md#output-and-error",
-      "classification": 13,
+      "doc": "docs/spec/values.md#error",
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "inflections": [
+        "Error",
+        "Errors"
+      ],
+      "classification": 14,
       "evidenceSet": 335,
       "note": 211
     },
@@ -8438,7 +9137,7 @@
       "id": "grammar-group:runtime-captures",
       "name": "runtime-captures",
       "doc": "docs/spec/names-and-scope.md#runtime-storage-and-definite-assignment",
-      "classification": 23,
+      "classification": 24,
       "evidenceSet": 336,
       "note": 212
     },
@@ -8451,7 +9150,7 @@
         "key": "storage"
       },
       "visibility": "namespace",
-      "classification": 21,
+      "classification": 22,
       "evidenceSet": 337,
       "note": 213
     },
@@ -8464,7 +9163,7 @@
         "key": "runtime"
       },
       "visibility": "namespace",
-      "classification": 21,
+      "classification": 22,
       "evidenceSet": 338,
       "note": 214
     },
@@ -8477,248 +9176,899 @@
         "key": "format"
       },
       "visibility": "namespace",
-      "classification": 21,
+      "classification": 22,
       "evidenceSet": 339,
       "note": 215
+    },
+    {
+      "id": "builtin:function.invoke",
+      "name": "Function.Invoke",
+      "doc": "docs/reference/builtins/definitions.md#functioninvoke",
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Invoker": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Invoke",
+        "Invokes",
+        "Invoked",
+        "Invoking",
+        "Invoker"
+      ],
+      "classification": 18,
+      "evidenceSet": 340,
+      "note": 216
+    },
+    {
+      "id": "builtin:delegate",
+      "name": "Delegate",
+      "doc": "docs/reference/builtins/definitions.md#delegate",
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Delegator": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "inflections": [
+        "Delegate",
+        "Delegates",
+        "Delegated",
+        "Delegating",
+        "Delegator"
+      ],
+      "classification": 18,
+      "evidenceSet": 341,
+      "note": 217
+    },
+    {
+      "id": "grammar-word:it",
+      "name": "It",
+      "doc": "docs/spec/names-and-scope.md#it",
+      "inflections": [
+        "It",
+        "they"
+      ],
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 113
+    },
+    {
+      "id": "grammar-word:that",
+      "name": "That",
+      "doc": "docs/spec/names-and-scope.md#that",
+      "inflections": [
+        "That",
+        "Those"
+      ],
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 113
+    },
+    {
+      "id": "grammar-word:this",
+      "name": "This",
+      "doc": "docs/spec/names-and-scope.md#this",
+      "inflections": [
+        "This",
+        "These"
+      ],
+      "word": {
+        "partOfSpeech": "noun"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 113
+    },
+    {
+      "id": "grammar-word:is",
+      "name": "Is",
+      "doc": "docs/spec/control-flow.md#is",
+      "inflections": [
+        "Is",
+        "Isnt"
+      ],
+      "word": {
+        "partOfSpeech": "verb"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 124
+    },
+    {
+      "id": "grammar-word:have",
+      "name": "Have",
+      "doc": "docs/spec/control-flow.md#have",
+      "inflections": [
+        "Have",
+        "Has",
+        "Had",
+        "Having",
+        "Haver"
+      ],
+      "word": {
+        "partOfSpeech": "verb"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 139
+    },
+    {
+      "id": "grammar-word:equal",
+      "name": "Equal",
+      "doc": "docs/spec/control-flow.md#equal",
+      "inflections": [
+        "Equal",
+        "Equals",
+        "Equaled",
+        "Equaling",
+        "Equaler"
+      ],
+      "word": {
+        "partOfSpeech": "verb"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 139
+    },
+    {
+      "id": "grammar-word:not",
+      "name": "Not",
+      "doc": "docs/spec/control-flow.md#not",
+      "inflections": [
+        "Not"
+      ],
+      "word": {
+        "partOfSpeech": "adverb"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 142
+    },
+    {
+      "id": "grammar-word:less",
+      "name": "Less",
+      "doc": "docs/spec/control-flow.md#less",
+      "inflections": [
+        "Less"
+      ],
+      "word": {
+        "partOfSpeech": "adverb"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 142
+    },
+    {
+      "id": "grammar-word:greater",
+      "name": "Greater",
+      "doc": "docs/spec/control-flow.md#greater",
+      "inflections": [
+        "Greater"
+      ],
+      "word": {
+        "partOfSpeech": "adverb"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 142
+    },
+    {
+      "id": "grammar-word:then",
+      "name": "Then",
+      "doc": "docs/spec/control-flow.md#then",
+      "inflections": [
+        "Then"
+      ],
+      "word": {
+        "partOfSpeech": "adverb"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 142
+    },
+    {
+      "id": "grammar-word:as",
+      "name": "As",
+      "doc": "docs/spec/grammar.md#as",
+      "inflections": [
+        "As"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 143
+    },
+    {
+      "id": "grammar-word:of",
+      "name": "Of",
+      "doc": "docs/spec/grammar.md#of",
+      "inflections": [
+        "Of"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 143
+    },
+    {
+      "id": "grammar-word:at",
+      "name": "At",
+      "doc": "docs/spec/grammar.md#at",
+      "inflections": [
+        "At"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 144
+    },
+    {
+      "id": "grammar-word:with",
+      "name": "With",
+      "doc": "docs/spec/grammar.md#with",
+      "inflections": [
+        "With"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 143
+    },
+    {
+      "id": "grammar-word:in",
+      "name": "In",
+      "doc": "docs/spec/grammar.md#in",
+      "inflections": [
+        "In"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 145
+    },
+    {
+      "id": "grammar-word:out",
+      "name": "Out",
+      "doc": "docs/spec/grammar.md#out",
+      "inflections": [
+        "Out"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 143
+    },
+    {
+      "id": "grammar-word:by",
+      "name": "By",
+      "doc": "docs/spec/grammar.md#by",
+      "inflections": [
+        "By"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 143
+    },
+    {
+      "id": "grammar-word:from",
+      "name": "From",
+      "doc": "docs/spec/grammar.md#from",
+      "inflections": [
+        "From"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 143
+    },
+    {
+      "id": "grammar-word:to",
+      "name": "To",
+      "doc": "docs/spec/grammar.md#to",
+      "inflections": [
+        "To"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 143
+    },
+    {
+      "id": "grammar-word:than",
+      "name": "Than",
+      "doc": "docs/spec/grammar.md#than",
+      "inflections": [
+        "Than"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 143
+    },
+    {
+      "id": "grammar-word:for",
+      "name": "For",
+      "doc": "docs/spec/grammar.md#for",
+      "inflections": [
+        "For"
+      ],
+      "word": {
+        "partOfSpeech": "preposition"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 143
+    },
+    {
+      "id": "grammar-word:any",
+      "name": "Any",
+      "doc": "docs/spec/grammar.md#any",
+      "inflections": [
+        "Any"
+      ],
+      "word": {
+        "partOfSpeech": "article"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 146
+    },
+    {
+      "id": "grammar-word:no",
+      "name": "No",
+      "doc": "docs/spec/grammar.md#no",
+      "inflections": [
+        "No"
+      ],
+      "word": {
+        "partOfSpeech": "article"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 146
+    },
+    {
+      "id": "grammar-word:a",
+      "name": "A",
+      "doc": "docs/spec/grammar.md#a",
+      "inflections": [
+        "A",
+        "An"
+      ],
+      "word": {
+        "partOfSpeech": "article"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 146
+    },
+    {
+      "id": "grammar-word:the",
+      "name": "The",
+      "doc": "docs/spec/grammar.md#the",
+      "inflections": [
+        "The"
+      ],
+      "word": {
+        "partOfSpeech": "article"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 146
+    },
+    {
+      "id": "grammar-word:and",
+      "name": "And",
+      "doc": "docs/spec/control-flow.md#and",
+      "inflections": [
+        "And"
+      ],
+      "word": {
+        "partOfSpeech": "conjunction"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 142
+    },
+    {
+      "id": "grammar-word:or",
+      "name": "Or",
+      "doc": "docs/spec/control-flow.md#or",
+      "inflections": [
+        "Or"
+      ],
+      "word": {
+        "partOfSpeech": "conjunction"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 142
+    },
+    {
+      "id": "grammar-word:if",
+      "name": "If",
+      "doc": "docs/spec/control-flow.md#if",
+      "inflections": [
+        "If"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 142
+    },
+    {
+      "id": "grammar-word:else",
+      "name": "Else",
+      "doc": "docs/spec/control-flow.md#else",
+      "inflections": [
+        "Else"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 142
+    },
+    {
+      "id": "grammar-word:otherwise",
+      "name": "Otherwise",
+      "doc": "docs/spec/control-flow.md#otherwise",
+      "inflections": [
+        "Otherwise"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation"
+      },
+      "classification": 26,
+      "evidenceSet": 342,
+      "note": 142
+    },
+    {
+      "id": "grammar-word:while",
+      "name": "While",
+      "doc": "docs/spec/control-flow.md#while",
+      "inflections": [
+        "While"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation"
+      },
+      "classification": 27,
+      "evidenceSet": 342,
+      "note": 147
+    },
+    {
+      "id": "authoring:Storage.Option",
+      "name": "Storage.Option",
+      "doc": "docs/internals/storage.md#option",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "inflections": [
+        "Option"
+      ],
+      "word": {
+        "partOfSpeech": "noun",
+        "audience": "authoring"
+      },
+      "classification": 28,
+      "evidenceSet": 343,
+      "note": 218
+    },
+    {
+      "id": "authoring:Storage.Result",
+      "name": "Storage.Result",
+      "doc": "docs/internals/storage.md#result",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "inflections": [
+        "Result"
+      ],
+      "word": {
+        "partOfSpeech": "noun",
+        "audience": "authoring"
+      },
+      "classification": 28,
+      "evidenceSet": 343,
+      "note": 219
+    },
+    {
+      "id": "authoring:Storage.Option.Select",
+      "name": "Storage.Option.Select",
+      "doc": "docs/internals/storage.md#optionselect",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "inflections": [
+        "Select",
+        "Selects",
+        "Selected",
+        "Selecting",
+        "Selector"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Selector": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "classification": 28,
+      "evidenceSet": 343,
+      "note": 220
+    },
+    {
+      "id": "authoring:Storage.Result.Select",
+      "name": "Storage.Result.Select",
+      "doc": "docs/internals/storage.md#resultselect",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "inflections": [
+        "Select",
+        "Selects",
+        "Selected",
+        "Selecting",
+        "Selector"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Selector": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "classification": 28,
+      "evidenceSet": 343,
+      "note": 221
+    },
+    {
+      "id": "authoring:Storage.Require",
+      "name": "Storage.Require",
+      "doc": "docs/internals/storage.md#require",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "inflections": [
+        "Require",
+        "Requires",
+        "Required",
+        "Requiring",
+        "Requirer"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Requirer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "classification": 28,
+      "evidenceSet": 343,
+      "note": 222
+    },
+    {
+      "id": "authoring:Storage.Result.Expect",
+      "name": "Storage.Result.Expect",
+      "doc": "docs/internals/storage.md#resultexpect",
+      "dictionary": {
+        "lexicon": "eng",
+        "key": "storage"
+      },
+      "inflections": [
+        "Expect",
+        "Expects",
+        "Expected",
+        "Expecting",
+        "Expecter"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Expecter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      },
+      "classification": 28,
+      "evidenceSet": 343,
+      "note": 223
     },
     {
       "id": "logeme.segment.B",
       "name": "B / declare",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
-      "classification": 25,
-      "evidenceSet": 340
+      "classification": 29,
+      "evidenceSet": 344
     },
     {
       "id": "logeme.segment.A",
       "name": "A / declaration",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
-      "classification": 25,
-      "evidenceSet": 341
+      "classification": 29,
+      "evidenceSet": 345
     },
     {
       "id": "logeme.segment.D",
       "name": "D / calculate",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
-      "classification": 25,
-      "evidenceSet": 342
+      "classification": 29,
+      "evidenceSet": 346
     },
     {
       "id": "logeme.segment.E",
       "name": "E / calculation",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
-      "classification": 25,
-      "evidenceSet": 343
+      "classification": 29,
+      "evidenceSet": 347
     },
     {
       "id": "logeme.segment.G",
       "name": "G / evaluate",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
-      "classification": 25,
-      "evidenceSet": 344
+      "classification": 29,
+      "evidenceSet": 348
     },
     {
       "id": "logeme.segment.I",
       "name": "I / evaluation",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
-      "classification": 25,
-      "evidenceSet": 345
+      "classification": 29,
+      "evidenceSet": 349
     },
     {
       "id": "logeme.segment.F",
       "name": "F / define",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
-      "classification": 25,
-      "evidenceSet": 346
+      "classification": 29,
+      "evidenceSet": 350
     },
     {
       "id": "logeme.segment.O",
       "name": "O / definition",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
-      "classification": 25,
-      "evidenceSet": 347
+      "classification": 29,
+      "evidenceSet": 351
     },
     {
       "id": "logeme.segment.H",
       "name": "H / describe",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
-      "classification": 25,
-      "evidenceSet": 348
+      "classification": 29,
+      "evidenceSet": 352
     },
     {
       "id": "logeme.segment.U",
       "name": "U / description",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
-      "classification": 25,
-      "evidenceSet": 349
+      "classification": 29,
+      "evidenceSet": 353
     },
     {
       "id": "logeme.segment.K",
       "name": "K / operate",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
-      "classification": 25,
-      "evidenceSet": 350
+      "classification": 29,
+      "evidenceSet": 354
     },
     {
       "id": "logeme.segment.W",
       "name": "W / operation",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
-      "classification": 25,
-      "evidenceSet": 351
+      "classification": 29,
+      "evidenceSet": 355
     },
     {
       "id": "logeme.segment.P",
       "name": "P / iterate",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
-      "classification": 25,
-      "evidenceSet": 352
+      "classification": 29,
+      "evidenceSet": 356
     },
     {
       "id": "logeme.segment.X",
       "name": "X / iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
-      "classification": 25,
-      "evidenceSet": 353
+      "classification": 29,
+      "evidenceSet": 357
     },
     {
       "id": "logeme.segment.M",
       "name": "M / instantiate",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
-      "classification": 25,
-      "evidenceSet": 354
+      "classification": 29,
+      "evidenceSet": 358
     },
     {
       "id": "logeme.segment.Y",
       "name": "Y / instantiation",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
-      "classification": 25,
-      "evidenceSet": 355
+      "classification": 29,
+      "evidenceSet": 359
     },
     {
       "id": "logeme.segment.C",
       "name": "C / execute",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
-      "classification": 25,
-      "evidenceSet": 356
+      "classification": 29,
+      "evidenceSet": 360
     },
     {
       "id": "logeme.segment.V",
       "name": "V / execution",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
-      "classification": 25,
-      "evidenceSet": 357
+      "classification": 29,
+      "evidenceSet": 361
     },
     {
       "id": "logeme.family.declaration-adapters",
       "name": "A/BA/DA/KA/HA/GA/MA/PA",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
-      "classification": 26,
-      "evidenceSet": 358
+      "classification": 30,
+      "evidenceSet": 362
     },
     {
       "id": "logeme.family.definition-adapters",
       "name": "O/OB/FO/FOB/KO/KOB/DO/DOB/GO/GOB/MO/MOB/CO/COB/BO/BOD/BOK/BOH/BOG/BOM/BOP/BOC",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
-      "classification": 26,
-      "evidenceSet": 359
+      "classification": 30,
+      "evidenceSet": 363
     },
     {
       "id": "logeme.family.literal-file",
       "name": "EA complete literal file",
       "doc": "docs/reference/logemes/declarations.md#ea-complete-literal-file",
-      "classification": 26,
-      "evidenceSet": 360
+      "classification": 30,
+      "evidenceSet": 364
     },
     {
       "id": "logeme.family.communication",
       "name": "CE communication calculations",
       "doc": "docs/reference/logemes/calculations.md#communication-calculations",
-      "classification": 25,
-      "evidenceSet": 361
+      "classification": 29,
+      "evidenceSet": 365
     },
     {
       "id": "logeme.family.description",
       "name": "U/MU description and updates",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
-      "classification": 25,
-      "evidenceSet": 362
+      "classification": 29,
+      "evidenceSet": 366
     },
     {
       "id": "logeme.family.selection",
       "name": "I/GE/GI ordered selection",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
-      "classification": 26,
-      "evidenceSet": 363
+      "classification": 30,
+      "evidenceSet": 367
     },
     {
       "id": "logeme.family.readiness",
       "name": "CI/BI/OC/DOC readiness selection",
       "doc": "docs/reference/logemes/selection.md#ci-and-bi-bounded-readiness-selection",
-      "classification": 25,
-      "evidenceSet": 364
+      "classification": 29,
+      "evidenceSet": 368
     },
     {
       "id": "logeme.family.callables",
       "name": "W/FW/BW/KY/KO/KOB callables",
       "doc": "docs/reference/logemes/callables.md#invocation-through-ky",
-      "classification": 25,
-      "evidenceSet": 365
+      "classification": 29,
+      "evidenceSet": 369
     },
     {
       "id": "logeme.family.iteration",
       "name": "X/I/OG/DOG/PO four-category iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
-      "classification": 26,
-      "evidenceSet": 366
+      "classification": 30,
+      "evidenceSet": 370
     },
     {
       "id": "logeme.family.unsupported-loops",
       "name": "Three-part loops",
       "doc": "docs/reference/logemes/iteration.md#unsupported-forms-and-native-failures",
-      "classification": 27,
-      "evidenceSet": 367
+      "classification": 31,
+      "evidenceSet": 371
     },
     {
       "id": "logeme.family.instantiation",
       "name": "Y/HY empty and populated records",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
-      "classification": 26,
-      "evidenceSet": 368
+      "classification": 30,
+      "evidenceSet": 372
     },
     {
       "id": "logeme.family.traits",
       "name": "MY required signatures",
       "doc": "docs/reference/logemes/instantiation.md#required-trait-signatures",
-      "classification": 25,
-      "evidenceSet": 369
+      "classification": 29,
+      "evidenceSet": 373
     },
     {
       "id": "logeme.family.generics",
       "name": "Local FW/HY/MY/Y/named KY parameters",
       "doc": "docs/reference/logemes/metadata.md#lifetimes-and-generictypes",
-      "classification": 25,
-      "evidenceSet": 370
+      "classification": 29,
+      "evidenceSet": 374
     },
     {
       "id": "logeme.family.scheduling",
       "name": "V/MV scheduling",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
-      "classification": 25,
-      "evidenceSet": 371
+      "classification": 29,
+      "evidenceSet": 375
     },
     {
       "id": "logeme.family.deferred",
       "name": "Deferred metadata",
       "doc": "docs/reference/logemes/instantiation.md#deferred-is-rejected",
-      "classification": 27,
-      "evidenceSet": 367
+      "classification": 31,
+      "evidenceSet": 371
     },
     {
       "id": "logeme.family.futures",
       "name": "CV/DV/CO/COB future composition",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
-      "classification": 28,
-      "evidenceSet": 372,
-      "note": 216
+      "classification": 32,
+      "evidenceSet": 376,
+      "note": 224
     }
   ],
   "schemaVersion": 3,
@@ -8846,7 +10196,7 @@
     "The configured byte root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.",
     "The configured truth root is a source spelling. Its storage and executable support are documented independently; the handler description below is not a callable API.",
     "Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API.",
-    "Function declarations retain typed signatures and use the canonical builtin definition. Their invocation verbs participate in ordinary sentences.",
+    "Configured native representation spelling, not a public application constructor or alias for the source Function, Property or Operation category. Its configuration handler is not executable API evidence.",
     "Assignment follows resolved typed-storage rules and definite assignment. Runtime ordering is preserved independently of parser retry order.",
     "Association names an existing canonical value or definition. It does not create an independent runtime copy.",
     "A declaration associates a source name with the indicated category or value. Voice-specific recognizers do not imply interchangeable native behavior.",
@@ -8907,7 +10257,7 @@
     "Owned byte sequences construct from Text, snapshot and support checked indexed reads as Number. Byte mutation and numeric-width families are not supplied.",
     "Null initializes an explicit absence value; typed reads preserve evaluation and type/index/key checks. Unassigned storage and the native-definition Null atom remain separate.",
     "Service declarations remain structural; standalone bodies, packages and native process operations are unsupported. App-constructed Service libraries retain their workspace topology. Static inspection; witnesses not run.",
-    "Functions bind typed invocation verbs and private bodies. Signatures include canonical constructor identity; aliases preserve it and incompatible transfers reject. Emission uses selected builtin/logeme definitions.",
+    "Functions bind typed invocation verbs and private bodies. Signatures include canonical constructor identity; aliases preserve it and incompatible transfers reject. Emission uses selected builtin/logeme definitions. The callable type and builtin composition use the same selected Function constructor; canonical word prose is associated explicitly rather than duplicated.",
     "Descriptors retain canonical targets through aliases and qualified imports. Source nouns bind typed formals and fixed operands to selected constructors. Replacements consume original operands; wrappers name and preserve the base result. Operands evaluate once in authored order; native moves and borrows remain checked. This is not a resource-cost certificate.",
     "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
     "Internal tag; source construction and runtime support are documented separately.",
@@ -8939,6 +10289,14 @@
     "Explicitly importable implementation vocabulary, not an implicit builtin or public dictionary catalog. Source compositions own typed traversal, result binding, lazy failures, release sequencing, byte appends and caller returns. Native allocation, blocking and destructor costs remain separate obligations.",
     "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog. Runtime privately imports canonical Storage leaves and the shared Formatting implementation; native host/platform inputs and generated composition retain separate ownership.",
     "IO and Runtime select one canonical Formatting Function. Shared bindings, control and numeric operators use Storage. Private Integer/Wide/Indexed/Unsigned preserve their nominal targets and compose through Storage.Integral without intermediate narrowing. No Numeric dictionary or implicit arithmetic vocabulary is added. Formatting and IO do not source-load process supervision.",
+    "Selected Function invocation uses resolved native target and ordered argument atoms; callers normally use their Function invocation verb.",
+    "Selected native entry delegation receives a compiler-resolved reference and is the sole entry tail call. Quoted Text is not a native target-reference API.",
+    "Dictionary namespace for native Option operations; not an L runtime carrier type.",
+    "Dictionary namespace for native Result operations; native payload and error types remain explicit.",
+    "Evaluate the supplied Option once; choose a typed Some Process or payload-free None Process without cloning.",
+    "Evaluate the supplied Result once; choose a typed Ok or Err Process within the enclosing Function.",
+    "Consume Option<T> and &str; preserve success payload or construct runtime failure only for None. Argument evaluation remains ordinary.",
+    "Consume a native Result and &str; preserve successful payload or panic using native expect formatting.",
     "CV constructs one unscheduled future; local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing; this adds no async-FW modifier or Function dispatcher."
   ],
   "evidenceSets": [
@@ -12225,7 +13583,8 @@
         "lyger/construction_test.go",
         "lyger/scoped_definition_test.go",
         "lyger/process_inputs_test.go",
-        "lyger/word_library_acceptance_test.go"
+        "lyger/word_library_acceptance_test.go",
+        "lyger/binding_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -12241,13 +13600,15 @@
         "lyger/source_functions.go",
         "lyger/function_composition.go",
         "lyger/function_definitions.go",
-        "lyger/lowering.go"
+        "lyger/lowering.go",
+        "lyger/binding.go"
       ],
       "witnesses": [
         "lyger/definition_test.go",
         "lyger/construction_test.go",
         "lyger/function_composition_test.go",
-        "lyger/nested_definition_test.go"
+        "lyger/nested_definition_test.go",
+        "lyger/binding_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
       "checkedStages": [
@@ -12980,6 +14341,70 @@
     },
     {
       "sources": [
+        "builtins/eng/core.l",
+        "lyger/function_definitions.go",
+        "lyger/function_composition.go"
+      ],
+      "witnesses": [
+        "lyger/function_composition_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "builtins/eng/core.l",
+        "lyger/source_units_topology.go"
+      ],
+      "witnesses": [
+        "lyger/recursive_classes_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lexicon/eng/grammar.json",
+        "lyger/grammar_types.go",
+        "lyger/instructions.go"
+      ],
+      "witnesses": [
+        "lyger/grammar_terms_test.go",
+        "lyger/grammar_consumption_test.go",
+        "lyger/phase1_language_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "builtins/eng/storage/dictionary.l",
+        "builtins/eng/storage/control.l",
+        "lyger/process_inputs.go",
+        "lyger/source_functions.go"
+      ],
+      "witnesses": [
+        "lyger/word_library_acceptance_test.go",
+        "lyger/word_documentation_test.go"
+      ],
+      "evidence": "static-inspection; existing-witness-not-run",
+      "checkedStages": [
+        "static-source-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
         "builtins/segments/consonants/declare.lu",
         "builtins/README.md"
       ],
@@ -13536,6 +14961,11 @@
     {
       "kind": "vocabulary",
       "role": "implementation",
+      "support": "internal"
+    },
+    {
+      "kind": "vocabulary",
+      "role": "implementation",
       "support": "rejected"
     },
     {
@@ -13622,6 +15052,21 @@
       "kind": "grammar-group",
       "role": "explanatory",
       "support": "rejected"
+    },
+    {
+      "kind": "grammar-word",
+      "role": "explanatory",
+      "support": "partial"
+    },
+    {
+      "kind": "grammar-word",
+      "role": "explanatory",
+      "support": "rejected"
+    },
+    {
+      "kind": "authoring-word",
+      "role": "explanatory",
+      "support": "supported"
     },
     {
       "kind": "logeme",

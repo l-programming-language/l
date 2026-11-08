@@ -22,6 +22,54 @@ For a source file that is not published as a page, link to its repository-relati
 
 Keep code examples in fenced blocks and AML escaped as code. Never turn native fragments or literal source into raw HTML to improve appearance. Do not rewrite links that merely appear inside a code sample.
 
+## Maintain word entries
+
+[Words A–Z](../reference/words.md), builtin navigation and library lists are derived views of the same canonical entries. Keep the explanation at its existing thematic home or library page. A small library needs one overview, its real import form, a task-to-word table where useful, an alphabetical list and precise entries. Internal dictionary registration does not make its helpers application API; mark deliberately documented foundational meanings as advanced authoring context.
+
+Review current definitions, exports, configured vocabulary and witnesses before selecting coverage. Each eligible builtin, public library meaning, noun/type or grammatical word must have an entry or a reviewed association to the same meaning. Internal value tags and non-word configuration records need honest classifications. Coverage proves completeness against this reviewed inventory; it is not a compiler-enumerated export proof.
+
+Keep identity, qualified name, support, visibility, dictionary ownership, sources, witnesses and the exact `doc` file/anchor in `docs/_meta/semantics.json`. Add only the missing mechanical facts in `word`: `partOfSpeech`, optional `audience` (`application` by default or `authoring`), exceptional `formRoles`, and modifier `targets` referencing `{ "entry": "reviewed-id", "form": "declared-form" }`. Forms come from the existing `inflections` list; roles annotate them rather than declaring new spellings. A record ID is a documentation review identity, not automatically a compiler-resolved identity.
+
+For genuinely overlapping records, use `wordRef` to a canonical record containing `word`. The two fields are mutually exclusive; references cannot chain or cycle. Configured vocabulary mappings use the same reference in `docs/_meta/vocabulary-review.json`. Inspect Function, Error and other overlaps by meaning; do not merge distinct senses or same-spelled words to reduce counts. Modifier target links establish that a meaning/form exists, while source review and relevant tests establish its actual applicability.
+
+Place one marker immediately after the owning heading and any supported explicit anchor. Its ID must match the record's exact `doc` target. The first substantive block must be the definition paragraph, before generated facts or example expansion:
+
+```markdown
+### Print
+
+<!-- word:stdlib-export:eng:io:IO.Print -->
+
+Render a supported value and write its bytes to standard output followed by one LF newline.
+
+**Usage:** Explain the actual import, operand roles, result and required App context.
+
+**Example:** Explain what this canonical program demonstrates.
+
+<!-- example:basic -->
+
+**Behavior:** State the relevant demand, ownership, failure or partial-effect policy.
+
+**Compose with:** Link to related canonical entries and explain their different purposes.
+```
+
+The template's instructions are authoring scaffolding, not publishable entry prose. Tailor the actual entry: a grammatical word describes its relationship and supported context rather than a fabricated callable signature; a descriptor identifies its exact target and order-sensitive effects; a noun explains what it denotes or constructs. Keep recognized-only or partial forms findable with their limits visible. Link shared lifecycle, formatting and contract explanations rather than repeating them in every entry.
+
+Each supported meaning needs a meaningful usage example, potentially a clearly linked shared example that actually demonstrates it. Show the caller and its enclosing setup; a source-definition excerpt alone is not a use. Keep complete, invalid and fragment classifications accurate. Avoid a copy of the basic program under unrelated words. Examples of unsupported syntax must say what is unsupported and must not appear as runnable instructions.
+
+A section owns content until the next heading at the same or higher level. Nested senses need their own markers and definition paragraphs; ordinary subsections must not substitute for a missing definition. The index gloss comes from that paragraph. Do not duplicate it in JSON or maintain a second list of definitions. Existing useful routes and anchors remain valid; never add an explicit anchor equal to the heading's automatic ID.
+
+Use these literal directives for navigation:
+
+```markdown
+<!-- word-index -->
+<!-- word-index:builtins -->
+<!-- word-index:eng:io -->
+```
+
+The first creates the global alphabetical view, the second builtin navigation, and the third selects an existing registry lexicon/key. Other registered libraries use the same form. Only nonempty letter groups get navigation. Generated lists are excluded from full-text search so the actual entries provide ownership, forms, targets and explanations. Fenced and inline directive examples stay literal.
+
+When changing a word, update its canonical entry, reviewed associations and meaningful examples together. Check source dependencies before refreshing hashes or mechanical references. The full production inventory stays mandatory during migration: test a pilot with a coherent fixture inventory, not an allow-missing switch or temporary public exclusion.
+
 ## Include an existing example
 
 Register the canonical source in `docs/_meta/examples.json`, then put an inclusion comment in the authored page:

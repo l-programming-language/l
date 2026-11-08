@@ -4,6 +4,12 @@ The implicit [core source](../../../builtins/eng/core.l) defines these compositi
 
 ## Process
 
+<!-- word:builtin:process -->
+
+Compose an ordered source body from existing instantiated definition expressions.
+
+**Usage and example.** A `New Process with Inputs ... for ...` supplies a branch body to [Storage.Option.Select](../../internals/storage.md#optionselect). Its typed input belongs to that branch; the [selector caller](../../examples/word-selection.l) demonstrates enclosing Functions and both branches.
+
 Process composes ordered Definitions/Syllables through operation W.
 
 A Process collects existing instantiated definition expressions. It is not an OS process handle; App invocations own those. Processing a source-defined rendering or writing operation in IO is an application-body composition, not a direct runtime launch instruction.
@@ -11,6 +17,12 @@ A Process collects existing instantiated definition expressions. It is not an OS
 Structured selection and iteration bodies can declare typed Process Inputs. Lyger binds each input within its body and retains its declared native type and source dependency; an explicit local annotation lets native compilation check type and borrow compatibility. `_` requests native type inference. These bindings create no callable or closure and cannot escape to a sibling branch or later sentence.
 
 ## Function
+
+<!-- word:builtin:function -->
+
+Define a callable with a selected constructor, ordered typed inputs and results, and a private source body.
+
+**Usage and example.** The [complete Identity/Relay program](../../examples/composed-functions.l) declares two Functions, calls their invocation verbs and names each result. Ordinary source signatures and explicitly native signatures share this selected definition; native generic/lifetime atoms require the advanced context below.
 
 Function supplies an FW native definition with Func metadata. Name is Text, Inputs is Props, Outputs is Texts, and Process is an already instantiated definition reference.
 
@@ -20,15 +32,45 @@ Invocation words use normal grammatical binding. Captures, snapshots and Pointer
 
 ## Function.Invoke and Delegate
 
-Function.Invoke applies its Target with ordered Arguments atoms through KY. Delegate supplies a direct native Target call without an argument-list slot. These are composition facilities; each source Function declaration binds its own ordinary invocation verb, with checked inputs and outputs.
+These advanced facilities compose invocation; they do not introduce a Call primitive or a second dispatch runtime.
+
+### Function.Invoke
+
+<!-- word:builtin:function.invoke -->
+
+Apply a selected Function target to its ordered, resolved argument atoms.
+
+**Usage and example.** The `Identity Message as "Nested"` call in the [complete Function example](../../../docs/examples/composed-functions.l) uses the selected Function.Invoke definition. An author normally invokes the Function's own verb. Its Target and Arguments atoms are compiler-bound references, not an executable body hidden in text. [Selection tests](../../../lyger/function_composition_test.go) establish that this implementation controls emitted calls.
+
+### Delegate
+
+<!-- word:builtin:delegate -->
+
+Call an explicitly selected native target without supplying an argument list.
+
+**Usage and example.** The [recursive Class fixture](../../../lyger/test/classes/recursive.l) places Main below nested modules. Its generated entry uses Delegate with a compiler-resolved native path to that Main Function. The [source topology implementation](../../../lyger/source_units_topology.go) supplies this reference as the entry's sole tail call. A quoted Text target is not this native reference, and no general Text-to-call API is promised.
+
+Both facilities preserve the selected target and lexical ownership. Native type and symbol checking remain separate from grammatical recognition.
 
 ## Function.Return
+
+<!-- word:builtin:function.return -->
+
+Complete the current Function invocation through its selected Return definition with the declared results.
+
+**Usage and example.** `Return Value` in the [Identity/Relay program](../../examples/composed-functions.l) returns Text; Relay separately binds and returns Nested. A Return from a selected Process still belongs to its enclosing Function.
 
 Root-authored returning actions select their caller's Return; that selected implementation preserves its own lexical delegates. Function-owned actions retain their constructor contract and reject incompatible callers. Each Function establishes its own return context and checks declared result types and counts. Known unconditional exits through source actors and transparent Processes enter the typed plan; opaque or conditional bodies do not establish unconditional exits.
 
 Return completes that invocation; Exit terminates the enclosing program. Neither transports runtime captures into an App process.
 
 ## Retain
+
+<!-- word:builtin:retain -->
+
+Borrow an Arc handle and produce another handle to the same allocation.
+
+**Usage and example.** The [native caller module](../../examples/word-core.l) takes `&std::sync::Arc<u8>` and returns the retained Arc. It preserves allocation identity; [Storage retention](../../internals/storage.md#ownership-and-bytes) distinguishes Rc from this Arc operation.
 
 Retain takes an explicit borrowed Arc and returns another handle to the same allocation. It increments shared ownership without cloning the payload. Atomic reference counting does not make an arbitrary payload Send or Sync.
 
@@ -40,23 +82,47 @@ Prelude includes core and imports Storage privately. Its [implementation referen
 
 ## Objective
 
+<!-- word:builtin:objective -->
+
+Group an existing Function definition as source content for its containing Object.
+
+**Usage and example.** `New Objective First Function` in the [Object construction fixture](../../../lyger/test/classes/interleaved.l) puts the selected Function into its Object. It does not invoke the Function or infer a signature.
+
 Objective describes any Function by wrapping its existing definition in a grouped native source word containing A and the Function. It preserves the input definition and grouping; it does not clone its runtime semantics or infer additional function arguments.
 
 ## Main
 
+<!-- word:builtin:main -->
+
+Describe the canonical native entry structure for a Function, Object or Service.
+
+**Usage and example.** The [nested construction example](../../spec/applicational-types.md#compose-an-object-inside-nested-classes) applies Main to an Object; Basic composes its Service rule for an App. Choose the actual target below rather than treating all three refinements as interchangeable.
+
 Main is a New Adjective describing Service, Object, or Function. Its ordered refinements compose:
 
-| Target | Builtin construction |
-| --- | --- |
-| Function | Generic `main` Function of a Process, with No Inputs and No Outputs |
-| Object | Generic `main` Object with a New Objective Main Function using a Process |
-| Service | Generic `main` Service with a New Main Object using a Process |
+### Main Function
+
+The Function rule constructs a Generic `main` Function from the supplied Process, with No Inputs and No Outputs. It chooses an entry signature; it does not accept arbitrary Function arguments.
+
+### Main Object
+
+The Object rule constructs a Generic `main` Object containing a New Objective Main Function. The Process becomes that Function's body, not an Object initializer.
+
+### Main Service
+
+The Service rule constructs a Generic `main` Service containing a New Main Object. Basic uses this structure inside an App; it does not make a standalone Service executable.
 
 These are ordinary source-defined descriptor rules. Aliases preserve their identity, and each construction applies every rule matching its target in authored order. Main currently has one rule for each target above; repeated construction remains distinct.
 
 Main does not grant standalone Service execution. A standalone declaration is structural; standalone Service body effects and native process operations reject. Apps own executable identity through their construction.
 
 ## Basic
+
+<!-- word:builtin:basic -->
+
+Describe an App containing a Main Service that receives the App's source Process.
+
+**Usage and example.** `Create "Hello" as a New Basic App` in the [first program](../../guide/first-program.md#read-the-program) creates the body owner. Execute is a separate lifecycle action; construction alone launches nothing.
 
 Basic describes a Generic App with a New Main Service using a Process. It is the composition behind `Create "Hello" as a New Basic App.` The App's source actions supply its body; the orchestrator separately controls launch and output.
 

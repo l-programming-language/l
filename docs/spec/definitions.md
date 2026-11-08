@@ -8,6 +8,30 @@ Create introduces a supported value or lexical action. Define supplies a scalar,
 
 Declarations retain tokens, formal identities, bindings, descriptor targets and source spans. Publication validates relationships before committing; expansion creates use-specific instances without mutating prototypes.
 
+### Create
+
+<!-- word:builtin:create -->
+
+Introduce a named supported value, construction or source action in the current lexical scope.
+
+**Usage and example.** `Create "Hello" as a New Basic App` in the [first program](../guide/first-program.md#read-the-program) creates an App. `Create "Launch..." for ...` in the [action example](../guide/definitions.md#compose-a-source-action) creates a reusable composition; its parameter has the declared App meaning.
+
+### Define
+
+<!-- word:builtin:define -->
+
+Associate a declaration with a value or an explicitly supplied native-backed definition.
+
+**Usage and example.** The [public-values program](../../demo/paragraphs/public-values.l) defines Text, Number and Truth. [Framed definitions](#framing-and-escaping) bind native source through typed slots; Define does not bypass ownership, type or visibility checks.
+
+### Describe
+
+<!-- word:builtin:describe -->
+
+Associate a descriptor with its canonical target and ordered construction refinements.
+
+**Usage and example.** Main's `It describes` rules in the [descriptor example](lexical-types.md#describe-with-an-adjective) construct different Function/Object/Service targets. The [recursive caller](../../lyger/test/classes/recursive.l) applies the selected Object rule. Description does not make unrelated homonyms equivalent.
+
 ## Source actions
 
 <!-- example:lexical-action-inflections -->
@@ -29,6 +53,22 @@ Descriptors bind nominal identities to ordered construction rules. A source noun
 The [authoring guide](../guide/definitions.md#compose-a-source-action) demonstrates separate paragraph-local actions and descriptors. New selects construction, Generic participates in source composition and Public controls visibility; none infers Rust lifetimes or generic arguments.
 
 Main constructs a Function inside an Object inside a Service; Basic supplies that Main Service to an App. These rules define `New Basic App`.
+
+### New
+
+<!-- word:builtin:new -->
+
+Request construction through the selected noun and its matching descriptor rules.
+
+**Usage and example.** `New Basic App` in the [first program](../guide/first-program.md#read-the-program) applies Basic and Main to the App body. `New List of Number` in the [value program](../examples/word-values.l) selects checked List construction. New supplies no universal constructor, clone or initialization fallback.
+
+### Generic
+
+<!-- word:builtin:generic -->
+
+Describe a reusable source construction pattern whose explicit operands are supplied when applied.
+
+**Usage and example.** Compact in the [source-action example](../../demo/paragraphs/local-definitions.l) describes a Generic App using any Process; `New Compact App` supplies its body. Generic alone does not infer native Rust type parameters, lifetimes or unconstrained constructor support.
 
 ## Process, Function, and Return
 

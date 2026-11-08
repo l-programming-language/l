@@ -955,6 +955,135 @@
         "start": 21,
         "end": 24
       }
+    },
+    {
+      "id": "word-io",
+      "source": "docs/examples/word-io.l",
+      "classification": "fragment",
+      "description": "Native-signature IO caller Functions with explicit writer and payload context; the documentation native witness supplies their host and checks exact bytes.",
+      "sha256": "745b5cc96a0533bfd5f41a8c53e456011f0f4a42047e8be2f53f0e262ca8be64",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/word_documentation_test.go",
+        "lyger/word_library_acceptance_test.go"
+      ]
+    },
+    {
+      "id": "word-selection",
+      "source": "docs/examples/word-selection.l",
+      "classification": "fragment",
+      "description": "Option/Result selection, Require and Expect callers with native signatures and typed Process inputs; the documentation native witness uses actual Runtime support.",
+      "sha256": "92475e1090f7d16756daa9527bd07d12276fa67060b8e7592a7594d6156bc165",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/word_documentation_test.go",
+        "lyger/word_library_acceptance_test.go"
+      ]
+    },
+    {
+      "id": "word-core",
+      "source": "docs/examples/word-core.l",
+      "classification": "fragment",
+      "description": "Native-signature Retain caller context; the documentation native witness checks Arc identity and shared ownership.",
+      "sha256": "d36b1e1fe72daeb976089ce9337137ce091798f2fed9c767630bedfc175ddbfc",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/word_documentation_test.go",
+        "lyger/word_library_ownership_test.go"
+      ]
+    },
+    {
+      "id": "word-values",
+      "source": "docs/examples/word-values.l",
+      "classification": "runnable",
+      "description": "Source-owned List, Map, Pointer, Bytes, Null and Error uses with exact displayed values.",
+      "sha256": "2477082be5608a7f39794db3a2c932643146bfd300e1aef3cf8678c1bee18bca",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
+      ],
+      "expectedStdoutBase64": "OUFkYXNlY29uZHJhdzk3bnVsbFtmYWlsdXJlXQ==",
+      "expectedStderrBase64": "",
+      "expectedExit": 0
+    },
+    {
+      "id": "word-values-list",
+      "source": "docs/examples/word-values.l",
+      "classification": "fragment",
+      "description": "Focused list use from the complete word-values program; omitted surrounding declarations remain available in the full source.",
+      "sha256": "2477082be5608a7f39794db3a2c932643146bfd300e1aef3cf8678c1bee18bca",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
+      ],
+      "lines": {
+        "start": 1,
+        "end": 5
+      }
+    },
+    {
+      "id": "word-values-map",
+      "source": "docs/examples/word-values.l",
+      "classification": "fragment",
+      "description": "Focused map use from the complete word-values program; omitted surrounding declarations remain available in the full source.",
+      "sha256": "2477082be5608a7f39794db3a2c932643146bfd300e1aef3cf8678c1bee18bca",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
+      ],
+      "lines": {
+        "start": 6,
+        "end": 9
+      }
+    },
+    {
+      "id": "word-values-pointer",
+      "source": "docs/examples/word-values.l",
+      "classification": "fragment",
+      "description": "Focused pointer use from the complete word-values program; omitted surrounding declarations remain available in the full source.",
+      "sha256": "2477082be5608a7f39794db3a2c932643146bfd300e1aef3cf8678c1bee18bca",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
+      ],
+      "lines": {
+        "start": 10,
+        "end": 15
+      }
+    },
+    {
+      "id": "word-values-bytes",
+      "source": "docs/examples/word-values.l",
+      "classification": "fragment",
+      "description": "Focused bytes use from the complete word-values program; omitted surrounding declarations remain available in the full source.",
+      "sha256": "2477082be5608a7f39794db3a2c932643146bfd300e1aef3cf8678c1bee18bca",
+      "validation": "existing-witness-not-run",
+      "witnesses": [
+        "lyger/runtime_values_test.go",
+        "lyger/runtime_transfer_test.go"
+      ],
+      "lines": {
+        "start": 16,
+        "end": 18
+      }
+    },
+    {
+      "id": "word-not",
+      "source": "docs/examples/word-not.l",
+      "classification": "runnable",
+      "description": "A declared Truth operand in a negated condition selects exactly the expected branch.",
+      "sha256": "b7668c26c82fa8610ebb81b36c85bc351af244326a99adda7b5677fdad1a1fc3",
+      "validation": "static-inspection; explicit example verification reported separately",
+      "witnesses": [
+        "lyger/orchestrator_test.go"
+      ],
+      "expectedStdoutBase64": "ZGlzYWJsZWQ=",
+      "expectedStderrBase64": "",
+      "expectedExit": 0
     }
   ]
 }

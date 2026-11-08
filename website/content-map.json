@@ -347,6 +347,16 @@
       "sidebar": false
     },
     {
+      "source": "docs/reference/words.md",
+      "route": "/docs/words/",
+      "title": "Words A\u2013Z",
+      "description": "Find builtin and library meanings, declared forms, grammatical roles, examples and support boundaries.",
+      "section": "Libraries",
+      "order": -1,
+      "role": "explanatory",
+      "generated": false
+    },
+    {
       "source": "docs/reference/builtins/index.md",
       "route": "/docs/reference/builtins/",
       "title": "Builtin reference",

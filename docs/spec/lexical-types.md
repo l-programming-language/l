@@ -30,6 +30,38 @@ Noun, Verb, Adjective, and Adverb are recognized lexical declaration categories.
 
 Attribute and Definition are [applicational categories](applicational-types.md#attributes-and-definitions). A source-defined word can carry a native definition, but the word's grammatical role remains distinct from that implementation. Similarly, an adjective descriptor supplies construction rules rather than an ordinary object field.
 
+### Noun
+
+<!-- word:type:noun -->
+
+Classify a word that names a value, category, reference or constructed definition.
+
+**Usage and example.** Process in the [core construction example](definitions.md#process-function-and-return) is a declared noun; its Processing form is an applicative verb derived from the noun’s active slot. The [first program](../guide/first-program.md#read-the-program) uses the App and Text categories as nouns. Noun is a lexical role, not a scalar runtime type.
+
+### Verb
+
+<!-- word:type:verb -->
+
+Classify a word that expresses an action or relationship with explicit operands.
+
+**Usage and example.** Launch in the [source-action example](../guide/definitions.md#compose-a-source-action) composes Build, Run and Await and declares their invocation forms. A verb's actor noun constructs that same selected meaning; it is not a new public synonym.
+
+### Adjective
+
+<!-- word:type:adjective -->
+
+Classify a word that qualifies a noun or describes construction for exact nominal targets.
+
+**Usage and example.** Main below declares Service, Object and Function targets. The [recursive fixture](../../lyger/test/classes/recursive.l) applies Main's Object rule through further descriptors. An unrelated same-spelled target does not satisfy that declaration.
+
+### Adverb
+
+<!-- word:type:adverb -->
+
+Classify a word that modifies an action, declaration, comparison or source sequence.
+
+**Usage and limitation.** Publicly on the Identity declaration in the [Function example](../examples/composed-functions.l) publishes that Function, while Then in a [source action](../guide/definitions.md#compose-a-source-action) separates composed actions. These configured cases do not establish unrestricted user-defined adverb execution or a new runtime type.
+
 ## Describe with an adjective
 
 <!-- example:main-descriptor -->

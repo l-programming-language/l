@@ -16,6 +16,12 @@ Only Apps own process lifecycle. Internal categories do not imply source constru
 
 ## Apps
 
+<!-- word:type:app -->
+
+Own an executable source composition and its separately supervised native process invocations.
+
+**Usage and example.** `Create "Hello" as a New Basic App` in the [first program](../guide/first-program.md#read-the-program) declares the App; Execute then runs its body. An App alias shares its invocation identity.
+
 ### Create and execute an App
 
 The [first program](../guide/first-program.md#read-the-program) constructs a Basic App, supplies its Print body and observes its captured output. Basic composes the Main Service, Object and entry Function; Execute builds, runs and awaits the App.
@@ -24,13 +30,35 @@ The [first program](../guide/first-program.md#read-the-program) constructs a Bas
 
 ## Services
 
+<!-- word:type:service -->
+
+Group source code within an App, supplying its primary entry structure or an additional constructed library.
+
+**Usage and example.** The [Service composition fixture](../../lyger/test/workspace/services.l) constructs Main, Left and Right Services within one App. A standalone Service remains structural and cannot be Run or Awaited.
+
 Basic supplies the primary Main Service. Additional Services constructed inside an App become native libraries whose nonprivate composed items form their interface. The [Service composition example](../guide/apps-and-services.md#service-composition) builds Main, Left and Right Services inside an App and explains how the body is passed into them.
 
 A standalone Service declaration creates no package or process. Standalone body effects, native lifecycle operations and implicit Output/Error reject; explicit static members and source-defined actions still use normal lexical lookup. See the [Service composition contract](../cli-build.md#service-composition).
 
 ## Classes and Objects
 
-Classes group modules and source files; Objects own files. Neither introduces a paragraph scope or process lifetime. Nested Classes retain explicit parents and source order. Native imports and visibility belong to their owning file/module; Class metadata does not silently become every child's default.
+### Class
+
+<!-- word:type:class -->
+
+Group Objects and nested Classes into native source modules.
+
+**Usage and example.** Outer, Middle and Leaf in the [recursive construction example](#compose-an-object-inside-nested-classes) retain their explicit parent order. Classes organize sources; they add no runtime scope or process lifetime.
+
+### Object
+
+<!-- word:type:object -->
+
+Own a native source file containing composed definitions and Functions.
+
+**Usage and example.** The Main Object in the [recursive construction example](#compose-an-object-inside-nested-classes) owns the entry Function. Object construction supplies source content, not an object initializer or process launch.
+
+Native imports and visibility belong to their owning file/module; Class metadata does not silently become every child's default.
 
 ### Compose an Object inside nested Classes
 
@@ -40,9 +68,25 @@ Read descriptors inside out: Leaf supplies the Main Object; Middle and Outer enc
 
 ## Attributes and Definitions
 
-A Function composed inside an Object is represented as an Attribute containing a Definition. [Adjective descriptors](lexical-types.md#describe-with-an-adjective) and named definitions express this structure; these categories add no field syntax or interchangeable constructors.
+### Attribute
+
+<!-- word:type:attribute -->
+
+Name a composed part of an Object in its applicational representation.
+
+**Context and illustration.** A Function inside the [Object fixture](../../lyger/test/classes/interleaved.l) becomes an Attribute containing its Definition. Use the supported Function/Object composition; this category does not establish a general `New Attribute` field-construction API.
+
+### Definition
+
+<!-- word:type:definition -->
+
+Name the implementation attached to a constructed element or lexical word.
+
+**Context and illustration.** The [native definition example](definitions.md#framing-and-escaping) associates framed source with a word. Definition describes that representation; it is not an interchangeable standalone runtime constructor. [Descriptors](lexical-types.md#describe-with-an-adjective) compose the actual selected definitions.
 
 ## Functions, Properties, and Operations
+
+[Function](../reference/builtins/definitions.md#function) is the canonical word entry for the selected callable constructor. This section explains its value and capture behavior. Property/Operation and the configured Func/Prop/Op spellings describe native representation; their presence does not add public application constructors.
 
 A Function declaration also defines its invocation verb. Its encapsulated paragraph supplies the body:
 

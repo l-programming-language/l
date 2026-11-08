@@ -26,6 +26,22 @@ Each indented paragraph owns its `message`; the final Show reads the outer one. 
 
 This private paragraph publishes Greeting, Count and Enabled. Later paragraphs in the [complete example](../../demo/paragraphs/public-values.l) can name them. The excerpt omits the subsequent Dictionary and Show statements.
 
+### Public
+
+<!-- word:builtin:public -->
+
+Publish exactly the declaration qualified by this visibility adjective from its private paragraph into the source-unit root.
+
+**Usage and example.** `Create "Shared" as a New Public Dictionary` in the [public-values program](../../demo/paragraphs/public-values.l) exposes Shared. Publication retains identity and does not export unrelated declarations or private members. Use [Publicly](#publicly) when the modifier attaches to the declaration action.
+
+### Publicly
+
+<!-- word:builtin:publicly -->
+
+Publish exactly the declaration selected by the action modified by this adverb.
+
+**Usage and example.** `Publicly define "Count" as 7` in the [public-values program](../../demo/paragraphs/public-values.l) makes Count available after its paragraph. `Publicly create Identity` in the [Function example](../examples/composed-functions.l) exposes the Function, not its input or body locals. This adverb is distinct from the [Public adjective](#public).
+
 ## Pronouns
 
 It, this and that bind the last subject **defined** in their original source paragraph. References within a statement use its incoming subject; coordinated declarations establish the next subject in source order. Mentioning an object or executing an action does not change it. A new paragraph has no inherited antecedent.
@@ -39,6 +55,30 @@ It, this and that bind the last subject **defined** in their original source par
 This example rejects: `Await it` begins a paragraph without a subject. Use Worker explicitly and launch it before Await; changing the pronoun alone does not launch it.
 
 Within an action definition, a pronoun may bind a preceding `any` parameter, as in Start's “Building any App and then Running it”. Ambiguous generic antecedents reject. Imports retain their own paragraph origins and cannot replace the caller's antecedent.
+
+### It
+
+<!-- word:grammar-word:it -->
+
+Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
+
+**Usage and boundary.** `Start it` in the [pronoun example](../../testdata/phase1/language/lang-06.l) uses the Job alias just defined. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject; the [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
+
+### This
+
+<!-- word:grammar-word:this -->
+
+Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
+
+**Usage and boundary.** Within a paragraph that has just defined Job, `this` refers to Job under the same antecedent rule as [It](#it). This is a focused reference illustration, not a new declaration or independently executed program. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject; the [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
+
+### That
+
+<!-- word:grammar-word:that -->
+
+Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
+
+**Usage and boundary.** Within a paragraph that has just defined Job, `that` refers to Job under the same antecedent rule as [It](#it). This is a focused reference illustration, not a new declaration or independently executed program. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject; the [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
 
 ## Possessives and member lookup
 

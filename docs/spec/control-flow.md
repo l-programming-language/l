@@ -14,6 +14,30 @@ Run acknowledges launch before the next instruction, while the child process con
 
 `Start First and Second` expands Build/Run for First, then Build/Run for Second. `Await Second and First` joins in the opposite order. The two Shows still display First before Second: the retained CLI test expects `First\nSecond\n`. Replacing Start with Execute would finish First's Start/Await composition before starting Second.
 
+### Then
+
+<!-- word:grammar-word:then -->
+
+Separate successive actions within a composed source sequence.
+
+**Usage and boundary.** Launch in the [local definitions program](../../demo/paragraphs/local-definitions.l) uses `and then Awaiting it` after Build/Run. Then preserves source sequencing; it is not an asynchronous continuation primitive.
+
+### And
+
+<!-- word:grammar-word:and -->
+
+Coordinate source operands, declarations or actions in their owning grammatical sequence.
+
+**Usage and boundary.** `Start First and Second` in the [two-App program](../../demo/phase1/main.l) expands the complete action for each operand. Joined Boolean conditions remain rejected; And supplies no general short-circuit operator.
+
+### Or
+
+<!-- word:grammar-word:or -->
+
+Join alternative nominal targets in supported descriptor declarations, or occur in recognized condition coordination.
+
+**Usage and boundary.** Main declares `Service, Object, or Function` in the [descriptor example](lexical-types.md#describe-with-an-adjective). These are alternative canonical targets. An `or`-joined runtime condition is rejected and has no promised short-circuit semantics.
+
 ## Assignment
 
 Passive declarations such as `"count" is 7.` and supported Define forms introduce or assign typed values. Runtime assignment evaluates its right-hand side at the ordered instruction position. A stored Output value remains a snapshot across subsequent invocations.
@@ -25,6 +49,14 @@ Definite assignment intersects all paths that continue to a read. Exit branches 
 <!-- example:control-output-snapshot -->
 
 The first Await makes Output available. Define reads it once; later invocations do not change `snapshot`. The last Show reads the latest Output separately. The [frontend witness](../../lyger/phase1_language_test.go) checks that the saved value retains its binding.
+
+### Is
+
+<!-- word:grammar-word:is -->
+
+Associate a subject with its declared or assigned value; in a condition, compare supported like-typed values.
+
+**Usage and boundary.** `"message" is` followed by Text in the [first program](../guide/first-program.md#read-the-program) supplies assignment. The comparison table below distinguishes conditional equality and the configured negative form `isnt`; neither implies arbitrary object equality.
 
 ## Comparisons
 
@@ -46,6 +78,50 @@ The inclusive-order spelling follows L's grammar. Source phrases must satisfy bo
 
 `not` or `no` negates only the condition forms whose grammar owns that modifier. Values do not have general truthiness, Text ordering is rejected, and mixed scalar comparisons do not coerce. The Error in a has condition must belong to the same target; it is not generic collection membership.
 
+### Have
+
+<!-- word:grammar-word:have -->
+
+Test whether the selected App has the Error identified by its current operation or invocation.
+
+**Usage and boundary.** `it has an Error` in the [conditional member fixture](../../lyger/test/member-resolution.l) follows Execute and refers to HelloWorldApp. Have is not general collection membership; the Error must belong to the same App.
+
+### Equal
+
+<!-- word:grammar-word:equal -->
+
+Compare two supported scalar values of the same type for equality.
+
+**Usage and boundary.** The [Truth condition](../../testdata/phase1/language/lang-13.l) uses `enabled equals true`. Text compares bytes and Number compares numeric values; mixed types do not coerce.
+
+### Not
+
+<!-- word:grammar-word:not -->
+
+Negate a condition only where its grammatical form admits this modifier.
+
+**Usage and boundary.** The grammar admits `not` in its bounded condition forms; see the [condition rules](../../lexicon/eng/grammar.json) and negative-condition [lowering witnesses](../../lyger/orchestrator_test.go). This is not an unrestricted prefix Boolean operator or a promise that joined conditions execute.
+
+**Example.** Here `enabled` is a declared Truth value. Negating its false value selects the first branch and writes `disabled` without a newline.
+
+<!-- example:word-not -->
+
+### Less
+
+<!-- word:grammar-word:less -->
+
+Select a numeric less-than comparison, with an optional equality continuation.
+
+**Usage and boundary.** The focused form `left less than right` requires two Number operands; `left less than equal to right` is the inclusive grammar. These [typed comparison witnesses](../../lyger/orchestrator_test.go) establish the native boundary; Text ordering is rejected.
+
+### Greater
+
+<!-- word:grammar-word:greater -->
+
+Select a numeric greater-than comparison, with an optional equality continuation.
+
+**Usage and boundary.** The focused form `left greater than right` requires Numbers; `left greater than equal to right` is the inclusive form. The [comparison witnesses](../../lyger/orchestrator_test.go) retain operand typing; no lexical Text ordering is implied.
+
 ## Selection
 
 If selects a branch from a supported condition. An attached else belongs to the unmatched if. Otherwise can attach to an immediately preceding unmatched conditional in the same source paragraph; it does not search arbitrary earlier paragraphs or create an unconditional fallback after unrelated statements.
@@ -64,6 +140,30 @@ The first `else` belongs to the Error test and assigns `y` from the completed in
 
 The grammar can parse multiple conditions, but outer lowering explicitly rejects joined condition lists. Consequently `and`/`or` in the vocabulary does not establish general boolean short-circuiting. Coordination of actions, declarations, and operands is a different supported use of conjunctions.
 
+### If
+
+<!-- word:grammar-word:if -->
+
+Select a source branch from a supported typed condition.
+
+**Usage and boundary.** The [Truth conditional program](../../testdata/phase1/language/lang-13.l) selects Await on true and Exit otherwise. Definite assignment is checked across all continuing paths.
+
+### Else
+
+<!-- word:grammar-word:else -->
+
+Attach an alternative branch to its unmatched If in the supported conditional statement.
+
+**Usage and boundary.** The [Truth conditional program](../../testdata/phase1/language/lang-13.l) puts `else exit` after its Await branch. Else is not an independent executable action or a fallback for arbitrary previous failures.
+
+### Otherwise
+
+<!-- word:grammar-word:otherwise -->
+
+Attach an alternative branch to the immediately preceding unmatched conditional in the same paragraph.
+
+**Usage and boundary.** The [conditional member fixture](../../lyger/test/member-resolution.l) follows an If with Otherwise. Intervening statements or a paragraph boundary do not grant attachment to an earlier condition.
+
 ## Iteration and collection operations
 
 While and three-part source loops remain unsupported. [Collections](collections-and-categories.md) support Put, Place and typed reads; configured Get/Take words do not introduce further operations.
@@ -75,6 +175,14 @@ While and three-part source loops remain unsupported. [Collections](collections-
 The [grammar](../../lexicon/eng/grammar.json) recognizes this While shape, but the [instruction builder](../../lyger/instructions.go) rejects it.
 
 Within native Function bodies, the Storage implementation dictionary composes Iteration and typed Processes into Traverse, Enumerate and related [source words](../internals/storage.md#iteration-and-continuations). Their contracts specify ordering and error behavior. They do not add general source loop syntax or break/continue vocabulary. The [Rust target](../../builtins/README.md#iteration-and-definition-contract) supports their bounded iteration shapes and rejects the three-part X form.
+
+### While
+
+<!-- word:grammar-word:while -->
+
+Recognize a conditional loop form that current outer instruction lowering rejects.
+
+**Usage and boundary.** The [unsupported loop illustration](../examples/control-while-unsupported.l) shows the recognized shape. It is a labeled fragment, not a runnable loop or a promise of native iteration. Advanced [Storage traversal](../internals/storage.md#iteration-and-continuations) is a separate source composition facility.
 
 ## Arithmetic and native calculations
 

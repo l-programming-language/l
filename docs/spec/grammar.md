@@ -61,6 +61,38 @@ The [complete first program](../guide/first-program.md#read-the-program) gives t
 
 `The App` associates Print with the App's generated body. The outer Execute and Show sentences control execution and display its result. Grammatical form does not erase that ownership distinction.
 
+### Any
+
+<!-- word:grammar-word:any -->
+
+Declare a variable argument or nominal target in a supported source signature or descriptor.
+
+**Usage and boundary.** Start declares `any App` in the [source-action example](definitions.md#source-actions); Main declares exact target categories. Any does not erase the supplied value's type or create unrestricted native generics.
+
+### No
+
+<!-- word:grammar-word:no -->
+
+Express an absent signature component or negate a condition where that grammar permits it.
+
+**Usage and boundary.** Main's Function refinement uses `No Inputs and No Outputs` in the [descriptor example](lexical-types.md#describe-with-an-adjective). This explicit empty signature is not an unassigned value or implicit runtime default.
+
+### A
+
+<!-- word:grammar-word:a -->
+
+Introduce an indefinite declaration or construction using the declared alternative form An where appropriate.
+
+**Usage and boundary.** `a New Basic App` in the [first program](../guide/first-program.md#read-the-program) and `an Error` in the [value program](../examples/word-values.l) use the same article family. A/An does not select a type independently of its noun.
+
+### The
+
+<!-- word:grammar-word:the -->
+
+Refer definitively to the selected subject or value in its owning source context.
+
+**Usage and boundary.** `The App Prints message` in the [first program](../guide/first-program.md#read-the-program) supplies an App body effect. The does not make a private or unresolved name visible.
+
 ## Phrases
 
 The thirteen phrase families are generic, directive, declarative, locative, objective, inflective, associative, indicative, utilization, dependency, signature, arguments, and results.
@@ -80,6 +112,94 @@ These two builtin declarations use a directive phrase:
 `for` introduces the action body. `Building`, `Running`, `Starting`, and `Awaiting` are applicative verb forms in that body; `any App` declares the argument, and `it` refers to it. The source conjunction `and then` separates the actions. The bars inside each quoted label declare inflections; they are unrelated to the grammar JSON's sequence notation. These definitions are implicitly loaded already, so do not redeclare them in a program.
 
 In the basic program, `from` and `as` select the IO dictionary and local alias. The [Main descriptor example](lexical-types.md#describe-with-an-adjective) uses `of`, `with`, and `using` in Function/Object/Service construction.
+
+### As
+
+<!-- word:grammar-word:as -->
+
+Relate a declaration or alias to its value, category, construction or new local name.
+
+**Usage and boundary.** `Create "Hello" as a New Basic App` and the IO import alias in the [first program](../guide/first-program.md#read-the-program) use distinct owning actions. As alone does not convert runtime types.
+
+### Of
+
+<!-- word:grammar-word:of -->
+
+Supply declared contents, type arguments or operands to a supported construction or signature.
+
+**Usage and boundary.** `New List of Number` in the [value program](../examples/word-values.l) gives the element type; `Inputs of "Value" as Text` in the [Function example](../examples/composed-functions.l) declares a parameter. The selected owner determines the contract.
+
+### At
+
+<!-- word:grammar-word:at -->
+
+Select a Number index or Text key for a supported typed read or update.
+
+**Usage and boundary.** The [value program](../examples/word-values.l) uses `items at 0` and the Text key `first` in names. The containing operation checks the key type, bounds and result type; At supplies no unchecked access.
+
+### With
+
+<!-- word:grammar-word:with -->
+
+Introduce associated structures or signature components in the selected construction.
+
+**Usage and boundary.** The [Function example](../examples/composed-functions.l) uses `with Inputs`; the [Main construction](lexical-types.md#describe-with-an-adjective) uses `with a New Main Object`. With preserves the owning construction's argument contract.
+
+### In
+
+<!-- word:grammar-word:in -->
+
+Identify the destination of a supported insertion or update.
+
+**Usage and boundary.** `Put 7 in items` in the [value program](../examples/word-values.l) appends a Number to its List. Pointer and Map updates have their own checked contracts; In does not select a lexical namespace.
+
+### Out
+
+<!-- word:grammar-word:out -->
+
+Name the configured deflective preposition without an established general executable application operation.
+
+**Usage and boundary.** The [configured vocabulary](../../lexicon/eng/vocabulary.json) recognizes Out. No runnable source form is claimed here; use the precise [Output member](../reference/builtins/lifecycle.md#output) or IO operations for their documented behavior.
+
+### By
+
+<!-- word:grammar-word:by -->
+
+Introduce the actor phrase recognized by an indicative grammatical form.
+
+**Usage and boundary.** A focused `by Actor` phrase is configuration-level syntax; its enclosing clause must supply supported semantics. The [indicative grammar](../../lexicon/eng/grammar.json) is not evidence for an arbitrary executable passive callback API.
+
+### From
+
+<!-- word:grammar-word:from -->
+
+Select the source of an import or a checked typed value read.
+
+**Usage and boundary.** The [first program](../guide/first-program.md#read-the-program) imports IO.Print from the `io` dictionary; the [value program](../examples/word-values.l) reads a Text from names at the key `first`. The owning import/read determines provider and type checks.
+
+### To
+
+<!-- word:grammar-word:to -->
+
+Introduce a native-backed action definition or a target-dependent utilization/comparison phrase.
+
+**Usage and boundary.** The [IO source](../../stdlib/eng/io/dictionary.l) defines Flush with `to` and one framed native flush call. In `less than equal to`, To belongs to the numeric comparison; it is not an independent conversion or transfer.
+
+### Than
+
+<!-- word:grammar-word:than -->
+
+Connect the operands of an admitted ordered Number comparison.
+
+**Usage and boundary.** The focused `left less than right` and `left greater than right` forms follow the [comparison contract](control-flow.md#comparisons). Both operands must be Number; Than does not enable Text ordering.
+
+### For
+
+<!-- word:grammar-word:for -->
+
+Introduce the composed body of a source action or structured Process.
+
+**Usage and boundary.** Launch in the [local definitions program](../../demo/paragraphs/local-definitions.l) uses `for Building ...`; the [selector caller](../examples/word-selection.l) uses `Process ... for Returning ...`. For is not a new loop primitive.
 
 ## Clauses and grammatical forms
 
@@ -119,6 +239,38 @@ This negative fixture deliberately puts Await in an App body:
 <!-- example:grammar-active-await-rejected -->
 
 **Rejected at executable-body lowering.** `Controller awaits Worker` can be classified grammatically, but source-level child-body process supervision is unsupported. Compilation rejects that statement; it does not silently move it to the orchestrator. Put lifecycle orchestration in the outer program, as in the preceding passive example. This negative fixture is an existing rejection witness, not a program to run or a newly observed diagnostic.
+
+### Get
+
+<!-- word:builtin:get -->
+
+Recognize a configured receptive action without a general supported collection instruction.
+
+**Supported alternative and limitation.** Use the checked typed read form in the [value program](../examples/word-values.l), such as `Define "first" as a New Number from items at 0`. Get is not an alternate supported spelling for that operation.
+
+### Take
+
+<!-- word:builtin:take -->
+
+Recognize a configured reductive action without a general supported removal instruction.
+
+**Supported alternative and limitation.** The [collection contract](collections-and-categories.md) provides insertion, replacement and typed reads, not removal. A configured Take form is not a runnable removal example.
+
+### Import
+
+<!-- word:builtin:import -->
+
+Recognize a configured import action whose general native execution is not implemented.
+
+**Supported alternative and limitation.** Use [Use](imports.md#indexed-dictionaries) with an explicit source or registered dictionary. The [file-import program](../../demo/dictionaries/file-import/main.l) demonstrates that supported spelling; Import is not an alias for it.
+
+### Export
+
+<!-- word:builtin:export -->
+
+Recognize a configured export action whose general native execution is not implemented.
+
+**Supported alternative and limitation.** Use [Public/Publicly](names-and-scope.md#public) to publish the selected declaration. The [public-values program](../../demo/paragraphs/public-values.l) demonstrates publication; Export is not an executable replacement.
 
 ## Conditions
 

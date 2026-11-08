@@ -19,6 +19,8 @@ Use [definitions](../../../docs/guide/definitions.md), actual selected source, i
 - **Modifiers and identity:** Inspect the exact canonical target and replaced role, retained base, original operands/resource, wrapper order, repeated construction and unrelated preserved structure. A [canonical alias](../../../docs/spec/names-and-scope.md#aliases-and-canonical-identity) is different from a same-spelled foreign target. Different modifier names or facets do not prove commutativity.
 - **Placement and reduction:** Check the appropriate source owner and whether public vocabulary is necessary. Search qualified definitions, calls, aliases, descriptors and generated/evidence dependencies before calling a word unused. Preserve foreign homonyms, distinct policies and tests of different boundaries.
 
+Check changed public meanings against their [canonical entries](../../../docs/contributing/documentation.md#maintain-word-entries), reviewed associations and meaningful examples; flag stale roles, targets, support claims or missing coverage without promoting private helpers.
+
 The [Storage semantics](../../../docs/internals/storage.md) distinguish Require's conditional error construction from eager message arguments, Accept's old-error destruction, continuation-dependent traversal, byte preservation and different retention laws. The [IO contract](../../../docs/stdlib/eng/io.md#explicit-byte-output) distinguishes returned failure from rollback: payload or newline failure can leave partial output. Release alone establishes no flush, durability, cancellation or App completion. Apply the relevant distinction rather than inferring behavior from a word's English name.
 
 ## Inspect native boundaries and evidence

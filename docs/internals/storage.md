@@ -6,20 +6,79 @@ The groups below explain the shared policies rather than cataloging every repres
 
 ## Results and errors
 
-Option and Result are Dictionary namespaces. They do not declare L runtime carrier types; native signatures spell types such as `Option<T>` and `Result<T, E>` explicitly.
+These are **advanced word-authoring meanings**. Explicitly importing Storage names the dictionary; private bootstrap loading does not expose its members to ordinary application source. The entries below describe selected composition facilities, not a promise that every Storage helper is application API.
 
-| Word | Inputs and behavior |
-| --- | --- |
-| Option.Select | Select one of two Processes for Some or None; the Some body binds its payload through one typed Input, and the None body takes none |
-| Result.Select | Select one of two Processes for Ok or Err; each body binds its payload or error through one typed Input |
-| Require | Consume `Option<T>` and a message; return `runtime::Result<T>`, preserving Some's payload or constructing a failure for None |
-| Accept | Consume `Result<T, E>` and a message; preserve Ok's payload, or release the old error and construct a replacement runtime error |
-| Result.Expect | Consume a Result and explicit message; return the successful payload or panic on the error |
-| Verify | Discard a successful payload or propagate an error from the enclosing Function |
+### Option
 
-Select evaluates its selected value once. Only the chosen branch runs, and its Inputs and local declarations stay inside that body. Moving or borrowing the payload follows the supplied native type; selection adds no clone. Branches can compose further selections or iterations.
+<!-- word:authoring:Storage.Option -->
 
-Require and Accept construct failures only on their failure branches. Their message arguments still evaluate normally, including on success. Accept releases the replaced error before constructing the new one; if its destructor panics, no replacement is constructed. Expect is a separate panic policy, not error propagation or conversion to a runtime error.
+Name the Storage dictionary namespace containing operations that compose native optional values.
+
+**Usage:** After ``Use Storage from `storage`.`` qualify a member such as `Storage.Option.Select`. Option is a Dictionary namespace, not an L carrier type: the native Function signature uses `Option<T>`, with a real payload type in place of `T`.
+
+**Example:** `Selection.Choose` in [Native callers](#native-callers) receives `Option<u64>` and selects its Some or None case. The qualified member is [Option.Select](#optionselect); Result's two payload-bearing outcomes belong to [Result](#result).
+
+### Option.Select
+
+<!-- word:authoring:Storage.Option.Select -->
+
+Select exactly one Process according to whether a supplied native Option contains a payload or is empty.
+
+**Usage:** Supply the Option value, a Some Process with one explicit typed Input, then a None Process with no payload Input. The payload type must match the enclosing Function's native carrier. Selector is Select's actor form in the Option namespace; it is distinct from [Result.Select](#resultselect).
+
+**Example:** `Selection.Choose` in [Native callers](#native-callers) returns the bound `u64` for Some and zero for None. The selected value is evaluated once. Only the chosen body runs, and its Input and declarations remain local to that Process. Moving or borrowing follows the supplied type; selection does not clone the payload. Nested selections retain their own bindings.
+
+### Result
+
+<!-- word:authoring:Storage.Result -->
+
+Name the Storage dictionary namespace containing operations that compose native success-or-error results.
+
+**Usage:** Qualify [Result.Select](#resultselect) for branch selection or [Result.Expect](#resultexpect) for an explicit panic policy. Result is not an L runtime carrier declaration. Write the actual native type, such as `Result<T, E>` or `runtime::Result<T>`, in the enclosing Function signature.
+
+**Example:** `Selection.Preserve` in [Native callers](#native-callers) handles `Result<u64, u8>`. Its error is a `u8`, while `Selection.Require` returns the runtime's Error type; sharing the namespace does not unify those types or failure policies.
+
+### Result.Expect
+
+<!-- word:authoring:Storage.Result.Expect -->
+
+Consume a native Result and an explicit message, returning its successful payload or panicking on its error.
+
+**Usage:** `a New Storage's Result's Expecter of Value and Message` calls the Result's native `expect`. The error type must support its native debug formatting, and the message is `&str`. Expecter belongs to this Expect verb family, not to [Result.Select](#resultselect).
+
+**Example:** `Selection.Expect` in [Native callers](#native-callers) preserves the successful Box's allocation. An error triggers the supplied message together with the error's debug representation. This is a panic policy, not propagation, rollback, or conversion into `runtime::Error`. [IO.Print](../stdlib/eng/io.md#print) deliberately uses it for output failure.
+
+### Result.Select
+
+<!-- word:authoring:Storage.Result.Select -->
+
+Select exactly one Process according to whether a supplied native Result is successful or contains an error.
+
+**Usage:** Supply the Result value, an Ok Process with one typed payload Input, then an Err Process with one typed error Input. Each Input matches its corresponding native type. Both bodies belong to the enclosing Function context; a Return in the selected body returns from that Function.
+
+**Example:** `Selection.Preserve` in [Native callers](#native-callers) reconstructs Ok and Err using their original values. The Result is evaluated once; only one branch runs, and branch-local bindings do not leak into siblings. Selection adds no panic, error replacement or clone. [IO.Lined](../stdlib/eng/io.md#lined) composes this selector to send LF only after payload success.
+
+### Require
+
+<!-- word:authoring:Storage.Require -->
+
+Consume an Option and return its payload as a runtime success, or construct a runtime failure when it is empty.
+
+**Usage:** `a New Storage's Requirer of Value and Message` consumes `Option<T>` and an `&str` message and returns `runtime::Result<T>`. The enclosing native module must include the compiler-selected Runtime support. Require does not return directly from its caller; that caller chooses how to handle the returned Result.
+
+**Example:** `Selection.Require` in [Native callers](#native-callers) keeps a successful Box's identity and returns the supplied message as a runtime error for None. Failure construction happens only on None. Message arguments still evaluate normally, including on Some; passing an effectful argument is not made lazy by selection.
+
+### Native callers
+
+These dictionary Functions show the enclosing native signatures, explicit imports, typed Process Inputs and actual calls. A generated native library and host provide their execution context; they are not standalone App programs. The Require caller additionally needs the compiler's actual Runtime module.
+
+<!-- example:word-selection -->
+
+The [documentation caller witness](../../lyger/word_documentation_test.go) reads these exact bytes, composes their selected definitions, compiles them with real runtime support and executes both selector outcomes. It also observes Require's success identity/failure message and Expect's success identity/panic. The [selector and lazy-error witnesses](../../lyger/word_library_acceptance_test.go) additionally observe nested scopes, once-only values, inactive bodies, destruction order and conditional error construction.
+
+### Related error policies
+
+Accept consumes `Result<T, E>` and a message, preserves Ok's payload, or releases the old error before constructing a replacement runtime error. If that destructor panics, no replacement is constructed. Its message argument still evaluates on success. Verify instead discards a successful payload or propagates an error from the enclosing Function. These policies are not interchangeable with selection or Expect.
 
 ## Iteration and continuations
 
