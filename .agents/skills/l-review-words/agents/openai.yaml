@@ -1,0 +1,4 @@
+interface:
+  display_name: "L Word Review"
+  short_description: "Review L words for correctness and composability"
+  default_prompt: "Use $l-review-words to review this L vocabulary diff and report concrete findings without modifying it."

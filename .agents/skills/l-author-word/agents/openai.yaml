@@ -1,0 +1,4 @@
+interface:
+  display_name: "L Word Authoring"
+  short_description: "Build reusable L words with tests-first composition"
+  default_prompt: "Use $l-author-word to implement this L vocabulary change through reusable composition and tests-first validation."
