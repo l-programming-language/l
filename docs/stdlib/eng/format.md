@@ -29,11 +29,11 @@ Formatting loads its required [Storage](../../internals/storage.md) words and pr
 
 Convert a finite binary64 Number into its shortest round-tripping decimal representation and return the encoded bytes.
 
-**Usage:** The native signature is `f64 → Vec<u8>`; the selected native function is `format_number`. The returned vector contains neither an added newline nor a terminator. Format performs no output, locking or flushing; its caller chooses those effects.
+**Usage:** The selected native function, `format_number`, accepts `f64` and returns `Vec<u8>`. The returned vector contains neither an added newline nor a terminator. Format leaves output, locking and flushing to its caller.
 
-**Example:** [Number output](#number-output-example) shows IO.Print using this formatter. Direct native-signature callers supply an `f64` and consume or borrow the resulting byte vector; this is not a general conversion for Text, collections or Errors.
+**Example:** [Number output](#number-output-example) shows IO.Print using this formatter. Direct native-signature callers supply an `f64` and consume or borrow the resulting byte vector. This is not a general conversion for Text, collections or Errors.
 
-**Behavior:** Preserve signed zero. Nonzero magnitudes from `0.0001` inclusive to `1000000` exclusive use ordinary decimal notation; smaller or larger magnitudes use scientific notation. Scientific exponents include a sign and at least two digits.
+**Behavior:** Preserve signed zero. Nonzero magnitudes from `0.0001` inclusive to `1000000` exclusive use ordinary decimal notation. Smaller or larger magnitudes use scientific notation. Scientific exponents include a sign and at least two digits.
 
 | Number | Returned bytes shown as text |
 | --- | --- |
@@ -45,22 +45,22 @@ Convert a finite binary64 Number into its shortest round-tripping decimal repres
 | `0.00001` | `1e-05` |
 | `-0` | `-0` |
 
-Large source integers may already have rounded to binary64; formatting reports that stored value. The L [Number](../../spec/values.md#number) rules reject nonfinite values. Format's native `f64` signature does not itself enforce finiteness, so this reference does not extend the finite-number contract to arbitrary native NaN or infinity inputs.
+Large source integers may already have rounded to binary64. Formatting reports that stored value. The L [Number](../../spec/values.md#number) rules reject nonfinite values. Format's native `f64` signature does not itself enforce finiteness, so this reference does not extend the finite-number contract to arbitrary native NaN or infinity inputs.
 
 ## Number output example
 
-This registered App-body fragment imports IO.Print and illustrates decimal and scientific output. It omits the surrounding lifecycle instructions and is not a standalone runnable program. Print appends one LF to each formatted value; Format alone does not.
+This registered App-body fragment imports IO.Print and illustrates decimal and scientific output. It omits the surrounding lifecycle instructions and is not a standalone runnable program. Print appends one LF to each formatted value, while Format alone does not.
 
 <!-- example:values-number-printing -->
 
-For a complete App with execution and captured output, see [IO.Print](io.md#print). The source-number witness below exercises the formatting path through real L programs; static page preparation does not execute the fragment.
+For a complete App with execution and captured output, see [IO.Print](io.md#print). The source-number witness below exercises the formatting path through real L programs. Static page preparation does not execute the fragment.
 
 ## Errors and ownership
 
-Format returns an owned byte vector, not a Result. Its internal expectations describe invariants of native finite-number spellings; they are not a recoverable parsing API. The composition makes no zero-allocation, allocation-count or nonblocking guarantee. It does not change IO's separate [output-failure policy](io.md#errors-and-return-behavior).
+Format returns an owned byte vector, not a Result. Its internal expectations describe invariants of native finite-number spellings. They are not a recoverable parsing API. The composition makes no zero-allocation, allocation-count or nonblocking guarantee. It does not change IO's separate [output-failure policy](io.md#errors-and-return-behavior).
 
 ## Sources and witnesses
 
 Sources: [Formatting dictionary](../../../stdlib/eng/format/dictionary.l) and its [private foundations](../../../stdlib/eng/format/foundations.l). Shared casts and other foundational operations compose through canonical Storage definitions.
 
-The [dictionary-selection tests](../../../lyger/format_dictionary_test.go) check canonical Format identity, Runtime's alias and source-import isolation. [Source Number tests](../../../lyger/io_numeric_test.go) exercise Print with exact output. [Native scalar tests](../../../logiceme/scalar_runtime_test.go) cover the selected formatter's signed zero, extrema, subnormal values and midpoint cases. [Foundation tests](../../../lyger/library_foundations_test.go) check shared ownership and cast composition. These witnesses establish distinct properties; a documentation build alone establishes none of their runtime outcomes.
+The [dictionary-selection tests](../../../lyger/format_dictionary_test.go) check canonical Format identity, Runtime's alias and source-import isolation. [Source Number tests](../../../lyger/io_numeric_test.go) exercise Print with exact output. [Native scalar tests](../../../logiceme/scalar_runtime_test.go) cover the selected formatter's signed zero, extrema, subnormal values and midpoint cases. [Foundation tests](../../../lyger/library_foundations_test.go) check shared ownership and cast composition. These witnesses establish distinct properties. A documentation build alone establishes none of their runtime outcomes.

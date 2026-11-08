@@ -96,10 +96,10 @@ export function deriveWords({ entries, lexical = { entries: {} }, pages, documen
 
 export function wordFacts(word, words, sourceLink) {
   const owner = word.dictionary;
-  const availability = (owner ? `Explicit dictionary: ${owner.lexicon}/${owner.key}` : 'Implicit builtin vocabulary') + (word.audience === 'authoring' ? '; advanced word authoring' : '');
+  const availability = (owner ? `Explicit dictionary: ${owner.lexicon}/${owner.key}` : 'Implicit builtin vocabulary') + (word.audience === 'authoring' ? ', advanced word authoring' : '');
   const listedForms = word.forms.map((form) => {
     const role = word.word.formRoles?.[form];
-    return `<code>${escape(form)}</code>${role ? ` (${escape(role.partOfSpeech)}; ${escape(role.role)})` : ''}`;
+    return `<code>${escape(form)}</code>${role ? ` (${escape(role.partOfSpeech)}, ${escape(role.role)})` : ''}`;
   }).join(', ');
   const targets = (word.word.targets ?? []).map((target) => {
     const selected = words.find((entry) => entry.id === target.entry);
@@ -122,7 +122,7 @@ export function wordIndex(words, selection = '', dictionaries = []) {
     const letters = [...new Set(items.map((word) => word.root[0].toUpperCase()))];
     const id = (letter) => `words-${group}-${letter.toLowerCase()}`;
     const alphabet = letters.map((letter) => `<a href="#${escape(id(letter))}">${escape(letter)}</a>`).join(' · ');
-    const sections = letters.map((letter) => `<h3 id="${escape(id(letter))}">${escape(letter)}</h3>\n<ul>${items.filter((word) => word.root[0].toUpperCase() === letter).map((word) => `<li><a href="${escape(word.link)}"><strong>${escape(word.root)}</strong>${word.name === word.root ? '' : ` (${escape(word.name)})`}</a> <span>(${escape(word.word.partOfSpeech)}; ${escape(word.support)}${word.audience === 'authoring' ? '; authoring' : ''})</span>: ${escape(word.gloss)}</li>`).join('\n')}</ul>`).join('\n');
+    const sections = letters.map((letter) => `<h3 id="${escape(id(letter))}">${escape(letter)}</h3>\n<ul>${items.filter((word) => word.root[0].toUpperCase() === letter).map((word) => `<li><a href="${escape(word.link)}"><strong>${escape(word.root)}</strong>${word.name === word.root ? '' : ` (${escape(word.name)})`}</a> <span>(${escape(word.word.partOfSpeech)}, ${escape(word.support)}${word.audience === 'authoring' ? ', authoring' : ''})</span>: ${escape(word.gloss)}</li>`).join('\n')}</ul>`).join('\n');
     return `<nav class="l-word-index" data-pagefind-ignore aria-label="${escape(title)}"><h2>${escape(title)}</h2><p>${alphabet}</p>${sections}</nav>`;
   }).join('\n\n');
 }

@@ -24,11 +24,11 @@ The Go `lerrors` package classifies InvalidInput, InvalidConfiguration, Syntax, 
 
 These are compiler/API inspection categories for Go callers. L does not thereby gain `try`, `catch`, thrown exceptions, or an imported standard-library error module. Native process Error is a separate runtime member.
 
-Grammar alternatives can aggregate candidate causes while preserving sorted diagnostics. A source numeric overflow may remain provisional until lexical resolution is exhausted. Direct definition Number binding has its own Syntax boundary; ordinary numeric input overflow and nonfinite native lowering have different classified boundaries. Do not collapse these into one invented source exception.
+Grammar alternatives can aggregate candidate causes while preserving sorted diagnostics. A source numeric overflow may remain provisional until lexical resolution is exhausted. Direct definition Number binding has its own Syntax boundary. Ordinary numeric input overflow and nonfinite native lowering have different classified boundaries. Do not collapse these into one invented source exception.
 
 ## Source attribution
 
-Diagnostics retain source file, byte-based line/column position, and original paragraph/source ownership. Native definition failures include definition/parameter context; expanded actions retain call-site attribution. Imported source belongs to its provider even when the calling program is elsewhere.
+Diagnostics retain source file, byte-based line/column position, and original paragraph/source ownership. Native definition failures include definition/parameter context. Expanded actions retain call-site attribution. Imported source belongs to its provider even when the calling program is elsewhere.
 
 Incidental UUIDs may be normalized for a diagnostic view. They must not be normalized in application output, canonical input, expected bytes, or generated artifacts merely to make a comparison pass. Original literal bytes and instruction order remain authoritative.
 
@@ -36,11 +36,11 @@ Incidental UUIDs may be normalized for a diagnostic view. They must not be norma
 
 The compiler CLI returns 0 for help and successful builds, 2 for invalid invocation or unsupported host, and 1 for initialization, compilation, generation, native build, publication, or output-write failure. Compiler diagnostics go to stderr. Successful build stdout contains the published executable path and newline.
 
-Generated programs have their own runtime statuses: normal fallthrough/bare Exit succeeds if cleanup succeeds; explicit failure or fatal misuse returns 1; supported SIGINT/SIGTERM termination uses 130/143. A child application's nonzero result is not automatically the orchestrator's exit status. See [execution](execution.md).
+Generated programs have their own runtime statuses. Normal fallthrough/bare Exit succeeds if cleanup succeeds. Explicit failure or fatal misuse returns 1, and supported SIGINT/SIGTERM termination uses 130/143. A child application's nonzero result is not automatically the orchestrator's exit status. See [execution](execution.md).
 
 ## Unsupported versus unresolved
 
-While has configured vocabulary and grammar rules but no executable loop implementation. A missing name reaches a reference boundary. A recognized structural category such as Attribute does not by itself establish a runtime constructor; documentation must distinguish compiler representation from executable values.
+While has configured vocabulary and grammar rules but no executable loop implementation. A missing name reaches a reference boundary. A recognized structural category such as Attribute does not by itself establish a runtime constructor. Documentation must distinguish compiler representation from executable values.
 
 See the [type reference](values.md) and [control-flow limits](control-flow.md) for current supported operations.
 
@@ -54,17 +54,17 @@ The backtick literal is Text. Await requires a process target, so this is a Type
 
 <!-- example:invalid-await-unresolved -->
 
-Here the operand is a name with no declaration. The [separate negative contract](../../testdata/phase1/n02-await-unresolved/case.json) expects unresolved-reference evidence containing `missing` and `unresolved`. Supplying a declared Text instead would change the failure to the type boundary above; the two diagnoses are not interchangeable.
+Here the operand is a name with no declaration. The [separate negative contract](../../testdata/phase1/n02-await-unresolved/case.json) expects unresolved-reference evidence containing `missing` and `unresolved`. Supplying a declared Text instead would change the failure to the type boundary above. The two diagnoses are not interchangeable.
 
 The [While illustration](control-flow.md#iteration-and-collection-operations) currently fails during grammar processing. Independently, [instruction lowering](../../lyger/instructions.go) has no While operation and rejects unsupported conditional kinds. A configured vocabulary word alone does not establish successful parsing or execution.
 
 ### Runtime failure is a separate stage
 
-**Intentional runtime misuse — complete source shown as a negative illustration.** This retained fixture builds an App but never launches it:
+**Intentional runtime misuse, with complete source shown as a negative illustration.** This retained fixture builds an App but never launches it:
 
 <!-- example:runtime-build-without-run -->
 
-Build does not create an invocation. Await therefore fails at generated-runtime execution with an invocation-related diagnostic. The [N07 contract](../../testdata/phase1/n07-build-is-not-run/case.json) expects empty stdout, status 1, and diagnostic text containing `Await` and `invocation`; it is not a compiler-rejection test. This is a display-only negative example, not a successful tutorial. No language stage was executed here.
+Build does not create an invocation. Await therefore fails at generated-runtime execution with an invocation-related diagnostic. The [N07 contract](../../testdata/phase1/n07-build-is-not-run/case.json) expects empty stdout, status 1, and diagnostic text containing `Await` and `invocation`. It is not a compiler-rejection test. This is a display-only negative example, not a successful tutorial. No language stage was executed here.
 
 **Explicit program failure.**
 
@@ -74,10 +74,10 @@ First's child succeeds and its continuation shows `First\n`. The equality condit
 
 ## Compatibility and releases
 
-L uses `vMAJOR.MINOR.PATCH` release tags. Backward compatibility is not guaranteed before `v1.0.0`; consult the [versioning policy and release notes](../releases/index.md#versioning-and-compatibility) before upgrading. Historical test results apply to their recorded revision and host; local previews report their own source identity.
+L uses `vMAJOR.MINOR.PATCH` release tags. Backward compatibility is not guaranteed before `v1.0.0`. Consult the [versioning policy and release notes](../releases/index.md#versioning-and-compatibility) before upgrading. Historical test results apply to their recorded revision and host. Local previews report their own source identity.
 
 Native fragments remain target-specific. Generated Go, Deferred and three-part loop forms are unsupported. New dictionaries or supported forms are documented with their release.
 
 ## Sources and witnesses
 
-The maintained [error model](../error-model.md) owns category definitions and Go inspection behavior. Other primary sources are [diagnostics](../../lyger/diagnostics.go), [error kinds](../../lyger/error_kinds_test.go), [native causes](../../lyger/error_causes_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), [CLI/runtime contract](../cli-build.md), and [validation policy](../development-harness.md). The [integration ledger](../../testdata/integration/IMPLEMENTATION.md) records historical outcomes; it is not a result for this checkout.
+The maintained [error model](../error-model.md) owns category definitions and Go inspection behavior. Other primary sources are [diagnostics](../../lyger/diagnostics.go), [error kinds](../../lyger/error_kinds_test.go), [native causes](../../lyger/error_causes_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), [CLI/runtime contract](../cli-build.md), and [validation policy](../development-harness.md). The [integration ledger](../../testdata/integration/IMPLEMENTATION.md) records historical outcomes. It is not a result for this checkout.

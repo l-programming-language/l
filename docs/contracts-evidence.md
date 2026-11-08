@@ -1,7 +1,7 @@
 # Contracts evidence
 
-The [acceptance catalog](../contracts/acceptance-catalog.json) defines requirements;
-the [acceptance map](../contracts/acceptance-map.json) identifies their test
+The [acceptance catalog](../contracts/acceptance-catalog.json) defines requirements.
+The [acceptance map](../contracts/acceptance-map.json) identifies their test
 witnesses and current limitations. Mapping integrity checks do not execute those
 tests or establish native approval. [Contracts support and limits](contracts.md)
 describe the supported behavior.
@@ -18,16 +18,16 @@ and their bytes verified before the diaries were removed from the current tree:
 
 These records preserve successful and failed attempts, platform and tool versions,
 source fingerprints, dirty-checkout qualifications and evidence limitations.
-Historical passes apply only to their recorded inputs; they are not a pass for
+Historical passes apply only to their recorded inputs. They are not a pass for
 the current checkout. Positive native examples use explicitly test-only
-assumptions; production native trust remains empty.
+assumptions. Production native trust remains empty.
 
 Raw local files remain in ignored `.harness/runs/` and `.harness/pr20-repair/`.
 All 23 path-and-digest references in the validation record matched their 19 unique
 local files during this review. Those local files are not a publicly accessible
 archive. The separately cited original review file
-`/private/tmp/pr20-review-validation-k_ybuxl8/validation.json` was unavailable;
-its historical narrative must not be treated as retrievable raw evidence.
+`/private/tmp/pr20-review-validation-k_ybuxl8/validation.json` was unavailable.
+Its historical narrative must not be treated as retrievable raw evidence.
 
 Hosted evidence for `092d8e3` was also checked. The
 [Linux CI artifact](https://github.com/l-programming-language/l/actions/runs/41602762341/artifacts/13215573513)

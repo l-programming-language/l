@@ -219,7 +219,7 @@
       "id": "file-import-helper",
       "source": "demo/dictionaries/file-import/helpers.l",
       "classification": "fragment",
-      "description": "Companion vocabulary source for file-import; displayed as a source unit, not independently run.",
+      "description": "Companion vocabulary source for file-import, displayed as a source unit, not independently run.",
       "sha256": "24b37679bbb93dc66de113c9ad42dc0904cf62d4ed2b95e4131e8efb07d50725",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -286,7 +286,7 @@
       "id": "stdlib-index",
       "source": "dictionaries.json",
       "classification": "fragment",
-      "description": "Exact structured registry for source lexicons and dictionary entries; this is resource configuration, not L source.",
+      "description": "Exact structured registry for source lexicons and dictionary entries. This is resource configuration, not L source.",
       "sha256": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
       "validation": "static-inspection",
       "witnesses": [
@@ -310,7 +310,7 @@
       "id": "main-descriptor",
       "source": "builtins/eng/core.l",
       "classification": "fragment",
-      "description": "Implicit Main adjective and its Function, Object, and Service construction rules; already loaded by the compiler.",
+      "description": "Implicit Main adjective and its Function, Object, and Service construction rules, already loaded by the compiler.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/distribution_frontend_test.go",
@@ -327,7 +327,7 @@
       "id": "native-dictionary-definition",
       "source": "cmd/l/test/runnable_service/probe.l",
       "classification": "fragment",
-      "description": "Native-backed ProbeIO dictionary operation used by App bodies; this vocabulary fragment is not independently executable.",
+      "description": "Native-backed ProbeIO dictionary operation used by App bodies. This vocabulary fragment is not independently executable.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "cmd/l/runnable_service_test.go",
@@ -344,7 +344,7 @@
       "id": "function-object-descriptor",
       "source": "lyger/test/classes/interleaved.l",
       "classification": "fragment",
-      "description": "First descriptor from the complete interleaved-Class compilation witness; excerpt is not independently executable.",
+      "description": "First descriptor from the complete interleaved-Class compilation witness. This excerpt is not independently executable.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/recursive_classes_test.go"
@@ -360,7 +360,7 @@
       "id": "lexical-sentence-boundaries",
       "source": "docs/examples/lexical-sentence-boundaries.l",
       "classification": "fragment",
-      "description": "Documentation-only combination of source-preparation shapes; sentence/paragraph explanation, not a compiled or executed program.",
+      "description": "Documentation-only combination of source-preparation shapes. This explains sentences and paragraphs without compilation or execution.",
       "validation": "static-inspection",
       "witnesses": [
         "lyger/paragraph_source_test.go",
@@ -373,7 +373,7 @@
       "id": "lexical-comments",
       "source": "docs/examples/lexical-comments.l",
       "classification": "fragment",
-      "description": "Documentation-only comment and literal example based on source scanning; not compiled or executed.",
+      "description": "Documentation-only comment and literal example based on source scanning. It has not been compiled or executed.",
       "validation": "static-inspection",
       "witnesses": [
         "lyger/source_test.go",
@@ -386,7 +386,7 @@
       "id": "lexical-declared-name",
       "source": "demo/basic/main.l",
       "classification": "fragment",
-      "description": "Name declaration and App-body use from the complete basic demo; requires its preceding IO import and later lifecycle instructions.",
+      "description": "Name declaration and App-body use from the complete basic demo. It requires its preceding IO import and later lifecycle instructions.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "acceptance/distribution/cli/cli_test.go"
@@ -402,7 +402,7 @@
       "id": "lexical-text-escapes",
       "source": "docs/examples/lexical-text-escapes.l",
       "classification": "fragment",
-      "description": "Documentation-only Text operands illustrating escaped backticks, literal backslash-n, Unicode, braces and interior markup; static inspection, not execution.",
+      "description": "Documentation-only Text operands illustrating escaped backticks, literal backslash-n, Unicode, braces and interior markup. Evidence is static inspection, not execution.",
       "validation": "static-inspection",
       "witnesses": [
         "lyger/grammar.go",
@@ -416,7 +416,7 @@
       "id": "lexical-possessive-output",
       "source": "demo/basic/main.l",
       "classification": "fragment",
-      "description": "Execution and explicit Output member read; requires the basic demo declarations omitted from this excerpt.",
+      "description": "Execution and explicit Output member read. It requires the basic demo declarations omitted from this excerpt.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "acceptance/distribution/cli/cli_test.go"
@@ -432,7 +432,7 @@
       "id": "lexical-action-inflections",
       "source": "builtins/eng/core.l",
       "classification": "fragment",
-      "description": "Implicit Start/Execute source definitions and their declared verb inflections; already loaded by the compiler, not user redeclarations.",
+      "description": "Implicit Start/Execute source definitions and their declared verb inflections, already loaded by the compiler, not user redeclarations.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/builtin_operations_contract_test.go",
@@ -449,7 +449,7 @@
       "id": "lexical-numeric-name",
       "source": "testdata/distribution/observers/numeric-declared-name.l",
       "classification": "fragment",
-      "description": "Canonical observer showing a numeric-looking declaration resolved as a Text binding. Numeric-resolution witnesses check the same source shape; not run here.",
+      "description": "Canonical observer showing a numeric-looking declaration resolved as a Text binding. Numeric-resolution witnesses check the same source shape. Those witnesses were not run here.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/numeric_resolution_test.go"
@@ -461,7 +461,7 @@
       "id": "values-number-printing",
       "source": "docs/examples/values-number-printing.l",
       "classification": "fragment",
-      "description": "Documentation-only App-body fragment drawn from the source-number parity witness; no lifecycle instructions or execution of this fragment.",
+      "description": "Documentation-only App-body fragment drawn from the source-number parity witness. This fragment has no lifecycle instructions and has not been executed.",
       "validation": "static-inspection",
       "witnesses": [
         "lyger/io_numeric_test.go",
@@ -490,7 +490,7 @@
       "id": "values-thing-printing",
       "source": "docs/examples/values-thing-printing.l",
       "classification": "fragment",
-      "description": "Documentation-only public Print calls supplying Text, Number and Truth to the private native Thing parameter; static composition, no execution claim.",
+      "description": "Documentation-only public Print calls supplying Text, Number and Truth to the private native Thing parameter. This shows static composition and makes no execution claim.",
       "validation": "static-inspection",
       "witnesses": [
         "stdlib/eng/io/dictionary.l",
@@ -504,7 +504,7 @@
       "id": "values-output-snapshot",
       "source": "demo/paragraphs/repeated-activation.l",
       "classification": "fragment",
-      "description": "App alias and scalar Output snapshot excerpt; requires earlier App declaration and continuation. Full demo has existing native witnesses.",
+      "description": "App alias and scalar Output snapshot excerpt. It requires earlier App declaration and continuation. Full demo has existing native witnesses.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "cmd/l/paragraph_integration_test.go",
@@ -522,7 +522,7 @@
       "id": "binding-forward-member",
       "source": "docs/examples/binding-forward-member.l",
       "classification": "fragment",
-      "description": "Documentation excerpt reproducing TestParagraphBindingNativeTypeForwardMemberShadowsOuter source; binding/source-location evidence only, no runtime-before-assignment claim.",
+      "description": "Documentation excerpt reproducing TestParagraphBindingNativeTypeForwardMemberShadowsOuter source. This provides binding and source-location evidence only, with no runtime-before-assignment claim.",
       "sha256": "208359c5a2bb80fa5b7c7bdb4a5c02bfa5a97d559bf09b500389299e618c34ad",
       "validation": "static-inspection",
       "witnesses": [
@@ -536,7 +536,7 @@
       "id": "binding-public-scalars",
       "source": "demo/paragraphs/public-values.l",
       "classification": "fragment",
-      "description": "First three declarations from the complete public-values runtime witness; following Dictionary and Show statements omitted.",
+      "description": "First three declarations from the complete public-values runtime witness. The following Dictionary and Show statements are omitted.",
       "sha256": "41b11a3bfa7e5b4a5b2f800976015b04e17f661cfd13d2a1606f4da7cd560162",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -554,7 +554,7 @@
       "id": "binding-pronoun-alias",
       "source": "testdata/phase1/language/lang-06.l",
       "classification": "runnable",
-      "description": "Canonical LANG-06 pronoun, alias, repeated Await, and possessive Output program; frontend identity checks and native expected bytes are retained witnesses.",
+      "description": "Canonical LANG-06 pronoun, alias, repeated Await, and possessive Output program. Frontend identity checks and native expected bytes are retained witnesses.",
       "sha256": "d6ee0e87af64864c8b1173b792f70cc6f07b1d01222cb39d8d86f4482e628844",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -570,7 +570,7 @@
       "id": "binding-pronoun-boundary",
       "source": "testdata/phase1/n11-pronoun-crosses-paragraph/main.l",
       "classification": "invalid",
-      "description": "Intentionally invalid N11 fixture: the new paragraph has no preceding pronoun subject; compile rejection before publication.",
+      "description": "Intentionally invalid N11 fixture: the new paragraph has no preceding pronoun subject. Compilation rejects it before publication.",
       "sha256": "684eb1b93ce5e4554319668dea3eb30c98b6c2cd77b09033c3f6f58e69186ed9",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -606,7 +606,7 @@
       "id": "definitions-objective",
       "source": "builtins/eng/core.l",
       "classification": "fragment",
-      "description": "Implicit Objective descriptor uses a grouped native word; the nested array is not an L collection literal.",
+      "description": "Implicit Objective descriptor uses a grouped native word. The nested array is not an L collection literal.",
       "sha256": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -623,7 +623,7 @@
       "id": "imports-indexed-member",
       "source": "demo/basic/main.l",
       "classification": "fragment",
-      "description": "Canonical IO.Print import line; the rest of the runnable basic program is omitted.",
+      "description": "Canonical IO.Print import line. The rest of the runnable basic program is omitted.",
       "sha256": "20ec30ca4fe054c11a28ce96c35e6e960f6af48921f1da1041e29fe9d88ae741",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -640,7 +640,7 @@
       "id": "imports-continuation",
       "source": "testdata/phase1/language/lang-14.l",
       "classification": "runnable",
-      "description": "Complete LANG-14 caller includes its sibling continuation.l; existing frontend and native witnesses preserve include order and caller-local snapshot ownership.",
+      "description": "Complete LANG-14 caller includes its sibling continuation.l. Existing frontend and native witnesses preserve include order and caller-local snapshot ownership.",
       "sha256": "666230cbd38fefd6c4a70547a1f48aee6e9c71a721e0951f753143d7d5dd139e",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -657,7 +657,7 @@
       "id": "imports-continuation-body",
       "source": "testdata/phase1/language/continuation.l",
       "classification": "fragment",
-      "description": "Companion source included by LANG-14; snapshot belongs to the caller and this file is not independently executable.",
+      "description": "Companion source included by LANG-14. Snapshot belongs to the caller and this file is not independently executable.",
       "sha256": "a20baa4077375536bc2dab010862d512fc1f835e59d22fea02b10144f90c9ea5",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -671,7 +671,7 @@
       "id": "imports-private-helper",
       "source": "docs/examples/imports-private-helper.l",
       "classification": "fragment",
-      "description": "Intentionally invalid explanatory fragment shortened from the IO02 private-helper regression; Write is unresolved. Static review only, not independently compiled.",
+      "description": "Intentionally invalid explanatory fragment shortened from the IO02 private-helper regression. Write is unresolved. Static review only, not independently compiled.",
       "sha256": "29ae5ae0a33019bb89d1c35d879f5a2792bcdef91948a6bc9071d9d0fa7dd6d5",
       "validation": "static-inspection",
       "witnesses": [
@@ -684,7 +684,7 @@
       "id": "control-ordered-apps",
       "source": "demo/phase1/main.l",
       "classification": "fragment",
-      "description": "Ordered lifecycle and display excerpt from the complete two-App CLI witness; requires preceding First and Second declarations.",
+      "description": "Ordered lifecycle and display excerpt from the complete two-App CLI witness. It requires preceding First and Second declarations.",
       "sha256": "4d8aac2bf95ca98aac182220cf64de89805358a24bfc808a7c50d940b7b22f2a",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -700,7 +700,7 @@
       "id": "control-output-snapshot",
       "source": "testdata/phase1/language/lang-11.l",
       "classification": "fragment",
-      "description": "Snapshot and rerun excerpt from LANG-11; requires the preceding Worker declaration and IO import.",
+      "description": "Snapshot and rerun excerpt from LANG-11. It requires the preceding Worker declaration and IO import.",
       "sha256": "943214829cf7d4b872fa8ae948438e0a208a171039451db01ef99ad6f667ba08",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -717,7 +717,7 @@
       "id": "control-otherwise",
       "source": "lyger/test/member-resolution.l",
       "classification": "fragment",
-      "description": "Conditional ownership excerpt from the member-resolution frontend witness; preceding App, x, and execution omitted. No successful runtime claim.",
+      "description": "Conditional ownership excerpt from the member-resolution frontend witness. The preceding App, x, and execution are omitted. No successful runtime claim.",
       "sha256": "8ff7716561b96300f7f1c690300b12fe9abb19ddd63c5d03289a2ce4c13f9767",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -734,7 +734,7 @@
       "id": "control-while-unsupported",
       "source": "docs/examples/control-while-unsupported.l",
       "classification": "fragment",
-      "description": "Documentation-only unsupported While illustration derived from configured grammar and the explicit outer-instruction rejection; not parsed or run.",
+      "description": "Documentation-only unsupported While illustration derived from configured grammar and the explicit outer-instruction rejection. This fragment has not been parsed or run.",
       "sha256": "f073d9bb8eb54424a05d8b5756e804d705ad8dcdc97f8e075749967206973427",
       "validation": "static-inspection",
       "witnesses": [
@@ -747,7 +747,7 @@
       "id": "control-bare-exit",
       "source": "demo/paragraphs/exit-program.l",
       "classification": "runnable",
-      "description": "Bare Exit from an App continuation terminates later paragraph and program actions; complete maintained runtime witness.",
+      "description": "Bare Exit from an App continuation terminates later paragraph and program actions. This is a complete maintained runtime witness.",
       "sha256": "0be2faa5132a6de9bcf3bb7036618f0c61f5619906ec6cf1a8b350aaa8987cd8",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -764,7 +764,7 @@
       "id": "runtime-build-run",
       "source": "cmd/l/test/runnable_service/basic.l",
       "classification": "fragment",
-      "description": "Primitive Build/Run/Await/Show excerpt from the App lifecycle witness; omits the declaration and test-owned ProbeIO setup.",
+      "description": "Primitive Build/Run/Await/Show excerpt from the App lifecycle witness. It omits the declaration and test-owned ProbeIO setup.",
       "sha256": "d5f7458b98b50106a02c00a70e5c43486c7f6cab2a52c06589c7aec2c5efa5b2",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -781,7 +781,7 @@
       "id": "runtime-stop-await",
       "source": "testdata/phase1/language/lang-10.l",
       "classification": "fragment",
-      "description": "Stop/Await ordering excerpt; Worker and its Error-checking continuation are declared earlier. Existing native witness permits termination or normal-completion race outcomes.",
+      "description": "Stop/Await ordering excerpt. Worker and its Error-checking continuation are declared earlier. Existing native witness permits termination or normal-completion race outcomes.",
       "sha256": "54df4df07f5ac526cc453b993fe01d3a09fd80a9afd52f00a3d78c5b6553b211",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -814,7 +814,7 @@
       "id": "runtime-build-without-run",
       "source": "testdata/phase1/n07-build-is-not-run/main.l",
       "classification": "fragment",
-      "description": "Complete N07 runtime-negative source displayed as an explanatory fragment: Build creates no invocation, so Await fails at runtime; excluded from automatic example execution.",
+      "description": "Complete N07 runtime-negative source displayed as an explanatory fragment: Build creates no invocation, so Await fails at runtime. It is excluded from automatic example execution.",
       "sha256": "20c14100932ef5253c079410a46cd01f27a7c802e380af44035d008051799694",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -828,7 +828,7 @@
       "id": "grammar-passive-await",
       "source": "testdata/phase1/language/lang-02.l",
       "classification": "runnable",
-      "description": "Canonical LANG-02 outer passive Await; the existing native witness expects passive followed by LF.",
+      "description": "Canonical LANG-02 outer passive Await. The existing native witness expects passive followed by LF.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "lyger/phase1_language_test.go",
@@ -863,7 +863,7 @@
       "id": "constructed-service-composition",
       "source": "lyger/test/workspace/services.l",
       "classification": "fragment",
-      "description": "Left/Right Service descriptors and a Grouped App construction from the maintained workspace fixture; requires the preceding IO.Print import and omits the second App.",
+      "description": "Left/Right Service descriptors and a Grouped App construction from the maintained workspace fixture. It requires the preceding IO.Print import and omits the second App.",
       "validation": "existing-witness-not-run",
       "witnesses": [
         "cmd/l/service_workspace_test.go",
@@ -960,7 +960,7 @@
       "id": "word-io",
       "source": "docs/examples/word-io.l",
       "classification": "fragment",
-      "description": "Native-signature IO caller Functions with explicit writer and payload context; the documentation native witness supplies their host and checks exact bytes.",
+      "description": "Native-signature IO caller Functions with explicit writer and payload context. The documentation native witness supplies their host and checks exact bytes.",
       "sha256": "745b5cc96a0533bfd5f41a8c53e456011f0f4a42047e8be2f53f0e262ca8be64",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -972,7 +972,7 @@
       "id": "word-selection",
       "source": "docs/examples/word-selection.l",
       "classification": "fragment",
-      "description": "Option/Result selection, Require and Expect callers with native signatures and typed Process inputs; the documentation native witness uses actual Runtime support.",
+      "description": "Option/Result selection, Require and Expect callers with native signatures and typed Process inputs. The documentation native witness uses actual Runtime support.",
       "sha256": "92475e1090f7d16756daa9527bd07d12276fa67060b8e7592a7594d6156bc165",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -984,7 +984,7 @@
       "id": "word-core",
       "source": "docs/examples/word-core.l",
       "classification": "fragment",
-      "description": "Native-signature Retain caller context; the documentation native witness checks Arc identity and shared ownership.",
+      "description": "Native-signature Retain caller context. The documentation native witness checks Arc identity and shared ownership.",
       "sha256": "d36b1e1fe72daeb976089ce9337137ce091798f2fed9c767630bedfc175ddbfc",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -1011,7 +1011,7 @@
       "id": "word-values-list",
       "source": "docs/examples/word-values.l",
       "classification": "fragment",
-      "description": "Focused list use from the complete word-values program; omitted surrounding declarations remain available in the full source.",
+      "description": "Focused list use from the complete word-values program. Omitted surrounding declarations remain available in the full source.",
       "sha256": "2477082be5608a7f39794db3a2c932643146bfd300e1aef3cf8678c1bee18bca",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -1027,7 +1027,7 @@
       "id": "word-values-map",
       "source": "docs/examples/word-values.l",
       "classification": "fragment",
-      "description": "Focused map use from the complete word-values program; omitted surrounding declarations remain available in the full source.",
+      "description": "Focused map use from the complete word-values program. Omitted surrounding declarations remain available in the full source.",
       "sha256": "2477082be5608a7f39794db3a2c932643146bfd300e1aef3cf8678c1bee18bca",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -1043,7 +1043,7 @@
       "id": "word-values-pointer",
       "source": "docs/examples/word-values.l",
       "classification": "fragment",
-      "description": "Focused pointer use from the complete word-values program; omitted surrounding declarations remain available in the full source.",
+      "description": "Focused pointer use from the complete word-values program. Omitted surrounding declarations remain available in the full source.",
       "sha256": "2477082be5608a7f39794db3a2c932643146bfd300e1aef3cf8678c1bee18bca",
       "validation": "existing-witness-not-run",
       "witnesses": [
@@ -1059,7 +1059,7 @@
       "id": "word-values-bytes",
       "source": "docs/examples/word-values.l",
       "classification": "fragment",
-      "description": "Focused bytes use from the complete word-values program; omitted surrounding declarations remain available in the full source.",
+      "description": "Focused bytes use from the complete word-values program. Omitted surrounding declarations remain available in the full source.",
       "sha256": "2477082be5608a7f39794db3a2c932643146bfd300e1aef3cf8678c1bee18bca",
       "validation": "existing-witness-not-run",
       "witnesses": [

@@ -6,7 +6,7 @@ L sequences resolved source instructions and source-defined actions. The support
 
 Statements retain their original order after source expansion. Coordinated unary Build, Run, Await, Stop, and Show operations process operands in source order. A source-defined one-argument action applied to several operands instead expands its entire body for each operand before starting the next.
 
-Run acknowledges launch before the next instruction, while the child process continues independently. This permits overlapping OS processes; it does not establish parallel evaluation of arbitrary expressions. Native fragments may have their own Rust evaluation rules. Logeme assembly order is not a general source expression-order promise.
+Run acknowledges launch before the next instruction, while the child process continues independently. This permits overlapping OS processes. It does not establish parallel evaluation of arbitrary expressions. Native fragments may have their own Rust evaluation rules. Logeme assembly order is not a general source expression-order promise.
 
 **Supported coordination.** The [two-App program](../../demo/phase1/main.l) declares First and Second before these instructions:
 
@@ -20,7 +20,7 @@ Run acknowledges launch before the next instruction, while the child process con
 
 Separate successive actions within a composed source sequence.
 
-**Usage and boundary.** Launch in the [local definitions program](../../demo/paragraphs/local-definitions.l) uses `and then Awaiting it` after Build/Run. Then preserves source sequencing; it is not an asynchronous continuation primitive.
+**Usage and boundary.** Launch in the [local definitions program](../../demo/paragraphs/local-definitions.l) uses `and then Awaiting it` after Build/Run. Then preserves source sequencing. It is not an asynchronous continuation primitive.
 
 ### And
 
@@ -30,7 +30,7 @@ Coordinate source operands, declarations or actions in their owning grammatical 
 
 **Usage and boundary.** `Start First and Second` in the [two-App program](../../demo/phase1/main.l) expands the complete action for each operand.
 
-**Partial support.** Operand, declaration and action coordination work, but an `and`-joined condition such as ``If true and false, Show `value`.`` is rejected during instruction lowering. The grammar recognizes the conditions; there is no Boolean join operator or short-circuit implementation for them.
+**Partial support.** Operand, declaration and action coordination work, but an `and`-joined condition such as ``If true and false, Show `value`.`` is rejected during instruction lowering. The grammar recognizes the conditions, but there is no Boolean join operator or short-circuit implementation for them.
 
 ### Or
 
@@ -40,7 +40,7 @@ Join alternative nominal targets in supported descriptor declarations, or occur 
 
 **Usage and boundary.** Main declares `Service, Object, or Function` in the [descriptor example](lexical-types.md#describe-with-an-adjective). These are alternative canonical targets.
 
-**Partial support.** Descriptor target alternatives work, but an `or`-joined runtime condition is rejected during instruction lowering. The grammar recognizes the joined conditions; there is no Boolean join operator or short-circuit implementation for them.
+**Partial support.** Descriptor target alternatives work, but an `or`-joined runtime condition is rejected during instruction lowering. The grammar recognizes the joined conditions, but there is no Boolean join operator or short-circuit implementation for them.
 
 ## Assignment
 
@@ -48,19 +48,19 @@ Passive declarations such as `"count" is 7.` and supported Define forms introduc
 
 Definite assignment intersects all paths that continue to a read. Exit branches cannot reach later reads and therefore do not require a value there. The compiler does not insert hidden defaults, and an unused Output assignment still performs the member read and its runtime availability check.
 
-**Supported snapshot assignment — excerpt.** The complete [snapshot fixture](../../testdata/phase1/language/lang-11.l) first declares a Basic App named Worker that prints `saved`:
+**Supported snapshot assignment excerpt.** The complete [snapshot fixture](../../testdata/phase1/language/lang-11.l) first declares a Basic App named Worker that prints `saved`:
 
 <!-- example:control-output-snapshot -->
 
-The first Await makes Output available. Define reads it once; later invocations do not change `snapshot`. The last Show reads the latest Output separately. The [frontend witness](../../lyger/phase1_language_test.go) checks that the saved value retains its binding.
+The first Await makes Output available. Define reads it once. Later invocations do not change `snapshot`. The last Show reads the latest Output separately. The [frontend witness](../../lyger/phase1_language_test.go) checks that the saved value retains its binding.
 
 ### Is
 
 <!-- word:grammar-word:is -->
 
-Associate a subject with its declared or assigned value; in a condition, compare supported like-typed values.
+Associate a subject with its declared or assigned value. In a condition, compare supported like-typed values.
 
-**Usage and boundary.** `"message" is` followed by Text in the [first program](../guide/first-program.md#read-the-program) supplies assignment. The comparison table below distinguishes conditional equality and the configured negative form `isnt`; neither implies arbitrary object equality.
+**Usage and boundary.** `"message" is` followed by Text in the [first program](../guide/first-program.md#read-the-program) supplies assignment. The comparison table below distinguishes conditional equality and the configured negative form `isnt`. Neither implies arbitrary object equality.
 
 ## Comparisons
 
@@ -80,7 +80,7 @@ The current condition operators and their boundaries are:
 
 The inclusive-order spelling follows L's grammar. Source phrases must satisfy both grammar and operand typing.
 
-`not` or `no` negates only the condition forms whose grammar owns that modifier. Values do not have general truthiness, Text ordering is rejected, and mixed scalar comparisons do not coerce. The Error in a has condition must belong to the same target; it is not generic collection membership.
+`not` or `no` negates only the condition forms whose grammar owns that modifier. Values do not have general truthiness, Text ordering is rejected, and mixed scalar comparisons do not coerce. The Error in a has condition must belong to the same target. It is not generic collection membership.
 
 ### Have
 
@@ -88,7 +88,7 @@ The inclusive-order spelling follows L's grammar. Source phrases must satisfy bo
 
 Test whether the selected App has the Error identified by its current operation or invocation.
 
-**Usage and boundary.** `it has an Error` in the [conditional member fixture](../../lyger/test/member-resolution.l) follows Execute and refers to HelloWorldApp. Have is not general collection membership; the Error must belong to the same App.
+**Usage and boundary.** `it has an Error` in the [conditional member fixture](../../lyger/test/member-resolution.l) follows Execute and refers to HelloWorldApp. Have is not general collection membership. The Error must belong to the same App.
 
 ### Equal
 
@@ -96,7 +96,7 @@ Test whether the selected App has the Error identified by its current operation 
 
 Compare two supported scalar values of the same type for equality.
 
-**Usage and boundary.** The [Truth condition](../../testdata/phase1/language/lang-13.l) uses `enabled equals true`. Text compares bytes and Number compares numeric values; mixed types do not coerce.
+**Usage and boundary.** The [Truth condition](../../testdata/phase1/language/lang-13.l) uses `enabled equals true`. Text compares bytes and Number compares numeric values. Mixed types do not coerce.
 
 ### Not
 
@@ -104,7 +104,7 @@ Compare two supported scalar values of the same type for equality.
 
 Negate a condition only where its grammatical form admits this modifier.
 
-**Usage and boundary.** The grammar admits `not` in its bounded condition forms; see the [condition rules](../../lexicon/eng/grammar.json) and negative-condition [lowering witnesses](../../lyger/orchestrator_test.go). This is not an unrestricted prefix Boolean operator or a promise that joined conditions execute.
+**Usage and boundary.** The grammar admits `not` in its bounded condition forms. See the [condition rules](../../lexicon/eng/grammar.json) and negative-condition [lowering witnesses](../../lyger/orchestrator_test.go). This is not an unrestricted prefix Boolean operator or a promise that joined conditions execute.
 
 **Example.** Here `enabled` is a declared Truth value. Negating its false value selects the first branch and writes `disabled` without a newline.
 
@@ -116,7 +116,7 @@ Negate a condition only where its grammatical form admits this modifier.
 
 Select a numeric less-than comparison, with an optional equality continuation.
 
-**Usage and boundary.** The focused form `left less than right` requires two Number operands; `left less than equal to right` is the inclusive grammar. These [typed comparison witnesses](../../lyger/orchestrator_test.go) establish the native boundary; Text ordering is rejected.
+**Usage and boundary.** The focused form `left less than right` requires two Number operands. The phrase `left less than equal to right` is the inclusive grammar. These [typed comparison witnesses](../../lyger/orchestrator_test.go) establish the native boundary. Text ordering is rejected.
 
 ### Greater
 
@@ -124,23 +124,23 @@ Select a numeric less-than comparison, with an optional equality continuation.
 
 Select a numeric greater-than comparison, with an optional equality continuation.
 
-**Usage and boundary.** The focused form `left greater than right` requires Numbers; `left greater than equal to right` is the inclusive form. The [comparison witnesses](../../lyger/orchestrator_test.go) retain operand typing; no lexical Text ordering is implied.
+**Usage and boundary.** The focused form `left greater than right` requires Numbers. The phrase `left greater than equal to right` is the inclusive form. The [comparison witnesses](../../lyger/orchestrator_test.go) retain operand typing. No lexical Text ordering is implied.
 
 ## Selection
 
-If selects a branch from a supported condition. An attached else belongs to the unmatched if. Otherwise can attach to an immediately preceding unmatched conditional in the same source paragraph; it does not search arbitrary earlier paragraphs or create an unconditional fallback after unrelated statements.
+If selects a branch from a supported condition. An attached else belongs to the unmatched if. Otherwise can attach to an immediately preceding unmatched conditional in the same source paragraph. It does not search arbitrary earlier paragraphs or create an unconditional fallback after unrelated statements.
 
 **Supported equality and selection.** This program makes the wait explicit on the branch that continues:
 
 <!-- example:values-truth-condition -->
 
-`enabled` is Truth. When it equals true, Await joins Worker; otherwise Exit terminates the program. Every path reaching the Output assignment has joined. Expected stdout is `condition\n`.
+`enabled` is Truth. When it equals true, Await joins Worker. Otherwise, Exit terminates the program. Every path reaching the Output assignment has joined. Expected stdout is `condition\n`.
 
-**Conditional ownership — excerpt from a frontend witness.** The [member-resolution source](../../lyger/test/member-resolution.l) declares an App, declares Text `x`, and executes the App before these clauses:
+**Conditional ownership excerpt from a frontend witness.** The [member-resolution source](../../lyger/test/member-resolution.l) declares an App, declares Text `x`, and executes the App before these clauses:
 
 <!-- example:control-otherwise -->
 
-The first `else` belongs to the Error test and assigns `y` from the completed invocation. Otherwise belongs to the immediately preceding `If x isnt y`. This [binding fixture](../../lyger/member_resolution_regression_test.go) requires the earlier declarations; its Text comparison differs by Print's final newline.
+The first `else` belongs to the Error test and assigns `y` from the completed invocation. Otherwise belongs to the immediately preceding `If x isnt y`. This [binding fixture](../../lyger/member_resolution_regression_test.go) requires the earlier declarations. Its Text comparison differs by Print's final newline.
 
 The grammar can parse multiple conditions, but outer lowering explicitly rejects joined condition lists. Consequently `and`/`or` in the vocabulary does not establish general boolean short-circuiting. Coordination of actions, declarations, and operands is a different supported use of conjunctions.
 
@@ -174,13 +174,13 @@ Attach an alternative branch to the immediately preceding unmatched conditional 
 
 ## Iteration and collection operations
 
-While and three-part source loops remain unsupported. [Collections](collections-and-categories.md) support Put, Place and typed reads; configured Get/Take words do not introduce further operations.
+While and three-part source loops remain unsupported. [Collections](collections-and-categories.md) support Put, Place and typed reads. Configured Get/Take words do not introduce further operations.
 
-**Unsupported loop — source fragment:**
+**Unsupported loop source fragment:**
 
 <!-- example:control-while-unsupported -->
 
-The [grammar configuration](../../lexicon/eng/grammar.json) declares a While rule, but this source fragment is rejected during grammar processing. The [instruction builder](../../lyger/instructions.go) also has no While operation; the configured rule is not an executable loop.
+The [grammar configuration](../../lexicon/eng/grammar.json) declares a While rule, but this source fragment is rejected during grammar processing. The [instruction builder](../../lyger/instructions.go) also has no While operation. The configured rule is not an executable loop.
 
 Within native Function bodies, the Storage implementation dictionary composes Iteration and typed Processes into Traverse, Enumerate and related [source words](../internals/storage.md#iteration-and-continuations). Their contracts specify ordering and error behavior. They do not add general source loop syntax or break/continue vocabulary. The [Rust target](../../builtins/README.md#iteration-and-definition-contract) supports their bounded iteration shapes and rejects the three-part X form.
 
@@ -196,7 +196,7 @@ Name a configured conditional loop form with no executable source implementation
 
 Number is binary64, but the configured English grammar has no general infix arithmetic expression system. No public precedence table for `+`, `-`, multiplication, division, or arithmetic grouping can be inferred from numeric literals or D/E templates.
 
-D/E calculates native expressions; G/I selects branches. A source-defined native-backed word may use supported target fragments deliberately. Such a definition documents its own typed contract and target dependence; it is not a built-in arithmetic operator family.
+D/E calculates native expressions, and G/I selects branches. A source-defined native-backed word may use supported target fragments deliberately. Such a definition documents its own typed contract and target dependence. It is not a built-in arithmetic operator family.
 
 ## Show and output
 
@@ -208,7 +208,7 @@ In the [first program](../guide/first-program.md#read-the-program), Print adds L
 
 ## Exit and Return
 
-Bare Exit terminates the whole L program after cleanup and succeeds if cleanup succeeds. Exit with an explicit Error/text failure follows the maintained error path and returns failure. Exit inside a continuation or expanded source action still exits the orchestrator; it is not merely a return from the nearest paragraph.
+Bare Exit terminates the whole L program after cleanup and succeeds if cleanup succeeds. Exit with an explicit Error/text failure follows the maintained error path and returns failure. Exit inside a continuation or expanded source action still exits the orchestrator. It is not merely a return from the nearest paragraph.
 
 **Supported whole-program termination.**
 
@@ -216,7 +216,7 @@ Bare Exit terminates the whole L program after cleanup and succeeds if cleanup s
 
 Execute reaches First's continuation, which shows `First\n` and then exits. The following Show in the paragraph, Second's Execute operand, and the program's final Show are unreachable. The retained paragraph test expects that one output line and status 0 when cleanup succeeds. Compare the [explicit-error example](errors.md#runtime-failure-is-a-separate-stage), whose exit status is 1.
 
-Function.Return completes the enclosing invocation through its selected definition. Root-authored returning actions use their caller's Return; definition-owned actions preserve their constructor contract. A conditional Return leaves other paths continuing, and constructing another Function does not return from its caller. See the [Return contract](../reference/builtins/definitions.md#functionreturn). This supplies neither general source exceptions nor return-value transport between App processes.
+Function.Return completes the enclosing invocation through its selected definition. Root-authored returning actions use their caller's Return. Definition-owned actions preserve their constructor contract. A conditional Return leaves other paths continuing, and constructing another Function does not return from its caller. See the [Return contract](../reference/builtins/definitions.md#functionreturn). This supplies neither general source exceptions nor return-value transport between App processes.
 
 ## Sources and witnesses
 

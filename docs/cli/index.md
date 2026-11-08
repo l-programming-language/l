@@ -1,19 +1,19 @@
 # The L command line
 
-L builds native macOS/Linux programs. Run the published executable directly; see the [runtime guide](runtime.md).
+L builds native macOS/Linux programs. Run the published executable directly. See the [runtime guide](runtime.md).
 
 ## Available commands
 
 | Invocation | Behavior |
 | --- | --- |
-| `l build [main.l]` | Compile and publish; source defaults to `main.l`. |
+| `l build [main.l]` | Compile and publish. Source defaults to `main.l`. |
 | `l contracts inspect INPUT` | Inspect bindings, typed targets, and contract obligations without building or running Apps. |
 | `l contracts check --profile NAME INPUT` | Enforce selected contract profiles. |
 | `l contracts explain --binding SELECTOR INPUT` | Explain a selected binding. |
-| `l contracts verify-dictionary DICTIONARY` | Verify a dictionary; focused symbolic adjective verification is explicit. |
-| `l contracts --help` | Show contracts usage; also accepts `-h`. |
+| `l contracts verify-dictionary DICTIONARY` | Verify a dictionary. Focused symbolic adjective verification is explicit. |
+| `l contracts --help` | Show contracts usage. Also accepts `-h`. |
 | `l --help`, `l -h`, `l -help` | Show usage. Use alone. |
-| `l build --help` | Show build usage before a filename; also accepts `-h`, `-help`, `--h`. |
+| `l build --help` | Show build usage before a filename. Also accepts `-h`, `-help`, `--h`. |
 | `l --version`, `l -v` | Print `0.0.1` plus a newline. Use alone. |
 
 See the [contracts reference](../contracts.md#commands) for options, scoped symbolic verification, reports, and exit statuses.

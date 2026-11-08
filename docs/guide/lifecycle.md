@@ -8,10 +8,10 @@ Apps run in separate processes. Use Run to start one, Await to wait for completi
 
 | Form | Effect |
 | --- | --- |
-| Build | Check an already compiled companion; no runtime compilation |
+| Build | Check an already compiled companion without runtime compilation |
 | Run | Start an App without waiting for completion |
 | Stop | Request forceful termination without waiting for completion |
-| Await | Join the finalized result; activate its continuation once |
+| Await | Join the finalized result and activate its continuation once |
 | Start | Source-defined Build then Run |
 | Execute | Source-defined Start then Await |
 | Output | Read finalized raw stdout without waiting |

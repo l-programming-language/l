@@ -67,7 +67,7 @@ test('irregular and actor forms retain qualified modifier targets', () => {
     entry('lined', 'IO.Lined', 'lined', { word: { partOfSpeech: 'adjective', targets: [{ entry: 'send', form: 'Sender' }] } }),
   ], '# IO\n\n## Send\n\n<!-- word:send -->\n\nSend exact bytes.\n\n## Lined\n\n<!-- word:lined -->\n\nAppend LF after successful payload.\n');
   const send = words.find((word) => word.id === 'send'), lined = words.find((word) => word.id === 'lined');
-  assert.match(wordFacts(send, words, String), /Sender<\/code> \(noun; actor\)/);
+  assert.match(wordFacts(send, words, String), /Sender<\/code> \(noun, actor\)/);
   assert.match(wordFacts(lined, words, String), /href="\/docs\/test\/#send".*IO.Send · Sender/);
   assert.doesNotMatch(wordFacts(send, words, String), /Sended/);
 });

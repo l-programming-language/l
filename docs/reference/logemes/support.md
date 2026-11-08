@@ -6,7 +6,7 @@ The [Lucid suite guide](../../../logiceme/testdata/lucid/README.md#current-inven
 
 ## Rejection corpus
 
-Malformed compositions must return classified errors without changing inputs, returning partial bundles, or panicking. The Lucid guide records the rejection families and focused checks. Its [frozen manifest](../../../logiceme/testdata/lucid/templates.sha256.json) protects the eighteen segment definitions; expected artifacts remain independent oracles.
+Malformed compositions must return classified errors without changing inputs, returning partial bundles, or panicking. The Lucid guide records the rejection families and focused checks. Its [frozen manifest](../../../logiceme/testdata/lucid/templates.sha256.json) protects the eighteen segment definitions. Expected artifacts remain independent oracles.
 
 ## What the evidence does not say
 
@@ -18,4 +18,4 @@ Deferred and three-part loops are unsupported. CV/DV and CO/COB provide [bounded
 
 ## Support assets
 
-Config/Cargo templates supply configuration and manifests; start/stop templates produce deployment artifacts. [Runtime support](../../cli-build.md#source-generation-and-native-builds) combines authored L policy with bounded host adapters. These assets are separate from the eighteen segments and L's public standard library.
+Config/Cargo templates supply configuration and manifests, while start/stop templates produce deployment artifacts. [Runtime support](../../cli-build.md#source-generation-and-native-builds) combines authored L policy with bounded host adapters. These assets are separate from the eighteen segments and L's public standard library.

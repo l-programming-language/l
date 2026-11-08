@@ -3,13 +3,13 @@
 Contracts describe selected meanings and their typed behavior. Inspection does
 not change resolution, build a Cargo workspace, publish an executable, run a
 tool query, or run an App. The default native approval policy is empty: a declaration is not proof of
-its implementation. A successful inspection can contain unknowns; enforced
+its implementation. A successful inspection can contain unknowns. Enforced
 checking fails when a required fact is contradicted or unresolved.
 
 ## Commands
 
 Use `l contracts --help` or `l contracts -h` for contracts usage. Each analysis
-subcommand requires exactly one input. Options precede that input; use `--` to
+subcommand requires exactly one input. Options precede that input. Use `--` to
 end option parsing before a filename beginning with a dash. No contracts command
 builds a Cargo workspace, publishes an executable, or launches an App. Explicit
 `evidence capture` is the only contracts operation that queries external tools.
@@ -59,7 +59,7 @@ Explanation requires `--binding`. Use an exact occurrence ID or an
 refer to original source where available. Generated uses have parent origins and
 expansion ordinals. Reports retain definition identity, selected meaning,
 occurrence, role path, definition-site environment, use-site environment, and
-the existing resolver's selection reason. Aliases share meanings; separate
+the existing resolver's selection reason. Aliases share meanings. Separate
 applications and same-type roles remain distinct. A selector with no matching
 binding is an invocation error.
 
@@ -84,7 +84,7 @@ l contracts verify-dictionary --adjective MEANING_OR_SOURCE:BYTE_OFFSET --assura
 
 Explicit `--assurance symbolic` requires one or more repeatable `--adjective`
 selectors. Each selector identifies one canonical rule meaning or its exact
-source-origin byte offset; ambiguous and missing selections reject. This mode
+source-origin byte offset. Ambiguous and missing selections reject. This mode
 checks only the selected definition-time structural obligations. Its report
 retains concrete instantiation and native obligations separately, so success is
 not a runtime guarantee. Options still precede the dictionary input. Whole-entry
@@ -92,7 +92,7 @@ not a runtime guarantee. Options still precede the dictionary input. Whole-entry
 
 `--adjective` is supported only by `verify-dictionary`. With the default
 implementation assurance, selecting adjectives still retains whole-dictionary
-enforcement; use explicit symbolic assurance for the narrower check.
+enforcement. Use explicit symbolic assurance for the narrower check.
 
 ### Capture native environment evidence
 
@@ -107,7 +107,7 @@ It is an explicit tool observation: it resolves the pinned local toolchain
 and records executable hashes, version-query commands and results, the native
 host target, selected source/backend fingerprints, and relevant Cargo
 configuration. It never fetches a toolchain, builds a workspace, or runs an App.
-`--target` is an assertion that must match the observed host; it does not enable
+`--target` is an assertion that must match the observed host. It does not enable
 cross-compilation. Omit it for the current native host.
 If `CARGO_HOME` is set, explicit evidence collection requires an absolute path so
 configuration identity does not depend on an unrelated working directory.
@@ -119,7 +119,7 @@ Environment fingerprints use this exact allowlist: `PATH`, `CARGO_HOME`,
 `RUSTC_WORKSPACE_WRAPPER`, `RUSTC_BOOTSTRAP`, and `RUSTC_FORCE_INCREMENTAL`.
 Only the values selected by the existing sanitized build environment are hashed.
 Credential variables and other unlisted variables are omitted entirely, including
-their hashes; non-test evidence containing unlisted environment keys rejects.
+their hashes. Non-test evidence containing unlisted environment keys rejects.
 Conventional Cargo configuration files and their absence are tracked separately.
 
 Build evidence uses record version 2 and includes the actual Cargo invocation,
@@ -140,7 +140,7 @@ queries or re-attest historical tool binaries.
 ### Scoped checks and failure footprints
 
 First inspect `scopes`, `native_uses`, and their published resource locations.
-Copy an exact scope ID into a version-1 `contract_check_requests` document; use
+Copy an exact scope ID into a version-1 `contract_check_requests` document. Use
 `whole_entry` to retain the whole selected program. Do not invent resource IDs
 from spelling or select a same-type role as a substitute.
 
@@ -175,7 +175,7 @@ The request's selected scope supplies the profile boundary and target. Copy each
 complete location from that scope's `resources`, including its resource kind and
 path when present. An absent, ambiguous or unsupported scope, or a location that
 the scope does not expose, rejects. `PreservesOnFailure` requires a nonempty
-footprint, explicit failure outcomes and `state_at_completion`; a bare
+footprint, explicit failure outcomes and `state_at_completion`. A bare
 `--profile PreservesOnFailure` is invalid. `OwnedLifecycle` currently requires
 `whole_entry`.
 
@@ -197,7 +197,7 @@ dependency fingerprints. Reviewed trust witnesses must match those propositions
 individually. An approved absence of allocation cannot certify absent blocking,
 a closed outcome set, cleanup, or unchanged state.
 
-Declared `guarantees` are separate report propositions; they do not replace
+Declared `guarantees` are separate report propositions. They do not replace
 outcome-specific summary components. Both use the same exact native selection,
 signature, environment and dependency checks, with requirements checked at the
 actual invocation entry. Facts established later cannot satisfy those entry
@@ -207,14 +207,14 @@ Native uses distinguish the selected `native_body` from
 `invocation_composition_overhead` and `source_body_lowering_overhead`. Invocation
 overhead covers the selected wrapper and its context handling. Source-body
 overhead covers prologue, value transfers and return composition. These claims
-exclude separately analyzed source operations and owned-storage destruction;
-approving one cannot discharge the others. Published scopes retain these
+exclude separately analyzed source operations and owned-storage destruction.
+Approving one cannot discharge the others. Published scopes retain these
 inclusions and exclusions explicitly.
 
 Checking applies only current, applicable component evidence, then reinfers the
 selected consumers and profiles. Source guards and entry requirements still
 apply. An unchanged completion-state relation may justify preservation despite
-an earlier write; a partial failure with an observable changed state contradicts
+an earlier write. A partial failure with an observable changed state contradicts
 it. Missing or stale evidence leaves the dependent obligation unresolved.
 Independent opaque helpers remain unresolved, including outside a successfully
 checked narrower scope. Reports retain every controlling request obligation and
@@ -234,7 +234,7 @@ and profile enforcement:
 | `--report PATH` | Also write the structured JSON report, regardless of the displayed format. |
 | `--language LANGUAGE` | Select source resources; default `eng`. An explicit empty language rejects. |
 | `--assets ROOT` | Use one complete resource filesystem in place of embedded resources. |
-| `--manifest PATH` | Add a metadata manifest; repeat to contribute multiple manifests. |
+| `--manifest PATH` | Add a metadata manifest. Repeat to contribute multiple manifests. |
 | `--trust-policy PATH` | Load an explicit trust-policy document; production native approval otherwise starts empty. |
 | `--native-environment PATH` | Read a previously captured native environment without executing recorded commands or probing tool versions. |
 | `--request-file PATH` | For `check`, load explicit scoped checks and failure-preservation footprints. |
@@ -245,11 +245,11 @@ the destinations must be distinct. Relative paths resolve from the working
 directory. Successful file replacement uses private permissions (0600). Keep the exit status alongside the
 report when recording an enforced check.
 
-`--assets` selects one complete resource provider; missing optional contract
+`--assets` selects one complete resource provider. Missing optional contract
 metadata does not trigger embedded metadata fallback. An optional
 `contracts/index.json` contains `schema_version` equal to `1.1` and a `manifests`
-array of resource-relative paths. Additional manifests contribute records;
-conflicting canonical declarations fail instead of overriding by load order.
+array of resource-relative paths. Additional manifests contribute records.
+Conflicting canonical declarations fail instead of overriding by load order.
 
 ## Exit statuses
 
@@ -269,7 +269,7 @@ ordinary compilation. It supports canonical constructors, fixed names and
 literal signature atoms, ordered child roles, parameter forwarding, and
 structural writes and frames. Dictionary helpers retain their definition-site
 bindings. Every matching
-descriptor rule still applies in order; repeated constructions remain distinct.
+descriptor rule still applies in order. Repeated constructions remain distinct.
 
 For example, the existing source grammar can express:
 
@@ -286,13 +286,13 @@ target compatibility.
 
 Facet/role manifests can supply bodyless `source_transformers` declarations keyed
 by the selected rule's canonical meaning. Requirements and promised properties
-come from those declarations; the implementation plan, actual writes and source
+come from those declarations. The implementation plan, actual writes and source
 provenance come from the compiler. An authored `transformers` body remains a
 separate typed model and cannot stand in for the source implementation.
 
 Start with `inspect --format json` to obtain the rule meaning, canonical nominal
 domain, symbolic target, and unmet shape premises. Copy those identities into the
-declaration; do not invent IDs from adjective spelling. Structural promises use
+declaration. Do not invent IDs from adjective spelling. Structural promises use
 the reported shape fields: canonical nominal/constructor identity, names, exact
 child presence/counts, signatures, and ordered parameter/wrapper selections.
 Runtime effects, ownership, protocol and cost promises remain unsupported by this
@@ -317,12 +317,12 @@ inferred by parsing generated Rust.
 
 `EvaluateNativeUses` evaluates declarations against selected typed native uses.
 Its `NativeEvaluation` results supply both inference components and report
-propositions; invocation-entry requirements remain typed-analysis obligations.
+propositions. Invocation-entry requirements remain typed-analysis obligations.
 
 `LygerService.AnalyzeContracts` is additive to ordinary compilation and accepts
 separate analysis options. `ResolveContractBindings` exposes Track A records.
-`ContractAnalysisOptions.SourceTransformers` supplies bodyless source declarations;
-the result exposes compiler-derived projections, source certificates and concrete
+`ContractAnalysisOptions.SourceTransformers` supplies bodyless source declarations.
+The result exposes compiler-derived projections, source certificates and concrete
 instantiations. `VerifyDictionaryContractsWithOptions` adds explicit canonical
 meaning selection and assurance scope through `DictionaryVerificationOptions`,
 while the existing dictionary API retains its default behavior. Session reuse
@@ -331,7 +331,7 @@ again at concrete assurance boundaries.
 `Session` owns private in-memory caches and returns independent snapshots. It
 reuses the current verified source certificate while checking each concrete
 instance and its lowering. It has no persisted-cache import or legacy migration
-API; incomplete dependencies require fresh analysis.
+API. Incomplete dependencies require fresh analysis.
 `PrepareContractGeneration` and `PrepareWorkspaceContractGeneration` expose
 backend preparation, an immutable inventory view, and one-shot source rendering.
 `VerifyInventory` detects a changed prepared inventory. Frontend-only analysis
@@ -343,16 +343,16 @@ cleanup, representation-dependent mutation, finite facets and cross-facet rules,
 exact-path frames, provider substitution, and symbolic adjective checking.
 Direct selections, rule-derived selections and supplied facet premises share
 schema, target, domain and cardinality validation. Rule closure precedes closed
-configuration checks. Unknown contribution/rule conditions remain obligations;
-rules never perform an implicit replacement. Authorized replacements preserve
+configuration checks. Unknown contribution/rule conditions remain obligations.
+Rules never perform an implicit replacement. Authorized replacements preserve
 release obligations and invalidate facts about the replaced slot.
 `facet:ID:SCOPE` configuration predicates are accepted only when declared schema identities
 make the split unambiguous, including IDs or scopes containing colons.
-Adjective certificates are rechecked at instantiation; concrete callback effects,
+Adjective certificates are rechecked at instantiation. Concrete callback effects,
 captures and lowering can invalidate a valid symbolic certificate. Repetition and
 wrapper order remain observable. Reflection outside this fragment is explicitly
 instantiation-only. Typed fixtures exercise vocabulary that the source language
-does not yet expose; these fixtures do not create production Theme/Backend APIs.
+does not yet expose. These fixtures do not create production Theme/Backend APIs.
 
 The unique-applicable reference selector is versioned and available only over
 explicit typed candidates. Unknown applicability blocks a unique selection.
@@ -363,7 +363,7 @@ rule, import precedence, or contract-driven fallback.
 ## Evidence and limits
 
 The interchange schemas in `contracts/schemas` are generated from the shared
-Go model by `go run ./tools/contracts-schema KIND`; output is written to stdout.
+Go model by `go run ./tools/contracts-schema KIND`. Output is written to stdout.
 The seven readable snapshots are retained for offline authoring without a Go
 toolchain and marked as generated for diff review. Their tests compare exact
 generated bytes with the shared model.
@@ -374,18 +374,18 @@ authority, rationale, exact contract/body/target fingerprints and dependencies.
 Approval of one proposition does not close unrelated native behavior.
 Requirements and target restrictions are separate evidence dependencies: a
 current native witness cannot bypass an unmet applicability condition. Explicit
-capture or build evidence supplies a reusable native-environment identity;
-source-only inspection without it retains an unresolved environment dependency.
+capture or build evidence supplies a reusable native-environment identity.
+Source-only inspection without it retains an unresolved environment dependency.
 Evidence remains conditional on the recorded environment and selected native
 contracts. It does not attest the current deployment or grant approval to a
 native implementation merely because compilation succeeded. Typed clients can
-supply independently checked premises; test-only assumptions remain explicitly
+supply independently checked premises. Test-only assumptions remain explicitly
 labeled.
 
 Profiles cover the whole selected entry and all modeled outcomes by default.
 Typed API callers and explicit request-file checks may narrow the scope, which
-remains visible in each claim. Allocation, blocking, external IO and panic are distinct constraints;
-neither nonblocking nor unknown cost establishes termination. Lifecycle ownership
+remains visible in each claim. Allocation, blocking, external IO and panic are distinct constraints.
+Neither nonblocking nor unknown cost establishes termination. Lifecycle ownership
 does not remove external completion or runtime synchronization. Preservation on
 failure requires an explicit observable footprint and selected failure outcomes.
 
@@ -394,22 +394,22 @@ updates at 64 per strongly connected component, and retains at most 32 path
 alternatives. Each inference has a cumulative budget of 8,192 analysis steps
 across repeats, calls and path alternatives. Exhaustion reports partial coverage
 and leaves unfinished obligations unresolved. Resource accounting separates cumulative allocation, peak
-live resources and retained resources; cost formulas can contain callback cost
+live resources and retained resources. Cost formulas can contain callback cost
 variables and dependent bounds.
 
 Native reports distinguish enumerated compiler boundaries, transitive dependency
 closure and implementation conformance. Opaque native internals, destructors and
 external runtime behavior remain explicit unresolved boundaries without approved
-evidence. `Require` constructs a failure only on its selected failure path;
+evidence. `Require` constructs a failure only on its selected failure path.
 `Accept` releases a replaced error before constructing its replacement. Those
 source compositions do not establish general allocation or destructor-cost
 bounds. Runtime failure channels, snapshot/sharing semantics and App lifecycle
-checks retain their contracts. Inspection records no build/test evidence;
-explicit validation commands and their results remain separate from requirement
+checks retain their contracts. Inspection records no build/test evidence.
+Explicit validation commands and their results remain separate from requirement
 coverage and native approval.
 
 See the [acceptance mapping](../contracts/acceptance-map.json) for test witnesses
 and current limitations, and the [evidence index](contracts-evidence.md) for
 revision-specific historical records and their availability. Platform coverage
-belongs to each recorded revision; historical results do not validate a changed
+belongs to each recorded revision. Historical results do not validate a changed
 checkout.

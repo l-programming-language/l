@@ -6,30 +6,30 @@ Builtins are available from the selected complete distribution without an explic
 
 <!-- word-index:builtins -->
 
-The [construction and callable reference](definitions.md) explains their inputs and limits. Actor forms such as Invoker and Retainer construct uses of their verb; they are not separate primitives. Aliases preserve canonical identity and adjectives retain their declared targets. See [word forms](../../spec/definitions.md#inflection-declarations) for the declaration notation.
+The [construction and callable reference](definitions.md) explains their inputs and limits. Actor forms such as Invoker and Retainer construct uses of their verb. They are not separate primitives. Aliases preserve canonical identity and adjectives retain their declared targets. See [word forms](../../spec/definitions.md#inflection-declarations) for the declaration notation.
 
 ## Compiler-typed operations
 
 | Operation | Forms from configured root | Operands and behavior |
 | --- | --- | --- |
-| Build | Build, Builds, Built, Building, Builder | Checked App; validate prebuilt artifact at runtime |
-| Run | Run, Runs, Ran, Running, Runner | Checked target; launch without join |
-| Await | Await, Awaits, Awaited, Awaiting | Checked target; join finalized result and claim continuation once |
-| Stop | Stop, Stops, Stopped, Stopping, Stopper | Checked target; request termination without join |
-| Show | Show, Shows, Showed, Showing, Shower | Observe supported runtime values; no added newline |
+| Build | Build, Builds, Built, Building, Builder | Validate a checked App's prebuilt artifact at runtime |
+| Run | Run, Runs, Ran, Running, Runner | Launch a checked target without joining |
+| Await | Await, Awaits, Awaited, Awaiting | Join a checked target's finalized result and claim its continuation once |
+| Stop | Stop, Stops, Stopped, Stopping, Stopper | Request termination of a checked target without joining |
+| Show | Show, Shows, Showed, Showing, Shower | Observe supported runtime values without adding a newline |
 | Exit | Exit, Exits, Exited, Exiting, Exiter | Terminate whole program, with optional supported failure operand |
 
 These operations are verbs. Inflection recognition does not make every grammatical owner valid: native Await inside an App body rejects even though its word form is recognized. The [lifecycle reference](lifecycle.md) records supported contexts and failure modes.
 
 ## Declaration and vocabulary facilities
 
-Create, Define, Describe, and Use establish declarations, typed/native definitions, descriptors, aliases, and supported imports. Public/Publicly controls visibility at one declaration site; New and Generic participate in construction. Noun/Verb/Adjective/Adverb are lexical categories, not native scalar types.
+Create, Define, Describe, and Use establish declarations, typed/native definitions, descriptors, aliases, and supported imports. Public/Publicly controls visibility at one declaration site. New and Generic participate in construction. Noun/Verb/Adjective/Adverb are lexical categories, not native scalar types.
 
 [Collections](../../spec/collections-and-categories.md) support Put, Place and typed reads. Get, Take and While remain unsupported operations. The [grammar chapter](../../spec/grammar.md) distinguishes executable actions from other configured vocabulary.
 
 ## Runtime members
 
-Output and Error are noun members: Output contains finalized raw stdout as Text; Error identifies the selected process operation/invocation failure. Possessive access keeps the canonical target. Input instead names signature parameters and typed Process bindings; it is not an implicit App member.
+Output and Error are noun members: Output contains finalized raw stdout as Text, and Error identifies the selected process operation/invocation failure. Possessive access keeps the canonical target. Input instead names signature parameters and typed Process bindings. It is not an implicit App member.
 
 ### Input
 
@@ -37,7 +37,7 @@ Output and Error are noun members: Output contains finalized raw stdout as Text;
 
 Name an ordered Function parameter or a typed binding supplied to a structured Process.
 
-**Usage and example.** `with Inputs of "Value" as Text` declares Identity's parameter in the [complete Function example](../../examples/composed-functions.l). A selector's Process Inputs bind its selected payload inside that body. `No Inputs` explicitly declares no parameters. These forms do not provide stdin or argument transport to an App; [execution limits](../../spec/execution.md#targets-and-process-ownership) remain unchanged.
+**Usage and example.** `with Inputs of "Value" as Text` declares Identity's parameter in the [complete Function example](../../examples/composed-functions.l). A selector's Process Inputs bind its selected payload inside that body. `No Inputs` explicitly declares no parameters. These forms do not provide stdin or argument transport to an App. The [execution limits](../../spec/execution.md#targets-and-process-ownership) remain unchanged.
 
 Function calls check input count and types. A Process input belongs only to its selected body, with native borrow and move checks at compilation. These supported bindings introduce neither an untyped argument list nor an implicit clone.
 

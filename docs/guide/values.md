@@ -1,6 +1,6 @@
 # Work with values
 
-Start with backtick-delimited Text, numeric literals, and `true`/`false` Truth values. Double-quoted declaration names identify values; they are not Text literals.
+Start with backtick-delimited Text, numeric literals, and `true`/`false` Truth values. Double-quoted declaration names identify values. They are not Text literals.
 
 ## Text, Number and Truth together
 
@@ -18,9 +18,9 @@ The three public declarations survive the paragraph boundary. `Show Greeting`, `
 
 `message` receives the Text `Hello World!`, including its space, as in the [first program](first-program.md).
 
-Text preserves its bytes. Periods and whitespace inside it are not sentence boundaries. A backslash followed by `n` remains two characters; it is not a newline escape.
+Text preserves its bytes. Periods and whitespace inside it are not sentence boundaries. A backslash followed by `n` remains two characters. It is not a newline escape.
 
-`IO.Print` adds a newline; `Show` writes Text exactly. Captured App Output is also Text. Read it after completion; a stored copy keeps its bytes even if the App runs again.
+`IO.Print` adds a newline, while `Show` writes Text exactly. Captured App Output is also Text. Read it after completion. A stored copy keeps its bytes even if the App runs again.
 
 ## Numbers have a concrete representation
 

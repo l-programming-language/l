@@ -8,13 +8,13 @@ The implicit [core source](../../../builtins/eng/core.l) defines these compositi
 
 Compose an ordered source body from existing instantiated definition expressions.
 
-**Usage and example.** A `New Process with Inputs ... for ...` supplies a branch body to [Storage.Option.Select](../../internals/storage.md#optionselect). Its typed input belongs to that branch; the [selector caller](../../examples/word-selection.l) demonstrates enclosing Functions and both branches.
+**Usage and example.** A `New Process with Inputs ... for ...` supplies a branch body to [Storage.Option.Select](../../internals/storage.md#optionselect). Its typed input belongs to that branch. The [selector caller](../../examples/word-selection.l) demonstrates enclosing Functions and both branches.
 
 Process composes ordered Definitions/Syllables through operation W.
 
-A Process collects existing instantiated definition expressions. It is not an OS process handle; App invocations own those. Processing a source-defined rendering or writing operation in IO is an application-body composition, not a direct runtime launch instruction.
+A Process collects existing instantiated definition expressions. It is not an OS process handle. App invocations own those. Processing a source-defined rendering or writing operation in IO is an application-body composition, not a direct runtime launch instruction.
 
-Structured selection and iteration bodies can declare typed Process Inputs. Lyger binds each input within its body and retains its declared native type and source dependency; an explicit local annotation lets native compilation check type and borrow compatibility. `_` requests native type inference. These bindings create no callable or closure and cannot escape to a sibling branch or later sentence.
+Structured selection and iteration bodies can declare typed Process Inputs. Lyger binds each input within its body and retains its declared native type and source dependency. An explicit local annotation lets native compilation check type and borrow compatibility. `_` requests native type inference. These bindings create no callable or closure and cannot escape to a sibling branch or later sentence.
 
 ## Function
 
@@ -22,19 +22,19 @@ Structured selection and iteration bodies can declare typed Process Inputs. Lyge
 
 Define a callable with a selected constructor, ordered typed inputs and results, and a private source body.
 
-**Usage and example.** The [complete Identity/Relay program](../../examples/composed-functions.l) declares two Functions, calls their invocation verbs and names each result. Ordinary source signatures and explicitly native signatures share this selected definition; native generic/lifetime atoms require the advanced context below.
+**Usage and example.** The [complete Identity/Relay program](../../examples/composed-functions.l) declares two Functions, calls their invocation verbs and names each result. Ordinary source signatures and explicitly native signatures share this selected definition. Native generic/lifetime atoms require the advanced context below.
 
 Function supplies an FW native definition with Func metadata. Name is Text, Inputs is Props, Outputs is Texts, and Process is an already instantiated definition reference.
 
-Inputs and Outputs preserve their typed cardinality. Main supplies No Inputs and No Outputs; ordinary Function declarations bind their checked signatures and paragraph bodies to the same selected definition. The constructor is not a marker for a second emitter.
+Inputs and Outputs preserve their typed cardinality. Main supplies No Inputs and No Outputs. Ordinary Function declarations bind their checked signatures and paragraph bodies to the same selected definition. The constructor is not a marker for a second emitter.
 
-**Supported boundary.** A Function declares one ordered signature and owns its body paragraph. A source Function with Outputs must return them on every continuing path; recursive calls and Function-valued arguments/results use that same checked signature. Generic inference, overload resolution and variadic parameters are not part of this interface.
+**Supported boundary.** A Function declares one ordered signature and owns its body paragraph. A source Function with Outputs must return them on every continuing path. Recursive calls and Function-valued arguments/results use that same checked signature. Generic inference, overload resolution and variadic parameters are not part of this interface.
 
 Invocation words use normal grammatical binding. Captures, snapshots and Pointer sharing follow [scope rules](../../spec/names-and-scope.md#runtime-storage-and-definite-assignment). Native signature/lifetime metadata remains bounded by the [definition contract](../../spec/definitions.md#process-function-and-return).
 
 ## Function.Invoke and Delegate
 
-These advanced facilities compose invocation; they do not introduce a Call primitive or a second dispatch runtime.
+These advanced facilities compose invocation. They do not introduce a Call primitive or a second dispatch runtime.
 
 ### Function.Invoke
 
@@ -60,11 +60,11 @@ Both facilities preserve the selected target and lexical ownership. Native type 
 
 Complete the current Function invocation through its selected Return definition with the declared results.
 
-**Usage and example.** `Return Value` in the [Identity/Relay program](../../examples/composed-functions.l) returns Text; Relay separately binds and returns Nested. A Return from a selected Process still belongs to its enclosing Function.
+**Usage and example.** `Return Value` in the [Identity/Relay program](../../examples/composed-functions.l) returns Text, while Relay separately binds and returns Nested. A Return from a selected Process still belongs to its enclosing Function.
 
-Root-authored returning actions select their caller's Return; that selected implementation preserves its own lexical delegates. Function-owned actions retain their constructor contract and reject incompatible callers. Each Function establishes its own return context and checks declared result types and counts. Known unconditional exits through source actors and transparent Processes enter the typed plan; opaque or conditional bodies do not establish unconditional exits.
+Root-authored returning actions select their caller's Return. That selected implementation preserves its own lexical delegates. Function-owned actions retain their constructor contract and reject incompatible callers. Each Function establishes its own return context and checks declared result types and counts. Known unconditional exits through source actors and transparent Processes enter the typed plan. Opaque or conditional bodies do not establish unconditional exits.
 
-Return completes that invocation; Exit terminates the enclosing program. Neither transports runtime captures into an App process.
+Return completes that invocation. Exit terminates the enclosing program. Neither transports runtime captures into an App process.
 
 ## Retain
 
@@ -72,7 +72,7 @@ Return completes that invocation; Exit terminates the enclosing program. Neither
 
 Borrow an Arc handle and produce another handle to the same allocation.
 
-**Usage and example.** The [native caller module](../../examples/word-core.l) takes `&std::sync::Arc<u8>` and returns the retained Arc. It preserves allocation identity; [Storage retention](../../internals/storage.md#ownership-and-bytes) distinguishes Rc from this Arc operation.
+**Usage and example.** The [native caller module](../../examples/word-core.l) takes `&std::sync::Arc<u8>` and returns the retained Arc. It preserves allocation identity. [Storage retention](../../internals/storage.md#ownership-and-bytes) distinguishes Rc from this Arc operation.
 
 Retain takes an explicit borrowed Arc and returns another handle to the same allocation. It increments shared ownership without cloning the payload. Atomic reference counting does not make an arbitrary payload Send or Sync.
 
@@ -90,7 +90,7 @@ Group an existing Function definition as source content for its containing Objec
 
 **Usage and example.** `New Objective First Function` in the [Object construction fixture](../../../lyger/test/classes/interleaved.l) puts the selected Function into its Object. It does not invoke the Function or infer a signature.
 
-Objective describes any Function by wrapping its existing definition in a grouped native source word containing A and the Function. It preserves the input definition and grouping; it does not clone its runtime semantics or infer additional function arguments.
+Objective describes any Function by wrapping its existing definition in a grouped native source word containing A and the Function. It preserves the input definition and grouping. It does not clone its runtime semantics or infer additional function arguments.
 
 ## Main
 
@@ -98,13 +98,13 @@ Objective describes any Function by wrapping its existing definition in a groupe
 
 Describe the canonical native entry structure for a Function, Object or Service.
 
-**Usage and example.** The [nested construction example](../../spec/applicational-types.md#compose-an-object-inside-nested-classes) applies Main to an Object; Basic composes its Service rule for an App. Choose the actual target below rather than treating all three refinements as interchangeable.
+**Usage and example.** The [nested construction example](../../spec/applicational-types.md#compose-an-object-inside-nested-classes) applies Main to an Object, while Basic composes its Service rule for an App. Choose the actual target below rather than treating all three refinements as interchangeable.
 
 Main is a New Adjective describing Service, Object, or Function. Its ordered refinements compose:
 
 ### Main Function
 
-The Function rule constructs a Generic `main` Function from the supplied Process, with No Inputs and No Outputs. It chooses an entry signature; it does not accept arbitrary Function arguments.
+The Function rule constructs a Generic `main` Function from the supplied Process, with No Inputs and No Outputs. It chooses an entry signature. It does not accept arbitrary Function arguments.
 
 ### Main Object
 
@@ -112,11 +112,11 @@ The Object rule constructs a Generic `main` Object containing a New Objective Ma
 
 ### Main Service
 
-The Service rule constructs a Generic `main` Service containing a New Main Object. Basic uses this structure inside an App; it does not make a standalone Service executable.
+The Service rule constructs a Generic `main` Service containing a New Main Object. Basic uses this structure inside an App. It does not make a standalone Service executable.
 
-These are ordinary source-defined descriptor rules. Aliases preserve their identity, and each construction applies every rule matching its target in authored order. Main currently has one rule for each target above; repeated construction remains distinct.
+These are ordinary source-defined descriptor rules. Aliases preserve their identity, and each construction applies every rule matching its target in authored order. Main currently has one rule for each target above. Repeated construction remains distinct.
 
-Main does not grant standalone Service execution. A standalone declaration is structural; standalone Service body effects and native process operations reject. Apps own executable identity through their construction.
+Main does not grant standalone Service execution. A standalone declaration is structural. Standalone Service body effects and native process operations reject. Apps own executable identity through their construction.
 
 ## Basic
 
@@ -124,9 +124,9 @@ Main does not grant standalone Service execution. A standalone declaration is st
 
 Describe an App containing a Main Service that receives the App's source Process.
 
-**Usage and example.** `Create "Hello" as a New Basic App` in the [first program](../../guide/first-program.md#read-the-program) creates the body owner. Execute is a separate lifecycle action; construction alone launches nothing.
+**Usage and example.** `Create "Hello" as a New Basic App` in the [first program](../../guide/first-program.md#read-the-program) creates the body owner. Execute is a separate lifecycle action. Construction alone launches nothing.
 
-Basic describes a Generic App with a New Main Service using a Process. It is the composition behind `Create "Hello" as a New Basic App.` The App's source actions supply its body; the orchestrator separately controls launch and output.
+Basic describes a Generic App with a New Main Service using a Process. It is the composition behind `Create "Hello" as a New Basic App.` The App's source actions supply its body, and the orchestrator separately controls launch and output.
 
 ## Failures and visibility
 

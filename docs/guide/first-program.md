@@ -6,11 +6,11 @@ After [installing L and its build prerequisites](../cli/installation.md), save t
 
 <!-- example:basic -->
 
-``Use IO's Print from `io` as "Print"`` imports a printing action. Backticks delimit Text; double quotes introduce names. Here, `message` names Text and `Hello` names an App.
+``Use IO's Print from `io` as "Print"`` imports a printing action. Backticks delimit Text, while double quotes introduce names. Here, `message` names Text and `Hello` names an App.
 
 `New Basic App` creates the App. `The App` refers to Hello, and `Prints` is a form of Print that puts the action in its body. See [word forms](values.md#read-pipe-delimited-word-forms).
 
-`Execute Hello` starts the App and waits for it. The possessive `'s` selects its captured `Output`; Show writes those bytes without adding a newline.
+`Execute Hello` starts the App and waits for it. The possessive `'s` selects its captured `Output`. Show writes those bytes without adding a newline.
 
 ## Build and run
 

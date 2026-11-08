@@ -1,10 +1,10 @@
 # Grammar and vocabulary
 
-The exact English grammar lives in `lexicon/eng/grammar.json`; the exact configured words live in `lexicon/eng/vocabulary.json`. This chapter explains their notation and semantic groupings. The generated inventory preserves every rule, named case, and vocabulary entry without treating every table combination as executable.
+The exact English grammar lives in `lexicon/eng/grammar.json`, and the exact configured words live in `lexicon/eng/vocabulary.json`. This chapter explains their notation and semantic groupings. The generated inventory preserves every rule, named case, and vocabulary entry without treating every table combination as executable.
 
 ## Inventory and authority
 
-The inspected English grammar has 99 rules and 307 named cases. Its categories are three NOUN rules, thirteen PHRASE rules, sixty-nine CLAUSE rules, one CONDITION rule, four CONDITIONAL rules, five PREDICATE rules, and four STATEMENT rules. The vocabulary has 72 entries across eight parts of speech. These counts describe the reviewed source snapshot; freshness checks must catch later changes.
+The inspected English grammar has 99 rules and 307 named cases. Its categories are three NOUN rules, thirteen PHRASE rules, sixty-nine CLAUSE rules, one CONDITION rule, four CONDITIONAL rules, five PREDICATE rules, and four STATEMENT rules. The vocabulary has 72 entries across eight parts of speech. These counts describe the reviewed source snapshot. Freshness checks must catch later changes.
 
 The [complete rule and case inventory](../_generated/grammar.md) provides a stable entry for every configured recognizer, and the [vocabulary inventory](../_generated/vocabulary.md) retains each root, inflection, role, and handler description. These tables supplement the semantic explanations below.
 
@@ -17,7 +17,7 @@ The notation is specialized and is not EBNF:
 | Notation | Actual parser meaning |
 | --- | --- |
 | `A \| B` | Sequence: match A, then B |
-| `TERM*` | Optional TERM; failure leaves the prior state intact |
+| `TERM*` | Optional TERM. Failure leaves the prior state intact |
 | `[TERM]` | Multiple association of TERM, using the grammar's coordinated-sequence handling |
 | `[TERM]*` | Optional multiple association |
 | `CASE` | Select a named case for this rule |
@@ -35,9 +35,9 @@ The decoder validates family names, qualification depth, type patterns, and decl
 
 ## Matching and ambiguity
 
-Nested grammar consumes a contiguous source prefix. Every candidate case begins from the same state; the parser chooses the successful candidate consuming the longest prefix. Equal lengths use sorted case names, so map iteration order does not decide the parse. Optional elements commit only on success. A full statement rejects leftover unassociated tokens.
+Nested grammar consumes a contiguous source prefix. Every candidate case begins from the same state. The parser chooses the successful candidate consuming the longest prefix. Equal lengths use sorted case names, so map iteration order does not decide the parse. Optional elements commit only on success. A full statement rejects leftover unassociated tokens.
 
-A parse choice is different from semantic ambiguity. If a spelling resolves to more than one valid lexical declaration, binding can report AmbiguousReference even after a grammar shape has been recognized. Coordinated subjects/objects retain occurrence identity; identical token spelling is not token identity.
+A parse choice is different from semantic ambiguity. If a spelling resolves to more than one valid lexical declaration, binding can report AmbiguousReference even after a grammar shape has been recognized. Coordinated subjects/objects retain occurrence identity. Identical token spelling is not token identity.
 
 ## Values, subjects, and objects
 
@@ -45,7 +45,7 @@ The value rule recognizes definitive references and Text/Number/Truth/Null/type/
 
 Articles and adjectives modify these positions. `a`/`an` is indefinite, `the` definite, `any` identifies variable arguments in supported action signatures, and `no` expresses absence or a supported negative condition. These roles are not interchangeable decoration.
 
-A subject identifies what is being defined or acted upon; an object supplies the action operand. That distinction matters for `The App Prints message`: the App owns the native body effect, while message supplies Print's argument. In `Run Worker`, Worker is the outer lifecycle operand.
+A subject identifies what is being defined or acted upon, while an object supplies the action operand. That distinction matters for `The App Prints message`: the App owns the native body effect, while message supplies Print's argument. In `Run Worker`, Worker is the outer lifecycle operand.
 
 ### Read a complete sentence in context
 
@@ -54,7 +54,7 @@ The [complete first program](../guide/first-program.md#read-the-program) gives t
 | Source phrase | Role in this program |
 | --- | --- |
 | `"message" is` followed by Text | Declares a name and assigns its literal value |
-| `Create "Hello" as a New Basic App` | Imperative declaration; `as` introduces the construction |
+| `Create "Hello" as a New Basic App` | Imperative declaration. The word `as` introduces the construction |
 | `The App Prints message` | Active statement: App is the subject, Prints is the action, and message is its operand |
 | `Execute Hello` | Imperative source-action call with Hello as its argument |
 | `Hello's Output` | Member access, used here as the operand of Show |
@@ -67,7 +67,7 @@ The [complete first program](../guide/first-program.md#read-the-program) gives t
 
 Declare a variable argument or nominal target in a supported source signature or descriptor.
 
-**Usage and boundary.** Start declares `any App` in the [source-action example](definitions.md#source-actions); Main declares exact target categories. Any does not erase the supplied value's type or create unrestricted native generics.
+**Usage and boundary.** Start declares `any App` in the [source-action example](definitions.md#source-actions), while Main declares exact target categories. Any does not erase the supplied value's type or create unrestricted native generics.
 
 ### No
 
@@ -97,7 +97,7 @@ Refer definitively to the selected subject or value in its owning source context
 
 The thirteen phrase families are generic, directive, declarative, locative, objective, inflective, associative, indicative, utilization, dependency, signature, arguments, and results.
 
-Declarative `as` relates a subject to a type, value, definition, or alias. Directive `for` introduces action composition. Utilization `to` connects a native-backed definition or imperative use. Associative `with` composes described child structures; `using` comes from source-defined inflection and supplies parameters. Dependency `from` selects a dictionary or explicit source provider in supported import forms.
+Declarative `as` relates a subject to a type, value, definition, or alias. Directive `for` introduces action composition. Utilization `to` connects a native-backed definition or imperative use. Associative `with` composes described child structures. The word `using` comes from source-defined inflection and supplies parameters. Dependency `from` selects a dictionary or explicit source provider in supported import forms.
 
 Locative `at` and inflective `in` participate in [collection updates and typed reads](collections-and-categories.md). A phrase's meaning follows its owning action, not the preposition alone.
 
@@ -109,7 +109,7 @@ These two builtin declarations use a directive phrase:
 
 <!-- example:lexical-action-inflections -->
 
-`for` introduces the action body. `Building`, `Running`, `Starting`, and `Awaiting` are applicative verb forms in that body; `any App` declares the argument, and `it` refers to it. The source conjunction `and then` separates the actions. The bars inside each quoted label declare inflections; they are unrelated to the grammar JSON's sequence notation. These definitions are implicitly loaded already, so do not redeclare them in a program.
+`for` introduces the action body. `Building`, `Running`, `Starting`, and `Awaiting` are applicative verb forms in that body. The phrase `any App` declares the argument, and `it` refers to it. The source conjunction `and then` separates the actions. The bars inside each quoted label declare inflections. They are unrelated to the grammar JSON's sequence notation. These definitions are implicitly loaded already, so do not redeclare them in a program.
 
 In the basic program, `from` and `as` select the IO dictionary and local alias. The [Main descriptor example](lexical-types.md#describe-with-an-adjective) uses `of`, `with`, and `using` in Function/Object/Service construction.
 
@@ -127,7 +127,7 @@ Relate a declaration or alias to its value, category, construction or new local 
 
 Supply declared contents, type arguments or operands to a supported construction or signature.
 
-**Usage and boundary.** `New List of Number` in the [value program](../examples/word-values.l) gives the element type; `Inputs of "Value" as Text` in the [Function example](../examples/composed-functions.l) declares a parameter. The selected owner determines the contract.
+**Usage and boundary.** `New List of Number` in the [value program](../examples/word-values.l) gives the element type. The phrase `Inputs of "Value" as Text` in the [Function example](../examples/composed-functions.l) declares a parameter. The selected owner determines the contract.
 
 ### At
 
@@ -135,7 +135,7 @@ Supply declared contents, type arguments or operands to a supported construction
 
 Select a Number index or Text key for a supported typed read or update.
 
-**Usage and boundary.** The [value program](../examples/word-values.l) uses `items at 0` and the Text key `first` in names. The containing operation checks the key type, bounds and result type; At supplies no unchecked access.
+**Usage and boundary.** The [value program](../examples/word-values.l) uses `items at 0` and the Text key `first` in names. The containing operation checks the key type, bounds and result type. At supplies no unchecked access.
 
 ### With
 
@@ -143,7 +143,7 @@ Select a Number index or Text key for a supported typed read or update.
 
 Introduce associated structures or signature components in the selected construction.
 
-**Usage and boundary.** The [Function example](../examples/composed-functions.l) uses `with Inputs`; the [Main construction](lexical-types.md#describe-with-an-adjective) uses `with a New Main Object`. With preserves the owning construction's argument contract.
+**Usage and boundary.** The [Function example](../examples/composed-functions.l) uses `with Inputs`, and the [Main construction](lexical-types.md#describe-with-an-adjective) uses `with a New Main Object`. With preserves the owning construction's argument contract.
 
 ### In
 
@@ -151,7 +151,7 @@ Introduce associated structures or signature components in the selected construc
 
 Identify the destination of a supported insertion or update.
 
-**Usage and boundary.** `Put 7 in items` in the [value program](../examples/word-values.l) appends a Number to its List. Pointer and Map updates have their own checked contracts; In does not select a lexical namespace.
+**Usage and boundary.** `Put 7 in items` in the [value program](../examples/word-values.l) appends a Number to its List. Pointer and Map updates have their own checked contracts. In does not select a lexical namespace.
 
 ### Out
 
@@ -169,9 +169,9 @@ Introduce a Function argument, with a separately configured deflective role that
 
 Introduce a Function argument or name an actor in the configured indicative phrase.
 
-**Usage and boundary.** After declaring Identity in the [Function example](../examples/composed-functions.l), ``Identity by `value` as "Result".`` uses the generic argument phrase. This binds an ordinary argument; it does not select an actor or callback.
+**Usage and boundary.** After declaring Identity in the [Function example](../examples/composed-functions.l), ``Identity by `value` as "Result".`` uses the generic argument phrase. This binds an ordinary argument. It does not select an actor or callback.
 
-**Partial support.** The [indicative grammar](../../lexicon/eng/grammar.json) declares `by Actor`, but no enclosing clause uses that phrase to implement passive actor execution. Generic Function arguments work; the configured actor-specific meaning does not.
+**Partial support.** The [indicative grammar](../../lexicon/eng/grammar.json) declares `by Actor`, but no enclosing clause uses that phrase to implement passive actor execution. Generic Function arguments work, but the configured actor-specific meaning does not.
 
 ### From
 
@@ -179,7 +179,7 @@ Introduce a Function argument or name an actor in the configured indicative phra
 
 Select the source of an import or a checked typed value read.
 
-**Usage and boundary.** The [first program](../guide/first-program.md#read-the-program) imports IO.Print from the `io` dictionary; the [value program](../examples/word-values.l) reads a Text from names at the key `first`. The owning import/read determines provider and type checks.
+**Usage and boundary.** The [first program](../guide/first-program.md#read-the-program) imports IO.Print from the `io` dictionary. The [value program](../examples/word-values.l) reads a Text from names at the key `first`. The owning import/read determines provider and type checks.
 
 ### To
 
@@ -187,7 +187,7 @@ Select the source of an import or a checked typed value read.
 
 Introduce a native-backed action definition or a target-dependent utilization/comparison phrase.
 
-**Usage and boundary.** The [IO source](../../stdlib/eng/io/dictionary.l) defines Flush with `to` and one framed native flush call. In `less than equal to`, To belongs to the numeric comparison; it is not an independent conversion or transfer.
+**Usage and boundary.** The [IO source](../../stdlib/eng/io/dictionary.l) defines Flush with `to` and one framed native flush call. In `less than equal to`, To belongs to the numeric comparison. It is not an independent conversion or transfer.
 
 ### Than
 
@@ -195,7 +195,7 @@ Introduce a native-backed action definition or a target-dependent utilization/co
 
 Connect the operands of an admitted ordered Number comparison.
 
-**Usage and boundary.** The focused `left less than right` and `left greater than right` forms follow the [comparison contract](control-flow.md#comparisons). Both operands must be Number; Than does not enable Text ordering.
+**Usage and boundary.** The focused `left less than right` and `left greater than right` forms follow the [comparison contract](control-flow.md#comparisons). Both operands must be Number. Than does not enable Text ordering.
 
 ### For
 
@@ -203,11 +203,11 @@ Connect the operands of an admitted ordered Number comparison.
 
 Introduce the composed body of a source action or structured Process.
 
-**Usage and boundary.** Launch in the [local definitions program](../../demo/paragraphs/local-definitions.l) uses `for Building ...`; the [selector caller](../examples/word-selection.l) uses `Process ... for Returning ...`. For is not a new loop primitive.
+**Usage and boundary.** Launch in the [local definitions program](../../demo/paragraphs/local-definitions.l) uses `for Building ...`, and the [selector caller](../examples/word-selection.l) uses `Process ... for Returning ...`. For is not a new loop primitive.
 
 ## Clauses and grammatical forms
 
-Most action families have imperative, active, passive, and applicative clauses. The configured verb root acts as the imperative. Active is typically the `-s` form, passive the past form, and applicative the `-ing` form; source inflection declarations determine the actual spelling.
+Most action families have imperative, active, passive, and applicative clauses. The configured verb root acts as the imperative. Active is typically the `-s` form, passive the past form, and applicative the `-ing` form. Source inflection declarations determine the actual spelling.
 
 | Action family | Root | Current semantic boundary |
 | --- | --- | --- |
@@ -222,8 +222,8 @@ Most action families have imperative, active, passive, and applicative clauses. 
 | Observative | Show | Write supported value bytes to outer output |
 | Terminative | Exit | Terminate the whole program |
 | Expansive / locative | Put / Place | Supported collection insertion and replacement |
-| Receptive / reductive | Get / Take | Recognized collection forms; general execution not established |
-| Inflective / deflective | Import / Export | Configured roots; not replacements for supported Use import syntax |
+| Receptive / reductive | Get / Take | Recognized collection forms with no established general execution |
+| Inflective / deflective | Import / Export | Configured roots that do not replace supported Use import syntax |
 | Generic | Source-defined word | Depends on bound typed definition/action |
 
 These forms are not freely interchangeable in all owners. Imperative and outer passive Await are implemented. Await inside an active App or Service body parses but rejects unsupported ownership. A standalone applicative sentence is not an executable statement simply because applicative clauses can appear in an action body.
@@ -234,7 +234,7 @@ This canonical example uses an imperative Run followed by passive Await:
 
 <!-- example:grammar-passive-await -->
 
-`Worker is awaited` is an outer join operation, with the same lifecycle role as `Await Worker`. The following Show reads finalized output. The existing LANG-02 runtime witness expects `passive` followed by one newline. The active `The App Prints message` sentence still supplies the App body; grammatical voice and effect ownership are separate concerns.
+`Worker is awaited` is an outer join operation, with the same lifecycle role as `Await Worker`. The following Show reads finalized output. The existing LANG-02 runtime witness expects `passive` followed by one newline. The active `The App Prints message` sentence still supplies the App body. Grammatical voice and effect ownership are separate concerns.
 
 ### Recognized but rejected active Await
 
@@ -242,7 +242,7 @@ This negative fixture deliberately puts Await in an App body:
 
 <!-- example:grammar-active-await-rejected -->
 
-**Rejected at executable-body lowering.** `Controller awaits Worker` can be classified grammatically, but source-level child-body process supervision is unsupported. Compilation rejects that statement; it does not silently move it to the orchestrator. Put lifecycle orchestration in the outer program, as in the preceding passive example. This negative fixture is an existing rejection witness, not a program to run or a newly observed diagnostic.
+**Rejected at executable-body lowering.** `Controller awaits Worker` can be classified grammatically, but source-level child-body process supervision is unsupported. Compilation rejects that statement. It does not silently move it to the orchestrator. Put lifecycle orchestration in the outer program, as in the preceding passive example. This negative fixture is an existing rejection witness, not a program to run or a newly observed diagnostic.
 
 ### Get
 
@@ -250,7 +250,7 @@ This negative fixture deliberately puts Await in an App body:
 
 Recognize a configured receptive action without a general supported collection instruction.
 
-**Unsupported operation.** The configured Get action has no executable instruction and is rejected during instruction lowering. Use the checked typed read form in the [value program](../examples/word-values.l), such as `Define "first" as a New Number from items at 0`. Get is not an alternate spelling for that operation; a separately authored action must supply its own definition.
+**Unsupported operation.** The configured Get action has no executable instruction and is rejected during instruction lowering. Use the checked typed read form in the [value program](../examples/word-values.l), such as `Define "first" as a New Number from items at 0`. Get is not an alternate spelling for that operation. A separately authored action must supply its own definition.
 
 ### Take
 
@@ -258,7 +258,7 @@ Recognize a configured receptive action without a general supported collection i
 
 Recognize a configured reductive action without a general supported removal instruction.
 
-**Unsupported operation.** The configured Take action has no executable instruction and is rejected during instruction lowering. The [collection contract](collections-and-categories.md) provides insertion, replacement and typed reads, not removal. A separately authored action must supply its own definition; the configured word is not a runnable removal example.
+**Unsupported operation.** The configured Take action has no executable instruction and is rejected during instruction lowering. The [collection contract](collections-and-categories.md) provides insertion, replacement and typed reads, not removal. A separately authored action must supply its own definition. The configured word is not a runnable removal example.
 
 ### Import
 
@@ -266,7 +266,7 @@ Recognize a configured reductive action without a general supported removal inst
 
 Recognize a configured import action whose general native execution is not implemented.
 
-**Unsupported operation.** The configured Import action has no executable instruction and is rejected during instruction lowering. Use [Use](imports.md#indexed-dictionaries) with an explicit source or registered dictionary. The [file-import program](../../demo/dictionaries/file-import/main.l) demonstrates that supported spelling; Import is not an alias for it. A separately authored action must supply its own definition.
+**Unsupported operation.** The configured Import action has no executable instruction and is rejected during instruction lowering. Use [Use](imports.md#indexed-dictionaries) with an explicit source or registered dictionary. The [file-import program](../../demo/dictionaries/file-import/main.l) demonstrates that supported spelling. Import is not an alias for it. A separately authored action must supply its own definition.
 
 ### Export
 
@@ -274,19 +274,19 @@ Recognize a configured import action whose general native execution is not imple
 
 Recognize a configured export action whose general native execution is not implemented.
 
-**Unsupported operation.** The configured Export action has no executable instruction and is rejected during instruction lowering. Use [Public/Publicly](names-and-scope.md#public) for declaration visibility, as in the [public-values program](../../demo/paragraphs/public-values.l); that is not a runtime export operation. A separately authored action must supply its own definition.
+**Unsupported operation.** The configured Export action has no executable instruction and is rejected during instruction lowering. Use [Public/Publicly](names-and-scope.md#public) for declaration visibility, as in the [public-values program](../../demo/paragraphs/public-values.l). That is not a runtime export operation. A separately authored action must supply its own definition.
 
 ## Conditions
 
-The condition rule contains truth, has, equals, is, isnt, less, greater, less_equal, and greater_equal cases. Exact spellings arise from configured is/isnt, have/has, equal/equals, less/greater, than, not, and articles. Equality requires matching supported scalar types; ordering requires Number; has is limited to a target's Error.
+The condition rule contains truth, has, equals, is, isnt, less, greater, less_equal, and greater_equal cases. Exact spellings arise from configured is/isnt, have/has, equal/equals, less/greater, than, not, and articles. Equality requires matching supported scalar types, ordering requires Number, and has is limited to a target's Error.
 
-The configured if/else/otherwise/while families are not equally executable. A single-condition If, an attached plain else, and paragraph-local otherwise have instruction support. The configured `else if` continuation and documented While example reject during grammar processing; While also has no outer instruction implementation. Multiple joined conditions reject during instruction lowering, so the grammar's repeated CONDITION form does not establish boolean conjunction or short-circuit evaluation.
+The configured if/else/otherwise/while families are not equally executable. A single-condition If, an attached plain else, and paragraph-local otherwise have instruction support. The configured `else if` continuation and documented While example reject during grammar processing. While also has no outer instruction implementation. Multiple joined conditions reject during instruction lowering, so the grammar's repeated CONDITION form does not establish boolean conjunction or short-circuit evaluation.
 
-The [Truth conditional example](values.md#truth) shows an actual `If enabled equals true, await Worker, else exit` statement with its declarations and execution context. It compares Truth operands and attaches an else branch to that If. For complete branch examples and explicitly rejected loop forms, see [operations and control flow](control-flow.md). A branch separator comma is source punctuation; it is not the grammar configuration's `|` sequence marker.
+The [Truth conditional example](values.md#truth) shows an actual `If enabled equals true, await Worker, else exit` statement with its declarations and execution context. It compares Truth operands and attaches an else branch to that If. For complete branch examples and explicitly rejected loop forms, see [operations and control flow](control-flow.md). A branch separator comma is source punctuation. It is not the grammar configuration's `|` sequence marker.
 
 ## Predicates and statements
 
-Predicates assemble clauses in imperative, active, passive, applicative, or conditional form. Passive predicates include assignment. Statements choose objective imperative/conditional or subjective active/passive organization. Subjective App effects contribute application body code; outer instructions control orchestration. Standalone Service body effects reject. The same action spelling can therefore be valid in one ownership context and rejected in another.
+Predicates assemble clauses in imperative, active, passive, applicative, or conditional form. Passive predicates include assignment. Statements choose objective imperative/conditional or subjective active/passive organization. Subjective App effects contribute application body code, while outer instructions control orchestration. Standalone Service body effects reject. The same action spelling can therefore be valid in one ownership context and rejected in another.
 
 Source order is retained after expansion. A sequence of native unary lifecycle operands runs each operation in order. A source-defined action with one parameter and several coordinated actuals expands its complete action body for each actual before proceeding to the next.
 
@@ -294,7 +294,7 @@ Source order is retained after expansion. A sequence of native unary lifecycle o
 
 Nouns include pronouns, Input/Output/Error, List/Map/Dictionary, Null/Thing/Text/Number/Byte/Truth/Pointer, native Func/Prop/Op concepts, Definition/Attribute, and Object/Class/Service/App. The adjective entries are Public, New, and Generic. Adverbs are Publicly, Not, Less, Greater, and Then. Prepositions are as/of/at/with/in/out/by/from/to/than/for. Articles are any/no/a/the, conjunctions and/or, and evaluations if/else/otherwise/while.
 
-The [source-defined builtins](../reference/builtins/index.md#source-defined-facilities) are implicit. Standard-library words such as Print require import. New words compose existing definitions; vocabulary recognition alone does not implement an action.
+The [source-defined builtins](../reference/builtins/index.md#source-defined-facilities) are implicit. Standard-library words such as Print require import. New words compose existing definitions. Vocabulary recognition alone does not implement an action.
 
 ## Sources and witnesses
 

@@ -125,7 +125,7 @@ export async function generateReferences(root) {
     const forms = fields.filter((field) => ['root', 'pos', 'type', 'prefixes', 'postfixes', 'forms'].includes(field));
     const handlers = fields.filter((field) => !forms.includes(field));
     const table = (fields, extra = []) => `| Word | ${[...fields, ...extra].map(cell).join(' | ')} |\n| --- | ${[...fields, ...extra].map(() => '---').join(' | ')} |\n`;
-    const values = (word, fields) => fields.map((field) => Object.hasOwn(word, field) ? code(typeof word[field] === 'string' ? word[field] : JSON.stringify(word[field])) : '—').join(' | ');
+    const values = (word, fields) => fields.map((field) => Object.hasOwn(word, field) ? code(typeof word[field] === 'string' ? word[field] : JSON.stringify(word[field])) : 'Not declared').join(' | ');
     let morphology = '**Word forms**\n\n' + table(forms);
     let meanings = '**Handlers and support**\n\n' + table(handlers, ['Support', 'Semantic context', 'Notes']);
     for (const [name, word] of Object.entries(words)) {

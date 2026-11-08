@@ -42,42 +42,42 @@
       "doc": "docs/reference/builtins/lifecycle.md#output",
       "topic": "Process members",
       "support": "supported",
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "notes": "Native process operations and implicit Output/Error require an App. Source-defined actions and explicit members retain lexical precedence.",
       "wordRef": "builtin:output"
     },
     "nouns.error": {
       "doc": "docs/reference/builtins/lifecycle.md#error",
       "topic": "Process members",
       "support": "supported",
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "notes": "Native process operations and implicit Output/Error require an App. Source-defined actions and explicit members retain lexical precedence.",
       "wordRef": "builtin:error"
     },
     "nouns.list": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "list",
       "support": "supported",
-      "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API.",
+      "notes": "Typed owned Lists construct, append, replace and read indexed values. Heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API.",
       "wordRef": "type:list"
     },
     "nouns.dictionary": {
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
       "topic": "dictionary",
       "support": "supported",
-      "notes": "Dictionary owns lexical members, exports and canonical alias identity. It is a source namespace, not runtime key/value storage; use Map for that distinct meaning.",
+      "notes": "Dictionary owns lexical members, exports and canonical alias identity. It is a source namespace, not runtime key/value storage. Use Map for that distinct meaning.",
       "wordRef": "type:dictionary"
     },
     "nouns.null": {
       "doc": "docs/spec/values.md#null",
       "topic": "null",
       "support": "supported",
-      "notes": "Null initializes an explicit absence value; typed reads preserve evaluation and type/index/key checks. Unassigned storage and the native-definition Null atom remain separate.",
+      "notes": "Null initializes an explicit absence value. Typed reads preserve evaluation and type/index/key checks. Unassigned storage and the native-definition Null atom remain separate.",
       "wordRef": "type:null"
     },
     "nouns.thing": {
       "doc": "docs/spec/values.md#thing",
       "topic": "thing",
       "support": "supported",
-      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types and callable signatures. No implicit coercion or dynamic arithmetic.",
+      "notes": "Explicit Thing boundaries retain concrete runtime types. Typed reads validate full element types and callable signatures. No implicit coercion or dynamic arithmetic.",
       "wordRef": "type:thing"
     },
     "nouns.text": {
@@ -91,14 +91,14 @@
       "doc": "docs/spec/values.md#number",
       "topic": "number",
       "support": "supported",
-      "notes": "Number is explicitly finite binary64; parsing, native encoding and typed runtime use implement that meaning. Arbitrary precision and integer-width arithmetic are not promised.",
+      "notes": "Number is explicitly finite binary64. Parsing, native encoding and typed runtime use implement that meaning. Arbitrary precision and integer-width arithmetic are not promised.",
       "wordRef": "type:number"
     },
     "nouns.byte": {
       "doc": "docs/spec/values.md#byte",
       "topic": "byte",
       "support": "partial",
-      "notes": "The configured Byte/Bytes family is recognized, but only Bytes has owned storage. Singular Byte has no scalar source type or one-byte constructor; octet reads produce Number.",
+      "notes": "The configured Byte/Bytes family is recognized, but only Bytes has owned storage. Singular Byte has no scalar source type or one-byte constructor. Octet reads produce Number.",
       "wordRef": "type:byte"
     },
     "nouns.truth": {
@@ -112,7 +112,7 @@
       "doc": "docs/spec/values.md#pointer",
       "topic": "pointer",
       "support": "supported",
-      "notes": "Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API.",
+      "notes": "Managed typed handles share targets. Reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API.",
       "wordRef": "type:pointer"
     },
     "nouns.op": {
@@ -165,7 +165,7 @@
       "doc": "docs/spec/applicational-types.md#services",
       "topic": "service",
       "support": "supported",
-      "notes": "Service declarations remain structural; standalone bodies, packages and native process operations are unsupported. App-constructed Service libraries retain their workspace topology. Static inspection; witnesses not run.",
+      "notes": "Service declarations remain structural. Standalone bodies, packages and native process operations are unsupported. App-constructed Service libraries retain their workspace topology. Static inspection. Witnesses not run.",
       "wordRef": "type:service"
     },
     "nouns.app": {
@@ -228,42 +228,42 @@
       "doc": "docs/spec/grammar.md#get",
       "topic": "Collection operations",
       "support": "rejected",
-      "notes": "The configured receptive root parses but has no native instruction role or bound implementation. A public Compile probe of Get 0 from items rejects with unsupported outer instruction action action.receptive; the matched typed read control compiles.",
+      "notes": "The configured receptive root parses but has no native instruction role or bound implementation. A public Compile probe of Get 0 from items rejects with unsupported outer instruction action action.receptive. The matched typed read control compiles.",
       "wordRef": "builtin:get"
     },
     "verbs.reductive": {
       "doc": "docs/spec/grammar.md#take",
       "topic": "Collection operations",
       "support": "rejected",
-      "notes": "The configured reductive root has no native instruction role or bound implementation. A public Compile probe of Take 0 from items reaches unsupported outer instruction action action.reductive; this is known unavailability, not unresolved semantics.",
+      "notes": "The configured reductive root has no native instruction role or bound implementation. A public Compile probe of Take 0 from items reaches unsupported outer instruction action action.reductive. This is known unavailability, not unresolved semantics.",
       "wordRef": "builtin:take"
     },
     "verbs.generative": {
       "doc": "docs/reference/builtins/lifecycle.md#build",
       "topic": "Build",
       "support": "supported",
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "notes": "Native process operations and implicit Output/Error require an App. Source-defined actions and explicit members retain lexical precedence.",
       "wordRef": "builtin:build"
     },
     "verbs.executive": {
       "doc": "docs/reference/builtins/lifecycle.md#run",
       "topic": "Run",
       "support": "supported",
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "notes": "Native process operations and implicit Output/Error require an App. Source-defined actions and explicit members retain lexical precedence.",
       "wordRef": "builtin:run"
     },
     "verbs.suspensive": {
       "doc": "docs/reference/builtins/lifecycle.md#await",
       "topic": "Await",
       "support": "supported",
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "notes": "Native process operations and implicit Output/Error require an App. Source-defined actions and explicit members retain lexical precedence.",
       "wordRef": "builtin:await"
     },
     "verbs.interruptive": {
       "doc": "docs/reference/builtins/lifecycle.md#stop",
       "topic": "Stop",
       "support": "supported",
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
+      "notes": "Native process operations and implicit Output/Error require an App. Source-defined actions and explicit members retain lexical precedence.",
       "wordRef": "builtin:stop"
     },
     "verbs.inflective": {
@@ -277,7 +277,7 @@
       "doc": "docs/spec/grammar.md#export",
       "topic": "Import/export distinction",
       "support": "rejected",
-      "notes": "The configured deflective action has no lowering implementation. A public Compile probe of Export `io` rejects with unsupported outer instruction action action.deflective. Public/Publicly publish declarations; they are not runtime Export aliases.",
+      "notes": "The configured deflective action has no lowering implementation. A public Compile probe of Export `io` rejects with unsupported outer instruction action action.deflective. Public/Publicly publish declarations. They are not runtime Export aliases.",
       "wordRef": "builtin:export"
     },
     "verbs.observative": {
@@ -291,7 +291,7 @@
       "doc": "docs/reference/builtins/lifecycle.md#exit",
       "topic": "Exit",
       "support": "supported",
-      "notes": "The outer instruction terminates the program and owns shutdown/cleanup even from a continuation or source action. Function.Return is deliberately separate; no unawaited continuation is promised.",
+      "notes": "The outer instruction terminates the program and owns shutdown/cleanup even from a continuation or source action. Function.Return is deliberately separate. No unawaited continuation is promised.",
       "wordRef": "builtin:exit"
     },
     "verbs.appropriative": {
@@ -305,7 +305,7 @@
       "doc": "docs/spec/control-flow.md#equal",
       "topic": "Comparisons",
       "support": "supported",
-      "notes": "Equality of matching Text, Number and Truth operands is implemented; no coercion or arbitrary object equality is promised.",
+      "notes": "Equality of matching Text, Number and Truth operands is implemented. No coercion or arbitrary object equality is promised.",
       "wordRef": "grammar-word:equal"
     },
     "adjectives.visibility.public": {
@@ -326,7 +326,7 @@
       "doc": "docs/spec/definitions.md#generic",
       "topic": "Descriptors",
       "support": "supported",
-      "notes": "Native source constructors accept explicit ordered parameter atoms through their declared slots. GenericTypes and Lifetimes retain their approved local native-input contract; this does not infer parameters or introduce general L generics.",
+      "notes": "Native source constructors accept explicit ordered parameter atoms through their declared slots. GenericTypes and Lifetimes retain their approved local native-input contract. This does not infer parameters or introduce general L generics.",
       "wordRef": "builtin:generic"
     },
     "adverbs.visibility.public": {
@@ -361,7 +361,7 @@
       "doc": "docs/spec/control-flow.md#then",
       "topic": "Conditions and modifiers",
       "support": "supported",
-      "notes": "And then preserves composed action order; source-action expansion evaluates each complete body before the next coordinated operand. It is a sequencing token, not an asynchronous scheduling feature.",
+      "notes": "And then preserves composed action order. Source-action expansion evaluates each complete body before the next coordinated operand. It is a sequencing token, not an asynchronous scheduling feature.",
       "wordRef": "grammar-word:then"
     },
     "prepositions.definement.declarative": {
@@ -403,7 +403,7 @@
       "doc": "docs/spec/grammar.md#out",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "Generic Function argument phrases accept Out and bind an ordinary argument. The configured consignment.deflective role has no dedicated grammar phrase or executable deflective/output/export operation; accepting a PREPOSITION in a generic call does not implement that missing role.",
+      "notes": "Generic Function argument phrases accept Out and bind an ordinary argument. The configured consignment.deflective role has no dedicated grammar phrase or executable deflective/output/export operation. Accepting a PREPOSITION in a generic call does not implement that missing role.",
       "wordRef": "grammar-word:out"
     },
     "prepositions.consignment.indicative": {
@@ -438,7 +438,7 @@
       "doc": "docs/spec/grammar.md#for",
       "topic": "Prepositions",
       "support": "supported",
-      "notes": "For introduces the source-action body; source instructions expand the selected action with scoped arguments in declared order. It does not introduce a general loop construct.",
+      "notes": "For introduces the source-action body. Source instructions expand the selected action with scoped arguments in declared order. It does not introduce a general loop construct.",
       "wordRef": "grammar-word:for"
     },
     "articles.variable": {
@@ -466,7 +466,7 @@
       "doc": "docs/spec/grammar.md#the",
       "topic": "Articles and typed arguments",
       "support": "supported",
-      "notes": "The selects a definite subject/value in its existing lexical context; App body effects and member Function invocations have maintained witnesses. Visibility rejection is the contract.",
+      "notes": "The selects a definite subject/value in its existing lexical context. App body effects and member Function invocations have maintained witnesses. Visibility rejection is the contract.",
       "wordRef": "grammar-word:the"
     },
     "conjunctions.mutual": {
@@ -501,14 +501,14 @@
       "doc": "docs/spec/control-flow.md#otherwise",
       "topic": "Conditions and modifiers",
       "support": "supported",
-      "notes": "Otherwise attaches to the immediately preceding unmatched conditional within the same paragraph. Intervening instructions or paragraph boundaries correctly reject; they are ownership rules rather than missing support.",
+      "notes": "Otherwise attaches to the immediately preceding unmatched conditional within the same paragraph. Intervening instructions or paragraph boundaries correctly reject. They are ownership rules rather than missing support.",
       "wordRef": "grammar-word:otherwise"
     },
     "evaluations.iterative": {
       "doc": "docs/spec/control-flow.md#while",
       "topic": "Iteration",
       "support": "rejected",
-      "notes": "The configured While loop has no outer instruction implementation: instructionBuilder.statement accepts only if/else/other. The documented While fragment additionally fails grammar processing; do not claim this fixture reaches lowering or that every possible configured While spelling was probed.",
+      "notes": "The configured While loop has no outer instruction implementation: instructionBuilder.statement accepts only if/else/other. The documented While fragment additionally fails grammar processing. Do not claim this fixture reaches lowering or that every possible configured While spelling was probed.",
       "wordRef": "grammar-word:while"
     }
   }

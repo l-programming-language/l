@@ -4,7 +4,7 @@ Start with [Install L](installation.md) for the recommended setup. This page cov
 
 ## Supported platforms
 
-Published binaries support Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64). Intel macOS is not supported; contributions toward future support are welcome. Native builds target the current host.
+Published binaries support Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64). Intel macOS is not supported. Contributions toward future support are welcome. Native builds target the current host.
 
 ## Native build tools
 
@@ -84,9 +84,9 @@ Native system tools must already be present. Rust tools and locked dependencies 
 
 Rerun the [quick-install command](installation.md#install-a-released-binary) to install the latest stable release, or pass `--version` to select a particular release. Read the [compatibility policy](../releases/index.md#versioning-and-compatibility) first. Repeating setup also repairs missing Rust tools and cached dependencies.
 
-The release installer replaces the compiler binary only after download verification and native prerequisite setup succeed. Those failures preserve the existing compiler. Language resources are embedded in the binary; native setup preserves the retained dependency locks.
+The release installer replaces the compiler binary only after download verification and native prerequisite setup succeed. Those failures preserve the existing compiler. Language resources are embedded in the binary, and native setup preserves the retained dependency locks.
 
-If terminal configuration fails after the binary is installed, setup reports that partial result. It attempts to restore its shell changes while preserving concurrent edits; the installed L binary and prepared Rust tools remain. Resolve the reported file or permission problem, then rerun setup to repair activation.
+If terminal configuration fails after the binary is installed, setup reports that partial result. It attempts to restore its shell changes while preserving concurrent edits. The installed L binary and prepared Rust tools remain. Resolve the reported file or permission problem, then rerun setup to repair activation.
 
 Successful setup saves its installation log as `~/.local/share/l/install.*`. If a failure occurs after release installation starts, setup prints the temporary directory containing `install.log` and configuration backups. Keep those files when reporting the failure.
 
@@ -118,10 +118,10 @@ This release installer does not create the quick installer's activation file or 
 
 | Option | Effect |
 | --- | --- |
-| `--with-toolchain` | Permit installing missing Rust tools. Otherwise interactive setup asks; noninteractive setup requires them to exist. |
+| `--with-toolchain` | Permit installing missing Rust tools. Otherwise, interactive setup asks and noninteractive setup requires them to exist. |
 | `--binary-only` | Install only `l`, deferring native prerequisites. |
 | `--prefix DIRECTORY` | Choose the executable directory instead of `~/.local/bin`. |
-| `--version VERSION` | Pin a release; omission selects the latest normal release once for all assets. |
+| `--version VERSION` | Pin a release. Omission selects the latest normal release once for all assets. |
 | `--repository OWNER/REPO` | Intentionally select another repository's release. |
 
 For a different pinned version, change both the release URL and `--version`. To repair a binary-only installation, rerun its versioned installer with `--with-toolchain`.
@@ -147,12 +147,12 @@ export PATH="$PWD/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH"
 l --version
 ```
 
-The tag selects the released compiler source; use another release tag when needed. [install.sh](../../install.sh) verifies Go dependencies and builds the self-contained `bin/l` with `-mod=readonly`. It does not prepare Rust. Keep the absolute path to this checkout's `bin` directory in your shell configuration if you use this installation in new terminals.
+The tag selects the released compiler source. Use another release tag when needed. [install.sh](../../install.sh) verifies Go dependencies and builds the self-contained `bin/l` with `-mod=readonly`. It does not prepare Rust. Keep the absolute path to this checkout's `bin` directory in your shell configuration if you use this installation in new terminals.
 
 ## Rust dependency preparation
 
 L uses rustup, Rust 1.98.1, and the retained Cargo dependencies. It invokes `cargo +1.98.1`, so standalone Cargo is insufficient. Release setup installs the minimal Rust toolchain, fetches locked dependencies, and checks that they resolve offline without changing the lockfile. On a fresh rustup installation, release setup selects Rust 1.98.1 as the default toolchain.
 
-For binary installations, rerun quick setup or use the versioned installer or extracted archive's setup script as described above. For source installations, the current preparation path is `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching checkout. This also prepares contributor tools and validation caches and can take several minutes; see the [development policy](../development-harness.md#validation-authorization).
+For binary installations, rerun quick setup or use the versioned installer or extracted archive's setup script as described above. For source installations, the current preparation path is `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching checkout. This also prepares contributor tools and validation caches and can take several minutes. See the [development policy](../development-harness.md#validation-authorization).
 
-Installing Rust alone does not populate L's dependency cache. Native compilation uses frozen, offline Cargo resolution; preserve the retained locks rather than removing `--frozen`. See [troubleshooting](troubleshooting.md#cargo-and-publication) if a build still fails after setup.
+Installing Rust alone does not populate L's dependency cache. Native compilation uses frozen, offline Cargo resolution. Preserve the retained locks rather than removing `--frozen`. See [troubleshooting](troubleshooting.md#cargo-and-publication) if a build still fails after setup.

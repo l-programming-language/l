@@ -7,13 +7,13 @@ Use the repository harness for current-input integrity and the ordinary build/te
 Explicit task authorization covers its bounded baseline, regression, native and
 full completion checks, including required tool preparation. Continue those checks
 without asking again. Use focused checks during development and the full gate for
-a completion claim; report unrun stages accurately. Documentation-only checks do
+a completion claim. Report unrun stages accurately. Documentation-only checks do
 not establish native behavior. Historical green reports validate only their tested
 revision. Preserve tests, assertions, protected inputs, tool pins and budgets.
 
 Repository Actions automatically validate Linux when a pull request opens, receives
 commits, or reopens. Manual dispatch, including macOS, requires explicit
-authorization. The required `L CI` check on `main` remains removed; restoring it is
+authorization. The required `L CI` check on `main` remains removed. Restoring it is
 a separate decision. Pull-request, deletion and force-push protections remain.
 
 ## Full validation
@@ -22,20 +22,20 @@ For authorized full validation, prepare pinned tools and dependencies with
 `scripts/l-ci bootstrap`, then run `scripts/l-check`. The shared CI launcher sets child `GOMAXPROCS` to the smaller
 of four and the logical CPUs available to the process, overriding inherited
 values. A two-CPU runner therefore uses two concurrent packages and two parallel
-tests per package; hosts with four or more CPUs retain the four-CPU profile.
+tests per package. Hosts with four or more CPUs retain the four-CPU profile.
 The completion command runs workflow linting, both Go lint profiles, harness
 `doctor` and unfiltered `verify`, and the complete tagged native compilation
 stage. Every stage must succeed with fresh, complete evidence. Focused tests
 remain useful during development but do not establish completion.
 
 Tool versions and verified official lint archive checksums live in
-[.ci-tools.json](../.ci-tools.json); [.go-version](../.go-version) selects Go
+[.ci-tools.json](../.ci-tools.json). [.go-version](../.go-version) selects Go
 1.27.3 and [.ci/go-checksums.txt](../.ci/go-checksums.txt) pins its fallback
 archives, without changing the module's Go 1.20 language declaration. Rust remains
 1.98.1, golangci-lint is 2.14.0, and actionlint is 1.7.12. Lint tools, fallback Go,
 Go build caches, seed projects and run evidence stay in ignored repository
 storage. Rust toolchains and Cargo/Go dependency downloads use their standard
-host locations; the CLI also retains its external native build cache. Tool
+host locations. The CLI also retains its external native build cache. Tool
 updates are explicit reviewed changes.
 
 [scripts/l-lint](../scripts/l-lint) checks the workflow and the entire Go module,
@@ -45,18 +45,18 @@ including tests, in separate ordinary and `nativecompile` passes. The
 `gofmt` without simplification. Resolve every warning and error. There is no
 changed-lines baseline, blanket test exclusion, output cap or automatic CI fix.
 Specific, explained suppressions are reserved for proven invariants and
-intentional best-effort behavior; they must not hide meaningful errors.
+intentional best-effort behavior. They must not hide meaningful errors.
 
 For investigation, run an individual stage with `scripts/l-ci lint`,
 `scripts/l-ci acceptance` or `scripts/l-ci native`. Fresh logs and structured
-results live under ignored `.harness/runs`; missing, malformed, stale or
+results live under ignored `.harness/runs`. Missing, malformed, stale or
 incomplete reports and native outcomes fail the gate.
 
 Bootstrap separates dependency preparation from validation. It verifies the native C compiler,
 installs pinned tools, fetches Go dependencies without changing module files,
 and constructs four disposable Cargo seeds from retained runtime, Lucid plain,
 Tokio and selection inputs. Each seed passes `fetch --locked` and then
-`fetch --frozen`; every external dependency tuple in retained lockfiles must be
+`fetch --frozen`. Every external dependency tuple in retained lockfiles must be
 covered and copied/original locks must remain unchanged. Setup fails with an
 explanation for uncovered dependencies.
 
@@ -65,7 +65,7 @@ Setup compiles the pinned Go race standard library and project libraries with
 the downloaded modules offline. Acceptance still creates and compiles its own
 race-instrumented API probe and executes every assertion. Setup also compiles
 selected locked Rust registry dependencies. Rust dependency build scripts run
-as part of that compilation; Rust workspace targets, generated Apps and test
+as part of that compilation. Rust workspace targets, generated Apps and test
 binaries are not built or executed by this preparation. Verified Rust dependency
 products populate 25 existing caches: six CLI slots, four shards each for Lyger,
 Logiceme, `cmd/l` and `acceptance/phase1/runtime`, and the three fixed runtime/empty-error
@@ -80,22 +80,22 @@ deployment scripts, filters acceptance tests or changes retained locks.
 [CI](../.github/workflows/ci.yml) is enabled and automatically validates Linux
 (Ubuntu 24.04 x64) on PR creation, new commits, and reopening. There is no separate
 push trigger or run for title/description edits. Manual dispatch defaults to
-`linux`; `macos` selects macOS 15 ARM64, and `both` selects both platforms. Each
+`linux`. `macos` selects macOS 15 ARM64, and `both` selects both platforms. Each
 selected platform bootstraps once and runs the [full gate](#full-validation).
-Hosted checks set `CARGO_INCREMENTAL=0`; local runs retain their
+Hosted checks set `CARGO_INCREMENTAL=0`. Local runs retain their
 configured Cargo setting. This changes compilation reuse without changing test
-selection, compiler concurrency or deadlines. A stage failure stops later stages on that platform; the other
+selection, compiler concurrency or deadlines. A stage failure stops later stages on that platform. The other
 selected platform continues. The stable aggregate `L CI` requires every selected
 platform to succeed and rejects failures, cancellations and skipped jobs.
 Linux-only success supplies no Darwin lint or runtime evidence. Superseded runs
-are cancelled. The combined job limit is 120 minutes; the aggregate retains
+are cancelled. The combined job limit is 120 minutes. The aggregate retains
 5 minutes. The [finite budget policy](#validation-budgets)
 preserves runtime watchdogs.
 
 Actions retain reviewed full commit pins, read-only repository access and
-checkout without persisted credentials. Bootstrap installs both pinned linters;
-the shared launcher verifies archive checksums, executable bytes and versions
-before execution. Weekly Dependabot updates review action pins; tool versions
+checkout without persisted credentials. Bootstrap installs both pinned linters.
+The shared launcher verifies archive checksums, executable bytes and versions
+before execution. Weekly Dependabot updates review action pins. Tool versions
 remain separate explicit updates. This
 workflow validates code and does not publish releases or deploy applications.
 
@@ -103,7 +103,7 @@ The separate [manual release workflow](../.github/workflows/release.yml) follows
 the committed [release policy](../website/ci-templates/release-policy.json), which
 disables publication. An authorized dry run validates main on three native targets,
 preserving this full gate on each. Per-target packaging and clean-home installer
-smoke checks add distribution evidence; they do not replace canonical acceptance.
+smoke checks add distribution evidence. They do not replace canonical acceptance.
 The matching documentation is tested before native and docs assets are published
 together in an immutable release. The installer prepares only user-build
 dependencies, not the CI bootstrap.
@@ -116,7 +116,7 @@ Additional pull-request workflows provide separately visible checks:
   `scripts/l-lint` stage, pinned `govulncheck` source analysis including tests in
   ordinary and `nativecompile` profiles, and the website's locked production and
   development dependency audit. Go analysis fails on reachable known
-  vulnerabilities; npm audit fails on high or critical findings. These jobs
+  vulnerabilities. The npm audit fails on high or critical findings. These jobs
   retain their reports for seven days and support manual dispatch. They do not
   replace any stage of `L CI` or establish native runtime acceptance.
 - [Documentation checks](../.github/workflows/docs-check.yml) installs the pinned
@@ -124,7 +124,7 @@ Additional pull-request workflows provide separately visible checks:
   aggregate: deployment guard, reference freshness, content/type checks, unit
   tests, static build/output checks, and browser tests. It runs for every PR
   regardless of changed paths and supports manual dispatch. These checks never
-  publish; see [website development](../website/README.md).
+  publish. See [website development](../website/README.md).
 - [PR issue link](../.github/workflows/pr-issue.yml) verifies a tracking line such
   as `Closes #123` or `Refs #123` against an accessible GitHub Issue. It also runs
   when the PR description changes, without checking out or executing its code.
@@ -132,9 +132,9 @@ Additional pull-request workflows provide separately visible checks:
 
 Caches separate pinned tools/dependency downloads from Go/native compiler outputs
 shared by all stages on a platform, including the CLI's external native cache.
-Keys identify platform, architecture, toolchains and dependency inputs; build
+Keys identify platform, architecture, toolchains and dependency inputs. Build
 keys also identify the source tree. Build caches use namespace `v4` without a
-stage component; dependency caches retain `v2`. The shared build cache includes
+stage component. Dependency caches retain `v2`. The shared build cache includes
 Go build, golangci-lint, Lucid and package parity outputs, plus the fixed
 `rust-runtime-parity`, `rust-empty-error-runtime` and `rust-empty-error-frontend`
 cache directories and their staged `-inputs` siblings. Each cache is saved once
@@ -177,9 +177,9 @@ scripts/l-harness diff EXPECTED ACTUAL
 | diagnose --frontend | Add temporary compiler/import probes to diagnostics |
 | diff | Compare supplied files byte-for-byte, reporting lengths, hashes and first differing offset |
 
-The launcher builds the standard-library-only harness before loading compiler packages; [gate helpers](../tools/internal/testgate/testgate.go) are shared with CI. It may be invoked by absolute path from another directory; relative diff arguments resolve against the caller directory. Missing Go, bootstrap-build failures and argument/contract-loading errors can occur before a report is allocated.
+The launcher builds the standard-library-only harness before loading compiler packages. [Gate helpers](../tools/internal/testgate/testgate.go) are shared with CI. It may be invoked by absolute path from another directory. Relative diff arguments resolve against the caller directory. Missing Go, bootstrap-build failures and argument/contract-loading errors can occur before a report is allocated.
 
-Verification builds the module, then discovers packages with `go list -mod=readonly -json ./...`. Each package runs exactly once in two sequential, unfiltered phases: `tests-native` contains all `acceptance/` packages, `cmd/l`, `lyger`, `logiceme`, `internal/cargocache` and `internal/testsupport/native`; `tests` contains the rest. A phase is omitted only when its inventory is empty. Ordinary Go test discovery and the separate tagged native stage remain unchanged.
+Verification builds the module, then discovers packages with `go list -mod=readonly -json ./...`. Each package runs exactly once in two sequential, unfiltered phases: `tests-native` contains all `acceptance/` packages, `cmd/l`, `lyger`, `logiceme`, `internal/cargocache` and `internal/testsupport/native`. `tests` contains the rest. A phase is omitted only when its inventory is empty. Ordinary Go test discovery and the separate tagged native stage remain unchanged.
 
 ```sh
 go build -mod=readonly ./...
@@ -188,17 +188,17 @@ go test -p=N -parallel=P -mod=readonly -count=1 -timeout=120s -json ORDINARY_PAC
 go test -p=N -parallel=P -mod=readonly -count=1 -timeout=10m -json NATIVE_HEAVY_PACKAGES...
 ```
 
-`N` is `min(3, effective GOMAXPROCS)` and `P` is effective `GOMAXPROCS` from the harness runtime snapshot. Direct `scripts/l-harness` invocations preserve inherited `GOMAXPROCS`; `scripts/l-ci` and `scripts/l-check` supply the CPU-capped value described above. `-p` bounds each outer test command's builds and test binaries, not nested builds. Native-case admission limits and application settings are unchanged. The [budget policy](#validation-budgets) distinguishes phase deadlines from runtime watchdogs.
+`N` is `min(3, effective GOMAXPROCS)` and `P` is effective `GOMAXPROCS` from the harness runtime snapshot. Direct `scripts/l-harness` invocations preserve inherited `GOMAXPROCS`. `scripts/l-ci` and `scripts/l-check` supply the CPU-capped value described above. `-p` bounds each outer test command's builds and test binaries, not nested builds. Native-case admission limits and application settings are unchanged. The [budget policy](#validation-budgets) distinguishes phase deadlines from runtime watchdogs.
 
 Native acceptance cases may run concurrently when projects, resource overrides,
 provenance records and process groups are independent. Per-package admission is
-bounded; each case retains its internal signal, publication, resource-deletion
+bounded. Each case retains its internal signal, publication, resource-deletion
 and repeated-output sequence. Compilation and runtime remain separate phases.
 Test scheduling does not change L execution semantics.
 
-Verification permits no overlays, skips, test selectors or disabled vet. Reports require every discovered package exactly once, matching phase arguments and successful terminal outcomes. Packages without test files may report a package-level skip; named skips, failures, aborted tests, malformed/incomplete streams and missing outcomes fail. All 16 original obligations must pass across the combined phases. Focused diagnostics and explicit vet cannot replace this gate.
+Verification permits no overlays, skips, test selectors or disabled vet. Reports require every discovered package exactly once, matching phase arguments and successful terminal outcomes. Packages without test files may report a package-level skip. Named skips, failures, aborted tests, malformed/incomplete streams and missing outcomes fail. All 16 original obligations must pass across the combined phases. Focused diagnostics and explicit vet cannot replace this gate.
 
-Exit status is 0 for success, 1 for build/test/diagnostic findings or byte mismatch, and 2 for integrity, configuration, setup or usage failure. Doctor checks prerequisites and does not establish behavioral acceptance. Before the Go harness starts, shell failures retain their native status; a missing `go` command can exit 127 without a JSON report.
+Exit status is 0 for success, 1 for build/test/diagnostic findings or byte mismatch, and 2 for integrity, configuration, setup or usage failure. Doctor checks prerequisites and does not establish behavioral acceptance. Before the Go harness starts, shell failures retain their native status. A missing `go` command can exit 127 without a JSON report.
 
 ## Acceptance timing diagnostics
 
@@ -206,14 +206,14 @@ Set `L_HARNESS_TIMING_DIR` to an absolute ignored run directory only for diagnos
 The existing build and native-test boundaries record per-process JSONL spans for
 admission, frontend/workspace setup, cache identification/wait/hold, Cargo,
 provenance, publication, runtime observations and cleanup. Start records retain
-interrupted spans; completed durations use a monotonic clock. Diagnostic I/O is
+interrupted spans. Completed durations use a monotonic clock. Diagnostic I/O is
 best effort and never enters compiler or application streams. Correlate PID/PPID,
-subjects and timestamps; concurrent work-time sums are not elapsed command time.
+subjects and timestamps. Concurrent work-time sums are not elapsed command time.
 
 The shared compiled test Cargo observer invokes the pinned real Cargo for every
 build, with private configuration and fresh evidence per probe/invocation. It
 preserves arguments, streams, status, process-group ownership and artifact
-snapshots; it removes the per-build shell/helper launch chain, not Cargo work.
+snapshots. It removes the per-build shell/helper launch chain, not Cargo work.
 Instrumented runs separate actual compilation from metadata and recording,
 count fresh/rebuilt artifacts, and retain Cargo's supported HTML timing reports.
 Diagnostic flags and trace I/O affect measurements, so run completion gates with
@@ -225,7 +225,7 @@ and installed-CLI cases. Each runtime profile still receives fresh private execu
 files/state with verified artifact bytes. Source/resource/publication/cache
 invalidation scenarios still rebuild independently. The
 [implementation ledger](../testdata/integration/IMPLEMENTATION.md) records measured
-results; measurements do not redefine the current budgets or authorize concurrency changes.
+results. Measurements do not redefine the current budgets or authorize concurrency changes.
 The historical reference profile used `GOMAXPROCS=4`, `-p=3`, `-parallel=4`.
 Current CI caps that profile to available CPUs. The four native-case permits for
 distribution/language/CLI, two for other Phase 1 packages, and six CLI Cargo-cache
@@ -236,8 +236,8 @@ Use [Cargo's HTML timings](https://doc.rust-lang.org/cargo/reference/timings.htm
 for compiler units and external spans for process/observer startup. Retain the
 [structured artifact and versioned metadata evidence](https://doc.rust-lang.org/cargo/reference/external-tools.html)
 on every build, including fresh artifacts. Subprocess diagnostics must respect
-[Go's cancellation and pipe-draining contracts](https://pkg.go.dev/os/exec);
-neither parent completion nor closed pipes establish descendant termination.
+[Go's cancellation and pipe-draining contracts](https://pkg.go.dev/os/exec).
+Neither parent completion nor closed pipes establish descendant termination.
 The Darwin zombie case is supported by the owned-process regression and
 [Apple's group-signaling implementation](https://github.com/apple-oss-distributions/xnu/blob/main/bsd/kern/kern_sig.c).
 It does not authorize treating general permission failures as absent groups.
@@ -248,20 +248,20 @@ The harness assigns a fresh `L_HARNESS_RUN_ID` to its command environment and
 records it in the report. An inherited run ID cannot cause a new harness run to
 reuse evidence. Standalone test processes allocate their own namespace. Ordinary
 bundle records preserve all returned artifacts, log their hashes and never
-replace prior records; `L_HARNESS_EVIDENCE_DIR` still selects their root.
+replace prior records. `L_HARNESS_EVIDENCE_DIR` still selects their root.
 
 Set a global `L_HARNESS_CARGO_EVIDENCE_DIR` only for controlled rebuild diagnosis.
 Tests that require artifact provenance also enable their own private captures.
 Detailed captures retain exact staged inputs before Cargo, input hashes and path/cache
 identities, an allowlist of compiler settings, raw Cargo messages and diagnostics,
-artifact hashes and completion state. Copies are independent evidence files;
-they never replace source inputs or executable artifacts. Missing or incomplete
+artifact hashes and completion state. Copies are independent evidence files.
+They never replace source inputs or executable artifacts. Missing or incomplete
 evidence invalidates the diagnostic comparison without replacing Cargo's status
 or altering its streams. Leave global diagnostic capture and timing variables
-unset for completion gates; required test-local provenance capture still runs.
+unset for completion gates. Required test-local provenance capture still runs.
 Enable timing alongside detailed capture to retain the CLI parent's actual
 preferred/selected cache-slot event.
-A missing event is reported as unavailable; the observer does not guess it.
+A missing event is reported as unavailable. The observer does not guess it.
 
 The native helper holds a cross-process file lock from source reconciliation
 through Cargo and immutable executable snapshots. Waiting consumes the existing
@@ -272,15 +272,15 @@ errors separately, and reads Cargo's line-oriented records without discarding
 later artifacts after unrelated output.
 
 CLI slots and native-test shards reconcile complete trees at stable `StageCurrent`
-paths. Unchanged bytes retain timestamps; at most 4096 absent-path hash hints may
+paths. Unchanged bytes retain timestamps. At most 4096 absent-path hash hints may
 restore timestamps when identical bytes return. Hints contain no source, are
 consumed before writes, and cannot restore aliases, future timestamps or stale
-versions. Missing history causes a rebuild; malformed state fails closed. Every
+versions. Missing history causes a rebuild. Malformed state fails closed. Every
 build invokes Cargo and snapshots its artifacts. The [cache contract](cli-build.md#source-generation-and-native-builds)
 defines source identity and ownership.
 
 Use `CARGO_LOG=cargo::compiler::fingerprint=info` during a controlled rebuild to
-record its reason; Cargo cannot reconstruct that explanation afterward. Compare
+record its reason. Cargo cannot reconstruct that explanation afterward. Compare
 exact A/A and A/B/A inputs using the actual stable-staging path and private slots.
 Retain seeding work separately and never normalize embedded source paths, purge
 user caches, or count summed concurrent work as elapsed time. These observations
@@ -301,8 +301,8 @@ paired Expected/Generated compilation stage, also available separately:
 scripts/l-ci native
 ```
 
-Use the suite's retained locks and pinned Rust 1.98.1 toolchain; communication
-uses Tokio =1.53.1 with rt/sync features; selection adds macros in a separate
+Use the suite's retained locks and pinned Rust 1.98.1 toolchain. Communication
+uses Tokio =1.53.1 with rt/sync features. Selection adds macros in a separate
 manifest and retained lockfile. Keep frozen dependency resolution
 and three-minute subprocess limits. The stage compiles independently authored
 expected projects and actual returned projects, without source repair, formatting,
@@ -319,28 +319,28 @@ The maintained cases establish only their documented compositions. Local
 `Lifetimes`/`GenericTypes` inputs provide native declaration/argument text, not
 ownership inference or general generic-implementation support. Retained
 runtime/module support and unrelated advanced validation paths are not verified
-by this corpus; consult the
+by this corpus. Consult the
 [integration limits](../builtins/README.md#current-integration-limits).
 Do not restore the removed Rust matrix or change frozen definitions merely to
 obtain a passing run. Keep `builtins/segments/`, `builtins/templates/`, their
-interfaces and frozen hash expectations unchanged. New source-level coverage retains the existing corpus;
-protected fixture changes still require a finite approved amendment.
+interfaces and frozen hash expectations unchanged. New source-level coverage retains the existing corpus.
+Protected fixture changes still require a finite approved amendment.
 
 ## Current integrity and amendments
 
 [harness/contract.json](../harness/contract.json) protects current test sources, expected-value helpers, inputs, case oracles and canonical resources with explicit approved hashes. It records required absent paths and the original named-test obligations. Current source membership is derived from the protected source paths, not an old migration ledger. Expected helpers outside `_test.go` are equally protected. Adding a current fixture must update the current contract through review, not revive a historical migration manifest.
 
-Never regenerate hashes or expected values to make an implementation failure pass. Preserve raw expected streams/statuses, actual behavioral assertions, canonical grammar/vocabulary and source-defined builtins. A fixture/oracle amendment requires explicit authorization identifying its exact scope and reason. Historical exceptions grant no standing permission to change expectations. Source expansion preserves declaration targets, typed slots and order; compiler output must follow source semantics rather than fixture-specific substitutions.
+Never regenerate hashes or expected values to make an implementation failure pass. Preserve raw expected streams/statuses, actual behavioral assertions, canonical grammar/vocabulary and source-defined builtins. A fixture/oracle amendment requires explicit authorization identifying its exact scope and reason. Historical exceptions grant no standing permission to change expectations. Source expansion preserves declaration targets, typed slots and order. Compiler output must follow source semantics rather than fixture-specific substitutions.
 
 The [implementation ledger](../testdata/integration/IMPLEMENTATION.md) records
 revision-specific evidence. Historical migration counts and approved amendments
 do not redefine the current contract or authorize further fixture changes.
 
-The harness checks current files directly. Ordinary build, tests, doctor and verify do not require archived documents, attachments, historical baseline reports, a Git object lookup, or a network fetch for provenance. Initial Go dependency setup can still need network access. Markdown link checking discovers maintained documentation; it does not preserve a closed list of obsolete plans. Repository skills remain under `.agents/skills`.
+The harness checks current files directly. Ordinary build, tests, doctor and verify do not require archived documents, attachments, historical baseline reports, a Git object lookup, or a network fetch for provenance. Initial Go dependency setup can still need network access. Markdown link checking discovers maintained documentation. It does not preserve a closed list of obsolete plans. Repository skills remain under `.agents/skills`.
 
 ## Reproducible execution and evidence
 
-The launcher and child commands use `GOENV=off`, empty `GOFLAGS`, `GOWORK=off`, `GOTOOLCHAIN=local` and `.harness/cache/go-build`. Persisted Go settings cannot inject overlays, filters or alternate tooling. Reports record current revision/dirty state when available, resolved Go executable and relevant environment; missing Git history does not invalidate a source-export run. No user-level Go settings are changed.
+The launcher and child commands use `GOENV=off`, empty `GOFLAGS`, `GOWORK=off`, `GOTOOLCHAIN=local` and `.harness/cache/go-build`. Persisted Go settings cannot inject overlays, filters or alternate tooling. Reports record current revision/dirty state when available, resolved Go executable and relevant environment. Missing Git history does not invalidate a source-export run. No user-level Go settings are changed.
 
 The report's environment fields distinguish inherited configuration from the harness's effective runtime snapshot:
 
@@ -360,11 +360,11 @@ The report's environment fields distinguish inherited configuration from the har
 
 These values do not measure every child process's effective concurrency. The executed command arguments record the selected `-p` and `-parallel` values directly.
 
-Harness and CI commands record effective `timeout_ms`, including defaults. On macOS/Linux, cancellation and completion clean the owned process group, including descendants that closed inherited pipes. Command status and captured streams remain visible; unexpected cleanup errors join the error. Reports distinguish deadline, cancellation and post-wait signals, retaining PID/PGID, raw errors and monotonic durations. On Darwin, post-wait `EPERM` after successful deadline `SIGKILL` may indicate an unreaped zombie group. Only then may signal-zero probes establish disappearance within the remaining WaitDelay budget. Reports retain raw `EPERM` and record verified `ESRCH` separately. Persistent errors fail, signals are not resent, and the original timeout remains a failure. Probe success requires its named outcome and report, not an empty test-selector match.
+Harness and CI commands record effective `timeout_ms`, including defaults. On macOS/Linux, cancellation and completion clean the owned process group, including descendants that closed inherited pipes. Command status and captured streams remain visible. Unexpected cleanup errors join the error. Reports distinguish deadline, cancellation and post-wait signals, retaining PID/PGID, raw errors and monotonic durations. On Darwin, post-wait `EPERM` after successful deadline `SIGKILL` may indicate an unreaped zombie group. Only then may signal-zero probes establish disappearance within the remaining WaitDelay budget. Reports retain raw `EPERM` and record verified `ESRCH` separately. Persistent errors fail, signals are not resent, and the original timeout remains a failure. Probe success requires its named outcome and report, not an empty test-selector match.
 
-An explicitly supplied setting such as `GOMAXPROCS=4 scripts/l-harness verify` has a broader effect than the outer `-p` limit: inherited runtime settings also affect test binaries, nested Go builds and application processes. Report that setting with the result; a passing run under one configuration does not erase failures from another.
+An explicitly supplied setting such as `GOMAXPROCS=4 scripts/l-harness verify` has a broader effect than the outer `-p` limit: inherited runtime settings also affect test binaries, nested Go builds and application processes. Report that setting with the result. A passing run under one configuration does not erase failures from another.
 
-Reports live in ignored `.harness/runs/<UTC-time-random>/`. Schema-2 verification reports require `test_packages` inventory/phase assignments and package terminal outcomes alongside named test events. `report.json` names command logs and raw events; JSON stdout and `test_events_path` may share a file. Readable test output and stderr remain available. Frontend reports live under `frontend/compiler/` and `frontend/imports/`, with inert `.go.txt` sources overlaid only for diagnostics. Follow report paths rather than assuming filenames.
+Reports live in ignored `.harness/runs/<UTC-time-random>/`. Schema-2 verification reports require `test_packages` inventory/phase assignments and package terminal outcomes alongside named test events. `report.json` names command logs and raw events. JSON stdout and `test_events_path` may share a file. Readable test output and stderr remain available. Frontend reports live under `frontend/compiler/` and `frontend/imports/`, with inert `.go.txt` sources overlaid only for diagnostics. Follow report paths rather than assuming filenames.
 
 The CI acceptance launcher retains a canonical report even when its child fails,
 after validating its schema, invocation identity, timestamps and repository-local
@@ -372,30 +372,30 @@ path. It preserves the child failure and any report-validation or copy errors.
 Malformed, stale or escaped report paths are rejected, never substituted with
 earlier successful evidence.
 
-Retain the latest acceptance report and raw evidence cited by the current change. Uncited superseded runs and disposable binaries/copies may be removed after preserving unique work; never prune running work or rewrite retained reports. Go owns its cache. An explicit cache purge uses `go clean -cache` with the repository GOCACHE and makes later builds slower.
+Retain the latest acceptance report and raw evidence cited by the current change. Uncited superseded runs and disposable binaries/copies may be removed after preserving unique work. Never prune running work or rewrite retained reports. Go owns its cache. An explicit cache purge uses `go clean -cache` with the repository GOCACHE and makes later builds slower.
 
 Report the command status, failed package/test names or complete success, input-integrity result, run location, host and limitations. Diagnostic views may normalize incidental UUIDs/map ordering, but raw acceptance bytes and source instruction order remain unchanged.
 
 ## Native runtime validation
 
-Native tests require permission to build/launch executables, bind local Unix sockets, observe processes, signal/reap owned groups and run the race detector. A constrained sandbox can pass doctor while blocking those operations; report that as an environment limitation, never weaken assertions or treat it as a passing gate.
+Native tests require permission to build/launch executables, bind local Unix sockets, observe processes, signal/reap owned groups and run the race detector. A constrained sandbox can pass doctor while blocking those operations. Report that as an environment limitation, never weaken assertions or treat it as a passing gate.
 
-A cross-host claim requires separate native macOS and Linux gate records. Go compiler/API/helper race checks and actual Rust lifecycle/concurrency observers establish distinct properties; no Rust sanitizer equivalence is claimed. Use the complete [current suite](../testdata/integration/README.md) and generated shutdown coverage. Generation-only or cross-compilation evidence does not prove native process behavior; no old host observation substitutes for a current run.
+A cross-host claim requires separate native macOS and Linux gate records. Go compiler/API/helper race checks and actual Rust lifecycle/concurrency observers establish distinct properties. No Rust sanitizer equivalence is claimed. Use the complete [current suite](../testdata/integration/README.md) and generated shutdown coverage. Generation-only or cross-compilation evidence does not prove native process behavior. No old host observation substitutes for a current run.
 
-Apps have no normal-duration timeout, process-count cap or capture-size cap. Runtime pipe draining after exit/cancellation retains its two-second bound. Same-group descendants are owned; deliberately escaped groups and uncatchable orchestrator termination are outside the guarantee. Test watchdogs diagnose missing events and never redefine these production semantics.
+Apps have no normal-duration timeout, process-count cap or capture-size cap. Runtime pipe draining after exit/cancellation retains its two-second bound. Same-group descendants are owned. Deliberately escaped groups and uncatchable orchestrator termination are outside the guarantee. Test watchdogs diagnose missing events and never redefine these production semantics.
 
-Native tests use the real compiler/runtime and current case manifests, source fixtures and controlled companions. Compare exact stdout/stderr/status and observe process lifetime/Wait ownership where required. The controller records leaks before fallback cleanup; cleanup never turns a failed runtime case into passing evidence. Generated deployment scripts are never executed.
+Native tests use the real compiler/runtime and current case manifests, source fixtures and controlled companions. Compare exact stdout/stderr/status and observe process lifetime/Wait ownership where required. The controller records leaks before fallback cleanup. Cleanup never turns a failed runtime case into passing evidence. Generated deployment scripts are never executed.
 
 The socket observer accepts drain EOF or `ConnectionReset`. A missing release
 socket or release `BrokenPipe`/`ConnectionReset` still requires `stopped()` to
-confirm disconnection and lifetime-lock release under the existing deadline;
-other I/O failures remain failures.
+confirm disconnection and lifetime-lock release under the existing deadline.
+Other I/O failures remain failures.
 
 ## Investigating failures
 
 Trace the earliest failed boundary: selected resources and source origins; imports and literal identity; token roles/storage/value types; grammar case and consumed span; scoped records/bindings; then ordered IR, AML and source bundles. Package tests retain package-local working directories. Temporary probes may expose private state without altering protected tests.
 
-For a backend failure, preserve the exact input and distinguish observable AML from canonical framed backend AML. Establish a failing regression before repair; reuse an existing exposing test when available. Use `TestDemoGeneratesBuildableSource` and `TestMemberSourceGeneratesBuildableSource` for frontend handoffs, the [Service coverage ledger](../testdata/service-execution/coverage.md) for App-constructed libraries, raw AML native consumers and App process boundaries, and the stored Lucid complete AML cases for the Rust API boundary. Parser acceptance, source emission, native compilation and execution are distinct claims. The CLI/compiler diagnostics must stay separate from application stdout.
+For a backend failure, preserve the exact input and distinguish observable AML from canonical framed backend AML. Establish a failing regression before repair. Reuse an existing exposing test when available. Use `TestDemoGeneratesBuildableSource` and `TestMemberSourceGeneratesBuildableSource` for frontend handoffs, the [Service coverage ledger](../testdata/service-execution/coverage.md) for App-constructed libraries, raw AML native consumers and App process boundaries, and the stored Lucid complete AML cases for the Rust API boundary. Parser acceptance, source emission, native compilation and execution are distinct claims. The CLI/compiler diagnostics must stay separate from application stdout.
 
 Harness self-tests use disposable synthetic files/modules:
 
@@ -409,7 +409,7 @@ GOCACHE="$PWD/.harness/cache/go-build" GOENV=off GOFLAGS= GOWORK=off GOTOOLCHAIN
 Frontend library selection, native atom encoding, typed orchestration and CLI
 builds use Rust. L, Lyger and Logiceme remain Go programs. The
 [implementation ledger](../testdata/integration/IMPLEMENTATION.md) records current
-outcomes; the [current integrity contract](#current-integrity-and-amendments)
+outcomes. The [current integrity contract](#current-integrity-and-amendments)
 protects their inputs and original required outcomes.
 
 Lucid's [generation, compilation and bounded future execution checks](#rust-source-generation-verification)
@@ -421,7 +421,7 @@ retaining the first failure and downstream blocked phases.
 ## Validation budgets
 
 Both unfiltered ordinary and native-heavy test phases are mandatory. The relocation
-fixture reuses the package's compiled CLI; package discovery, test identities and
+fixture reuses the package's compiled CLI. Package discovery, test identities and
 assertions remain unchanged.
 
 | Boundary | Approved budget |
@@ -432,9 +432,9 @@ assertions remain unchanged.
 | Verification launcher / Actions check job | 26 / 120 minutes |
 
 Verification reserves discovery + build + both phases + one minute for reporting.
-Suite caps guard cumulative work, not application performance; they do not promise
-every child can exhaust its individual allowance. Doctor retains seven minutes;
-diagnostic and tagged-native deadlines, runtime watchdogs, tool pins
+Suite caps guard cumulative work, not application performance. They do not promise
+every child can exhaust its individual allowance. Doctor retains seven minutes.
+Diagnostic and tagged-native deadlines, runtime watchdogs, tool pins
 and all concurrency remain unchanged. These budgets also govern cache-disabled
 and local runs. Further deadline amendments require explicit scope.
 
@@ -443,12 +443,12 @@ API probes no longer have short wrapper deadlines. Enclosing suite limits still
 apply. The CLI Cargo coordinator and shared native Build helper retain their
 three-minute limits. Runtime execution, readiness, cancellation and cleanup
 watchdogs remain unchanged. Rebuilding
-pauses only the surviving process's remaining runtime allowance; check liveness
+pauses only the surviving process's remaining runtime allowance. Check liveness
 before and after, then resume that allowance. Never grant a fresh runtime budget.
 
 ## Compiler defaults
 
-Released binaries embed English resources; users need no overrides. These options support compiler development:
+Released binaries embed English resources. Users need no overrides. These options support compiler development:
 
 | Override | Default | Developer use |
 | --- | --- | --- |
@@ -461,23 +461,23 @@ From the repository root, exercise its English resource files with an installed 
 l build --assets . --language eng demo/basic/main.l
 ```
 
-Both options precede the source filename. Relative asset paths use invocation CWD without changing it. Empty values reject; invalid or unavailable languages fail initialization. Overrides have no embedded fallback or settings file. Keep the bundle's templates and dependencies compatible with the compiler. Bare imports use its `dictionaries.json`; dictionary helpers resolve inside that provider, never unrelated host files.
+Both options precede the source filename. Relative asset paths use invocation CWD without changing it. Empty values reject. Invalid or unavailable languages fail initialization. Overrides have no embedded fallback or settings file. Keep the bundle's templates and dependencies compatible with the compiler. Bare imports use its `dictionaries.json`. Dictionary helpers resolve inside that provider, never unrelated host files.
 
-Runtime support fingerprints the root registry as well as its actual source inputs. Changing a mapping, including adding a dictionary to a developer bundle, requires explicit regeneration with `scripts/l-go run -mod=readonly ./tools/composition` from the resource source checkout before staging the complete bundle. Check freshness with the same command plus `-check`. Offline `inspect`, `check` and `explain` report missing or stale resources; they never invoke generation, compilers, toolchain probes or network recovery to repair them.
+Runtime support fingerprints the root registry as well as its actual source inputs. Changing a mapping, including adding a dictionary to a developer bundle, requires explicit regeneration with `scripts/l-go run -mod=readonly ./tools/composition` from the resource source checkout before staging the complete bundle. Check freshness with the same command plus `-check`. Offline `inspect`, `check` and `explain` report missing or stale resources. They never invoke generation, compilers, toolchain probes or network recovery to repair them.
 
-Lyger accepts typed language, resource and provenance options; Logiceme accepts the same filesystem and constructs 18 glyphs from private defaults. Generated Rust configuration contracts, absent `configuration/` and `configurations/` directories, all eleven distribution probes, literal preservation, resource diagnostics, isolation and CWD-independent compilation remain required. See [complete CLI help](_generated/cli-help.md).
+Lyger accepts typed language, resource and provenance options. Logiceme accepts the same filesystem and constructs 18 glyphs from private defaults. Generated Rust configuration contracts, absent `configuration/` and `configurations/` directories, all eleven distribution probes, literal preservation, resource diagnostics, isolation and CWD-independent compilation remain required. See [complete CLI help](_generated/cli-help.md).
 
 ## October 14, 2026 standalone Service retirement amendment
 
 The author approved the selective retirement recorded in the
 [exact protected amendment](./_meta/service-executable-amendment.json).
-Standalone Service declarations remain structural; they create no package or
+Standalone Service declarations remain structural. They create no package or
 process. Standalone body effects, native lifecycle operations, implicit runtime
 members and Service continuation ownership are retired. Main/Basic construction,
 primary Service topology, additional App-constructed libraries and raw AML
 library/bin controls remain unchanged.
 
 The linked amendment records its exact historical scope. Current protections
-come from [the integrity contract](#current-integrity-and-amendments); App output,
+come from [the integrity contract](#current-integrity-and-amendments). App output,
 cleanup, provenance, publication and watchdog obligations remain. The retirement
 adds no linking feature, library-root migration or in-process task runtime.

@@ -12,14 +12,14 @@ The current runner contains the following obligations:
 | --- | --- |
 | Complete AML generation | 59 applications, with all 295 returned artifacts compared exactly. |
 | Malformed composition | 192 stored inputs: 62 callable, 35 selection, 50 iteration, five empty-composition, four Deferred, two invocation, 14 keyed-GI and 20 generic/lifetime cases. |
-| Native compilation | 59 Expected and 59 Generated contracts; each phase requires 45 successful builds and 14 specific intentional Rust errors. |
+| Native compilation | 59 Expected and 59 Generated contracts. Each phase requires 45 successful builds and 14 specific intentional Rust errors. |
 | Frozen definitions | All 18 selected Rust segment assets match their recorded hashes. |
 | Focused generic/lifetime checks | 50 exact primitive profiles, plus lookup, preparation, placement and resource/isolation checks. |
 
 Shared interpreter, provenance, primitive, preparation and resource/isolation
 tests supplement these complete-application obligations. The 50 profiles above
 are the generic/lifetime additions, not the total number of low-level suite tests.
-Native checks compile the Expected and Generated contracts; three positive
+Native checks compile the Expected and Generated contracts. Three positive
 future cases also execute generated assertions. Deployment scripts remain unexecuted.
 
 This guide owns the current inventory and commands. The [dated ledger](FAILURES.md)
@@ -30,7 +30,7 @@ below describe each family's composition, rejection and isolation obligations.
 
 [templates.sha256.json](templates.sha256.json) records the repository-relative
 paths and SHA-256 hashes of the 18 Rust segment files. The freeze check compares
-the selected resource files against those hashes; there is no automatic update
+the selected resource files against those hashes. There is no automatic update
 mode. The [Rust reference](../../../builtins/README.md) defines the supported
 forms, excluded Deferred interface and integration limits. Keep frozen assets,
 interfaces and hash expectations unchanged. Independent fixture/oracle amendments
@@ -55,7 +55,7 @@ Each `<case>.aml.txt` is a complete AML document defining the application
 `lucid_nested_rust` with source location `/src/main.rs`. It uses an ordinary
 composed FW entry point with explicit unit output. Native scaffolding never
 replaces the composed feature with EA. Communication supplies its native `async`
-block explicitly. The current CE path validates operands; Cargo checks the
+block explicitly. The current CE path validates operands. Cargo checks the
 emitted async context. This case does not establish general compiler inference
 or validation of asynchronous execution contexts.
 
@@ -80,7 +80,7 @@ bytes for all five artifacts:
 ```
 
 Expected Rust sources and shared support artifacts are independently authored,
-checked-in oracles. Compare them using `bytes.Equal`; do not trim, format, reorder,
+checked-in oracles. Compare them using `bytes.Equal`. Do not trim, format, reorder,
 normalize, regenerate from actual output, or replace actual files with expected
 ones. Common immutable support expectations are shared across case mappings.
 
@@ -89,7 +89,7 @@ ones. Common immutable support expectations are shared across case mappings.
 Five complete pairs use the existing plain manifest and lock. `future-composed`
 checks CV construction, CO assignment, COB binding, DV native/composed operands,
 and ordered single evaluation. `future-move` returns an owned non-Copy future
-with a borrowed parameter lifetime; `future-infer` covers nested construction
+with a borrowed parameter lifetime. `future-infer` covers nested construction
 and inferred capture. `future-borrow-escape` requires E0373, while
 `future-move-reuse` requires E0382. The three positive generated programs also
 have a bounded execution check of their assertions.
@@ -127,7 +127,7 @@ Selection isolation reuses complete fixtures for A/B/A, previous-bundle stabilit
 and equivalent explicit/embedded resources.
 
 The positive projects use ordinary FW and native async scaffolding. CI/BI/CE and
-OC/DOC remain composed; ordinary O performs caller-authored outer assignments.
+OC/DOC remain composed. Ordinary O performs caller-authored outer assignments.
 Every BI needs a caller-supplied Definition, including defaults. Default metadata
 orders the branch and never supplies a wildcard or ready value. No compiler
 temporary or drop statement is inserted. The original communication fixture
@@ -146,7 +146,7 @@ X, the existing X/I adapter, OG/DOG conditional bindings, all four iterator
 binding shapes, caller-supplied iterator adapters, explicit borrowed matching,
 async receive conditions and direct PO labels. Nested labels exercise targeted
 break/continue. Ordered bodies retain their scope and appear exactly once.
-Native statements establish setup and async context; X, conditional Definition
+Native statements establish setup and async context. X, conditional Definition
 and label composition remain in the logemes under test.
 
 | Case | Witnesses or intended native diagnostic |
@@ -163,7 +163,7 @@ and label composition remain in the logemes under test.
 
 The last three applications require exact generation followed by their intended
 native diagnostics. Native pattern/type/ownership rules remain Rust's
-responsibility; successful compilation
+responsibility. Successful compilation
 does not prove runtime order, termination or channel behavior.
 
 `iteration-invalid/` contains 50 complete AML documents covering conflicting
@@ -178,7 +178,7 @@ Eight stored `primitive/iterate-*.rs.txt` expectations render the actual Iterate
 Default case for Definition, Calculation, Evaluation and unconditional branches,
 plus wildcard, single,
 discarded-pair and named-pair traversal. These low-level checks supplement complete
-AML; they do not bypass composition validation as evidence of application support.
+AML. They do not bypass composition validation as evidence of application support.
 
 Iteration uses the plain and Tokio rt/sync manifests and retained locks. The
 [iteration contract](../../../builtins/README.md#iteration-and-definition-contract)
@@ -211,7 +211,7 @@ runtime behavior.
 ## Run and retain evidence
 
 Follow the [validation policy](../../../docs/development-harness.md#validation-authorization).
-Task-authorized checks proceed without repeated permission requests; focused
+Task-authorized checks proceed without repeated permission requests. Focused
 checks establish only their stated boundary. The [development guide](../../../docs/development-harness.md)
 owns tool provisioning, environment and validation budgets.
 
@@ -225,12 +225,12 @@ This records fresh evidence for Expected and Generated compilation of the
 [current inventory](#current-inventory), including intentional native negatives,
 and the native-metadata arrow regression. It compiles independently authored
 expected projects and actual returned projects without repair. A byte mismatch
-does not block compilation of materializable output; generation failure records
+does not block compilation of materializable output. Generation failure records
 a blocked phase. The arrow regression reuses the retained plain manifest and
 lock rather than adding a corpus fixture.
 
 The configured native stage compiles only. The three [future cases](#futures)
-have a separate tagged execution check; when that check is requested, run it on
+have a separate tagged execution check. When that check is requested, run it on
 macOS or Linux with the pinned toolchain and retained dependencies:
 
 ```sh
@@ -243,10 +243,10 @@ Retain each fixture's initial lockfile and frozen dependency resolution. Missing
 tooling, dependencies or expired deadlines are failures. Generated start/stop
 scripts remain artifacts. Compilation alone does not establish execution behavior.
 
-For requested full repository validation, run `scripts/l-check`; it includes
+For requested full repository validation, run `scripts/l-check`. It includes
 linting, unfiltered acceptance and the configured native-compilation stage.
 Report any separately requested future-execution results explicitly. Preserve
-assertions and budgets; do not substitute focused checks for the gate.
+assertions and budgets. Do not substitute focused checks for the gate.
 
 ## Declaration adapters
 
@@ -256,11 +256,11 @@ Five complete applications under this directory exercise Declaration adapters.
 | --- | --- |
 | declaration-operation | KA forwards one named FW with two ordered statements and deduplicated nested imports. |
 | declaration-description | HA forwards bare U's helper and main functions once, in order; main calls helper natively. |
-| declaration-evaluation | FOB receives GA's composed I/GE grouped multiplication; the result is subsequently used. |
+| declaration-evaluation | FOB receives GA's composed I/GE grouped multiplication. The result is subsequently used. |
 | declaration-instantiation | FOB receives MA's Y construction with fields 11 and 22; both fields are read. |
 | declaration-iteration | PA forwards X/I/W's conditional loop, ordered body and following statement between native function-boundary fragments. |
 
-The vowel selectors use consonant action names; Declare's nominal selectors and
+The vowel selectors use consonant action names. Declare's nominal selectors and
 singular children are unchanged. Rust FW signatures remain parameterless with
 explicit unit results, Y has two fields, and PA does not introduce a new W child
 role. These choices isolate adapter routing from unrelated integration limits.
@@ -287,7 +287,7 @@ comparisons retain their textual meaning.
 
 Both pairs use independently authored exact source expectations and the existing
 five-artifact bundle. `invocation-named` reuses the Tokio rt/sync manifest and
-retained lock; `invocation-void` reuses the plain manifest and lock.
+retained lock. `invocation-void` reuses the plain manifest and lock.
 
 `invocation-invalid/` contains the two complete malformed Receiver documents.
 `TestLucidInvocationInvalid` checks their exact classified leaf causes, zero
@@ -312,8 +312,8 @@ have separate provenance contracts below.
 
 | Case | Callable-name obligation |
 | --- | --- |
-| function-void-flat | Declare `Void` through composed FW with flat Key, empty Inputs and unit Outputs; retain W/BOD/E body and a composed KY call through MOB. |
-| function-void-record | Declare the same function through FW with the explicit framed Func record; retain the same composed body and invocation. |
+| function-void-flat | Declare `Void` through composed FW with flat Key, empty Inputs and unit Outputs. Retain W/BOD/E body and a composed KY call through MOB. |
+| function-void-record | Declare the same function through FW with the explicit framed Func record. Retain the same composed body and invocation. |
 
 The two independently authored source expectations reuse the existing plain
 manifest, support expectations and lockfile. Every returned artifact remains an
@@ -324,7 +324,7 @@ and inequality under Rust, differing record/root names, ordinary
 names, empty and absent controls, and repeated interpretation without metadata,
 working-variable or parsed-source mutation. Empty Key compares unequal to bare `Void`, while the explicit
 prepared `Func = Void` sentinel compares equal. A completely unset Func entry
-retains its empty-record fallback; it also compares unequal and is not promoted
+retains its empty-record fallback. It also compares unequal and is not promoted
 to native-name provenance.
 
 These callable-name witnesses do not establish general signatures or runtime
@@ -334,7 +334,7 @@ behavior. Generated Rust applications and scripts remain unexecuted.
 
 The [callable contract](../../../builtins/README.md#typed-functions-and-anonymous-callables)
 defines typed FW functions, bounded BW placement and KY invocation. Omitted or
-empty Outputs omit the return annotation; native Rust checks supplied types.
+empty Outputs omit the return annotation. Native Rust checks supplied types.
 
 | Case | Composed obligation |
 | --- | --- |
@@ -347,19 +347,19 @@ empty Outputs omit the return annotation; native Rust checks supplied types.
 
 These independently authored source expectations follow literal template spans
 and use the plain manifest/support/lock variant. The explicit BW Func records
-omit Key, which decodes as an empty name; the preserved record parser does not
+omit Key, which decodes as an empty name. The preserved record parser does not
 accept the literal empty-field spelling `Key: ,`.
 
 `callable-invalid/` contains 62 complete AML cases. Fifty-one cover required
 names, bounded BW placement, KY children/metadata, Func/flat exclusivity,
-unsupported Capture/headers, strict nested fields and framing errors; eleven
+unsupported Capture/headers, strict nested fields and framing errors. Eleven
 cover MY signatures as described below. Tests assert exact classified leaf causes,
 zero bundles, no panic and input immutability. Interpreter controls retain
 existing Prop rendering and repeated-interpretation state.
 A/B/A checks use filesystem and embedded providers with import isolation and
 Operate/Operation/Instantiate/Instantiation resource provenance.
 
-All native checks compile only; closure invocation, capture behavior and owner
+All native checks compile only. Closure invocation, capture behavior and owner
 reuse are not executed. No Rust runtime parity is claimed.
 
 ## Native output-type provenance
@@ -395,7 +395,7 @@ template and uses the plain manifest and retained lock.
 Focused indexed Funcs tests exercise numeric and Count/Add access, exact names
 and joined output text, raw-list presence, bare/quoted Void comparisons, nested
 parameters, bounds and repeated interpretation without mutation.
-The direct Rust decoder returns no partial records on malformed input; complete
+The direct Rust decoder returns no partial records on malformed input. Complete
 AML rejects malformed records before rendering with classified causes.
 
 Eleven of the 62 callable validation cases cover supplied/empty Receiver, missing
@@ -415,14 +415,14 @@ defines braced Y/HY/MY output for empty effective collections.
 
 `empty-instantiations` covers omitted and explicit empty Props/Funcs, braced
 HY records and Y constructions through MOB, empty MY traits, a populated HY/Y
-control, typed uses and trait references. The feature under test is composed;
-native fragments supply ordinary uses rather than replacement declarations.
+control, typed uses and trait references. The feature under test is composed.
+Native fragments supply ordinary uses rather than replacement declarations.
 The independent source expectation reuses the existing plain manifest and lock.
 
 Six exact primitive cases cover the empty and nonempty routes. Twenty-one
 preparation cases cover canonical missing collections, explicit empty lists,
 inherited/local precedence and malformed local/inherited records. Repeated
-preparation compares effective metadata by key/value/type; original inputs,
+preparation compares effective metadata by key/value/type. Original inputs,
 resource data, parsed tags and source bytes remain exact and immutable.
 
 Five stored malformed inputs in `empty-instantiation-invalid` reject empty
@@ -446,7 +446,7 @@ Three complete applications use the exact-bundle/native runner:
 | --- | --- |
 | keyed-conditionals | Single and multiple arms, preserved final bindings, exhaustive Boolean arms, literal/tuple/constructor/range patterns, direct/composed terminal fallback, fallback-only, caller wildcard, quoted/qualified/parenthesized Void, nested bodies and separately grouped category ordering. |
 | keyed-nonexhaustive | Two supplied integer patterns remain intact; Expected and Generated projects produce E0004 rather than acquiring a fabricated wildcard. |
-| keyed-call-pattern | A native call-shaped pattern remains intact and produces E0164; no synthesized equality guard. |
+| keyed-call-pattern | A native call-shaped pattern remains intact and produces E0164. No synthesized equality guard. |
 
 Fourteen stored `keyed-invalid` documents cover cardinality, empty Key/patterns,
 unexpected children and direct/composed duplicate or nonterminal fallbacks.
@@ -481,7 +481,7 @@ All seven independent source oracles follow intended composition and literal
 template layout. The Expected stage compiles those projects before Generated
 output is considered. Each uses the existing
 plain manifest, support expectations and retained lock. Tests compare all five
-returned artifacts byte-for-byte; no output normalization or oracle-update mode
+returned artifacts byte-for-byte. No output normalization or oracle-update mode
 is provided.
 
 Twenty complete AML inputs in `generics-invalid/` cover blank values, unsupported
@@ -498,12 +498,12 @@ interpretation and generic systemless lookup. Filesystem/embedded service reuse
 checks A/B/A output, earlier bundles and provenance for all four selected assets.
 
 Consult the [dated ledger](FAILURES.md) for observed gate outcomes. Generated Rust
-applications and deployment scripts remain unexecuted;
-compilation establishes neither runtime behavior nor ownership-inference parity.
+applications and deployment scripts remain unexecuted.
+Compilation establishes neither runtime behavior nor ownership-inference parity.
 
 See the [input contract](../../../builtins/README.md#lifetime-and-generic-inputs)
 for native String framing, glyph-local scope and declaration/application placement.
-Trait-level inputs do not add method-specific lists; dedicated const-generic,
+Trait-level inputs do not add method-specific lists. Dedicated const-generic,
 independent where-clause and generic implementation interfaces remain separate work.
 
 ## Recording evidence

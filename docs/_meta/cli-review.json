@@ -30,7 +30,7 @@
         "cmd/l/command_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Build and publish; optional one source defaults to main.l."
+      "notes": "Build and publish. Accepts one optional source, defaulting to main.l."
     },
     {
       "id": "cli:--assets",
@@ -46,7 +46,7 @@
         "cmd/l/command_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Complete replacement filesystem; FlagSet also accepts single-hyphen and equals-value spellings."
+      "notes": "Complete replacement filesystem. FlagSet also accepts single-hyphen and equals-value spellings."
     },
     {
       "id": "cli:--output-dir",
@@ -62,7 +62,7 @@
         "cmd/l/command_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Publish executable and companion output together; relative to caller CWD."
+      "notes": "Publish executable and companion output together, relative to the caller CWD."
     },
     {
       "id": "cli:--language",
@@ -78,7 +78,7 @@
         "cmd/l/command_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Select source lexicon; bundled default eng. Explicit empty values fail."
+      "notes": "Select source lexicon. The bundled default is eng. Explicit empty values fail."
     },
     {
       "id": "cli:--version",
@@ -178,7 +178,7 @@
         "cmd/l/command_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "OS targeting follows v0.0.1; currently rejected."
+      "notes": "The -os option is currently rejected."
     },
     {
       "id": "cli:contracts",
@@ -196,7 +196,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Analysis commands remain offline; explicit evidence capture performs bounded installed-tool observations. One required input follows options; no Cargo build, publication, or App execution in the contracts command group."
+      "notes": "Analysis commands remain offline. Explicit evidence capture performs bounded installed-tool observations. One required input follows options. No Cargo build, publication, or App execution in the contracts command group."
     },
     {
       "id": "cli:contracts inspect",
@@ -214,7 +214,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Inspection may succeed with unresolved obligations; it does not establish every reported property."
+      "notes": "Inspection may succeed with unresolved obligations. It does not establish every reported property."
     },
     {
       "id": "cli:contracts check",
@@ -237,7 +237,7 @@
         "cmd/l/contracts_profiles_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Requires --profile or --request-file; checks whole entry by default or exact published scopes in explicit requests. Contradicted or unresolved controlling obligations return 1 without semantic fallback."
+      "notes": "Requires --profile or --request-file. Checks the whole entry by default or exact published scopes in explicit requests. Contradicted or unresolved controlling obligations return 1 without semantic fallback."
     },
     {
       "id": "cli:contracts explain",
@@ -255,7 +255,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "An occurrence or source-byte selector is required; no matching binding returns 2."
+      "notes": "An occurrence or source-byte selector is required. If no binding matches, the command returns 2."
     },
     {
       "id": "cli:contracts verify-dictionary",
@@ -273,7 +273,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Defaults to implementation assurance for the entire dictionary; loading definitions is not certification."
+      "notes": "Defaults to implementation assurance for the entire dictionary. Loading definitions is not certification."
     },
     {
       "id": "cli:contracts --format",
@@ -291,7 +291,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Select text or JSON display; default text. Other values reject."
+      "notes": "Select text or JSON display. The default is text. Other values reject."
     },
     {
       "id": "cli:contracts --output",
@@ -345,7 +345,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "One complete resource filesystem; missing optional metadata has no embedded fallback."
+      "notes": "One complete resource filesystem. Missing optional metadata has no embedded fallback."
     },
     {
       "id": "cli:contracts --language",
@@ -363,7 +363,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Select source resources; default eng, explicit empty value rejects."
+      "notes": "Select source resources. The default is eng. An explicit empty value rejects."
     },
     {
       "id": "cli:contracts --manifest",
@@ -381,7 +381,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Repeatable explicit manifests contribute records; conflicts reject rather than override by order."
+      "notes": "Repeatable explicit manifests contribute records. Conflicts reject rather than override by order."
     },
     {
       "id": "cli:contracts --trust-policy",
@@ -399,7 +399,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Explicit trust_policy document; declarations do not approve themselves and default native approval is empty."
+      "notes": "Explicit trust_policy document. Declarations do not approve themselves and default native approval is empty."
     },
     {
       "id": "cli:contracts --profile",
@@ -421,7 +421,7 @@
         "cmd/l/contracts_profiles_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Repeatable supported whole-entry profiles; check requires these or --request-file. PreservesOnFailure requires an explicit request footprint. Whole-entry profiles reject in symbolic assurance mode."
+      "notes": "Repeatable supported whole-entry profiles. Check requires these or --request-file. PreservesOnFailure requires an explicit request footprint. Whole-entry profiles reject in symbolic assurance mode."
     },
     {
       "id": "cli:contracts --binding",
@@ -439,7 +439,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Required for explain; matches exact occurrence identity or origin.source:origin.start."
+      "notes": "Required for explain. Matches exact occurrence identity or origin.source:origin.start."
     },
     {
       "id": "cli:contracts --adjective",
@@ -457,7 +457,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Repeatable, nonempty canonical rule meaning or declaration source-byte selector; dictionary-only and must resolve uniquely."
+      "notes": "Repeatable, nonempty canonical rule meaning or declaration source-byte selector. Applies only to dictionaries and must resolve uniquely."
     },
     {
       "id": "cli:contracts --assurance",
@@ -475,7 +475,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Implementation is default. Symbolic requires explicit adjective selection and excludes whole-entry profiles; success leaves native assurance separate."
+      "notes": "Implementation is default. Symbolic requires explicit adjective selection and excludes whole-entry profiles. Success leaves native assurance separate."
     },
     {
       "id": "cli:contracts --help",
@@ -493,7 +493,7 @@
         "cmd/l/contracts_source_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Group help accepts --help/-h; subcommand FlagSet help is available before input. Displays usage with status 0."
+      "notes": "Group help accepts --help/-h. Subcommand FlagSet help is available before input. Displays usage with status 0."
     },
     {
       "id": "cli:contracts --",
@@ -533,7 +533,7 @@
         "cmd/l/native_environment_native_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Version 2 build evidence binds the recorded inputs, companion placement, Cargo invocation and artifact digests to the same compilation. Required evidence is written before executable publication. Failed Cargo invocations remain recorded. Custom asset providers pass source/AML freshness checking before native build staging; offline inspection does not recompose resources."
+      "notes": "Version 2 build evidence binds the recorded inputs, companion placement, Cargo invocation and artifact digests to the same compilation. Required evidence is written before executable publication. Failed Cargo invocations remain recorded. Custom asset providers pass source/AML freshness checking before native build staging. Offline inspection does not recompose resources."
     },
     {
       "id": "cli:contracts evidence capture",
@@ -551,7 +551,7 @@
         "cmd/l/native_environment_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Explicit bounded offline installed-tool resolution/version queries; requires --output. No build, fetch, publication, App execution or native approval."
+      "notes": "Capture explicit, bounded, offline installed-tool resolution/version observations. The command requires --output. It performs no build, fetch, publication, App execution or native approval."
     },
     {
       "id": "cli:contracts --native-environment",
@@ -594,7 +594,7 @@
         "cmd/l/contracts_profiles_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Check-only versioned requests select whole_entry or exact published scopes; PreservesOnFailure requires a supported observation, nonempty exact resource footprint and failure outcomes. Every controlling obligation remains in the report."
+      "notes": "Check-only versioned requests select whole_entry or exact published scopes. PreservesOnFailure requires a supported observation, nonempty exact resource footprint and failure outcomes. Every controlling obligation remains in the report."
     },
     {
       "id": "cli:contracts --target",
@@ -612,7 +612,7 @@
         "cmd/l/native_environment_test.go"
       ],
       "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Capture-only compatibility assertion; must match the observed native host triple. It does not enable cross-compilation."
+      "notes": "Capture-only compatibility assertion. It must match the observed native host triple. It does not enable cross-compilation."
     }
   ]
 }

@@ -5,7 +5,7 @@ declared forms, grammatical role, supported context, and examples. The same
 spelling can denote different meanings: App Output and IO.Output, for example,
 have different owners and behavior.
 
-Builtin vocabulary is available implicitly; [public libraries](../stdlib/index.md)
+Builtin vocabulary is available implicitly. [Public libraries](../stdlib/index.md)
 require an explicit import. Advanced Storage compositions appear separately below
 and require their documented native authoring context.
 
@@ -26,7 +26,7 @@ The second describes implementation support for the linked meaning:
 
 Requiring an App, an exact descriptor target or Number operands is an intentional
 usage rule, not by itself a reason to mark a word partial. These labels describe
-reviewed implementation coverage; [test execution and other evidence](../contributing/evidence.md#verification-stage)
+reviewed implementation coverage. [Test execution and other evidence](../contributing/evidence.md#verification-stage)
 are recorded separately.
 
 **Authoring** identifies advanced word-definition or native integration context.

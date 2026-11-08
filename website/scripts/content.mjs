@@ -258,6 +258,6 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
   const source = sourceURL(root, page.source, identity);
   const edit = source && !page.generated && identity.channel === 'production' ? source.replace(`/blob/${identity.docsCommit}/`, '/edit/main/') : false;
   const metadata = { ...authored, title: page.title, description: page.description, slug: page.route.slice(1, -1), editUrl: edit, sourcePath: page.source, documentRole: page.role, generatedReference: page.generated };
-  const attribution = `\n\n<div data-pagefind-ignore>\n\n---\n\n${page.generated ? '**Generated reference:**' : '**Canonical source:**'} ${source ? `[${page.source}](${source})` : `\`${page.source}\``}.${identity.dirty && source ? ' Source links show the committed base; this local checkout contains changes.' : ''}\n\n</div>\n`;
+  const attribution = `\n\n<div data-pagefind-ignore>\n\n---\n\n${page.generated ? '**Generated reference:**' : '**Canonical source:**'} ${source ? `[${page.source}](${source})` : `\`${page.source}\``}.${identity.dirty && source ? ' Source links show the committed base. This local checkout contains changes.' : ''}\n\n</div>\n`;
   return `---\n${yaml(metadata)}---\n\n${text.trim()}${attribution}`;
 }

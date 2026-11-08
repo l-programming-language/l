@@ -1,7 +1,7 @@
 # Compiler and build errors
 
 Compiler and build diagnostics use the standard-library-only `lerrors` package.
-The category identifies why an operation failed; existing diagnostic text and
+The category identifies why an operation failed. Existing diagnostic text and
 native causes remain independently inspectable. Categories do not select CLI
 statuses, parser alternatives, dependency retries, or runtime behavior.
 
@@ -34,8 +34,8 @@ available, including JSON errors, `*strconv.NumError`, `strconv.ErrRange`,
 
 ## Categories
 
-`Kind` is a `uint8` enum using `iota`. `String` and `Error` use indexed names;
-out-of-range values format safely as `Kind(n)`. Numeric values are not a
+`Kind` is a `uint8` enum using `iota`. `String` and `Error` use indexed names.
+Out-of-range values format safely as `Kind(n)`. Numeric values are not a
 serialization contract.
 
 | Kind | Meaning and originating boundary |
@@ -74,15 +74,15 @@ literal percent characters cannot become formatting directives.
 
 `Kind.Wrap(nil, message)` returns nil. With an empty message, `Wrap` keeps the
 cause's exact display text. With a nonempty message, that message is the complete
-diagnostic; the cause is not appended again:
+diagnostic. The cause is not appended again:
 
 ```go
 return lerrors.IO.Wrap(err, existingOwnershipDiagnostic)
 ```
 
 Ordinary context uses `fmt.Errorf("phase: %w", err)` without reclassification.
-Source context belongs to `SourceSpan.wrapError`; definition context belongs to
-`DefinitionTemplate.failure`; instruction and expanded-action call-site context
+Source context belongs to `SourceSpan.wrapError`. Definition context belongs to
+`DefinitionTemplate.failure`. Instruction and expanded-action call-site context
 belong to `instruction.wrapError`. `statementDiagnostic` still restores literal
 cache values only in display text and keeps the original cause. The compilation
 retains its first error.
@@ -113,7 +113,7 @@ causes together, while their diagnostic and CLI status remain unchanged.
 
 Classified returned errors cover Lyger, checked logeme source
 generation, source-file utilities and the CLI/build coordinator. Help retains
-`flag.ErrHelp`; the unsupported-host sentinel retains its identity. CLI statuses
+`flag.ErrHelp`. The unsupported-host sentinel retains its identity. CLI statuses
 remain 0 for help/success, 2 for invalid invocation/unsupported host and 1 for
 initialization, compilation, generation or build failure.
 

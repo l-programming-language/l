@@ -1,12 +1,12 @@
 # Names, scope, and evaluation state
 
-L resolves names before emitting Rust. Paragraph boundaries determine lexical scope; runtime activations determine when values are initialized and retained.
+L resolves names before emitting Rust. Paragraph boundaries determine lexical scope, while runtime activations determine when values are initialized and retained.
 
 ## Declarations and definitions
 
 Quoted labels declare names. `Create` introduces a category or action, `Define` supplies a value or native definition, and `"name" is value` declares or assigns. The grammatical site and resolved value determine their meaning.
 
-A statement publishes its declarations together, preserving separate coordinated targets and source order. Failure leaves existing bindings intact. Duplicate names in one namespace reject; private scopes may reuse spellings. Dependency retries do not reorder execution or pronouns. Forward local names reserve their spellings before lookup considers outer names or builtins.
+A statement publishes its declarations together, preserving separate coordinated targets and source order. Failure leaves existing bindings intact. Duplicate names in one namespace reject, but private scopes may reuse spellings. Dependency retries do not reorder execution or pronouns. Forward local names reserve their spellings before lookup considers outer names or builtins.
 
 <!-- example:binding-forward-member -->
 
@@ -14,13 +14,13 @@ Both indented `Show App's Label` occurrences bind the local Label, including the
 
 ## Paragraph scope
 
-An ordinary paragraph uses its program or dictionary's environment. Four spaces before its first code line create a private scope. Parent bindings remain available unless shadowed; siblings cannot access each other's private declarations.
+An ordinary paragraph uses its program or dictionary's environment. Four spaces before its first code line create a private scope. Parent bindings remain available unless shadowed. Siblings cannot access each other's private declarations.
 
 Public/Publicly publish only the selected declaration into the source unit's root, retaining its identity. They do not expose other declarations or a private owner's namespace. Each visibility modifier must target one declaration in its clause.
 
 <!-- example:local-shadowing -->
 
-Each indented paragraph owns its `message`; the final Show reads the outer one. Expected stdout is `inner7truesecondouter`, without a newline.
+Each indented paragraph owns its `message`. The final Show reads the outer one. Expected stdout is `inner7truesecondouter`, without a newline.
 
 <!-- example:binding-public-scalars -->
 
@@ -44,15 +44,15 @@ Publish exactly the declaration selected by the action modified by this adverb.
 
 ## Pronouns
 
-It, this and that bind the last subject **defined** in their original source paragraph. References within a statement use its incoming subject; coordinated declarations establish the next subject in source order. Mentioning an object or executing an action does not change it. A new paragraph has no inherited antecedent.
+It, this and that bind the last subject **defined** in their original source paragraph. References within a statement use its incoming subject. Coordinated declarations establish the next subject in source order. Mentioning an object or executing an action does not change it. A new paragraph has no inherited antecedent.
 
 <!-- example:binding-pronoun-alias -->
 
-`Use Worker as "Job"` makes Job the latest subject. `Start it` starts that same App; both Await statements address its invocation, and `Job's Output` reads finalized stdout. Expected output is `canonical\n` once.
+`Use Worker as "Job"` makes Job the latest subject. `Start it` starts that same App. Both Await statements address its invocation, and `Job's Output` reads finalized stdout. Expected output is `canonical\n` once.
 
 <!-- example:binding-pronoun-boundary -->
 
-This example rejects: `Await it` begins a paragraph without a subject. Use Worker explicitly and launch it before Await; changing the pronoun alone does not launch it.
+This example rejects: `Await it` begins a paragraph without a subject. Use Worker explicitly and launch it before Await. Changing the pronoun alone does not launch it.
 
 Within an action definition, a pronoun may bind a preceding `any` parameter, as in Start's “Building any App and then Running it”. Ambiguous generic antecedents reject. Imports retain their own paragraph origins and cannot replace the caller's antecedent.
 
@@ -62,7 +62,7 @@ Within an action definition, a pronoun may bind a preceding `any` parameter, as 
 
 Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
 
-**Usage and boundary.** `Start it` in the [pronoun example](../../testdata/phase1/language/lang-06.l) uses the Job alias just defined. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject; the [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
+**Usage and boundary.** `Start it` in the [pronoun example](../../testdata/phase1/language/lang-06.l) uses the Job alias just defined. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject. The [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
 
 ### This
 
@@ -70,7 +70,7 @@ Refer to the last subject defined in the original source paragraph, or the appli
 
 Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
 
-**Usage and boundary.** Within a paragraph that has just defined Job, `this` refers to Job under the same antecedent rule as [It](#it). This is a focused reference illustration, not a new declaration or independently executed program. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject; the [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
+**Usage and boundary.** Within a paragraph that has just defined Job, `this` refers to Job under the same antecedent rule as [It](#it). This is a focused reference illustration, not a new declaration or independently executed program. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject. The [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
 
 ### That
 
@@ -78,11 +78,11 @@ Refer to the last subject defined in the original source paragraph, or the appli
 
 Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
 
-**Usage and boundary.** Within a paragraph that has just defined Job, `that` refers to Job under the same antecedent rule as [It](#it). This is a focused reference illustration, not a new declaration or independently executed program. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject; the [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
+**Usage and boundary.** Within a paragraph that has just defined Job, `that` refers to Job under the same antecedent rule as [It](#it). This is a focused reference illustration, not a new declaration or independently executed program. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject. The [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
 
 ## Possessives and member lookup
 
-`Worker's Output` and `it's Output` select a member of the bound owner. Dotted names and imported aliases preserve that ownership: a missing member never falls back to a different outer owner. Members can be words, definitions or values; implicit Output/Error require an App.
+`Worker's Output` and `it's Output` select a member of the bound owner. Dotted names and imported aliases preserve that ownership: a missing member never falls back to a different outer owner. Members can be words, definitions or values. Implicit Output/Error require an App.
 
 <!-- example:file-import-helper -->
 
@@ -90,13 +90,13 @@ Refer to the last subject defined in the original source paragraph, or the appli
 
 ## Aliases and canonical identity
 
-`Use existing as "Alias"` retains the declaration's App identity, descriptor, members and signature. Imports use this relationship after checking exports. Aliases create no new process slot and confer no Main entry status. Cycles and unresolved targets reject. Dictionary private bindings stay in the dictionary; qualified members require an explicit alias for unqualified use.
+`Use existing as "Alias"` retains the declaration's App identity, descriptor, members and signature. Imports use this relationship after checking exports. Aliases create no new process slot and confer no Main entry status. Cycles and unresolved targets reject. Dictionary private bindings stay in the dictionary. Qualified members require an explicit alias for unqualified use.
 
 ## Runtime storage and definite assignment
 
-Assignments write at their source positions. Every path continuing to a read must have assigned the value; exiting branches cannot reach the read. Conditional declarations supply no hidden initial value.
+Assignments write at their source positions. Every path continuing to a read must have assigned the value. Exiting branches cannot reach the read. Conditional declarations supply no hidden initial value.
 
-Assignment, arguments, returns and captures snapshot ordinary values and retain explicit Pointer identity. Short reads may borrow storage; [Pointer](values.md#pointer) shares targets without Rust lifetime annotations.
+Assignment, arguments, returns and captures snapshot ordinary values and retain explicit Pointer identity. Short reads may borrow storage. [Pointer](values.md#pointer) shares targets without Rust lifetime annotations.
 
 An action or Function declaration retains an environment for its activation. Captured assignments update that environment. Copies and aliases retain it until their last owner is released, even after the original name is rebound. Every capture must be assigned when the declaration executes. Static definitions retain definition-site bindings.
 
@@ -104,11 +104,11 @@ Source-word arguments evaluate once in the caller before entering the callee's e
 
 ## Output snapshots
 
-Output requires finalized capture; declaration, Build and assignment do not implicitly Await. Stored Output retains the bytes read from that invocation after reruns. App continuations get fresh local storage per invocation; repeated Await returns the same result without repeating effects. See [execution](execution.md#continuations-and-activation).
+Output requires finalized capture. Declaration, Build and assignment do not implicitly Await. Stored Output retains the bytes read from that invocation after reruns. App continuations get fresh local storage per invocation. Repeated Await returns the same result without repeating effects. See [execution](execution.md#continuations-and-activation).
 
 <!-- example:repeated-activation -->
 
-Each Run/Await pair activates the indented continuation once, showing its local result twice. The outer snapshot retains the first invocation. Expected stdout is six `Repeat\n` lines; the [counter-based witness](../../testdata/phase1/f08-rerun-keeps-snapshot/case.json) additionally checks differing invocation bytes.
+Each Run/Await pair activates the indented continuation once, showing its local result twice. The outer snapshot retains the first invocation. Expected stdout is six `Repeat\n` lines. The [counter-based witness](../../testdata/phase1/f08-rerun-keeps-snapshot/case.json) additionally checks differing invocation bytes.
 
 ## Diagnostics
 

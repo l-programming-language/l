@@ -8,7 +8,7 @@ Build, Run, Stop, and Await act on checked process targets. Show and Exit act in
 
 Check that an App's prebuilt executable is available, recording the operation result without launching it.
 
-**Usage and example.** `Build Worker` in the [explicit lifecycle example](../../spec/execution.md#build-run-stop-and-await) precedes Run; it is not the CLI compilation command.
+**Usage and example.** `Build Worker` in the [explicit lifecycle example](../../spec/execution.md#build-run-stop-and-await) precedes Run. It is not the CLI compilation command.
 
 Build accepts an App. At runtime it checks the already published executable and selects its operation error. It does not invoke Cargo. CLI `l build` is the separate compilation/publication command.
 
@@ -32,9 +32,9 @@ Run before Await permits overlap between targets. Running a target twice while o
 
 Request termination of an App's owned process group without waiting for finalized completion.
 
-**Usage and example.** The [Stop/Await witness](../../spec/execution.md#build-run-stop-and-await) shows `stop-requested|` before joining. A natural exit may win the race; always Await when completion is needed.
+**Usage and example.** The [Stop/Await witness](../../spec/execution.md#build-run-stop-and-await) shows `stop-requested|` before joining. A natural exit may win the race, so always Await when completion is needed.
 
-Stop requests SIGKILL of the owned process group and returns without joining. A natural exit racing Stop must still produce one coherent result. Stop before Run is misuse; Stop after finalized completion is an idempotent no-op. A signal-delivery failure selects a recoverable operation error and preserves ownership for subsequent Await/cleanup.
+Stop requests SIGKILL of the owned process group and returns without joining. A natural exit racing Stop must still produce one coherent result. Stop before Run is misuse. Stop after finalized completion is an idempotent no-op. A signal-delivery failure selects a recoverable operation error and preserves ownership for subsequent Await/cleanup.
 
 Use Await to obtain finalized output and cleanup state after Stop. Do not teach Stop as a synchronous cancellation-and-join primitive. The retained Stop observer exercises this distinction with an App.
 
@@ -44,11 +44,11 @@ Use Await to obtain finalized output and cleanup state after Stop. Do not teach 
 
 Join an App invocation's finalized result and activate its continuation once.
 
-**Usage and example.** The [continuation example](../../spec/execution.md#continuations-and-activation) awaits Worker twice; only the first join runs the paragraph. `Worker is awaited` is the supported outer passive form.
+**Usage and example.** The [continuation example](../../spec/execution.md#continuations-and-activation) awaits Worker twice, but only the first join runs the paragraph. `Worker is awaited` is the supported outer passive form.
 
 Await joins process reaping, raw stream finalization, and owned-group cleanup. The first Await claims the invocation continuation and executes it inline once. Failed launch, nonzero child exit, and per-target Stop still permit that continuation. Repeated/self-Await returns the cached result without repeating effects.
 
-The invocation slot remains occupied until the first continuation finishes. A nested Await of another target is allowed; Run of the currently claimed target is not. Global shutdown aborts source flow instead of reentering a continuation. The imperative, outer passive, and source-action applicative forms are supported; native App-body Await rejects ownership; standalone Service body effects reject.
+The invocation slot remains occupied until the first continuation finishes. A nested Await of another target is allowed, but Run of the currently claimed target is not. Global shutdown aborts source flow instead of reentering a continuation. The imperative, outer passive, and source-action applicative forms are supported. Native App-body Await rejects ownership, and standalone Service body effects reject.
 
 ## Start and Execute
 
@@ -60,7 +60,7 @@ These source-defined actions share the App-only lifecycle contract.
 
 Build an App and then launch its native process without waiting for completion.
 
-**Usage and example.** `Start First and Second` applies the whole Build/Run composition to each App in order. The [two-App program](../../../demo/phase1/main.l) starts both before joining; Start does not promise application readiness.
+**Usage and example.** `Start First and Second` applies the whole Build/Run composition to each App in order. The [two-App program](../../../demo/phase1/main.l) starts both before joining. Start does not promise application readiness.
 
 ### Execute
 
@@ -68,7 +68,7 @@ Build an App and then launch its native process without waiting for completion.
 
 Start an App and await its finalized result and first continuation before proceeding.
 
-**Usage and example.** `Execute Hello` in the [first program](../../guide/first-program.md#read-the-program) supplies the completion boundary before `Show Hello's Output`. Its source parameter remains `any App`; no explicit Runtime import is needed.
+**Usage and example.** `Execute Hello` in the [first program](../../guide/first-program.md#read-the-program) supplies the completion boundary before `Show Hello's Output`. Its source parameter remains `any App`, and no explicit Runtime import is needed.
 
 A source-defined action with coordinated Apps performs its complete body for the first App, then the next. Thus coordinating Execute has a different overlap pattern from coordinating Run followed by coordinating Await. That ordering follows source expansion, not parallel implicit execution.
 
@@ -82,9 +82,9 @@ These members refer to a selected App, unlike the [IO.Output handle](../../stdli
 
 Read the finalized raw standard-output bytes of an App invocation as Text.
 
-**Usage and example.** `Show Hello's Output` in the [first program](../../guide/first-program.md#read-the-program) follows Execute. Assigning Output makes a snapshot, demonstrated by the [repeated-activation example](../../../demo/paragraphs/repeated-activation.l). Function signature `Outputs` names result types instead; see [Function](definitions.md#function).
+**Usage and example.** `Show Hello's Output` in the [first program](../../guide/first-program.md#read-the-program) follows Execute. Assigning Output makes a snapshot, demonstrated by the [repeated-activation example](../../../demo/paragraphs/repeated-activation.l). Function signature `Outputs` names result types instead. See [Function](definitions.md#function).
 
-Output is raw finalized stdout. Reading it before finalization is fatal misuse; no hidden join occurs. Captured stderr stays separate and does not automatically mean failure. Output may be available before Await if the invocation has already finalized, but reading it does not activate its continuation.
+Output is raw finalized stdout. Reading it before finalization is fatal misuse. No hidden join occurs. Captured stderr stays separate and does not automatically mean failure. Output may be available before Await if the invocation has already finalized, but reading it does not activate its continuation.
 
 ### Error
 
@@ -92,9 +92,9 @@ Output is raw finalized stdout. Reading it before finalization is fatal misuse; 
 
 Select an App's current operation or invocation failure for inspection.
 
-**Usage and example.** `it has an Error` in the [conditional member example](../../../lyger/test/member-resolution.l) checks the declared HelloWorldApp after Execute. Extracting an absent Error rejects; this member is distinct from the [Error value type](../../spec/values.md#error).
+**Usage and example.** `it has an Error` in the [conditional member example](../../../lyger/test/member-resolution.l) checks the declared HelloWorldApp after Execute. Extracting an absent Error rejects. This member is distinct from the [Error value type](../../spec/values.md#error).
 
-Error identifies the selected operation or invocation failure. Build/Stop can select operation errors; Await reselects its immutable invocation result. `target has an Error` checks matching owner identity. Stored Text snapshots survive later runs unchanged.
+Error identifies the selected operation or invocation failure. Build/Stop can select operation errors, while Await reselects its immutable invocation result. `target has an Error` checks matching owner identity. Stored Text snapshots survive later runs unchanged.
 
 ## Show
 
@@ -114,7 +114,7 @@ The [first program](../../guide/first-program.md) uses Execute then Show. Its st
 
 Terminate the whole generated L program, cleaning up its owned processes.
 
-**Usage and example.** The [bare Exit example](../../spec/control-flow.md#exit-and-return) ends execution inside a continuation; later actions do not run. [Function.Return](definitions.md#functionreturn) instead completes one invocation.
+**Usage and example.** The [bare Exit example](../../spec/control-flow.md#exit-and-return) ends execution inside a continuation. Later actions do not run. [Function.Return](definitions.md#functionreturn) instead completes one invocation.
 
 Bare Exit cleans all owned processes and exits successfully if cleanup succeeds. Exit with a supported explicit failure/Error operand selects failure. It terminates the entire L program even inside a continuation or source-expanded action.
 
