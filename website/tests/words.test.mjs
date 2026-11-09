@@ -103,6 +103,19 @@ test('advanced builtin audience does not change implicit availability or remove 
   assert.match(wordIndex(words, 'builtins'), /Retain.*authoring/s);
 });
 
+test('ordinary Function.Return remains discoverable in application vocabulary', async () => {
+  const { entries } = JSON.parse(await fs.readFile(new URL('../../docs/_meta/semantics.json', import.meta.url), 'utf8'));
+  const record = entries.find((entry) => entry.id === 'builtin:function.return');
+  const source = record.doc.split('#')[0];
+  const document = await fs.readFile(new URL(`../../${source}`, import.meta.url), 'utf8');
+  const section = document.match(/^## Function\.Return\n[\s\S]*?(?=^## )/m)?.[0];
+  assert.ok(section, 'Function.Return retains its canonical source entry');
+  const words = deriveWords({ entries: [record], pages: [{ source, route: '/docs/reference/builtins/definitions/' }], documents: new Map([[source, parseDocument(section)]]) });
+  assert.equal(words[0].audience, 'application');
+  assert.match(wordIndex(words), /Application vocabulary[\s\S]*Function\.Return/);
+  assert.doesNotMatch(wordIndex(words), /Advanced word authoring/);
+});
+
 test('two meanings cannot claim the same rendered canonical anchor', () => {
   const source = '# Words\n\n## First\n\n<a id="same"></a>\n\n<!-- word:x -->\n\nFirst meaning.\n\n## Second\n\n<a id="same"></a>\n\n<!-- word:y -->\n\nSecond meaning.\n';
   assert.throws(() => derive([entry('x', 'First', 'same'), entry('y', 'Second', 'same')], source), /Ambiguous.*anchor/);

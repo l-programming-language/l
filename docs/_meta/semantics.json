@@ -17,7 +17,7 @@
     "builtins/eng/storage/traversal.l": "f32222d8882e68b16148bd4ff3b14dc8a13b44c39e3a7b2454fe2d71413d66be",
     "builtins/eng/storage/values.l": "f7ace59aa9505e38ad39d2dac33cabdee0e53085cf0665b3a764b8fadf40d2d7",
     "dictionaries.json": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
-    "docs/cli-build.md": "1bef13ddddef40888e79d74d564dd652b23d03205125a3692a2122f752db63f0",
+    "docs/cli-build.md": "0bb167db3a0ca5276390afc1deeb6eb692975bb883a6f99d9270bfe5210d8b05",
     "internal/sourcepaths/sourcepaths.go": "57d39aacf36251725151e67821f956f2a6c87171b0dc0e936dafe5310c698301",
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
@@ -1708,7 +1708,6 @@
       "notes": "Root-authored returning actions use their caller\u2019s selected Return. Its implementation keeps lexical delegates; Function-owned Returns retain their constructor contract and reject incompatible callers. Known unconditional source-actor and transparent-Process exits terminate typed caller flow. Real Function calls, conditional and opaque bodies retain their own boundaries and native obligations.",
       "word": {
         "partOfSpeech": "verb",
-        "audience": "authoring",
         "formRoles": {
           "Returner": {
             "partOfSpeech": "noun",

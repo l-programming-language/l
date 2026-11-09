@@ -9,6 +9,8 @@ L builds native macOS/Linux programs. Run the published executable directly. See
 | `l build [main.l]` | Compile and publish. Source defaults to `main.l`. |
 | `l contracts inspect INPUT` | Inspect bindings, typed targets, and contract obligations without building or running Apps. |
 | `l contracts check --profile NAME INPUT` | Enforce selected contract profiles. |
+| `l contracts check --request-file PATH INPUT` | Check explicitly scoped requests and failure footprints. |
+| `l contracts evidence capture --output PATH INPUT` | Record installed-tool observations without building or running Apps. |
 | `l contracts explain --binding SELECTOR INPUT` | Explain a selected binding. |
 | `l contracts verify-dictionary DICTIONARY` | Verify a dictionary. Focused symbolic adjective verification is explicit. |
 | `l contracts --help` | Show contracts usage. Also accepts `-h`. |

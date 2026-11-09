@@ -9,7 +9,7 @@ import { repository, website, sha256, stable } from './lib.mjs';
 
 const previewURL = 'http://127.0.0.1:4321/install.sh';
 const systemPath = '/usr/bin:/bin:/usr/sbin:/sbin';
-const usage = 'Usage: npm run test:install\nRequires the built site running with npm run preview at http://127.0.0.1:4321.\nDownloads the published release pinned by repository VERSION and its Rust toolchain, then builds and runs the canonical demo in a temporary home.\n';
+const usage = 'Usage: npm run test:install\nRequires the built site running with npm run preview at http://127.0.0.1:4321.\nChecks the retained bootstrap and documented release installer using disposable homes, then builds and runs the canonical demo.\n';
 if (process.argv.length > 2) {
   if (process.argv.length === 3 && process.argv[2] === '--help') console.log(usage);
   else { console.error(usage); process.exitCode = 1; }
@@ -24,6 +24,16 @@ async function smoke() {
   const toolchain = JSON.parse(await fs.readFile(path.join(repository, '.ci-tools.json'), 'utf8')).rust;
   const bootstrap = await fs.readFile(path.join(website, 'public/install.sh'));
   const source = await fs.readFile(path.join(repository, 'demo/basic/main.l'));
+  const releaseCommand = [
+    "curl --fail --location --proto '=https' --tlsv1.2 \\",
+    `  https://github.com/l-programming-language/l/releases/download/v${version}/install-release.sh \\`,
+    '  --output install-release.sh &&',
+    `bash ./install-release.sh --version ${version} --with-toolchain &&`,
+    'export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH" &&',
+    'l --version',
+  ].join('\n');
+  const installationGuide = await fs.readFile(path.join(repository, 'docs/cli/installation.md'), 'utf8');
+  if (installationGuide.match(/```sh\n([\s\S]*?)\n```/)?.[1] !== releaseCommand) throw new Error('Review the documented release installation command before running this smoke.');
   if (!(await fs.readFile(path.join(website, 'dist/install.sh'))).equals(bootstrap)) throw new Error('Build the current website before running installation smoke.');
   const reports = path.join(website, 'reports');
   await fs.mkdir(reports, { recursive: true });
@@ -128,6 +138,33 @@ async function smoke() {
     const runtime = await run('runtime', path.join(output, 'main'), [], 30000, { CARGO_NET_OFFLINE: 'true' });
     if (!runtime.stdout.equals(Buffer.from('Hello World!\n')) || runtime.stderr.length !== 0) throw new Error('Runtime output differs from exact Hello World! newline with empty stderr.');
     report.runtimeVerified = true;
+    // Preserve the bootstrap's clean-home observations above. The direct route
+    // gets a separate home/cache but reuses only the prepared Rust dependencies.
+    const directHome = path.join(sandbox, 'direct-home');
+    await fs.mkdir(directHome);
+    const directEnv = {
+      HOME: directHome, CARGO_HOME: cargoHome, RUSTUP_HOME: rustupHome,
+      XDG_CACHE_HOME: path.join(directHome, '.cache'), XDG_CONFIG_HOME: path.join(directHome, '.config'),
+    };
+    const direct = report.directInstaller = { freshHome: true, freshNativeCache: true, dependencySetup: 'reuses isolated bootstrap Cargo/Rustup homes', passed: false };
+    await run('direct-install-and-path', '/bin/bash', ['--noprofile', '--norc', '-c',
+      `set -eu\n${releaseCommand}\n[ "$(command -v l)" = "$HOME/.local/bin/l" ]\n[ "$(command -v cargo)" = "$CARGO_HOME/bin/cargo" ]\ncargo "+$1" --version\n`,
+      'l-direct-install-smoke', toolchain], 15 * 60 * 1000, directEnv);
+    direct.installerSha256 = sha256(await fs.readFile(path.join(sandbox, 'install-release.sh')));
+    const directBinary = path.join(directHome, '.local/bin/l');
+    const directBytes = await fs.readFile(directBinary);
+    if (!directBytes.equals(await fs.readFile(path.join(prefix, 'l')))) throw new Error('Direct and bootstrap installations selected different compiler bytes.');
+    direct.binarySha256 = sha256(directBytes);
+    if (await fs.access(path.join(directHome, '.local/share/l/env')).then(() => true, () => false)) throw new Error('The direct release installer unexpectedly created a bootstrap activation file.');
+    directEnv.PATH = `${path.dirname(directBinary)}:${path.join(cargoHome, 'bin')}:${systemPath}`;
+    assertVersion(await run('direct-version', directBinary, ['--version'], 10000, directEnv), 'direct-version');
+    const directOutput = path.join(sandbox, 'direct-out');
+    await run('direct-offline-build', directBinary, ['build', '--output-dir', directOutput, path.join(sandbox, 'source/main.l')], 4 * 60 * 1000, { ...directEnv, CARGO_NET_OFFLINE: 'true' });
+    const directRuntime = await run('direct-runtime', path.join(directOutput, 'main'), [], 30000, { ...directEnv, CARGO_NET_OFFLINE: 'true' });
+    if (!directRuntime.stdout.equals(Buffer.from('Hello World!\n')) || directRuntime.stderr.length !== 0) throw new Error('Direct installation runtime output differs from exact Hello World! newline with empty stderr.');
+    direct.offlineBuild = true;
+    direct.runtimeVerified = true;
+    direct.passed = true;
     report.passed = true;
   } catch (error) {
     report.error = error.message;

@@ -72,41 +72,13 @@ Main and Basic remain source-defined construction descriptors. Only Apps accept 
 
 ## Verified compositions
 
-Each application case passes complete AML to `LogicemeService.Evaluate` with
-`IncludeRuntime: false`, comparing `src/main.rs`, `Cargo.toml`,
-`src/config.rs`, `start.sh` and `stop.sh` exactly. The maintained corpus covers the
-core compositions below, selection, iteration,
-scheduling, Declaration adapters, invocation, typed and anonymous callables,
-source provenance, MY signatures, empty records/traits, keyed GI and generics.
-The [suite guide](../logiceme/testdata/lucid/README.md) owns the numerical
-inventory and intended native diagnostics. The
-[ledger](../logiceme/testdata/lucid/FAILURES.md) records generation,
-compilation and acceptance results separately.
-
-The six core scenarios have distinct obligations:
-
-| Case | Verified composition | Boundary of the evidence |
-| --- | --- | --- |
-| grouping | I/GE retains `2 * (1 + 2)` through GOB binding | Expression grouping within the declared form |
-| statements | Three BOD/E statements remain ordered within W/FW | `let mut` is explicit native text, not mutability metadata |
-| fields | DA/E declaration plus Y/MOB two-field construction | Native record declaration does not test HY's struct shell |
-| calculations | DE/DOB retains both Ops, grouping, prefixes and postfixes | Supplied operand syntax remains native data |
-| communication | CE/DOB send and receive expressions preserve their order and bindings | Native fragments create Tokio, the async block and channel; Result/Option handling is explicit. No V/MV task or CI/BI selection is tested |
-| conditionals | GI/BOG retains false, true and fallback branches | Unkeyed conditional chain, not general pattern matching |
-
-All six use named FW with empty parameters and explicit unit output. The empty
-Header loop, restored existing Func/Props/Ops records, singular/plural forwarding
-and ordered child categories are part of their compiler integration.
-
-The five additional Declaration witnesses exercise KA forwarding a named FW,
-HA forwarding U's ordered functions, GA forwarding composed I/GE grouping
-through FOB, MA forwarding two-field Y construction through FOB, and PA forwarding
-X/I/W iteration within explicit native function scaffolding. Their outer vowel
-selectors use the action names `Operate`, `Describe`, `Evaluate`, `Instantiate`
-and `Iterate`. The Declare primitive still uses the category nouns `Operation`,
-`Description`, `Evaluation`, `Instantiation` and `Iteration`. Each forwards exactly
-one child. This does
-not establish support for every possible child form, signature or execution context.
+The [Lucid suite guide](../logiceme/testdata/lucid/README.md) owns the complete-AML
+case inventory, exact-bundle assertions, native diagnostics and execution scope.
+Its [core compositions](../logiceme/testdata/lucid/README.md#core-compositions)
+and [Declaration adapters](../logiceme/testdata/lucid/README.md#declaration-adapters)
+record the baseline obligations; later families exercise the bounded contracts
+below. The [dated ledger](../logiceme/testdata/lucid/FAILURES.md) records generation,
+compilation, execution and acceptance separately.
 
 ## Segment pairs
 
@@ -231,11 +203,8 @@ absence and native-source provenance. A Rust-only direct-primitive lookup fallba
 handles missing values for these two names alone. Generic systemless lookup and shared ordered rendering remain unchanged. Dedicated const-generic, independent `where`, generic
 implementation and per-method interfaces remain separate work.
 
-The seven complete witnesses and focused controls are listed in the
-[suite guide](../logiceme/testdata/lucid/README.md#lifetime-and-generic-inputs).
-Consult the [ledger](../logiceme/testdata/lucid/FAILURES.md) for observed
-generation, compilation and acceptance results. Native builds do not execute
-these applications or establish runtime or ownership-inference parity.
+The [suite guide](../logiceme/testdata/lucid/README.md#lifetime-and-generic-inputs)
+records the witnesses, focused controls and compile-only evidence boundary.
 
 ## Literal syntax translations
 
@@ -294,19 +263,8 @@ in template conditions. Quoted `"Void"` comparisons remain textual. Absent Recei
 bytes already equal `Void`, without mutating file-owned metadata.
 
 The [invocation witnesses](../logiceme/testdata/lucid/README.md#named-invocation)
-cover two bounded routes. `invocation-named` composes a parameterless helper
-call, qualified calls with supplied arguments, an explicit receiver and a
-receiverless KY under MV.
-`invocation-void` composes calls whose Key or Receiver is named `Void`, with native
-helper declarations isolating invocation from signature generation. Both retain
-the existing five-artifact bundle and reuse the plain or Tokio rt/sync
-manifest/lock variant. Consult the [ledger](../logiceme/testdata/lucid/FAILURES.md) for
-generation, native compilation and acceptance results. Neither case executes
-the generated application.
-
-These invocation witnesses do not establish BW, general signatures or KYC
-semantics. Native helper declarations isolate `invocation-void` from
-FW/Func-field interpolation. Callable-name coverage follows below.
+isolate these calls from general signature generation. They do not establish BW
+or KYC semantics. Callable-name provenance has the separate contract below.
 
 ## Native callable-name provenance
 
@@ -323,14 +281,9 @@ Receiver. An explicitly prepared
 entry falls back to an empty Func whose Key compares unequal. Neither absence
 representation gains native-name provenance.
 
-`function-void-flat` declares `Void` through FW's flat callable metadata.
-`function-void-record` uses an explicit Func record. Both provide empty parameters
-and unit output, retain a composed W/BOD/E body, and call the declared function
-through KY. They reuse the plain manifest, support expectations and lockfile.
-These witnesses cover callable names without establishing other Func fields,
-indexed Funcs fields, general signatures or runtime behavior.
-See the [ledger](../logiceme/testdata/lucid/FAILURES.md) for the separate
-exact-generation, native-compilation and acceptance results.
+The [callable-name witnesses](../logiceme/testdata/lucid/README.md#native-callable-name-provenance)
+cover flat and record FW names. Other Func fields and indexed provenance require
+their own contracts.
 
 ## Typed functions and anonymous callables
 
@@ -357,13 +310,10 @@ Supplied Capture and generic BA/U header children are rejected on FW/BW because
 the current templates do not consume those interfaces. Other advanced callable
 forms retain their existing paths without new support claims.
 
-Five positive witnesses cover flat/record typed signatures, optional outputs,
-inline BW calls, stored BW through KO/KOB and borrowed capture with owner reuse.
-`callable-unit-mismatch` deliberately returns an integer from a named function
-with no Outputs and must produce E0308. All six use complete AML and compare
-all five returned artifacts. Native compilation, not execution, verifies these
-witnesses. Receiver methods, FWC/KYC and general ownership analysis remain outside this
-contract. The supported output and indexed provenance fields are specified below.
+The [callable witnesses](../logiceme/testdata/lucid/README.md#typed-functions-and-closures)
+cover signatures, optional outputs, closures and the intentional unit mismatch.
+Receiver methods, FWC/KYC and general ownership analysis remain outside this
+contract. Supported output and indexed provenance fields are specified below.
 
 ## Future construction, awaiting, and value bindings
 
@@ -402,12 +352,9 @@ The frozen FW/BW punctuation therefore remains `-> (Void)`. Missing and empty
 outputs and the explicit Func absence sentinel retain their existing behavior.
 Bare `Void` remains an absence comparison. Quoted `"Void"` compares text.
 
-The complete `callable-output-void` application declares `type Void = u8;` and
-composes both FW functions and BW closures with flat and explicit Func metadata.
-Composed calls and typed result uses verify all four routes. It reuses the plain
-manifest, support files and lock. Indexed Funcs provenance has the separate MY
-contract below. See the [ledger](../logiceme/testdata/lucid/FAILURES.md) for compilation
-and acceptance evidence. This Lucid witness remains compile-only.
+The [output-type witness](../logiceme/testdata/lucid/README.md#native-output-type-provenance)
+covers flat/record FW and BW. Indexed Funcs provenance has the separate MY
+contract below.
 
 ## MY required trait signatures
 
@@ -429,11 +376,8 @@ bounded contract below. Trait-level generic/lifetime inputs have the contract
 above. Composed/default methods, independent method parameters and implementations
 remain separate work. Retained preparation entries are not proof of those routes.
 
-`trait-signature-outputs` composes eight required signatures and an ordinary main,
-with exact five-artifact comparison and Expected/Generated native compilation.
-Eleven malformed cases and explicit/embedded A/B/A checks cover validation and
-isolation. Native compilation checks declarations. Generated applications remain
-unexecuted. See the [ledger](../logiceme/testdata/lucid/FAILURES.md) for results.
+The [MY witnesses](../logiceme/testdata/lucid/README.md#my-required-signatures)
+cover required signatures, native provenance, malformed records and isolation.
 
 ## Empty record and trait compositions
 
@@ -455,14 +399,8 @@ rejected rather than emitted as a struct. This does not implement composed
 fields/methods, composed generic-header children or sum types, nor certify their
 nonempty paths. The separate local String inputs above also apply to empty shells.
 
-`empty-instantiations` composes the omitted/explicit-empty variants, MOB
-initializers, a populated HY/Y control, typed uses and references to both empty
-traits. Exact primitive and preparation checks cover brace preservation,
-nonempty bytes, repeated use, inherited/local precedence and malformed records.
-Five complete malformed inputs cover these guards. Filesystem/embedded A/B/A
-checks retain input, earlier-bundle and resource isolation. Expected and actual
-projects compile without executing Rust applications or deployment scripts.
-See the [ledger](../logiceme/testdata/lucid/FAILURES.md) for dated results.
+The [empty-composition witnesses](../logiceme/testdata/lucid/README.md#empty-yhymy)
+cover omitted/empty collections, populated controls, preparation and rejection.
 
 ## CI/BI selection contract
 
@@ -608,14 +546,14 @@ flush, completed transaction or completed shutdown.
 RAII does not imply deferred-call argument evaluation or function-exit ordering. The logemes synthesize no guard or Drop implementation.
 Explicit process supervision and shutdown remain dedicated support responsibilities.
 [`std::process::exit`](https://doc.rust-lang.org/std/process/fn.exit.html) does not
-run stack destructors. Generated Rust Apps remain unexecuted by this suite, so
-neither destructor timing nor shutdown behavior is runtime-verified.
+run stack destructors. The scheduling witnesses remain compile-only and establish
+neither destructor timing nor shutdown behavior. The suite's separate
+[future execution checks](../logiceme/testdata/lucid/README.md#futures) exercise
+construction, captures and awaiting.
 
-`schedule-direct` (V) and `schedule-composed` (MV), plus four Deferred rejection
-documents, cover scheduling. The composed witness uses KY's receiver-method form,
-`ready.into_future()`. The [invocation witnesses](../logiceme/testdata/lucid/README.md#named-invocation)
-separately cover receiverless KY. Consult the [ledger](../logiceme/testdata/lucid/FAILURES.md)
-for observed generation, compilation and acceptance results.
+The [scheduling witnesses](../logiceme/testdata/lucid/README.md#scheduling-and-deferred-rejection)
+cover V/MV and Deferred rejection. [Named-invocation witnesses](../logiceme/testdata/lucid/README.md#named-invocation)
+separately cover receiverless KY.
 
 ## Keyed GI pattern selection
 
@@ -646,11 +584,9 @@ whose bare name would collide with the fallback carrier. Caller-written `_`
 remains ordinary Rust pattern syntax. The compiler does not analyze its coverage
 or invent a fallback from the final body's position.
 
-`keyed-conditionals` compares exact single/multiple/nested matches, native
-patterns and direct/composed fallbacks. `keyed-nonexhaustive` requires E0004,
-proving a wildcard is not fabricated. `keyed-call-pattern` requires E0164,
-proving a call expression is not converted to an equality guard. These projects
-compile only. These witnesses and their deployment scripts remain unexecuted.
+The [keyed-GI witnesses](../logiceme/testdata/lucid/README.md#keyed-gi)
+cover ordered matching and native rejection of missing coverage or call-shaped
+patterns without invented wildcard/equality repairs.
 
 ## Current integration limits
 

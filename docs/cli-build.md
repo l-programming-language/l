@@ -160,6 +160,32 @@ separate test-only compilation or lock-wait adapter remains.
 
 Structured Cargo messages must identify the requested manifest and binary target. Verified native executables are copied into the invocation's private staging before publication. The compiler does not guess output paths, launch Go as an intermediary, or ship its build toolchain. Generated deployment scripts are artifacts and are never run by `l build`.
 
+Native build caching uses six bounded slots. Complete input paths and bytes
+select a preferred slot; another available slot can admit the build when it is
+busy. Admission waits cancellably only while all slots are occupied. Each slot
+owns a cross-process lock, exact source copies and Cargo dependency products.
+Every build invokes Cargo, verifies manifest/target identities and snapshots
+executables before releasing its lock. The cache substitutes for neither tests
+nor publication. Concurrent workspaces cannot expose each other's mutable
+executable paths.
+
+CLI slots and native-test shards reconcile an explicit input inventory at stable
+private `StageCurrent` paths. They validate the supplied tree and recorded paths
+before changing files, preserve unchanged bytes/timestamps, and remove only
+recorded obsolete inputs and emptied parent directories. Unexpected files,
+symlinks, incomplete inventories and malformed state reject. Stable package paths
+retain Cargo's normal source/dependency invalidation without runtime-specific
+freshness exemptions.
+
+At most 4096 absent-path hints retain only the last contents' hash and timestamp.
+Reintroducing identical bytes can restore that timestamp; staging different
+contents discards the former hint. Hints are consumed before writes and cannot
+restore aliases, future timestamps or stale versions. Missing history causes a
+rebuild. This preserves unchanged libraries across an intervening library-only
+workspace without reusing older versions of changed code. Cargo still runs and
+snapshots artifacts every time. The test helper's default slots share this
+staging; explicit target directories retain separate graph-addressed staging.
+
 ## Service composition
 
 Services organize source within App construction. The builtin Basic descriptor
@@ -231,31 +257,6 @@ Children inherit environment and caller CWD, receive EOF on stdin and receive no
 The lowerer checks scalar/operator types and definite assignment across continuing branches. Exit removes a branch from that intersection. Output availability remains a runtime check. Diagnostics retain source attribution. Maintained programs import the `IO.Print` member from the `io` dictionary and use implicit Basic, Start and Execute definitions. Direct Run requires an explicit Await wherever subsequent source needs completion or continuation effects.
 
 Phase 2 in-code concurrency, runtime argument transport, nested layout syntax, containers, cross-compilation, remote deployment and unrestricted installation of third-party dependencies remain outside this build command. The [architecture](architecture.md) describes compiler/runtime ownership and [development guide](development-harness.md) describes validation.
-
-Native build caching uses six bounded slots. Complete input paths and bytes
-select a preferred slot for reuse. An available slot can admit the build when
-that slot is busy. Admission waits cancellably only while all slots are occupied.
-Each slot owns a cross-process lock, stable exact source copies and Cargo's
-dependency products. Every build still invokes Cargo. The
-coordinator checks manifest/target identities and snapshots actual executables
-before releasing the lock. The cache stores no successful-test or publication
-substitute. Different workspaces can build concurrently without exposing another
-build's mutable executable paths.
-
-CLI staging reconciles an explicit input inventory at a fixed private source
-root in each slot. It validates the supplied tree and all recorded cached paths
-before changing files, preserves unchanged bytes and timestamps, and removes
-only recorded obsolete inputs and their emptied parent directories. Unexpected
-files, symlinks or incomplete recorded inventories reject. This keeps Cargo's
-package paths stable while allowing its normal source/dependency invalidation.
-There is no runtime-specific freshness exemption. A bounded record of removed
-inputs retains only their last contents' hash and timestamp. Reintroducing those
-same bytes can retain their timestamp, while staging any different contents at
-that path discards the former record. This avoids rebuilding unchanged libraries
-after an intervening library-only workspace without reusing timestamps from an
-older version of changed code. Cargo still runs and validates every build.
-The test helper's default slots use the same current-workspace staging. Explicit
-target directories retain separate graph-addressed staging.
 
 ## Build implementation ownership
 

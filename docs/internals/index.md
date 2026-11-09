@@ -19,7 +19,10 @@ Lyger resolves grammar, bindings, and ordered instructions into AML (Assembly Ma
 
 <!-- diagram:process-model -->
 
-Apps run in separate OS processes. Their constructed Services supply libraries. Standalone Services create no package or process. Classes group modules and Objects group files, without introducing runtime scopes.
+Apps run in separate OS processes. Their primary Service supplies binary topology;
+additional constructed Services supply libraries. Standalone Services create no
+package or process. Classes group modules and Objects group files, without
+introducing runtime scopes.
 
 ## Evidence at each boundary
 

@@ -30,6 +30,6 @@ A value must be assigned on every path that continues to its use. Return ends th
 
 ## Iteration has a bounded implementation surface
 
-`While` is rejected in the enclosing program. In Functions with native signatures, the Storage implementation dictionary composes bounded traversal and selection from typed Process bodies. These [source compositions](../internals/storage.md#iteration-and-continuations) have specific contracts. They do not introduce general L `for`/`while` syntax. The [authoring guide](definitions.md#keep-branch-data-inside-its-process) shows branch-local dataflow, while the [iteration reference](../reference/logemes/iteration.md) documents the backend surface.
+`While` is rejected in the enclosing program. In Functions with native signatures, the Storage implementation dictionary composes bounded traversal and selection from typed Process bodies. These [source compositions](../internals/storage.md#iteration-and-continuations) have specific contracts. They do not introduce general L `for`/`while` syntax. The [native-definition guide](native-definitions.md#keep-branch-data-inside-its-process) shows branch-local dataflow, while the [iteration reference](../reference/logemes/iteration.md) documents the backend surface.
 
 Continue with [imports and dictionaries](imports.md).

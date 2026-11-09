@@ -2,22 +2,24 @@
 
 Builtins are available from the selected complete distribution without an explicit Use import. They comprise configured lexical facilities, compiler-typed operations, and definitions authored in `builtins/eng/core.l`. IO.Print belongs to the separately imported [standard library](../../stdlib/index.md).
 
-## Source-defined facilities
+## Builtin vocabulary
+
+<a id="source-defined-facilities"></a>
 
 <!-- word-index:builtins -->
 
-The [construction and callable reference](definitions.md) explains their inputs and limits. Actor forms such as Invoker and Retainer construct uses of their verb. They are not separate primitives. Aliases preserve canonical identity and adjectives retain their declared targets. See [word forms](../../spec/definitions.md#inflection-declarations) for the declaration notation.
+This index includes configured grammar words, types, compiler-typed operations and source-defined facilities. Each entry gives its declared forms and support limits. The [construction and callable reference](definitions.md) covers core compositions such as Function and Main. Actor forms such as Invoker and Retainer construct uses of their verb. See [word forms](../../spec/definitions.md#inflection-declarations) for the declaration notation.
 
 ## Compiler-typed operations
 
-| Operation | Forms from configured root | Operands and behavior |
-| --- | --- | --- |
-| Build | Build, Builds, Built, Building, Builder | Validate a checked App's prebuilt artifact at runtime |
-| Run | Run, Runs, Ran, Running, Runner | Launch a checked target without joining |
-| Await | Await, Awaits, Awaited, Awaiting | Join a checked target's finalized result and claim its continuation once |
-| Stop | Stop, Stops, Stopped, Stopping, Stopper | Request termination of a checked target without joining |
-| Show | Show, Shows, Showed, Showing, Shower | Observe supported runtime values without adding a newline |
-| Exit | Exit, Exits, Exited, Exiting, Exiter | Terminate whole program, with optional supported failure operand |
+| Operation | Operands and behavior |
+| --- | --- |
+| [Build](lifecycle.md#build) | Validate a checked App's prebuilt artifact at runtime |
+| [Run](lifecycle.md#run) | Launch a checked target without joining |
+| [Await](lifecycle.md#await) | Join a checked target's finalized result and claim its continuation once |
+| [Stop](lifecycle.md#stop) | Request termination of a checked target without joining |
+| [Show](lifecycle.md#show) | Observe supported runtime values without adding a newline |
+| [Exit](lifecycle.md#exit) | Terminate whole program, with optional supported failure operand |
 
 These operations are verbs. Inflection recognition does not make every grammatical owner valid: native Await inside an App body rejects even though its word form is recognized. The [lifecycle reference](lifecycle.md) records supported contexts and failure modes.
 

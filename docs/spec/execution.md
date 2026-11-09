@@ -12,7 +12,7 @@ After publication, invoking the generated entry executable executes the source's
 
 An App is a process target. Standalone Service declarations remain structural and produce no package or process. Native lifecycle operations and implicit runtime members require an App. Lexical source actions and explicit members retain precedence. Classes and Objects organize sources without process lifetimes.
 
-Children inherit the caller's environment and CWD, receive EOF on stdin, and receive no synthesized runtime arguments. Runtime argument transport and process return-value transport are outside the current contract. The process result carries raw captured output and error state instead.
+The process result carries captured output and error state. Runtime argument and process return-value transport are outside the contract. See [child environment, streams and limits](../cli-build.md#shutdown-streams-and-limits).
 
 The [complete App example](../guide/apps-and-services.md#run-an-app) supplies Worker's body through Basic construction, then runs and awaits it before reading Output. Standalone Service declarations and bodies do not supply executable targets.
 
@@ -25,7 +25,7 @@ The [complete App example](../guide/apps-and-services.md#run-an-app) supplies Wo
 | Stop | Request termination of the owned process group or observe completion without joining |
 | Await | Join reaping, captured streams, and owned-group cleanup, then return immutable result and activate continuation once |
 
-Run does not wait for application readiness, normal completion, output finalization, or continuation effects. Stop requests SIGKILL of the owned group and returns after request submission/known completion. The process leader exiting while output drain or group cleanup remains pending is not finalized completion.
+Run acknowledges launch; Await establishes completion. Stop requests termination without joining. The [launch](../cli-build.md#launch-and-language-forms) and [shutdown](../cli-build.md#shutdown-streams-and-limits) contracts define the native boundaries.
 
 Start and Execute are source-defined App actions. Start composes Build then Run, and Execute composes Start then Await. Their `any App` signatures remain intentional.
 
@@ -39,23 +39,17 @@ Build checks Worker's already compiled companion. Run starts it, Await is the co
 
 <!-- example:runtime-stop-await -->
 
-`stop-requested|` is shown after Stop returns and before the first Await. Only that Await activates the continuation. The second Await does not repeat it. A short-lived Worker can finish before the termination request wins, so the [native witness](../../acceptance/phase1/language/language_test.go) permits either `stop-requested|continuation|error|joined|` or `stop-requested|continuation|success|joined|`. The excerpt is not a promise of one deterministic Stop outcome and was not executed here.
+`stop-requested|` is shown before the first Await, which activates the continuation. The second Await does not repeat it. Worker can finish before termination wins, so the [native witness](../../acceptance/phase1/language/language_test.go) permits either `stop-requested|continuation|error|joined|` or `stop-requested|continuation|success|joined|`.
 
 ## Invocations and ordering
 
-Each canonical target has one outstanding invocation slot. Completion alone does not release that slot. The first Await continuation must finish. Duplicate Run, Build while outstanding, Await/Stop before Run, and rerunning a target during its own active continuation are lifecycle misuse.
-
-A startup failure still creates an awaitable failed invocation. An unstarted command has no OS Wait. Ordinary child nonzero exit is stored as a result and does not automatically Exit the orchestrator. An alias shares its target's invocation slot.
-
-A later accepted Run creates a new invocation. Previously captured results and assigned scalar Output snapshots remain unchanged. A Stop captures its target invocation before signaling so a race cannot redirect the signal to a replacement invocation. A completed Stop is an idempotent no-op.
+Each canonical App, including its aliases, has one outstanding invocation until its first Await continuation finishes. A startup failure is still awaitable. Later accepted runs create fresh invocations without changing saved Output snapshots. The [invocation contract](../cli-build.md#invocation-and-results) defines invalid operation ordering, failed launches, reruns and Stop races.
 
 ## Continuations and activation
 
 An ordinary encapsulated paragraph executes when source flow reaches it. An App-led paragraph associates its continuation with that target. The first Await of an invocation claims and executes the continuation inline exactly once, including failed launch, nonzero exit, or per-target Stop.
 
-Repeated/cached Await observes the same result and cannot claim the continuation again. Self-Await while the claim is active likewise cannot repeat it. Nested Await of a different target is allowed. Fresh accepted invocations receive fresh continuation locals. Lexical paragraph identity does not suppress another target's claim.
-
-A continuation Exit terminates the whole program. Global shutdown aborts source flow instead of returning from public Await into a continuation. Fallthrough cleanup does not execute continuations for unawaited invocations.
+Repeated Await reuses the result without repeating effects. Fresh invocations receive fresh continuation locals. [Continuation ownership](../cli-build.md#invocation-and-results) also governs self-Await, nested Await, Exit and shutdown.
 
 **Supported first-Await activation.**
 
@@ -67,19 +61,11 @@ This paragraph illustrates one invocation. The [snapshot example](control-flow.m
 
 ## Output and Error
 
-Output is raw stdout, including whitespace, newlines, NUL, and arbitrary bytes. Stderr is captured separately and is not automatically replayed. Stderr alone does not indicate failure. Print inside a child commonly adds LF, while Show in the orchestrator preserves the captured result as-is.
-
-Reading Output before capture finalization is fatal misuse, even when assigning it to an otherwise unused variable. There is no implicit Await. If an invocation has already finalized, Output can be read before Await without activating its continuation. Programs requiring deterministic completion should explicitly Await.
-
-Error selects the relevant operation/invocation error. Build selects its operation error. A Stop signal-delivery failure selects an error while retaining the invocation and ownership. A subsequent Await, including a cached Await, reselects that invocation's immutable result. The typed condition `target has an Error` checks this state. It does not expose the Go compiler's lerrors package as an L exception API.
+Output preserves raw stdout, including whitespace, newlines, NUL and arbitrary bytes. Await explicitly before reading it when completion must be deterministic. Print adds LF in the child; Show preserves the captured bytes. Error selects the current operation/invocation failure, tested by `target has an Error`. The [result contract](../cli-build.md#invocation-and-results) owns availability checks, separate stderr capture, error selection and stored snapshots. Compiler diagnostics use a separate [error model](errors.md).
 
 ## Shutdown and cleanup
 
-Normal fallthrough and bare Exit clean owned processes and return 0 if cleanup succeeds. Explicit Error/fatal misuse cleans up and returns 1. SIGINT/SIGTERM abort source flow, settle ownership, and use 130/143. A cleanup failure on otherwise successful exit produces failure. Explicit primary errors are retained and cleanup errors are appended once in launch order.
-
-Broken stdout or stderr pipes require cleanup and failure. Error reporting must not recursively retry a failed diagnostic writer. One terminal request selects the primary diagnostic/status when fatal and signal requests race. Cleanup does not turn a native panic into success.
-
-Each launched direct child has one Wait owner. Same-group descendants are owned even after closing inherited pipes. There is a bounded two-second post-exit/cancellation pipe drain, but no normal process-duration timeout, process-count cap, or capture-size cap. Deliberately escaped process groups, uncatchable SIGKILL of the orchestrator, and host/power loss remain outside the cleanup guarantee.
+Fallthrough and Exit settle owned processes without activating unawaited continuations. The [shutdown contract](../cli-build.md#shutdown-streams-and-limits) defines exit statuses, signal and output failures, process-group ownership, the two-second drain bound and limits of cleanup. It imposes no normal process-duration timeout, process-count cap or capture-size cap.
 
 ## Platform and concurrency limits
 

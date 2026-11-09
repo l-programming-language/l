@@ -10,7 +10,7 @@ Apps own executable processes. Services compose code within Apps. Classes group 
 
 <!-- example:runnable-app -->
 
-Run launches Worker, Await joins its finalized capture, and Show reads Output. Expected stdout is `work completed\n`, as the [CLI](../../cmd/l/runnable_service_test.go) and [native](../../cmd/l/runnable_service_native_test.go) witnesses assert.
+Run launches Worker, Await joins its finalized capture, and Show reads Output. The program writes `work completed\n`.
 
 ## Service composition
 
@@ -20,12 +20,12 @@ The [workspace fixture](../../lyger/test/workspace/services.l) constructs additi
 
 Left and Right each construct a Function inside an Object inside a Service. Grouped constructs an App containing Main, Left and Right Services, and Create applies it to First. Main supplies the executable entry, while Left and Right become separate libraries. `using any Process` passes the App's body composition into those constructions.
 
-The [workspace test](../../cmd/l/service_workspace_test.go) compiles the two Apps in the complete fixture, four additional libraries and a native library caller. Nonprivate composed items form the libraries' native interface.
+Nonprivate composed items form the libraries' native interface. The [Service coverage ledger](../../testdata/service-execution/coverage.md) records the workspace and native-caller checks.
 
-A standalone `New Main Service` remains structural: it creates no package or process. Its body effects, native Build/Run/Stop/Await and implicit Output/Error reject. It has no App continuation. Explicit members and source-defined actions retain lexical meaning. This does not provide arbitrary linking of standalone Services or an in-process Service lifecycle.
+A standalone `New Main Service` creates no package or process. Its body effects, native lifecycle operations and implicit Output/Error reject. Explicit members and source-defined actions retain lexical meaning. See the [Service contract](../cli-build.md#service-composition) for that structural boundary.
 
 ## Organize code without inventing lifetimes
 
-Classes and Objects have no running lifetime. [Source topology](../architecture.md#native-executable-pipeline) separates App executable crates from constructed Service libraries. Published App generations retain version-1 manifests.
+Classes and Objects have no running lifetime. [Source topology](../architecture.md#native-executable-pipeline) explains their generated files and modules.
 
 See [Service coverage](../../testdata/service-execution/coverage.md), then [lifecycle and output](lifecycle.md).

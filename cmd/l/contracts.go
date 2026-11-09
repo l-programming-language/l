@@ -31,7 +31,7 @@ Options precede input. Common options: --assets ROOT, --language eng,
 --manifest PATH (repeatable), --trust-policy PATH, --native-environment PATH,
 --format text|json. Inspection and checking never execute external tools.
 Explicit evidence capture queries installed tools; it never builds or runs Apps.
-Track A preserves current resolution. Track B has no source-facing mode.
+Inspection preserves current resolution; source-facing contract selection is unsupported.
 Assurance defaults to implementation. Symbolic assurance checks only selected
 source adjective definitions; native/runtime assurance remains separate.
 `

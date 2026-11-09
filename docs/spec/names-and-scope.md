@@ -62,7 +62,7 @@ Within an action definition, a pronoun may bind a preceding `any` parameter, as 
 
 Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
 
-**Usage and boundary.** `Start it` in the [pronoun example](../../testdata/phase1/language/lang-06.l) uses the Job alias just defined. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject. The [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
+**Usage and boundary.** `Start it` in the [pronoun example](../../testdata/phase1/language/lang-06.l) uses the Job alias just defined. The [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates the shared [paragraph boundary](#pronouns).
 
 ### This
 
@@ -70,7 +70,7 @@ Refer to the last subject defined in the original source paragraph, or the appli
 
 Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
 
-**Usage and boundary.** Within a paragraph that has just defined Job, `this` refers to Job under the same antecedent rule as [It](#it). This is a focused reference illustration, not a new declaration or independently executed program. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject. The [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
+**Usage and boundary.** Within a paragraph that has just defined Job, `this` refers to Job under the shared [pronoun rules](#pronouns). It can replace `it` in the [Job illustration](#it).
 
 ### That
 
@@ -78,7 +78,7 @@ Refer to the last subject defined in the original source paragraph, or the appli
 
 Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
 
-**Usage and boundary.** Within a paragraph that has just defined Job, `that` refers to Job under the same antecedent rule as [It](#it). This is a focused reference illustration, not a new declaration or independently executed program. Merely mentioning an operand does not change the antecedent. A new paragraph has no inherited subject. The [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates that boundary.
+**Usage and boundary.** Within a paragraph that has just defined Job, `that` refers to Job under the shared [pronoun rules](#pronouns). It can replace `it` in the [Job illustration](#it).
 
 ## Possessives and member lookup
 

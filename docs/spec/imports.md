@@ -78,7 +78,7 @@ App publication retains version-1 manifests. App-constructed library targets hav
 
 ## Adding a standard library
 
-The [public catalog](../stdlib/index.md) excludes internal implementation dictionaries. For registry and documentation requirements, see [contributing documentation](../contributing/documentation.md#update-coverage-and-snapshots).
+The [dictionary catalog](../stdlib/index.md) distinguishes application vocabulary from implementation and word-authoring facilities. For registry and documentation requirements, see [contributing documentation](../contributing/documentation.md#update-coverage-and-snapshots).
 
 ## Sources and witnesses
 

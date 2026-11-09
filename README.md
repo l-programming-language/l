@@ -27,27 +27,10 @@ of the syntax and execution steps.
 
 ## Try L
 
-[L releases](https://github.com/l-programming-language/l/releases) support
-Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64). In a Bash or Zsh
-terminal, install the latest stable release and activate it:
-
-```sh
-(set -o pipefail; curl --proto '=https' --tlsv1.2 -fsSL https://ldocs.org/install.sh | sh) && . "$HOME/.local/share/l/env"
-```
-
-Setup asks once before installing L, preparing its pinned Rust dependencies,
-and configuring Bash and Zsh. Check the installation:
-
-```sh
-l --version
-```
-
-Native C/linker tools are required; setup explains what is missing. The
-[installation guide](docs/cli/installation.md) covers getting started. A
-[versioned manual installer](docs/cli/installation-options.md#download-and-inspect-the-release-installer)
-is also available, along with options for custom locations and shell setup.
-Binary installation needs neither Go nor a source checkout; pre-1.0 macOS
-binaries are unsigned.
+[Install L](docs/cli/installation.md) for Apple Silicon macOS (ARM64) or Linux
+(ARM64 and x86-64). The versioned release installer prepares Rust dependencies;
+native C/linker tools are required. Binary installation needs neither Go nor a
+source checkout. The guide covers shell setup and unsigned pre-1.0 macOS binaries.
 
 Save the example as `main.l`, then build and run it:
 

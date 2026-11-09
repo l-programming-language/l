@@ -97,7 +97,7 @@ Refer definitively to the selected subject or value in its owning source context
 
 The thirteen phrase families are generic, directive, declarative, locative, objective, inflective, associative, indicative, utilization, dependency, signature, arguments, and results.
 
-Declarative `as` relates a subject to a type, value, definition, or alias. Directive `for` introduces action composition. Utilization `to` connects a native-backed definition or imperative use. Associative `with` composes described child structures. The word `using` comes from source-defined inflection and supplies parameters. Dependency `from` selects a dictionary or explicit source provider in supported import forms.
+Declarative `as` relates a subject to a type, value, definition, or alias. Directive `for` introduces action composition. Utilization `to` connects a native-backed definition or imperative use. Associative `with` composes described child structures. The word `using` is the applicative form of configured Use and supplies parameters. Dependency `from` selects a dictionary or explicit source provider in supported import forms.
 
 Locative `at` and inflective `in` participate in [collection updates and typed reads](collections-and-categories.md). A phrase's meaning follows its owning action, not the preposition alone.
 
@@ -294,7 +294,7 @@ Source order is retained after expansion. A sequence of native unary lifecycle o
 
 Nouns include pronouns, Input/Output/Error, List/Map/Dictionary, Null/Thing/Text/Number/Byte/Truth/Pointer, native Func/Prop/Op concepts, Definition/Attribute, and Object/Class/Service/App. The adjective entries are Public, New, and Generic. Adverbs are Publicly, Not, Less, Greater, and Then. Prepositions are as/of/at/with/in/out/by/from/to/than/for. Articles are any/no/a/the, conjunctions and/or, and evaluations if/else/otherwise/while.
 
-The [source-defined builtins](../reference/builtins/index.md#source-defined-facilities) are implicit. Standard-library words such as Print require import. New words compose existing definitions. Vocabulary recognition alone does not implement an action.
+The [builtin vocabulary](../reference/builtins/index.md#builtin-vocabulary) includes configured words and source-defined core words. Standard-library words such as Print require import. New words compose existing definitions. Vocabulary recognition alone does not implement an action.
 
 ## Sources and witnesses
 

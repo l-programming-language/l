@@ -66,7 +66,7 @@ Describe IO.Send's Sender actor so that it sends one LF through the same writer 
 
 Obtain a handle to the current process's standard-output stream without writing or locking it.
 
-**Usage:** In a native-signature Function, `a New IO's Output` produces `std::io::Stdout`. This is distinct from [builtin App Output](../../reference/builtins/lifecycle.md#output-and-error), which exposes finalized captured bytes after Await.
+**Usage:** In a native-signature Function, `a New IO's Output` produces `std::io::Stdout`. This is distinct from [builtin App Output](../../reference/builtins/lifecycle.md#output), which exposes finalized captured stdout bytes.
 
 **Example:** `Writing.Output` in [Native callers](#native-callers) returns the handle. Choose [Diagnostic](#diagnostic) for stderr, or use [Print](#print) when its rendering, newline and failure policy are wanted together.
 
@@ -76,13 +76,13 @@ Obtain a handle to the current process's standard-output stream without writing 
 
 Render a supported value and write its bytes to standard output followed by one LF newline.
 
-**Usage:** Import Print and invoke it on an App, as in the complete program below. Each argument is evaluated once. Text, Number, Truth and Null follow [Value handling](#value-handling). Arbitrary List, Dictionary and Pointer values have no general Print contract.
+**Usage:** Import Print and invoke it on an App, as in the complete program below. Each argument is evaluated once. See [Value handling](#value-handling) for accepted operands.
 
 **Example:** The App prints the greeting, Execute waits for it, and Show displays the captured bytes including LF.
 
 <!-- example:basic -->
 
-**Behavior:** Print owns stdout selection, one held guard, a lined send and its fail-fast [error policy](#errors-and-return-behavior). It has no public return value and makes no zero-allocation or nonblocking promise. Use [Send](#send) with [Lined](#lined) when the writer and returned failure should remain explicit.
+**Behavior:** Print composes rendering and a lined stdout send with its [fail-fast error policy](#errors-and-return-behavior). It makes no zero-allocation or nonblocking promise. Use [Send](#send) with [Lined](#lined) to choose the writer and handle returned failure.
 
 ### Send
 
@@ -116,9 +116,7 @@ Lists, Dictionaries, Pointers and internal compiler states have no general Print
 
 ## Output and newlines
 
-Print appends exactly one LF after the supplied byte/text or formatted scalar output. It does not trim the operand first. A value already ending with LF therefore produces another LF. Empty Text produces one LF.
-
-Show adds no newline. In the first program, Print writes `Hello World!` plus LF inside the App. Execute waits for it, and Show displays its captured Output, including that LF. Captured stderr remains separate.
+Print does not trim its operand before appending LF. A value already ending with LF therefore produces another LF. Empty Text produces one LF. [Show](../../reference/builtins/lifecycle.md#show) preserves captured Output without adding a newline. Captured stderr remains separate.
 
 ## Number formatting
 
@@ -134,4 +132,4 @@ Send, Lined and Flush instead return the native IO Result for the caller to hand
 
 ## Sources and witnesses
 
-Source: [IO dictionary](../../../stdlib/eng/io/dictionary.l). Tests cover [public byte IO and failure paths](../../../lyger/word_library_acceptance_test.go), [Write's guard and panic policy](../../../lyger/word_library_io_policy_test.go), [raw Text](../../../lyger/raw_text_test.go), [Number formatting](../../../lyger/io_numeric_test.go), [imports](../../../lyger/configured_import_test.go) and [private ownership](../../../lyger/dictionary_ownership_test.go). Source review and recorded witnesses support these descriptions. A website build does not execute those tests.
+Source: [IO dictionary](../../../stdlib/eng/io/dictionary.l). Tests cover [public byte IO and failure paths](../../../lyger/word_library_acceptance_test.go), [Write's guard and panic policy](../../../lyger/word_library_io_policy_test.go), [raw Text](../../../lyger/raw_text_test.go), [Number formatting](../../../lyger/io_numeric_test.go), [imports](../../../lyger/configured_import_test.go) and [private ownership](../../../lyger/dictionary_ownership_test.go).

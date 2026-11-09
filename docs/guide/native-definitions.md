@@ -12,6 +12,16 @@ Borrowed names the byte view produced from Payload. Deliverer performs one `writ
 
 This dictionary fragment requires its helpers and a native caller. `Storage.Routine` accepts explicit native generic parameters: `W` and `P` are supplied type atoms, not inferred by Generic. See the [definition contract](../spec/definitions.md#process-function-and-return).
 
+## Keep branch data inside its Process
+
+Storage.Require composes optional selection in a Function with native types:
+
+<!-- example:source-require -->
+
+Option.Select receives Value and two Process bodies. The present branch binds Payload as `T`. Only the absent branch constructs Failure from Message. Returning completes Require. This fragment needs its dictionary declarations and a [native caller](../internals/storage.md#native-callers).
+
+Name intermediate results the next operation needs. Declare each Process input's type and ownership, using `_` to request native inference. Inputs and locals stay in that body, with distinct bindings on repeated or nested use. See [Process](../reference/builtins/definitions.md#process) for scope and [Return](../reference/builtins/definitions.md#functionreturn) for caller selection and lexical delegation.
+
 ## Compose a wrapper
 
 <!-- example:source-lined -->

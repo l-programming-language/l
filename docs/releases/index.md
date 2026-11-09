@@ -1,6 +1,6 @@
 # Releases and source identity
 
-Releases are published manually from main after native validation, installer checks and documentation tests. Binaries and their matching docs archive are published together in an immutable release. Pages deployment follows. Merging a change does not publish a release.
+Publication of new releases is currently disabled pending [reviewed activation](../../website/DEPLOYMENT.md#deliberate-activation-after-review). When enabled, manual releases from main require native validation, installer checks and documentation tests. Binaries and matching docs archives form one immutable release; Pages deployment follows. Merging a change does not publish a release.
 
 ## Download L
 

@@ -320,7 +320,7 @@ Its `NativeEvaluation` results supply both inference components and report
 propositions. Invocation-entry requirements remain typed-analysis obligations.
 
 `LygerService.AnalyzeContracts` is additive to ordinary compilation and accepts
-separate analysis options. `ResolveContractBindings` exposes Track A records.
+separate analysis options. `ResolveContractBindings` exposes the recorded bindings.
 `ContractAnalysisOptions.SourceTransformers` supplies bodyless source declarations.
 The result exposes compiler-derived projections, source certificates and concrete
 instantiations. `VerifyDictionaryContractsWithOptions` adds explicit canonical
@@ -357,7 +357,7 @@ does not yet expose. These fixtures do not create production Theme/Backend APIs.
 The unique-applicable reference selector is versioned and available only over
 explicit typed candidates. Unknown applicability blocks a unique selection.
 Ordinary source resolution still applies every currently matching descriptor in
-order. This release adds no Track B source mode, phrase recognition, attachment
+order. This release adds no contract-driven source selection, phrase recognition, attachment
 rule, import precedence, or contract-driven fallback.
 
 ## Evidence and limits

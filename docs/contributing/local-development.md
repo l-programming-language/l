@@ -71,6 +71,8 @@ npm run test:install
 
 The check requires `http://127.0.0.1:4321/install.sh` to serve the exact bootstrap from the current build. Only that local preview request uses HTTP. Release and Rust downloads use HTTPS. It installs into a disposable home with separate Cargo, Rustup, and native-cache directories, using a custom executable location. It checks immediate activation and fresh Bash/Zsh sessions, then compiles the unchanged canonical program offline and checks its exact output. Linux hosts without Zsh record that shell check as unavailable.
 
+It then runs the documented versioned installer and manual PATH commands in a separate home with a fresh native cache, reusing the isolated Rust dependencies prepared above. This stage compares the installed compiler bytes, checks that no bootstrap activation file was created, and separately builds and runs the same program offline. Its dependency setup is warm; the original bootstrap and shell observations remain separate.
+
 Per-stage logs and `report.json` are retained under `website/reports/install-smoke-*/`. Temporary installation files are removed afterward. Report the host, released version, completed stages, unavailable shell checks, and evidence path. This verifies the installation flow on that host. It is not the full compiler acceptance gate or evidence for other platforms.
 
 Documentation CI runs routine website checks on pull requests. The legacy-named `ci:verify-disabled` command validates the canonical workflows and their authorization boundaries. Publication is disabled pending separate reviewed [activation](../../website/DEPLOYMENT.md#deliberate-activation-after-review).

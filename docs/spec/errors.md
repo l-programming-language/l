@@ -1,6 +1,6 @@
 # Errors, diagnostics, and compatibility
 
-Compiler diagnostics, native build failures, runtime lifecycle misuse, and application output are distinct channels and stages. A successful website build does not establish successful language compilation or native execution.
+Compiler diagnostics, native build failures, runtime lifecycle misuse, and application output are distinct channels and stages.
 
 ## Failure stages
 
@@ -64,7 +64,7 @@ The [While illustration](control-flow.md#iteration-and-collection-operations) cu
 
 <!-- example:runtime-build-without-run -->
 
-Build does not create an invocation. Await therefore fails at generated-runtime execution with an invocation-related diagnostic. The [N07 contract](../../testdata/phase1/n07-build-is-not-run/case.json) expects empty stdout, status 1, and diagnostic text containing `Await` and `invocation`. It is not a compiler-rejection test. This is a display-only negative example, not a successful tutorial. No language stage was executed here.
+Build does not create an invocation. Await therefore fails at generated-runtime execution. The [N07 contract](../../testdata/phase1/n07-build-is-not-run/case.json) expects empty stdout, status 1, and diagnostic text containing `Await` and `invocation`. Compilation succeeds; the generated program fails when it reaches Await.
 
 **Explicit program failure.**
 

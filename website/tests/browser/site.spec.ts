@@ -215,6 +215,18 @@ test('word dictionary browsing works without JavaScript', async ({ browser }) =>
 test('word navigation and source disclosures support keyboard focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/docs/words/');
+  const returnSelector = 'a[href="/docs/reference/builtins/definitions/#functionreturn"]';
+  const returnLink = page.getByRole('navigation', { name: 'Application vocabulary', exact: true }).locator(returnSelector);
+  await expect(returnLink).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Advanced word authoring', exact: true }).locator(returnSelector)).toHaveCount(0);
+  await returnLink.click();
+  await expect(page).toHaveURL(/\/docs\/reference\/builtins\/definitions\/#functionreturn$/);
+  await expect(page.locator('#functionreturn')).toBeVisible();
+  await page.goto('/docs/reference/builtins/#source-defined-facilities');
+  await expect(page.locator('#source-defined-facilities')).toHaveCount(1);
+  await expect(page.getByRole('heading', { name: 'Builtin vocabulary', exact: true })).toBeVisible();
+  await expect(page.locator('main .l-word-index a[href="/docs/reference/builtins/definitions/#functionreturn"]')).toBeVisible();
+  await page.goto('/docs/words/');
   const alphabet = page.locator('.l-word-index a[href^="#"]').first();
   await alphabet.focus();
   await page.keyboard.press('Enter');
@@ -255,11 +267,18 @@ test('theme persistence, correct logos, copy controls and local cross-links', as
   await expect(page).toHaveURL('http://127.0.0.1:4321/docs/cli/');
 });
 
-test('installation command copies intact and its bootstrap is served unchanged', async ({ page, context, request }) => {
+test('release installation command copies intact and the retained bootstrap is served unchanged', async ({ page, context, request }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/docs/cli/installation/');
-  const command = '(set -o pipefail; curl --proto \'=https\' --tlsv1.2 -fsSL https://ldocs.org/install.sh | sh) && . "$HOME/.local/share/l/env"';
+  const command = [
+    "curl --fail --location --proto '=https' --tlsv1.2 \\",
+    '  https://github.com/l-programming-language/l/releases/download/v0.0.1/install-release.sh \\',
+    '  --output install-release.sh &&',
+    'bash ./install-release.sh --version 0.0.1 --with-toolchain &&',
+    'export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH" &&',
+    'l --version',
+  ].join('\n');
   await page.locator('.expressive-code .copy button').first().click();
   expect((await page.evaluate(() => navigator.clipboard.readText())).trimEnd()).toBe(command);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
@@ -299,7 +318,7 @@ test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ 
     ['/docs/guide/apps-and-services/', '../lyger/test/workspace/services.l', 1, 12],
     ['/docs/spec/definitions/', '../cmd/l/test/runnable_service/probe.l', 0, 3],
     ['/docs/guide/definitions/', '../docs/examples/composed-functions.l', 0, undefined],
-    ['/docs/guide/definitions/', '../builtins/eng/storage/control.l', 24, 26],
+    ['/docs/guide/native-definitions/', '../builtins/eng/storage/control.l', 24, 26],
     ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 16, 19],
     ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 20, 24],
     ['/docs/guide/first-program/', '../demo/basic/main.l', 0, undefined],

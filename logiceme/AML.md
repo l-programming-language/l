@@ -338,43 +338,28 @@ interpret the contents. Use supported framing. Do not invent undocumented escape
 syntax. Escaping Rust literals, TOML entries and shell arguments are separate
 target-preparation responsibilities.
 
-Rust's template inputs, conditions and forwarding are frozen. Changes or additional
-metadata require an explicitly reviewed task. Preparation code accepts
-fields such as `Mutable` and `Capture`, but those fields are not consumed by the
-copied templates and do not establish supported syntax or ownership behavior.
-Validation tables and unsupported-form diagnostics do not expand the current
-template contracts. Current cases supply explicit native
-mutability and async scaffolding where needed.
+Rust's template inputs, conditions and forwarding are frozen. Preparation fields
+and validation entries do not independently establish an authoring interface.
+`Mutable` supplies no general mutability contract. CV does consume glyph-local
+`Capture: Infer|Move` under the [future contract](../builtins/README.md#future-construction-awaiting-and-value-bindings);
+FW/BW reject supplied Capture. Other native mutability and async scaffolding
+remain explicit where required.
 
 ### Rust lifetime and generic inputs
 
-The optional `Lifetimes` and `GenericTypes` inputs are String metadata on the
-individual glyph, beside existing signature records. Their native contents are
-comma-separated list interiors without enclosing angle brackets. For example,
-these metadata excerpts declare parameters and supply arguments respectively:
+`Lifetimes` and `GenericTypes` are glyph-local String metadata beside signature
+records. These framed excerpts contain native list interiors, first for a
+declaration and then for an application:
 
 ```text
 {|Lifetimes: ~'a, 'b~, GenericTypes: ~T, U: Clone + 'a~|}
 {|Lifetimes: ~'_~, GenericTypes: ~String, Vec<(u8, u16)>~|}
 ```
 
-FW, HY and MY use declaration punctuation `<...>` after the function, struct or
-trait name. Y and named KY use argument punctuation `::<...>`. KY attaches it to
-the final named path component. MY parameters belong to its trait header, not
-individual Funcs methods. Lifetimes precede GenericTypes, with a template-owned
-comma only when both are present. Missing inputs emit no suffix. Supplied empty
-or whitespace-only inputs are InvalidInput. Native `GenericTypes: ~Void~` is a
-supplied type, not absence. Native bytes are preserved without list splitting,
-additional unframing, normalization or declaration-to-argument conversion.
-
-Both inputs reject on BW, anonymous KY and unsupported forms. A generic KY call
-requires a locally supplied Key. They are not new Func/Prop/Op fields and do not
-inherit into child calls or neighboring items. Existing native type positions
-remain complete types. Rust checks bounds, argument arity and lifetime/ownership
-legality. No inference, cloning, borrowing or automatic lifetime arguments are
-added. Dedicated const-generic, independent where-clause, generic-implementation
-and per-method interfaces remain outside this contract. See the
-[complete input contract](../builtins/README.md#lifetime-and-generic-inputs).
+FW/HY/MY declare parameters; Y and named KY apply arguments. The
+[Rust input contract](../builtins/README.md#lifetime-and-generic-inputs) owns
+placement, absence, provenance, punctuation and native-validation rules. These
+values are neither record fields nor inherited file metadata.
 
 ## Source units, imports and modules
 

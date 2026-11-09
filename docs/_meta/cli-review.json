@@ -7,7 +7,7 @@
     "cmd/l/cargo.go": "accf87ab91696319cbd4ff00fa71ba47ddfd2b4a83b3bf5b6e07bb9b415238b7",
     "cmd/l/command.go": "fc6e07ba875c7c41e62aec111a2efe12220c5aa19199c061ed3352513d551761",
     "cmd/l/compiler.go": "597c8d7796d951f748771aa02ed02c730b64bb6a7c15a0648c94128a6daa9ec8",
-    "cmd/l/contracts.go": "d9b4adb6d2ca8fde948b67f0041e99257bc18e7da4cbf8bf9e28b08a9cc05dfd",
+    "cmd/l/contracts.go": "ed780c22db290ee5518c26a51e1258f327769e16ed87e864f0473f634b7fab81",
     "cmd/l/contracts_requests.go": "5a4f6357b0033f28264f93f3c1ca579e8c0483aa502d6fa5c43807697845c5a6",
     "cmd/l/native_environment.go": "41e1f6ae1a83d724747a6629122fff4aa9ef8fe251fe97413104170de9f9b4a0",
     "contracts/environment.go": "7b8a68eba1d93526c425a66cc8d7c06b73b0733e856724c03921a14d7fae295f",

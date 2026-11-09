@@ -85,15 +85,10 @@ Compose the existing forms with resolved typed bindings.
 Do not introduce target-prefixed duplicates or opaque whole-program inputs to
 bypass composition.
 
-The current Rust-only `Lifetimes` and `GenericTypes` inputs are glyph-local String
-list interiors on FW/HY/MY/Y/named KY. They are not Func/Prop/Op fields or inherited
-Class/Object defaults. Missing inputs are absent. Supplied blanks are invalid.
-Native text such as `Void` retains source provenance. Effective inherited entries
-are rejected even with a local override or a standalone EA file. Templates add
-only the appropriate declaration/application punctuation and the separator
-between the two supplied inputs. See the
-[detailed contract](README.md#lifetime-and-generic-inputs). Do not parse those
-interiors, infer arguments or propagate parameter lists to child glyphs.
+The [Rust lifetime/generic contract](README.md#lifetime-and-generic-inputs)
+owns the glyph-local String interfaces and their placement, absence and provenance
+rules. Preserve native interiors and explicit forwarding without record-field
+extensions, inherited defaults, argument inference or propagation to child glyphs.
 
 L's types, aliases, and value/snapshot semantics do not change with the target.
 Map them to Rust or accept deliberately supplied native types in developer
@@ -205,11 +200,8 @@ entry as supported:
   checks pattern legality, binding and exhaustiveness. Logiceme never invents
   equality guards or a wildcard from arm position. Unkeyed GI retains Boolean
   conditions. See [keyed GI](README.md#keyed-gi-pattern-selection).
-- **Lifetime/generic lists:** The local inputs described above qualify existing
-  declarations and applications only. Trait parameters appear once at the
-  header. KY arguments attach to the final named path component. Rust checks
-  native bounds, arity and lifetime legality. No ownership or argument inference
-  is implied.
+- **Lifetime/generic lists:** Preserve the declaration/application ownership and
+  native-validation boundary in the [local-input contract](README.md#lifetime-and-generic-inputs).
 
 Only template Default cases must stand alone. Qualified Definition fragments are
 completed by their enclosing compositions, and definitions/native leaves retain

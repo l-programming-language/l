@@ -26,13 +26,7 @@ A verb describes an action, and its actor noun constructs that action's definiti
 
 ## Keep branch data inside its Process
 
-The implementation dictionary's Require illustrates composition in a Function with native types:
-
-<!-- example:source-require -->
-
-Option.Select receives Value and two Process bodies. The present branch binds Payload as `T`. Only the absent branch constructs Failure from Message. Returning completes Require. This fragment needs its dictionary declarations and native caller. It is not a standalone program.
-
-Name intermediate results the next operation needs. Declare each Process input's type and ownership, using `_` to request native inference. Inputs and locals stay in that body, with distinct bindings on repeated or nested use. See [Process](../reference/builtins/definitions.md#process) for scope/cardinality and [Return](../reference/builtins/definitions.md#functionreturn) for caller selection and lexical delegation.
+A Process supplies a body to a selected branch or iteration. Its inputs and locals stay within that body. The advanced [Require walkthrough](native-definitions.md#keep-branch-data-inside-its-process) shows typed branch inputs and conditional error construction.
 
 ## Describe construction
 
@@ -44,7 +38,7 @@ A wrapper composes around its retained base, while a replacement supplies a new 
 
 ## Know the implicit foundation
 
-The [implicit foundation](../reference/builtins/index.md#source-defined-facilities) includes Start/Execute and the Process/Function/Objective/Main composition behind Basic. Extend existing words before adding a native leaf. The [native guide](native-definitions.md) explains that boundary.
+The implicit foundation includes [Start/Execute](../reference/builtins/lifecycle.md#start-and-execute) and the [core constructions](../reference/builtins/definitions.md) behind Basic. Extend existing words before adding a native leaf. The [native guide](native-definitions.md) explains that boundary.
 
 ## Diagnose a definition failure
 

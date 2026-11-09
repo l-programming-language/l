@@ -131,13 +131,10 @@ nested sequences, preserve file ownership, deduplicate them deterministically,
 and render one valid header for each composed source unit. Source imports and
 package-manager dependencies are different information.
 
-Rust's approved `Meta.Lifetimes` and `Meta.GenericTypes` are optional, glyph-local
-String inputs containing native list interiors. FW/HY/MY declare parameters.
-Y and named KY apply arguments. The existing case determines the role, without
-new syllables, collections or Func/Prop/Op fields. See the
-[Rust input contract](README.md#lifetime-and-generic-inputs) for placement,
-absence and forwarding rules. These syntax inputs do not provide ownership
-inference or implicitly parameterize child glyphs.
+Rust's [local lifetime/generic inputs](README.md#lifetime-and-generic-inputs)
+illustrate this separation: existing declaration/application cases determine
+their role. Native syntax metadata introduces neither a new logical owner nor
+ownership inference.
 
 Further inputs, including mutability or capture contracts, need separately scoped
 review of type, default, absence behavior and interactions. Existing inputs are

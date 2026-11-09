@@ -20,7 +20,7 @@ The following fragment combines sentence-boundary shapes from the existing sourc
 
 <!-- example:lexical-sentence-boundaries -->
 
-The first line contains two sentences: the decimal point in `3.14` stays inside the Number token, while the period after it ends the declaration. The next `Show` belongs to the same paragraph even though it is unindented. The empty line begins a second paragraph. The period inside `tail.` belongs to Text. This documentation fragment illustrates **source preparation only**. The related tests inspect sentence spans and paragraph identity. This combined fragment has not been compiled or run.
+The first line contains two sentences: the decimal point in `3.14` stays inside the Number token, while the period after it ends the declaration. The next `Show` belongs to the same paragraph even though it is unindented. The empty line begins a second paragraph. The period inside `tail.` belongs to Text. This fragment illustrates **source preparation only**.
 
 ## Comments
 
@@ -42,7 +42,7 @@ The scanner skips a backslash and following byte while locating a quote terminat
 
 <!-- example:lexical-text-escapes -->
 
-In this documentation-only fragment, the first operand contains a literal backtick, the second contains backslash followed by `n`, and the third contains Unicode and markup punctuation. The interior `<DEF>` is ordinary Text because it is not a complete definition frame. `Show` adds no separator or newline between operands. These examples are based on inspected quote-scanning, literal-framing, and Text-emission contracts. The fragment itself has not been compiled or run. See [Text](values.md#text) for the byte-preservation boundary.
+The first operand contains a literal backtick, the second contains backslash followed by `n`, and the third contains Unicode and markup punctuation. The interior `<DEF>` is ordinary Text because it is not a complete definition frame. `Show` adds no separator or newline between operands. See [Text](values.md#text) for the byte-preservation boundary.
 
 Quoted source names cannot contain ordinary spaces in the primitive identifier classification. Case-insensitive lookup uses lowercase identity. Source-defined words may declare inflections with vertical bars inside the quoted label. Those bars belong to the lexical declaration, not statement conjunction.
 
@@ -56,7 +56,7 @@ For example, the basic program's final two sentences use an explicit owner:
 
 <!-- example:lexical-possessive-output -->
 
-`Hello` must already name the App declared earlier in that program. `Execute` completes its lifecycle before `Hello's Output` is shown. `Output` is the member of that App, not a global variable. This excerpt shares the basic program's existing execution witness and has not been run independently.
+`Hello` must already name the App declared earlier in that program. `Execute` completes its lifecycle before `Hello's Output` is shown. `Output` is the member of that App, not a global variable.
 
 Native definition slots have a stricter identifier contract: each dot-separated segment begins with a Unicode letter or underscore, followed by letters, digits, or underscores. Empty segments, hyphens, leading digits, and combining marks rejected by that validator are not permitted. Rust or Go reserved words are not automatically reserved as L slot names. Native emitted names have separate target validation.
 
@@ -70,7 +70,7 @@ The implicit core defines the two lifecycle words this way:
 
 <!-- example:lexical-action-inflections -->
 
-`Starting` in the second definition uses an inflection of the preceding `Start`. The pronoun `it` refers to the action's bound App operand. The inflection bars declare forms of one lexical identity, while `and then` sequences the action's steps. This is an excerpt of already-loaded builtin definitions, not code to redeclare in a user program. Existing builtin/frontend witnesses cover their expansion. No language execution was performed here.
+`Starting` in the second definition uses an inflection of the preceding `Start`. The pronoun `it` refers to the action's bound App operand. The inflection bars declare forms of one lexical identity, while `and then` sequences the action's steps. These builtin definitions are already loaded; do not redeclare them in a user program.
 
 An active noun form can serve as an applicative verb, a descriptive noun form as an adjective, and an objective verb form as a noun. These conversions preserve the canonical definition. Prefix storage exists internally, but source label declaration currently assigns its root first and does not establish a general public prefix-declaration language.
 

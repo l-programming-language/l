@@ -1,6 +1,6 @@
 # Construction and definition builtins
 
-The implicit [core source](../../../builtins/eng/core.l) defines these composition facilities. See the [builtin index](index.md#source-defined-facilities) for their word forms and the [definition guide](../../guide/definitions.md) for source authoring.
+The implicit [core source](../../../builtins/eng/core.l) defines these composition facilities. See [builtin vocabulary](index.md#builtin-vocabulary) for their declared forms and the [definition guide](../../guide/definitions.md) for source authoring.
 
 ## Process
 
@@ -72,9 +72,9 @@ Return completes that invocation. Exit terminates the enclosing program. Neither
 
 Borrow an Arc handle and produce another handle to the same allocation.
 
-**Usage and example.** The [native caller module](../../examples/word-core.l) takes `&std::sync::Arc<u8>` and returns the retained Arc. It preserves allocation identity. [Storage retention](../../internals/storage.md#ownership-and-bytes) distinguishes Rc from this Arc operation.
+**Usage and example.** The [native caller module](../../examples/word-core.l) takes `&std::sync::Arc<u8>` and returns the retained Arc, preserving allocation identity.
 
-Retain takes an explicit borrowed Arc and returns another handle to the same allocation. It increments shared ownership without cloning the payload. Atomic reference counting does not make an arbitrary payload Send or Sync.
+Retain increments shared ownership without cloning the payload. Atomic reference counting does not make an arbitrary payload Send or Sync.
 
 The [Storage ownership words](../../internals/storage.md#ownership-and-bytes) distinguish this Arc operation from Rc retention, copying and release.
 
@@ -112,7 +112,7 @@ The Object rule constructs a Generic `main` Object containing a New Objective Ma
 
 ### Main Service
 
-The Service rule constructs a Generic `main` Service containing a New Main Object. Basic uses this structure inside an App. It does not make a standalone Service executable.
+The Service rule constructs a Generic `main` Service containing a New Main Object. Basic uses this structure inside an App.
 
 These are ordinary source-defined descriptor rules. Aliases preserve their identity, and each construction applies every rule matching its target in authored order. Main currently has one rule for each target above. Repeated construction remains distinct.
 

@@ -78,7 +78,7 @@ Describe a reusable source construction pattern whose explicit operands are supp
 
 Process composes ordered Syllables through W. Function supplies FW/Func metadata: Name, typed Inputs, output types and an instantiated Process. Source Function declarations use this selected definition too. Function-local Return binds its builtin member after checking source results.
 
-A structured Process can declare typed Inputs for a selected pattern or iteration body. The [Process contract](../reference/builtins/definitions.md#process) specifies scope, cardinality and native type/borrow checking. The [Require walkthrough](../guide/definitions.md#keep-branch-data-inside-its-process) shows their use. A Process has no callable outputs or capture runtime.
+A structured Process can declare typed Inputs for a selected pattern or iteration body. The [Process contract](../reference/builtins/definitions.md#process) specifies scope, cardinality and native type/borrow checking. The [Require walkthrough](../guide/native-definitions.md#keep-branch-data-inside-its-process) shows their use. A Process has no callable outputs or capture runtime.
 
 Native source Function constructors accept explicit generic parameter atoms before their signature. Descriptors on derived invocation nouns retain the base result and forward checked operands once, in source order, including through transparent value definitions. Structured bodies retain their execution placement. One selected signature determines operand boundaries and result bindings: wrappers preserve it, replacements supply it, and source forwarding inherits its remaining parameters. Each declaration owns its body and formal inputs, including declarations sharing a sentence. Native move/borrow checks still apply, and forwarding introduces no clone. [Lined](../guide/native-definitions.md#compose-a-wrapper) demonstrates a source wrapper.
 
@@ -88,17 +88,17 @@ Each `It describes` refines Main. App construction selects its Service, Object a
 
 ## Framing and escaping
 
-Source definitions use backtick Text with one complete outer `<DEF>…<DEF>` pair. Both markers are spelled `<DEF>`, and neither is an XML closing tag. Interior/incomplete markers remain ordinary Text. Empty or nested definition bodies reject. The framing helper can inspect quoted/unquoted frames. Explicit internal template parsing also accepts markerless interiors. Those internal interfaces do not remove source backticks.
+Source definitions use backtick Text with one complete outer `<DEF>…<DEF>` pair. Both markers are spelled `<DEF>`, and neither is an XML closing tag. Interior/incomplete markers remain exact ordinary Text. The [framing helper](../../lyger/definition_bindings.go) inspects quoted/unquoted frames without decoding bodies or validating glyphs. Explicit internal template parsing accepts markerless interiors and rejects malformed, empty or nested definitions. Those internal interfaces do not remove source backticks.
 
 <!-- example:native-dictionary-definition -->
 
 This retained ProbeIO fixture witnesses framing and escaping, not the recommended decomposition of IO policy. `BOD^E` integrates the Calculation, `{|Statement: …|}` supplies metadata and `~…~` encloses native statement text. Its [caller](../../cmd/l/test/runnable_service/basic.l) supplies Output. For compositional authoring, follow the [Send/Lined walkthrough](../guide/native-definitions.md#start-from-the-existing-foundation).
 
-A body may be one expression, a JSON string array representing a word, or an array of word arrays. Grouping survives instantiation. Quote, backslash and backtick escapes decode once. Native escapes such as `\n` survive, and arguments are not decoded again.
+A body may be one expression, a JSON string array representing a word, or an array of word arrays. Grouping survives instantiation. Expanded display and explicit template parsing decode quote, backslash and backtick escapes once at their respective boundaries. Lexeme storage preserves encoding and quote presence. Native escapes such as `\n` survive, and arguments are not decoded again.
 
 ## Typed slots
 
-`<@Name|Type@>` declares a typed slot, and `<@Name@>` references an instantiated definition. Compatible repetitions share one ordered formal. Conflicting declarations reject. Dotted labels follow L identifier rules, independently of Go/Rust keywords and native identifier validation.
+`<@Name|Type@>` declares a typed slot, and `<@Name@>` references an instantiated definition. Compatible repetitions share one ordered formal. Conflicting declarations reject. Slot and type labels follow [L's dotted identifier rules](lexical-structure.md#names-possessives-and-qualification), independently of Go/Rust keywords and native identifier validation.
 
 | Binding kind | Data |
 | --- | --- |
@@ -119,7 +119,21 @@ Native Thing slots accept Text, Number, Truth and Null without converting them t
 
 Type, Atoms and Label are frontend roles using existing AML metadata. Nested constructors bind results once, in operand order, before the consuming word. Composition slots retain their selected definitions. Native and ordinary Functions share body lowering and bind their own invocation words. Dependencies retain canonical source ownership.
 
-Unknown kinds, incompatible types, missing bindings, invalid native names and malformed compositions reject. Text receives protected native quoting around AML/logeme delimiters. Explicit native fragments retain target-dependent meaning.
+Definition arguments and orchestrator primitives share a finite binary64 encoder.
+It emits the shortest round-trip decimal with an explicit `_f64` suffix,
+preserving negative zero and the parsed value's rounding. Integral, leading-plus
+and hexadecimal floating-point spellings therefore become valid Rust expressions.
+Number in a Thing slot uses the same encoding. Native fragments and integers
+remain opaque. Malformed/overflowing definition arguments retain contextual
+Syntax errors and native parse causes; stored nonfinite primitives remain Unsupported.
+
+Text scalar encoding protects backend delimiters, metadata separators, repeated
+spaces and Lucid openers with Rust escapes. Definition arguments, including Text
+in Thing slots, and orchestration share that boundary; orchestration retains its
+additional glyph escapes. Literal storage, source rendering, raw definitions and
+completed AML are not rewritten. Unknown kinds, incompatible types, missing
+bindings, invalid native names and malformed compositions reject. Explicit native
+fragments retain target-dependent meaning.
 
 ## Composition and source ownership
 

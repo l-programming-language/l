@@ -20,18 +20,20 @@ Canonical absence, omitted collections and explicit empty collections depend on 
 
 ## Lifetimes and GenericTypes
 
-The only approved generic/lifetime interfaces are glyph-local native String list interiors:
+The [Rust input contract](../../../builtins/README.md#lifetime-and-generic-inputs)
+defines glyph-local native String list interiors:
 
 ```text
 Lifetimes: ~'a, 'b~
 GenericTypes: ~T, U: Clone + 'a~
 ```
 
-FW/HY/MY declare parameters, while Y and named KY apply arguments. Both absent emits nothing. Both supplied places Lifetimes first and adds one template-owned separator. Callers own commas inside either value. Empty/whitespace-only supplied inputs reject. Native text Void remains a supplied type.
-
-These values are not Func/Prop/Op fields and cannot be inherited Class/Object/file metadata, even with a local override or an EA literal file. BW, anonymous KY and other forms reject them. Parent lists do not propagate into child calls. Named KY attaches arguments to its final named component: Key `Vec::new` plus GenericTypes `u8` yields `Vec::new::<u8>()`.
-
-Rust validates syntax, bounds, arity and lifetime legality. There is no parsing of a new generic parameter language, ownership/lifetime inference, implicit borrowing/cloning, added PhantomData or const-generic/where-clause interface. The [generic witnesses](../../../logiceme/testdata/lucid/generics-functions.aml.txt) and [validation tests](../../../logiceme/lucid_generics_validation_test.go) retain native E0794/E0392/E0107 failures where appropriate.
+FW/HY/MY declare parameters; Y and named KY apply arguments. These values sit
+beside Func/Prop/Op records and are never inherited file defaults. The canonical
+contract specifies absence, punctuation, provenance and the native-validation
+boundary. The [generic witnesses](../../../logiceme/testdata/lucid/generics-functions.aml.txt)
+and [validation tests](../../../logiceme/lucid_generics_validation_test.go) retain
+native E0794/E0392/E0107 failures where appropriate.
 
 ## Imports and support
 

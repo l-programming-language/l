@@ -90,15 +90,9 @@ For source authoring, see [composable definitions](guide/definitions.md) and the
 [native boundary](guide/native-definitions.md). Those guides own invocation forms,
 inflections and examples. This map covers compiler responsibilities.
 
-Number arguments in definitions and orchestrator primitives share one finite
-binary64 encoder. It emits the shortest round-trip decimal representation with
-an explicit `_f64` suffix, preserving negative zero and the parsed value's
-rounding. Definition binding encodes the parsed value rather than copying its
-spelling: integral, leading-plus and hexadecimal floating-point inputs therefore
-reach Rust as valid floating-point expressions. Number arguments supplied to
-Thing use the same rule. Native fragments and native integers remain opaque.
-Malformed or overflowing definition arguments retain their contextual Syntax
-errors and native parse causes. Stored nonfinite primitives remain Unsupported.
+Definition arguments and orchestrator primitives share native Text/Number
+encoding. The [typed-slot contract](spec/definitions.md#typed-slots) owns its byte,
+numeric and diagnostic rules.
 
 ## Preserve three representations
 
@@ -120,9 +114,28 @@ Relationships belong to the enum that supplies them. A native role can select an
 
 [Stored-value readers](../lyger/types.go) return `(val, error)` and verify exactly one matching outer wrapper plus a nonnil selected application/collection payload. Valid nil Thing and Bytes remain readable. Reads preserve canonical App/Dictionary pointers. Unresolved ID/None/Unknown states can exist during construction. Checked resolved reads do not turn failures into ordinary values. Runtime provenance is independent of storage. [Lexical receivers](../lyger/lexical_types.go) bind per-use arguments, load ordered actions, attach descriptors, and relabel directly. No generic update-map path remains.
 
-The [grammar-term decoder](../lyger/grammar_terms.go) is shared by configuration validation, lookup, matching, and node dispatch. [Grammar matching](../lyger/grammar_match.go) owns candidate copies, case selection, prefix consumption, and repeated-item lookahead. [Node types/building](../lyger/grammar_types.go) preserve configured structures. [Extraction](../lyger/grammar_extraction.go) returns declaration-token/record pairs. The borrowed [registration sites](../lyger/registration.go) follow those grammar nodes for declarations, aliases, descriptor refinements, and modifier ownership. They retain original tokens and separate independent clauses from definition bodies. Registration prepares every declaration and descriptor update before the [atomic publisher](../lyger/publication.go) validates the complete statement and commits its relationships. A rejected batch publishes nothing. Descriptor refinements clone existing targets/rules, and template discovery follows each canonical record back to its own value site. Instruction lowering skips registration-only clauses while preserving following assignments and effects.
+The shared [grammar-term decoder](../lyger/grammar_terms.go) serves configuration
+validation, lookup, matching and dispatch. [Matching](../lyger/grammar_match.go)
+owns candidate copies, case selection, prefix consumption and repeated lookahead;
+[nodes](../lyger/grammar_types.go) preserve configured structures.
+[Extraction](../lyger/grammar_extraction.go) pairs declaration tokens with records.
+[Registration](../lyger/registration.go) follows those nodes for declarations,
+aliases, refinements and modifiers, retaining original tokens and separating
+independent clauses from definition bodies. It clones refinements and prepares
+the complete statement before [atomic publication](../lyger/publication.go).
+Rejection publishes nothing. Template discovery follows canonical records to
+their own value sites; lowering skips registration-only clauses and retains later
+assignments and effects.
 
-Literal restoration visits each original statement token once and checks exact pool keys in its original backtick-delimited spans using the shared quote scanner. A token may contain several such spans. It skips quoted identifiers, preserves intervening bytes and escapes, and never rescans inserted content. Each cached fragment and the assembled Text are checked before committing token bytes and primitive storage together. Grammar nodes share these token pointers. Display rendering uses one deterministic replacement pass, so inserted literal bytes cannot become another cache lookup. The import builder owns one flattened accumulator and copies each prepared source's local literals into its own pool. Compilation adopts complete outputs only after expansion succeeds. A preparation-local position index avoids rescanning source prefixes for every span.
+Literal restoration uses the shared quote scanner on each original token's
+backtick spans once, checking
+exact pool keys, skipping quoted identifiers and preserving intervening bytes
+and escapes. It validates fragments and assembled Text before committing token
+bytes and primitive storage together; grammar nodes share those token pointers.
+Inserted content is never rescanned, including during deterministic display
+replacement. The import builder owns one flattened accumulator and copies local
+literals into its pool. Compilation adopts outputs only after expansion succeeds.
+A preparation-local position index avoids repeated source-prefix scans.
 
 ## Source meaning and output views
 
@@ -132,12 +145,25 @@ The builder retains `SourcePaths` as a physical-dependency projection, including
 
 Pronouns resolve from source order within their paragraph, independently of the order in which unresolved statements become known. Possessives select members of explicit or resolved values. A source paragraph is unrelated to the source-file hierarchy: Classes group files, and Objects own files. AML does not define a Feature/PARAGRAPH layer.
 
-The [semantic resolver](../lyger/semantic_resolution.go) starts lookup at each token's lexical scope and borrows the source-scope plan and canonical semantic maps. The program root scope owns `Compilation.Memory` and inherits builtin declarations. Dictionary unit roots inherit builtins without seeing caller locals. The resolver has no second memory map or fallback for unscoped tokens. Source scopes retain declaration tokens. Semantic `Subjects` connects each token to its registered record, including aliases and qualified declarations. Each lexical layer checks the complete qualified query first, preserving explicitly Public qualified bindings with private owners. Otherwise the longest locally visible owner prefix commits the remainder to canonical member tables. A reserved owner or missing member stays pending instead of reopening outer lookup. Possessive static lookup uses the same member traversal. Checked alias traversal selects a canonical owner before member lookup. Alias records remain addressable under their source names, while a shared dictionary retains its canonical ID and member namespace. Missing dependencies wait for the existing no-progress-checked retry loop.
+The [semantic resolver](../lyger/semantic_resolution.go) borrows the source-scope
+plan and canonical maps, starting at each token's lexical scope. It has no second
+memory map or unscoped fallback. Program-root `Compilation.Memory` inherits
+builtins; dictionary roots inherit builtins without caller locals. Scopes retain
+declaration tokens, and `Subjects` links uses to registered records, including
+aliases and qualified declarations.
+
+Each layer first checks the complete qualified query, preserving Public bindings
+with private owners. Otherwise its longest visible owner prefix commits lookup
+to canonical member tables. Reserved owners/missing members stay pending through
+the retry loop's no-progress check. Possessives share that traversal; aliases resolve their
+canonical owner while remaining addressable by source name. Shared dictionaries
+retain their canonical ID and member namespace. See [source lookup rules](spec/names-and-scope.md#possessives-and-member-lookup).
 
 The [paragraph scope model](../lyger/lexical_scope.go) separates physical source
 positions, pronoun paragraphs, expansion occurrences, and lexical environments.
-A four-space opening prefix creates an encapsulation. Continuation lines remain
-inside until a physical blank separator outside comments/literals. Removing a comment-only line does not create a paragraph boundary. Inline sentences retain byte spans.
+The [lexical contract](spec/lexical-structure.md#whitespace-sentences-and-paragraphs)
+defines four-space encapsulation and physical blank separators. Removing a
+comment-only line creates no boundary; inline sentences retain byte spans.
 Imported declarations inherit their import-site environment, while explicit
 paragraphs in an imported occurrence create children. Local declarations reserve
 all source-defined forms before retries, so unresolved locals cannot bind outer
@@ -161,23 +187,20 @@ and root/Public App names remain unchanged.
 
 Qualified static members take precedence over native runtime members. Concrete owners use their canonical member tables. Native type namespaces use qualified lookup in the token's lexical environment, including unresolved local reservations. Native reads require an actual App and the configured lexical role (`functional.deflective` or `functional.error`). A bare type namespace permits static definitions but does not create an invocation. Each native use retains its lexical metadata and a fresh runtime reference. Deferred Output Text takes that annotation from its actual RHS operand. Instruction lowering uses the same ownership rules. Local action arguments never fall back to paragraph/global symbols.
 
-Definition framing is structural: one complete outer marker pair, optionally inside complete backticks, surrounds an encoded body. The shared [framing helper](../lyger/definition_bindings.go) does not decode or validate template glyphs. Source Text requires the quoted form to classify as a definition. Ordinary Text with interior/unmatched markers remains exact. Expanded display and explicit template parsing decode once at their respective boundaries, while lexeme storage preserves encoding and quote presence. Explicit parsing still accepts markerless internal templates and rejects malformed/empty/nested definitions. When a Text scalar becomes a Rust expression, shared quoting protects backend delimiters, metadata separators, repeated spaces, and Lucid openers with Rust escapes. Definition arguments (including Text in Thing slots) and orchestration use that boundary. Literal storage, source rendering, raw definitions, and completed AML are not rewritten. Orchestration retains its additional glyph escapes. L slot labels and type labels accept dotted identifiers whose components start with a Unicode letter or underscore and continue with Unicode letters, digits or underscores. Native language keywords do not restrict these L labels. Rust identifiers embedded in native definitions use their separate native validation boundary.
+The shared [definition-binding implementation](../lyger/definition_bindings.go)
+owns structural framing and typed native encoding. The definition reference owns
+[framing/escaping](spec/definitions.md#framing-and-escaping) and
+[typed slots](spec/definitions.md#typed-slots); [lexical rules](spec/lexical-structure.md#names-possessives-and-qualification)
+distinguish L slot/type labels from native identifiers.
 
 Grammar includes value/subject/object roles, phrases, clauses, conditions, predicates, and statements. Its JSON notation expresses optional/repeated items and alternative cases. Go code implements their interpretation. Vocabulary localization remains partial because grammar loading and semantic type names retain English-specific logic. Import operators follow the loaded root-form lexical roles: associative verb, objective preposition, and declarative preposition. Import aliases remove only the original file clause, retaining configured operator spelling, owner punctuation, identifier quoting, and source attribution. Possessive suffix recognition is case-insensitive without changing owner bytes.
 
 The expanded-source view preserves declaration names, descriptor targets, template references, typed parameters, source order and ordinary literal bytes. Program-file inclusions expand at their import positions. Implicit builtin and dictionary units retain their own ownership rather than masquerading as copied program text. A member import retains its local alias statement. Resolution scheduling never reorders the source view. Display rendering removes comments, source stamps and literal-cache identities, strips definition framing and decodes its display escaping once. Ordinary literals retain their escaping. It emits deterministic period/newline separators without a final newline and preserves raw main-source bytes separately. It does not widen Function to Definition, substitute Noun.Process or erase Syllables annotations.
 
-The current CLI tests distinguish five views:
-
-| View | Current obligation |
-| --- | --- |
-| `mainBytes` / INITTEST | Exact raw main-source bytes |
-| COMPTEST | Originating-user-source projection: trim each main-path statement's Raw bytes and join in order; comments remain. The current constant equals INITTEST. |
-| `compiledBytes` / `CompilationResult.ExpandedSource` | Full expanded display, including resolved source units. It is not COMPTEST |
-| `asmBytes` / `CompilationResult.AML` | Exact observable application AML required by AMLTEST |
-| `CompilationResult.BackendAML` | Canonical framed generator input, including syllable backticks |
-
-`TestCompilerInitialize` compares the complete compiler struct, including nil/empty state. `TestCompilerCompile` checks raw source, exact AML, unchanged initialized compilation/options, equality to the returned expanded view, and originating-source preservation. The returned working result owns the actual semantic graph. Both AML views are separately allocated renderings of that graph. Preserve exact expected bytes and nil-versus-empty distinctions. Never copy fixture constants into compilation or discard the graph to satisfy a tested view.
+Raw input, originating-source projection, expanded display and the two AML views
+remain distinct. The [development guide](development-harness.md#investigating-failures)
+maps them to exact CLI test obligations. The returned working result owns the
+semantic graph; both AML views are separately allocated renderings of it.
 
 ## Application structure and execution
 
@@ -205,7 +228,7 @@ The checked grammar loader validates [configured rule references](../lyger/gramm
 
 ## Native executable pipeline
 
-[Application units](../lyger/application_units.go) preserve the source graph: each App owns a binary, its additional Services become libraries, Classes become modules, and Objects remain files. Standalone Services create no package, process or continuation. Raw AML retains independent library/bin targets. Programs without Apps still use the orchestrator with an empty generation manifest.
+[Workspace units](../lyger/workspace_units.go) project the source graph: each App owns a binary, its additional Services become libraries, Classes become modules, and Objects remain files. Standalone Services create no package, process or continuation. Raw AML retains independent library/bin targets. Programs without Apps still use the orchestrator with an empty generation manifest.
 
 The [typed plan](../lyger/orchestration_plan.go) resolves storage, captures, definite assignment and transfers before AML generation. Functions bind invocation verbs and compose their selected construction, invocation and Return definitions with private source storage/suspension words. Lyger supplies resolved signature/value atoms. Logiceme renders callable syntax. Generated bodies stay composed, and authored native leaves remain opaque.
 

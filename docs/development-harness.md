@@ -271,13 +271,8 @@ staging operation. The helper preserves discovery stdout, stderr and native
 errors separately, and reads Cargo's line-oriented records without discarding
 later artifacts after unrelated output.
 
-CLI slots and native-test shards reconcile complete trees at stable `StageCurrent`
-paths. Unchanged bytes retain timestamps. At most 4096 absent-path hash hints may
-restore timestamps when identical bytes return. Hints contain no source, are
-consumed before writes, and cannot restore aliases, future timestamps or stale
-versions. Missing history causes a rebuild. Malformed state fails closed. Every
-build invokes Cargo and snapshots its artifacts. The [cache contract](cli-build.md#source-generation-and-native-builds)
-defines source identity and ownership.
+CLI slots and native-test shards share the [stable-staging cache contract](cli-build.md#source-generation-and-native-builds),
+including timestamp-history bounds and fail-closed input validation.
 
 Use `CARGO_LOG=cargo::compiler::fingerprint=info` during a controlled rebuild to
 record its reason. Cargo cannot reconstruct that explanation afterward. Compare
@@ -394,6 +389,22 @@ Other I/O failures remain failures.
 ## Investigating failures
 
 Trace the earliest failed boundary: selected resources and source origins; imports and literal identity; token roles/storage/value types; grammar case and consumed span; scoped records/bindings; then ordered IR, AML and source bundles. Package tests retain package-local working directories. Temporary probes may expose private state without altering protected tests.
+
+The CLI's retained compiler tests distinguish five views:
+
+| View | Current obligation |
+| --- | --- |
+| `mainBytes` / INITTEST | Exact raw main-source bytes |
+| COMPTEST | Originating-user-source projection: trim each main-path statement's Raw bytes and join in order; comments remain. The current constant equals INITTEST. |
+| `compiledBytes` / `CompilationResult.ExpandedSource` | Full expanded display, including resolved source units. It is not COMPTEST |
+| `asmBytes` / `CompilationResult.AML` | Exact observable application AML required by AMLTEST |
+| `CompilationResult.BackendAML` | Canonical framed generator input, including syllable backticks |
+
+`TestCompilerInitialize` compares the complete compiler struct, including nil/empty
+state. `TestCompilerCompile` checks raw source, exact AML, unchanged initialized
+compilation/options, equality to the returned expanded view and originating-source
+preservation. Keep exact expected bytes and nil-versus-empty distinctions. The
+returned result owns the semantic graph; fixture constants must never replace it.
 
 For a backend failure, preserve the exact input and distinguish observable AML from canonical framed backend AML. Establish a failing regression before repair. Reuse an existing exposing test when available. Use `TestDemoGeneratesBuildableSource` and `TestMemberSourceGeneratesBuildableSource` for frontend handoffs, the [Service coverage ledger](../testdata/service-execution/coverage.md) for App-constructed libraries, raw AML native consumers and App process boundaries, and the stored Lucid complete AML cases for the Rust API boundary. Parser acceptance, source emission, native compilation and execution are distinct claims. The CLI/compiler diagnostics must stay separate from application stdout.
 

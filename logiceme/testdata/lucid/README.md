@@ -19,8 +19,10 @@ The current runner contains the following obligations:
 Shared interpreter, provenance, primitive, preparation and resource/isolation
 tests supplement these complete-application obligations. The 50 profiles above
 are the generic/lifetime additions, not the total number of low-level suite tests.
-Native checks compile the Expected and Generated contracts. Three positive
-future cases also execute generated assertions. Deployment scripts remain unexecuted.
+Native checks compile the Expected and Generated contracts. A separate tagged
+check executes assertions in the three positive [future cases](#futures).
+All other listed applications are compile-only. Deployment scripts remain
+unexecuted. Compilation establishes neither runtime behavior nor ownership-inference parity.
 
 This guide owns the current inventory and commands. The [dated ledger](FAILURES.md)
 owns observed generation, native compilation and acceptance results. The sections
@@ -44,16 +46,18 @@ cases retain Rust and generic systemless settings.
 
 | Case | Composed obligation |
 | --- | --- |
-| `grouping` | I/GE preserves the nested `2 * (1 + 2)` expression and result binding. |
-| `statements` | Three ordered native statement children declare explicit `let mut`, assign an increment, and print. |
-| `fields` | Native record declaration plus Y-composed construction preserves both fields and member use. |
-| `calculations` | Both Op records retain their order, grouping, prefixes, postfixes, and combined calculation. |
-| `communication` | CE composes bounded Tokio send and receive expressions; native E scaffolding creates the runtime and handles `Result`/`Option`. |
-| `conditionals` | The composed false/true/fallback chain retains ordered, distinct branch bodies. |
+| `grouping` | I/GE preserves `2 * (1 + 2)` through GOB binding. |
+| `statements` | Three BOD/E statements remain ordered within W/FW: explicit native `let mut`, increment assignment, then printing. This adds no mutability metadata. |
+| `fields` | DA/E native declaration plus Y/MOB two-field construction preserves fields and member use. It does not test HY's struct shell. |
+| `calculations` | DE/DOB preserves both Ops, grouping, prefixes and postfixes; operand syntax remains native data. |
+| `communication` | CE/DOB preserves send/receive order and bindings. Native E scaffolding creates Tokio, the async block and channel, and handles `Result`/`Option`. It tests neither V/MV scheduling nor CI/BI selection. |
+| `conditionals` | GI/BOG preserves false, true and fallback bodies in an unkeyed chain, without testing general pattern matching. |
 
 Each `<case>.aml.txt` is a complete AML document defining the application
 `lucid_nested_rust` with source location `/src/main.rs`. It uses an ordinary
-composed FW entry point with explicit unit output. Native scaffolding never
+composed FW entry point with empty parameters and explicit unit output. The empty
+Header loop, restored Func/Props/Ops records, singular/plural forwarding and
+ordered child categories are part of their integration. Native scaffolding never
 replaces the composed feature with EA. Communication supplies its native `async`
 block explicitly. The current CE path validates operands. Cargo checks the
 emitted async context. This case does not establish general compiler inference
@@ -84,6 +88,15 @@ checked-in oracles. Compare them using `bytes.Equal`. Do not trim, format, reord
 normalize, regenerate from actual output, or replace actual files with expected
 ones. Common immutable support expectations are shared across case mappings.
 
+The named family checks below share these guarantees where applicable:
+
+| Check | Common assertions |
+| --- | --- |
+| Malformed composition | Exact classified semantic cause, separate from application/file context; unchanged input, no panic and a zero-value bundle. |
+| Resource/isolation | Explicit and embedded providers, A/B/A service reuse, stable earlier bundles and file-owned imports, with provenance for the selected assets. |
+| Interpreter/preparation | Preserve metadata, bindings, parsed input and literal bytes across repeated use; family-specific controls below supplement these guarantees. |
+| Native negative | Expected and Generated projects require the intended diagnostic code and primary source/expansion span. Unrelated errors or dependency/setup failures cannot satisfy it. |
+
 ## Futures
 
 Five complete pairs use the existing plain manifest and lock. `future-composed`
@@ -112,19 +125,12 @@ five-file bundle shape:
 | select-nesting-hygiene | Nested selection, preserved caller helper-like name, explicit repeated assignments, body once. |
 | select-closed-receive | Explicit Option handling and scope across subsequent use. |
 
-Three more complete-AML/source pairs require successful exact generation and
-intentional Cargo rejection: select-sync-context (E0728), select-borrow-conflict
-(E0499), select-moved-send (E0382). The runner requires the intended code and a
-primary source/expansion span, rejects unrelated compiler errors, and never treats
-dependency/setup failures as an expected negative.
+Three more pairs require exact generation and intentional Cargo rejection:
+select-sync-context (E0728), select-borrow-conflict (E0499), select-moved-send (E0382).
 
 `selection-invalid/` contains 35 complete AML documents for invalid CI/BI/OC/DOC
 compositions. They cover DO/DOB and bare guard rejection, Definition metadata and
 cardinality, placement and unsupported codas as well as existing CI/BI rules.
-Checks assert the classified underlying semantic cause separately
-from application/file context, no panic, unchanged input, and zero returned bundle.
-Selection isolation reuses complete fixtures for A/B/A, previous-bundle stability
-and equivalent explicit/embedded resources.
 
 The positive projects use ordinary FW and native async scaffolding. CI/BI/CE and
 OC/DOC remain composed. Ordinary O performs caller-authored outer assignments.
@@ -169,10 +175,8 @@ does not prove runtime order, termination or channel behavior.
 `iteration-invalid/` contains 50 complete AML documents covering conflicting
 conditions, iterator/condition mixtures, three-part composition, body and
 child cardinality, ordinary Definitions used as conditions, OG/DOG metadata and
-placement, and PO child/label/coda rules. They use the same classified-cause,
-zero-bundle, immutability and no-panic requirements as the 35 selection-invalid
-cases. Iteration isolation covers A/B/A reuse, earlier bundles and explicit versus
-embedded resources without changing selection isolation obligations.
+placement, and PO child/label/coda rules. Iteration and selection retain independent
+isolation checks under the common requirements above.
 
 Eight stored `primitive/iterate-*.rs.txt` expectations render the actual Iterate
 Default case for Definition, Calculation, Evaluation and unconditional branches,
@@ -191,17 +195,15 @@ Execute and Execution exclude Deferred inputs, forwarding and branches.
 Scheduling expressions require explicit caller-supplied futures and context.
 
 `schedule-direct` exercises V's native Key and `schedule-composed` exercises
-MV's composed Instantiation without supplying Deferred. The four documents in
-`scheduling-invalid/` cover Deferred True and False on both routes, asserting
-the unchanged `Unsupported` cause, zero bundle, input immutability and no panic.
+MV with KY's receiver-method call `ready.into_future()`, without Deferred.
+The four documents in `scheduling-invalid/` cover Deferred True and False on both
+routes, retaining the `Unsupported` cause.
 `TestLucidDeferredRejected` checks these failures, and
 `TestLucidSchedulingIsolation` checks reuse and selected resource providers.
 These tests do not expand the accepted execution child roles or certify other
 async forms. Caller-supplied futures and Tokio setup remain explicit.
 
 Expected and Generated projects use the existing manifests and retained locks.
-These scheduling checks compile without executing applications or deployment
-scripts.
 
 See the [execution contract](../../../builtins/README.md#execution-without-deferred)
 for the distinction between scheduling and resource cleanup through RAII. Removing
@@ -248,6 +250,19 @@ linting, unfiltered acceptance and the configured native-compilation stage.
 Report any separately requested future-execution results explicitly. Preserve
 assertions and budgets. Do not substitute focused checks for the gate.
 
+Record generation errors/panics, actual bundles and expected references, byte
+differences, Expected/Generated Cargo results, and blocked phases in the
+[dated ledger](FAILURES.md). Classify causes as production generation/validation,
+support assembly, fixture/harness, infrastructure, or a reviewed expectation-only
+mismatch. Compilation success alone cannot justify the last classification:
+review literal contents, operation order, scopes and every support artifact.
+Use an existing exposing regression when available and repair the responsible
+production layer. Independent expectation amendments require concrete approval,
+never an automatic update from actual output. Keep frozen hashes unchanged.
+Documentation updates establish no new behavioral result; consult the
+[integration limits](../../../builtins/README.md#current-integration-limits)
+before extending a support claim.
+
 ## Declaration adapters
 
 Five complete applications under this directory exercise Declaration adapters.
@@ -260,15 +275,16 @@ Five complete applications under this directory exercise Declaration adapters.
 | declaration-instantiation | FOB receives MA's Y construction with fields 11 and 22; both fields are read. |
 | declaration-iteration | PA forwards X/I/W's conditional loop, ordered body and following statement between native function-boundary fragments. |
 
-The vowel selectors use consonant action names. Declare's nominal selectors and
-singular children are unchanged. Rust FW signatures remain parameterless with
+The outer vowel selectors use `Operate`, `Describe`, `Evaluate`, `Instantiate`
+and `Iterate`; Declare uses the category nouns `Operation`, `Description`,
+`Evaluation`, `Instantiation` and `Iteration`. Each forwards exactly one child.
+These witnesses do not establish every child form, signature or execution context.
+Rust FW signatures remain parameterless with
 explicit unit results, Y has two fields, and PA does not introduce a new W child
 role. These choices isolate adapter routing from unrelated integration limits.
 No EA, native replacement loop, dispatcher alias, or compiler repair is involved.
 
-Rust expectations are authored from literal template spans and compared without
-normalization. The applications are not executed. The [ledger](FAILURES.md)
-records generation, compilation and acceptance evidence.
+Rust expectations are authored from literal template spans.
 
 ## Named invocation
 
@@ -289,15 +305,12 @@ Both pairs use independently authored exact source expectations and the existing
 five-artifact bundle. `invocation-named` reuses the Tokio rt/sync manifest and
 retained lock. `invocation-void` reuses the plain manifest and lock.
 
-`invocation-invalid/` contains the two complete malformed Receiver documents.
-`TestLucidInvocationInvalid` checks their exact classified leaf causes, zero
-bundles, input immutability, no panic and selected Instantiate/Instantiation assets.
-`TestLucidInvocationIsolation` evaluates `invocation-named`, `schedule-composed`
-and `invocation-named` again using one service under filesystem and embedded
-providers, checking exact bundles and previous-result stability. Additional
-Rust interpreter tests compare bare/quoted equality and inequality without
-mutating metadata or parsed source. Preparation tests distinguish omitted Receiver
-from native `Void`, including inherited equal-byte metadata provenance.
+`invocation-invalid/` contains two malformed Receiver documents, checked by
+`TestLucidInvocationInvalid` with Instantiate/Instantiation provenance.
+`TestLucidInvocationIsolation` uses `invocation-named`, `schedule-composed`, then
+`invocation-named`. Interpreter controls compare bare/quoted equality and
+inequality. Preparation distinguishes omitted Receiver from native `Void`,
+including inherited equal-byte metadata provenance.
 
 Native helper declarations isolate KY from Func-field interpolation. These
 invocation witnesses do not establish BW, general signatures or KYC behavior.
@@ -327,8 +340,7 @@ prepared `Func = Void` sentinel compares equal. A completely unset Func entry
 retains its empty-record fallback. It also compares unequal and is not promoted
 to native-name provenance.
 
-These callable-name witnesses do not establish general signatures or runtime
-behavior. Generated Rust applications and scripts remain unexecuted.
+These callable-name witnesses do not establish general signatures.
 
 ## Typed functions and closures
 
@@ -353,14 +365,9 @@ accept the literal empty-field spelling `Key: ,`.
 `callable-invalid/` contains 62 complete AML cases. Fifty-one cover required
 names, bounded BW placement, KY children/metadata, Func/flat exclusivity,
 unsupported Capture/headers, strict nested fields and framing errors. Eleven
-cover MY signatures as described below. Tests assert exact classified leaf causes,
-zero bundles, no panic and input immutability. Interpreter controls retain
-existing Prop rendering and repeated-interpretation state.
-A/B/A checks use filesystem and embedded providers with import isolation and
-Operate/Operation/Instantiate/Instantiation resource provenance.
-
-All native checks compile only. Closure invocation, capture behavior and owner
-reuse are not executed. No Rust runtime parity is claimed.
+cover MY signatures as described below. Interpreter controls retain existing Prop
+rendering. Isolation checks cover Operate/Operation/Instantiate/Instantiation
+provenance. Closure invocation, capture behavior and owner reuse remain compile-only.
 
 ## Native output-type provenance
 
@@ -376,9 +383,6 @@ interpolation, bare/quoted comparisons and raw-list presence under Rust. Missing
 interpretation without state mutation remain explicit controls. Only exact
 `Meta.Func.Outputs~` gains Rust native-source provenance for a nonempty output
 collection. Indexed Funcs have the separate MY contract below.
-
-Generated Rust applications and deployment scripts remain unexecuted. The
-[ledger](FAILURES.md) records generation, compilation and acceptance evidence.
 
 ## MY required signatures
 
@@ -400,13 +404,10 @@ AML rejects malformed records before rendering with classified causes.
 
 Eleven of the 62 callable validation cases cover supplied/empty Receiver, missing
 method names, unknown/duplicate/malformed Func fields and invalid input Props.
-Filesystem/embedded A/B/A checks compare complete bundles and verify input,
-prior-bundle and resource isolation.
 
 These witnesses cover receiverless required signatures. Empty traits and local
 generic/lifetime parameters have separate controls below. Composed methods,
 per-method parameters and implementations remain outside this contract.
-Generated Rust applications and deployment scripts are not executed.
 
 ## Empty Y/HY/MY
 
@@ -427,13 +428,11 @@ resource data, parsed tags and source bytes remain exact and immutable.
 
 Five stored malformed inputs in `empty-instantiation-invalid` reject empty
 native collections with unrendered headers/methods, and empty HY with Shape Sum.
-They assert classified leaf causes, zero bundles, no mutation and no panic.
-A/B/A service reuse under filesystem and embedded resources verifies exact
-bundles and selected Instantiate/Instantiation provenance.
+Isolation checks retain Instantiate/Instantiation provenance.
 
 Empty declaration support does not implement composed members, composed
 generic-header children or sum types. Local String parameters have separate
-controls below. Generated Rust applications and scripts remain unexecuted.
+controls below.
 
 ## Keyed GI
 
@@ -450,15 +449,13 @@ Three complete applications use the exact-bundle/native runner:
 
 Fourteen stored `keyed-invalid` documents cover cardinality, empty Key/patterns,
 unexpected children and direct/composed duplicate or nonterminal fallbacks.
-They assert exact classified leaf causes, zero bundles, immutable input and no
-panic. Five exact Evaluate primitive cases and thirteen preparation cases cover
+Five exact Evaluate primitive cases and thirteen preparation cases cover
 one-shell rendering, repeated interpretation, Count restoration, inherited/local
 Key precedence and native Void provenance. Filesystem/embedded A/B/A reuses
-`keyed-conditionals`, existing `conditionals`, then `keyed-conditionals`, checking
-all artifacts, prior bundles and Evaluate/Evaluation resource provenance.
+`keyed-conditionals`, existing `conditionals`, then `keyed-conditionals`, with
+Evaluate/Evaluation resource provenance.
 
-The independent oracles use the plain manifest/lock and exact byte comparisons.
-Runtime branch selection is not executed or claimed.
+The independent oracles use the plain manifest/lock.
 
 ## Lifetime and generic inputs
 
@@ -487,8 +484,7 @@ is provided.
 Twenty complete AML inputs in `generics-invalid/` cover blank values, unsupported
 forms, anonymous calls, inputs incorrectly placed inside Func records, duplicates
 and inherited Class/Object metadata. An inherited-input EA case exercises the
-file-boundary guard. Assertions require the classified leaf cause, zero-value
-bundle, unchanged input and no panic.
+file-boundary guard.
 
 Fifty exact primitive profiles cover all ten suffix sites with absent inputs,
 lifetime-only, type-only, both inputs and native type Void. Additional preparation
@@ -497,10 +493,6 @@ supported form, inherited sentinel/blank/override rejection, repeated immutable
 interpretation and generic systemless lookup. Filesystem/embedded service reuse
 checks A/B/A output, earlier bundles and provenance for all four selected assets.
 
-Consult the [dated ledger](FAILURES.md) for observed gate outcomes. Generated Rust
-applications and deployment scripts remain unexecuted.
-Compilation establishes neither runtime behavior nor ownership-inference parity.
-
 See the [input contract](../../../builtins/README.md#lifetime-and-generic-inputs)
 for native String framing, glyph-local scope and declaration/application placement.
 Trait-level inputs do not add method-specific lists. Dedicated const-generic,
@@ -508,18 +500,6 @@ independent where-clause and generic implementation interfaces remain separate w
 
 ## Recording evidence
 
-[FAILURES.md](FAILURES.md) records the latest dated evidence. Record generation
-errors/panics, every actual bundle, expected references, byte-difference evidence,
-expected/actual Cargo results, and blocked phases. Classify causes as production generation/validation,
-support assembly, fixture/harness, infrastructure, or a reviewed expectation-only
-mismatch. Compilation success alone cannot justify expectation-only: review
-literal contents, operation order, scopes, and all support artifacts first.
-
-The ledger records whether the current generation and native obligations passed
-at a given revision. A documentation update alone establishes no new behavioral
-result. For subsequent behavior changes, use an existing exposing regression
-when available and repair the responsible production layer within the approved
-scope. Keep frozen hashes unchanged. Independent expectation changes require
-a concrete, separately scoped amendment, never an automatic update from actual
-output. Consult the [current integration limits](../../../builtins/README.md#current-integration-limits)
-before treating the current corpus as support for additional compositions.
+Follow [Run and retain evidence](#run-and-retain-evidence) for commands, failure
+classification and reporting. [FAILURES.md](FAILURES.md) records the latest dated
+results for their tested revision and host.

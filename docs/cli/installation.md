@@ -1,32 +1,39 @@
 # Install L
 
-L is available for Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64). Setup installs the latest stable release and prepares the Rust tools needed to build L programs. You do not need Go or a compiler source checkout.
+L is available for Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64). The released installer prepares L and its Rust build dependencies without Go or a compiler source checkout.
 
 ## Install a released binary
 
-Run this command in a Bash or Zsh terminal:
+Install L 0.0.1 in a Bash or Zsh terminal:
 
 ```sh
-(set -o pipefail; curl --proto '=https' --tlsv1.2 -fsSL https://ldocs.org/install.sh | sh) && . "$HOME/.local/share/l/env"
+curl --fail --location --proto '=https' --tlsv1.2 \
+  https://github.com/l-programming-language/l/releases/download/v0.0.1/install-release.sh \
+  --output install-release.sh &&
+bash ./install-release.sh --version 0.0.1 --with-toolchain &&
+export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH" &&
+l --version
 ```
 
-Setup shows the selected release and installation locations, then asks once before making changes. It verifies the download, installs `l` into `~/.local/bin`, prepares its pinned Rust dependencies, and configures Bash and Zsh for new terminals. The final part of the command activates L in your current terminal. Setup does not use `sudo` or install system packages.
+The installer verifies the release archive and installs `l` into `~/.local/bin`. `--with-toolchain` permits installation of missing Rust tools without another prompt. The PATH export activates this terminal; `l --version` should print `0.0.1`. Setup does not use `sudo`, install system packages, or edit shell startup files.
 
-To review the script before running it, use [download and inspect](installation-options.md#download-and-inspect) or the [versioned release installer](installation-options.md#download-and-inspect-the-release-installer).
+To review the script before running it, use [download and inspect](installation-options.md#download-and-inspect).
 
 ## Prerequisites
 
 You need internet access and your system's [native build tools](installation-options.md#native-build-tools). If setup reports a missing C compiler or linker, follow those platform instructions and rerun the command.
 
-## Activate and check L
+<a id="activate-and-check-l"></a>
 
-Check that L is available:
+## Keep L on PATH
+
+Add this export to your chosen Bash or Zsh startup file for new terminals:
 
 ```sh
-l --version
+export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH"
 ```
 
-It should print the version selected during setup. If you need to activate an existing installation in another Bash or Zsh session, run `. "$HOME/.local/share/l/env"`. See [shell setup](installation-options.md#shell-setup) for custom locations and other shells. If macOS blocks the binary, see [macOS approval](installation-options.md#macos-approval).
+See [shell setup](installation-options.md#shell-setup) for custom locations and other shells. If macOS blocks the binary, see [macOS approval](installation-options.md#macos-approval).
 
 ## First native build
 

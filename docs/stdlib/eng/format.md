@@ -53,7 +53,7 @@ This registered App-body fragment imports IO.Print and illustrates decimal and s
 
 <!-- example:values-number-printing -->
 
-For a complete App with execution and captured output, see [IO.Print](io.md#print). The source-number witness below exercises the formatting path through real L programs. Static page preparation does not execute the fragment.
+For a complete App with execution and captured output, see [IO.Print](io.md#print).
 
 ## Errors and ownership
 
@@ -63,4 +63,4 @@ Format returns an owned byte vector, not a Result. Its internal expectations des
 
 Sources: [Formatting dictionary](../../../stdlib/eng/format/dictionary.l) and its [private foundations](../../../stdlib/eng/format/foundations.l). Shared casts and other foundational operations compose through canonical Storage definitions.
 
-The [dictionary-selection tests](../../../lyger/format_dictionary_test.go) check canonical Format identity, Runtime's alias and source-import isolation. [Source Number tests](../../../lyger/io_numeric_test.go) exercise Print with exact output. [Native scalar tests](../../../logiceme/scalar_runtime_test.go) cover the selected formatter's signed zero, extrema, subnormal values and midpoint cases. [Foundation tests](../../../lyger/library_foundations_test.go) check shared ownership and cast composition. These witnesses establish distinct properties. A documentation build alone establishes none of their runtime outcomes.
+The [dictionary-selection tests](../../../lyger/format_dictionary_test.go) check canonical Format identity, Runtime's alias and source-import isolation. [Source Number tests](../../../lyger/io_numeric_test.go) exercise Print with exact output. [Native scalar tests](../../../logiceme/scalar_runtime_test.go) cover the selected formatter's signed zero, extrema, subnormal values and midpoint cases. [Foundation tests](../../../lyger/library_foundations_test.go) check shared ownership and cast composition.
