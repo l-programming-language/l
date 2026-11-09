@@ -1,17 +1,15 @@
-# Words A–Z
+# Native Words
 
-Find a word by its root, then choose its qualified meaning. Entries explain the
-declared forms, grammatical role, supported context, and examples. The same
-spelling can denote different meanings: App Output and IO.Output, for example,
-have different owners and behavior.
+<a id="words-az"></a>
 
-Builtin vocabulary is available implicitly. [Public libraries](../stdlib/index.md)
-require an explicit import. Advanced Storage compositions appear separately below
-and require their documented native authoring context.
+Find the implicit builtin, core and configured grammatical vocabulary by root.
+Every link opens its complete [Word Glossary](word-glossary.md) entry, including
+the source definition, forms, part of speech, description and usage examples.
 
-The index covers the reviewed public inventory reconciled with current source.
-It is not a compiler-generated export list or a runtime certification. For
-language concepts rather than individual words, use the [terminology glossary](../spec/glossary.md).
+These words require no dictionary import. For imported words, browse
+[IO](../stdlib/eng/io.md), [Formatting](../stdlib/eng/format.md),
+[Runtime](../stdlib/eng/runtime.md) or [Storage](../internals/storage.md).
+The [terminology glossary](../spec/glossary.md) explains language concepts.
 
 ## How to read the labels
 
@@ -32,4 +30,4 @@ are recorded separately.
 **Authoring** identifies advanced word-definition or native integration context.
 It is an audience label, independent of implementation support.
 
-<!-- word-index -->
+<!-- word-index:builtins -->

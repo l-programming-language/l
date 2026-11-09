@@ -24,147 +24,43 @@ Assignment, Function arguments/results and captures snapshot ordinary values, re
 
 ## Text
 
-<!-- word:type:text -->
-
-Represent a sequence of bytes without an implicit newline or Unicode normalization.
-
-**Usage and example.** Backtick literals initialize Text. The [public-values program](../../demo/paragraphs/public-values.l) stores and shows Greeting. The escape illustration below preserves its precise byte rules.
-
-Backticks delimit Text. Interior bytes are retained, except that a backslash immediately before an escaped backtick is removed when the literal is unquoted. This is not general escape decoding: backslash followed by `n` remains two characters. Text has no implicit newline. `Show` writes it exactly, while imported `IO.Print` appends one LF. See the [IO reference](../stdlib/eng/io.md).
-
-Text preserves UTF-8, invalid UTF-8 octets, NUL, whitespace, and markup punctuation. Native encoding preserves these bytes without replacement characters. Browser displays cannot faithfully represent every octet. Use the original source bytes for byte-sensitive examples.
-
-Text supports equality with Text. General ordering, numeric conversion, indexing, concatenation operators, code-point iteration, and Unicode normalization are not currently exposed as L operations. Native definitions can supply target-specific operations.
-
-<!-- example:lexical-text-escapes -->
-
-The first Text contains a backtick, the second retains the two bytes `\n`, and the third retains Unicode, braces, and an interior `<DEF>` marker as data. Successive Show calls write adjacent text. This fragment does not define a Bytes constructor or an escape for arbitrary octets.
+[Text in the Word Glossary](../reference/word-glossary.md#word-type-text).
 
 ## Number
 
-<!-- word:type:number -->
-
-Represent a finite binary64 number for typed storage, comparison and supported rendering.
-
-**Usage and example.** `Define "Count" as 7` in [public-values](../../demo/paragraphs/public-values.l) supplies a Number. The printing fragment below demonstrates the formatter and requires its App context.
-
-Number uses finite IEEE-754 binary64 (`float64` in Lyger, `f64` in Rust). It is not an arbitrary-precision integer, and L has no source integer-width family.
-
-The number parser accepts these forms. Source token boundaries also apply. Parser acceptance alone does not make a spelling a complete standalone token.
-
-| Source spelling | Represented consequence |
-| --- | --- |
-| `3`, `+3`, `3.0` | The same binary64 value |
-| `-12.5` | Negative finite fraction |
-| `1e6` | One million |
-| `0x1.8p+1` | Three |
-| `1_000` | One thousand |
-| `9007199254740993` | Rounded to the representable value 9007199254740992 |
-| `5e-324` | Smallest positive subnormal |
-| `1e-4000` | Underflows to positive zero |
-| `-1e-4000` | Underflows to negative zero |
-
-Positive and negative zero retain their sign through native encoding. Overflow, such as `1e999`, rejects with its range error preserved. Numeric-looking declared words can resolve as names. Although the lower parser recognizes nonfinite spellings, native scalar emission and typed definition binding reject NaN and Infinity.
-
-Number supports equality and order comparisons with Number. Text/Number comparisons do not coerce. The English source grammar has no general arithmetic operator expressions. Native logeme calculations are a separate interface.
-
-`IO.Print` uses shortest round-tripping binary64 formatting, corresponding to `strconv.FormatFloat(value, 'g', -1, 64)`. One million prints as `1e+06`, followed by LF.
-
-<!-- example:values-number-printing -->
-
-The three calls print `3.5`, `-12.5`, and `1e+06`, each followed by LF when the App runs. This fragment supplies only the App body. The [first program](../guide/first-program.md) shows the lifecycle and output handling needed to execute it.
+[Number in the Word Glossary](../reference/word-glossary.md#word-type-number).
 
 ## Truth
 
-<!-- word:type:truth -->
-
-Represent the Boolean values true and false without implicit truthiness conversion.
-
-**Usage and example.** The complete conditional example below compares a declared Truth and joins Worker only on its selected branch.
-
-The literals are lowercase `true` and `false`. A bare condition requires Truth, and equality requires another Truth. Number and Text have no implicit truthiness. The grammar's `?~?` notation is a type matcher, not a source literal.
-
-Configured `not`/negative forms express negation in conditions, not a general prefix operator. Joined Boolean conditions are currently rejected by outer instruction lowering. No short-circuit behavior is defined.
-
-<!-- example:values-truth-condition -->
-
-`enabled` receives a Truth. Comparing it with `true` selects `await Worker`. The following declaration snapshots the finalized Output. Replacing `true` with backtick Text changes the type and does not create truthiness.
+[Truth in the Word Glossary](../reference/word-glossary.md#word-type-truth).
 
 ## Thing
 
-<!-- word:type:thing -->
-
-Retain a value's concrete runtime type at an explicitly broad typed boundary.
-
-**Usage and example.** ``Define "boxed" as a New Thing of `first`.`` followed by a checked Text read is the [runtime-value witness](../../lyger/runtime_values_test.go). The Print illustration below shows that a broad parameter still selects a supported concrete renderer.
-
-Thing preserves a contained runtime type and checks typed reads. It does not coerce values into Text. IO.Print selects typed rendering definitions for Text, Number, Truth and Null:
-
-<!-- example:values-thing-printing -->
-
-The public Print action composes private rendering and writing Functions. This fragment supplies an App body. Declaration alone does not run it.
-
-Thing does not provide dynamically typed arithmetic, unrestricted reflection, or printing for every application or collection value. Its usable arguments depend on the definition and native consumer.
+[Thing in the Word Glossary](../reference/word-glossary.md#word-type-thing).
 
 ## Byte and Bytes
 
 ### Byte
 
-<!-- word:type:byte -->
-
-Name the byte-oriented lexical category whose supported owned storage form is Bytes.
-
-**Usage.** Use the plural [Bytes](#bytes) constructor for an owned byte sequence, then read an element as Number. The [byte excerpt](../examples/word-values.l) reads the `a` octet as 97.
-
-**Partial support.** The configured Byte/Bytes word family is recognized, but only the plural Bytes storage type is implemented. The source-type whitelist has no singular Byte scalar type: individual octets are read as Number, and `New Byte` does not supply a one-byte value constructor. See the [source-type boundary test](../../lyger/refactor_value_characterization_test.go).
+[Byte in the Word Glossary](../reference/word-glossary.md#word-type-byte).
 
 ### Bytes
 
-<!-- word:type:bytes -->
-
-Own a sequence of unchanged bytes copied from Text.
-
-**Usage and example.** `New Bytes of` constructs the buffer. A checked Number read selects a zero-based octet. The complete [value program](../examples/word-values.l) contains this excerpt:
-
-<!-- example:word-values-bytes -->
-
-Indices must be nonnegative integers within bounds. Bytes mutation is not exposed, and byte indexing is not Unicode character indexing.
+[Bytes in the Word Glossary](../reference/word-glossary.md#word-type-bytes).
 
 ## Pointer
 
-<!-- word:type:pointer -->
-
-Hold a managed shared reference to a typed runtime value.
-
-**Usage and example.** The [complete value program](../examples/word-values.l) copies a Pointer handle, changes the shared target and reads it as Text. The focused excerpt below preserves those exact source lines.
-
-<!-- example:word-values-pointer -->
-
-The Pointer owns a copy of the initial value. Both handles share that target, so this prints `second`, while `message` remains `first`. Target types are checked. Pointer and capture-environment writes reject ownership cycles. Reads release their checked borrow before a nested call or Await. The last owner releases the target. There is no pointer arithmetic or user-managed deallocation.
+[Pointer in the Word Glossary](../reference/word-glossary.md#word-type-pointer).
 
 ## Null and internal states
 
 ### Null
 
-<!-- word:type:null -->
-
-Represent an explicitly initialized absence value, distinct from an unassigned binding.
-
-**Usage and example.** The [value program](../examples/word-values.l) defines nothing as Null and shows `null`. IO.Print renders its native Null operand as `<nil>` instead. These policies are intentionally distinct.
-
-`Define "nothing" as Null.` initializes an absence value, and Show writes `null`. A typed Null read still evaluates its source and checks its type, index or key. Null does not replace definite assignment. The separate native-definition Null atom displays `<nil>`.
-
-Compiler labels are separate from public types. The labels `ID`, `None`, and `Unknown` track resolution, `Lexeme` stores lexical definitions, and invalid sentinels indicate compiler state. These implementation labels are not additional application words. [Error](#error) is a separate runtime carrier, not an internal sentinel.
+[Null in the Word Glossary](../reference/word-glossary.md#word-type-null).
 
 ## Error
 
-<!-- word:type:error -->
-
-Carry a runtime failure value that can be stored, passed and retained in typed containers.
-
-**Usage and example.** The [complete value program](../examples/word-values.l) uses ``Define "problem" as an Error of `failure`.`` and puts it in a List of Error. Showing that list writes `[failure]`. Direct Show of an Error is unsupported. This is a value constructor, distinct from inspecting an [App's Error](../reference/builtins/lifecycle.md#error).
-
-The value retains its failure information when transferred through Functions. Extracting an absent App Error rejects instead of manufacturing this carrier. Error values do not provide general source exceptions or automatic rollback.
+[Error in the Word Glossary](../reference/word-glossary.md#word-type-error).
 
 ## Conversion and aliasing boundaries
 

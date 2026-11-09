@@ -28,19 +28,11 @@ This private paragraph publishes Greeting, Count and Enabled. Later paragraphs i
 
 ### Public
 
-<!-- word:builtin:public -->
-
-Publish exactly the declaration qualified by this visibility adjective from its private paragraph into the source-unit root.
-
-**Usage and example.** `Create "Shared" as a New Public Dictionary` in the [public-values program](../../demo/paragraphs/public-values.l) exposes Shared. Publication retains identity and does not export unrelated declarations or private members. Use [Publicly](#publicly) when the modifier attaches to the declaration action.
+[Public in the Word Glossary](../reference/word-glossary.md#word-builtin-public).
 
 ### Publicly
 
-<!-- word:builtin:publicly -->
-
-Publish exactly the declaration selected by the action modified by this adverb.
-
-**Usage and example.** `Publicly define "Count" as 7` in the [public-values program](../../demo/paragraphs/public-values.l) makes Count available after its paragraph. `Publicly create Identity` in the [Function example](../examples/composed-functions.l) exposes the Function, not its input or body locals. This adverb is distinct from the [Public adjective](#public).
+[Publicly in the Word Glossary](../reference/word-glossary.md#word-builtin-publicly).
 
 ## Pronouns
 
@@ -58,27 +50,15 @@ Within an action definition, a pronoun may bind a preceding `any` parameter, as 
 
 ### It
 
-<!-- word:grammar-word:it -->
-
-Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
-
-**Usage and boundary.** `Start it` in the [pronoun example](../../testdata/phase1/language/lang-06.l) uses the Job alias just defined. The [rejection fixture](../../testdata/phase1/n11-pronoun-crosses-paragraph/main.l) demonstrates the shared [paragraph boundary](#pronouns).
+[It in the Word Glossary](../reference/word-glossary.md#word-grammar-word-it).
 
 ### This
 
-<!-- word:grammar-word:this -->
-
-Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
-
-**Usage and boundary.** Within a paragraph that has just defined Job, `this` refers to Job under the shared [pronoun rules](#pronouns). It can replace `it` in the [Job illustration](#it).
+[This in the Word Glossary](../reference/word-glossary.md#word-grammar-word-this).
 
 ### That
 
-<!-- word:grammar-word:that -->
-
-Refer to the last subject defined in the original source paragraph, or the applicable declared source-action argument.
-
-**Usage and boundary.** Within a paragraph that has just defined Job, `that` refers to Job under the shared [pronoun rules](#pronouns). It can replace `it` in the [Job illustration](#it).
+[That in the Word Glossary](../reference/word-glossary.md#word-grammar-word-that).
 
 ## Possessives and member lookup
 

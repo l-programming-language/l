@@ -2,9 +2,11 @@
 // is transient: it is shared by coverage and rendering, never a second registry.
 const parts = new Set(['noun', 'verb', 'adjective', 'adverb', 'article', 'preposition', 'conjunction', 'evaluation']);
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
+const compareWords = (a, b) => compare(a.root.toLowerCase(), b.root.toLowerCase()) || compare(a.name, b.name) || compare(a.dictionary?.lexicon ?? '', b.dictionary?.lexicon ?? '') || compare(a.id, b.id);
 const escape = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 const text = (node) => node.type === 'html' ? '' : node.value ?? (node.children ?? []).map(text).join('');
 const marker = /^<!--\s*word:([^\s<>]+)\s*-->$/;
+const definitionMarker = /^<!--\s*word-definition:([^\s<>]+)\s*-->$/;
 const explicitAnchor = /^<(?:a|span)\s+id=["'][^"']+["']\s*>\s*<\/(?:a|span)>$/;
 const anchorID = (node) => {
   const value = node?.type === 'html' ? node.value : node?.type === 'paragraph' && node.children.every((child) => child.type === 'html' || (child.type === 'text' && !child.value.trim())) ? node.children.map((child) => child.value).join('') : '';
@@ -13,7 +15,7 @@ const anchorID = (node) => {
 const forms = (entry) => [...new Set([entry.name.split('.').at(-1), ...(entry.inflections ?? [])])];
 const eligible = (entry) => ['builtin', 'grammar-word', 'authoring-word'].includes(entry.kind)
   || (entry.kind === 'type' && entry.support !== 'internal')
-  || (entry.kind === 'stdlib-export' && entry.visibility === 'public' && entry.support !== 'internal');
+  || (entry.kind === 'stdlib-export' && ['public', 'namespace'].includes(entry.visibility) && entry.support !== 'internal');
 
 export function deriveWords({ entries, lexical = { entries: {} }, pages, documents }) {
   const byId = new Map(entries.map((entry) => [entry.id, entry]));
@@ -32,10 +34,13 @@ export function deriveWords({ entries, lexical = { entries: {} }, pages, documen
     if (entry.wordRef) associate(entry, entry.id);
     if (!entry.word) continue;
     const word = entry.word;
-    if (!word || typeof word !== 'object' || Array.isArray(word) || Object.keys(word).some((key) => !['partOfSpeech', 'audience', 'formRoles', 'targets'].includes(key))) throw new Error(`Invalid word metadata: ${entry.id}`);
+    if (!word || typeof word !== 'object' || Array.isArray(word) || Object.keys(word).some((key) => !['partOfSpeech', 'audience', 'formRoles', 'targets', 'definitions', 'aliases'].includes(key))) throw new Error(`Invalid word metadata: ${entry.id}`);
     if (!parts.has(word.partOfSpeech)) throw new Error(`Invalid word part of speech: ${entry.id}`);
     if (word.audience !== undefined && !['application', 'authoring'].includes(word.audience)) throw new Error(`Invalid word audience: ${entry.id}`);
     if (!eligible(entry) || entry.support === 'internal' || (entry.kind === 'authoring-word' && word.audience !== 'authoring')) throw new Error(`Internal or private meaning cannot be promoted: ${entry.id}`);
+    if (word.aliases !== undefined && (!Array.isArray(word.aliases) || !word.aliases.length ||
+      word.aliases.some((alias) => typeof alias !== 'string' || !/^[^.\s]+(?:\.[^.\s]+)+$/.test(alias) || alias.toLowerCase() === entry.name.toLowerCase()) ||
+      new Set(word.aliases.map((alias) => alias.toLowerCase())).size !== word.aliases.length)) throw new Error(`Invalid word aliases: ${entry.id}`);
     if (entry.inflections !== undefined && (!Array.isArray(entry.inflections) || entry.inflections.some((form) => typeof form !== 'string' || !form))) throw new Error(`Invalid declared forms: ${entry.id}`);
     if (word.formRoles !== undefined && (!word.formRoles || typeof word.formRoles !== 'object' || Array.isArray(word.formRoles))) throw new Error(`Invalid form roles: ${entry.id}`);
     for (const [form, role] of Object.entries(word.formRoles ?? {})) {
@@ -49,17 +54,31 @@ export function deriveWords({ entries, lexical = { entries: {} }, pages, documen
       try { owner = canonical(target.entry); } catch { throw new Error(`Unknown canonical modifier target ${target.entry}: ${entry.id}`); }
       if (target.form !== undefined && !forms(owner).includes(target.form)) throw new Error(`Unknown target form ${target.form}: ${entry.id}`);
     }
+    if (word.definitions !== undefined && (!Array.isArray(word.definitions) || !word.definitions.length)) throw new Error(`Invalid word definitions: ${entry.id}`);
+    for (const definition of word.definitions ?? []) {
+      if (!definition || typeof definition.source !== 'string' || !/\.(?:l|json|go)$/.test(definition.source) ||
+        Object.keys(definition).some((key) => !['source', 'lines'].includes(key)) ||
+        !Array.isArray(definition.lines) || definition.lines.length !== 2 || !definition.lines.every(Number.isSafeInteger) ||
+        definition.lines[0] < 1 || definition.lines[1] < definition.lines[0]) throw new Error(`Invalid word definition: ${entry.id}`);
+      // These dependencies receive the existing schema-3 sourceHashes check.
+      if (!entry.sources?.includes(definition.source)) throw new Error(`Unreviewed word definition source: ${entry.id} -> ${definition.source}`);
+    }
   }
   for (const [key, review] of Object.entries(lexical.entries)) {
     if (review.wordRef) associate(review, key);
     else if (review.support !== 'internal' || !review.notes?.trim()) throw new Error(`Missing configured word association: ${key}`);
   }
-  const found = new Map();
+  const found = new Map(), definitionMarkers = [];
   for (const page of pages) {
     const document = documents.get(page.source);
     const children = document.tree.children;
     const visit = (node, top = false) => {
       if (node.type === 'html' && /<!--\s*word:/.test(node.value) && (!top || !marker.test(node.value.trim()))) throw new Error(`Word marker must be standalone in ${page.source}:${node.position.start.line}`);
+      if (node.type === 'html' && /<!--\s*word-definition\b/.test(node.value)) {
+        const match = node.value.trim().match(definitionMarker);
+        if (!top || !match) throw new Error(`Word-definition marker must be standalone in ${page.source}:${node.position.start.line}`);
+        definitionMarkers.push({ id: match[1], source: page.source, node });
+      }
       for (const child of node.children ?? []) visit(child, node.type === 'root');
     };
     visit(document.tree);
@@ -91,7 +110,18 @@ export function deriveWords({ entries, lexical = { entries: {} }, pages, documen
     }
   }
   for (const entry of entries) if (entry.word && !found.has(entry.id)) throw new Error(`Missing canonical word marker: ${entry.id} at ${entry.doc}`);
-  return [...found.values()].sort((a, b) => compare(a.root.toLowerCase(), b.root.toLowerCase()) || compare(a.name, b.name) || compare(a.dictionary?.lexicon ?? '', b.dictionary?.lexicon ?? '') || compare(a.id, b.id));
+  for (const { id, source, node } of definitionMarkers) {
+    const word = found.get(id);
+    if (!word) throw new Error(`Unknown word-definition marker: ${id}`);
+    if (!word.word.definitions) throw new Error(`Word-definition marker without reviewed definitions: ${id}`);
+    const offset = node.position.start.offset;
+    const owner = [...found.values()].filter((entry) => entry.source === source && entry.section.start <= offset && offset < entry.section.end).sort((a, b) => b.section.start - a.section.start)[0];
+    if (owner !== word) throw new Error(`Word-definition marker outside its canonical word section: ${id} in ${source}:${node.position.start.line}`);
+    if (word.definitionMarker) throw new Error(`Duplicate word-definition marker: ${id}`);
+    word.definitionMarker = node;
+  }
+  for (const word of found.values()) if (word.word.definitions && !word.definitionMarker) throw new Error(`Missing word-definition marker: ${word.id}`);
+  return [...found.values()].sort(compareWords);
 }
 
 export function wordFacts(word, words, sourceLink) {
@@ -99,14 +129,15 @@ export function wordFacts(word, words, sourceLink) {
   const availability = (owner ? `Explicit dictionary: ${owner.lexicon}/${owner.key}` : 'Implicit builtin vocabulary') + (word.audience === 'authoring' ? ', advanced word authoring' : '');
   const listedForms = word.forms.map((form) => {
     const role = word.word.formRoles?.[form];
-    return `<code>${escape(form)}</code>${role ? ` (${escape(role.partOfSpeech)}, ${escape(role.role)})` : ''}`;
-  }).join(', ');
+    return `<li><code>${escape(form)}</code> (${escape(role?.partOfSpeech ?? word.word.partOfSpeech)}${role ? `, ${escape(role.role)}` : ''})</li>`;
+  }).join('\n');
   const targets = (word.word.targets ?? []).map((target) => {
     const selected = words.find((entry) => entry.id === target.entry);
     return `<a href="${escape(selected.link)}"><code>${escape(selected.name)}${target.form ? ` · ${escape(target.form)}` : ''}</code></a>`;
   });
   const sources = (word.sources ?? []).map((source) => sourceLink(source)).join(', ');
-  return `<div class="l-word-facts">\n\n<p><strong>${escape(word.name)}</strong> · ${escape(word.word.partOfSpeech)} · ${escape(word.support)}<br />${escape(availability)}.<br />Declared forms: ${listedForms}.${targets.length ? `<br />Targets: ${targets.join(', ')}.` : ''}</p>\n\n<details data-pagefind-ignore><summary>Source and review evidence</summary><p>${escape(word.evidence)}. This documentation record is not a compiler identity or a runtime certificate.</p><p>${sources}</p></details>\n\n</div>`;
+  const aliases = (word.word.aliases ?? []).map((alias) => `<code>${escape(alias)}</code>`);
+  return `<div class="l-word-facts">\n\n<p><strong>${escape(word.name)}</strong> · ${escape(word.word.partOfSpeech)} · ${escape(word.support)}<br />${escape(availability)}.</p>\n\n<p>Declared forms:</p>\n<ol>${listedForms}</ol>${aliases.length ? `\n\n<p>Aliases: ${aliases.join(', ')}.</p>` : ''}${targets.length ? `\n\n<p>Targets: ${targets.join(', ')}.</p>` : ''}\n\n<details data-pagefind-ignore><summary>Source and review evidence</summary><p>${escape(word.evidence)}. This documentation record is not a compiler identity or a runtime certificate.</p><p>${sources}</p></details>\n\n</div>`;
 }
 
 export function wordIndex(words, selection = '', dictionaries = []) {
@@ -114,8 +145,13 @@ export function wordIndex(words, selection = '', dictionaries = []) {
   if (selection === 'builtins') selected = words.filter((word) => !word.dictionary);
   else if (selection) {
     const [lexicon, key, extra] = selection.split(':');
-    if (extra || !dictionaries.some((dictionary) => !dictionary.internal && dictionary.language === lexicon && dictionary.key === key)) throw new Error(`Unknown word-index library: ${selection}`);
-    selected = words.filter((word) => word.dictionary?.lexicon === lexicon && word.dictionary.key === key && word.audience === 'application');
+    const dictionary = dictionaries.find((entry) => entry.language === lexicon && entry.key === key);
+    if (extra || !dictionary) throw new Error(`Unknown word-index library: ${selection}`);
+    selected = words.filter((word) => word.dictionary?.lexicon === lexicon && word.dictionary.key === key && (dictionary.internal ? word.kind === 'authoring-word' && word.audience === 'authoring' : word.audience === 'application'));
+    // Alias rows expose a reviewed path in this dictionary, retaining the canonical meaning.
+    const aliases = words.flatMap((word) => (word.word.aliases ?? []).filter((name) => name.split('.')[0] === dictionary.dictionary).map((name) => ({ ...word, name, root: name.split('.').at(-1), audience: dictionary.internal ? 'authoring' : word.audience })));
+    selected = [...selected, ...aliases].sort(compareWords);
+    if (dictionary.internal && !selected.length) throw new Error(`Unknown word-index library: ${selection}`);
   }
   const groups = selection ? [['Words', selected]] : [['Application vocabulary', selected.filter((word) => word.audience === 'application')], ['Advanced word authoring', selected.filter((word) => word.audience === 'authoring')]];
   return groups.filter(([, items]) => items.length).map(([title, items], group) => {

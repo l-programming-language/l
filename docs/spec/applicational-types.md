@@ -2,8 +2,8 @@
 
 | Type | What it represents | Current use in L |
 | --- | --- | --- |
-| [App](#apps) | An application with source, identity and process state. | Construct, build, run, stop and await a separate process. Read its Output or Error. |
-| [Service](#services) | A unit of code composed into an App. | Main supplies the entry structure. Additional App-constructed Services become libraries. A standalone Service is structural. |
+| [App](../reference/word-glossary.md#word-type-app) | An application with source, identity and process state. | Construct, build, run, stop and await a separate process. Read its Output or Error. |
+| [Service](../reference/word-glossary.md#word-type-service) | A unit of code composed into an App. | Main supplies the entry structure. Additional App-constructed Services become libraries. A standalone Service is structural. |
 | [Class](#classes-and-objects) | A group of source modules, Objects and nested Classes. | Organize generated code without an independent process or runtime scope. |
 | [Object](#classes-and-objects) | A source-file unit containing definitions. | Own generated file content without an automatic runtime lifetime. |
 | [Function](#functions-properties-and-operations) | A callable with typed inputs, results and retained captures. | Invoke its descriptive verb with fresh parameters and locals. |
@@ -16,49 +16,25 @@ Only Apps own process lifecycle. Internal categories do not imply source constru
 
 ## Apps
 
-<!-- word:type:app -->
-
-Own an executable source composition and its separately supervised native process invocations.
-
-**Usage and example.** `Create "Hello" as a New Basic App` in the [first program](../guide/first-program.md#read-the-program) declares the App. Execute then runs its body. An App alias shares its invocation identity.
+[App in the Word Glossary](../reference/word-glossary.md#word-type-app).
 
 ### Create and execute an App
 
-The [first program](../guide/first-program.md#read-the-program) constructs a Basic App, supplies its Print body and observes its captured output. Basic composes the Main Service, Object and entry Function. Execute builds, runs and awaits the App.
-
-`l build` publishes the native program. Running that program performs its lifecycle actions. Aliases preserve App identity. Separate declarations remain separate Apps even if they use the same name in different private scopes.
+[Create and execute an App in the Word Glossary](../reference/word-glossary.md#word-type-app--create-and-execute-an-app).
 
 ## Services
 
-<!-- word:type:service -->
-
-Group source code within an App, supplying its primary entry structure or an additional constructed library.
-
-**Usage and example.** The [Service composition fixture](../../lyger/test/workspace/services.l) constructs Main, Left and Right Services within one App. A standalone Service remains structural and cannot be Run or Awaited.
-
-Basic supplies the primary Main Service. Additional Services constructed inside an App become native libraries whose nonprivate composed items form their interface. The [Service composition example](../guide/apps-and-services.md#service-composition) builds Main, Left and Right Services inside an App and explains how the body is passed into them.
-
-A standalone Service declaration creates no package or process. Standalone body effects, native lifecycle operations and implicit Output/Error reject. Explicit static members and source-defined actions still use normal lexical lookup. See the [Service composition contract](../cli-build.md#service-composition).
+[Service in the Word Glossary](../reference/word-glossary.md#word-type-service).
 
 ## Classes and Objects
 
 ### Class
 
-<!-- word:type:class -->
-
-Group Objects and nested Classes into native source modules.
-
-**Usage and example.** Outer, Middle and Leaf in the [recursive construction example](#compose-an-object-inside-nested-classes) retain their explicit parent order. Classes organize sources. They add no runtime scope or process lifetime.
+[Class in the Word Glossary](../reference/word-glossary.md#word-type-class).
 
 ### Object
 
-<!-- word:type:object -->
-
-Own a native source file containing composed definitions and Functions.
-
-**Usage and example.** The Main Object in the [recursive construction example](#compose-an-object-inside-nested-classes) owns the entry Function. Object construction supplies source content, not an object initializer or process launch.
-
-Native imports and visibility belong to their owning file/module. Class metadata does not silently become every child's default.
+[Object in the Word Glossary](../reference/word-glossary.md#word-type-object).
 
 ### Compose an Object inside nested Classes
 
@@ -70,27 +46,15 @@ Read descriptors inside out: Leaf supplies the Main Object, Middle and Outer enc
 
 ### Attribute
 
-<!-- word:type:attribute -->
-
-Name a composed part of an Object in its applicational representation.
-
-**Context and illustration.** A Function inside the [Object fixture](../../lyger/test/classes/interleaved.l) becomes an Attribute containing its Definition.
-
-**Partial support.** Attribute is recognized as an applicational category, and [Object projection](../../lyger/source_hierarchy.go) creates Attributes for composed Functions. It has no standalone data-field or runtime-value constructor: using Attribute as a source Function parameter or List element [rejects](../../lyger/runtime_types.go) with `Attribute is a source structure, not a runtime type`. Use Function/Object composition for the implemented form.
+[Attribute in the Word Glossary](../reference/word-glossary.md#word-type-attribute).
 
 ### Definition
 
-<!-- word:type:definition -->
-
-Name the implementation attached to a constructed element or lexical word.
-
-**Context and illustration.** The [native definition example](definitions.md#framing-and-escaping) associates framed source with a word. [Descriptors](lexical-types.md#describe-with-an-adjective) compose the actual selected definitions.
-
-**Partial support.** Framed definition templates can be parsed, bound and composed, and constructed Functions carry their Definition in the [Object representation](../../lyger/source_hierarchy.go). The recognized Definition category has no standalone runtime-value constructor: using Definition as a source Function parameter or List element [rejects](../../lyger/runtime_types.go) with `Definition is a source structure, not a runtime type`. Attach a definition to its owning word through Define instead.
+[Definition in the Word Glossary](../reference/word-glossary.md#word-type-definition).
 
 ## Functions, Properties, and Operations
 
-[Function](../reference/builtins/definitions.md#function) is the canonical word entry for the selected callable constructor. This section explains its value and capture behavior. Property/Operation and the configured Func/Prop/Op spellings describe native representation. Their presence does not add public application constructors.
+[Function](../reference/word-glossary.md#word-builtin-function) is the canonical word entry for the selected callable constructor. This section explains its value and capture behavior. Property/Operation and the configured Func/Prop/Op spellings describe native representation. Their presence does not add public application constructors.
 
 A Function declaration also defines its invocation verb. Its encapsulated paragraph supplies the body:
 

@@ -58,7 +58,7 @@ and template formats, and generated programs do not depend on them at runtime.
 
 `builtins/<configured-language>/prelude.l` supplies the implicit builtin unit
 and includes `core.l` in that same unit.
-The [core reference](reference/builtins/index.md) describes its implicit vocabulary.
+The [core reference](reference/words.md) describes its implicit vocabulary.
 Prelude privately imports [Storage](internals/storage.md). That implementation namespace
 requires an explicit import at a source use. The [dictionary index](../dictionaries.json)
 also selects [IO](stdlib/eng/io.md) and private support dictionaries. Adding an

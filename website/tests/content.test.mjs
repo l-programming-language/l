@@ -5,7 +5,8 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
 import { parse as parseYAML } from 'yaml';
-import { anchors, parseMarkdown, preparePage, validateMap, validateStdlib, stdlibCatalog } from '../scripts/content.mjs';
+import { anchors, parseDocument, parseMarkdown, preparePage, validateMap, validateStdlib, stdlibCatalog } from '../scripts/content.mjs';
+import { deriveWords } from '../scripts/words.mjs';
 import { prepare, publishOwned } from '../scripts/prepare.mjs';
 import { atomicWrite, contained, safeFile, sha256 } from '../scripts/lib.mjs';
 import { checkDist } from '../scripts/check-dist.mjs';
@@ -38,6 +39,13 @@ async function project(root, text, options = {}) {
     ...options,
   });
   return { output, assets };
+}
+
+function definitionWords(input, definitions) {
+  return deriveWords({
+    entries: [{ id: 'meaning', name: 'Meaning', kind: 'builtin', support: 'supported', doc: 'docs/start.md#meaning', sources: definitions.map((definition) => definition.source), evidence: 'static-inspection', word: { partOfSpeech: 'verb', definitions } }],
+    pages: [page()], documents: new Map([['docs/start.md', parseDocument(input)]]),
+  });
 }
 
 test('map validation enforces route, ownership and navigation metadata', () => {
@@ -144,6 +152,57 @@ test('malformed or inline word indices do not silently disappear', async (t) => 
   for (const directive of ['<!-- word-index:eng:IO -->', '<!-- word-index:eng/io -->', 'Text <!-- word-index --> after.']) {
     await assert.rejects(project(root, '# Words\n\n' + directive + '\n'), /Invalid word-index directive/);
   }
+});
+
+test('word definitions display exact L, configured JSON and compiler source lines in collapsed escaped blocks', async (t) => {
+  const input = '# Words\n\n## Meaning\n\n<!-- word:meaning -->\n\nA visible definition.\n\n**Usage:** A visible usage.\n\n<!-- word-definition:meaning -->\n';
+  const selected = '"literal" is `<BOOK>{value}</BOOK>`.\r\n*** ```` and </code></pre></details> ***\r\n';
+  const json = '"it": {"value": "<IT>&value", "pos": "noun"}';
+  const go = 'case "bytes":\n\treturn Bytes';
+  const root = await fixture(t, { 'docs/start.md': input, 'source.l': 'before\r\n' + selected + 'after', 'vocabulary.json': json, 'types.go': go });
+  const words = definitionWords(input, [{ source: 'source.l', lines: [2, 3] }, { source: 'vocabulary.json', lines: [1, 1] }, { source: 'types.go', lines: [1, 2] }]);
+  const { output } = await project(root, input, { words });
+  assert.match(output, /<details class="l-word-definition" data-pagefind-ignore><summary>Source definition<\/summary>/);
+  assert.doesNotMatch(output, /<details[^>]*\bopen\b/);
+  assert.match(output, /L source.*source\.l.*lines 2–3/);
+  assert.match(output, /Configured JSON.*vocabulary\.json.*lines 1–1/);
+  assert.match(output, /Compiler definition.*types\.go.*lines 1–2/);
+  assert.equal([...output.matchAll(/<pre tabindex="0" role="region" aria-label="Meaning source definition">/g)].length, 3);
+  assert.ok(output.includes('<code class="language-l">&quot;literal&quot; is `&lt;BOOK&gt;{value}&lt;/BOOK&gt;`.\r\n*** ```` and &lt;/code&gt;&lt;/pre&gt;&lt;/details&gt; ***\r\n</code></pre>'));
+  assert.ok(output.includes('<code class="language-json">&quot;it&quot;: {&quot;value&quot;: &quot;&lt;IT&gt;&amp;value&quot;, &quot;pos&quot;: &quot;noun&quot;}</code></pre>'));
+  assert.ok(output.includes('<code class="language-go">case &quot;bytes&quot;:\n\treturn Bytes</code></pre>'));
+  assert.doesNotMatch(output, /before|after|word-definition:meaning/);
+  assert.ok(output.indexOf('A visible definition.') < output.indexOf('class="l-word-definition"'));
+  assert.ok(output.indexOf('A visible usage.') < output.indexOf('class="l-word-definition"'));
+  assert.equal(await fs.readFile(path.join(root, 'source.l'), 'utf8'), 'before\r\n' + selected + 'after');
+});
+
+test('word definitions read actual source files and reject missing, out-of-range and invalid UTF-8 input', async (t) => {
+  const input = '# Words\n\n## Meaning\n\n<!-- word:meaning -->\n\nA meaning.\n\n<!-- word-definition:meaning -->\n';
+  const root = await fixture(t, { 'docs/start.md': input, 'source.l': 'first\nlast' });
+  const words = definitionWords(input, [{ source: 'source.l', lines: [2, 2] }]);
+  const { output } = await project(root, input, { words, sourceTexts: new Map([['docs/start.md', input], ['source.l', 'fabricated\ncopy']]) });
+  assert.ok(output.includes('<code class="language-l">last</code>'));
+  assert.doesNotMatch(output, /fabricated|copy/);
+  await assert.rejects(project(root, input, { words: definitionWords(input, [{ source: 'source.l', lines: [2, 3] }]) }), /out of bounds/);
+  await assert.rejects(project(root, input, { words: definitionWords(input, [{ source: 'missing.l', lines: [1, 1] }]) }), /ENOENT/);
+  await fs.writeFile(path.join(root, 'source.l'), Buffer.from([0x61, 0x0a, 0xff]));
+  await assert.rejects(project(root, input, { words }), /Invalid UTF-8.*word definition/);
+  const outside = await fixture(t, { 'private.l': 'private' });
+  await fs.symlink(path.join(outside, 'private.l'), path.join(root, 'escape.l'));
+  await assert.rejects(project(root, input, { words: definitionWords(input, [{ source: 'escape.l', lines: [1, 1] }]) }), /Symlink escapes/);
+});
+
+test('word-definition projection rejects unowned directives and preserves literal instructions', async (t) => {
+  const literal = '# Words\n\n```markdown\n<!-- word-definition:missing -->\n```\n\n`<!-- word-definition:missing -->`\n';
+  const root = await fixture(t, { 'docs/start.md': literal });
+  assert.ok((await project(root, literal)).output.includes(literal.slice(literal.indexOf('```'))));
+  for (const directive of ['<!-- word-definition:missing -->', 'Text <!-- word-definition:missing --> after.', '<!-- word-definition -->']) {
+    await assert.rejects(project(root, '# Words\n\n' + directive + '\n'), /word-definition/);
+  }
+  const original = '# Words\n\n## Meaning\n\n<!-- word:meaning -->\n\nA meaning.\n\n<!-- word-definition:meaning -->\n';
+  const words = definitionWords(original, [{ source: 'source.l', lines: [1, 1] }]);
+  await assert.rejects(project(root, original.replace('<!-- word-definition:meaning -->', '## Other\n\n<!-- word-definition:meaning -->'), { words }), /canonical word section/);
 });
 
 test('authoring dictionaries require the same real owner and source as public library records', () => {

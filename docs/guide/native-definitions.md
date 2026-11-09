@@ -18,9 +18,9 @@ Storage.Require composes optional selection in a Function with native types:
 
 <!-- example:source-require -->
 
-Option.Select receives Value and two Process bodies. The present branch binds Payload as `T`. Only the absent branch constructs Failure from Message. Returning completes Require. This fragment needs its dictionary declarations and a [native caller](../internals/storage.md#native-callers).
+Option.Select receives Value and two Process bodies. The present branch binds Payload as `T`. Only the absent branch constructs Failure from Message. Returning completes Require. This fragment needs its dictionary declarations and a [native caller](../reference/word-glossary.md#context-storage--native-callers).
 
-Name intermediate results the next operation needs. Declare each Process input's type and ownership, using `_` to request native inference. Inputs and locals stay in that body, with distinct bindings on repeated or nested use. See [Process](../reference/builtins/definitions.md#process) for scope and [Return](../reference/builtins/definitions.md#functionreturn) for caller selection and lexical delegation.
+Name intermediate results the next operation needs. Declare each Process input's type and ownership, using `_` to request native inference. Inputs and locals stay in that body, with distinct bindings on repeated or nested use. See [Process](../reference/word-glossary.md#word-builtin-process) for scope and [Return](../reference/word-glossary.md#word-builtin-function-return) for caller selection and lexical delegation.
 
 ## Compose a wrapper
 
@@ -28,7 +28,7 @@ Name intermediate results the next operation needs. Declare each Process input's
 
 Lined describes IO's Sender through the private Terminate Function. In its rule, `any IO's Sender` denotes the retained base invocation, and `any Thing` forwards its writer. The base result becomes Receipt. Result.Select runs the newline send only after payload success. Failure returns through the other Process. The wrapper keeps the same writer rather than acquiring another handle.
 
-Callers import the public Send/Lined words. Terminate remains an implementation dependency. `New IO.Lined IO's Sender` evaluates the original operands once and preserves their ownership. A wrapper may use those references, but it cannot silently clone a consumed payload. The [IO contract](../stdlib/eng/io.md#explicit-byte-output) owns exact newline, partial-write and failure behavior.
+Callers import the public Send/Lined words. Terminate remains an implementation dependency. `New IO.Lined IO's Sender` evaluates the original operands once and preserves their ownership. A wrapper may use those references, but it cannot silently clone a consumed payload. The [IO contract](../reference/word-glossary.md#context-io--explicit-byte-output) owns exact newline, partial-write and failure behavior.
 
 Keep each policy at the level that owns it. IO.Print composes rendering, writer/guard acquisition, Lined sending and an explicit fail-fast result check. A reusable Send leaves those choices to its caller.
 

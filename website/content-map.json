@@ -349,8 +349,8 @@
     {
       "source": "docs/reference/words.md",
       "route": "/docs/words/",
-      "title": "Words A\u2013Z",
-      "description": "Find builtin and library meanings, declared forms, grammatical roles, examples and support boundaries.",
+      "title": "Native Words",
+      "description": "Alphabetical index of implicit builtin, core and configured grammatical words.",
       "section": "Libraries",
       "order": -1,
       "role": "explanatory",
@@ -364,7 +364,8 @@
       "section": "Libraries",
       "order": 10,
       "role": "normative",
-      "generated": false
+      "generated": false,
+      "sidebar": false
     },
     {
       "source": "docs/reference/builtins/definitions.md",
@@ -374,7 +375,8 @@
       "section": "Libraries",
       "order": 15,
       "role": "normative",
-      "generated": false
+      "generated": false,
+      "sidebar": false
     },
     {
       "source": "docs/reference/builtins/lifecycle.md",
@@ -384,7 +386,8 @@
       "section": "Libraries",
       "order": 15,
       "role": "normative",
-      "generated": false
+      "generated": false,
+      "sidebar": false
     },
     {
       "source": "docs/reference/logemes/index.md",
@@ -747,6 +750,16 @@
       "role": "explanatory",
       "generated": false,
       "sidebar": false
+    },
+    {
+      "source": "docs/reference/word-glossary.md",
+      "route": "/docs/word-glossary/",
+      "title": "Word Glossary",
+      "description": "Definitions, forms, parts of speech and usage for native words and imported dictionary members.",
+      "section": "Libraries",
+      "order": -0.5,
+      "role": "explanatory",
+      "generated": false
     }
   ]
 }

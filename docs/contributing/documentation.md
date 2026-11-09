@@ -28,11 +28,40 @@ Keep code examples in fenced blocks and AML escaped as code. Never turn native f
 
 ## Maintain word entries
 
-[Words A–Z](../reference/words.md), builtin navigation and library lists are derived views of the same canonical entries. Keep the explanation at its existing thematic home or library page. A small library needs one overview, its real import form, a task-to-word table where useful, an alphabetical list and precise entries. Internal dictionary registration does not make its helpers application API. Mark deliberately documented foundational meanings as advanced authoring context.
+[Native Words](../reference/words.md) and the library indexes link to the same
+canonical entries in the [Word Glossary](../reference/word-glossary.md). Keep
+complete word definitions there. Thematic guides own concepts and walkthroughs.
+Each library index needs its real import form, required context and alphabetical
+navigation. Internal dictionary registration does not make implementation words
+application API. Label their native authoring context explicitly.
 
-Review current definitions, exports, configured vocabulary and witnesses before selecting coverage. Each eligible builtin, public library meaning, noun/type or grammatical word must have an entry or a reviewed association to the same meaning. Internal value tags and non-word configuration records need honest classifications. Coverage proves completeness against this reviewed inventory. It is not a compiler-enumerated export proof.
+Review current definitions, lexical member lookup, configured vocabulary and
+witnesses before selecting coverage. Every externally addressable meaning needs
+an entry or a direct reviewed association. Native export-root selection and
+lexical accessibility are different: a qualified implementation member may be
+addressable without being an application API. Exclude genuinely unit-private
+definitions and internal value/configuration tags. The compiler inventory test
+checks dictionary coverage; source review still owns meaning and support.
 
-Keep identity, qualified name, support, visibility, dictionary ownership, sources, witnesses and the exact `doc` file/anchor in `docs/_meta/semantics.json`. Add only the missing mechanical facts in `word`: `partOfSpeech`, optional `audience` (`application` by default or `authoring`), exceptional `formRoles`, and modifier `targets` referencing `{ "entry": "reviewed-id", "form": "declared-form" }`. Forms come from the existing `inflections` list. Roles annotate them rather than declaring new spellings. A record ID is a documentation review identity, not automatically a compiler-resolved identity.
+Keep identity, qualified name, support, visibility, dictionary ownership, sources,
+witnesses and the exact `doc` file/anchor in `docs/_meta/semantics.json`. The `word`
+facts contain `partOfSpeech`, optional `audience` (`application` or `authoring`),
+`formRoles`, modifier `targets` referencing a canonical `entry` and optional
+`form`, existing qualified `aliases`, and `definitions` source excerpts. Forms come from `inflections`; annotate
+each declared case and its POS without inventing spellings. A documentation ID is
+not automatically a compiler identity.
+
+Aliases describe existing bindings to that same meaning. The library indexes
+link those names to the canonical entry, including cross-dictionary bindings such
+as Runtime.Format. Documentation must not introduce aliases or duplicate meanings.
+
+Each `definitions` item has a `source` already listed in the record's reviewed
+sources and one-based inclusive `lines: [start, end]`. Place
+`<!-- word-definition:REVIEWED_ID -->` inside that word's section. Preparation
+reads and escapes the exact source bytes, including complete Function bodies and
+descriptor refinements. Configured words without L definitions show their actual
+vocabulary JSON records. Do not copy a definition into a second maintained code
+block. These excerpts establish definition provenance, not usage or runtime proof.
 
 For genuinely overlapping records, use `wordRef` to a canonical record containing `word`. The two fields are mutually exclusive. References cannot chain or cycle. Configured vocabulary mappings use the same reference in `docs/_meta/vocabulary-review.json`. Inspect Function, Error and other overlaps by meaning. Do not merge distinct senses or same-spelled words to reduce counts. Modifier target links establish that a meaning/form exists, while source review and relevant tests establish its actual applicability.
 
@@ -51,6 +80,8 @@ Place one marker immediately after the owning heading and any supported explicit
 <!-- word:stdlib-export:eng:io:IO.Print -->
 
 Render a supported value and write its bytes to standard output followed by one LF newline.
+
+<!-- word-definition:stdlib-export:eng:io:IO.Print -->
 
 **Usage:** Explain the actual import, operand roles, result and required App context.
 

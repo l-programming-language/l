@@ -14,6 +14,29 @@ const jsonText = (value) => JSON.stringify(value, null, 2) + '\n';
 const segment = 'builtins/segments/rust/a.def';
 const page = (source, route) => ({ source, route, title: source, description: 'Synthetic reference witness.', section: 'Reference', order: 1, role: 'implementation', generated: source.startsWith('docs/_generated/') });
 
+test('canonical word routes converge on the glossary while native and library indexes retain distinct scopes', async () => {
+  const root = new URL('../../', import.meta.url);
+  const map = JSON.parse(await fs.readFile(new URL('website/content-map.json', root), 'utf8'));
+  const semantic = JSON.parse(await fs.readFile(new URL('docs/_meta/semantics.json', root), 'utf8'));
+  const glossary = map.pages.find((page) => page.route === '/docs/word-glossary/');
+  assert.ok(glossary, 'one detailed glossary has a maintained canonical route');
+  const canonical = semantic.entries.filter((entry) => entry.word);
+  assert.ok(canonical.length > 0);
+  for (const entry of canonical) {
+    assert.equal(entry.doc.split('#')[0], glossary.source, entry.id);
+    assert.ok(entry.word.definitions?.length, `${entry.id} has an authoritative definition`);
+  }
+  const native = map.pages.find((page) => page.route === '/docs/words/');
+  assert.equal(native.title, 'Native Words');
+  const nativeTree = parseMarkdown(await fs.readFile(new URL(native.source, root), 'utf8'));
+  assert.deepEqual(nativeTree.children.filter((node) => node.type === 'html' && /word-index/.test(node.value)).map((node) => node.value), ['<!-- word-index:builtins -->']);
+  for (const route of ['/docs/reference/builtins/', '/docs/reference/builtins/definitions/', '/docs/reference/builtins/lifecycle/']) {
+    const retained = map.pages.find((page) => page.route === route);
+    assert.ok(retained, route);
+    assert.equal(retained.sidebar, false, `${route} retains links without competing navigation`);
+  }
+});
+
 async function write(root, relative, content) {
   const target = path.join(root, relative);
   await fs.mkdir(path.dirname(target), { recursive: true });

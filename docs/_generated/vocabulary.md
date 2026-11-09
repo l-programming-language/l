@@ -37,30 +37,30 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 
 | Word | value | inputs | outputs | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| [it](#vocabulary-nouns-it) | <code>IT(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Pronouns](../spec/names-and-scope.md#it) | [Note 1](#vocabulary-note-1) |
-| [that](#vocabulary-nouns-that) | <code>THAT(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Pronouns](../spec/names-and-scope.md#that) | [Note 1](#vocabulary-note-1) |
-| [this](#vocabulary-nouns-this) | <code>THIS(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Pronouns](../spec/names-and-scope.md#this) | [Note 1](#vocabulary-note-1) |
-| [input](#vocabulary-nouns-input) | <code>INPUT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Input metadata and runtime boundary](../reference/builtins/index.md#input) | [Note 2](#vocabulary-note-2) |
-| [output](#vocabulary-nouns-output) | <code>OUTPUT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Process members](../reference/builtins/lifecycle.md#output) | [Note 3](#vocabulary-note-3) |
-| [error](#vocabulary-nouns-error) | <code>ERROR(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Process members](../reference/builtins/lifecycle.md#error) | [Note 3](#vocabulary-note-3) |
-| [list](#vocabulary-nouns-list) | <code>LIST(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [list](../spec/collections-and-categories.md#lists) | [Note 4](#vocabulary-note-4) |
-| [dictionary](#vocabulary-nouns-dictionary) | <code>DICTIONARY(inputs[0], inputs[1])</code> | <code>["text","*.thing"]</code> | <code>["value"]</code> | supported | [dictionary](../spec/collections-and-categories.md#dictionaries) | [Note 5](#vocabulary-note-5) |
-| [null](#vocabulary-nouns-null) | <code>NULL(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [null](../spec/values.md#null) | [Note 6](#vocabulary-note-6) |
-| [thing](#vocabulary-nouns-thing) | <code>THING(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [thing](../spec/values.md#thing) | [Note 7](#vocabulary-note-7) |
-| [text](#vocabulary-nouns-text) | <code>TEXT(inputs[0])</code> | <code>["*.text"]</code> | <code>["value"]</code> | supported | [text](../spec/values.md#text) | [Note 8](#vocabulary-note-8) |
-| [number](#vocabulary-nouns-number) | <code>NUMBER(inputs[0])</code> | <code>["*.number"]</code> | <code>["value"]</code> | supported | [number](../spec/values.md#number) | [Note 9](#vocabulary-note-9) |
-| [byte](#vocabulary-nouns-byte) | <code>BYTES(inputs[0])</code> | <code>["*.byte"]</code> | <code>["value"]</code> | partial | [byte](../spec/values.md#byte) | [Note 10](#vocabulary-note-10) |
-| [truth](#vocabulary-nouns-truth) | <code>TRUTH(inputs[0])</code> | <code>["*.truth"]</code> | <code>["value"]</code> | supported | [truth](../spec/values.md#truth) | [Note 11](#vocabulary-note-11) |
-| [pointer](#vocabulary-nouns-pointer) | <code>POINTER(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [pointer](../spec/values.md#pointer) | [Note 12](#vocabulary-note-12) |
+| [it](#vocabulary-nouns-it) | <code>IT(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Pronouns](../reference/word-glossary.md#it) | [Note 1](#vocabulary-note-1) |
+| [that](#vocabulary-nouns-that) | <code>THAT(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Pronouns](../reference/word-glossary.md#that) | [Note 1](#vocabulary-note-1) |
+| [this](#vocabulary-nouns-this) | <code>THIS(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Pronouns](../reference/word-glossary.md#this) | [Note 1](#vocabulary-note-1) |
+| [input](#vocabulary-nouns-input) | <code>INPUT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Input metadata and runtime boundary](../reference/word-glossary.md#input) | [Note 2](#vocabulary-note-2) |
+| [output](#vocabulary-nouns-output) | <code>OUTPUT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Process members](../reference/word-glossary.md#appoutput) | [Note 3](#vocabulary-note-3) |
+| [error](#vocabulary-nouns-error) | <code>ERROR(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Process members](../reference/word-glossary.md#apperror) | [Note 3](#vocabulary-note-3) |
+| [list](#vocabulary-nouns-list) | <code>LIST(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [list](../reference/word-glossary.md#list) | [Note 4](#vocabulary-note-4) |
+| [dictionary](#vocabulary-nouns-dictionary) | <code>DICTIONARY(inputs[0], inputs[1])</code> | <code>["text","*.thing"]</code> | <code>["value"]</code> | supported | [dictionary](../reference/word-glossary.md#dictionary) | [Note 5](#vocabulary-note-5) |
+| [null](#vocabulary-nouns-null) | <code>NULL(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [null](../reference/word-glossary.md#null) | [Note 6](#vocabulary-note-6) |
+| [thing](#vocabulary-nouns-thing) | <code>THING(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [thing](../reference/word-glossary.md#thing) | [Note 7](#vocabulary-note-7) |
+| [text](#vocabulary-nouns-text) | <code>TEXT(inputs[0])</code> | <code>["*.text"]</code> | <code>["value"]</code> | supported | [text](../reference/word-glossary.md#text) | [Note 8](#vocabulary-note-8) |
+| [number](#vocabulary-nouns-number) | <code>NUMBER(inputs[0])</code> | <code>["*.number"]</code> | <code>["value"]</code> | supported | [number](../reference/word-glossary.md#number) | [Note 9](#vocabulary-note-9) |
+| [byte](#vocabulary-nouns-byte) | <code>BYTES(inputs[0])</code> | <code>["*.byte"]</code> | <code>["value"]</code> | partial | [byte](../reference/word-glossary.md#byte) | [Note 10](#vocabulary-note-10) |
+| [truth](#vocabulary-nouns-truth) | <code>TRUTH(inputs[0])</code> | <code>["*.truth"]</code> | <code>["value"]</code> | supported | [truth](../reference/word-glossary.md#truth) | [Note 11](#vocabulary-note-11) |
+| [pointer](#vocabulary-nouns-pointer) | <code>POINTER(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [pointer](../reference/word-glossary.md#pointer) | [Note 12](#vocabulary-note-12) |
 | [op](#vocabulary-nouns-op) | <code>OP(inputs[0], inputs[1], inputs[2], inputs[3])</code> | <code>["text","numbers","text","text"]</code> | <code>["value"]</code> | internal | [op](../spec/applicational-types.md#functions-properties-and-operations) | [Note 13](#vocabulary-note-13) |
 | [prop](#vocabulary-nouns-prop) | <code>PROP(inputs[0], inputs[1], inputs[2])</code> | <code>["text","text","thing"]</code> | <code>["value"]</code> | internal | [prop](../spec/applicational-types.md#functions-properties-and-operations) | [Note 13](#vocabulary-note-13) |
 | [func](#vocabulary-nouns-func) | <code>FUNC(inputs[0], inputs[1], inputs[2], inputs[3])</code> | <code>["text","props","texts","prop"]</code> | <code>["value"]</code> | internal | [func](../spec/applicational-types.md#functions-properties-and-operations) | [Note 13](#vocabulary-note-13) |
-| [definition](#vocabulary-nouns-definition) | <code>DEF(inputs[0])</code> | <code>["text"]</code> | <code>["value"]</code> | partial | [definition](../spec/applicational-types.md#definition) | [Note 14](#vocabulary-note-14) |
-| [attribute](#vocabulary-nouns-attribute) | <code>ATTRIBUTE(inputs[0], inputs[1])</code> | <code>["definition","attributes"]</code> | <code>["value"]</code> | partial | [attribute](../spec/applicational-types.md#attribute) | [Note 15](#vocabulary-note-15) |
-| [object](#vocabulary-nouns-object) | <code>OBJECT(inputs[0], inputs[1])</code> | <code>["definition","attributes"]</code> | <code>["value"]</code> | supported | [object](../spec/applicational-types.md#object) | [Note 16](#vocabulary-note-16) |
-| [class](#vocabulary-nouns-class) | <code>CLASS(inputs[0], inputs[1])</code> | <code>["objects","classes"]</code> | <code>["value"]</code> | supported | [class](../spec/applicational-types.md#class) | [Note 17](#vocabulary-note-17) |
-| [service](#vocabulary-nouns-service) | <code>SERVICE(inputs[0], inputs[1], inputs[2])</code> | <code>["objects","classes","services"]</code> | <code>["value"]</code> | supported | [service](../spec/applicational-types.md#services) | [Note 18](#vocabulary-note-18) |
-| [app](#vocabulary-nouns-app) | <code>APP(inputs[0], inputs[1], inputs[2])</code> | <code>["objects","services","dictionary"]</code> | <code>["value"]</code> | supported | [app](../spec/applicational-types.md#apps) | [Note 19](#vocabulary-note-19) |
+| [definition](#vocabulary-nouns-definition) | <code>DEF(inputs[0])</code> | <code>["text"]</code> | <code>["value"]</code> | partial | [definition](../reference/word-glossary.md#definition) | [Note 14](#vocabulary-note-14) |
+| [attribute](#vocabulary-nouns-attribute) | <code>ATTRIBUTE(inputs[0], inputs[1])</code> | <code>["definition","attributes"]</code> | <code>["value"]</code> | partial | [attribute](../reference/word-glossary.md#attribute) | [Note 15](#vocabulary-note-15) |
+| [object](#vocabulary-nouns-object) | <code>OBJECT(inputs[0], inputs[1])</code> | <code>["definition","attributes"]</code> | <code>["value"]</code> | supported | [object](../reference/word-glossary.md#object) | [Note 16](#vocabulary-note-16) |
+| [class](#vocabulary-nouns-class) | <code>CLASS(inputs[0], inputs[1])</code> | <code>["objects","classes"]</code> | <code>["value"]</code> | supported | [class](../reference/word-glossary.md#class) | [Note 17](#vocabulary-note-17) |
+| [service](#vocabulary-nouns-service) | <code>SERVICE(inputs[0], inputs[1], inputs[2])</code> | <code>["objects","classes","services"]</code> | <code>["value"]</code> | supported | [service](../reference/word-glossary.md#service) | [Note 18](#vocabulary-note-18) |
+| [app](#vocabulary-nouns-app) | <code>APP(inputs[0], inputs[1], inputs[2])</code> | <code>["objects","services","dictionary"]</code> | <code>["value"]</code> | supported | [app](../reference/word-glossary.md#app) | [Note 19](#vocabulary-note-19) |
 
 ## verbs
 
@@ -92,25 +92,25 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 
 | Word | value | inputs | outputs | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| [passive](#vocabulary-verbs-passive) | <code>IS(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Assignment](../spec/control-flow.md#is) | [Note 20](#vocabulary-note-20) |
-| [associative](#vocabulary-verbs-associative) | <code>USE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Aliases](../spec/imports.md#indexed-dictionaries) | [Note 21](#vocabulary-note-21) |
-| [declarative](#vocabulary-verbs-declarative) | <code>DECLARE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Declarations](../spec/definitions.md#create) | [Note 22](#vocabulary-note-22) |
-| [definitive](#vocabulary-verbs-definitive) | <code>DEFINE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Definitions](../spec/definitions.md#define) | [Note 23](#vocabulary-note-23) |
-| [descriptive](#vocabulary-verbs-descriptive) | <code>DESCRIBE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Descriptors](../spec/definitions.md#describe) | [Note 24](#vocabulary-note-24) |
-| [expansive](#vocabulary-verbs-expansive) | <code>PUT(inputs[0], inputs[1], inputs[2])</code> | <code>["*.thing","*.noun.iterative","text"]</code> | <code>["value"]</code> | supported | [Collection operations](../spec/collections-and-categories.md#put) | [Note 25](#vocabulary-note-25) |
-| [locative](#vocabulary-verbs-locative) | <code>PLACE(inputs[0], inputs[1], inputs[2])</code> | <code>["*.thing","*.noun.iterative","text"]</code> | <code>["value"]</code> | supported | [Collection operations](../spec/collections-and-categories.md#place) | [Note 25](#vocabulary-note-25) |
-| [receptive](#vocabulary-verbs-receptive) | <code>GET(inputs[0], inputs[1])</code> | <code>["text","*.noun.iterative"]</code> | <code>["value"]</code> | rejected | [Collection operations](../spec/grammar.md#get) | [Note 26](#vocabulary-note-26) |
-| [reductive](#vocabulary-verbs-reductive) | <code>TAKE(inputs[0], inputs[1])</code> | <code>["text","*.noun.iterative"]</code> | <code>["value"]</code> | rejected | [Collection operations](../spec/grammar.md#take) | [Note 27](#vocabulary-note-27) |
-| [generative](#vocabulary-verbs-generative) | <code>BUILD(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | supported | [Build](../reference/builtins/lifecycle.md#build) | [Note 3](#vocabulary-note-3) |
-| [executive](#vocabulary-verbs-executive) | <code>RUN(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | supported | [Run](../reference/builtins/lifecycle.md#run) | [Note 3](#vocabulary-note-3) |
-| [suspensive](#vocabulary-verbs-suspensive) | <code>AWAIT(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | supported | [Await](../reference/builtins/lifecycle.md#await) | [Note 3](#vocabulary-note-3) |
-| [interruptive](#vocabulary-verbs-interruptive) | <code>STOP(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | supported | [Stop](../reference/builtins/lifecycle.md#stop) | [Note 3](#vocabulary-note-3) |
-| [inflective](#vocabulary-verbs-inflective) | <code>IMPORT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | rejected | [Import/export distinction](../spec/grammar.md#import) | [Note 28](#vocabulary-note-28) |
-| [deflective](#vocabulary-verbs-deflective) | <code>EXPORT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | rejected | [Import/export distinction](../spec/grammar.md#export) | [Note 29](#vocabulary-note-29) |
-| [observative](#vocabulary-verbs-observative) | <code>SHOW(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Show](../reference/builtins/lifecycle.md#show) | [Note 30](#vocabulary-note-30) |
-| [terminative](#vocabulary-verbs-terminative) | <code>EXIT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Exit](../reference/builtins/lifecycle.md#exit) | [Note 31](#vocabulary-note-31) |
-| [appropriative](#vocabulary-verbs-appropriative) | <code>HAVE(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Comparisons](../spec/control-flow.md#have) | [Note 32](#vocabulary-note-32) |
-| [comparative](#vocabulary-verbs-comparative) | <code>EQUAL(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Comparisons](../spec/control-flow.md#equal) | [Note 33](#vocabulary-note-33) |
+| [passive](#vocabulary-verbs-passive) | <code>IS(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Assignment](../reference/word-glossary.md#is) | [Note 20](#vocabulary-note-20) |
+| [associative](#vocabulary-verbs-associative) | <code>USE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Aliases](../reference/word-glossary.md#use) | [Note 21](#vocabulary-note-21) |
+| [declarative](#vocabulary-verbs-declarative) | <code>DECLARE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Declarations](../reference/word-glossary.md#create) | [Note 22](#vocabulary-note-22) |
+| [definitive](#vocabulary-verbs-definitive) | <code>DEFINE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Definitions](../reference/word-glossary.md#define) | [Note 23](#vocabulary-note-23) |
+| [descriptive](#vocabulary-verbs-descriptive) | <code>DESCRIBE(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Descriptors](../reference/word-glossary.md#describe) | [Note 24](#vocabulary-note-24) |
+| [expansive](#vocabulary-verbs-expansive) | <code>PUT(inputs[0], inputs[1], inputs[2])</code> | <code>["*.thing","*.noun.iterative","text"]</code> | <code>["value"]</code> | supported | [Collection operations](../reference/word-glossary.md#put) | [Note 25](#vocabulary-note-25) |
+| [locative](#vocabulary-verbs-locative) | <code>PLACE(inputs[0], inputs[1], inputs[2])</code> | <code>["*.thing","*.noun.iterative","text"]</code> | <code>["value"]</code> | supported | [Collection operations](../reference/word-glossary.md#place) | [Note 25](#vocabulary-note-25) |
+| [receptive](#vocabulary-verbs-receptive) | <code>GET(inputs[0], inputs[1])</code> | <code>["text","*.noun.iterative"]</code> | <code>["value"]</code> | rejected | [Collection operations](../reference/word-glossary.md#get) | [Note 26](#vocabulary-note-26) |
+| [reductive](#vocabulary-verbs-reductive) | <code>TAKE(inputs[0], inputs[1])</code> | <code>["text","*.noun.iterative"]</code> | <code>["value"]</code> | rejected | [Collection operations](../reference/word-glossary.md#take) | [Note 27](#vocabulary-note-27) |
+| [generative](#vocabulary-verbs-generative) | <code>BUILD(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | supported | [Build](../reference/word-glossary.md#build) | [Note 3](#vocabulary-note-3) |
+| [executive](#vocabulary-verbs-executive) | <code>RUN(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | supported | [Run](../reference/word-glossary.md#run) | [Note 3](#vocabulary-note-3) |
+| [suspensive](#vocabulary-verbs-suspensive) | <code>AWAIT(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | supported | [Await](../reference/word-glossary.md#await) | [Note 3](#vocabulary-note-3) |
+| [interruptive](#vocabulary-verbs-interruptive) | <code>STOP(inputs[0])</code> | <code>["*.noun.app"]</code> | <code>["value"]</code> | supported | [Stop](../reference/word-glossary.md#stop) | [Note 3](#vocabulary-note-3) |
+| [inflective](#vocabulary-verbs-inflective) | <code>IMPORT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | rejected | [Import/export distinction](../reference/word-glossary.md#import) | [Note 28](#vocabulary-note-28) |
+| [deflective](#vocabulary-verbs-deflective) | <code>EXPORT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | rejected | [Import/export distinction](../reference/word-glossary.md#export) | [Note 29](#vocabulary-note-29) |
+| [observative](#vocabulary-verbs-observative) | <code>SHOW(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Show](../reference/word-glossary.md#show) | [Note 30](#vocabulary-note-30) |
+| [terminative](#vocabulary-verbs-terminative) | <code>EXIT(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Exit](../reference/word-glossary.md#exit) | [Note 31](#vocabulary-note-31) |
+| [appropriative](#vocabulary-verbs-appropriative) | <code>HAVE(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Comparisons](../reference/word-glossary.md#have) | [Note 32](#vocabulary-note-32) |
+| [comparative](#vocabulary-verbs-comparative) | <code>EQUAL(inputs[0])</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Comparisons](../reference/word-glossary.md#equal) | [Note 33](#vocabulary-note-33) |
 
 ## adjectives
 
@@ -126,9 +126,9 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 
 | Word | value | inputs | outputs | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| [visibility.public](#vocabulary-adjectives-visibility.public) | Not declared | Not declared | Not declared | supported | [Visibility](../spec/names-and-scope.md#public) | [Note 34](#vocabulary-note-34) |
-| [initialization](#vocabulary-adjectives-initialization) | <code>NEW(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Descriptors](../spec/definitions.md#new) | [Note 35](#vocabulary-note-35) |
-| [abstraction](#vocabulary-adjectives-abstraction) | <code>GENERIC(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Descriptors](../spec/definitions.md#generic) | [Note 36](#vocabulary-note-36) |
+| [visibility.public](#vocabulary-adjectives-visibility.public) | Not declared | Not declared | Not declared | supported | [Visibility](../reference/word-glossary.md#public) | [Note 34](#vocabulary-note-34) |
+| [initialization](#vocabulary-adjectives-initialization) | <code>NEW(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Descriptors](../reference/word-glossary.md#new) | [Note 35](#vocabulary-note-35) |
+| [abstraction](#vocabulary-adjectives-abstraction) | <code>GENERIC(inputs[0])</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Descriptors](../reference/word-glossary.md#generic) | [Note 36](#vocabulary-note-36) |
 
 ## adverbs
 
@@ -146,11 +146,11 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 
 | Word | value | inputs | outputs | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| [visibility.public](#vocabulary-adverbs-visibility.public) | Not declared | Not declared | Not declared | supported | [Visibility](../spec/names-and-scope.md#publicly) | [Note 37](#vocabulary-note-37) |
-| [nullification](#vocabulary-adverbs-nullification) | <code>NOT(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../spec/control-flow.md#not) | [Note 38](#vocabulary-note-38) |
-| [comparison.subtraction](#vocabulary-adverbs-comparison.subtraction) | <code>LESSER(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../spec/control-flow.md#less) | [Note 39](#vocabulary-note-39) |
-| [comparison.multiplication](#vocabulary-adverbs-comparison.multiplication) | <code>GREATER(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../spec/control-flow.md#greater) | [Note 39](#vocabulary-note-39) |
-| [progression](#vocabulary-adverbs-progression) | <code>THEN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../spec/control-flow.md#then) | [Note 40](#vocabulary-note-40) |
+| [visibility.public](#vocabulary-adverbs-visibility.public) | Not declared | Not declared | Not declared | supported | [Visibility](../reference/word-glossary.md#publicly) | [Note 37](#vocabulary-note-37) |
+| [nullification](#vocabulary-adverbs-nullification) | <code>NOT(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../reference/word-glossary.md#not) | [Note 38](#vocabulary-note-38) |
+| [comparison.subtraction](#vocabulary-adverbs-comparison.subtraction) | <code>LESSER(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../reference/word-glossary.md#less) | [Note 39](#vocabulary-note-39) |
+| [comparison.multiplication](#vocabulary-adverbs-comparison.multiplication) | <code>GREATER(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../reference/word-glossary.md#greater) | [Note 39](#vocabulary-note-39) |
+| [progression](#vocabulary-adverbs-progression) | <code>THEN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../reference/word-glossary.md#then) | [Note 40](#vocabulary-note-40) |
 
 ## prepositions
 
@@ -174,17 +174,17 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 
 | Word | value | inputs | outputs | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| [definement.declarative](#vocabulary-prepositions-definement.declarative) | <code>AS(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../spec/grammar.md#as) | [Note 41](#vocabulary-note-41) |
-| [definement.definitive](#vocabulary-prepositions-definement.definitive) | <code>OF(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../spec/grammar.md#of) | [Note 42](#vocabulary-note-42) |
-| [definement.locative](#vocabulary-prepositions-definement.locative) | <code>AT(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../spec/grammar.md#at) | [Note 43](#vocabulary-note-43) |
-| [consignment.associative](#vocabulary-prepositions-consignment.associative) | <code>WITH(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../spec/grammar.md#with) | [Note 44](#vocabulary-note-44) |
-| [consignment.inflective](#vocabulary-prepositions-consignment.inflective) | <code>IN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../spec/grammar.md#in) | [Note 45](#vocabulary-note-45) |
-| [consignment.deflective](#vocabulary-prepositions-consignment.deflective) | <code>OUT(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#out) | [Note 46](#vocabulary-note-46) |
-| [consignment.indicative](#vocabulary-prepositions-consignment.indicative) | <code>BY(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../spec/grammar.md#by) | [Note 47](#vocabulary-note-47) |
-| [conjoinment.objective](#vocabulary-prepositions-conjoinment.objective) | <code>FROM(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../spec/grammar.md#from) | [Note 48](#vocabulary-note-48) |
-| [conjoinment.subjective](#vocabulary-prepositions-conjoinment.subjective) | <code>TO(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../spec/grammar.md#to) | [Note 49](#vocabulary-note-49) |
-| [conjoinment.comparative](#vocabulary-prepositions-conjoinment.comparative) | <code>THAN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../spec/grammar.md#than) | [Note 50](#vocabulary-note-50) |
-| [conjoinment.directive](#vocabulary-prepositions-conjoinment.directive) | <code>FOR(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../spec/grammar.md#for) | [Note 51](#vocabulary-note-51) |
+| [definement.declarative](#vocabulary-prepositions-definement.declarative) | <code>AS(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../reference/word-glossary.md#as) | [Note 41](#vocabulary-note-41) |
+| [definement.definitive](#vocabulary-prepositions-definement.definitive) | <code>OF(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../reference/word-glossary.md#of) | [Note 42](#vocabulary-note-42) |
+| [definement.locative](#vocabulary-prepositions-definement.locative) | <code>AT(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../reference/word-glossary.md#at) | [Note 43](#vocabulary-note-43) |
+| [consignment.associative](#vocabulary-prepositions-consignment.associative) | <code>WITH(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../reference/word-glossary.md#with) | [Note 44](#vocabulary-note-44) |
+| [consignment.inflective](#vocabulary-prepositions-consignment.inflective) | <code>IN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../reference/word-glossary.md#in) | [Note 45](#vocabulary-note-45) |
+| [consignment.deflective](#vocabulary-prepositions-consignment.deflective) | <code>OUT(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../reference/word-glossary.md#out) | [Note 46](#vocabulary-note-46) |
+| [consignment.indicative](#vocabulary-prepositions-consignment.indicative) | <code>BY(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Prepositions](../reference/word-glossary.md#by) | [Note 47](#vocabulary-note-47) |
+| [conjoinment.objective](#vocabulary-prepositions-conjoinment.objective) | <code>FROM(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../reference/word-glossary.md#from) | [Note 48](#vocabulary-note-48) |
+| [conjoinment.subjective](#vocabulary-prepositions-conjoinment.subjective) | <code>TO(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../reference/word-glossary.md#to) | [Note 49](#vocabulary-note-49) |
+| [conjoinment.comparative](#vocabulary-prepositions-conjoinment.comparative) | <code>THAN(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../reference/word-glossary.md#than) | [Note 50](#vocabulary-note-50) |
+| [conjoinment.directive](#vocabulary-prepositions-conjoinment.directive) | <code>FOR(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Prepositions](../reference/word-glossary.md#for) | [Note 51](#vocabulary-note-51) |
 
 ## articles
 
@@ -201,10 +201,10 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 
 | Word | value | inputs | outputs | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| [variable](#vocabulary-articles-variable) | <code>ANY(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Articles and typed arguments](../spec/grammar.md#any) | [Note 52](#vocabulary-note-52) |
-| [none](#vocabulary-articles-none) | <code>NO(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Articles and typed arguments](../spec/grammar.md#no) | [Note 53](#vocabulary-note-53) |
-| [indefinite](#vocabulary-articles-indefinite) | <code>A(inputs)</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Articles and typed arguments](../spec/grammar.md#a) | [Note 54](#vocabulary-note-54) |
-| [definite](#vocabulary-articles-definite) | <code>THE(inputs)</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Articles and typed arguments](../spec/grammar.md#the) | [Note 55](#vocabulary-note-55) |
+| [variable](#vocabulary-articles-variable) | <code>ANY(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Articles and typed arguments](../reference/word-glossary.md#any) | [Note 52](#vocabulary-note-52) |
+| [none](#vocabulary-articles-none) | <code>NO(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Articles and typed arguments](../reference/word-glossary.md#no) | [Note 53](#vocabulary-note-53) |
+| [indefinite](#vocabulary-articles-indefinite) | <code>A(inputs)</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Articles and typed arguments](../reference/word-glossary.md#a-1) | [Note 54](#vocabulary-note-54) |
+| [definite](#vocabulary-articles-definite) | <code>THE(inputs)</code> | <code>["*.noun"]</code> | <code>["value"]</code> | supported | [Articles and typed arguments](../reference/word-glossary.md#the) | [Note 55](#vocabulary-note-55) |
 
 ## conjunctions
 
@@ -219,8 +219,8 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 
 | Word | value | inputs | outputs | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| [mutual](#vocabulary-conjunctions-mutual) | <code>AND(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#and) | [Note 56](#vocabulary-note-56) |
-| [exclusive](#vocabulary-conjunctions-exclusive) | <code>OR(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#or) | [Note 57](#vocabulary-note-57) |
+| [mutual](#vocabulary-conjunctions-mutual) | <code>AND(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../reference/word-glossary.md#and) | [Note 56](#vocabulary-note-56) |
+| [exclusive](#vocabulary-conjunctions-exclusive) | <code>OR(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../reference/word-glossary.md#or) | [Note 57](#vocabulary-note-57) |
 
 ## evaluations
 
@@ -237,10 +237,10 @@ The configured lexicon supplies roots, inflection transformations, grammatical c
 
 | Word | value | inputs | outputs | Support | Semantic context | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| [conditional](#vocabulary-evaluations-conditional) | <code>IF(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#if) | [Note 58](#vocabulary-note-58) |
-| [exceptional](#vocabulary-evaluations-exceptional) | <code>ELSE(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../spec/control-flow.md#else) | [Note 59](#vocabulary-note-59) |
-| [alternative](#vocabulary-evaluations-alternative) | <code>OTHERWISE(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../spec/control-flow.md#otherwise) | [Note 60](#vocabulary-note-60) |
-| [iterative](#vocabulary-evaluations-iterative) | <code>WHILE(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | rejected | [Iteration](../spec/control-flow.md#while) | [Note 61](#vocabulary-note-61) |
+| [conditional](#vocabulary-evaluations-conditional) | <code>IF(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../reference/word-glossary.md#if) | [Note 58](#vocabulary-note-58) |
+| [exceptional](#vocabulary-evaluations-exceptional) | <code>ELSE(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | partial | [Conditions and modifiers](../reference/word-glossary.md#else) | [Note 59](#vocabulary-note-59) |
+| [alternative](#vocabulary-evaluations-alternative) | <code>OTHERWISE(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | supported | [Conditions and modifiers](../reference/word-glossary.md#otherwise) | [Note 60](#vocabulary-note-60) |
+| [iterative](#vocabulary-evaluations-iterative) | <code>WHILE(inputs)</code> | <code>["*.thing"]</code> | <code>["value"]</code> | rejected | [Iteration](../reference/word-glossary.md#while) | [Note 61](#vocabulary-note-61) |
 
 ## Support notes
 

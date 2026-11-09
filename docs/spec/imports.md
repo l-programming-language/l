@@ -8,23 +8,7 @@ Released compilers load the embedded English `builtins/eng/prelude.l`. It includ
 
 ## Indexed dictionaries
 
-<!-- word:builtin:use -->
-
-Associate an existing canonical declaration with an alias, or load a supported explicit source or indexed dictionary dependency.
-
-**Usage and example.** The member import below selects IO.Print and names its local alias. `Use Worker as "Job"` in the [pronoun example](../../testdata/phase1/language/lang-06.l) instead aliases an existing App. Neither form copies its meaning.
-
-Bare dictionary names resolve through the selected `dictionaries.json`. The current format is version 1, with language keys containing dictionary keys. Each entry names a repository/resource-relative `.l` entry and the registered Dictionary it exports.
-
-For example:
-
-<!-- example:imports-indexed-member -->
-
-This imports the public member from the registered IO dictionary and binds a local alias. It does not search for a neighboring `io` directory or `io.l`, nor does it expose private rendering and writing helpers. Importing the dictionary itself retains a namespace instead of flattening all members into the program.
-
-The registry validates duplicate JSON keys, supported source roots, safe resource paths, format, actual entry files, and consistent dictionary identity. It selects foundational dictionaries under `builtins/<language>/`, runtime source under `runtime/<language>/`, and standard libraries under `stdlib/<language>/`. There is one selected registry and no legacy registry lookup. An unknown key is an unresolved dictionary. An unsupported provider-style name reports its bounded unsupported-provider diagnostic. There is no package download or unrestricted remote dependency resolver hidden in Use.
-
-Each indexed dictionary owns a private lexical root inheriting builtins. Its public export must resolve to the registered Dictionary. Imported member aliases resolve in that dictionary's environment. Helper definitions do not capture caller-added members. Repeated dictionary dependencies reuse canonical dictionary identity while preserving import-site attribution.
+[Use in the Word Glossary](../reference/word-glossary.md#word-builtin-use).
 
 ## Explicit source-file imports
 

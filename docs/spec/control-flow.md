@@ -16,31 +16,15 @@ Run acknowledges launch before the next instruction, while the child process con
 
 ### Then
 
-<!-- word:grammar-word:then -->
-
-Separate successive actions within a composed source sequence.
-
-**Usage and boundary.** Launch in the [local definitions program](../../demo/paragraphs/local-definitions.l) uses `and then Awaiting it` after Build/Run. Then preserves source sequencing. It is not an asynchronous continuation primitive.
+[Then in the Word Glossary](../reference/word-glossary.md#word-grammar-word-then).
 
 ### And
 
-<!-- word:grammar-word:and -->
-
-Coordinate source operands, declarations or actions in their owning grammatical sequence.
-
-**Usage and boundary.** `Start First and Second` in the [two-App program](../../demo/phase1/main.l) expands the complete action for each operand.
-
-**Partial support.** Operand, declaration and action coordination work, but an `and`-joined condition such as ``If true and false, Show `value`.`` is rejected during instruction lowering. The grammar recognizes the conditions, but there is no Boolean join operator or short-circuit implementation for them.
+[And in the Word Glossary](../reference/word-glossary.md#word-grammar-word-and).
 
 ### Or
 
-<!-- word:grammar-word:or -->
-
-Join alternative nominal targets in supported descriptor declarations, or occur in recognized condition coordination.
-
-**Usage and boundary.** Main declares `Service, Object, or Function` in the [descriptor example](lexical-types.md#describe-with-an-adjective). These are alternative canonical targets.
-
-**Partial support.** Descriptor target alternatives work, but an `or`-joined runtime condition is rejected during instruction lowering. The grammar recognizes the joined conditions, but there is no Boolean join operator or short-circuit implementation for them.
+[Or in the Word Glossary](../reference/word-glossary.md#word-grammar-word-or).
 
 ## Assignment
 
@@ -56,11 +40,7 @@ The first Await makes Output available. Define reads it once. Later invocations 
 
 ### Is
 
-<!-- word:grammar-word:is -->
-
-Associate a subject with its declared or assigned value. In a condition, compare supported like-typed values.
-
-**Usage and boundary.** `"message" is` followed by Text in the [first program](../guide/first-program.md#read-the-program) supplies assignment. The comparison table below distinguishes conditional equality and the configured negative form `isnt`. Neither implies arbitrary object equality.
+[Is in the Word Glossary](../reference/word-glossary.md#word-grammar-word-is).
 
 ## Comparisons
 
@@ -84,47 +64,23 @@ The inclusive-order spelling follows L's grammar. Source phrases must satisfy bo
 
 ### Have
 
-<!-- word:grammar-word:have -->
-
-Test whether the selected App has the Error identified by its current operation or invocation.
-
-**Usage and boundary.** `it has an Error` in the [conditional member fixture](../../lyger/test/member-resolution.l) follows Execute and refers to HelloWorldApp. Have is not general collection membership. The Error must belong to the same App.
+[Have in the Word Glossary](../reference/word-glossary.md#word-grammar-word-have).
 
 ### Equal
 
-<!-- word:grammar-word:equal -->
-
-Compare two supported scalar values of the same type for equality.
-
-**Usage and boundary.** The [Truth condition](../../testdata/phase1/language/lang-13.l) uses `enabled equals true`. Text compares bytes and Number compares numeric values. Mixed types do not coerce.
+[Equal in the Word Glossary](../reference/word-glossary.md#word-grammar-word-equal).
 
 ### Not
 
-<!-- word:grammar-word:not -->
-
-Negate a condition only where its grammatical form admits this modifier.
-
-**Usage and boundary.** The grammar admits `not` in its bounded condition forms. See the [condition rules](../../lexicon/eng/grammar.json) and negative-condition [lowering witnesses](../../lyger/orchestrator_test.go). This is not an unrestricted prefix Boolean operator or a promise that joined conditions execute.
-
-**Example.** Here `enabled` is a declared Truth value. Negating its false value selects the first branch and writes `disabled` without a newline.
-
-<!-- example:word-not -->
+[Not in the Word Glossary](../reference/word-glossary.md#word-grammar-word-not).
 
 ### Less
 
-<!-- word:grammar-word:less -->
-
-Select a numeric less-than comparison, with an optional equality continuation.
-
-**Usage and boundary.** The focused form `left less than right` requires two Number operands. The phrase `left less than equal to right` is the inclusive grammar. These [typed comparison witnesses](../../lyger/orchestrator_test.go) establish the native boundary. Text ordering is rejected.
+[Less in the Word Glossary](../reference/word-glossary.md#word-grammar-word-less).
 
 ### Greater
 
-<!-- word:grammar-word:greater -->
-
-Select a numeric greater-than comparison, with an optional equality continuation.
-
-**Usage and boundary.** The focused form `left greater than right` requires Numbers. The phrase `left greater than equal to right` is the inclusive form. The [comparison witnesses](../../lyger/orchestrator_test.go) retain operand typing. No lexical Text ordering is implied.
+[Greater in the Word Glossary](../reference/word-glossary.md#word-grammar-word-greater).
 
 ## Selection
 
@@ -146,31 +102,15 @@ The grammar can parse multiple conditions, but outer lowering explicitly rejects
 
 ### If
 
-<!-- word:grammar-word:if -->
-
-Select a source branch from a supported typed condition.
-
-**Usage and boundary.** The [Truth conditional program](../../testdata/phase1/language/lang-13.l) selects Await on true and Exit otherwise. Definite assignment is checked across all continuing paths.
-
-**Partial support.** A single typed condition works. The configured list of conditions joined by And or Or is rejected during instruction lowering, and the configured `else if` continuation is rejected during grammar processing. Neither form is an executable extension of the supported If/Else pair.
+[If in the Word Glossary](../reference/word-glossary.md#word-grammar-word-if).
 
 ### Else
 
-<!-- word:grammar-word:else -->
-
-Attach an alternative branch to its unmatched If in the supported conditional statement.
-
-**Usage and boundary.** The [Truth conditional program](../../testdata/phase1/language/lang-13.l) puts `else exit` after its Await branch. Else is not an independent executable action or a fallback for arbitrary previous failures.
-
-**Partial support.** A plain alternative branch works, but the configured `else if` continuation does not: a source chain such as `If false, Show 1, else if true, Show 2, else Show 3` is rejected during grammar processing. It does not produce an executable conditional chain.
+[Else in the Word Glossary](../reference/word-glossary.md#word-grammar-word-else).
 
 ### Otherwise
 
-<!-- word:grammar-word:otherwise -->
-
-Attach an alternative branch to the immediately preceding unmatched conditional in the same paragraph.
-
-**Usage and boundary.** The [conditional member fixture](../../lyger/test/member-resolution.l) follows an If with Otherwise. Intervening statements or a paragraph boundary do not grant attachment to an earlier condition.
+[Otherwise in the Word Glossary](../reference/word-glossary.md#word-grammar-word-otherwise).
 
 ## Iteration and collection operations
 
@@ -182,15 +122,11 @@ While and three-part source loops remain unsupported. [Collections](collections-
 
 The [grammar configuration](../../lexicon/eng/grammar.json) declares a While rule, but this source fragment is rejected during grammar processing. The [instruction builder](../../lyger/instructions.go) also has no While operation. The configured rule is not an executable loop.
 
-Within native Function bodies, the Storage implementation dictionary composes Iteration and typed Processes into Traverse, Enumerate and related [source words](../internals/storage.md#iteration-and-continuations). Their contracts specify ordering and error behavior. They do not add general source loop syntax or break/continue vocabulary. The [Rust target](../../builtins/README.md#iteration-and-definition-contract) supports their bounded iteration shapes and rejects the three-part X form.
+Within native Function bodies, the Storage implementation dictionary composes Iteration and typed Processes into Traverse, Enumerate and related [source words](../reference/word-glossary.md#context-storage--iteration-and-continuations). Their contracts specify ordering and error behavior. They do not add general source loop syntax or break/continue vocabulary. The [Rust target](../../builtins/README.md#iteration-and-definition-contract) supports their bounded iteration shapes and rejects the three-part X form.
 
 ### While
 
-<!-- word:grammar-word:while -->
-
-Name a configured conditional loop form with no executable source implementation.
-
-**Unsupported operation.** The [unsupported loop illustration](../examples/control-while-unsupported.l) is rejected during grammar processing, and no outer While instruction is implemented. It is a labeled fragment, not a runnable loop or a promise of native iteration. Advanced [Storage traversal](../internals/storage.md#iteration-and-continuations) is a separate source composition facility.
+[While in the Word Glossary](../reference/word-glossary.md#word-grammar-word-while).
 
 ## Arithmetic and native calculations
 
@@ -202,7 +138,7 @@ D/E calculates native expressions, and G/I selects branches. A source-defined na
 
 Show is an outer observation instruction. It writes Text bytes unchanged and formats supported runtime values without adding a newline. Direct App and Error display rejects. It does not implicitly join a process, replay unrelated captured output, or turn child stderr into stdout. Use explicit Await before Output when completion is required.
 
-IO.Print is an imported action that adds one newline. See [IO](../stdlib/eng/io.md#output-and-newlines) for raw-byte and numeric behavior.
+IO.Print is an imported action that adds one newline. See [IO](../reference/word-glossary.md#context-io--output-and-newlines) for raw-byte and numeric behavior.
 
 In the [first program](../guide/first-program.md#read-the-program), Print adds LF inside Hello's process. Execute waits, then Show writes captured Output exactly, without adding a second LF.
 
@@ -216,7 +152,7 @@ Bare Exit terminates the whole L program after cleanup and succeeds if cleanup s
 
 Execute reaches First's continuation, which shows `First\n` and then exits. The following Show in the paragraph, Second's Execute operand, and the program's final Show are unreachable. The retained paragraph test expects that one output line and status 0 when cleanup succeeds. Compare the [explicit-error example](errors.md#runtime-failure-is-a-separate-stage), whose exit status is 1.
 
-Function.Return completes the enclosing invocation through its selected definition. Root-authored returning actions use their caller's Return. Definition-owned actions preserve their constructor contract. A conditional Return leaves other paths continuing, and constructing another Function does not return from its caller. See the [Return contract](../reference/builtins/definitions.md#functionreturn). This supplies neither general source exceptions nor return-value transport between App processes.
+Function.Return completes the enclosing invocation through its selected definition. Root-authored returning actions use their caller's Return. Definition-owned actions preserve their constructor contract. A conditional Return leaves other paths continuing, and constructing another Function does not return from its caller. See the [Return contract](../reference/word-glossary.md#word-builtin-function-return). This supplies neither general source exceptions nor return-value transport between App processes.
 
 ## Sources and witnesses
 

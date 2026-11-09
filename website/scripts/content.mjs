@@ -31,6 +31,13 @@ export function parseDocument(source, mdx = false) {
 }
 export function anchors(text, mdx = false) { return parseDocument(text, mdx).anchors; }
 
+function sourceLines(code, start, end, label) {
+  // Keep original terminators; a final newline does not create an extra line.
+  const lines = code.match(/[^\n]*\n|[^\n]+$/g) ?? [];
+  if (end > lines.length) throw new Error(`${label} lines out of bounds: ${start}-${end}, source has ${lines.length} lines.`);
+  return lines.slice(start - 1, end).join('');
+}
+
 export function validateMap(map) {
   if (map.schemaVersion !== 1 || !Array.isArray(map.pages)) throw new Error('content-map.json requires schemaVersion 1 and a pages array.');
   const routes = new Set(['/']); const sources = new Set();
@@ -168,6 +175,31 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
         }));
         continue;
       }
+      const definition = node.value.trim().match(/^<!--\s*word-definition:([^\s<>]+)\s*-->$/);
+      if (/<!--\s*word-definition\b/.test(node.value) && (!definition || !tree.children.includes(node))) throw new Error(`Invalid word-definition directive in ${page.source}:${node.position.start.line}`);
+      if (definition) {
+        const selected = words.find((entry) => entry.id === definition[1] && entry.source === page.source);
+        if (!selected?.word.definitions) throw new Error(`Unknown word-definition marker ${definition[1]} in ${page.source}`);
+        if (selected.definitionMarker?.position.start.offset !== node.position.start.offset) throw new Error(`Word-definition marker outside its canonical word section: ${definition[1]} in ${page.source}`);
+        const html = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+        const excerpts = [];
+        for (const reference of selected.word.definitions) {
+          const bytes = await fs.readFile(await safeFile(root, reference.source));
+          let code;
+          try { code = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); }
+          catch { throw new Error(`Invalid UTF-8 in word definition: ${selected.id} -> ${reference.source}`); }
+          const [start, end] = reference.lines;
+          code = sourceLines(code, start, end, `Word definition ${selected.id}`);
+          const label = `${reference.source} (lines ${start}–${end})`;
+          const link = sourceURL(root, reference.source, identity);
+          const source = link ? `<a href="${html(link)}#L${start}-L${end}"><code>${html(label)}</code></a>` : `<code>${html(label)}</code>`;
+          const language = path.posix.extname(reference.source).slice(1);
+          const kind = { l: 'L source', json: 'Configured JSON', go: 'Compiler definition' }[language];
+          excerpts.push(`<p>${kind}: ${source}.</p>\n<pre tabindex="0" role="region" aria-label="${html(selected.name)} source definition"><code class="language-${language}">${html(code)}</code></pre>`);
+        }
+        add(node, `<details class="l-word-definition" data-pagefind-ignore><summary>Source definition</summary>\n${excerpts.join('\n')}\n</details>`);
+        continue;
+      }
       const index = node.value.trim().match(/^<!--\s*word-index(?::([a-z0-9:-]+))?\s*-->$/);
       if (/<!--\s*word-index\b/.test(node.value) && (!index || !tree.children.includes(node))) throw new Error(`Invalid word-index directive in ${page.source}:${node.position.start.line}`);
       if (index) {
@@ -215,11 +247,8 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
       let sourceLabel = example.source;
       let sourceFragment = '';
       if (excerpt) {
-        // Keep each selected line's original terminator; a final newline is not an extra line.
-        const lines = code.match(/[^\n]*\n|[^\n]+$/g) ?? [];
         const { start, end } = example.lines;
-        if (end > lines.length) throw new Error(`Example lines out of bounds for ${example.id}: ${start}-${end}, source has ${lines.length} lines.`);
-        code = lines.slice(start - 1, end).join('');
+        code = sourceLines(code, start, end, `Example ${example.id}`);
         sourceLabel += ` (lines ${start}–${end})`;
         sourceFragment = `#L${start}-L${end}`;
       }

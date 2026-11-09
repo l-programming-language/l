@@ -10,7 +10,8 @@ Start with [installation](cli/installation.md), then [build your first program](
 | --- | --- |
 | Look up commands and build options | [CLI reference](cli/index.md) |
 | Read the implemented language contract | [Language specification](spec/index.md) |
-| Look up implicit facilities | [Builtins](reference/builtins/index.md) |
+| Browse implicit vocabulary | [Native Words](reference/words.md) |
+| Look up a word's definition, forms and usage | [Word Glossary](reference/word-glossary.md) |
 | Import a library dictionary | [Standard library](stdlib/index.md) |
 | Understand the compiler and logemes | [Internals](internals/index.md) |
 | Improve documentation or compiler development | [Contributing](contributing/index.md) |

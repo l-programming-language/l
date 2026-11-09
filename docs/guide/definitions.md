@@ -38,7 +38,7 @@ A wrapper composes around its retained base, while a replacement supplies a new 
 
 ## Know the implicit foundation
 
-The implicit foundation includes [Start/Execute](../reference/builtins/lifecycle.md#start-and-execute) and the [core constructions](../reference/builtins/definitions.md) behind Basic. Extend existing words before adding a native leaf. The [native guide](native-definitions.md) explains that boundary.
+The implicit foundation includes [Start/Execute](../reference/word-glossary.md#context-builtin-lifecycle--start-and-execute) and the [core constructions](../reference/word-glossary.md) behind Basic. Extend existing words before adding a native leaf. The [native guide](native-definitions.md) explains that boundary.
 
 ## Diagnose a definition failure
 

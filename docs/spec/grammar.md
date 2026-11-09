@@ -63,35 +63,19 @@ The [complete first program](../guide/first-program.md#read-the-program) gives t
 
 ### Any
 
-<!-- word:grammar-word:any -->
-
-Declare a variable argument or nominal target in a supported source signature or descriptor.
-
-**Usage and boundary.** Start declares `any App` in the [source-action example](definitions.md#source-actions), while Main declares exact target categories. Any does not erase the supplied value's type or create unrestricted native generics.
+[Any in the Word Glossary](../reference/word-glossary.md#word-grammar-word-any).
 
 ### No
 
-<!-- word:grammar-word:no -->
-
-Express an absent signature component or negate a condition where that grammar permits it.
-
-**Usage and boundary.** Main's Function refinement uses `No Inputs and No Outputs` in the [descriptor example](lexical-types.md#describe-with-an-adjective). This explicit empty signature is not an unassigned value or implicit runtime default.
+[No in the Word Glossary](../reference/word-glossary.md#word-grammar-word-no).
 
 ### A
 
-<!-- word:grammar-word:a -->
-
-Introduce an indefinite declaration or construction using the declared alternative form An where appropriate.
-
-**Usage and boundary.** `a New Basic App` in the [first program](../guide/first-program.md#read-the-program) and `an Error` in the [value program](../examples/word-values.l) use the same article family. A/An does not select a type independently of its noun.
+[A in the Word Glossary](../reference/word-glossary.md#word-grammar-word-a).
 
 ### The
 
-<!-- word:grammar-word:the -->
-
-Refer definitively to the selected subject or value in its owning source context.
-
-**Usage and boundary.** `The App Prints message` in the [first program](../guide/first-program.md#read-the-program) supplies an App body effect. The does not make a private or unresolved name visible.
+[The in the Word Glossary](../reference/word-glossary.md#word-grammar-word-the).
 
 ## Phrases
 
@@ -115,95 +99,47 @@ In the basic program, `from` and `as` select the IO dictionary and local alias. 
 
 ### As
 
-<!-- word:grammar-word:as -->
-
-Relate a declaration or alias to its value, category, construction or new local name.
-
-**Usage and boundary.** `Create "Hello" as a New Basic App` and the IO import alias in the [first program](../guide/first-program.md#read-the-program) use distinct owning actions. As alone does not convert runtime types.
+[As in the Word Glossary](../reference/word-glossary.md#word-grammar-word-as).
 
 ### Of
 
-<!-- word:grammar-word:of -->
-
-Supply declared contents, type arguments or operands to a supported construction or signature.
-
-**Usage and boundary.** `New List of Number` in the [value program](../examples/word-values.l) gives the element type. The phrase `Inputs of "Value" as Text` in the [Function example](../examples/composed-functions.l) declares a parameter. The selected owner determines the contract.
+[Of in the Word Glossary](../reference/word-glossary.md#word-grammar-word-of).
 
 ### At
 
-<!-- word:grammar-word:at -->
-
-Select a Number index or Text key for a supported typed read or update.
-
-**Usage and boundary.** The [value program](../examples/word-values.l) uses `items at 0` and the Text key `first` in names. The containing operation checks the key type, bounds and result type. At supplies no unchecked access.
+[At in the Word Glossary](../reference/word-glossary.md#word-grammar-word-at).
 
 ### With
 
-<!-- word:grammar-word:with -->
-
-Introduce associated structures or signature components in the selected construction.
-
-**Usage and boundary.** The [Function example](../examples/composed-functions.l) uses `with Inputs`, and the [Main construction](lexical-types.md#describe-with-an-adjective) uses `with a New Main Object`. With preserves the owning construction's argument contract.
+[With in the Word Glossary](../reference/word-glossary.md#word-grammar-word-with).
 
 ### In
 
-<!-- word:grammar-word:in -->
-
-Identify the destination of a supported insertion or update.
-
-**Usage and boundary.** `Put 7 in items` in the [value program](../examples/word-values.l) appends a Number to its List. Pointer and Map updates have their own checked contracts. In does not select a lexical namespace.
+[In in the Word Glossary](../reference/word-glossary.md#word-grammar-word-in).
 
 ### Out
 
-<!-- word:grammar-word:out -->
-
-Introduce a Function argument, with a separately configured deflective role that has no executable operation.
-
-**Usage and boundary.** After declaring Identity in the [Function example](../examples/composed-functions.l), ``Identity out `value` as "Result".`` uses the generic argument phrase. Out does not give that call output or export behavior.
-
-**Partial support.** The [configured deflective role](../../lexicon/eng/vocabulary.json) has no corresponding operation or dedicated phrase in the current grammar. Only the generic Function argument use is implemented. Use the [Output member](../reference/builtins/lifecycle.md#output) or IO operations for their distinct documented behavior.
+[Out in the Word Glossary](../reference/word-glossary.md#word-grammar-word-out).
 
 ### By
 
-<!-- word:grammar-word:by -->
-
-Introduce a Function argument or name an actor in the configured indicative phrase.
-
-**Usage and boundary.** After declaring Identity in the [Function example](../examples/composed-functions.l), ``Identity by `value` as "Result".`` uses the generic argument phrase. This binds an ordinary argument. It does not select an actor or callback.
-
-**Partial support.** The [indicative grammar](../../lexicon/eng/grammar.json) declares `by Actor`, but no enclosing clause uses that phrase to implement passive actor execution. Generic Function arguments work, but the configured actor-specific meaning does not.
+[By in the Word Glossary](../reference/word-glossary.md#word-grammar-word-by).
 
 ### From
 
-<!-- word:grammar-word:from -->
-
-Select the source of an import or a checked typed value read.
-
-**Usage and boundary.** The [first program](../guide/first-program.md#read-the-program) imports IO.Print from the `io` dictionary. The [value program](../examples/word-values.l) reads a Text from names at the key `first`. The owning import/read determines provider and type checks.
+[From in the Word Glossary](../reference/word-glossary.md#word-grammar-word-from).
 
 ### To
 
-<!-- word:grammar-word:to -->
-
-Introduce a native-backed action definition or a target-dependent utilization/comparison phrase.
-
-**Usage and boundary.** The [IO source](../../stdlib/eng/io/dictionary.l) defines Flush with `to` and one framed native flush call. In `less than equal to`, To belongs to the numeric comparison. It is not an independent conversion or transfer.
+[To in the Word Glossary](../reference/word-glossary.md#word-grammar-word-to).
 
 ### Than
 
-<!-- word:grammar-word:than -->
-
-Connect the operands of an admitted ordered Number comparison.
-
-**Usage and boundary.** The focused `left less than right` and `left greater than right` forms follow the [comparison contract](control-flow.md#comparisons). Both operands must be Number. Than does not enable Text ordering.
+[Than in the Word Glossary](../reference/word-glossary.md#word-grammar-word-than).
 
 ### For
 
-<!-- word:grammar-word:for -->
-
-Introduce the composed body of a source action or structured Process.
-
-**Usage and boundary.** Launch in the [local definitions program](../../demo/paragraphs/local-definitions.l) uses `for Building ...`, and the [selector caller](../examples/word-selection.l) uses `Process ... for Returning ...`. For is not a new loop primitive.
+[For in the Word Glossary](../reference/word-glossary.md#word-grammar-word-for).
 
 ## Clauses and grammatical forms
 
@@ -246,35 +182,19 @@ This negative fixture deliberately puts Await in an App body:
 
 ### Get
 
-<!-- word:builtin:get -->
-
-Recognize a configured receptive action without a general supported collection instruction.
-
-**Unsupported operation.** The configured Get action has no executable instruction and is rejected during instruction lowering. Use the checked typed read form in the [value program](../examples/word-values.l), such as `Define "first" as a New Number from items at 0`. Get is not an alternate spelling for that operation. A separately authored action must supply its own definition.
+[Get in the Word Glossary](../reference/word-glossary.md#word-builtin-get).
 
 ### Take
 
-<!-- word:builtin:take -->
-
-Recognize a configured reductive action without a general supported removal instruction.
-
-**Unsupported operation.** The configured Take action has no executable instruction and is rejected during instruction lowering. The [collection contract](collections-and-categories.md) provides insertion, replacement and typed reads, not removal. A separately authored action must supply its own definition. The configured word is not a runnable removal example.
+[Take in the Word Glossary](../reference/word-glossary.md#word-builtin-take).
 
 ### Import
 
-<!-- word:builtin:import -->
-
-Recognize a configured import action whose general native execution is not implemented.
-
-**Unsupported operation.** The configured Import action has no executable instruction and is rejected during instruction lowering. Use [Use](imports.md#indexed-dictionaries) with an explicit source or registered dictionary. The [file-import program](../../demo/dictionaries/file-import/main.l) demonstrates that supported spelling. Import is not an alias for it. A separately authored action must supply its own definition.
+[Import in the Word Glossary](../reference/word-glossary.md#word-builtin-import).
 
 ### Export
 
-<!-- word:builtin:export -->
-
-Recognize a configured export action whose general native execution is not implemented.
-
-**Unsupported operation.** The configured Export action has no executable instruction and is rejected during instruction lowering. Use [Public/Publicly](names-and-scope.md#public) for declaration visibility, as in the [public-values program](../../demo/paragraphs/public-values.l). That is not a runtime export operation. A separately authored action must supply its own definition.
+[Export in the Word Glossary](../reference/word-glossary.md#word-builtin-export).
 
 ## Conditions
 
@@ -282,7 +202,7 @@ The condition rule contains truth, has, equals, is, isnt, less, greater, less_eq
 
 The configured if/else/otherwise/while families are not equally executable. A single-condition If, an attached plain else, and paragraph-local otherwise have instruction support. The configured `else if` continuation and documented While example reject during grammar processing. While also has no outer instruction implementation. Multiple joined conditions reject during instruction lowering, so the grammar's repeated CONDITION form does not establish boolean conjunction or short-circuit evaluation.
 
-The [Truth conditional example](values.md#truth) shows an actual `If enabled equals true, await Worker, else exit` statement with its declarations and execution context. It compares Truth operands and attaches an else branch to that If. For complete branch examples and explicitly rejected loop forms, see [operations and control flow](control-flow.md). A branch separator comma is source punctuation. It is not the grammar configuration's `|` sequence marker.
+The [Truth conditional example](../reference/word-glossary.md#word-type-truth) shows an actual `If enabled equals true, await Worker, else exit` statement with its declarations and execution context. It compares Truth operands and attaches an else branch to that If. For complete branch examples and explicitly rejected loop forms, see [operations and control flow](control-flow.md). A branch separator comma is source punctuation. It is not the grammar configuration's `|` sequence marker.
 
 ## Predicates and statements
 
@@ -294,7 +214,7 @@ Source order is retained after expansion. A sequence of native unary lifecycle o
 
 Nouns include pronouns, Input/Output/Error, List/Map/Dictionary, Null/Thing/Text/Number/Byte/Truth/Pointer, native Func/Prop/Op concepts, Definition/Attribute, and Object/Class/Service/App. The adjective entries are Public, New, and Generic. Adverbs are Publicly, Not, Less, Greater, and Then. Prepositions are as/of/at/with/in/out/by/from/to/than/for. Articles are any/no/a/the, conjunctions and/or, and evaluations if/else/otherwise/while.
 
-The [builtin vocabulary](../reference/builtins/index.md#builtin-vocabulary) includes configured words and source-defined core words. Standard-library words such as Print require import. New words compose existing definitions. Vocabulary recognition alone does not implement an action.
+The [builtin vocabulary](../reference/word-glossary.md#context-builtin-vocabulary--builtin-vocabulary) includes configured words and source-defined core words. Standard-library words such as Print require import. New words compose existing definitions. Vocabulary recognition alone does not implement an action.
 
 ## Sources and witnesses
 

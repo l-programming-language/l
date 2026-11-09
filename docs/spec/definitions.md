@@ -10,27 +10,15 @@ Declarations retain tokens, formal identities, bindings, descriptor targets and 
 
 ### Create
 
-<!-- word:builtin:create -->
-
-Introduce a named supported value, construction or source action in the current lexical scope.
-
-**Usage and example.** `Create "Hello" as a New Basic App` in the [first program](../guide/first-program.md#read-the-program) creates an App. `Create "Launch..." for ...` in the [action example](../guide/definitions.md#compose-a-source-action) creates a reusable composition. Its parameter has the declared App meaning.
+[Create in the Word Glossary](../reference/word-glossary.md#word-builtin-create).
 
 ### Define
 
-<!-- word:builtin:define -->
-
-Associate a declaration with a value or an explicitly supplied native-backed definition.
-
-**Usage and example.** The [public-values program](../../demo/paragraphs/public-values.l) defines Text, Number and Truth. [Framed definitions](#framing-and-escaping) bind native source through typed slots. Define does not bypass ownership, type or visibility checks.
+[Define in the Word Glossary](../reference/word-glossary.md#word-builtin-define).
 
 ### Describe
 
-<!-- word:builtin:describe -->
-
-Associate a descriptor with its canonical target and ordered construction refinements.
-
-**Usage and example.** Main's `It describes` rules in the [descriptor example](lexical-types.md#describe-with-an-adjective) construct different Function/Object/Service targets. The [recursive caller](../../lyger/test/classes/recursive.l) applies the selected Object rule. Description does not make unrelated homonyms equivalent.
+[Describe in the Word Glossary](../reference/word-glossary.md#word-builtin-describe).
 
 ## Source actions
 
@@ -56,21 +44,11 @@ Main constructs a Function inside an Object inside a Service. Basic supplies tha
 
 ### New
 
-<!-- word:builtin:new -->
-
-Request construction through the selected noun and its matching descriptor rules.
-
-**Usage and example.** `New Basic App` in the [first program](../guide/first-program.md#read-the-program) applies Basic and Main to the App body. `New List of Number` in the [value program](../examples/word-values.l) selects checked List construction. New supplies no universal constructor, clone or initialization fallback.
+[New in the Word Glossary](../reference/word-glossary.md#word-builtin-new).
 
 ### Generic
 
-<!-- word:builtin:generic -->
-
-Describe a reusable source construction pattern whose explicit operands are supplied when applied.
-
-**Usage and example.** Compact in the [source-action example](../../demo/paragraphs/local-definitions.l) describes a Generic App using any Process. `New Compact App` supplies its body. Generic alone does not infer native Rust type parameters, lifetimes or unconstrained constructor support.
-
-**Supported boundary.** The selected source constructor declares the operands it accepts. Its callers and refinements retain that signature and canonical target. Generic describes this reusable construction mechanism, not a promise of inferred polymorphism.
+[Generic in the Word Glossary](../reference/word-glossary.md#word-builtin-generic).
 
 ## Process, Function, and Return
 
@@ -78,7 +56,7 @@ Describe a reusable source construction pattern whose explicit operands are supp
 
 Process composes ordered Syllables through W. Function supplies FW/Func metadata: Name, typed Inputs, output types and an instantiated Process. Source Function declarations use this selected definition too. Function-local Return binds its builtin member after checking source results.
 
-A structured Process can declare typed Inputs for a selected pattern or iteration body. The [Process contract](../reference/builtins/definitions.md#process) specifies scope, cardinality and native type/borrow checking. The [Require walkthrough](../guide/native-definitions.md#keep-branch-data-inside-its-process) shows their use. A Process has no callable outputs or capture runtime.
+A structured Process can declare typed Inputs for a selected pattern or iteration body. The [Process contract](../reference/word-glossary.md#word-builtin-process) specifies scope, cardinality and native type/borrow checking. The [Require walkthrough](../guide/native-definitions.md#keep-branch-data-inside-its-process) shows their use. A Process has no callable outputs or capture runtime.
 
 Native source Function constructors accept explicit generic parameter atoms before their signature. Descriptors on derived invocation nouns retain the base result and forward checked operands once, in source order, including through transparent value definitions. Structured bodies retain their execution placement. One selected signature determines operand boundaries and result bindings: wrappers preserve it, replacements supply it, and source forwarding inherits its remaining parameters. Each declaration owns its body and formal inputs, including declarations sharing a sentence. Native move/borrow checks still apply, and forwarding introduces no clone. [Lined](../guide/native-definitions.md#compose-a-wrapper) demonstrates a source wrapper.
 

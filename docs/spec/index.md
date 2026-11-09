@@ -21,7 +21,7 @@ These are related dimensions: `App` is a noun grammatically and names an applica
 
 Read [lexical structure](lexical-structure.md) for literals and paragraphs, [names and scope](names-and-scope.md) for binding and visibility, and [grammar](grammar.md) for sentence forms. [Definitions](definitions.md), [control flow](control-flow.md), [imports](imports.md), and [execution](execution.md) explain how those pieces become a program. Consult [errors](errors.md) and the [glossary](glossary.md) for diagnostics and terminology.
 
-The [builtin reference](../reference/builtins/index.md) documents implicit words, and the [standard library](../stdlib/index.md) documents explicit imports. Native definitions use the separate [logeme model](../../builtins/LOGEMES.md) and [Rust target contracts](../../builtins/README.md).
+[Native Words](../reference/words.md) indexes implicit vocabulary. The [standard library](../stdlib/index.md) indexes explicit imports. Both lead to complete [Word Glossary](../reference/word-glossary.md) entries. Native definitions use the separate [logeme model](../../builtins/LOGEMES.md) and [Rust target contracts](../../builtins/README.md).
 
 ## Role, support, and evidence
 
