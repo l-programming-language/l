@@ -9,17 +9,23 @@ Work from the current checkout and selected definitions, not a historical layout
 
 ## Establish the meaning and owner
 
-Search existing qualified words and their consumers by behavior before choosing syntax. Decide whether to reuse a capability, improve its definition, or introduce a genuinely new meaning. Reuse can completely satisfy a request; an unfamiliar proposed name does not require a new synonym.
+Search existing qualified words and their consumers by behavior before choosing syntax. Include private unit roots, implementation members, aliases, descriptor targets and compiler-selected definitions relevant to the task; the public glossary is not the whole vocabulary. Decide whether to reuse a capability, improve its definition, or introduce a genuinely new meaning. Reuse can completely satisfy a request; an unfamiliar proposed name does not require a new synonym.
 
 Write a proportional semantic brief in task notes or the existing change description:
 
-- Identify the owning dictionary, qualified root, POS, actual inflections, visibility, and concrete observable meaning.
+- Identify the owning dictionary, qualified root, registered POS, actual inflections, visibility, and concrete observable meaning. Classify action, actor construction, modifier, predicate, value or native pattern before selecting syntax.
 - Identify the canonical target. For a modifier, specify the component or role it requires, introduces, changes, replaces, and preserves.
 - State arguments, results, dataflow and relevant borrow, move, retention, copying and release behavior.
 - State evaluation order and multiplicity, conditional demand, Process/callback invocation and escape, and failure, partial-effect and cleanup behavior.
 - Name reused definitions, justify new abstraction boundaries, and distinguish required guarantees from available evidence and unknowns.
 
-A trivial leaf needs only relevant decisions, not a permanent per-word manifest. Use [definitions](../../../docs/guide/definitions.md) for supported forms and [inflection](../../../docs/spec/lexical-structure.md#vocabulary-and-inflection) for word families. Choose coherent single-word roots and dictionary ownership. Factor independent policies by meaning and target, not a CamelCase splitter. Actor nouns belong to the existing verb family; do not independently redefine that identity. Keep helpers private unless their interface has a real external use. Several source steps can form a useful high-level word.
+A trivial leaf needs only relevant decisions, not a permanent per-word manifest. Apply the [word design convention](../../../docs/guide/definitions.md#organize-words-by-meaning-and-grammatical-role) in that brief: justify deeper declaration ownership, including dotted or mixed qualification, and explain each public interface. Factor independent policies while retaining useful private helpers and high-level compositions.
+
+Trace the [actual declaration role](../../../docs/spec/definitions.md#declaration-roles-and-identity), not just the English name or glossary label. Investigate the guide's operation, actor and stage-noun warning signs through actual behavior and callers. For a modifier, demonstrate a compatible base and canonical target rather than inferring them from related spellings.
+
+Expand every declared form through the current [inflection rules](../../../docs/spec/lexical-structure.md#vocabulary-and-inflection). Check intended spelling, grammatical role and representative caller identity, including actors in the same family. Resolve incorrect forms in authorized source changes, not metadata-only relabeling, and do not manufacture unsupported cases.
+
+Before reusing or deleting a similar mechanism, compare actual operands/results, target, mutability, moves/borrows, retention/destruction, demand/order, return/discard and failure behavior. Inspect its native callee and consumers. A writable buffer and an immutable empty value, or Rc and Arc retention, are not interchangeable merely because their names or bodies resemble each other.
 
 Choose the supported source action, Function, Process, descriptor or native leaf that matches the work. A callable Return is not program Exit. Grammatical recognition alone does not establish lowering or execution support for an adverb, attachment or wrapper. Consult [Process, Function and Return](../../../docs/spec/definitions.md#process-function-and-return) and [construction](../../../docs/spec/definitions.md#descriptors-and-constructors) before extending a form.
 
@@ -33,7 +39,7 @@ Keep native observers limited to observation, such as counting calls, recording 
 
 ## Compose and preserve identity
 
-Keep new sequencing, branching, iteration, callback policy, error policy and resource selection in L. Use explicit typed Process inputs and intermediate labels. Preserve definition-site lookup, canonical targets, paragraph/source order, lexical scope and source provenance through repeated and nested uses. Do not recover bindings from rendered Rust, invent hidden result names, use global temporary counters or add English-spelling compiler cases.
+Keep new sequencing, branching, iteration, callback policy, error policy and resource selection in L. Use explicit typed Process inputs and intermediate labels. Trace producer/consumer bindings before introducing stages: independent words must not communicate through fixed generated names. Preserve definition-site lookup, canonical targets, paragraph/source order, lexical scope and source provenance through repeated and nested uses. Do not recover bindings from rendered Rust, invent hidden result names, use global temporary counters or add English-spelling compiler cases.
 
 Evaluate operands once in their intended order and forward the original target/resource. Preserve wrapper order and repeated construction: different names or facets do not establish commutativity or justify deduplication. A [canonical alias](../../../docs/spec/names-and-scope.md#aliases-and-canonical-identity) retains applicability; a foreign same-spelled word does not. Do not silently clone consumed inputs, erase ownership, impose blanket lifetimes or change representation to make a wrapper compile.
 
@@ -55,7 +61,7 @@ Offline inspect/check/explain and dictionary verification must not replay record
 
 ## Complete the change
 
-For an authorized retirement, inspect qualified definitions, consumers, imports, aliases, descriptors, docs, tests and generated-name/evidence dependencies. Migrate callers and delete the retired meaning, preserving unrelated homonyms and distinct policies. Leave no compatibility alias, shim, second spelling, duplicate layout or fallback unless the user explicitly requires one. Check a forwarding helper's callers and purpose before removing it.
+For an authorized role, family or ownership change, migrate the declaring source, forms/actor uses, qualified consumers, imports, aliases, descriptor targets and compiler/native selection together. Review generated support, provenance, documentation and evidence dependencies. For retirement, delete the old meaning after migration, preserving unrelated homonyms and distinct policies. Leave no compatibility alias, shim, second spelling, duplicate layout or fallback unless the user explicitly requires one. Check a forwarding helper's callers and purpose before removing it. A review or guidance task does not authorize this production migration.
 
 Maintain the changed meaning’s [canonical word entry](../../../docs/contributing/documentation.md#maintain-word-entries), meaningful examples and reviewed associations without publishing private helpers or duplicating definitions. Use [acceptance](../l-acceptance/SKILL.md) for validation and completion; it owns commands, protections, budgets and stage requirements. Do not impose additional native runs on unrelated documentation or read-only tasks.
 

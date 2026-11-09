@@ -20,6 +20,16 @@ Declarations retain tokens, formal identities, bindings, descriptor targets and 
 
 [Describe in the Word Glossary](../reference/word-glossary.md#word-builtin-describe).
 
+### Declaration roles and identity
+
+In the maintained English grammar, `Define "Word" as` followed by a complete backtick-delimited `<DEF>…<DEF>` literal declares a noun lexical definition. `Define "Word" to` with such a literal declares a verb lexical definition. `Create "Word" for ...` declares a source action. These are specific declaration forms: `as` also participates in value bindings and Function construction, so it does not universally mean noun registration. Complete framing alone does not establish that the native body is valid.
+
+A Function declaration binds its invocation verb, including through a selected source constructor. Ordinary source Functions retain Function value storage while exposing that verb's morphology; native/generic Functions use lexical definition records. The invocation word and value share canonical identity. Explicit adjective descriptors register their nominal targets and construction rules separately.
+
+Keep the declared lexical family, a form's grammatical role at use, storage/value category and canonical identity distinct. The objective form of a verb serves as an actor noun without a second independent noun definition. A passive verb form does not automatically become an adjective descriptor. An explicit descriptor and a same-spelled inflection can be distinct meanings selected by grammar. English spelling cannot determine which declaration was registered.
+
+See [registration](../../lyger/registration.go), [Function binding](../../lyger/binding.go), and the [Function identity](../../lyger/function_invocation_words_test.go) and [modifier homonym](../../lyger/word_library_pos_test.go) witnesses. The [authoring convention](../guide/definitions.md#organize-words-by-meaning-and-grammatical-role) governs design choices without changing these rules.
+
 ## Source actions
 
 <!-- example:lexical-action-inflections -->

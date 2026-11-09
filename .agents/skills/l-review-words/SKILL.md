@@ -11,13 +11,23 @@ Review-only means no implementation, documentation, metadata, generated-file, tr
 
 ## Inspect the relevant semantics
 
-Use [definitions](../../../docs/guide/definitions.md), actual selected source, its contracts and maintained tests. Cover the dimensions affected by the change without imposing a boilerplate report for every leaf:
+State the inspected scope and omissions. Follow relevant public words, qualified implementation members, private unit roots, aliases, descriptor targets and compiler-selected definitions; the glossary intentionally omits some of these. Inspect actual selected source, contracts and consumers before accepting a source inventory as a design review.
+
+Use the [word design convention](../../../docs/guide/definitions.md#organize-words-by-meaning-and-grammatical-role) and [registration semantics](../../../docs/spec/definitions.md#declaration-roles-and-identity). For each candidate concern, establish its declaring form, registered family, use-site role, owner, inputs/results and real callers. Distinguish an action, actor construction, modifier, predicate, value and native pattern. A noun label may accurately transcribe a questionable source design; changing the label alone does not repair it.
+
+Count declaration ownership through equivalent possessive, dotted and mixed qualification, and assess the semantic reason for each deeper level under the guide's convention. Separate declaration design from ordinary member access. Report an unjustified depth as a design concern, not a grammar error or demonstrated runtime failure.
+
+Investigate the guide's operation, actor and stage-noun warning signs, including private helpers, while checking its valid controls. Expand every declared form with the actual suffix rules and check intended spelling, role and canonical caller identity. Passing source/metadata consistency can preserve bad morphology; use the registration rules to distinguish passive forms from descriptors.
+
+When a suspect noun resembles another word's inflection, show that family's expanded forms and distinguish their canonical records in the report. Give each nominated role/family concern a disposition, including designs retained with a reason; do not leave that identity comparison implicit in a general semantics summary.
+
+Cover the dimensions affected by the change without imposing a boilerplate report for every leaf:
 
 - **Meaning and factoring:** Check coherent single-word roots, POS/inflections, actor identity, dictionary ownership and visibility. Identify genuinely independent policies and exact component roles; spelling alone does not prove poor factoring. Preserve useful high-level compositions and private helpers.
 - **Dataflow and demand:** Trace typed arguments/results, explicit Process inputs, intermediate bindings, once-only evaluation, order, inactive branches, callback multiplicity/escape and repeated or nested scope. Check provenance and definition-site lookup rather than generated-name coincidences. Distinguish callable returns from program exits and recognized grammar from implemented support.
 - **Ownership and effects:** Check shared/exclusive borrows, moves, retention, copying, destruction, replacement and release. Reject silent clones or blanket lifetime/representation changes introduced to make a wrapper compile. Identify deliberate propagation, replacement, discard, panic and partial completion.
 - **Modifiers and identity:** Inspect the exact canonical target and replaced role, retained base, original operands/resource, wrapper order, repeated construction and unrelated preserved structure. A [canonical alias](../../../docs/spec/names-and-scope.md#aliases-and-canonical-identity) is different from a same-spelled foreign target. Different modifier names or facets do not prove commutativity.
-- **Placement and reduction:** Check the appropriate source owner and whether public vocabulary is necessary. Search qualified definitions, calls, aliases, descriptors and generated/evidence dependencies before calling a word unused. Preserve foreign homonyms, distinct policies and tests of different boundaries.
+- **Placement and reduction:** Check the appropriate source owner and whether public vocabulary is necessary. Search qualified definitions, calls, aliases, descriptors and compiler/native/generated/evidence dependencies before calling a word unused. Compare types/targets, mutability, ownership, demand, return/discard and failure behavior before proposing reuse. Trace fixed intermediate names between stages. Similar bodies do not establish safe substitution, and a single caller does not establish uselessness. Preserve foreign homonyms, distinct policies and tests of different boundaries.
 
 Check changed public meanings against their [canonical entries](../../../docs/contributing/documentation.md#maintain-word-entries), reviewed associations and meaningful examples; flag stale roles, targets, support claims or missing coverage without promoting private helpers.
 
@@ -46,7 +56,7 @@ Distinguish these categories; add severity when it helps prioritization:
 | Removable complexity | A simpler implementation whose removal conditions preserve required behavior, public meaning and distinct coverage. |
 | Optional design preference | A naming or organization choice without a demonstrated correctness defect. |
 
-For each actionable finding, provide the location and qualified word, triggering composition, consequence or unmet obligation, observed evidence or explicitly proposed exposing test, smallest coherent correction, and safe-removal conditions where applicable. Distinguish tests actually run from suggestions. A regex match, adjective label or author's assurance is not sufficient evidence.
+For each actionable finding, provide the location and qualified word, triggering composition, consequence or unmet obligation, observed evidence or explicitly proposed exposing test, smallest coherent correction, and safe-removal conditions where applicable. A role/family correction must account for source declarations, forms, callers, aliases, descriptor targets and selected-definition/provenance dependencies, not just metadata. Distinguish tests actually run from suggestions. A regex match, adjective label or author's assurance is not sufficient evidence.
 
 Do not force a line-count reduction, inline useful L compositions, publish private helpers or delete behavioral coverage merely to shorten a change. Authorized clean breaks migrate the selected meaning's callers before deletion and leave no compatibility route; they do not authorize unrelated vocabulary retirement.
 

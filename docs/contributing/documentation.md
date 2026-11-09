@@ -43,6 +43,11 @@ addressable without being an application API. Exclude genuinely unit-private
 definitions and internal value/configuration tags. The compiler inventory test
 checks dictionary coverage; source review still owns meaning and support.
 
+A vocabulary audit has a wider scope than the glossary: inspect private roots,
+implementation members, aliases and compiler-selected definitions too, without
+publishing them as application API. Apply the [word design guidance](../guide/definitions.md#organize-words-by-meaning-and-grammatical-role)
+to their source and callers.
+
 Keep identity, qualified name, support, visibility, dictionary ownership, sources,
 witnesses and the exact `doc` file/anchor in `docs/_meta/semantics.json`. The `word`
 facts contain `partOfSpeech`, optional `audience` (`application` or `authoring`),
@@ -50,6 +55,13 @@ facts contain `partOfSpeech`, optional `audience` (`application` or `authoring`)
 `form`, existing qualified `aliases`, and `definitions` source excerpts. Forms come from `inflections`; annotate
 each declared case and its POS without inventing spellings. A documentation ID is
 not automatically a compiler identity.
+
+POS and forms must describe actual [registration and identity](../spec/definitions.md#declaration-roles-and-identity),
+even when the source design merits correction. Accurate transcription is not
+design approval. Expand and inspect the declared family rather than assuming
+matching metadata proves good morphology. A metadata-only relabel cannot turn
+a noun definition into an action or descriptor; an authorized source migration
+must precede the corresponding factual update.
 
 Aliases describe existing bindings to that same meaning. The library indexes
 link those names to the canonical entry, including cross-dictionary bindings such
