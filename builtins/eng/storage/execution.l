@@ -5,18 +5,16 @@ Define Storage's "Specialize|-s|-d|--ing|--er" to `<DEF>OB{|Key: ~<@Name|Label@>
     Publicly create Storage's "Clone|-s|-d|--ing|--er" as a Generic Storage.Cloneable Storage.Routine with Inputs of "value" as `&T` and Outputs of `T`.
 Return a New Storage's Copier of Value.
 
-Define Storage's "Future" as `<DEF>COB{|Key: ~<@Name|Label@>~|}^CV{|Capture: ~Move~|}^(<@Body@>)<DEF>`.
-Define Storage's Function's "Pending" as `<DEF>COB{|Key: ~lPending~|}^CV{|Capture: ~Move~|}^(<@Body@>)<DEF>`.
-Define Storage's Function's "Pinned" as `<DEF>MOB{|Key: ~lPinned~|}^KY{|Key: ~Box::pin~, Inputs: ~&[lPending]&~|}<DEF>`.
-Define Storage's Function's "Ready" as `<DEF>BOD^E{|Statement: ~lPinned~|}<DEF>`.
-Create Storage's Function's "Suspend|-s|-ed|-ing|-er" for Processing a New Storage's Function's Pending, a New Storage's Function's Pinned, and a New Storage's Function's Ready.
+Define Storage's "Future" as `<DEF>COB{|Key: ~<@Future|Label@>~|}^CV{|Capture: ~Move~|}^(<@Body@>)<DEF>`.
+Define Storage's "Pin|-s|-ned|-ning|-ner" to `<DEF>MOB{|Key: ~<@Pinned|Label@>~|}^KY{|Key: ~Box::pin~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
+Define "Tail" as `<DEF>BOD^E{|Statement: ~<@Pinned@>~|}<DEF>`.
+Create Storage's Function's "Suspend|-s|-ed|-ing|-er" for Processing a New Storage's Future, a New Storage's Pinner, and a New Tail.
 Define Storage's Function's "Continue|-s|-d|--ing|--er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::ops::ControlFlow::Continue~, Inputs: ~&[<@Values@>]&~|}<DEF>`.
 Define Storage's Function's "Return" as `<DEF><@Return@><DEF>`.
 Create Storage's Function's "Yield|-s|-ed|-ing|-er" for Processing a New Storage's Function's Continuer, a New Storage's Success, and a New Storage's Function's Return.
 Create Storage's Function's "Exit|-s|-ed|-ing|-er" for Processing a New Storage's Success and a New Storage's Function's Return.
-Define Storage's Function's "Capture" as `<DEF>MOB{|Key: ~<@Name@>Environment~|}^(<@Environment@>)<DEF>`.
-Define Storage's Function's "Pair" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~(<@Name|Label@>Environment?, <@Function@> as <@Type@>)~|}<DEF>`.
-Create Storage's Function's "Bind|-s|---ound|-ing|-er" for Processing a New Storage's Function's Capture and a New Storage's Function's Pair.
+Define "Capture" as `<DEF>MOB{|Key: ~<@Capture|Label@>~|}^(<@Environment@>)<DEF>`.
+Create Storage's Function's "Bind|-s|----ound|-ing|-er" for Processing a New Capture, a New Storage.Checked Storage's Binding, a New Storage's Caster, and a New Storage's Tuple.
 
 Create Storage's "Reject|-s|-ed|-ing|-or" for Function.Returning a New Storage's Rejection of a New Storage's Failure of any Text.
 
@@ -42,16 +40,14 @@ Create "Copied" as a New Storage's Environment's Copier of Borrowed.
 Return a New Storage's Success of Copied.
 
 Create Storage's "Context" as a Dictionary.
-Define Storage's Context's "Runtime" as `<DEF>MOB{|Key: ~<@Name@>Runtime~|}^KY{|Key: ~clone~, Receiver: ~<@Runtime@>~|}<DEF>`.
-Define Storage's Context's "Pair" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~(<@Name|Label@>Runtime, <@Program@>)~|}<DEF>`.
-Define Storage's Context's "Binding" as `<DEF>OB{|Key: ~<@Binding@>~, Value: ~&<@Name@>.1~|}<DEF>`.
-Create Storage's Context's "Create|-s|-d|--ing|--or" for Processing a New Storage's Context's Runtime, a New Storage's Context's Pair, and a New Storage's Context's Binding.
-Define Storage's Context's "First" as `<DEF>OB{|Key: ~runtime~, Value: ~&<@Context@>.0~|}<DEF>`.
-Define Storage's Context's "Second" as `<DEF>OB{|Key: ~lProgram~, Value: ~&<@Context@>.1~|}<DEF>`.
-Create Storage's Context's "Read|-s||-ing|-er" for Processing a New Storage's Context's First and a New Storage's Context's Second.
-Define Storage's Function's "Snapshot" as `<DEF>MOB{|Key: ~<@Name@>Environment~|}^KY{|Key: ~<@Copy@>~, Inputs: ~&[&<@Environment@>]&~|}<DEF>`.
-Define Storage's Function's "Identity" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~(<@Name|Label@>Environment, <@Function@> as <@Type@>)~|}<DEF>`.
-Create Storage's Function's "Retain|-s|-ed|-ing|-er" for Processing a New Storage's Function's Snapshot and a New Storage's Function's Identity.
+Define "Runtime" as `<DEF>MOB{|Key: ~<@Cloned|Label@>~|}^KY{|Key: ~clone~, Receiver: ~<@Runtime@>~|}<DEF>`.
+Define "Program" as `<DEF>OB{|Key: ~<@Binding|Label@>~, Value: ~&<@Name@>.1~|}<DEF>`.
+Create Storage's Context's "Create|-s|-d|--ing|--or" for Processing a New Runtime, a New Storage's Tuple, and a New Program.
+Define "Host" as `<DEF>OB{|Key: ~<@RuntimeBinding|Label@>~, Value: ~&<@Context@>.0~|}<DEF>`.
+Define "Data" as `<DEF>OB{|Key: ~<@ProgramBinding|Label@>~, Value: ~&<@Context@>.1~|}<DEF>`.
+Create Storage's Context's "Read|-s||-ing|-er" for Processing a New Host and a New Data.
+Define "Snapshot" as `<DEF>MOB{|Key: ~<@Captured|Label@>~|}^KY{|Key: ~<@Copy@>~, Inputs: ~&[&<@Environment@>]&~|}<DEF>`.
+Create Storage's Function's "Retain|-s|-ed|-ing|-er" for Processing a New Snapshot, a New Storage's Caster, and a New Storage's Tuple.
 Define Storage's Program's "Apps" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Program@>.apps~|}<DEF>`.
 
     Publicly create Storage's App's "Retain|-s|-ed|-ing|-er" as a Generic Function with Inputs of "value" as `&std::sync::Arc<runtime::App>` and Outputs of `std::sync::Arc<runtime::App>`.
@@ -64,21 +60,20 @@ Create "Borrowed" as a New Storage.Checked Binding of a New Storage's Requirer o
 Create "Retained" as a New Storage's App's Retainer of Borrowed.
 Return a New Storage's Success of Retained.
 
-Define Storage's App's "Path" as `<DEF>MOB{|Key: ~<@Name@>Path~|}^KY{|Key: ~std::path::PathBuf::from~, Inputs: ~&[<@Path|Text@>]&~|}<DEF>`.
-Define Storage's App's "Handle" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::runtime_app~, Imports: ~&[runtime::runtime_app as _]&~, Inputs: ~&[runtime, <@Name|Label@>Path]&~|}<DEF>`.
-Create Storage's App's "Create|-s|-d|--ing|--or" for Processing a New Storage's App's Path and a New Storage's App's Handle.
-Define Storage's App's "Source" as `<DEF>MOB{|Key: ~lAppSource~|}^KY{|Key: ~String::from~, Inputs: ~&[<@Source|Text@>]&~|}<DEF>`.
-Define Storage's App's "Attribution" as `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~runtime::app_set_source~, Imports: ~&[runtime::app_set_source as _]&~, Inputs: ~&[&<@App@>, lAppSource]&~|}<DEF>`.
-Create Storage's App's "Attribute|-s|-d|--ing|--or" for Processing a New Storage's App's Source and a New Storage's App's Attribution.
+Define "Path" as `<DEF>MOB{|Key: ~<@PathBinding|Label@>~|}^KY{|Key: ~std::path::PathBuf::from~, Inputs: ~&[<@Path|Text@>]&~|}<DEF>`.
+Define "Application" as `<DEF>MOB{|Key: ~<@AppResult|Label@>~|}^KY{|Key: ~runtime::runtime_app~, Imports: ~&[runtime::runtime_app as _]&~, Inputs: ~&[<@Runtime@>, <@PathBinding@>]&~|}<DEF>`.
+Create Storage's App's "Create|-s|-d|--ing|--or" for Processing a New Path and a New Application.
+Define "Source" as `<DEF>MOB{|Key: ~<@SourceBinding|Label@>~|}^KY{|Key: ~String::from~, Inputs: ~&[<@Source|Text@>]&~|}<DEF>`.
+Define "Attribute|-s|-d|--ing|--or" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~runtime::app_set_source~, Imports: ~&[runtime::app_set_source as _]&~, Inputs: ~&[&<@App@>, <@SourceBinding@>]&~|}<DEF>`.
+Create Storage's App's "Attribute|-s|-d|--ing|--or" for Processing a New Source and a New Attributor.
 Define Storage's App's "Output" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::app_output~, Imports: ~&[runtime::app_output as _]&~, Inputs: ~&[&<@App@>]&~|}<DEF>`.
 Define Storage's App's "Error" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::app_error~, Imports: ~&[runtime::app_error as _]&~, Inputs: ~&[&<@App@>]&~|}<DEF>`.
 Define Storage's Error's "Create|-s|-d|--ing|--or" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::error_new~, Imports: ~&[runtime::error_new as _]&~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Storage's "Show|-s|-ed|-ing|-er" to `<DEF>COB{|Key: ~<@Name|Label@>~|}^DV^KY{|Key: ~runtime::runtime_show~, Imports: ~&[runtime::runtime_show as _]&~, Inputs: ~&[runtime, &<@Value@>]&~|}<DEF>`.
-Define Storage's Program's "Failure" as `<DEF>MOB{|Key: ~<@Name@>Error~|}^KY{|Key: ~runtime::runtime_fail~, Imports: ~&[runtime::runtime_fail as _]&~, Inputs: ~&[runtime, <@Value@>]&~|}<DEF>`.
-Define Storage's Program's "Rejection" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~Err~, Inputs: ~&[<@Name|Label@>Error]&~|}<DEF>`.
-Create Storage's Program's "Fail|-s|-ed|-ing|-er" for Processing a New Storage's Program's Failure and a New Storage's Program's Rejection.
+Define "Fail|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Error|Label@>~|}^KY{|Key: ~runtime::runtime_fail~, Imports: ~&[runtime::runtime_fail as _]&~, Inputs: ~&[<@Runtime@>, <@FailureInput@>]&~|}<DEF>`.
+Create Storage's Program's "Fail|-s|-ed|-ing|-er" for Processing a New Failer and a New Storage's Rejection.
 
 Create Storage's "Entry" as a Dictionary.
-Define Storage's Entry's "Future" as `<DEF>MOB{|Key: ~lObservedFuture~|}^KY{|Key: ~l_main~, Inputs: ~&[runtime]&~|}<DEF>`.
-Define Storage's Entry's "Outcome" as `<DEF>COB{|Key: ~lObservedStatus~|}^DV^KY{|Key: ~runtime::runtime_run~, Imports: ~&[runtime::runtime_run as _]&~, Inputs: ~&[runtime, lObservedFuture]&~|}<DEF>`.
-Create Storage's Entry's "Observe|-s|-d|--ing|--er" for Processing a New Storage's Entry's Future, a New Storage's Entry's Outcome, and a New Storage's Function's Return.
+Define "Entry" as `<DEF>MOB{|Key: ~<@MainFuture|Label@>~|}^KY{|Key: ~<@Main@>~, Inputs: ~&[<@Runtime@>]&~|}<DEF>`.
+Define "Observation" as `<DEF>MOB{|Key: ~<@Future|Label@>~|}^KY{|Key: ~runtime::runtime_run~, Imports: ~&[runtime::runtime_run as _]&~, Inputs: ~&[<@Runtime@>, <@MainFuture@>]&~|}<DEF>`.
+Create Storage's Entry's "Observe|-s|-d|--ing|--er" for Processing a New Entry, a New Observation, a New Storage's Awaiter, and a New Storage's Function's Return.

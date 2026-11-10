@@ -28,7 +28,6 @@ type orchestrationEmitter struct {
 	functionItems       []string
 	functionContracts   map[*record]*sourceFunction
 	functionEmitted     map[int]bool
-	functionCall        int
 	programStorage      map[*orchestrationStorage]int
 	programActions      map[*record]int
 	processes           *builtinProcessCatalog
@@ -51,6 +50,7 @@ func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact
 	if r.Compilation.Semantics == nil {
 		return BuildUnit{}, lerrors.Internal.Errorf("orchestration requires semantic instructions")
 	}
+	defer r.Compilation.definitionScope()()
 	emitter := &orchestrationEmitter{compilation: r.Compilation, artifacts: make(map[*App]string), apps: make(map[*App]string), processes: r.Compilation.builtinProcesses}
 	paths := make(map[string]bool)
 	for _, artifact := range companions {
@@ -85,7 +85,8 @@ func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact
 	var body []string
 	for _, app := range emitter.plan.Apps {
 		created, err := emitter.word("Storage.App.Create", map[string]DefinitionArgument{
-			"Name": definitionReferenceArgument(emitter.apps[app]), "Path": {Kind: "Text", Text: emitter.artifacts[app]},
+			"AppResult": definitionReferenceArgument(emitter.apps[app]), "Path": {Kind: "Text", Text: emitter.artifacts[app]},
+			"PathBinding": definitionReferenceArgument(r.Compilation.definitionLabel()), "Runtime": definitionReferenceArgument("runtime"),
 		})
 		if err != nil {
 			return BuildUnit{}, err
@@ -122,11 +123,15 @@ func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact
 	if err != nil {
 		return BuildUnit{}, err
 	}
-	observedReturn, err := r.Compilation.instantiateBuiltin("Function.Return", map[string]DefinitionArgument{"Statement": definitionReferenceArgument("lObservedStatus")})
+	mainFuture, observedFuture, observedStatus := r.Compilation.definitionLabel(), r.Compilation.definitionLabel(), r.Compilation.definitionLabel()
+	observedReturn, err := r.Compilation.instantiateBuiltin("Function.Return", map[string]DefinitionArgument{"Statement": definitionReferenceArgument(observedStatus)})
 	if err != nil {
 		return BuildUnit{}, err
 	}
-	observedBody, err := emitter.word("Storage.Entry.Observe", map[string]DefinitionArgument{"Return": {Kind: "Definition", Definition: &observedReturn}})
+	observedBody, err := emitter.word("Storage.Entry.Observe", map[string]DefinitionArgument{
+		"Return": {Kind: "Definition", Definition: &observedReturn}, "Main": definitionReferenceArgument("l_main"), "Runtime": definitionReferenceArgument("runtime"),
+		"MainFuture": definitionReferenceArgument(mainFuture), "Future": definitionReferenceArgument(observedFuture), "Outcome": definitionReferenceArgument(observedStatus),
+	})
 	if err != nil {
 		return BuildUnit{}, err
 	}
@@ -353,6 +358,9 @@ func (value emittedExpression) definitionAtom() DefinitionArgument {
 }
 
 func (e *orchestrationEmitter) condition(condition *orchestrationCondition) (string, error) {
+	if len(e.compilation.definitionTemporaries) == 0 {
+		defer e.compilation.definitionScope()()
+	}
 	left, err := e.value(condition.Left)
 	if err != nil {
 		return "", err
@@ -397,7 +405,10 @@ func (e *orchestrationEmitter) condition(condition *orchestrationCondition) (str
 			}
 			// The selected definition supplies the calculation; the enum supplies only
 			// its already-resolved comparison token and the two operand references.
-			result, err = e.valueBinding("Storage.Compare", map[string]DefinitionArgument{"Operator": {Kind: "Syllable", Text: operator}, "Left": left.definitionAtom(), "Right": right.definitionAtom()})
+			result = e.compilation.definitionLabel()
+			result, err = e.explicitValueBinding("Storage.Compare", result, map[string]DefinitionArgument{
+				"Name": definitionReferenceArgument(result), "Operator": {Kind: "Syllable", Text: operator}, "Left": left.definitionAtom(), "Right": right.definitionAtom(),
+			})
 		}
 		if err != nil {
 			return "", err
@@ -410,6 +421,9 @@ func (e *orchestrationEmitter) condition(condition *orchestrationCondition) (str
 }
 
 func (e *orchestrationEmitter) attribution(current *orchestrationInstruction) ([]string, error) {
+	if len(e.compilation.definitionTemporaries) == 0 {
+		defer e.compilation.definitionScope()()
+	}
 	if current.Source.Kind == instructionCall && len(current.Arguments) == 0 || current.Source.Kind == instructionBlock {
 		return nil, nil
 	}
@@ -430,7 +444,9 @@ func (e *orchestrationEmitter) attribution(current *orchestrationInstruction) ([
 			if span.Path != "" {
 				source = fmt.Sprintf("%s:%d:%d: %s", span.Path, span.Start.Line, span.Start.Column, source)
 			}
-			words, err := e.word("Storage.App.Attribute", map[string]DefinitionArgument{"App": definitionReferenceArgument(e.apps[value.App]), "Source": {Kind: "Text", Text: source}})
+			words, err := e.word("Storage.App.Attribute", map[string]DefinitionArgument{
+				"App": definitionReferenceArgument(e.apps[value.App]), "Source": {Kind: "Text", Text: source}, "SourceBinding": definitionReferenceArgument(e.compilation.definitionLabel()),
+			})
 			if err != nil {
 				return err
 			}
@@ -456,6 +472,9 @@ func (e *orchestrationEmitter) attribution(current *orchestrationInstruction) ([
 }
 
 func (e *orchestrationEmitter) instructions(body []*orchestrationInstruction) ([]string, error) {
+	if len(e.compilation.definitionTemporaries) == 0 {
+		defer e.compilation.definitionScope()()
+	}
 	outer := e.pending
 	e.pending = nil
 	defer func() { e.pending = outer }()
@@ -498,6 +517,9 @@ func (e *orchestrationEmitter) returned(value string) ([]string, error) {
 }
 
 func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([]string, error) {
+	if len(e.compilation.definitionTemporaries) == 0 {
+		defer e.compilation.definitionScope()()
+	}
 	if current.Source.Application != nil || current.Source.Constructor != nil {
 		var instance DefinitionInstance
 		var err error
@@ -605,7 +627,7 @@ func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([
 		if err != nil {
 			return nil, err
 		}
-		_, err = e.describedValueBinding("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Value": definitionReferenceArgument(shown)})
+		_, err = e.describedValueBinding("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Attempt": definitionReferenceArgument(shown)})
 		return nil, err
 	case instructionExit:
 		if current.Value == nil {
@@ -630,7 +652,11 @@ func (e *orchestrationEmitter) instruction(current *orchestrationInstruction) ([
 		if err != nil {
 			return nil, err
 		}
-		failed, err := e.valueBinding("Storage.Program.Fail", map[string]DefinitionArgument{"Value": definitionReferenceArgument(present)})
+		failure, result := e.compilation.definitionLabel(), e.compilation.definitionLabel()
+		failed, err := e.explicitValueBinding("Storage.Program.Fail", result, map[string]DefinitionArgument{
+			"Error": definitionReferenceArgument(failure), "Runtime": definitionReferenceArgument("runtime"), "FailureInput": definitionReferenceArgument(present),
+			"Name": definitionReferenceArgument(result), "Value": definitionReferenceArgument(failure),
+		})
 		if err != nil {
 			return nil, err
 		}

@@ -9,7 +9,7 @@ Create Storage's "Error" as a Dictionary.
 Create Storage's "Null" as a Dictionary.
 Create Storage's "App" as a Dictionary.
 Create Storage's "Function" as a Dictionary.
-Define Storage's Number's "Format" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::format_number~, Imports: ~&[runtime::format_number as _]&~, Inputs: ~&[*<@Value@>]&~|}<DEF>`.
+Define Storage's Number's "Format|-s|-ted|-ting|-ter" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::format_number~, Imports: ~&[runtime::format_number as _]&~, Inputs: ~&[*<@Value@>]&~|}<DEF>`.
 
     Publicly create Storage's Text's "Restore|-s|-d|--ing|--er" as a Generic Function with Inputs of "data" as `&dyn std::any::Any` and "message" as `&str` and Outputs of `runtime::Result<Vec<u8>>`.
 Create "Value" as a New Storage.Checked Binding of a New Storage's Annotation of `runtime::Result<&Vec<u8>>` and a New Storage's Projector of Data and Message.
@@ -24,7 +24,7 @@ Return a New Storage's Text's Restorer of Data and `expected Bytes`.
 
     Publicly create Storage's Number's "Render|-s|-ed|-ing|-er" as a Generic `l_show_number` Function with Inputs of "data" as `&dyn std::any::Any` and Outputs of `runtime::Result<Vec<u8>>`.
 Create "Value" as a New Storage.Checked Binding of a New Storage's Annotation of `runtime::Result<&f64>` and a New Storage's Projector of Data and `expected Number`.
-Create "Bytes" as a New Storage's Number's Format of Value.
+Create "Bytes" as a New Storage's Number's Formatter of Value.
 Return a New Storage's Success of Bytes.
 
     Publicly create Storage's Truth's "Render|-s|-ed|-ing|-er" as a Generic `l_show_truth` Function with Inputs of "data" as `&dyn std::any::Any` and Outputs of `runtime::Result<Vec<u8>>`.
@@ -57,10 +57,10 @@ Return a New Storage's Rejection of Failure.
 
 Define Storage's Function's "Environment" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~&<@Value@>.0~|}<DEF>`.
 Use Storage.Tuple.Second as Storage.Function's "Target".
-Define Storage's Function's "Copyable" as a New Adjective describing any Storage's Routine.
+Define Storage's "Copyable" as a New Adjective describing any Storage's Routine.
 It describes a Generic Storage's Routine of `T: Copy`.
 
-    Publicly create Storage's Function's "Copy|--ies|--ied|-ing|--ier" as a Generic Storage.Function.Copyable `l_function_copy` Storage.Routine with Inputs of "value" as `&(LEnvironment, T)` and Outputs of `(LEnvironment, T)`.
+    Publicly create Storage's Function's "Copy|--ies|--ied|-ing|--ier" as a Generic Storage.Copyable `l_function_copy` Storage.Routine with Inputs of "value" as `&(LEnvironment, T)` and Outputs of `(LEnvironment, T)`.
 Create "Environment" as a New Storage's Function's Environment of Value.
 Create "Copied" as a New Storage's Environment's Copier of Environment.
 Create "Target" as a New Storage's Function's Target of Value.

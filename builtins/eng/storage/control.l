@@ -5,28 +5,27 @@ It describes a Generic Storage's Routine of `T: 'static`.
 Define Storage's "Referenced" as a New Adjective describing any Storage's Routine.
 It describes a Generic Storage.Lending Storage's Routine of `T: 'static` and `'a`.
 Define Storage's "Failure" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~runtime::error_new_text~, Imports: ~&[runtime::error_new_text as _]&~, Inputs: ~&[<@Message@>]&~|}<DEF>`.
-Define Storage's "Optional" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~ok~, Receiver: ~<@Value@>~|}<DEF>`.
+Define Storage's "Extract|-s|-ed|-ing|-or" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~ok~, Receiver: ~<@Value@>~|}<DEF>`.
 Define Storage's "Projection" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~downcast_ref~, Receiver: ~<@Value@>~|}<DEF>`.
-Define Storage's "Shared" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::rc::Rc::new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
+Define Storage's "Share|-s|-d|--ing|-r" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::rc::Rc::new~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Storage's "Success" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~Ok~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Storage's "Release|-s|-d|--ing|--er" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~std::mem::drop~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
+Define "Presence" as `<DEF>E{|Statement: ~Some(<@Payload|Label@>)~|}*<@Body@><DEF>`.
+Define "Absence" as `<DEF>E{|Statement: ~None~|}*<@Body@><DEF>`.
+Define "Success" as `<DEF>E{|Statement: ~Ok(<@Payload|Label@>)~|}*<@Body@><DEF>`.
+Define "Failure" as `<DEF>E{|Statement: ~Err(<@Failure|Label@>)~|}*<@Body@><DEF>`.
+Define "Selection" as `<DEF>BOG^GI{|Key: ~<@Value@>~|}^(<@Present@>*<@Absent@>)<DEF>`.
 Create Storage's "Option" as a Dictionary.
-Define Storage's Option's "Present" as `<DEF>E{|Statement: ~Some(<@Payload|Label@>)~|}*<@Body@><DEF>`.
-Define Storage's Option's "Absent" as `<DEF>E{|Statement: ~None~|}*<@Body@><DEF>`.
-Define Storage's Option's "Choice" as `<DEF>BOG^GI{|Key: ~<@Value@>~|}^(<@Present@>*<@Absent@>)<DEF>`.
-Create Storage's Option's "Select|-s|-ed|-ing|-or" for Processing a New Storage's Option's Choice of any Thing, a New Storage's Option's Present of any Process, and a New Storage's Option's Absent of any Process.
+Create Storage's Option's "Select|-s|-ed|-ing|-or" for Processing a New Selection of any Thing, a New Presence of any Process, and a New Absence of any Process.
 Create Storage's "Result" as a Dictionary.
-Define Storage's Result's "Accepted" as `<DEF>E{|Statement: ~Ok(<@Payload|Label@>)~|}*<@Body@><DEF>`.
-Define Storage's Result's "Rejected" as `<DEF>E{|Statement: ~Err(<@Failure|Label@>)~|}*<@Body@><DEF>`.
-Define Storage's Result's "Choice" as `<DEF>BOG^GI{|Key: ~<@Value@>~|}^(<@Accepted@>*<@Rejected@>)<DEF>`.
-Create Storage's Result's "Select|-s|-ed|-ing|-or" for Processing a New Storage's Result's Choice of any Thing, a New Storage's Result's Accepted of any Process, and a New Storage's Result's Rejected of any Process.
-Define Storage's Result's "Expect|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~expect~, Receiver: ~<@Value@>~, Inputs: ~&[<@Message@>]&~|}<DEF>`.
+Create Storage's Result's "Select|-s|-ed|-ing|-or" for Processing a New Selection of any Thing, a New Success of any Process, and a New Failure of any Process.
+Define Storage's "Expect|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~expect~, Receiver: ~<@Value@>~, Inputs: ~&[<@Message@>]&~|}<DEF>`.
 
     Publicly create Storage's "Require|-s|-d|--ing|--er" as a Generic Storage.Polymorphic `l_required` Storage.Routine with Inputs of "value" as `Option<T>` and "message" as `&str` and Outputs of `runtime::Result<T>`.
-Storage.Option.Select Value, a New Process with Inputs of "Payload" as `T` for Returning a New Storage's Success of Payload, and a New Process for Creating "Failure" as a New Storage's Failure of Message and then Returning a New Storage's Rejection of Failure.
+Storage.Option.Select Value, a New Process with Inputs of "Payload" as `T` for Returning a New Storage's Success of Payload, and a New Process for Creating "Reason" as a New Storage's Failure of Message and then Returning a New Storage's Rejection of Reason.
 
     Publicly create Storage's "Accept|-s|-ed|-ing|-er" as a Generic `l_borrowed` Storage.Routine of `T, E` with Inputs of "value" as `Result<T, E>` and "message" as `&str` and Outputs of `runtime::Result<T>`.
-Storage.Result.Select Value, a New Process with Inputs of "Payload" as `T` for Returning a New Storage's Success of Payload, and a New Process with Inputs of "Previous" as `E` for Storage.Releasing Previous and then Creating "Failure" as a New Storage's Failure of Message and then Returning a New Storage's Rejection of Failure.
+Storage.Result.Select Value, a New Process with Inputs of "Payload" as `T` for Returning a New Storage's Success of Payload, and a New Process with Inputs of "Previous" as `E` for Storage.Releasing Previous and then Creating "Reason" as a New Storage's Failure of Message and then Returning a New Storage's Rejection of Reason.
 
     Publicly create Storage's "Project|-s|-ed|-ing|-or" as a Generic Storage.Referenced `l_project` Storage.Routine with Inputs of "value" as `&'a dyn std::any::Any` and "message" as `&str` and Outputs of `runtime::Result<&'a T>`.
 Create "Projected" as a New Storage's Projection of Value.
@@ -38,7 +37,7 @@ Create "Copied" as a New Storage.Produced Binding of a New Function's Invoker of
 Return a New Storage's Success of Copied.
 
     Publicly create Storage's Value's "Wrap|-s|-ped|-ping|-per" as a Generic Storage.Permanent `l_value_wrap` Storage.Routine with Inputs of "value" as `T` and "signature" as `Vec<u64>` and "renderer" as `fn(&dyn std::any::Any) -> runtime::Result<Vec<u8>>` and "visitor" as `fn(&dyn std::any::Any, usize, &mut std::collections::BTreeSet<usize>) -> runtime::Result<bool>` and Outputs of Storage's Value.
-Create "Data" as a New Storage's Shared of Value.
+Create "Data" as a New Storage's Sharer of Value.
 Return a New Storage's Value's Content of Signature, Data, Renderer, and Visitor.
 
     Publicly create Storage's Value's "Restore|-s|-d|--ing|--er" as a Generic Storage.Permanent `l_restore` Storage.Routine with Inputs of "value" as `LValue` and "message" as `&str` and "snapshot" as `fn(&T) -> T` and Outputs of `runtime::Result<T>`.
@@ -78,4 +77,4 @@ Return a New Storage's Success of false.
 Define Storage's "Sum" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: +, Operands: &[<@Left@>, <@Right@>]&}Op]&~|}<DEF>`.
 Define Storage's "Choice" as `<DEF>GOB{|Key: ~<@Name|Label@>~|}^GI^(E{|Statement: ~<@Condition@>~|}*W^BOD^E{|Statement: ~<@Then@>~|}*E{|Statement: ~Void~|}*W^BOD^E{|Statement: ~<@Else@>~|})<DEF>`.
 Define Storage's "Agreement" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: &&, Operands: &[<@Left@>, <@Right@>]&}Op]&~|}<DEF>`.
-Define Storage's Result's "Alternative" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~unwrap_or~, Receiver: ~<@Value@>~, Inputs: ~&[<@Fallback@>]&~|}<DEF>`.
+Define Storage's "Unwrap|-s|-ped|-ping|-per" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~unwrap_or~, Receiver: ~<@Value@>~, Inputs: ~&[<@Fallback@>]&~|}<DEF>`.

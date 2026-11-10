@@ -224,7 +224,7 @@
     },
     {
       "path": "lexicon/eng/vocabulary.json",
-      "sha256": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321"
+      "sha256": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c"
     },
     {
       "path": "logiceme/feature_removal_test.go",

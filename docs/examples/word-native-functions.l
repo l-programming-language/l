@@ -35,7 +35,7 @@ Return a New Storage's Environment's Visitor of Data and Target and Seen.
     Publicly create GlossaryExamples's "StorageErrorRender" as a Generic Function with Inputs of "data" as `&dyn std::any::Any` and Outputs of `runtime::Result<Vec<u8>>`.
 Return a New Storage's Error's Renderer of Data.
 
-    Publicly create GlossaryExamples's "StorageFunctionCopy" as a Generic Storage.Function.Copyable Storage.Routine with Inputs of "value" as `&(LEnvironment, T)` and Outputs of `(LEnvironment, T)`.
+    Publicly create GlossaryExamples's "StorageFunctionCopy" as a Generic Storage.Copyable Storage.Routine with Inputs of "value" as `&(LEnvironment, T)` and Outputs of `(LEnvironment, T)`.
 Return a New Storage's Function's Copier of Value.
 
     Publicly create GlossaryExamples's "StorageFunctionReach" as a Generic Storage.Permanent Storage.Routine with Inputs of "data" as `&dyn std::any::Any` and "target" as `usize` and "seen" as `&mut std::collections::BTreeSet<usize>` and Outputs of `runtime::Result<bool>`.

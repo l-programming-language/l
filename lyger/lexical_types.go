@@ -308,6 +308,25 @@ func (l *lexeme) define(definition []byte) error {
 	return nil
 }
 
+// matchesForm checks one declared form without applying context-free root
+// precedence. Grammar uses it only after lexical identity has been resolved.
+func (l *lexeme) matchesForm(word, form string) bool {
+	if form == "root" {
+		return word == l.Root
+	}
+	for fix, role := range l.Postfixes {
+		if role == form && word == processLexFix(l.Root, fix, "postfix") {
+			return true
+		}
+	}
+	for fix, role := range l.Prefixes {
+		if role == form && word == processLexFix(l.Root, fix, "prefix") {
+			return true
+		}
+	}
+	return false
+}
+
 // match checks if an inputted token byte slice matches the lexeme, if a match returns root/case
 func (l *lexeme) match(tBytes []byte) (bool, string) {
 	// 1) check for root match

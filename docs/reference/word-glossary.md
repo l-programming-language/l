@@ -51,9 +51,9 @@ Request cancellation of the selected native task without joining it. The selecte
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Quell](#word-authoring-runtime-quell). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Quell`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-246-246 -->
+<!-- example:glossary-runtime-abort-caller -->
 
 </details>
 
@@ -70,28 +70,9 @@ Construct the native None variant of an Option without a payload.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Adapt](#word-authoring-runtime-capture-adapt). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Adapt`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-22-22 -->
-
-</details>
-
-### Storage.Option.Absent
-
-<a id="word-authoring-storage-option-absent"></a>
-
-<!-- word:authoring:Storage.Option.Absent -->
-
-Provide the None pattern and its supplied body as a branch of the owning optional-value selection.
-
-<!-- word-definition:authoring:Storage.Option.Absent -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/control.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-control-17-17 -->
+<!-- example:glossary-storage-absent-caller -->
 
 </details>
 
@@ -114,25 +95,6 @@ This statement is used inside [Storage.Slot.Read](#word-authoring-storage-slot-r
 
 </details>
 
-### Storage.Result.Accepted
-
-<a id="word-authoring-storage-result-accepted"></a>
-
-<!-- word:authoring:Storage.Result.Accepted -->
-
-Provide an Ok payload pattern with its supplied binding label and body for the owning Result selection.
-
-<!-- word-definition:authoring:Storage.Result.Accepted -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/control.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-control-22-22 -->
-
-</details>
-
 ### Storage.Access
 
 <a id="word-authoring-storage-access"></a>
@@ -146,9 +108,9 @@ Borrow the payload of an Option and return that reference as a runtime success, 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Require](#word-authoring-storage-environment-require). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Require`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-40-40 -->
+<!-- example:glossary-storage-access-caller -->
 
 </details>
 
@@ -165,9 +127,9 @@ Unpack a diagnostic traversal context and append one Error using its shared outp
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Collect](#word-authoring-runtime-error-collect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Collect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-100-100 -->
+<!-- example:glossary-runtime-error-accumulate-caller -->
 
 </details>
 
@@ -184,9 +146,9 @@ Obtain the lock future for the selected asynchronous mutex; awaiting it is a sep
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-183-183 -->
+<!-- example:glossary-runtime-acquire-caller -->
 
 </details>
 
@@ -203,9 +165,9 @@ Reject an outstanding App invocation, then allocate and select a new invocation,
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Run](#word-authoring-runtime-app-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-276-276 -->
+<!-- example:glossary-runtime-app-acquire-caller -->
 
 </details>
 
@@ -241,9 +203,9 @@ Convert a present concrete async reader into the declared boxed reader interface
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Read](#word-authoring-runtime-capture-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-95-95 -->
+<!-- example:glossary-runtime-capture-adapt-caller -->
 
 </details>
 
@@ -260,9 +222,9 @@ Read the allocation pointer of the selected Arc-backed ErrorData without consumi
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Identify](#word-authoring-runtime-error-identify). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Identify`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-143-143 -->
+<!-- example:glossary-runtime-error-address-caller -->
 
 </details>
 
@@ -279,9 +241,9 @@ Read the allocation pointer of the supplied Rc handle without consuming its payl
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Identify](#word-authoring-storage-identify). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Identify`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-127-127 -->
+<!-- example:glossary-storage-address-caller -->
 
 </details>
 
@@ -310,9 +272,9 @@ Borrow `Value.state` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Choose](#word-authoring-runtime-choose). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Choose`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-95-95 -->
+<!-- example:glossary-runtime-admission-caller -->
 
 </details>
 
@@ -329,9 +291,9 @@ Borrow `Value.state` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Describe](#word-authoring-runtime-app-describe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Describe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-48-48 -->
+<!-- example:glossary-runtime-app-admission-caller -->
 
 </details>
 
@@ -348,9 +310,9 @@ Borrow `Value.state` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Claim](#word-authoring-runtime-invocation-claim). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Claim`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-98-98 -->
+<!-- example:glossary-runtime-invocation-admission-caller -->
 
 </details>
 
@@ -367,9 +329,9 @@ Return true only when runtime state is neither stopping, terminal-selected, nor 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Check](#word-authoring-runtime-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-54-54 -->
+<!-- example:glossary-runtime-admit-caller -->
 
 </details>
 
@@ -386,9 +348,9 @@ Accept only normal or current-directory native path components; reject roots, pr
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-30-30 -->
+<!-- example:glossary-runtime-path-admit-caller -->
 
 </details>
 
@@ -405,9 +367,9 @@ Mutably borrow `Value.next` so the caller can update that exact native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Count](#word-authoring-runtime-count). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Count`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-183-183 -->
+<!-- example:glossary-runtime-advance-caller -->
 
 </details>
 
@@ -424,9 +386,9 @@ Race a stream read against the current cleanup deadline and deadline changes. Re
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Start](#word-authoring-runtime-capture-start). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Start`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-87-88 -->
+<!-- example:glossary-runtime-capture-advance-caller -->
 
 </details>
 
@@ -457,9 +419,9 @@ Compute the native Boolean conjunction of the supplied left and right operands.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Balance](#word-authoring-formatting-balance). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Balance`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-66-66 -->
+<!-- example:glossary-storage-agreement-caller -->
 
 </details>
 
@@ -476,9 +438,9 @@ Construct shared invocation state with weak App/runtime owners, sequence and hos
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Acquire](#word-authoring-runtime-app-acquire). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Acquire`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-197-197 -->
+<!-- example:glossary-runtime-invocation-allocate-caller -->
 
 </details>
 
@@ -514,28 +476,9 @@ Compute the native Boolean disjunction of the supplied left and right operands.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Signature.Match](#word-authoring-storage-signature-match). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Signature.Match`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-60-60 -->
-
-</details>
-
-### Storage.Result.Alternative
-
-<a id="word-authoring-storage-result-alternative"></a>
-
-<!-- word:authoring:Storage.Result.Alternative -->
-
-Return a native Option or Result payload when available, otherwise the supplied fallback. The fallback argument evaluates before the native call.
-
-<!-- word-definition:authoring:Storage.Result.Alternative -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Invocation.Kill](#word-authoring-runtime-invocation-kill). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-process-354-354 -->
+<!-- example:glossary-storage-alternative-caller -->
 
 </details>
 
@@ -552,9 +495,9 @@ Apply the supplied modifying callback to a watch channel's current value and not
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Revise](#word-authoring-runtime-revise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Revise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-284-284 -->
+<!-- example:glossary-runtime-amend-caller -->
 
 </details>
 
@@ -585,9 +528,9 @@ Create a native binding with the supplied explicit type and initializer.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Text.Restore](#word-authoring-storage-text-restore). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `runtime/eng/process.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-15-15 -->
+<!-- example:glossary-storage-annotation-caller -->
 
 </details>
 
@@ -636,9 +579,9 @@ Declare the native `App` record with fields `runtime: std::sync::Weak<RuntimeInn
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Launch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-234-234 -->
+<!-- example:glossary-runtime-app-caller -->
 
 </details>
 
@@ -655,9 +598,9 @@ Borrow `Value.app` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Finish](#word-authoring-runtime-invocation-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-134-134 -->
+<!-- example:glossary-runtime-invocation-app-caller -->
 
 </details>
 
@@ -674,9 +617,9 @@ Name the Storage namespace for native App handles, source attribution, process-m
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Program.Select](#word-authoring-storage-program-select). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Program.Select`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-64-64 -->
+<!-- example:glossary-storage-app-caller -->
 
 </details>
 
@@ -693,9 +636,9 @@ Append enough zero digits to place the decimal point after the requested positio
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Expand](#word-authoring-formatting-expand). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Expand`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-95-95 -->
+<!-- example:glossary-formatting-append-caller -->
 
 </details>
 
@@ -712,9 +655,9 @@ Append an Error's diagnostic bytes once per error identity, preserving child ord
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Render](#word-authoring-runtime-error-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-130-130 -->
+<!-- example:glossary-runtime-error-append-caller -->
 
 </details>
 
@@ -769,9 +712,9 @@ Invoke the supplied typed callback with Item and Context, preserving that argume
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/bindings.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/bindings.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-bindings-8-8 -->
+<!-- example:glossary-storage-apply-caller -->
 
 </details>
 
@@ -807,9 +750,9 @@ Borrow `Program.apps` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Program.Select](#word-authoring-storage-program-select). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Program.Select`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-61-61 -->
+<!-- example:glossary-storage-program-apps-caller -->
 
 </details>
 
@@ -838,9 +781,9 @@ Attempt to upgrade the selected weak shared-ownership reference to a strong hand
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Signals.Watch](#word-authoring-runtime-signals-watch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Signals.Watch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-9-9 -->
+<!-- example:glossary-runtime-ascend-caller -->
 
 </details>
 
@@ -857,9 +800,9 @@ Construct a shared runtime handle from host dependencies and output streams, cre
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Install](#word-authoring-runtime-install). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Install`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-35-35 -->
+<!-- example:glossary-runtime-assemble-caller -->
 
 </details>
 
@@ -876,9 +819,9 @@ Collect recorded cleanup errors in runtime order, join them when present, and re
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Reap](#word-authoring-runtime-reap). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Reap`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-278-278 -->
+<!-- example:glossary-runtime-assess-caller -->
 
 </details>
 
@@ -914,11 +857,9 @@ Replace the canonical Runtime.Mutex construction with a Tokio asynchronous mutex
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Mutex](word-glossary.md#word-authoring-runtime-mutex).
+This statement is used inside `Runtime.Assemble`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Assemble](#word-authoring-runtime-assemble). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-process-257-257 -->
+<!-- example:glossary-runtime-asynchronous-caller -->
 
 </details>
 
@@ -947,9 +888,9 @@ Store a spawned signal-watcher task in the runtime's protected optional task slo
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Install](#word-authoring-runtime-install). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Install`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-39-39 -->
+<!-- example:glossary-runtime-attach-caller -->
 
 </details>
 
@@ -966,9 +907,9 @@ Preserve an Error when stderr is empty; otherwise construct a parent message fro
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Decorate](#word-authoring-runtime-supervision-decorate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Decorate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-94-94 -->
+<!-- example:glossary-runtime-error-attach-caller -->
 
 </details>
 
@@ -994,7 +935,7 @@ Name a composed part of an Object in its applicational representation.
 
 <!-- word:authoring:Storage.App.Attribute -->
 
-Compose an owned source-attribution string and the native App attribution operation in that order.
+Construct source-attribution text once and apply it to the supplied App handle.
 
 <!-- word-definition:authoring:Storage.App.Attribute -->
 
@@ -1004,25 +945,6 @@ Compose an owned source-attribution string and the native App attribution operat
 **Compiler use.** Attach the resolved source attribution text to the selected App handle. This retained compiler excerpt selects the L-owned definition with typed native name/type/value or Process bindings. Those bindings come from the compiler’s resolved plan; this is an integration fragment, not an ordinary standalone L call.
 
 <!-- example:glossary-lyger-execution-composition-429-436 -->
-
-</details>
-
-### Storage.App.Attribution
-
-<a id="word-authoring-storage-app-attribution"></a>
-
-<!-- word:authoring:Storage.App.Attribution -->
-
-Set an App's source attribution from the preceding `lAppSource` binding through the selected runtime operation.
-
-<!-- word-definition:authoring:Storage.App.Attribution -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-72-72 -->
 
 </details>
 
@@ -1039,9 +961,9 @@ Visit pair-shaped items in iterator order, invoking the supplied callback with b
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Render](#word-authoring-storage-map-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-153-153 -->
+<!-- example:glossary-storage-audit-caller -->
 
 </details>
 
@@ -1058,9 +980,9 @@ Borrow `Value.dependencies` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Acquire](#word-authoring-runtime-app-acquire). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Acquire`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-195-195 -->
+<!-- example:glossary-runtime-authority-caller -->
 
 </details>
 
@@ -1077,9 +999,9 @@ Check whether the selected native Option contains a payload. The selected operat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Claim](#word-authoring-runtime-invocation-claim). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Claim`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-99-99 -->
+<!-- example:glossary-runtime-invocation-available-caller -->
 
 </details>
 
@@ -1099,25 +1021,6 @@ Await joins reaping, captured streams and owned-group cleanup. Failed launches a
 
 Imperative, outer passive and source-action applicative forms are supported. Native App-body Await rejects ownership, and standalone Service body effects reject. See [supported language forms](../cli-build.md#launch-and-language-forms).
 
-### Runtime.Await
-
-<a id="word-authoring-runtime-await"></a>
-
-<!-- word:authoring:Runtime.Await -->
-
-Obtain the lock future for the selected asynchronous mutex; awaiting it is a separate composition step. The selected operation is `Value.lock()`.
-
-<!-- word-definition:authoring:Runtime.Await -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-process-309-309 -->
-
-</details>
-
 ### Runtime.Supervision.Await
 
 <a id="word-authoring-runtime-supervision-await"></a>
@@ -1131,9 +1034,9 @@ Poll the child wait alongside termination requests until the wait completes, clo
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-107-107 -->
+<!-- example:glossary-runtime-supervision-await-caller -->
 
 </details>
 
@@ -1143,16 +1046,16 @@ This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-run
 
 <!-- word:authoring:Storage.Await -->
 
-Await the supplied typed invocation expression and bind its outcome for subsequent control-flow selection.
+Await the supplied future and bind its outcome to the explicit result label. This operation neither constructs nor pins the future.
 
 <!-- word-definition:authoring:Storage.Await -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/bindings.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `Delay`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-bindings-19-19 -->
+<!-- example:glossary-storage-await-caller -->
 
 </details>
 
@@ -1173,9 +1076,9 @@ Compare a decimal midpoint representation with the exact binary significand and 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Render](#word-authoring-formatting-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-134-134 -->
+<!-- example:glossary-formatting-balance-caller -->
 
 </details>
 
@@ -1206,9 +1109,9 @@ Bind the native constant `crate::runtime::host::Checkpoint::PreStart` for this c
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Run](#word-authoring-runtime-app-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-281-281 -->
+<!-- example:glossary-runtime-app-before-caller -->
 
 </details>
 
@@ -1225,9 +1128,9 @@ Claim shutdown ownership once and spawn cleanup of the captured owned-invocation
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Clean](#word-authoring-runtime-clean). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Clean`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-125-125 -->
+<!-- example:glossary-runtime-begin-caller -->
 
 </details>
 
@@ -1237,7 +1140,7 @@ This statement is used inside [Runtime.Clean](#word-authoring-runtime-clean). It
 
 <!-- word:authoring:Storage.Function.Bind -->
 
-Compose the selected capture-environment construction and pair the successful environment with its concretely typed callable target.
+Construct and check the capture environment, cast the selected function target and construct their tuple. Environment failure propagates before the Function value is published.
 
 <!-- word-definition:authoring:Storage.Function.Bind -->
 
@@ -1263,49 +1166,9 @@ Declare a native local binding initialized with the supplied value.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Storage.Closure`. They select this canonical meaning.
+This statement is used inside `Runtime.Error.Cancel`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Count](#word-authoring-runtime-count). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-app-180-180 -->
-
-</details>
-
-### Storage.Context.Binding
-
-<a id="word-authoring-storage-context-binding"></a>
-
-<!-- word:authoring:Storage.Context.Binding -->
-
-Borrow the program-storage component of a generated runtime/program pair into the supplied binding name.
-
-<!-- word-definition:authoring:Storage.Context.Binding -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-48-48 -->
-
-</details>
-
-### Runtime.Capture.Borrow
-
-<a id="word-authoring-runtime-capture-borrow"></a>
-
-<!-- word:authoring:Runtime.Capture.Borrow -->
-
-Allocate a native Box containing the supplied value or mutable reference. The selected operation is `Box::new(&mut Value)`.
-
-<!-- word-definition:authoring:Runtime.Capture.Borrow -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Capture.Start](#word-authoring-runtime-capture-start). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-capture-79-79 -->
+<!-- example:glossary-storage-binding-caller -->
 
 </details>
 
@@ -1322,9 +1185,9 @@ Create an immutable native borrow of the supplied value.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Text.Enclose](#word-authoring-storage-text-enclose). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Text.Enclose`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-118-118 -->
+<!-- example:glossary-storage-borrow-caller -->
 
 </details>
 
@@ -1341,9 +1204,9 @@ Create the native final process-group cleanup operation from a process ID, signa
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-327-327 -->
+<!-- example:glossary-runtime-bound-caller -->
 
 </details>
 
@@ -1360,9 +1223,9 @@ Publish a cleanup deadline through the invocation's deadline sender, preserving 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-109-109 -->
+<!-- example:glossary-runtime-invocation-bound-caller -->
 
 </details>
 
@@ -1379,9 +1242,9 @@ Allocate a native Box containing the supplied value or mutable reference. The se
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Adapt](#word-authoring-runtime-capture-adapt). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Start`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-21-21 -->
+<!-- example:glossary-runtime-capture-box-caller -->
 
 </details>
 
@@ -1398,28 +1261,9 @@ Create a mutable zero-filled 8192-byte array for stream capture reads.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Start](#word-authoring-runtime-capture-start). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Start`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-80-80 -->
-
-</details>
-
-### Runtime.Error.Buffer
-
-<a id="word-authoring-runtime-error-buffer"></a>
-
-<!-- word:authoring:Runtime.Error.Buffer -->
-
-Construct an empty native vector with the type required by its declared binding or enclosing composition. The selected operation is `Vec::new()`.
-
-<!-- word-definition:authoring:Runtime.Error.Buffer -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Render](#word-authoring-runtime-error-render). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-124-124 -->
+<!-- example:glossary-runtime-capture-buffer-caller -->
 
 </details>
 
@@ -1436,9 +1280,9 @@ Construct an empty native ordered map with key and value types selected by its e
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Create](#word-authoring-storage-map-create). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Create`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-91-91 -->
+<!-- example:glossary-storage-map-buffer-caller -->
 
 </details>
 
@@ -1455,9 +1299,9 @@ Construct an empty native vector with the type required by its declared binding 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Render](#word-authoring-storage-list-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-140-140 -->
+<!-- example:glossary-storage-vector-buffer-caller -->
 
 </details>
 
@@ -1507,9 +1351,9 @@ Select the native field `Value.outstanding` by value. Its declared type determin
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Build](#word-authoring-runtime-app-build). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Build`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-63-63 -->
+<!-- example:glossary-runtime-app-busy-caller -->
 
 </details>
 
@@ -1541,25 +1385,6 @@ Name the byte-oriented lexical category whose supported owned storage form is By
 
 **Partial support.** The configured Byte/Bytes word family is recognized, but only the plural Bytes storage type is implemented. The source-type whitelist has no singular Byte scalar type: individual octets are read as Number, and `New Byte` does not supply a one-byte value constructor. See the [source-type boundary test](../../lyger/refactor_value_characterization_test.go).
 
-### Runtime.Byte
-
-<a id="word-authoring-runtime-byte"></a>
-
-<!-- word:authoring:Runtime.Byte -->
-
-Cast the supplied native value using `Value as u8` and bind the result.
-
-<!-- word-definition:authoring:Runtime.Byte -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Invocation.Claim](#word-authoring-runtime-invocation-claim). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-process-103-103 -->
-
-</details>
-
 ### Bytes
 
 <a id="word-type-bytes"></a>
@@ -1589,9 +1414,9 @@ Select the native field `Value.bytes` by value. Its declared type determines whe
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Share](#word-authoring-runtime-capture-share). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Share`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-33-33 -->
+<!-- example:glossary-runtime-capture-bytes-caller -->
 
 </details>
 
@@ -1608,9 +1433,9 @@ Borrow the selected vector as a native slice. The selected operation is `Value.d
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Read](#word-authoring-runtime-error-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-167-167 -->
+<!-- example:glossary-runtime-error-bytes-caller -->
 
 </details>
 
@@ -1627,9 +1452,9 @@ Name the Storage namespace for byte-slice extension, checked byte reads and byte
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Text.Enclose](#word-authoring-storage-text-enclose). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Attach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-119-119 -->
+<!-- example:glossary-storage-bytes-caller -->
 
 </details>
 
@@ -1646,9 +1471,9 @@ Borrow a native string as its exact UTF-8 byte slice. The selected operation is 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Text.Own](#word-authoring-storage-text-own). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Text.Own`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-36-36 -->
+<!-- example:glossary-storage-text-bytes-caller -->
 
 </details>
 
@@ -1669,28 +1494,9 @@ Construct the cancellation Error `source execution stopped` with its cancellatio
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Leave](#word-authoring-runtime-leave). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Leave`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-54-54 -->
-
-</details>
-
-### Runtime.Error.Cancellation
-
-<a id="word-authoring-runtime-error-cancellation"></a>
-
-<!-- word:authoring:Runtime.Error.Cancellation -->
-
-Bind the supplied compiler-encoded Boolean cancellation flag.
-
-<!-- word-definition:authoring:Runtime.Error.Cancellation -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Cancel](#word-authoring-runtime-error-cancel). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-139-139 -->
+<!-- example:glossary-runtime-error-caller -->
 
 </details>
 
@@ -1707,28 +1513,9 @@ Borrow `Value.cancelled` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Gather](#word-authoring-runtime-gather). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Gather`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-233-233 -->
-
-</details>
-
-### Runtime.Canonical
-
-<a id="word-authoring-runtime-canonical"></a>
-
-<!-- word:authoring:Runtime.Canonical -->
-
-Resolve the supplied filesystem path to its native canonical absolute path, returning any IO failure. The selected operation is `std::fs::canonicalize(Path)`.
-
-<!-- word-definition:authoring:Runtime.Canonical -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Locate](#word-authoring-runtime-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-process-215-215 -->
+<!-- example:glossary-runtime-inner-caller -->
 
 </details>
 
@@ -1745,9 +1532,9 @@ Read an App's current invocation and return retained stdout bytes only when that
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Read](#word-authoring-runtime-app-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-91-91 -->
+<!-- example:glossary-runtime-app-capture-caller -->
 
 </details>
 
@@ -1764,9 +1551,9 @@ Declare the native `Capture` record with fields `bytes: Vec<u8>`, `error: Option
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Start](#word-authoring-runtime-capture-start). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Start`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-80-80 -->
+<!-- example:glossary-runtime-capture-buffer-caller -->
 
 </details>
 
@@ -1783,28 +1570,28 @@ Mutably borrow `Value.snapshot` so the caller can update that exact native field
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Publish](#word-authoring-runtime-invocation-publish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Publish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-378-378 -->
+<!-- example:glossary-runtime-invocation-capture-caller -->
 
 </details>
 
-### Storage.Function.Capture
+### Storage.Cast
 
-<a id="word-authoring-storage-function-capture"></a>
+<a id="word-authoring-storage-cast"></a>
 
-<!-- word:authoring:Storage.Function.Capture -->
+<!-- word:authoring:Storage.Cast -->
 
-Bind the result of the supplied environment-construction composition for a typed callable.
+Convert the supplied native value to the explicitly supplied native type using Rust cast semantics. This operation does not validate ranges or replace checked language conversions.
 
-<!-- word-definition:authoring:Storage.Function.Capture -->
+<!-- word-definition:authoring:Storage.Cast -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `Storage.Identify`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-19-19 -->
+<!-- example:glossary-storage-cast-caller -->
 
 </details>
 
@@ -1821,9 +1608,9 @@ Wrap a source future in the host panic-catching adapter. The selected operation 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Run](#word-authoring-runtime-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-211-211 -->
+<!-- example:glossary-runtime-catch-caller -->
 
 </details>
 
@@ -1840,30 +1627,9 @@ Describe a Storage.Routine with `E: std::error::Error + Send + Sync + 'static` s
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `Runtime.Error.Explain`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Error.Explain](#word-authoring-runtime-error-explain). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-33-33 -->
-
-</details>
-
-### Runtime.Error.Causes
-
-<a id="word-authoring-runtime-error-causes"></a>
-
-<!-- word:authoring:Runtime.Error.Causes -->
-
-Construct an empty native vector with the type required by its declared binding or enclosing composition. The selected operation is `Vec::new()`.
-
-<!-- word-definition:authoring:Runtime.Error.Causes -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Explain](#word-authoring-runtime-error-explain). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-36-36 -->
+<!-- example:glossary-runtime-error-caused-caller -->
 
 </details>
 
@@ -1899,9 +1665,9 @@ Wait for the selected watch receiver's value to change, or report that its chann
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Advance](#word-authoring-runtime-capture-advance). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Advance`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-63-63 -->
+<!-- example:glossary-runtime-change-caller -->
 
 </details>
 
@@ -1918,9 +1684,9 @@ Bind a supplied boxed reader as the declared AsyncRead + Unpin + Send interface.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Adapt](#word-authoring-runtime-capture-adapt). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Adapt`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-21-21 -->
+<!-- example:glossary-runtime-capture-channel-caller -->
 
 </details>
 
@@ -1937,9 +1703,9 @@ Create an unbounded native message channel and return its sender/receiver pair. 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Allocate](#word-authoring-runtime-invocation-allocate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Allocate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-192-192 -->
+<!-- example:glossary-runtime-channel-caller -->
 
 </details>
 
@@ -1956,9 +1722,9 @@ Return successful unit while runtime admission remains open, otherwise return th
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Stop](#word-authoring-runtime-app-stop). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Stop`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-152-152 -->
+<!-- example:glossary-runtime-check-caller -->
 
 </details>
 
@@ -1975,9 +1741,9 @@ Read a runtime Error's cancellation flag.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Resolve](#word-authoring-runtime-resolve). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Resolve`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-163-163 -->
+<!-- example:glossary-runtime-error-check-caller -->
 
 </details>
 
@@ -1994,9 +1760,9 @@ Apply the supplied predicate to successive iterator items, stopping with false a
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-30-30 -->
+<!-- example:glossary-runtime-path-admit-caller -->
 
 </details>
 
@@ -2013,9 +1779,9 @@ Check one captured value against an expected signature and return unit on succes
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Create](#word-authoring-storage-environment-create). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Create`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-74-74 -->
+<!-- example:glossary-storage-environment-check-caller -->
 
 </details>
 
@@ -2032,9 +1798,9 @@ Accept finite, nonnegative, integral numeric indices strictly below `usize::MAX 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Bytes.Read](#word-authoring-storage-bytes-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Bytes.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-33-33 -->
+<!-- example:glossary-storage-index-check-caller -->
 
 </details>
 
@@ -2051,9 +1817,9 @@ Check a value against a List element signature and use `List element type mismat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Create](#word-authoring-storage-list-create). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.List.Create`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-46-46 -->
+<!-- example:glossary-storage-inspect-caller -->
 
 </details>
 
@@ -2070,9 +1836,9 @@ Compare a stored value's full signature with the expected signature and return u
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Check](#word-authoring-storage-environment-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-63-63 -->
+<!-- example:glossary-storage-value-check-caller -->
 
 </details>
 
@@ -2089,11 +1855,9 @@ Describe a Binding so its initializer applies Rust's `?` operator, propagating a
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Binding](word-glossary.md#word-authoring-storage-binding).
+This statement is used inside `Storage.Resolve`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Resolve](#word-authoring-storage-resolve). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-control-36-36 -->
+<!-- example:glossary-storage-checked-caller -->
 
 </details>
 
@@ -2110,9 +1874,9 @@ Bind the native constant `crate::runtime::host::Checkpoint::CapturedStopTarget` 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Stop](#word-authoring-runtime-app-stop). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Stop`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-148-148 -->
+<!-- example:glossary-runtime-checkpoint-caller -->
 
 </details>
 
@@ -2129,9 +1893,9 @@ Borrow the selected vector as a native slice. The selected operation is `Value.d
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Inspect](#word-authoring-runtime-error-inspect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Inspect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-149-149 -->
+<!-- example:glossary-runtime-error-children-caller -->
 
 </details>
 
@@ -2148,9 +1912,9 @@ Obtain a borrowed iterator over the selected ordered map's values. The selected 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Reach](#word-authoring-storage-map-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-31-31 -->
+<!-- example:glossary-storage-map-children-caller -->
 
 </details>
 
@@ -2167,47 +1931,9 @@ Select the Then value when the native Boolean condition is true, otherwise selec
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Report](#word-authoring-runtime-report). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Report`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-87-87 -->
-
-</details>
-
-### Storage.Option.Choice
-
-<a id="word-authoring-storage-option-choice"></a>
-
-<!-- word:authoring:Storage.Option.Choice -->
-
-Select between the supplied Some and None branches by matching the supplied native Option.
-
-<!-- word-definition:authoring:Storage.Option.Choice -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/control.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-control-17-17 -->
-
-</details>
-
-### Storage.Result.Choice
-
-<a id="word-authoring-storage-result-choice"></a>
-
-<!-- word:authoring:Storage.Result.Choice -->
-
-Select between the supplied Ok and Err branches by matching the supplied native Result.
-
-<!-- word-definition:authoring:Storage.Result.Choice -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/control.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-control-22-22 -->
+<!-- example:glossary-storage-choice-caller -->
 
 </details>
 
@@ -2224,9 +1950,9 @@ Select the first terminal status and optional Error while holding runtime state,
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Request](#word-authoring-runtime-request). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Request`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-109-109 -->
+<!-- example:glossary-runtime-choose-caller -->
 
 </details>
 
@@ -2274,9 +2000,9 @@ Begin shutdown if necessary, wait for its published cleanup result, and return t
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-188-188 -->
+<!-- example:glossary-runtime-clean-caller -->
 
 </details>
 
@@ -2293,9 +2019,9 @@ Select the native field `Value.cleaned` by value. Its declared type determines w
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-310-310 -->
+<!-- example:glossary-runtime-invocation-cleaned-caller -->
 
 </details>
 
@@ -2331,11 +2057,9 @@ Describe a Storage.Routine with the native generic bound `T: Clone`.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `Storage.Clone`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Clone](#word-authoring-storage-clone). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-execution-5-5 -->
+<!-- example:glossary-storage-cloneable-caller -->
 
 </details>
 
@@ -2352,9 +2076,9 @@ Adapt the selected borrowed iterator to yield cloned items. The selected operati
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Gather](#word-authoring-runtime-gather). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Gather`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-235-235 -->
+<!-- example:glossary-runtime-cloned-caller -->
 
 </details>
 
@@ -2371,9 +2095,9 @@ Close the selected native request receiver to further sends while retaining queu
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Await](#word-authoring-runtime-supervision-await). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Await`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-47-47 -->
+<!-- example:glossary-runtime-supervision-close-caller -->
 
 </details>
 
@@ -2390,9 +2114,9 @@ Read a native IO error's optional operating-system error code. The selected oper
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Normalize](#word-authoring-runtime-normalize). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Normalize`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-290-290 -->
+<!-- example:glossary-runtime-code-caller -->
 
 </details>
 
@@ -2409,9 +2133,9 @@ Convert a native process ExitStatus to the platform-selected optional numeric ex
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Inspect](#word-authoring-runtime-supervision-inspect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Inspect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-70-70 -->
+<!-- example:glossary-runtime-supervision-caller -->
 
 </details>
 
@@ -2428,9 +2152,9 @@ Traverse child Errors in order, appending each through a shared diagnostic-outpu
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Append](#word-authoring-runtime-error-append). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Append`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-115-115 -->
+<!-- example:glossary-runtime-error-collect-caller -->
 
 </details>
 
@@ -2447,9 +2171,9 @@ Copy one stored value with Value.Copy and append the copied value to a supplied 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Copy](#word-authoring-storage-list-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.List.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-99-99 -->
+<!-- example:glossary-storage-list-collect-caller -->
 
 </details>
 
@@ -2466,9 +2190,9 @@ Copy a byte-vector key and a stored value, insert them into the supplied ordered
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Copy](#word-authoring-storage-map-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-122-122 -->
+<!-- example:glossary-storage-enumerate-caller -->
 
 </details>
 
@@ -2485,9 +2209,9 @@ Collect the selected iterator into a native vector. The selected operation is `I
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Gather](#word-authoring-runtime-gather). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Gather`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-235-235 -->
+<!-- example:glossary-runtime-cloned-caller -->
 
 </details>
 
@@ -2504,9 +2228,9 @@ Construct a mutable tuple holding diagnostic output, visited identities and sepa
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Collect](#word-authoring-runtime-error-collect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Collect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-99-99 -->
+<!-- example:glossary-runtime-error-collection-caller -->
 
 </details>
 
@@ -2523,9 +2247,9 @@ Construct a mutable native child-command builder for the supplied executable pat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Launch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-233-233 -->
+<!-- example:glossary-runtime-app-command-caller -->
 
 </details>
 
@@ -2561,9 +2285,9 @@ Apply the explicitly supplied native comparison operator to the left and right o
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/bindings.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/bindings.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-bindings-23-23 -->
+<!-- example:glossary-storage-comparison-caller -->
 
 </details>
 
@@ -2580,9 +2304,9 @@ Subscribe to an invocation's completion flag and wait until it is true or its no
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Reap](#word-authoring-runtime-reap). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Reap`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-276-276 -->
+<!-- example:glossary-runtime-invocation-complete-caller -->
 
 </details>
 
@@ -2599,28 +2323,9 @@ Combine wait, capture, stream and cleanup failures, attach stderr to the joined 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-122-122 -->
-
-</details>
-
-### Runtime.Completion
-
-<a id="word-authoring-runtime-completion"></a>
-
-<!-- word:authoring:Runtime.Completion -->
-
-Await the supplied future and bind its completed native result.
-
-<!-- word-definition:authoring:Runtime.Completion -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-supervision-110-110 -->
+<!-- example:glossary-runtime-supervision-complete-caller -->
 
 </details>
 
@@ -2656,9 +2361,9 @@ Mark runtime state finalized and return its selected terminal decision, or succe
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-190-190 -->
+<!-- example:glossary-runtime-conclude-caller -->
 
 </details>
 
@@ -2675,9 +2380,9 @@ Apply the native platform process configuration to the supplied child-command bu
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Launch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-241-241 -->
+<!-- example:glossary-runtime-app-configure-caller -->
 
 </details>
 
@@ -2694,9 +2399,9 @@ Construct a native `App` value with `runtime` set to `Runtime`, `path` set to `P
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Appoint](#word-authoring-runtime-appoint). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Appoint`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-61-61 -->
+<!-- example:glossary-runtime-app-content-caller -->
 
 </details>
 
@@ -2713,9 +2418,9 @@ Construct a native `AppState` value with `source` set to `Source`, `invocation` 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Appoint](#word-authoring-runtime-appoint). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Appoint`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-60-60 -->
+<!-- example:glossary-runtime-app-state-caller -->
 
 </details>
 
@@ -2732,9 +2437,9 @@ Construct a native `Capture` value with `bytes` set to `Bytes`, `error` set to `
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Start](#word-authoring-runtime-capture-start). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Start`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-92-92 -->
+<!-- example:glossary-runtime-capture-content-caller -->
 
 </details>
 
@@ -2751,9 +2456,9 @@ Construct a native `ErrorData` value with `message` set to `Message`, `causes` s
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Wrap](#word-authoring-runtime-error-wrap). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Wrap`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-19-19 -->
+<!-- example:glossary-runtime-error-data-caller -->
 
 </details>
 
@@ -2770,9 +2475,9 @@ Construct a native `Runtime` value with `inner` set to `Inner`.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Copy](#word-authoring-runtime-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-82-82 -->
+<!-- example:glossary-runtime-handle-caller -->
 
 </details>
 
@@ -2789,9 +2494,9 @@ Construct a native `RuntimeInner` value with `companion_directory` set to `Direc
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Assemble](#word-authoring-runtime-assemble). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Assemble`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-259-259 -->
+<!-- example:glossary-runtime-inner-content-caller -->
 
 </details>
 
@@ -2808,9 +2513,9 @@ Construct a native `Invocation` value with `app` set to `App`, `runtime` set to 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Allocate](#word-authoring-runtime-invocation-allocate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Allocate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-197-197 -->
+<!-- example:glossary-runtime-invocation-content-caller -->
 
 </details>
 
@@ -2827,9 +2532,9 @@ Construct a native `GroupState` value with `pid` set to `Pid`, `cleaned` set to 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Allocate](#word-authoring-runtime-invocation-allocate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Allocate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-196-196 -->
+<!-- example:glossary-runtime-invocation-group-caller -->
 
 </details>
 
@@ -2846,9 +2551,9 @@ Construct a native `InvocationState` value with `snapshot` set to `None`, `claim
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Allocate](#word-authoring-runtime-invocation-allocate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Allocate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-195-195 -->
+<!-- example:glossary-runtime-invocation-state-caller -->
 
 </details>
 
@@ -2865,9 +2570,9 @@ Construct a native `Snapshot` value with `stdout` set to `Output`, `stderr` set 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Snapshot.Reject](#word-authoring-runtime-snapshot-reject). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Snapshot.Reject`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-261-261 -->
+<!-- example:glossary-runtime-snapshot-content-caller -->
 
 </details>
 
@@ -2884,9 +2589,9 @@ Construct a native `Terminal` value with `status` set to `Status`, `error` set t
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Conclude](#word-authoring-runtime-conclude). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Conclude`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-149-149 -->
+<!-- example:glossary-runtime-terminal-content-caller -->
 
 </details>
 
@@ -2903,9 +2608,9 @@ Construct a native `LEnvironment` value with `types` set to `Types`, `values` se
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Copy](#word-authoring-storage-environment-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-66-66 -->
+<!-- example:glossary-storage-environment-content-caller -->
 
 </details>
 
@@ -2922,9 +2627,9 @@ Construct a native `LList` value with `element` set to `Element`, `values` set t
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Copy](#word-authoring-storage-list-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.List.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-100-100 -->
+<!-- example:glossary-storage-list-content-caller -->
 
 </details>
 
@@ -2941,9 +2646,9 @@ Construct a native `LMap` value with `element` set to `Element`, `values` set to
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Create](#word-authoring-storage-map-create). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Create`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-92-92 -->
+<!-- example:glossary-storage-map-content-caller -->
 
 </details>
 
@@ -2960,9 +2665,9 @@ Construct a native `LPointer` value with `element` set to `Element`, `target` se
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Copy](#word-authoring-storage-pointer-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-29-29 -->
+<!-- example:glossary-storage-pointer-content-caller -->
 
 </details>
 
@@ -2998,9 +2703,9 @@ Construct a native `LValue` value with `ty` set to `Signature`, `data` set to `D
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Wrap](#word-authoring-storage-value-wrap). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Wrap`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-42-42 -->
+<!-- example:glossary-storage-value-content-caller -->
 
 </details>
 
@@ -3017,9 +2722,9 @@ Construct a native String using the exact format pattern and arguments specified
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Launch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-246-246 -->
+<!-- example:glossary-runtime-app-context-caller -->
 
 </details>
 
@@ -3036,28 +2741,9 @@ Construct a native String using the exact format pattern and arguments specified
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Describe](#word-authoring-runtime-app-describe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Explain`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-53-53 -->
-
-</details>
-
-### Runtime.Error.Context
-
-<a id="word-authoring-runtime-error-context"></a>
-
-<!-- word:authoring:Runtime.Error.Context -->
-
-Construct a native String using the exact format pattern and arguments specified by this definition. The selected operation is `format!("{}: {}", Message, Error)`.
-
-<!-- word-definition:authoring:Runtime.Error.Context -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Explain](#word-authoring-runtime-error-explain). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-34-34 -->
+<!-- example:glossary-runtime-context-caller -->
 
 </details>
 
@@ -3074,30 +2760,9 @@ Construct a native String using the exact format pattern and arguments specified
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-37-37 -->
-
-</details>
-
-### Storage.Binding.Context
-
-<a id="word-authoring-storage-binding-context"></a>
-
-<!-- word:authoring:Storage.Binding.Context -->
-
-Borrow the supplied execution context into the generated callable-context binding.
-
-<!-- word-definition:authoring:Storage.Binding.Context -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-Existing qualified aliases: `Storage.Closure.Context`. They select this canonical meaning.
-
-This source-authoring fragment comes from `builtins/eng/storage/bindings.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-bindings-19-19 -->
+<!-- example:glossary-runtime-path-context-caller -->
 
 </details>
 
@@ -3114,9 +2779,9 @@ Name the Storage namespace for pairing runtime and program storage and projectin
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/execution.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-49-49 -->
+<!-- example:glossary-storage-context-caller -->
 
 </details>
 
@@ -3133,9 +2798,9 @@ Construct the Continue variant of native ControlFlow around the supplied values.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/execution.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-15-15 -->
+<!-- example:glossary-storage-function-continue-caller -->
 
 </details>
 
@@ -3152,9 +2817,9 @@ Insert a decimal point after the first significant digit when needed and append 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Render](#word-authoring-formatting-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-146-146 -->
+<!-- example:glossary-formatting-contract-caller -->
 
 </details>
 
@@ -3171,13 +2836,13 @@ Return another runtime handle retaining the same Arc-backed RuntimeInner allocat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Host.Copy`. They select this canonical meaning.
+This statement is used inside `Runtime.Begin`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Begin](#word-authoring-runtime-begin). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-shutdown-292-292 -->
+<!-- example:glossary-runtime-copy-caller -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Host.Copy`. They select this canonical meaning.
 
 ### Runtime.Error.Copy
 
@@ -3192,13 +2857,13 @@ Retain the Arc-backed ErrorData allocation and return another Error handle.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Host.Error.Copy`. They select this canonical meaning.
+This statement is used inside `Runtime.Refuse`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Refuse](#word-authoring-runtime-refuse). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-shutdown-43-43 -->
+<!-- example:glossary-runtime-error-copy-caller -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Host.Error.Copy`. They select this canonical meaning.
 
 ### Runtime.Snapshot.Copy
 
@@ -3213,13 +2878,14 @@ Retain a Snapshot's shared stdout/stderr bytes, copy its optional Error, and pre
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Host.Snapshot.Copy`. They select this canonical meaning.
 
 The wrapper below imports `Storage` and `Runtime` and is a member of the example `GlossaryExamples` Dictionary. Its declared native inputs, outputs, lifetime/generic descriptors, and the original selected module's native types/support are required. Lyger resolves the source and composes its library AML; this fragment has no native compilation or execution claim.
 
 <!-- example:glossary-native-runtime-snapshot-copy -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Host.Snapshot.Copy`. They select this canonical meaning.
 
 ### Runtime.Terminal.Copy
 
@@ -3234,13 +2900,14 @@ Copy a terminal decision's status and optional Error into another Terminal value
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Host.Terminal.Copy`. They select this canonical meaning.
 
 The wrapper below imports `Storage` and `Runtime` and is a member of the example `GlossaryExamples` Dictionary. Its declared native inputs, outputs, lifetime/generic descriptors, and the original selected module's native types/support are required. Lyger resolves the source and composes its library AML; this fragment has no native compilation or execution claim.
 
 <!-- example:glossary-native-runtime-terminal-copy -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Host.Terminal.Copy`. They select this canonical meaning.
 
 ### Storage.Copy
 
@@ -3255,9 +2922,9 @@ Invoke the native Clone implementation on the supplied borrowed value. The selec
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Clone](#word-authoring-storage-clone). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Clone`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-6-6 -->
+<!-- example:glossary-storage-copy-caller -->
 
 </details>
 
@@ -3274,9 +2941,9 @@ Return another capture-environment handle sharing both the Rc-backed type signat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Require](#word-authoring-storage-environment-require). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Require`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-41-41 -->
+<!-- example:glossary-storage-environment-copy-caller -->
 
 </details>
 
@@ -3369,30 +3036,28 @@ Copy a stored value's signature, retain its Rc-backed payload, and preserve its 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Read](#word-authoring-storage-pointer-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-135-135 -->
+<!-- example:glossary-storage-value-copy-caller -->
 
 </details>
 
-### Storage.Function.Copyable
+### Storage.Copyable
 
-<a id="word-authoring-storage-function-copyable"></a>
+<a id="word-authoring-storage-copyable"></a>
 
-<!-- word:authoring:Storage.Function.Copyable -->
+<!-- word:authoring:Storage.Copyable -->
 
 Describe a Storage.Routine with the native generic bound `T: Copy`.
 
-<!-- word-definition:authoring:Storage.Function.Copyable -->
+<!-- word-definition:authoring:Storage.Copyable -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `Storage.Function.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Function.Copy](#word-authoring-storage-function-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-display-63-63 -->
+<!-- example:glossary-storage-copyable-caller -->
 
 </details>
 
@@ -3409,9 +3074,9 @@ Increment the runtime's invocation-sequence counter under its state lock and ret
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Acquire](#word-authoring-runtime-app-acquire). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Acquire`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-191-191 -->
+<!-- example:glossary-runtime-count-caller -->
 
 </details>
 
@@ -3433,7 +3098,7 @@ Introduce a named supported value, construction or source action in the current 
 
 <!-- word:authoring:Storage.App.Create -->
 
-Compose a native companion PathBuf and the runtime App-handle constructor using the enclosing runtime binding.
+Construct the PathBuf once and create the App handle from the explicit runtime and path operands.
 
 <!-- word-definition:authoring:Storage.App.Create -->
 
@@ -3452,7 +3117,7 @@ Compose a native companion PathBuf and the runtime App-handle constructor using 
 
 <!-- word:authoring:Storage.Context.Create -->
 
-Retain the enclosing runtime, pair it with program storage, and bind the program reference used by generated source actions.
+Clone the runtime handle, pair it with the supplied program storage, and expose the program through an explicitly named borrowed binding.
 
 <!-- word-definition:authoring:Storage.Context.Create -->
 
@@ -3592,9 +3257,9 @@ Obtain the selected value's native borrowed view, preserving any optional wrappe
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Resolve](#word-authoring-runtime-app-resolve). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Resolve`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-127-127 -->
+<!-- example:glossary-runtime-app-current-caller -->
 
 </details>
 
@@ -3611,9 +3276,9 @@ Borrow the current value of the selected watch receiver. The selected operation 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Observe](#word-authoring-runtime-observe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Observe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-228-228 -->
+<!-- example:glossary-runtime-current-caller -->
 
 </details>
 
@@ -3634,9 +3299,9 @@ Declare the native `ErrorData` record with fields `message: Vec<u8>`, `causes: V
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Wrap](#word-authoring-runtime-error-wrap). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Wrap`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-19-19 -->
+<!-- example:glossary-runtime-error-data-caller -->
 
 </details>
 
@@ -3653,9 +3318,9 @@ Borrow `Value.data` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Restore](#word-authoring-storage-value-restore). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Restore`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-45-45 -->
+<!-- example:glossary-storage-value-data-caller -->
 
 </details>
 
@@ -3672,9 +3337,9 @@ Borrow `Value.data` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Copy](#word-authoring-runtime-error-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-170-170 -->
+<!-- example:glossary-runtime-error-datum-caller -->
 
 </details>
 
@@ -3691,9 +3356,9 @@ Select the native field `Value.termination_deadline` by value. Its declared type
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-324-324 -->
+<!-- example:glossary-runtime-invocation-deadline-caller -->
 
 </details>
 
@@ -3710,9 +3375,9 @@ Read whether runtime state already contains a terminal selection.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Run](#word-authoring-runtime-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-221-221 -->
+<!-- example:glossary-runtime-decide-caller -->
 
 </details>
 
@@ -3729,9 +3394,9 @@ Propagate a failed Boolean Result, execute the supplied Process for a successful
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/traversal.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/traversal.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-2-2 -->
+<!-- example:glossary-storage-decide-caller -->
 
 </details>
 
@@ -3767,9 +3432,9 @@ Preserve absence of an Error, or attach the supplied stderr bytes to a present i
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Complete](#word-authoring-runtime-supervision-complete). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Complete`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-81-81 -->
+<!-- example:glossary-runtime-supervision-decorate-caller -->
 
 </details>
 
@@ -3814,9 +3479,9 @@ Select the native field `Value.wait_delay` by value. Its declared type determine
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-326-326 -->
+<!-- example:glossary-runtime-invocation-delay-caller -->
 
 </details>
 
@@ -3847,9 +3512,9 @@ Move the supplied value into a new Arc allocation. The selected operation is `st
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Open](#word-authoring-runtime-open). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Open`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-43-43 -->
+<!-- example:glossary-runtime-dependencies-caller -->
 
 </details>
 
@@ -3866,9 +3531,9 @@ Borrow `Value.dependencies` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Observe](#word-authoring-runtime-invocation-observe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Observe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-119-119 -->
+<!-- example:glossary-runtime-invocation-dependencies-caller -->
 
 </details>
 
@@ -3885,9 +3550,9 @@ Select the value behind a native reference or dereferenceable value; its concret
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Bytes.Read](#word-authoring-storage-bytes-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Limit`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-36-36 -->
+<!-- example:glossary-storage-dereference-caller -->
 
 </details>
 
@@ -3916,9 +3581,9 @@ Read an App's diagnostic source label and prefix it to a message when nonempty, 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Explain](#word-authoring-runtime-app-explain). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Explain`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-56-56 -->
+<!-- example:glossary-runtime-app-describe-caller -->
 
 </details>
 
@@ -3935,9 +3600,9 @@ Copy a borrowed message string into bytes and construct a runtime Error with no 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Own](#word-authoring-runtime-app-own). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Own`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-21-21 -->
+<!-- example:glossary-runtime-error-describe-caller -->
 
 </details>
 
@@ -3954,9 +3619,9 @@ Render one stored value, propagate a rendering failure, and append its byte vect
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Render](#word-authoring-storage-list-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.List.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-143-143 -->
+<!-- example:glossary-storage-list-describe-caller -->
 
 </details>
 
@@ -3973,9 +3638,9 @@ Render one Map value, prefix it with its unchanged byte key and `: `, then appen
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Render](#word-authoring-storage-map-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-153-153 -->
+<!-- example:glossary-storage-audit-caller -->
 
 </details>
 
@@ -3992,9 +3657,9 @@ Construct a native String using the exact format pattern and arguments specified
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Join](#word-authoring-runtime-capture-join). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Join`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-105-105 -->
+<!-- example:glossary-runtime-capture-description-caller -->
 
 </details>
 
@@ -4011,9 +3676,9 @@ Construct a native String using the exact format pattern and arguments specified
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-32-32 -->
+<!-- example:glossary-runtime-path-description-caller -->
 
 </details>
 
@@ -4030,9 +3695,9 @@ Construct a native String using the exact format pattern and arguments specified
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Inspect](#word-authoring-runtime-supervision-inspect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Inspect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-69-69 -->
+<!-- example:glossary-runtime-supervision-description-caller -->
 
 </details>
 
@@ -4049,9 +3714,9 @@ Format the supplied receiver into an owned native String through its Display imp
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Render](#word-authoring-formatting-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-141-141 -->
+<!-- example:glossary-storage-description-caller -->
 
 </details>
 
@@ -4068,9 +3733,9 @@ Obtain the selected host capture destination for a stream and supplied byte-buff
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Start](#word-authoring-runtime-capture-start). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Start`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-79-79 -->
+<!-- example:glossary-runtime-capture-box-caller -->
 
 </details>
 
@@ -4087,9 +3752,9 @@ Mutably reborrow the diagnostic byte buffer in the first traversal-context compo
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Accumulate](#word-authoring-runtime-error-accumulate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Accumulate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-94-94 -->
+<!-- example:glossary-runtime-error-destination-caller -->
 
 </details>
 
@@ -4106,9 +3771,9 @@ Join optional primary and cleanup Errors, render their diagnostic bytes, append 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-197-197 -->
+<!-- example:glossary-runtime-diagnose-caller -->
 
 </details>
 
@@ -4155,9 +3820,9 @@ Borrow `Value.companion_directory` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-33-33 -->
+<!-- example:glossary-runtime-directory-caller -->
 
 </details>
 
@@ -4174,9 +3839,9 @@ Send the supplied value through the selected native channel. The selected operat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Release](#word-authoring-runtime-supervision-release). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Release`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-35-35 -->
+<!-- example:glossary-runtime-supervision-discard-caller -->
 
 </details>
 
@@ -4193,9 +3858,9 @@ Evaluate the supplied value expression and bind it to the native discard pattern
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `stdlib/eng/io/dictionary.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `stdlib/eng/io/dictionary.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-io-dictionary-50-50 -->
+<!-- example:glossary-storage-discard-caller -->
 
 </details>
 
@@ -4212,13 +3877,14 @@ Render an Error, convert its bytes to a lossy UTF-8 view, and write that text th
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Host.Error.Display`. They select this canonical meaning.
 
 The wrapper below imports `Storage` and `Runtime` and is a member of the example `GlossaryExamples` Dictionary. Its declared native inputs, outputs, lifetime/generic descriptors, and the original selected module's native types/support are required. Lyger resolves the source and composes its library AML; this fragment has no native compilation or execution claim.
 
 <!-- example:glossary-native-runtime-error-display -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Host.Error.Display`. They select this canonical meaning.
 
 ### Runtime.Invocation.Done
 
@@ -4233,9 +3899,9 @@ Borrow `Value.done` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Publish](#word-authoring-runtime-invocation-publish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Publish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-382-382 -->
+<!-- example:glossary-runtime-invocation-done-caller -->
 
 </details>
 
@@ -4252,9 +3918,9 @@ Construct a native duration from the supplied whole-second count. The selected o
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Acquire](#word-authoring-runtime-app-acquire). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Acquire`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-196-196 -->
+<!-- example:glossary-runtime-duration-caller -->
 
 </details>
 
@@ -4275,11 +3941,9 @@ Select a mutable borrow for Storage.Borrow, a fallible mutable RefCell borrow fo
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Borrower](word-glossary.md#word-authoring-storage-borrow), [Reader](word-glossary.md#word-authoring-storage-read), [Reference](word-glossary.md#word-authoring-storage-reference).
+This statement is used inside `Runtime.Error.Render`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Error.Render](#word-authoring-runtime-error-render). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-128-128 -->
+<!-- example:glossary-storage-editable-caller -->
 
 </details>
 
@@ -4296,15 +3960,13 @@ Replace the canonical List.Values projection with a mutable borrow of the same v
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Values](word-glossary.md#word-authoring-storage-environment-values).
+This statement is used inside `Storage.Map.Update`. Its enclosing native signature and preceding bindings remain required.
 
-Existing qualified aliases: `Storage.Map.Editable`. They select this canonical meaning.
-
-This statement is used inside [Storage.Map.Update](#word-authoring-storage-map-update). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-collections-105-105 -->
+<!-- example:glossary-storage-list-editable-caller -->
 
 </details>
+
+Existing qualified aliases: `Storage.Map.Editable`. They select this canonical meaning.
 
 ### Storage.Pointer.Element
 
@@ -4319,13 +3981,13 @@ Borrow `Value.element` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Storage.List.Element`, `Storage.Map.Element`. They select this canonical meaning.
+This statement is used inside `Storage.Map.Update`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Map.Update](#word-authoring-storage-map-update). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-collections-101-101 -->
+<!-- example:glossary-storage-pointer-element-caller -->
 
 </details>
+
+Existing qualified aliases: `Storage.List.Element`, `Storage.Map.Element`. They select this canonical meaning.
 
 ### Else
 
@@ -4354,28 +4016,9 @@ Construct an empty native String. The selected operation is `String::new()`.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Appoint](#word-authoring-runtime-appoint). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Appoint`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-60-60 -->
-
-</details>
-
-### Runtime.Path.Empty
-
-<a id="word-authoring-runtime-path-empty"></a>
-
-<!-- word:authoring:Runtime.Path.Empty -->
-
-Borrow the selected native path as its operating-system string representation. The selected operation is `Value.as_os_str()`.
-
-<!-- word-definition:authoring:Runtime.Path.Empty -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-app-28-28 -->
+<!-- example:glossary-runtime-app-state-caller -->
 
 </details>
 
@@ -4392,9 +4035,9 @@ Construct an empty shared Arc-backed byte slice with `std::sync::Arc::from([])`.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Snapshot.Reject](#word-authoring-runtime-snapshot-reject). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Snapshot.Reject`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-258-258 -->
+<!-- example:glossary-runtime-snapshot-caller -->
 
 </details>
 
@@ -4411,11 +4054,9 @@ Select an empty Process, an initially None mutable optional Binding, an empty ty
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Process](word-glossary.md#word-builtin-process), [Binding](word-glossary.md#word-authoring-storage-binding), [Tuple](word-glossary.md#word-authoring-storage-tuple), [Vector](word-glossary.md#word-authoring-storage-vector).
+This statement is used inside `Runtime.Error.Join`. Its enclosing native signature and preceding bindings remain required.
 
-This source-authoring fragment comes from `builtins/eng/storage/traversal.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-traversal-1-1 -->
+<!-- example:glossary-storage-empty-caller -->
 
 </details>
 
@@ -4432,9 +4073,9 @@ Consume a byte vector and return opening delimiter bytes, the unchanged vector b
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Render](#word-authoring-storage-list-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.List.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-145-145 -->
+<!-- example:glossary-storage-text-enclose-caller -->
 
 </details>
 
@@ -4451,9 +4092,9 @@ Consume the selected String and return its owned UTF-8 byte vector. The selected
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Finish](#word-authoring-formatting-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-117-117 -->
+<!-- example:glossary-storage-encoding-caller -->
 
 </details>
 
@@ -4470,9 +4111,9 @@ Call the selected host checkpoint observer with the supplied event and invocatio
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Observe](#word-authoring-runtime-invocation-observe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Observe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-121-121 -->
+<!-- example:glossary-runtime-checkpoint-enter-caller -->
 
 </details>
 
@@ -4489,9 +4130,9 @@ Notify the selected host dependencies that the supplied terminal request has bee
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Signals.Watch](#word-authoring-runtime-signals-watch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Signals.Watch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-21-21 -->
+<!-- example:glossary-runtime-enter-caller -->
 
 </details>
 
@@ -4508,9 +4149,9 @@ Borrow the selected collection and obtain its native iterator. The selected oper
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Render](#word-authoring-storage-map-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-152-152 -->
+<!-- example:glossary-storage-map-entries-caller -->
 
 </details>
 
@@ -4527,9 +4168,9 @@ Look up the supplied key through a native map entry handle. The selected operati
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Record](#word-authoring-runtime-invocation-record). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Record`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-364-364 -->
+<!-- example:glossary-runtime-entry-caller -->
 
 </details>
 
@@ -4546,9 +4187,9 @@ Name the Storage namespace that composes generated main execution and returns th
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/execution.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-82-82 -->
+<!-- example:glossary-storage-entry-caller -->
 
 </details>
 
@@ -4565,30 +4206,9 @@ Visit pair-shaped items in iterator order and invoke the supplied callback with 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Copy](#word-authoring-storage-map-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-122-122 -->
-
-</details>
-
-### Storage.Binding.Environment
-
-<a id="word-authoring-storage-binding-environment"></a>
-
-<!-- word:authoring:Storage.Binding.Environment -->
-
-Invoke the supplied environment-copy Function on the first component of the generated callable pair and bind the result.
-
-<!-- word-definition:authoring:Storage.Binding.Environment -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-Existing qualified aliases: `Storage.Closure.Environment`. They select this canonical meaning.
-
-This source-authoring fragment comes from `builtins/eng/storage/bindings.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-bindings-19-19 -->
+<!-- example:glossary-storage-enumerate-caller -->
 
 </details>
 
@@ -4605,9 +4225,9 @@ Declare the native `LEnvironment` record with fields `values: std::rc::Rc<std::c
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Copy](#word-authoring-storage-environment-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-62-62 -->
+<!-- example:glossary-storage-environment-caller -->
 
 </details>
 
@@ -4624,9 +4244,9 @@ Borrow `Value.0` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Function.Copy](#word-authoring-storage-function-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Function.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-64-64 -->
+<!-- example:glossary-storage-function-environment-caller -->
 
 </details>
 
@@ -4643,9 +4263,9 @@ Declare the native `LEnvironment` record with fields `values: std::rc::Rc<std::c
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/values.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/values.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-57-57 -->
+<!-- example:glossary-storage-layout-environment-caller -->
 
 </details>
 
@@ -4674,9 +4294,9 @@ Compare the supplied native operands `Left, Right` for equality and bind the Boo
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Admit](#word-authoring-runtime-admit). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Admit`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-50-50 -->
+<!-- example:glossary-storage-equality-caller -->
 
 </details>
 
@@ -4721,9 +4341,9 @@ Select the native field `Value.error` by value. Its declared type determines whe
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Share](#word-authoring-runtime-capture-share). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Share`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-34-34 -->
+<!-- example:glossary-runtime-capture-error-caller -->
 
 </details>
 
@@ -4740,9 +4360,9 @@ Declare the native `Error` record with fields `data: std::sync::Arc<ErrorData>`.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Leave](#word-authoring-runtime-leave). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Leave`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-54-54 -->
+<!-- example:glossary-runtime-error-caller -->
 
 </details>
 
@@ -4778,9 +4398,9 @@ Borrow `Value.stderr` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Snapshot.Copy](#word-authoring-runtime-snapshot-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Snapshot.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-147-147 -->
+<!-- example:glossary-runtime-snapshot-error-caller -->
 
 </details>
 
@@ -4797,9 +4417,9 @@ Bind the native constant `crate::runtime::host::Stream::Stderr` for this composi
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-102-102 -->
+<!-- example:glossary-runtime-capture-follow-caller -->
 
 </details>
 
@@ -4816,9 +4436,9 @@ Borrow `Value.error` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-196-196 -->
+<!-- example:glossary-runtime-terminal-error-caller -->
 
 </details>
 
@@ -4854,9 +4474,9 @@ Name the Storage namespace for runtime Error construction and erased-value displ
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Error.Render](#word-authoring-storage-error-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Error.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-36-36 -->
+<!-- example:glossary-storage-error-caller -->
 
 </details>
 
@@ -4873,9 +4493,9 @@ Obtain a borrowed iterator over the selected ordered map's values. The selected 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Assess](#word-authoring-runtime-assess). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Assess`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-251-251 -->
+<!-- example:glossary-runtime-state-errors-caller -->
 
 </details>
 
@@ -4892,28 +4512,9 @@ Invoke a callback with one item and context, then discard a successful payload o
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/collections.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/collections.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-6-6 -->
-
-</details>
-
-### Runtime.App.Executable
-
-<a id="word-authoring-runtime-app-executable"></a>
-
-<!-- word:authoring:Runtime.App.Executable -->
-
-Check the supplied companion path against the native launch-format requirements. The selected operation is `crate::process::validate_launch_format(Path)`.
-
-<!-- word-definition:authoring:Runtime.App.Executable -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-app-231-231 -->
+<!-- example:glossary-storage-examine-caller -->
 
 </details>
 
@@ -4930,9 +4531,9 @@ Read the native path of the running orchestrator executable. The selected operat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Locate](#word-authoring-runtime-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-214-214 -->
+<!-- example:glossary-runtime-executable-caller -->
 
 </details>
 
@@ -4977,9 +4578,9 @@ Bind the native constant `crate::runtime::host::TerminalRequest::Exit` for this 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Leave](#word-authoring-runtime-leave). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Leave`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-49-49 -->
+<!-- example:glossary-runtime-exit-caller -->
 
 </details>
 
@@ -5015,25 +4616,30 @@ Place a decimal point in the digit string at the position determined by its expo
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Render](#word-authoring-formatting-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-145-145 -->
+<!-- example:glossary-formatting-expand-caller -->
 
 </details>
 
-### Storage.Result.Expect
+### Storage.Expect
 
-<a id="word-authoring-storage-result-expect"></a>
+<a id="word-authoring-storage-expect"></a>
 
-<!-- word:authoring:Storage.Result.Expect -->
+<!-- word:authoring:Storage.Expect -->
 
-Consume a native Result and an explicit message, returning its successful payload or panicking on its error.
+Consume a native Option or Result and return its payload, or panic when it is absent or failed. The message argument is evaluated normally even on success.
 
-<!-- word-definition:authoring:Storage.Result.Expect -->
+<!-- word-definition:authoring:Storage.Expect -->
 
-**Usage:** `a New Storage's Result's Expecter of Value and Message` calls the Result's native `expect`. The error type must support its native debug formatting, and the message is `&str`. Expecter belongs to this Expect verb family, not to [Result.Select](#word-authoring-storage-result-select).
+<details class="l-word-usage" data-pagefind-ignore>
+<summary>Usage example</summary>
 
-**Example:** `Selection.Expect` in [Native callers](#context-storage--native-callers) preserves the successful Box's allocation. An error triggers the supplied message together with the error's debug representation. This is a panic policy, not propagation, rollback, or conversion into `runtime::Error`. [IO.Print](#word-stdlib-export-eng-io-io-print) deliberately uses it for output failure.
+This statement is used inside `Runtime.Clean`. Its enclosing native signature and preceding bindings remain required.
+
+<!-- example:glossary-storage-expect-caller -->
+
+</details>
 
 ### Storage.Value.Expect
 
@@ -5067,9 +4673,9 @@ Wrap a native IO error with the context `start application`, retaining its nativ
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Launch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-232-232 -->
+<!-- example:glossary-runtime-app-command-explain-caller -->
 
 </details>
 
@@ -5086,9 +4692,9 @@ Describe App misuse with its source label and request runtime failure using that
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Read](#word-authoring-runtime-app-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-95-95 -->
+<!-- example:glossary-runtime-app-explain-caller -->
 
 </details>
 
@@ -5105,9 +4711,9 @@ Attach `capture application stream` context to an IO error, store it as the capt
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Receive](#word-authoring-runtime-capture-receive). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Receive`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-41-41 -->
+<!-- example:glossary-runtime-capture-explain-caller -->
 
 </details>
 
@@ -5124,9 +4730,9 @@ Construct a message from context and a native error's display text, retaining th
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Command.Explain](#word-authoring-runtime-app-command-explain). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Command.Explain`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-226-226 -->
+<!-- example:glossary-runtime-error-explain-caller -->
 
 </details>
 
@@ -5143,9 +4749,9 @@ Transform a native Result's error with the supplied callback while preserving it
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Terminate](#word-authoring-runtime-invocation-terminate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Terminate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-335-335 -->
+<!-- example:glossary-runtime-explain-caller -->
 
 </details>
 
@@ -5162,9 +4768,9 @@ Wrap an IO error with `terminate application process group` context and retain i
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Terminate](#word-authoring-runtime-invocation-terminate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Terminate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-335-335 -->
+<!-- example:glossary-runtime-explain-caller -->
 
 </details>
 
@@ -5181,9 +4787,9 @@ Wrap an IO error with `locate orchestrator` context and retain its native cause.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Locate](#word-authoring-runtime-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-216-216 -->
+<!-- example:glossary-runtime-path-explain-caller -->
 
 </details>
 
@@ -5200,9 +4806,9 @@ Wrap an IO error with `install application signal subscriptions` context and ret
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Install](#word-authoring-runtime-install). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Install`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-34-34 -->
+<!-- example:glossary-runtime-signals-explain-caller -->
 
 </details>
 
@@ -5219,9 +4825,9 @@ Wrap an IO error with `terminate application leader` context and retain its nati
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Terminate](#word-authoring-runtime-supervision-terminate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Terminate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-13-13 -->
+<!-- example:glossary-runtime-supervision-explain-caller -->
 
 </details>
 
@@ -5239,44 +4845,6 @@ Recognize a configured export action whose general native execution is not imple
 
 **Rejected source illustration (not executed).** After defining a Text binding named Message, `Export message.` does not publish it or provide a native export operation. Use Public/Publicly on the declaration when visibility is intended.
 
-### Runtime.Error.Extend
-
-<a id="word-authoring-runtime-error-extend"></a>
-
-<!-- word:authoring:Runtime.Error.Extend -->
-
-Append the supplied slice bytes to the selected native byte buffer. The selected operation is `Output.extend_from_slice(Bytes)`.
-
-<!-- word-definition:authoring:Runtime.Error.Extend -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Attach](#word-authoring-runtime-error-attach). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-62-62 -->
-
-</details>
-
-### Runtime.Supervision.Extend
-
-<a id="word-authoring-runtime-supervision-extend"></a>
-
-<!-- word:authoring:Runtime.Supervision.Extend -->
-
-Extend the selected native collection with the supplied iterable values. The selected operation is `Values.extend(Value)`.
-
-<!-- word-definition:authoring:Runtime.Supervision.Extend -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Supervision.Complete](#word-authoring-runtime-supervision-complete). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-supervision-77-77 -->
-
-</details>
-
 ### Storage.Bytes.Extend
 
 <a id="word-authoring-storage-bytes-extend"></a>
@@ -5290,9 +4858,28 @@ Append the supplied byte slice to a mutable byte buffer using `extend_from_slice
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Text.Enclose](#word-authoring-storage-text-enclose). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Attach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-119-119 -->
+<!-- example:glossary-storage-bytes-caller -->
+
+</details>
+
+### Storage.Extract
+
+<a id="word-authoring-storage-extract"></a>
+
+<!-- word:authoring:Storage.Extract -->
+
+Consume a Result and return its successful payload as Some, or discard its error and return None.
+
+<!-- word-definition:authoring:Storage.Extract -->
+
+<details class="l-word-usage" data-pagefind-ignore>
+<summary>Usage example</summary>
+
+This statement is used inside `Runtime.Capture.Receive`. Its enclosing native signature and preceding bindings remain required.
+
+<!-- example:glossary-storage-extract-caller -->
 
 </details>
 
@@ -5313,9 +4900,9 @@ Replace the optional capture failure with the supplied Error and return true to 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Explain](#word-authoring-runtime-capture-explain). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Explain`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-37-37 -->
+<!-- example:glossary-runtime-capture-fail-caller -->
 
 </details>
 
@@ -5332,9 +4919,9 @@ Request runtime failure with a present Error; an absent Error becomes the explic
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Explain](#word-authoring-runtime-app-explain). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Explain`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-56-56 -->
+<!-- example:glossary-runtime-app-describe-caller -->
 
 </details>
 
@@ -5344,7 +4931,7 @@ This statement is used inside [Runtime.App.Explain](#word-authoring-runtime-app-
 
 <!-- word:authoring:Storage.Program.Fail -->
 
-Record a failure through the enclosing runtime and wrap the selected Error in a rejection result.
+Construct a runtime failure from the explicit failure input, bind its error and wrap that error in the canonical Rejection.
 
 <!-- word-definition:authoring:Storage.Program.Fail -->
 
@@ -5370,9 +4957,9 @@ Consume a native Result and retain its error as Some, or discard its successful 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Reject](#word-authoring-runtime-reject). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Reject`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-78-78 -->
+<!-- example:glossary-runtime-failure-caller -->
 
 </details>
 
@@ -5389,28 +4976,9 @@ Construct a runtime Error from a supplied borrowed message through `runtime::err
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Validate](#word-authoring-storage-validate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Validate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-10-10 -->
-
-</details>
-
-### Storage.Program.Failure
-
-<a id="word-authoring-storage-program-failure"></a>
-
-<!-- word:authoring:Storage.Program.Failure -->
-
-Request runtime failure through the enclosing runtime and bind the selected Error for Program.Rejection.
-
-<!-- word-definition:authoring:Storage.Program.Failure -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-79-79 -->
+<!-- example:glossary-storage-failure-caller -->
 
 </details>
 
@@ -5427,9 +4995,9 @@ Mutably borrow `Value.cleanup_errors` so the caller can update that exact native
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Record](#word-authoring-runtime-invocation-record). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Record`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-362-362 -->
+<!-- example:glossary-runtime-failures-caller -->
 
 </details>
 
@@ -5446,9 +5014,9 @@ Bind the native constant `crate::runtime::host::TerminalRequest::Failure` for th
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Refuse](#word-authoring-runtime-refuse). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Refuse`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-41-41 -->
+<!-- example:glossary-runtime-fatal-caller -->
 
 </details>
 
@@ -5465,9 +5033,9 @@ Borrow `Value.operation_error` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Select](#word-authoring-runtime-app-select). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Select`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-100-100 -->
+<!-- example:glossary-runtime-app-fault-caller -->
 
 </details>
 
@@ -5484,9 +5052,9 @@ Construct a native `Error` value with `data` set to `Data`.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Copy](#word-authoring-runtime-error-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-170-170 -->
+<!-- example:glossary-runtime-error-datum-caller -->
 
 </details>
 
@@ -5503,9 +5071,9 @@ Check whether the selected native Result is an error. The selected operation is 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Signals.Watch](#word-authoring-runtime-signals-watch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Signals.Watch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-15-15 -->
+<!-- example:glossary-runtime-fault-caller -->
 
 </details>
 
@@ -5522,28 +5090,9 @@ Borrow `Value.error` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Snapshot.Copy](#word-authoring-runtime-snapshot-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Snapshot.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-148-148 -->
-
-</details>
-
-### Runtime.Faults
-
-<a id="word-authoring-runtime-faults"></a>
-
-<!-- word:authoring:Runtime.Faults -->
-
-Construct an empty native vector with the type required by its declared binding or enclosing composition. The selected operation is `Vec::new()`.
-
-<!-- word-definition:authoring:Runtime.Faults -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Diagnose](#word-authoring-runtime-diagnose). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-shutdown-170-170 -->
+<!-- example:glossary-runtime-snapshot-fault-caller -->
 
 </details>
 
@@ -5560,9 +5109,9 @@ Lock App state and copy its optional current invocation handle.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Capture](#word-authoring-runtime-app-capture). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Capture`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-79-79 -->
+<!-- example:glossary-runtime-app-fetch-caller -->
 
 </details>
 
@@ -5579,9 +5128,9 @@ Create an async read operation into the supplied capture buffer. The selected op
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Advance](#word-authoring-runtime-capture-advance). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Advance`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-64-64 -->
+<!-- example:glossary-runtime-capture-fill-caller -->
 
 </details>
 
@@ -5598,9 +5147,9 @@ Mutably borrow `Value.finalized` so the caller can update that exact native fiel
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Conclude](#word-authoring-runtime-conclude). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Conclude`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-143-143 -->
+<!-- example:glossary-runtime-state-finalize-caller -->
 
 </details>
 
@@ -5617,9 +5166,9 @@ Select the native field `Value.finalized` by value. Its declared type determines
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Admit](#word-authoring-runtime-admit). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Admit`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-47-47 -->
+<!-- example:glossary-runtime-finalized-caller -->
 
 </details>
 
@@ -5636,9 +5185,9 @@ Prefix a minus sign when the original float is sign-negative, then consume the c
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Render](#word-authoring-formatting-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-147-147 -->
+<!-- example:glossary-formatting-finish-caller -->
 
 </details>
 
@@ -5655,9 +5204,9 @@ Serialize finalization, preserve a previously recorded status, handle the source
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Run](#word-authoring-runtime-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-218-218 -->
+<!-- example:glossary-runtime-finish-caller -->
 
 </details>
 
@@ -5680,63 +5229,6 @@ The wrapper below imports `Storage` and `Runtime` and is a member of the example
 
 </details>
 
-### Storage.Number.Finite
-
-<a id="word-authoring-storage-number-finite"></a>
-
-<!-- word:authoring:Storage.Number.Finite -->
-
-Check whether the selected native floating-point value is finite. The selected operation is `Value.is_finite()`.
-
-<!-- word-definition:authoring:Storage.Number.Finite -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Storage.Index.Check](#word-authoring-storage-index-check). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-collections-21-21 -->
-
-</details>
-
-### Runtime.Error.First
-
-<a id="word-authoring-runtime-error-first"></a>
-
-<!-- word:authoring:Runtime.Error.First -->
-
-Advance the selected iterator and return its next optional item. The selected operation is `Value.next()`.
-
-<!-- word-definition:authoring:Runtime.Error.First -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Join](#word-authoring-runtime-error-join). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-161-161 -->
-
-</details>
-
-### Storage.Context.First
-
-<a id="word-authoring-storage-context-first"></a>
-
-<!-- word:authoring:Storage.Context.First -->
-
-Borrow the first execution-context component into the generated `runtime` binding.
-
-<!-- word-definition:authoring:Storage.Context.First -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-51-51 -->
-
-</details>
-
 ### Storage.Tuple.First
 
 <a id="word-authoring-storage-tuple-first"></a>
@@ -5750,28 +5242,9 @@ Select the first tuple component by value; the component's native type determine
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Kill](#word-authoring-runtime-invocation-kill). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Kill`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-347-347 -->
-
-</details>
-
-### Runtime.Error.Flag
-
-<a id="word-authoring-runtime-error-flag"></a>
-
-<!-- word:authoring:Runtime.Error.Flag -->
-
-Create a mutable false flag tracking whether a diagnostic line has been written.
-
-<!-- word-definition:authoring:Runtime.Error.Flag -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Render](#word-authoring-runtime-error-render). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-126-126 -->
+<!-- example:glossary-storage-tuple-first-caller -->
 
 </details>
 
@@ -5802,9 +5275,9 @@ Create an async flush operation for the supplied output writer. The selected ope
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Show](#word-authoring-runtime-show). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Show`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-70-70 -->
+<!-- example:glossary-runtime-flush-caller -->
 
 </details>
 
@@ -5821,9 +5294,9 @@ Subscribe to an invocation's drain deadline, retain its host dependencies, and s
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-102-102 -->
+<!-- example:glossary-runtime-capture-follow-caller -->
 
 </details>
 
@@ -5840,9 +5313,9 @@ Read the target identity and visited-set references from a traversal context, th
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Search](#word-authoring-storage-value-search). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Search`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-21-21 -->
+<!-- example:glossary-storage-search-caller -->
 
 </details>
 
@@ -5871,9 +5344,9 @@ Construct a runtime Error from owned message bytes with no child causes, native 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Describe](#word-authoring-runtime-error-describe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Describe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-134-134 -->
+<!-- example:glossary-runtime-error-form-caller -->
 
 </details>
 
@@ -5890,13 +5363,13 @@ Convert a finite binary64 value into its shortest round-tripping decimal bytes, 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Format`. They select this canonical meaning.
+This statement is used inside `Number.Render`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Number.Render](../../stdlib/eng/io/dictionary.l#L36). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-stdlib-eng-io-dictionary-36-36 -->
+<!-- example:glossary-formatting-format-caller -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Format`. They select this canonical meaning.
 
 ### Storage.Number.Format
 
@@ -5911,9 +5384,9 @@ Format the referenced finite Number through the canonical runtime number formatt
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Number.Render](#word-authoring-storage-number-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Number.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-27-27 -->
+<!-- example:glossary-storage-number-caller -->
 
 </details>
 
@@ -5930,9 +5403,9 @@ Borrow a stored value's erased payload and invoke its selected typed renderer Fu
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Render](#word-authoring-storage-pointer-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-162-162 -->
+<!-- example:glossary-storage-value-caller -->
 
 </details>
 
@@ -5968,9 +5441,9 @@ Return the fractional part of the selected native floating-point value. The sele
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Index.Check](#word-authoring-storage-index-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Index.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-24-24 -->
+<!-- example:glossary-storage-number-fraction-caller -->
 
 </details>
 
@@ -6019,47 +5492,9 @@ Name the Storage namespace for typed callable capture pairs, invocation results,
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Function.Copy](#word-authoring-storage-function-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Function.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-66-66 -->
-
-</details>
-
-### Runtime.Future
-
-<a id="word-authoring-runtime-future"></a>
-
-<!-- word:authoring:Runtime.Future -->
-
-Construct and bind a move-capturing future whose body is the supplied Process.
-
-<!-- word-definition:authoring:Runtime.Future -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `runtime/eng/process.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-runtime-eng-process-19-19 -->
-
-</details>
-
-### Storage.Entry.Future
-
-<a id="word-authoring-storage-entry-future"></a>
-
-<!-- word:authoring:Storage.Entry.Future -->
-
-Call the generated `l_main` Function with the enclosing runtime and bind its source-execution future.
-
-<!-- word-definition:authoring:Storage.Entry.Future -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-84-84 -->
+<!-- example:glossary-storage-function-caller -->
 
 </details>
 
@@ -6076,9 +5511,9 @@ Construct and bind a move-capturing native future from the supplied body.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-**Compiler use.** Supply a typed Process body and native result binding to the selected future construction. This retained compiler excerpt selects the L-owned definition with typed native name/type/value or Process bindings. Those bindings come from the compiler’s resolved plan; this is an integration fragment, not an ordinary standalone L call.
+This statement is used inside `builtins/eng/storage/execution.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-lyger-entry-composition-16-24 -->
+<!-- example:glossary-storage-future-caller -->
 
 </details>
 
@@ -6099,9 +5534,9 @@ Borrow `Value.finish_gate` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-183-183 -->
+<!-- example:glossary-runtime-acquire-caller -->
 
 </details>
 
@@ -6118,9 +5553,9 @@ Borrow `Value.group` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Identify](#word-authoring-runtime-invocation-identify). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Identify`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-268-268 -->
+<!-- example:glossary-runtime-invocation-gate-caller -->
 
 </details>
 
@@ -6137,9 +5572,9 @@ Claim shutdown once, set stopping state and cancellation, then snapshot the runt
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Begin](#word-authoring-runtime-begin). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Begin`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-287-287 -->
+<!-- example:glossary-runtime-gather-caller -->
 
 </details>
 
@@ -6184,9 +5619,9 @@ Look up a native collection element by the supplied index or key and return its 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Program.Select](#word-authoring-storage-program-select). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Program.Select`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-62-62 -->
+<!-- example:glossary-storage-get-caller -->
 
 </details>
 
@@ -6223,9 +5658,9 @@ Construct the host signal target for the supplied process-group ID. The selected
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-319-319 -->
+<!-- example:glossary-runtime-group-caller -->
 
 </details>
 
@@ -6242,9 +5677,9 @@ Declare the native `GroupState` record with fields `pid: Option<u32>`, `cleaned:
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Allocate](#word-authoring-runtime-invocation-allocate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Allocate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-196-196 -->
+<!-- example:glossary-runtime-invocation-group-caller -->
 
 </details>
 
@@ -6265,9 +5700,9 @@ Break from the enclosing native loop when the supplied Boolean condition is true
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Await](#word-authoring-runtime-supervision-await). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Await`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-48-48 -->
+<!-- example:glossary-runtime-halt-caller -->
 
 </details>
 
@@ -6284,28 +5719,9 @@ Declare the native `Runtime` record with fields `inner: std::sync::Arc<RuntimeIn
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Copy](#word-authoring-runtime-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-82-82 -->
-
-</details>
-
-### Storage.App.Handle
-
-<a id="word-authoring-storage-app-handle"></a>
-
-<!-- word:authoring:Storage.App.Handle -->
-
-Construct an App handle from the enclosing `runtime` binding and the companion path prepared for this declaration.
-
-<!-- word-definition:authoring:Storage.App.Handle -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-69-69 -->
+<!-- example:glossary-runtime-handle-caller -->
 
 </details>
 
@@ -6334,9 +5750,9 @@ Construct an empty ordered set used to track visited ownership identities. The s
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Protect](#word-authoring-storage-value-protect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Protect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-139-139 -->
+<!-- example:glossary-storage-history-caller -->
 
 </details>
 
@@ -6353,9 +5769,9 @@ Mutably reborrow the visited-identity set stored in the second traversal-context
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Follow](#word-authoring-storage-value-follow). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Follow`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-13-13 -->
+<!-- example:glossary-storage-value-history-caller -->
 
 </details>
 
@@ -6395,9 +5811,9 @@ Compare the supplied Arc handles by allocation identity. The selected operation 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Resolve](#word-authoring-runtime-app-resolve). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Resolve`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-131-131 -->
+<!-- example:glossary-runtime-identical-caller -->
 
 </details>
 
@@ -6435,9 +5851,9 @@ Return an ErrorData allocation address as `usize` for diagnostic deduplication.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Append](#word-authoring-runtime-error-append). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Append`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-105-105 -->
+<!-- example:glossary-runtime-error-identify-caller -->
 
 </details>
 
@@ -6454,9 +5870,9 @@ Set an unstarted invocation's process ID while holding its process-group gate; f
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Supervise](#word-authoring-runtime-app-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-294-294 -->
+<!-- example:glossary-runtime-invocation-identify-caller -->
 
 </details>
 
@@ -6473,9 +5889,9 @@ Borrow an Rc-backed value and return the address of its allocation converted to 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Reach](#word-authoring-storage-pointer-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-148-148 -->
+<!-- example:glossary-storage-identify-caller -->
 
 </details>
 
@@ -6492,9 +5908,9 @@ Mutably reborrow the visited-error identity set in the second traversal-context 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Accumulate](#word-authoring-runtime-error-accumulate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Accumulate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-95-95 -->
+<!-- example:glossary-runtime-error-identities-caller -->
 
 </details>
 
@@ -6511,28 +5927,9 @@ Read the selected native child process's optional process ID. The selected opera
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-104-104 -->
-
-</details>
-
-### Storage.Function.Identity
-
-<a id="word-authoring-storage-function-identity"></a>
-
-<!-- word:authoring:Storage.Function.Identity -->
-
-Pair a prepared capture environment with a callable cast to its supplied concrete native signature.
-
-<!-- word-definition:authoring:Storage.Function.Identity -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-54-54 -->
+<!-- example:glossary-runtime-supervision-identity-caller -->
 
 </details>
 
@@ -6596,13 +5993,13 @@ Construct a runtime Error from a native IO error's display bytes and retain that
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Host.Error.Import`. They select this canonical meaning.
+This statement is used inside `Runtime.App.Launch`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-app-242-242 -->
+<!-- example:glossary-runtime-error-import-caller -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Host.Error.Import`. They select this canonical meaning.
 
 ### In
 
@@ -6629,9 +6026,9 @@ Name the Storage namespace for checking numeric indices against the native index
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Index.Check](#word-authoring-storage-index-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Index.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-26-26 -->
+<!-- example:glossary-storage-index-caller -->
 
 </details>
 
@@ -6648,9 +6045,9 @@ Construct a native `RuntimeState` value with `owned` set to `Owned`, `cleanup_er
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Initialize](#word-authoring-runtime-initialize). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Initialize`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-224-224 -->
+<!-- example:glossary-runtime-initial-caller -->
 
 </details>
 
@@ -6667,9 +6064,9 @@ Construct initial runtime state with empty owned-invocation and cleanup-error ma
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Assemble](#word-authoring-runtime-assemble). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Assemble`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-246-246 -->
+<!-- example:glossary-runtime-initialize-caller -->
 
 </details>
 
@@ -6686,9 +6083,9 @@ Declare the native `RuntimeInner` record with fields `companion_directory: Resul
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Gather](#word-authoring-runtime-gather). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Gather`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-233-233 -->
+<!-- example:glossary-runtime-inner-caller -->
 
 </details>
 
@@ -6706,44 +6103,6 @@ Name an ordered Function parameter or a typed binding supplied to a structured P
 
 Function calls check input count and types. A Process input belongs only to its selected body, with native borrow and move checks at compilation. These supported bindings introduce neither an untyped argument list nor an implicit clone.
 
-### Runtime.App.Input
-
-<a id="word-authoring-runtime-app-input"></a>
-
-<!-- word:authoring:Runtime.App.Input -->
-
-Set the selected child command's standard-input configuration to the supplied stream. The selected operation is `Command.stdin(Stream)`.
-
-<!-- word-definition:authoring:Runtime.App.Input -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-app-235-235 -->
-
-</details>
-
-### Runtime.App.Insert
-
-<a id="word-authoring-runtime-app-insert"></a>
-
-<!-- word:authoring:Runtime.App.Insert -->
-
-Insert Invocation under Sequence in the selected native collection and discard the replaced value. The selected operation is `Values.insert(Sequence, Invocation)`.
-
-<!-- word-definition:authoring:Runtime.App.Insert -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.App.Supervise](#word-authoring-runtime-app-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-app-298-298 -->
-
-</details>
-
 ### Runtime.Insert
 
 <a id="word-authoring-runtime-insert"></a>
@@ -6757,9 +6116,9 @@ Insert the supplied value only when the selected native map entry is vacant. The
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Record](#word-authoring-runtime-invocation-record). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Record`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-365-365 -->
+<!-- example:glossary-runtime-insert-caller -->
 
 </details>
 
@@ -6776,9 +6135,9 @@ Insert the supplied value or key/value pair into the selected native collection 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Collect](#word-authoring-storage-map-collect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Collect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-114-114 -->
+<!-- example:glossary-storage-insert-caller -->
 
 </details>
 
@@ -6814,9 +6173,9 @@ Borrow the slice of child Errors retained by an Error.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Remember](#word-authoring-runtime-error-remember). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Remember`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-89-89 -->
+<!-- example:glossary-runtime-error-inspect-caller -->
 
 </details>
 
@@ -6833,9 +6192,9 @@ Check the supplied companion path using the native executable-validation operati
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-35-35 -->
+<!-- example:glossary-runtime-path-inspect-caller -->
 
 </details>
 
@@ -6852,9 +6211,9 @@ Convert a child wait result into an optional exit code, appending attributed wai
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Complete](#word-authoring-runtime-supervision-complete). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Complete`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-75-75 -->
+<!-- example:glossary-runtime-supervision-inspect-caller -->
 
 </details>
 
@@ -6871,9 +6230,9 @@ Visit values in iterator order and apply Examine to each item, discarding succes
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Create](#word-authoring-storage-list-create). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.List.Create`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-46-46 -->
+<!-- example:glossary-storage-inspect-caller -->
 
 </details>
 
@@ -6890,28 +6249,9 @@ Install signal subscriptions, assemble a runtime from supplied host dependencies
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Open](#word-authoring-runtime-open). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Open`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-46-46 -->
-
-</details>
-
-### Storage.Integral
-
-<a id="word-authoring-storage-integral"></a>
-
-<!-- word:authoring:Storage.Integral -->
-
-Cast the supplied value to the explicitly supplied native type with Rust's `as` operator.
-
-<!-- word-definition:authoring:Storage.Integral -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Storage.Identify](#word-authoring-storage-identify). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-collections-128-128 -->
+<!-- example:glossary-runtime-install-caller -->
 
 </details>
 
@@ -6928,9 +6268,9 @@ Cast a shared native error to the Arc-backed Error + Send + Sync interface.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Explain](#word-authoring-runtime-error-explain). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Explain`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-35-35 -->
+<!-- example:glossary-runtime-error-interface-caller -->
 
 </details>
 
@@ -6947,9 +6287,9 @@ Map signal status one to an `application output pipe closed` Error and other sta
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Signals.Watch](#word-authoring-runtime-signals-watch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Signals.Watch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-18-18 -->
+<!-- example:glossary-runtime-signals-interpret-caller -->
 
 </details>
 
@@ -6966,9 +6306,9 @@ Borrow `Value.invocation` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Fetch](#word-authoring-runtime-app-fetch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Fetch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-74-74 -->
+<!-- example:glossary-runtime-app-invocation-caller -->
 
 </details>
 
@@ -6985,9 +6325,9 @@ Declare the native `Invocation` record with fields `app: std::sync::Weak<App>`, 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Publish](#word-authoring-runtime-invocation-publish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Publish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-374-374 -->
+<!-- example:glossary-runtime-invocation-caller -->
 
 </details>
 
@@ -7003,13 +6343,15 @@ Apply a selected Function target to its ordered, resolved argument atoms.
 
 **Usage and example.** The `Identity Message as "Nested"` call in the [complete Function example](../examples/composed-functions.l) uses the selected Function.Invoke definition. An author normally invokes the Function's own verb. Its Target and Arguments atoms are compiler-bound references, not an executable body hidden in text. [Selection tests](../../lyger/function_composition_test.go) establish that this implementation controls emitted calls.
 
+Existing qualified aliases: `Storage.Routine.Invoke`. They select this canonical meaning.
+
 ### Storage.Invoke
 
 <a id="word-authoring-storage-invoke"></a>
 
 <!-- word:authoring:Storage.Invoke -->
 
-Bind a generated callable pair, retain its capture environment, borrow the execution context, await its typed invocation, and select its Continue or Break outcome.
+Evaluate the selected Function value once, copy its environment, borrow the context, construct and await its invocation, then propagate failure and select the Continue payload or the enclosing caller’s Exit.
 
 <!-- word-definition:authoring:Storage.Invoke -->
 
@@ -7078,9 +6420,9 @@ Borrow the selected collection and obtain its native iterator. The selected oper
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Reach](#word-authoring-storage-environment-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-46-46 -->
+<!-- example:glossary-storage-iterate-caller -->
 
 </details>
 
@@ -7097,9 +6439,9 @@ Iterate the supplied native iterable, bind each item under the supplied label, a
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/bindings.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/bindings.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-bindings-8-8 -->
+<!-- example:glossary-storage-apply-caller -->
 
 </details>
 
@@ -7116,11 +6458,9 @@ Describe a lending Storage.Routine with lifetime `'a` and `I: IntoIterator<Item 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `Storage.Value.Search`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Value.Search](#word-authoring-storage-value-search). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-traversal-16-16 -->
+<!-- example:glossary-storage-iterative-caller -->
 
 </details>
 
@@ -7137,9 +6477,9 @@ Consume the selected collection into its owning iterator. The selected operation
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Trace](#word-authoring-runtime-error-trace). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Trace`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-51-51 -->
+<!-- example:glossary-runtime-error-iterator-caller -->
 
 </details>
 
@@ -7160,9 +6500,9 @@ Convert a completed capture task into shared bytes and an optional Error. A task
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-113-113 -->
+<!-- example:glossary-runtime-capture-join-caller -->
 
 </details>
 
@@ -7179,9 +6519,9 @@ Return None for an empty error list, preserve its sole Error for a singleton, or
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Diagnose](#word-authoring-runtime-diagnose). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Diagnose`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-173-173 -->
+<!-- example:glossary-runtime-error-join-caller -->
 
 </details>
 
@@ -7191,16 +6531,16 @@ This statement is used inside [Runtime.Diagnose](#word-authoring-runtime-diagnos
 
 <!-- word:authoring:Runtime.Join -->
 
-Visit supplied values in order, call the selected action for each value and await its future before advancing to the next item.
+Visit the supplied invocations in order, constructing and awaiting each callback future before advancing. Reap uses a complete settle pass followed by a complete completion pass.
 
 <!-- word-definition:authoring:Runtime.Join -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Reap](#word-authoring-runtime-reap). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Reap`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-275-275 -->
+<!-- example:glossary-runtime-invocation-settle-caller -->
 
 </details>
 
@@ -7217,9 +6557,9 @@ Append Path to the native Parent path and return the resulting owned path throug
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-34-34 -->
+<!-- example:glossary-runtime-path-join-caller -->
 
 </details>
 
@@ -7236,9 +6576,9 @@ Join the byte sequences in Values with the supplied Separator byte sequence usin
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Text.Join](#word-authoring-storage-text-join). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Text.Join`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-113-113 -->
+<!-- example:glossary-storage-join-caller -->
 
 </details>
 
@@ -7255,9 +6595,9 @@ Join byte-vector parts with the exact UTF-8 bytes of the supplied separator stri
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Describe](#word-authoring-storage-map-describe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Describe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-134-134 -->
+<!-- example:glossary-storage-text-join-caller -->
 
 </details>
 
@@ -7278,9 +6618,9 @@ Send a leader-termination request to the invocation supervisor and await its rep
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Settle](#word-authoring-runtime-invocation-settle). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Settle`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-265-265 -->
+<!-- example:glossary-runtime-invocation-kill-caller -->
 
 </details>
 
@@ -7297,9 +6637,9 @@ Bind the native constant `nix::sys::signal::Signal::SIGKILL` for this compositio
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-320-320 -->
+<!-- example:glossary-runtime-kill-caller -->
 
 </details>
 
@@ -7320,9 +6660,9 @@ Borrow `Value.source` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Describe](#word-authoring-runtime-app-describe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Describe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-49-49 -->
+<!-- example:glossary-runtime-app-label-caller -->
 
 </details>
 
@@ -7339,9 +6679,9 @@ Obtain a native path-display adapter for diagnostic formatting. The selected ope
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-37-37 -->
+<!-- example:glossary-runtime-path-context-caller -->
 
 </details>
 
@@ -7358,9 +6698,9 @@ Locate and validate an App companion, configure a native child with null stdin a
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Run](#word-authoring-runtime-app-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-285-285 -->
+<!-- example:glossary-runtime-app-launch-caller -->
 
 </details>
 
@@ -7377,9 +6717,9 @@ Name the Storage namespace containing native layout declarations for environment
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/values.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/values.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-104-104 -->
+<!-- example:glossary-storage-layout-caller -->
 
 </details>
 
@@ -7415,11 +6755,9 @@ Add explicitly supplied native lifetime parameters to a Storage.Routine while re
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `builtins/eng/storage/execution.l`. Its enclosing native signature and preceding bindings remain required.
 
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-33-33 -->
+<!-- example:glossary-storage-lending-caller -->
 
 </details>
 
@@ -7436,9 +6774,9 @@ Read the selected native value's length. The selected operation is `Value.len()`
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Attach](#word-authoring-runtime-error-attach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Attach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-55-55 -->
+<!-- example:glossary-storage-length-caller -->
 
 </details>
 
@@ -7455,11 +6793,9 @@ Describe a lending Storage.Routine with a native type parameter `T` and lifetime
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `Storage.Access`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Access](#word-authoring-storage-access). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-execution-35-35 -->
+<!-- example:glossary-storage-lent-caller -->
 
 </details>
 
@@ -7496,9 +6832,9 @@ Mutably borrow `Value.termination_deadline` so the caller can update that exact 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-326-326 -->
+<!-- example:glossary-runtime-invocation-delay-caller -->
 
 </details>
 
@@ -7515,9 +6851,9 @@ Set an absent cleanup deadline or replace an existing deadline with the earlier 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Revise](#word-authoring-runtime-revise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Revise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-284-284 -->
+<!-- example:glossary-runtime-amend-caller -->
 
 </details>
 
@@ -7534,9 +6870,9 @@ Convert the native maximum usize value to f64 for the exclusive numeric-index ra
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Index.Check](#word-authoring-storage-index-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Index.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-26-26 -->
+<!-- example:glossary-storage-index-caller -->
 
 </details>
 
@@ -7587,9 +6923,9 @@ Declare the native `LList` record with fields `element: Vec<u64>`, `values: Vec<
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/values.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/values.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-79-79 -->
+<!-- example:glossary-storage-layout-list-caller -->
 
 </details>
 
@@ -7606,9 +6942,9 @@ Declare the native `LList` record with fields `element: Vec<u64>`, `values: Vec<
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Read](#word-authoring-storage-list-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.List.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-63-63 -->
+<!-- example:glossary-storage-list-caller -->
 
 </details>
 
@@ -7625,9 +6961,9 @@ Observe a completed shutdown result or wait for a notification change; store an 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Clean](#word-authoring-runtime-clean). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Clean`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-131-131 -->
+<!-- example:glossary-runtime-listen-caller -->
 
 </details>
 
@@ -7663,9 +6999,9 @@ Reject blank or nonrelative companion paths, join an allowed path to the orchest
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Build](#word-authoring-runtime-app-build). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Build`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-65-65 -->
+<!-- example:glossary-runtime-app-locate-caller -->
 
 </details>
 
@@ -7682,9 +7018,9 @@ Locate and canonicalize the orchestrator executable, then return its parent dire
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Assemble](#word-authoring-runtime-assemble). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Assemble`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-245-245 -->
+<!-- example:glossary-runtime-locate-caller -->
 
 </details>
 
@@ -7701,9 +7037,9 @@ Look up a native collection element by the supplied index and return an optional
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Update](#word-authoring-storage-environment-update). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Update`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-98-98 -->
+<!-- example:glossary-storage-locate-caller -->
 
 </details>
 
@@ -7720,9 +7056,9 @@ Attempt to acquire the selected asynchronous mutex immediately, returning its na
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Identify](#word-authoring-runtime-invocation-identify). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Identify`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-268-268 -->
+<!-- example:glossary-runtime-invocation-gate-caller -->
 
 </details>
 
@@ -7739,28 +7075,9 @@ Expand the supplied body as a native unbounded loop; the body owns termination a
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `runtime/eng/process.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `runtime/eng/process.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-162-162 -->
-
-</details>
-
-### Runtime.Error.Lossy
-
-<a id="word-authoring-runtime-error-lossy"></a>
-
-<!-- word:authoring:Runtime.Error.Lossy -->
-
-View bytes as native text, replacing invalid UTF-8 sequences where necessary. The selected operation is `String::from_utf8_lossy(&Value)`.
-
-<!-- word-definition:authoring:Runtime.Error.Lossy -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Attach](#word-authoring-runtime-error-attach). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-58-58 -->
+<!-- example:glossary-storage-loop-caller -->
 
 </details>
 
@@ -7833,9 +7150,9 @@ Construct an empty native ordered map with key and value types selected by its e
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Initialize](#word-authoring-runtime-initialize). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Initialize`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-223-223 -->
+<!-- example:glossary-runtime-map-caller -->
 
 </details>
 
@@ -7852,9 +7169,9 @@ Declare the native `LMap` record with fields `element: Vec<u64>`, `values: std::
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/values.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/values.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-104-104 -->
+<!-- example:glossary-storage-layout-caller -->
 
 </details>
 
@@ -7871,28 +7188,9 @@ Declare the native `LMap` record with fields `element: Vec<u64>`, `values: std::
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Map.Read](#word-authoring-storage-map-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Map.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-95-95 -->
-
-</details>
-
-### Runtime.Error.Mark
-
-<a id="word-authoring-runtime-error-mark"></a>
-
-<!-- word:authoring:Runtime.Error.Mark -->
-
-Assign true through the supplied mutable flag reference.
-
-<!-- word-definition:authoring:Runtime.Error.Mark -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Append](#word-authoring-runtime-error-append). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-120-120 -->
+<!-- example:glossary-storage-environment-values-caller -->
 
 </details>
 
@@ -7909,9 +7207,9 @@ Mutably borrow `Value.claim` so the caller can update that exact native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Claim](#word-authoring-runtime-invocation-claim). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Claim`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-104-104 -->
+<!-- example:glossary-runtime-invocation-mark-caller -->
 
 </details>
 
@@ -7928,28 +7226,9 @@ Accept an actual signature when it exactly equals the expected signature or the 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Check](#word-authoring-storage-value-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-58-58 -->
-
-</details>
-
-### Runtime.Error.Message
-
-<a id="word-authoring-runtime-error-message"></a>
-
-<!-- word:authoring:Runtime.Error.Message -->
-
-Construct an empty native vector with the type required by its declared binding or enclosing composition. The selected operation is `Vec::new()`.
-
-<!-- word-definition:authoring:Runtime.Error.Message -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Join](#word-authoring-runtime-error-join). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-162-162 -->
+<!-- example:glossary-storage-signature-match-caller -->
 
 </details>
 
@@ -7966,9 +7245,9 @@ Return the lesser of the supplied native values. The selected operation is `Left
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Limit](#word-authoring-runtime-limit). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Limit`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-298-298 -->
+<!-- example:glossary-runtime-minimum-caller -->
 
 </details>
 
@@ -7985,9 +7264,9 @@ Bind the native constant `nix::libc::ESRCH` for this composition.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Normalize](#word-authoring-runtime-normalize). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Normalize`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-291-291 -->
+<!-- example:glossary-runtime-missing-caller -->
 
 </details>
 
@@ -8004,9 +7283,9 @@ Construct a native closure that calls the supplied deadline visitor with the cur
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Revise](#word-authoring-runtime-revise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Revise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-284-284 -->
+<!-- example:glossary-runtime-amend-caller -->
 
 </details>
 
@@ -8023,11 +7302,9 @@ Describe a Storage.Binding as a mutable native binding while preserving its init
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Binding](word-glossary.md#word-authoring-storage-binding).
+This statement is used inside `Runtime.Error.Render`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Count](#word-authoring-runtime-count). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-app-180-180 -->
+<!-- example:glossary-storage-mutable-caller -->
 
 </details>
 
@@ -8044,15 +7321,34 @@ Construct a synchronous native mutex around the supplied value. The selected ope
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Assemble](#word-authoring-runtime-assemble). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Assemble`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-255-255 -->
+<!-- example:glossary-runtime-mutex-caller -->
 
 </details>
 
 ## N
 
 <a id="glossary-n"></a>
+
+### Runtime.Path.Name
+
+<a id="word-authoring-runtime-path-name"></a>
+
+<!-- word:authoring:Runtime.Path.Name -->
+
+Expose a Path as a borrowed native OsStr. The separate Vacancy predicate checks whether that representation is empty.
+
+<!-- word-definition:authoring:Runtime.Path.Name -->
+
+<details class="l-word-usage" data-pagefind-ignore>
+<summary>Usage example</summary>
+
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
+
+<!-- example:glossary-runtime-path-name-caller -->
+
+</details>
 
 ### Runtime.Error.Native
 
@@ -8067,9 +7363,9 @@ Obtain the selected value's native borrowed view, preserving any optional wrappe
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Trace](#word-authoring-runtime-error-trace). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Trace`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-48-48 -->
+<!-- example:glossary-runtime-error-native-caller -->
 
 </details>
 
@@ -8086,9 +7382,9 @@ Bind the native constant `crate::runtime::host::NativeDependencies` for this com
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Open](#word-authoring-runtime-open). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Open`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-43-43 -->
+<!-- example:glossary-runtime-dependencies-caller -->
 
 </details>
 
@@ -8148,9 +7444,9 @@ Preserve successful signal results, treat the native missing-process error as su
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-321-321 -->
+<!-- example:glossary-runtime-normalize-caller -->
 
 </details>
 
@@ -8183,9 +7479,9 @@ Construct the native unit value `()`.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Observe](#word-authoring-runtime-invocation-observe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Observe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-122-122 -->
+<!-- example:glossary-storage-nothing-caller -->
 
 </details>
 
@@ -8202,9 +7498,9 @@ Borrow `Value.shutdown_done` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Reap](#word-authoring-runtime-reap). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Reap`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-281-281 -->
+<!-- example:glossary-runtime-inner-notification-caller -->
 
 </details>
 
@@ -8221,9 +7517,9 @@ Borrow `Value.drain_deadline` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Bound](#word-authoring-runtime-invocation-bound). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Bound`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-303-303 -->
+<!-- example:glossary-runtime-invocation-notification-caller -->
 
 </details>
 
@@ -8240,13 +7536,13 @@ Replace a watch channel's current value and notify receivers, discarding the pre
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Invocation.Notify`. They select this canonical meaning.
+This statement is used inside `Runtime.Gather`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Gather](#word-authoring-runtime-gather). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-shutdown-234-234 -->
+<!-- example:glossary-runtime-notify-caller -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Invocation.Notify`. They select this canonical meaning.
 
 ### Noun
 
@@ -8273,9 +7569,9 @@ Read the current native monotonic instant. The selected operation is `tokio::tim
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-108-108 -->
+<!-- example:glossary-runtime-now-caller -->
 
 </details>
 
@@ -8308,9 +7604,9 @@ Construct the native null standard-stream configuration. The selected operation 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Launch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-234-234 -->
+<!-- example:glossary-runtime-app-caller -->
 
 </details>
 
@@ -8327,9 +7623,9 @@ Name the Storage namespace for displaying the explicit absence value.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Null.Render](#word-authoring-storage-null-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Null.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-42-42 -->
+<!-- example:glossary-storage-null-caller -->
 
 </details>
 
@@ -8384,9 +7680,9 @@ Name the Storage namespace for native finite/fraction checks and canonical Numbe
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Number.Render](#word-authoring-storage-number-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Number.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-27-27 -->
+<!-- example:glossary-storage-number-caller -->
 
 </details>
 
@@ -8435,9 +7731,9 @@ Continue after a successful deadline-change notice, or store `capture deadline n
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Advance](#word-authoring-runtime-capture-advance). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Advance`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-70-70 -->
+<!-- example:glossary-runtime-capture-observe-caller -->
 
 </details>
 
@@ -8454,9 +7750,9 @@ Invoke the selected host checkpoint hook with the supplied event and a retained 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Stop](#word-authoring-runtime-app-stop). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Stop`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-148-148 -->
+<!-- example:glossary-runtime-checkpoint-caller -->
 
 </details>
 
@@ -8473,9 +7769,9 @@ Borrow the current watch-channel value and return its native clone.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Listen](#word-authoring-runtime-listen). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Listen`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-115-115 -->
+<!-- example:glossary-runtime-observe-caller -->
 
 </details>
 
@@ -8485,7 +7781,7 @@ This statement is used inside [Runtime.Listen](#word-authoring-runtime-listen). 
 
 <!-- word:authoring:Storage.Entry.Observe -->
 
-Construct the generated main future, drive it through the runtime entry operation, and return the resulting status through the selected caller return definition.
+Call Main once, construct its runtime execution, await the resulting status and apply the supplied Return definition.
 
 <!-- word-definition:authoring:Storage.Entry.Observe -->
 
@@ -8523,13 +7819,14 @@ Create native host dependencies and pinned stdout/stderr outputs, then install t
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Host.Open`. They select this canonical meaning.
 
 The wrapper below imports `Storage` and `Runtime` and is a member of the example `GlossaryExamples` Dictionary. Its declared native inputs, outputs, lifetime/generic descriptors, and the original selected module's native types/support are required. Lyger resolves the source and composes its library AML; this fragment has no native compilation or execution claim.
 
 <!-- example:glossary-native-runtime-open -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Host.Open`. They select this canonical meaning.
 
 ### Runtime.App.Operation
 
@@ -8544,9 +7841,9 @@ Mutably borrow `Value.operation_error` so the caller can update that exact nativ
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Build](#word-authoring-runtime-app-build). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Build`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-66-66 -->
+<!-- example:glossary-runtime-app-operation-caller -->
 
 </details>
 
@@ -8563,25 +7860,6 @@ Name the Storage dictionary namespace containing operations that compose native 
 **Usage:** After ``Use Storage from `storage`.`` qualify a member such as `Storage.Option.Select`. Option is a Dictionary namespace, not an L carrier type: the native Function signature uses `Option<T>`, with a real payload type in place of `T`.
 
 **Example:** `Selection.Choose` in [Native callers](#context-storage--native-callers) receives `Option<u64>` and selects its Some or None case. The qualified member is [Option.Select](#word-authoring-storage-option-select). Result's two payload-bearing outcomes belong to [Result](#word-authoring-storage-result).
-
-### Storage.Optional
-
-<a id="word-authoring-storage-optional"></a>
-
-<!-- word:authoring:Storage.Optional -->
-
-Consume a Result and return its successful payload as Some, discarding an error payload as None. The selected operation is `Value.ok()`.
-
-<!-- word-definition:authoring:Storage.Optional -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Capture.Receive](#word-authoring-runtime-capture-receive). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-capture-42-42 -->
-
-</details>
 
 ### Or
 
@@ -8610,9 +7888,9 @@ Select the native field `Value.next` by value. Its declared type determines whet
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Count](#word-authoring-runtime-count). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Count`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-181-181 -->
+<!-- example:glossary-runtime-ordinal-caller -->
 
 </details>
 
@@ -8642,43 +7920,19 @@ Introduce a Function argument, with a separately configured deflective role that
 
 **Partial support.** The [configured deflective role](../../lexicon/eng/vocabulary.json) has no corresponding operation or dedicated phrase in the current grammar. Only the generic Function argument use is implemented. Use the [Output member](#word-builtin-output) or IO operations for their distinct documented behavior.
 
-### Storage.Entry.Outcome
+### App.Output
 
-<a id="word-authoring-storage-entry-outcome"></a>
+<a id="word-builtin-output"></a>
 
-<!-- word:authoring:Storage.Entry.Outcome -->
+<!-- word:builtin:output -->
 
-Drive the prepared main future through runtime_run, await its result, and bind the orchestrator status.
+Read the finalized raw standard-output bytes of an App invocation as Text.
 
-<!-- word-definition:authoring:Storage.Entry.Outcome -->
+<!-- word-definition:builtin:output -->
 
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
+**Usage and example.** `Show Hello's Output` in the [first program](../guide/first-program.md#read-the-program) follows Execute. Assigning Output makes a snapshot, demonstrated by the [repeated-activation example](../../demo/paragraphs/repeated-activation.l). Function signature `Outputs` names result types instead. See [Function](#word-builtin-function).
 
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-84-84 -->
-
-</details>
-
-### Storage.Outcome
-
-<a id="word-authoring-storage-outcome"></a>
-
-<!-- word:authoring:Storage.Outcome -->
-
-Propagate a failed invocation result, extract ControlFlow.Continue's value, or execute the supplied exit composition for ControlFlow.Break.
-
-<!-- word-definition:authoring:Storage.Outcome -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/bindings.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-bindings-19-19 -->
-
-</details>
+Reading Output before finalization is fatal misuse. No hidden join occurs, and an already finalized read does not activate the continuation. The [result contract](../cli-build.md#invocation-and-results) covers availability, separate stderr capture and snapshots across reruns.
 
 ### IO.Output
 
@@ -8694,20 +7948,6 @@ Obtain a handle to the current process's standard-output stream without writing 
 
 **Example:** `Writing.Output` in [Native callers](#context-io--native-callers) returns the handle. Choose [Diagnostic](#word-stdlib-export-eng-io-io-diagnostic) for stderr, or use [Print](#word-stdlib-export-eng-io-io-print) when its rendering, newline and failure policy are wanted together.
 
-### App.Output
-
-<a id="word-builtin-output"></a>
-
-<!-- word:builtin:output -->
-
-Read the finalized raw standard-output bytes of an App invocation as Text.
-
-<!-- word-definition:builtin:output -->
-
-**Usage and example.** `Show Hello's Output` in the [first program](../guide/first-program.md#read-the-program) follows Execute. Assigning Output makes a snapshot, demonstrated by the [repeated-activation example](../../demo/paragraphs/repeated-activation.l). Function signature `Outputs` names result types instead. See [Function](#word-builtin-function).
-
-Reading Output before finalization is fatal misuse. No hidden join occurs, and an already finalized read does not activate the continuation. The [result contract](../cli-build.md#invocation-and-results) covers availability, separate stderr capture and snapshots across reruns.
-
 ### Runtime.Capture.Output
 
 <a id="word-authoring-runtime-capture-output"></a>
@@ -8721,9 +7961,9 @@ Convert the supplied bytes into a shared Arc-backed byte slice. The selected ope
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Share](#word-authoring-runtime-capture-share). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Share`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-33-33 -->
+<!-- example:glossary-runtime-capture-bytes-caller -->
 
 </details>
 
@@ -8733,18 +7973,16 @@ This statement is used inside [Runtime.Capture.Share](#word-authoring-runtime-ca
 
 <!-- word:authoring:Runtime.Output -->
 
-Describe Runtime.Pin's Pinner actor as a pinned box explicitly typed as the host Output interface.
+Describe Storage.Pin's Pinner actor as a pinned box explicitly typed as the host Output interface.
 
 <!-- word-definition:authoring:Runtime.Output -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Pinner](word-glossary.md#word-authoring-runtime-pin).
+This statement is used inside `Runtime.Open`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Open](#word-authoring-runtime-open). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-start-45-45 -->
+<!-- example:glossary-runtime-output-caller -->
 
 </details>
 
@@ -8761,9 +7999,9 @@ Borrow `Value.stdout` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Snapshot.Copy](#word-authoring-runtime-snapshot-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Snapshot.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-146-146 -->
+<!-- example:glossary-runtime-snapshot-output-caller -->
 
 </details>
 
@@ -8780,9 +8018,9 @@ Bind the native constant `crate::runtime::host::Stream::Stdout` for this composi
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-101-101 -->
+<!-- example:glossary-runtime-supervision-output-caller -->
 
 </details>
 
@@ -8818,9 +8056,9 @@ Mutably borrow `Value.outstanding` so the caller can update that exact native fi
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Acquire](#word-authoring-runtime-app-acquire). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Acquire`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-207-207 -->
+<!-- example:glossary-runtime-app-outstanding-caller -->
 
 </details>
 
@@ -8837,9 +8075,9 @@ Upgrade an App's weak runtime reference and return a runtime handle, or report `
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Read](#word-authoring-runtime-app-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-90-90 -->
+<!-- example:glossary-runtime-app-own-caller -->
 
 </details>
 
@@ -8856,9 +8094,9 @@ Upgrade an invocation's weak runtime owner, or return `invocation runtime is una
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Claim](#word-authoring-runtime-invocation-claim). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Claim`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-91-91 -->
+<!-- example:glossary-runtime-invocation-own-caller -->
 
 </details>
 
@@ -8875,9 +8113,9 @@ Copy the selected native slice into an owned vector. The selected operation is `
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Text.Own](#word-authoring-storage-text-own). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Text.Own`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-37-37 -->
+<!-- example:glossary-storage-own-caller -->
 
 </details>
 
@@ -8894,9 +8132,9 @@ Copy a borrowed native string's bytes into an owned byte vector.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.App.Render](#word-authoring-storage-app-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.App.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-47-47 -->
+<!-- example:glossary-storage-text-caller -->
 
 </details>
 
@@ -8913,72 +8151,15 @@ Obtain a borrowed iterator over the selected ordered map's values. The selected 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Gather](#word-authoring-runtime-gather). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Gather`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-235-235 -->
-
-</details>
-
-### Runtime.Supervision.Owned
-
-<a id="word-authoring-runtime-supervision-owned"></a>
-
-<!-- word:authoring:Runtime.Supervision.Owned -->
-
-Mutably borrow `Value.owned` so the caller can update that exact native field.
-
-<!-- word-definition:authoring:Runtime.Supervision.Owned -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Supervision.Complete](#word-authoring-runtime-supervision-complete). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-supervision-85-85 -->
+<!-- example:glossary-runtime-cloned-caller -->
 
 </details>
 
 ## P
 
 <a id="glossary-p"></a>
-
-### Storage.Context.Pair
-
-<a id="word-authoring-storage-context-pair"></a>
-
-<!-- word:authoring:Storage.Context.Pair -->
-
-Pair the previously retained runtime with the supplied program storage.
-
-<!-- word-definition:authoring:Storage.Context.Pair -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-48-48 -->
-
-</details>
-
-### Storage.Function.Pair
-
-<a id="word-authoring-storage-function-pair"></a>
-
-<!-- word:authoring:Storage.Function.Pair -->
-
-Propagate a failed prepared environment through `?`, then pair the successful environment with a concretely typed callable target.
-
-<!-- word-definition:authoring:Storage.Function.Pair -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-19-19 -->
-
-</details>
 
 ### Storage.Pair
 
@@ -8993,9 +8174,9 @@ Pair the left iterator with the right iterator in order, stopping when either it
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Create](#word-authoring-storage-environment-create). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Create`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-73-73 -->
+<!-- example:glossary-storage-pair-caller -->
 
 </details>
 
@@ -9012,11 +8193,9 @@ Describe Storage.Iteration as pair-destructuring iteration, or Storage.Apply's a
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Applier](word-glossary.md#word-authoring-storage-apply), [Iteration](word-glossary.md#word-authoring-storage-iteration).
+This statement is used inside `builtins/eng/storage/traversal.l`. Its enclosing native signature and preceding bindings remain required.
 
-This source-authoring fragment comes from `builtins/eng/storage/traversal.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-traversal-59-59 -->
+<!-- example:glossary-storage-paired-caller -->
 
 </details>
 
@@ -9033,28 +8212,9 @@ Borrow `Value.runtime` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Own](#word-authoring-runtime-app-own). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Own`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-18-18 -->
-
-</details>
-
-### Runtime.Error.Parent
-
-<a id="word-authoring-runtime-error-parent"></a>
-
-<!-- word:authoring:Runtime.Error.Parent -->
-
-Construct an owned vector from the supplied native array values. The selected operation is `Vec::from([Value])`.
-
-<!-- word-definition:authoring:Runtime.Error.Parent -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Attach](#word-authoring-runtime-error-attach). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-63-63 -->
+<!-- example:glossary-runtime-app-parent-caller -->
 
 </details>
 
@@ -9071,9 +8231,9 @@ Borrow `Value.runtime` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Own](#word-authoring-runtime-invocation-own). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Own`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-85-85 -->
+<!-- example:glossary-runtime-invocation-parent-caller -->
 
 </details>
 
@@ -9090,9 +8250,9 @@ Read the supplied path's optional parent path. The selected operation is `Path.p
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Locate](#word-authoring-runtime-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-217-217 -->
+<!-- example:glossary-runtime-parent-caller -->
 
 </details>
 
@@ -9109,9 +8269,9 @@ Obtain a mutable native path-component iterator. The selected operation is `Valu
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-29-29 -->
+<!-- example:glossary-runtime-path-parts-caller -->
 
 </details>
 
@@ -9128,9 +8288,9 @@ Borrow `Value.path` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Locate](#word-authoring-runtime-app-locate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Locate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-27-27 -->
+<!-- example:glossary-runtime-app-path-caller -->
 
 </details>
 
@@ -9147,47 +8307,9 @@ Copy the selected borrowed path into an owned PathBuf. The selected operation is
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Path.Admit](#word-authoring-runtime-path-admit). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Path.Admit`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-24-24 -->
-
-</details>
-
-### Storage.App.Path
-
-<a id="word-authoring-storage-app-path"></a>
-
-<!-- word:authoring:Storage.App.Path -->
-
-Construct an owned native companion PathBuf from the supplied path text and bind it under the declaration's generated path name.
-
-<!-- word-definition:authoring:Storage.App.Path -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-69-69 -->
-
-</details>
-
-### Storage.Function.Pending
-
-<a id="word-authoring-storage-function-pending"></a>
-
-<!-- word:authoring:Storage.Function.Pending -->
-
-Construct a move-capturing native future from the supplied body and bind it as `lPending`.
-
-<!-- word-definition:authoring:Storage.Function.Pending -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-12-12 -->
+<!-- example:glossary-runtime-path-caller -->
 
 </details>
 
@@ -9204,11 +8326,9 @@ Describe a Storage.Routine with the native generic bound `T: 'static`.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `Storage.Value.Restore`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Value.Restore](#word-authoring-storage-value-restore). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-control-44-44 -->
+<!-- example:glossary-storage-permanent-caller -->
 
 </details>
 
@@ -9225,9 +8345,9 @@ Select the native field `Value.claim` by value. Its declared type determines whe
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Claim](#word-authoring-runtime-invocation-claim). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Claim`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-100-100 -->
+<!-- example:glossary-runtime-invocation-phase-caller -->
 
 </details>
 
@@ -9244,47 +8364,28 @@ Select the native field `Value.pid` by value. Its declared type determines wheth
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-313-313 -->
+<!-- example:glossary-runtime-invocation-pid-caller -->
 
 </details>
 
-### Runtime.Pin
+### Storage.Pin
 
-<a id="word-authoring-runtime-pin"></a>
+<a id="word-authoring-storage-pin"></a>
 
-<!-- word:authoring:Runtime.Pin -->
+<!-- word:authoring:Storage.Pin -->
 
-Allocate and pin the supplied value in a native Box. The selected operation is `Box::pin(Value)`.
+Move the supplied value into a pinned Box and bind it to the supplied result label. Future construction and awaiting remain separate operations.
 
-<!-- word-definition:authoring:Runtime.Pin -->
+<!-- word-definition:authoring:Storage.Pin -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `runtime/eng/process.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `runtime/eng/process.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-16-16 -->
-
-</details>
-
-### Storage.Function.Pinned
-
-<a id="word-authoring-storage-function-pinned"></a>
-
-<!-- word:authoring:Storage.Function.Pinned -->
-
-Pin the prepared `lPending` future in a Box and bind it as `lPinned`.
-
-<!-- word-definition:authoring:Storage.Function.Pinned -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-12-12 -->
+<!-- example:glossary-storage-pin-caller -->
 
 </details>
 
@@ -9301,9 +8402,9 @@ Construct the native piped standard-stream configuration. The selected operation
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Launch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-236-236 -->
+<!-- example:glossary-runtime-app-pipe-caller -->
 
 </details>
 
@@ -9348,9 +8449,9 @@ Declare the native `LPointer` record with fields `element: Vec<u64>`, `target: s
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/values.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/values.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-3-3 -->
+<!-- example:glossary-storage-layout-pointer-caller -->
 
 </details>
 
@@ -9367,9 +8468,9 @@ Declare the native `LPointer` record with fields `element: Vec<u64>`, `target: s
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Reach](#word-authoring-storage-pointer-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-147-147 -->
+<!-- example:glossary-storage-pointer-caller -->
 
 </details>
 
@@ -9386,9 +8487,9 @@ Race the child wait against a leader-termination request; store a completed wait
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Await](#word-authoring-runtime-supervision-await). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Await`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-45-46 -->
+<!-- example:glossary-runtime-supervision-poll-caller -->
 
 </details>
 
@@ -9405,11 +8506,9 @@ Describe a Storage.Routine with the explicitly named native type parameter `T`.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `Storage.Identify`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Identify](#word-authoring-storage-identify). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-collections-126-126 -->
+<!-- example:glossary-storage-polymorphic-caller -->
 
 </details>
 
@@ -9445,9 +8544,9 @@ Borrow `Value.selected` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Select](#word-authoring-runtime-app-select). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Select`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-99-99 -->
+<!-- example:glossary-runtime-app-preference-caller -->
 
 </details>
 
@@ -9464,9 +8563,9 @@ Build an ordinary decimal string with `0.`, the required leading zero digits, an
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Expand](#word-authoring-formatting-expand). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Expand`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-93-93 -->
+<!-- example:glossary-formatting-prepend-caller -->
 
 </details>
 
@@ -9483,9 +8582,9 @@ Mutably reborrow the diagnostic separator flag in the third traversal-context co
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Accumulate](#word-authoring-runtime-error-accumulate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Accumulate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-96-96 -->
+<!-- example:glossary-runtime-error-presence-caller -->
 
 </details>
 
@@ -9502,28 +8601,9 @@ Check whether the selected native Option contains a payload. The selected operat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Terminate](#word-authoring-runtime-supervision-terminate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Terminate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-12-12 -->
-
-</details>
-
-### Storage.Option.Present
-
-<a id="word-authoring-storage-option-present"></a>
-
-<!-- word:authoring:Storage.Option.Present -->
-
-Provide a Some payload pattern with its supplied binding label and body for the owning optional-value selection.
-
-<!-- word-definition:authoring:Storage.Option.Present -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/control.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-control-17-17 -->
+<!-- example:glossary-storage-presence-caller -->
 
 </details>
 
@@ -9540,9 +8620,9 @@ Wrap the supplied value in the native Some variant. The selected operation is `S
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Capture](#word-authoring-runtime-app-capture). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Capture`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-87-87 -->
+<!-- example:glossary-storage-present-caller -->
 
 </details>
 
@@ -9577,9 +8657,9 @@ Invoke a callback with one item and context, then pass its Boolean Result to Dec
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/traversal.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/traversal.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-3-3 -->
+<!-- example:glossary-storage-probe-caller -->
 
 </details>
 
@@ -9614,28 +8694,28 @@ Mutably borrow `Value.pid` so the caller can update that exact native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Identify](#word-authoring-runtime-invocation-identify). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Identify`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-269-269 -->
+<!-- example:glossary-runtime-invocation-process-caller -->
 
 </details>
 
-### Runtime.App.Processes
+### Runtime.State.Processes
 
-<a id="word-authoring-runtime-app-processes"></a>
+<a id="word-authoring-runtime-state-processes"></a>
 
-<!-- word:authoring:Runtime.App.Processes -->
+<!-- word:authoring:Runtime.State.Processes -->
 
-Mutably borrow `Value.owned` so the caller can update that exact native field.
+Borrow the RuntimeState owned-invocation map mutably, preserving the original map identity.
 
-<!-- word-definition:authoring:Runtime.App.Processes -->
+<!-- word-definition:authoring:Runtime.State.Processes -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Supervise](#word-authoring-runtime-app-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-297-297 -->
+<!-- example:glossary-runtime-state-processes-caller -->
 
 </details>
 
@@ -9652,11 +8732,9 @@ Describe a Storage.Binding whose initializer is a composed native value expressi
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Binding](word-glossary.md#word-authoring-storage-binding).
+This statement is used inside `Storage.Value.Format`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Value.Format](#word-authoring-storage-value-format). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-values-75-75 -->
+<!-- example:glossary-storage-produced-caller -->
 
 </details>
 
@@ -9692,9 +8770,9 @@ Declare the native `LProgram` record with fields `apps: Vec<std::sync::Arc<runti
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Program.Select](#word-authoring-storage-program-select). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Program.Select`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-61-61 -->
+<!-- example:glossary-storage-program-apps-caller -->
 
 </details>
 
@@ -9711,9 +8789,9 @@ Bind the native constant `crate::runtime::host::Checkpoint::SuccessfulStart` for
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Run](#word-authoring-runtime-app-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-288-288 -->
+<!-- example:glossary-runtime-app-progress-caller -->
 
 </details>
 
@@ -9730,9 +8808,9 @@ Downcast a borrowed erased value to the declared native type and return its borr
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Restore](#word-authoring-storage-value-restore). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Restore`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-47-47 -->
+<!-- example:glossary-storage-project-caller -->
 
 </details>
 
@@ -9749,9 +8827,9 @@ Attempt a borrowed downcast from erased Any storage to the native type selected 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Project](#word-authoring-storage-project). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Project`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-32-32 -->
+<!-- example:glossary-storage-projection-caller -->
 
 </details>
 
@@ -9768,9 +8846,9 @@ Search a value with a fresh visited set and reject it with the supplied message 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Update](#word-authoring-storage-pointer-update). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Update`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-164-164 -->
+<!-- example:glossary-storage-value-protect-caller -->
 
 </details>
 
@@ -9799,9 +8877,9 @@ Bind the native constant `crate::runtime::host::Checkpoint::PrePublication` for 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Publish](#word-authoring-runtime-invocation-publish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Publish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-374-374 -->
+<!-- example:glossary-runtime-invocation-caller -->
 
 </details>
 
@@ -9830,9 +8908,9 @@ Run the result-publication checkpoint, store the finalized Snapshot under the in
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Complete](#word-authoring-runtime-supervision-complete). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Complete`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-83-83 -->
+<!-- example:glossary-runtime-invocation-publish-caller -->
 
 </details>
 
@@ -9868,9 +8946,9 @@ Bind the exact colon-space byte slice used when attaching stderr.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Attach](#word-authoring-runtime-error-attach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Attach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-60-60 -->
+<!-- example:glossary-runtime-error-punctuation-caller -->
 
 </details>
 
@@ -9887,9 +8965,9 @@ Append the supplied value to the selected native vector. The selected operation 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Settle](#word-authoring-runtime-invocation-settle). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Settle`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-264-264 -->
+<!-- example:glossary-runtime-push-caller -->
 
 </details>
 
@@ -9903,7 +8981,7 @@ Insert a value into a supported runtime destination with its required element or
 
 <!-- word-definition:builtin:put -->
 
-**Usage and example.** `Put 7 in items` appends to a List. The [value program](../examples/word-values.l) also supplies a Map key and updates a Pointer target. Put does not mutate vocabulary Dictionaries.
+**Usage and example.** `Put 7 in items` appends to a List. The [value program](../examples/word-values.l) also supplies a Map key and updates a Pointer target. `7 is Put in items` uses the same checked List update. Passive Put also accepts the existing Map-key phrase. Pointer updates remain imperative. Put does not mutate vocabulary Dictionaries.
 
 ## Q
 
@@ -9922,9 +9000,9 @@ Take the runtime's signal-watcher task if present, abort it, and await its termi
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-195-195 -->
+<!-- example:glossary-runtime-quell-caller -->
 
 </details>
 
@@ -9945,9 +9023,9 @@ Create the host future that completes with whichever of two supplied futures bec
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Poll](#word-authoring-runtime-supervision-poll). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Poll`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-19-19 -->
+<!-- example:glossary-runtime-race-caller -->
 
 </details>
 
@@ -9983,9 +9061,9 @@ Check whether an environment or one of its captured values reaches a target owne
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Visit](#word-authoring-storage-environment-visit). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Visit`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-51-51 -->
+<!-- example:glossary-storage-environment-reach-caller -->
 
 </details>
 
@@ -10059,9 +9137,9 @@ Check a Pointer cell's identity and recursively follow its stored value once per
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Visit](#word-authoring-storage-pointer-visit). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Visit`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-36-36 -->
+<!-- example:glossary-storage-pointer-reach-caller -->
 
 </details>
 
@@ -10078,9 +9156,9 @@ Invoke a stored value's typed ownership visitor with its borrowed erased payload
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Reach](#word-authoring-storage-pointer-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-155-155 -->
+<!-- example:glossary-storage-value-reach-caller -->
 
 </details>
 
@@ -10116,9 +9194,9 @@ Adapt an optional concrete reader and return the capture future using the suppli
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Follow](#word-authoring-runtime-capture-follow). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Follow`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-101-101 -->
+<!-- example:glossary-runtime-capture-read-caller -->
 
 </details>
 
@@ -10135,9 +9213,9 @@ Borrow the raw message bytes of an Error without rendering child causes.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Append](#word-authoring-runtime-error-append). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Append`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-107-107 -->
+<!-- example:glossary-runtime-error-read-caller -->
 
 </details>
 
@@ -10154,9 +9232,9 @@ Lock invocation state and copy its optional finalized Snapshot.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Capture](#word-authoring-runtime-app-capture). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Capture`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-83-83 -->
+<!-- example:glossary-runtime-invocation-read-caller -->
 
 </details>
 
@@ -10173,9 +9251,9 @@ Read the runtime's optional cached final exit status under its state lock.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-184-184 -->
+<!-- example:glossary-runtime-read-caller -->
 
 </details>
 
@@ -10192,9 +9270,9 @@ Try to receive a queued termination request without waiting. The selected operat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Release](#word-authoring-runtime-supervision-release). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Release`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-30-30 -->
+<!-- example:glossary-runtime-supervision-read-caller -->
 
 </details>
 
@@ -10223,7 +9301,7 @@ The wrapper below imports `Storage` and `Runtime` and is a member of the example
 
 <!-- word:authoring:Storage.Context.Read -->
 
-Bind the runtime and program references from the two components of a generated execution context.
+Borrow the runtime and program components of the supplied context into independently supplied result labels.
 
 <!-- word-definition:authoring:Storage.Context.Read -->
 
@@ -10306,9 +9384,9 @@ Borrow a Pointer's target cell and return Value.Copy of the stored value. A conf
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Render](#word-authoring-storage-pointer-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-160-160 -->
+<!-- example:glossary-storage-pointer-read-caller -->
 
 </details>
 
@@ -10363,9 +9441,9 @@ Attempt an immutable RefCell borrow and return its guard or native borrow error.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Reach](#word-authoring-storage-pointer-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-152-152 -->
+<!-- example:glossary-storage-read-caller -->
 
 </details>
 
@@ -10401,30 +9479,9 @@ Describe a Storage.Routine with `R: tokio::io::AsyncRead + Unpin + Send + 'stati
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `Runtime.Capture.Adapt`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Runtime.Capture.Adapt](#word-authoring-runtime-capture-adapt). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-capture-19-19 -->
-
-</details>
-
-### Storage.Function.Ready
-
-<a id="word-authoring-storage-function-ready"></a>
-
-<!-- word:authoring:Storage.Function.Ready -->
-
-Yield the prepared `lPinned` future as the native callable body's final expression.
-
-<!-- word-definition:authoring:Storage.Function.Ready -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-12-12 -->
+<!-- example:glossary-runtime-capture-readable-caller -->
 
 </details>
 
@@ -10441,9 +9498,9 @@ Settle every captured owned invocation, await their completion, collect cleanup 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Begin](#word-authoring-runtime-begin). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Begin`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-293-293 -->
+<!-- example:glossary-runtime-reap-caller -->
 
 </details>
 
@@ -10460,9 +9517,9 @@ Handle one read result: stop at EOF, store a read/write failure, or write exactl
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Advance](#word-authoring-runtime-capture-advance). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Advance`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-71-71 -->
+<!-- example:glossary-runtime-capture-receive-caller -->
 
 </details>
 
@@ -10479,9 +9536,9 @@ Create a receive operation on the selected native event or request receiver. The
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Poll](#word-authoring-runtime-supervision-poll). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Poll`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-17-17 -->
+<!-- example:glossary-runtime-receive-caller -->
 
 </details>
 
@@ -10498,9 +9555,9 @@ If its runtime owner remains available, record an invocation cleanup Error under
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Settle](#word-authoring-runtime-invocation-settle). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Settle`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-270-270 -->
+<!-- example:glossary-runtime-invocation-record-caller -->
 
 </details>
 
@@ -10517,9 +9574,9 @@ Notify the selected host dependencies that the supplied terminal request has bee
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Refuse](#word-authoring-runtime-refuse). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Refuse`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-42-42 -->
+<!-- example:glossary-runtime-terminal-record-caller -->
 
 </details>
 
@@ -10536,9 +9593,9 @@ Recursively divide a decimal coefficient by ten while it is divisible by ten, in
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Render](#word-authoring-formatting-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-138-138 -->
+<!-- example:glossary-formatting-reduce-caller -->
 
 </details>
 
@@ -10555,9 +9612,9 @@ Obtain the selected value's native borrowed view, preserving any optional wrappe
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Restore](#word-authoring-storage-value-restore). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Restore`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-46-46 -->
+<!-- example:glossary-storage-refer-caller -->
 
 </details>
 
@@ -10574,9 +9631,9 @@ Borrow `Value.inner` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Wait](#word-authoring-runtime-app-wait). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Wait`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-164-164 -->
+<!-- example:glossary-runtime-reference-caller -->
 
 </details>
 
@@ -10593,9 +9650,9 @@ Create an immutable native reborrow through dereferencing the supplied value.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Read](#word-authoring-storage-pointer-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-134-134 -->
+<!-- example:glossary-storage-reference-caller -->
 
 </details>
 
@@ -10612,11 +9669,9 @@ Describe a lending Storage.Routine with lifetime `'a` and native type bound `T: 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This descriptor applies to [Routine](word-glossary.md#word-authoring-storage-routine).
+This statement is used inside `Storage.Project`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Project](#word-authoring-storage-project). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-control-31-31 -->
+<!-- example:glossary-storage-referenced-caller -->
 
 </details>
 
@@ -10633,9 +9688,9 @@ Record a fatal terminal request, request exit status one with a retained copy of
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Fail](#word-authoring-runtime-fail). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Fail`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-38-38 -->
+<!-- example:glossary-runtime-refuse-caller -->
 
 </details>
 
@@ -10652,9 +9707,9 @@ Construct a Capture containing an empty byte vector and the supplied Error.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Start](#word-authoring-runtime-capture-start). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Start`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-75-75 -->
+<!-- example:glossary-runtime-capture-reject-caller -->
 
 </details>
 
@@ -10671,9 +9726,9 @@ Construct a failure Snapshot with empty streams and publish it as the invocation
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Run](#word-authoring-runtime-app-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-287-287 -->
+<!-- example:glossary-runtime-invocation-reject-caller -->
 
 </details>
 
@@ -10690,9 +9745,9 @@ Extract the error from a Result already known to have failed, panicking through 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Normalize](#word-authoring-runtime-normalize). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Normalize`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-289-289 -->
+<!-- example:glossary-runtime-reject-caller -->
 
 </details>
 
@@ -10709,9 +9764,9 @@ Construct a Snapshot with empty stdout and stderr, the supplied Error, and no pr
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Reject](#word-authoring-runtime-invocation-reject). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Reject`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-264-264 -->
+<!-- example:glossary-runtime-snapshot-reject-caller -->
 
 </details>
 
@@ -10728,47 +9783,9 @@ Construct a runtime Error from a Text message, wrap it in rejection, and immedia
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Index.Check](#word-authoring-storage-index-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Index.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-28-28 -->
-
-</details>
-
-### Storage.Result.Rejected
-
-<a id="word-authoring-storage-result-rejected"></a>
-
-<!-- word:authoring:Storage.Result.Rejected -->
-
-Provide an Err payload pattern with its supplied failure binding and body for the owning Result selection.
-
-<!-- word-definition:authoring:Storage.Result.Rejected -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/control.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-control-22-22 -->
-
-</details>
-
-### Storage.Program.Rejection
-
-<a id="word-authoring-storage-program-rejection"></a>
-
-<!-- word:authoring:Storage.Program.Rejection -->
-
-Wrap the previously selected generated Error binding in native Err.
-
-<!-- word-definition:authoring:Storage.Program.Rejection -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-79-79 -->
+<!-- example:glossary-storage-reject-caller -->
 
 </details>
 
@@ -10785,9 +9802,9 @@ Construct native Err around the supplied error payload without returning from th
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Normalize](#word-authoring-runtime-normalize). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Normalize`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-293-293 -->
+<!-- example:glossary-storage-rejection-caller -->
 
 </details>
 
@@ -10804,9 +9821,9 @@ Match a native path component and return true for Normal or CurDir, false for ev
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Path.Admit](#word-authoring-runtime-path-admit). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Path.Admit`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-24-24 -->
+<!-- example:glossary-runtime-path-caller -->
 
 </details>
 
@@ -10823,9 +9840,9 @@ Clear an App's outstanding flag only when its current invocation is the supplied
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Finish](#word-authoring-runtime-invocation-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-136-136 -->
+<!-- example:glossary-runtime-app-release-caller -->
 
 </details>
 
@@ -10842,9 +9859,9 @@ Try to receive one queued termination request, acknowledge it with success, and 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Await](#word-authoring-runtime-supervision-await). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Await`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-48-48 -->
+<!-- example:glossary-runtime-halt-caller -->
 
 </details>
 
@@ -10861,9 +9878,9 @@ Consume the supplied value through native drop. Releasing a shared handle need n
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Describe](#word-authoring-runtime-app-describe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Describe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-50-50 -->
+<!-- example:glossary-storage-release-caller -->
 
 </details>
 
@@ -10880,9 +9897,9 @@ Insert an Error's identity and recursively visit its children in the supplied id
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Append](#word-authoring-runtime-error-append). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Append`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-116-116 -->
+<!-- example:glossary-runtime-error-remember-caller -->
 
 </details>
 
@@ -10899,9 +9916,9 @@ Store a final exit status under the runtime state lock and return that status.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-198-198 -->
+<!-- example:glossary-runtime-remember-caller -->
 
 </details>
 
@@ -10918,9 +9935,9 @@ Mutably borrow `Value.final_status` so the caller can update that exact native f
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Remember](#word-authoring-runtime-remember). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Remember`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-153-153 -->
+<!-- example:glossary-runtime-state-remember-caller -->
 
 </details>
 
@@ -10937,9 +9954,9 @@ Insert the supplied value or key/value pair into the selected native collection 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Reach](#word-authoring-storage-pointer-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-150-150 -->
+<!-- example:glossary-storage-remember-caller -->
 
 </details>
 
@@ -10956,9 +9973,9 @@ Remove the supplied invocation sequence from the selected owned-invocation map a
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Complete](#word-authoring-runtime-supervision-complete). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Complete`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-87-87 -->
+<!-- example:glossary-runtime-supervision-remove-caller -->
 
 </details>
 
@@ -10975,9 +9992,9 @@ Parse a native scientific spelling, adjust an exact midpoint when required, remo
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Format](#word-authoring-formatting-format). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Format`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-158-158 -->
+<!-- example:glossary-formatting-render-caller -->
 
 </details>
 
@@ -10994,9 +10011,9 @@ Render an Error graph into a fresh byte vector, tracking identities to avoid dup
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Attach](#word-authoring-runtime-error-attach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Attach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-58-58 -->
+<!-- example:glossary-runtime-error-render-caller -->
 
 </details>
 
@@ -11241,9 +10258,9 @@ Select the native field `Value.show` by value. Its declared type determines whet
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Copy](#word-authoring-storage-value-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-51-51 -->
+<!-- example:glossary-storage-value-renderer-caller -->
 
 </details>
 
@@ -11260,9 +10277,9 @@ Expand the supplied Process as the body of a native loop; exits belong to the Pr
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Await](#word-authoring-runtime-supervision-await). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Await`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-48-48 -->
+<!-- example:glossary-runtime-halt-caller -->
 
 </details>
 
@@ -11279,9 +10296,9 @@ Assign the supplied value through the selected mutable reference.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Identify](#word-authoring-runtime-invocation-identify). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Identify`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-270-270 -->
+<!-- example:glossary-runtime-replace-caller -->
 
 </details>
 
@@ -11298,9 +10315,9 @@ Replace the value at a supplied mutable location and return its previous value t
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Update](#word-authoring-storage-list-update). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.List.Update`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-86-86 -->
+<!-- example:glossary-storage-replace-caller -->
 
 </details>
 
@@ -11317,9 +10334,9 @@ Create a native one-shot reply channel and return its sender/receiver pair. The 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Kill](#word-authoring-runtime-invocation-kill). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Kill`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-346-346 -->
+<!-- example:glossary-runtime-reply-caller -->
 
 </details>
 
@@ -11336,9 +10353,9 @@ When diagnostic bytes exist, write and flush them to runtime stderr. Return stat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-198-198 -->
+<!-- example:glossary-runtime-remember-caller -->
 
 </details>
 
@@ -11355,9 +10372,9 @@ Attempt the first terminal selection and begin shutdown only if this request win
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Refuse](#word-authoring-runtime-refuse). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Refuse`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-45-45 -->
+<!-- example:glossary-runtime-request-caller -->
 
 </details>
 
@@ -11374,9 +10391,9 @@ Borrow `Value.leader_requests` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Kill](#word-authoring-runtime-invocation-kill). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Kill`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-349-349 -->
+<!-- example:glossary-runtime-invocation-requests-caller -->
 
 </details>
 
@@ -11426,9 +10443,9 @@ Update an App's selection only if the supplied invocation is still current: stor
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Wait](#word-authoring-runtime-app-wait). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Wait`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-170-170 -->
+<!-- example:glossary-runtime-app-resolve-caller -->
 
 </details>
 
@@ -11445,9 +10462,9 @@ Ignore a successful or cancellation source result, and request status one with a
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Finish](#word-authoring-runtime-finish). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Finish`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-187-187 -->
+<!-- example:glossary-runtime-resolve-caller -->
 
 </details>
 
@@ -11483,9 +10500,9 @@ Downcast an erased payload to a byte vector and return its native clone, using t
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Text.Render](#word-authoring-storage-text-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Text.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-20-20 -->
+<!-- example:glossary-storage-text-restore-caller -->
 
 </details>
 
@@ -11537,7 +10554,7 @@ Name the Storage dictionary namespace containing operations that compose native 
 
 <!-- word-definition:authoring:Storage.Result -->
 
-**Usage:** Qualify [Result.Select](#word-authoring-storage-result-select) for branch selection or [Result.Expect](#word-authoring-storage-result-expect) for an explicit panic policy. Result is not an L runtime carrier declaration. Write the actual native type, such as `Result<T, E>` or `runtime::Result<T>`, in the enclosing Function signature.
+**Usage:** Qualify [Result.Select](#word-authoring-storage-result-select) for branch selection or [Expect](#word-authoring-storage-expect) for an explicit panic policy. Result is not an L runtime carrier declaration. Write the actual native type, such as `Result<T, E>` or `runtime::Result<T>`, in the enclosing Function signature.
 
 **Example:** `Selection.Preserve` in [Native callers](#context-storage--native-callers) handles `Result<u64, u8>`. Its error is a `u8`, while `Selection.Require` returns the runtime's Error type. Sharing the namespace does not unify those types or failure policies.
 
@@ -11554,9 +10571,9 @@ Resume unwinding with the supplied native panic payload. The selected operation 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Run](#word-authoring-runtime-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-223-223 -->
+<!-- example:glossary-runtime-resume-caller -->
 
 </details>
 
@@ -11589,9 +10606,9 @@ Borrow an Arc-backed App handle and return another handle to the same App alloca
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Program.Select](#word-authoring-storage-program-select). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Program.Select`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-64-64 -->
+<!-- example:glossary-storage-app-caller -->
 
 </details>
 
@@ -11601,7 +10618,7 @@ This statement is used inside [Storage.Program.Select](#word-authoring-storage-p
 
 <!-- word:authoring:Storage.Function.Retain -->
 
-Snapshot or retain a callable's capture environment through the supplied copying operation and pair it with the same typed callable target.
+Copy the selected Function environment once and pair it with the cast function target, preserving shared capture identity.
 
 <!-- word-definition:authoring:Storage.Function.Retain -->
 
@@ -11627,9 +10644,9 @@ Borrow an Rc-backed value and return another handle to the same allocation, with
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Copy](#word-authoring-storage-value-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-50-50 -->
+<!-- example:glossary-storage-retain-caller -->
 
 </details>
 
@@ -11649,6 +10666,8 @@ Root-authored returning actions select their caller's Return. That selected impl
 
 Return completes that invocation. Exit terminates the enclosing program. Neither transports runtime captures into an App process.
 
+Existing qualified aliases: `Storage.Routine.Return`. They select this canonical meaning.
+
 ### Storage.Function.Return
 
 <a id="word-authoring-storage-function-return"></a>
@@ -11662,9 +10681,9 @@ Expand the selected Return definition supplied by the enclosing typed Function c
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/execution.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-execution-16-16 -->
+<!-- example:glossary-storage-function-return-caller -->
 
 </details>
 
@@ -11681,9 +10700,9 @@ Invoke a callback with two items and context, then discard a successful payload 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/traversal.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/traversal.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-60-60 -->
+<!-- example:glossary-storage-review-caller -->
 
 </details>
 
@@ -11700,9 +10719,9 @@ Apply Limit to a watch sender's optional deadline through its native modifying o
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Bound](#word-authoring-runtime-invocation-bound). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Bound`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-304-304 -->
+<!-- example:glossary-runtime-revise-caller -->
 
 </details>
 
@@ -11719,9 +10738,9 @@ Define a native callable from the supplied name, typed input/output declarations
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/control.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/control.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-2-2 -->
+<!-- example:glossary-storage-routine-caller -->
 
 </details>
 
@@ -11771,13 +10790,14 @@ Race the source future against cancellation, settle runtime cleanup and status i
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Host.Run`. They select this canonical meaning.
 
 The wrapper below imports `Storage` and `Runtime` and is a member of the example `GlossaryExamples` Dictionary. Its declared native inputs, outputs, lifetime/generic descriptors, and the original selected module's native types/support are required. Lyger resolves the source and composes its library AML; this fragment has no native compilation or execution claim.
 
 <!-- example:glossary-native-runtime-run -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Host.Run`. They select this canonical meaning.
 
 ### Runtime
 
@@ -11798,25 +10818,6 @@ Import the dictionary to make its qualified members available.
 
 </details>
 
-### Storage.Context.Runtime
-
-<a id="word-authoring-storage-context-runtime"></a>
-
-<!-- word:authoring:Storage.Context.Runtime -->
-
-Clone the selected native receiver; its concrete Clone implementation determines copying or shared retention. The selected operation is `Runtime.clone()`.
-
-<!-- word-definition:authoring:Storage.Context.Runtime -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-48-48 -->
-
-</details>
-
 ## S
 
 <a id="glossary-s"></a>
@@ -11834,9 +10835,9 @@ Multiply an integer coefficient by powers of five for positive exponents, or div
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Balance](#word-authoring-formatting-balance). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Balance`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-60-60 -->
+<!-- example:glossary-formatting-scale-caller -->
 
 </details>
 
@@ -11872,9 +10873,9 @@ Mutably borrow `Value.cleaned` so the caller can update that exact native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-327-327 -->
+<!-- example:glossary-runtime-bound-caller -->
 
 </details>
 
@@ -11891,9 +10892,9 @@ Visit the selected iterator in order with the supplied callback and return its f
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Trace](#word-authoring-runtime-error-trace). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Trace`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-52-52 -->
+<!-- example:glossary-runtime-error-search-caller -->
 
 </details>
 
@@ -11910,9 +10911,9 @@ Probe values in iterator order with the supplied callback and continuation. A fa
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Search](#word-authoring-storage-value-search). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Search`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-21-21 -->
+<!-- example:glossary-storage-search-caller -->
 
 </details>
 
@@ -11929,28 +10930,9 @@ Search values in iterator order, returning successful true at the first ownershi
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Reach](#word-authoring-storage-list-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.List.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-27-27 -->
-
-</details>
-
-### Storage.Context.Second
-
-<a id="word-authoring-storage-context-second"></a>
-
-<!-- word:authoring:Storage.Context.Second -->
-
-Borrow the second execution-context component into the generated `lProgram` binding.
-
-<!-- word-definition:authoring:Storage.Context.Second -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-51-51 -->
+<!-- example:glossary-storage-value-search-caller -->
 
 </details>
 
@@ -11967,32 +10949,13 @@ Select the second tuple component by value; the component's native type determin
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
+This statement is used inside `Runtime.Invocation.Kill`. Its enclosing native signature and preceding bindings remain required.
+
+<!-- example:glossary-storage-tuple-second-caller -->
+
+</details>
+
 Existing qualified aliases: `Storage.Function.Target`. They select this canonical meaning.
-
-This statement is used inside [Runtime.Invocation.Kill](#word-authoring-runtime-invocation-kill). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-process-348-348 -->
-
-</details>
-
-### Runtime.Error.Seen
-
-<a id="word-authoring-runtime-error-seen"></a>
-
-<!-- word:authoring:Runtime.Error.Seen -->
-
-Insert the supplied value or key/value pair into the selected native collection and return that collection's insertion result. The selected operation is `Set.insert(Identity)`.
-
-<!-- word-definition:authoring:Runtime.Error.Seen -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Append](#word-authoring-runtime-error-append). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-105-105 -->
-
-</details>
 
 ### Runtime.App.Select
 
@@ -12007,9 +10970,9 @@ Lock App state and copy the selected invocation together with the saved operatio
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Inspect](#word-authoring-runtime-app-inspect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Inspect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-103-103 -->
+<!-- example:glossary-runtime-app-select-caller -->
 
 </details>
 
@@ -12073,9 +11036,9 @@ Execute the supplied Then Process for a true native condition and the Else Proce
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `builtins/eng/storage/traversal.l` and retains that dictionary's surrounding imports and native binding context.
+This statement is used inside `builtins/eng/storage/traversal.l`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-1-1 -->
+<!-- example:glossary-storage-select-caller -->
 
 </details>
 
@@ -12092,9 +11055,9 @@ Check whether the selected native Option contains a payload. The selected operat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Decide](#word-authoring-runtime-decide). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Decide`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-205-205 -->
+<!-- example:glossary-runtime-selected-caller -->
 
 </details>
 
@@ -12111,9 +11074,9 @@ Mutably borrow `Value.selected` so the caller can update that exact native field
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Build](#word-authoring-runtime-app-build). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Build`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-68-68 -->
+<!-- example:glossary-runtime-app-selection-caller -->
 
 </details>
 
@@ -12144,28 +11107,9 @@ Ask the selected host dependencies to send the supplied signal to the supplied t
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Signal](#word-authoring-runtime-invocation-signal). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Signal`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-321-321 -->
-
-</details>
-
-### Runtime.Error.Separate
-
-<a id="word-authoring-runtime-error-separate"></a>
-
-<!-- word:authoring:Runtime.Error.Separate -->
-
-Append byte 10, one LF, to the supplied diagnostic buffer.
-
-<!-- word-definition:authoring:Runtime.Error.Separate -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Diagnose](#word-authoring-runtime-diagnose). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-shutdown-178-178 -->
+<!-- example:glossary-runtime-normalize-caller -->
 
 </details>
 
@@ -12182,9 +11126,9 @@ Select the native field `Value.sequence` by value. Its declared type determines 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Supervise](#word-authoring-runtime-app-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-295-295 -->
+<!-- example:glossary-runtime-invocation-sequence-caller -->
 
 </details>
 
@@ -12236,9 +11180,9 @@ Construct an empty native hash set used to track rendered Error identities. The 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Render](#word-authoring-runtime-error-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-125-125 -->
+<!-- example:glossary-runtime-error-set-caller -->
 
 </details>
 
@@ -12255,9 +11199,9 @@ Request process-group termination; if it fails, request leader termination and r
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Reap](#word-authoring-runtime-reap). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Reap`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-275-275 -->
+<!-- example:glossary-runtime-invocation-settle-caller -->
 
 </details>
 
@@ -12274,47 +11218,28 @@ Consume a Capture and return its bytes in an Arc-backed slice together with its 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Join](#word-authoring-runtime-capture-join). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Join`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-107-107 -->
+<!-- example:glossary-runtime-capture-share-caller -->
 
 </details>
 
-### Runtime.Shared
+### Storage.Share
 
-<a id="word-authoring-runtime-shared"></a>
+<a id="word-authoring-storage-share"></a>
 
-<!-- word:authoring:Runtime.Shared -->
+<!-- word:authoring:Storage.Share -->
 
-Move the supplied value into a new Arc allocation. The selected operation is `std::sync::Arc::new(Value)`.
+Allocate an Rc containing the supplied value. This creates shared ownership without cloning the value and is distinct from Arc allocation or retention.
 
-<!-- word-definition:authoring:Runtime.Shared -->
+<!-- word-definition:authoring:Storage.Share -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Appoint](#word-authoring-runtime-appoint). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Wrap`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-61-61 -->
-
-</details>
-
-### Storage.Shared
-
-<a id="word-authoring-storage-shared"></a>
-
-<!-- word:authoring:Storage.Shared -->
-
-Move the supplied value into a new Rc allocation and bind its shared-ownership handle.
-
-<!-- word-definition:authoring:Storage.Shared -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Storage.Value.Wrap](#word-authoring-storage-value-wrap). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-control-41-41 -->
+<!-- example:glossary-storage-share-caller -->
 
 </details>
 
@@ -12383,9 +11308,9 @@ Serialize process-group termination, skip completed or already-cleaned invocatio
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Terminate](#word-authoring-runtime-invocation-terminate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Terminate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-334-334 -->
+<!-- example:glossary-runtime-invocation-signal-caller -->
 
 </details>
 
@@ -12402,9 +11327,9 @@ Construct a host terminal request carrying the supplied signal status. The selec
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Signals.Watch](#word-authoring-runtime-signals-watch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Signals.Watch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-19-19 -->
+<!-- example:glossary-runtime-signal-caller -->
 
 </details>
 
@@ -12421,9 +11346,9 @@ Request native termination of the supplied child-leader process ID. The selected
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Terminate](#word-authoring-runtime-supervision-terminate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Terminate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-13-13 -->
+<!-- example:glossary-runtime-supervision-explain-caller -->
 
 </details>
 
@@ -12440,9 +11365,9 @@ Borrow `Value.signals` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Unsubscribe](#word-authoring-runtime-unsubscribe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Unsubscribe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-240-240 -->
+<!-- example:glossary-runtime-inner-signals-caller -->
 
 </details>
 
@@ -12459,9 +11384,9 @@ Install the native process-signal subscriptions and return their receiver or IO 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Install](#word-authoring-runtime-install). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Install`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-33-33 -->
+<!-- example:glossary-runtime-signals-caller -->
 
 </details>
 
@@ -12478,9 +11403,9 @@ Name the Storage namespace for universal and exact runtime type-signature matchi
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Signature.Match](#word-authoring-storage-signature-match). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Signature.Match`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-57-57 -->
+<!-- example:glossary-storage-signature-caller -->
 
 </details>
 
@@ -12497,28 +11422,9 @@ Borrow `Value.ty` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Check](#word-authoring-storage-value-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-57-57 -->
-
-</details>
-
-### Runtime.Capture.Sleep
-
-<a id="word-authoring-runtime-capture-sleep"></a>
-
-<!-- word:authoring:Runtime.Capture.Sleep -->
-
-Create a timer future for the supplied cleanup deadline. The selected operation is `tokio::time::sleep_until(Until)`.
-
-<!-- word-definition:authoring:Runtime.Capture.Sleep -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Capture.Timeout](#word-authoring-runtime-capture-timeout). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-capture-53-53 -->
+<!-- example:glossary-storage-value-signature-caller -->
 
 </details>
 
@@ -12573,9 +11479,9 @@ Borrow `Value.snapshot` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Read](#word-authoring-runtime-invocation-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-155-155 -->
+<!-- example:glossary-runtime-invocation-snapshot-caller -->
 
 </details>
 
@@ -12592,28 +11498,9 @@ Declare the native `Snapshot` record with fields `pub stdout: std::sync::Arc<[u8
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Snapshot.Reject](#word-authoring-runtime-snapshot-reject). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Snapshot.Reject`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-258-258 -->
-
-</details>
-
-### Storage.Function.Snapshot
-
-<a id="word-authoring-storage-function-snapshot"></a>
-
-<!-- word:authoring:Storage.Function.Snapshot -->
-
-Invoke the supplied environment-copy Function on a borrowed environment and bind the resulting capture snapshot.
-
-<!-- word-definition:authoring:Storage.Function.Snapshot -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-54-54 -->
+<!-- example:glossary-runtime-snapshot-caller -->
 
 </details>
 
@@ -12630,9 +11517,9 @@ Mutably borrow `Value.source` so the caller can update that exact native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Set](#word-authoring-runtime-app-set). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Set`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-65-65 -->
+<!-- example:glossary-runtime-app-source-caller -->
 
 </details>
 
@@ -12649,28 +11536,9 @@ Cast a native cause reference to the borrowed Error interface with the declared 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Trace](#word-authoring-runtime-error-trace). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Trace`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-50-50 -->
-
-</details>
-
-### Storage.App.Source
-
-<a id="word-authoring-storage-app-source"></a>
-
-<!-- word:authoring:Storage.App.Source -->
-
-Construct the owned native source-attribution string used by App.Attribute.
-
-<!-- word-definition:authoring:Storage.App.Source -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This source-authoring fragment comes from `builtins/eng/storage/execution.l` and retains that dictionary's surrounding imports and native binding context.
-
-<!-- example:glossary-builtins-eng-storage-execution-72-72 -->
+<!-- example:glossary-runtime-error-source-caller -->
 
 </details>
 
@@ -12687,9 +11555,9 @@ Spawn the supplied future on the active native executor and return its task hand
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Begin](#word-authoring-runtime-begin). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Begin`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-293-293 -->
+<!-- example:glossary-runtime-reap-caller -->
 
 </details>
 
@@ -12725,9 +11593,9 @@ Ask the selected host dependencies to start the supplied child command. The sele
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Launch`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-244-244 -->
+<!-- example:glossary-runtime-app-start-caller -->
 
 </details>
 
@@ -12744,9 +11612,9 @@ Require a capture reader, obtain the host capture destination, and repeatedly ad
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Read](#word-authoring-runtime-capture-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-96-96 -->
+<!-- example:glossary-runtime-capture-start-caller -->
 
 </details>
 
@@ -12775,9 +11643,9 @@ Declare the native `AppState` record with fields `source: String`, `invocation: 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Appoint](#word-authoring-runtime-appoint). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Appoint`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-60-60 -->
+<!-- example:glossary-runtime-app-state-caller -->
 
 </details>
 
@@ -12794,9 +11662,9 @@ Declare the native `InvocationState` record with fields `snapshot: Option<Snapsh
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Allocate](#word-authoring-runtime-invocation-allocate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Allocate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-195-195 -->
+<!-- example:glossary-runtime-invocation-state-caller -->
 
 </details>
 
@@ -12813,9 +11681,9 @@ Declare the native `RuntimeState` record with fields `owned: std::collections::B
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Read](#word-authoring-runtime-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-138-138 -->
+<!-- example:glossary-runtime-state-caller -->
 
 </details>
 
@@ -12832,9 +11700,9 @@ Select the native field `Value.data.cancelled` by value. Its declared type deter
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Check](#word-authoring-runtime-error-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-146-146 -->
+<!-- example:glossary-runtime-error-status-caller -->
 
 </details>
 
@@ -12851,9 +11719,9 @@ Select the native field `Value.status` by value. Its declared type determines wh
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Snapshot.Copy](#word-authoring-runtime-snapshot-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Snapshot.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-149-149 -->
+<!-- example:glossary-runtime-snapshot-status-caller -->
 
 </details>
 
@@ -12870,9 +11738,9 @@ Select the native field `Value.final_status` by value. Its declared type determi
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Read](#word-authoring-runtime-read). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Read`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-138-138 -->
+<!-- example:glossary-runtime-state-caller -->
 
 </details>
 
@@ -12889,28 +11757,9 @@ Select the native field `Value.status` by value. Its declared type determines wh
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Terminal.Copy](#word-authoring-runtime-terminal-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Terminal.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-90-90 -->
-
-</details>
-
-### Runtime.App.Stderr
-
-<a id="word-authoring-runtime-app-stderr"></a>
-
-<!-- word:authoring:Runtime.App.Stderr -->
-
-Set the selected child command's standard-error configuration to the supplied stream. The selected operation is `Command.stderr(Stream)`.
-
-<!-- word-definition:authoring:Runtime.App.Stderr -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-app-239-239 -->
+<!-- example:glossary-runtime-terminal-caller -->
 
 </details>
 
@@ -12927,9 +11776,9 @@ Borrow `Value.stderr` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Report](#word-authoring-runtime-report). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Report`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-80-80 -->
+<!-- example:glossary-runtime-inner-stderr-caller -->
 
 </details>
 
@@ -12946,9 +11795,9 @@ Obtain the native asynchronous standard-error handle. The selected operation is 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Open](#word-authoring-runtime-open). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Open`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-45-45 -->
+<!-- example:glossary-runtime-output-caller -->
 
 </details>
 
@@ -12958,35 +11807,16 @@ This statement is used inside [Runtime.Open](#word-authoring-runtime-open). Its 
 
 <!-- word:authoring:Runtime.Supervision.Stderr -->
 
-Take the selected optional value, leaving None in its original location. The selected operation is `Child.stderr.take()`.
+Borrow the child’s stderr Option mutably. The caller applies Take separately to move out the stream once.
 
 <!-- word-definition:authoring:Runtime.Supervision.Stderr -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-99-99 -->
-
-</details>
-
-### Runtime.App.Stdout
-
-<a id="word-authoring-runtime-app-stdout"></a>
-
-<!-- word:authoring:Runtime.App.Stdout -->
-
-Set the selected child command's standard-output configuration to the supplied stream. The selected operation is `Command.stdout(Stream)`.
-
-<!-- word-definition:authoring:Runtime.App.Stdout -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.App.Launch](#word-authoring-runtime-app-launch). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-app-237-237 -->
+<!-- example:glossary-runtime-supervision-stderr-caller -->
 
 </details>
 
@@ -13003,9 +11833,9 @@ Borrow `Value.stdout` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Show](#word-authoring-runtime-show). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Show`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-61-61 -->
+<!-- example:glossary-runtime-inner-stdout-caller -->
 
 </details>
 
@@ -13022,9 +11852,9 @@ Obtain the native asynchronous standard-output handle. The selected operation is
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Open](#word-authoring-runtime-open). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Open`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-44-44 -->
+<!-- example:glossary-runtime-stdout-caller -->
 
 </details>
 
@@ -13034,16 +11864,16 @@ This statement is used inside [Runtime.Open](#word-authoring-runtime-open). Its 
 
 <!-- word:authoring:Runtime.Supervision.Stdout -->
 
-Take the selected optional value, leaving None in its original location. The selected operation is `Child.stdout.take()`.
+Borrow the child’s stdout Option mutably. The caller applies Take separately to move out the stream once.
 
 <!-- word-definition:authoring:Runtime.Supervision.Stdout -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-98-98 -->
+<!-- example:glossary-runtime-supervision-stdout-caller -->
 
 </details>
 
@@ -13079,9 +11909,9 @@ Mutably borrow `Value.stopping` so the caller can update that exact native field
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Gather](#word-authoring-runtime-gather). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Gather`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-231-231 -->
+<!-- example:glossary-runtime-state-stop-caller -->
 
 </details>
 
@@ -13131,9 +11961,9 @@ Select the native field `Value.stopping` by value. Its declared type determines 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Admit](#word-authoring-runtime-admit). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Admit`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-45-45 -->
+<!-- example:glossary-runtime-stopping-caller -->
 
 </details>
 
@@ -13169,9 +11999,9 @@ Mutably borrow `Value.invocation` so the caller can update that exact native fie
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Acquire](#word-authoring-runtime-app-acquire). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Acquire`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-202-202 -->
+<!-- example:glossary-runtime-app-store-caller -->
 
 </details>
 
@@ -13188,9 +12018,9 @@ Send the supplied value through the selected native channel. The selected operat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Kill](#word-authoring-runtime-invocation-kill). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Kill`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-350-350 -->
+<!-- example:glossary-runtime-submit-caller -->
 
 </details>
 
@@ -13207,9 +12037,9 @@ Subscribe to the selected watch sender and return a receiver for its current and
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Follow](#word-authoring-runtime-capture-follow). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Follow`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-99-99 -->
+<!-- example:glossary-runtime-subscribe-caller -->
 
 </details>
 
@@ -13226,9 +12056,9 @@ Check whether the supplied native process status denotes success. The selected o
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Inspect](#word-authoring-runtime-supervision-inspect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Inspect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-68-68 -->
+<!-- example:glossary-runtime-supervision-success-caller -->
 
 </details>
 
@@ -13245,9 +12075,9 @@ Construct native Ok around the supplied success payload without returning from t
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Claim](#word-authoring-runtime-invocation-claim). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Claim`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-106-106 -->
+<!-- example:glossary-storage-success-caller -->
 
 </details>
 
@@ -13264,9 +12094,9 @@ Add the supplied native operands and bind the result; their concrete types deter
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Formatting.Scale](#word-authoring-formatting-scale). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Formatting.Scale`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-stdlib-eng-format-dictionary-28-28 -->
+<!-- example:glossary-storage-sum-caller -->
 
 </details>
 
@@ -13283,9 +12113,9 @@ Record a launched child's process ID, register its invocation as runtime-owned, 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Run](#word-authoring-runtime-app-run). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Run`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-288-288 -->
+<!-- example:glossary-runtime-app-progress-caller -->
 
 </details>
 
@@ -13302,9 +12132,9 @@ Own the child wait, capture stdout and stderr, service termination requests, bou
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Supervise](#word-authoring-runtime-app-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-300-300 -->
+<!-- example:glossary-runtime-invocation-supervise-caller -->
 
 </details>
 
@@ -13321,9 +12151,9 @@ Name the Runtime namespace owning child waits, leader-termination requests, stre
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Inspect](#word-authoring-runtime-supervision-inspect). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Inspect`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-70-70 -->
+<!-- example:glossary-runtime-supervision-caller -->
 
 </details>
 
@@ -13333,7 +12163,7 @@ This statement is used inside [Runtime.Supervision.Inspect](#word-authoring-runt
 
 <!-- word:authoring:Storage.Function.Suspend -->
 
-Construct a move-capturing pending future, pin it in a box, and yield that pinned future as the native callable body result.
+Construct a move future, pin it and yield the pinned value as the outer construction result. The enclosed Function body executes only when its future is polled.
 
 <!-- word-definition:authoring:Storage.Function.Suspend -->
 
@@ -13363,9 +12193,9 @@ Take the selected optional value, leaving None in its original location. The sel
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Unsubscribe](#word-authoring-runtime-unsubscribe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Unsubscribe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-241-241 -->
+<!-- example:glossary-runtime-take-caller -->
 
 </details>
 
@@ -13396,9 +12226,9 @@ Borrow `Value.target` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Reach](#word-authoring-storage-pointer-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-147-147 -->
+<!-- example:glossary-storage-pointer-caller -->
 
 </details>
 
@@ -13415,28 +12245,9 @@ Read the target ownership identity from the first traversal-context component.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Follow](#word-authoring-storage-value-follow). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Follow`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-12-12 -->
-
-</details>
-
-### Runtime.Task
-
-<a id="word-authoring-runtime-task"></a>
-
-<!-- word:authoring:Runtime.Task -->
-
-Borrow `Value.signals` without moving the referenced native field.
-
-<!-- word-definition:authoring:Runtime.Task -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Attach](#word-authoring-runtime-attach). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-start-26-26 -->
+<!-- example:glossary-storage-value-target-caller -->
 
 </details>
 
@@ -13472,9 +12283,9 @@ Mutably borrow `Value.terminal` so the caller can update that exact native field
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Choose](#word-authoring-runtime-choose). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Choose`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-102-102 -->
+<!-- example:glossary-runtime-state-terminal-caller -->
 
 </details>
 
@@ -13491,9 +12302,9 @@ Declare the native `Terminal` record with fields `status: u8`, `error: Option<Er
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Terminal.Copy](#word-authoring-runtime-terminal-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Terminal.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-90-90 -->
+<!-- example:glossary-runtime-terminal-caller -->
 
 </details>
 
@@ -13510,9 +12321,9 @@ Await Invocation.Signal and convert any native termination failure into a runtim
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Settle](#word-authoring-runtime-invocation-settle). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Settle`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-258-258 -->
+<!-- example:glossary-runtime-invocation-terminate-caller -->
 
 </details>
 
@@ -13529,9 +12340,9 @@ Signal the supplied leader process ID and convert a native failure to a runtime 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Supervision.Poll](#word-authoring-runtime-supervision-poll). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Supervision.Poll`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-supervision-24-24 -->
+<!-- example:glossary-runtime-supervision-terminate-caller -->
 
 </details>
 
@@ -13567,9 +12378,9 @@ Borrow the selected native String as a string slice. The selected operation is `
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Describe](#word-authoring-runtime-app-describe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Describe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-53-53 -->
+<!-- example:glossary-runtime-text-caller -->
 
 </details>
 
@@ -13586,9 +12397,9 @@ Name the Storage namespace for exact byte ownership, joining, delimiters and era
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.App.Render](#word-authoring-storage-app-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.App.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-47-47 -->
+<!-- example:glossary-storage-text-caller -->
 
 </details>
 
@@ -13710,25 +12521,6 @@ Define "message" as `hello`.
 Show this.
 ```
 
-### Runtime.Capture.Timeout
-
-<a id="word-authoring-runtime-capture-timeout"></a>
-
-<!-- word:authoring:Runtime.Capture.Timeout -->
-
-Wait until a supplied cleanup instant, or remain pending indefinitely when no cleanup deadline has been supplied.
-
-<!-- word-definition:authoring:Runtime.Capture.Timeout -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Capture.Advance](#word-authoring-runtime-capture-advance). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-capture-62-62 -->
-
-</details>
-
 ### To
 
 <a id="word-grammar-word-to"></a>
@@ -13754,13 +12546,14 @@ Return an Error's retained native cause when present, otherwise search its child
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Runtime.Host.Error.Trace`. They select this canonical meaning.
 
 The wrapper below imports `Storage` and `Runtime` and is a member of the example `GlossaryExamples` Dictionary. Its declared native inputs, outputs, lifetime/generic descriptors, and the original selected module's native types/support are required. Lyger resolves the source and composes its library AML; this fragment has no native compilation or execution claim.
 
 <!-- example:glossary-native-runtime-error-trace -->
 
 </details>
+
+Existing qualified aliases: `Runtime.Host.Error.Trace`. They select this canonical meaning.
 
 ### Storage.Traverse
 
@@ -13794,9 +12587,9 @@ Name the Storage namespace for native Boolean display.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Truth.Render](#word-authoring-storage-truth-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Truth.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-30-30 -->
+<!-- example:glossary-storage-truth-caller -->
 
 </details>
 
@@ -13833,9 +12626,9 @@ Construct a native tuple from the supplied values in their supplied order.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Function.Copy](#word-authoring-storage-function-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Function.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-display-67-67 -->
+<!-- example:glossary-storage-tuple-caller -->
 
 </details>
 
@@ -13852,9 +12645,9 @@ Borrow `Value.types` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Copy](#word-authoring-storage-environment-copy). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Copy`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-values-62-62 -->
+<!-- example:glossary-storage-environment-caller -->
 
 </details>
 
@@ -13894,9 +12687,9 @@ Bind the borrowed signature slice `[1]` used to represent the universal Thing si
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Signature.Match](#word-authoring-storage-signature-match). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Signature.Match`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-57-57 -->
+<!-- example:glossary-storage-signature-caller -->
 
 </details>
 
@@ -13913,9 +12706,28 @@ Take and clear the runtime's optional signal-watcher task while holding its lock
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Quell](#word-authoring-runtime-quell). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Quell`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-244-244 -->
+<!-- example:glossary-runtime-unsubscribe-caller -->
+
+</details>
+
+### Storage.Unwrap
+
+<a id="word-authoring-storage-unwrap"></a>
+
+<!-- word:authoring:Storage.Unwrap -->
+
+Consume an Option or Result and return its payload, or the supplied fallback. The fallback argument is evaluated normally, including when the payload is present.
+
+<!-- word-definition:authoring:Storage.Unwrap -->
+
+<details class="l-word-usage" data-pagefind-ignore>
+<summary>Usage example</summary>
+
+This statement is used inside `Runtime.Invocation.Kill`. Its enclosing native signature and preceding bindings remain required.
+
+<!-- example:glossary-storage-unwrap-caller -->
 
 </details>
 
@@ -14036,9 +12848,9 @@ Check whether the selected native string or path-string value is empty. The sele
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Describe](#word-authoring-runtime-app-describe). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Describe`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-51-51 -->
+<!-- example:glossary-runtime-vacancy-caller -->
 
 </details>
 
@@ -14055,9 +12867,9 @@ Check whether the selected native Result contains a success. The selected operat
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Normalize](#word-authoring-runtime-normalize). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Normalize`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-287-287 -->
+<!-- example:glossary-runtime-valid-caller -->
 
 </details>
 
@@ -14074,47 +12886,9 @@ Return successful unit when a condition is true; otherwise construct and return 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Check](#word-authoring-storage-value-check). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Check`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-collections-59-59 -->
-
-</details>
-
-### Runtime.Error.Value
-
-<a id="word-authoring-runtime-error-value"></a>
-
-<!-- word:authoring:Runtime.Error.Value -->
-
-Read the value behind the supplied native reference.
-
-<!-- word-definition:authoring:Runtime.Error.Value -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Error.Append](#word-authoring-runtime-error-append). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-errors-117-117 -->
-
-</details>
-
-### Runtime.Value
-
-<a id="word-authoring-runtime-value"></a>
-
-<!-- word:authoring:Runtime.Value -->
-
-Read the value behind the supplied native reference.
-
-<!-- word-definition:authoring:Runtime.Value -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Limit](#word-authoring-runtime-limit). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-process-296-296 -->
+<!-- example:glossary-storage-validate-caller -->
 
 </details>
 
@@ -14131,9 +12905,9 @@ Declare the native `LValue` record with fields `ty: Vec<u64>`, `data: std::rc::R
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Pointer.Render](#word-authoring-storage-pointer-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Pointer.Render`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-162-162 -->
+<!-- example:glossary-storage-value-caller -->
 
 </details>
 
@@ -14150,13 +12924,13 @@ Borrow `Value.values` without moving the referenced native field.
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-Existing qualified aliases: `Storage.List.Values`, `Storage.Map.Values`. They select this canonical meaning.
+This statement is used inside `Storage.Map.Read`. Its enclosing native signature and preceding bindings remain required.
 
-This statement is used inside [Storage.Map.Read](#word-authoring-storage-map-read). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-builtins-eng-storage-collections-95-95 -->
+<!-- example:glossary-storage-environment-values-caller -->
 
 </details>
+
+Existing qualified aliases: `Storage.List.Values`, `Storage.Map.Values`. They select this canonical meaning.
 
 ### Storage.Program.Values
 
@@ -14190,9 +12964,9 @@ Construct an owned vector from the supplied native array values. The selected op
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.List.Render](#word-authoring-storage-list-render). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Attach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-140-140 -->
+<!-- example:glossary-storage-vector-caller -->
 
 </details>
 
@@ -14221,9 +12995,9 @@ Apply native `?` to the supplied result and discard its successful payload, prop
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Environment.Create](#word-authoring-storage-environment-create). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Environment.Create`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-traversal-70-70 -->
+<!-- example:glossary-storage-verify-caller -->
 
 </details>
 
@@ -14278,9 +13052,9 @@ Select the native field `Value.reaches` by value. Its declared type determines w
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Storage.Value.Reach](#word-authoring-storage-value-reach). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Storage.Value.Reach`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-builtins-eng-storage-control-72-72 -->
+<!-- example:glossary-storage-value-visitor-caller -->
 
 </details>
 
@@ -14307,22 +13081,22 @@ The wrapper below imports `Storage` and `Runtime` and is a member of the example
 
 </details>
 
-### Runtime.Capture.Wait
+### Runtime.Supervision.Wait
 
-<a id="word-authoring-runtime-capture-wait"></a>
+<a id="word-authoring-runtime-supervision-wait"></a>
 
-<!-- word:authoring:Runtime.Capture.Wait -->
+<!-- word:authoring:Runtime.Supervision.Wait -->
 
-Create a future that remains pending until dropped. The selected operation is `std::future::pending()`.
+Construct the single host-owned child-wait future used by invocation supervision. Driving it, deadline policy and cleanup belong to the supervising source Functions.
 
-<!-- word-definition:authoring:Runtime.Capture.Wait -->
+<!-- word-definition:authoring:Runtime.Supervision.Wait -->
 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Timeout](#word-authoring-runtime-capture-timeout). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Supervise`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-54-54 -->
+<!-- example:glossary-runtime-supervision-wait-caller -->
 
 </details>
 
@@ -14339,28 +13113,9 @@ Wait for a Boolean watch value to become true or for its notification channel to
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Wait](#word-authoring-runtime-app-wait). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Wait`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-166-166 -->
-
-</details>
-
-### Runtime.Supervision.Waiter
-
-<a id="word-authoring-runtime-supervision-waiter"></a>
-
-<!-- word:authoring:Runtime.Supervision.Waiter -->
-
-Obtain the selected host's wait operation for the supplied child process. The selected operation is `Dependencies.wait(Child)`.
-
-<!-- word-definition:authoring:Runtime.Supervision.Waiter -->
-
-<details class="l-word-usage" data-pagefind-ignore>
-<summary>Usage example</summary>
-
-This statement is used inside [Runtime.Invocation.Supervise](#word-authoring-runtime-invocation-supervise). Its enclosing native signature, preceding local bindings and selected native module are required.
-
-<!-- example:glossary-runtime-eng-supervision-106-106 -->
+<!-- example:glossary-runtime-wait-caller -->
 
 </details>
 
@@ -14377,9 +13132,9 @@ Await a native signal event, upgrade the runtime owner if still available, notif
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Install](#word-authoring-runtime-install). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Install`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-start-37-37 -->
+<!-- example:glossary-runtime-signals-watch-caller -->
 
 </details>
 
@@ -14396,9 +13151,9 @@ Create a native watch channel initialized with the supplied value. The selected 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Invocation.Allocate](#word-authoring-runtime-invocation-allocate). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Invocation.Allocate`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-process-184-184 -->
+<!-- example:glossary-runtime-watch-caller -->
 
 </details>
 
@@ -14415,9 +13170,9 @@ Create a weak reference to the supplied Arc allocation. The selected operation i
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.App.Acquire](#word-authoring-runtime-app-acquire). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.App.Acquire`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-app-192-192 -->
+<!-- example:glossary-runtime-weak-caller -->
 
 </details>
 
@@ -14458,9 +13213,9 @@ Construct ErrorData from message bytes, child Errors, cancellation state and an 
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Explain](#word-authoring-runtime-error-explain). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Explain`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-38-38 -->
+<!-- example:glossary-runtime-error-wrap-caller -->
 
 </details>
 
@@ -14496,9 +13251,9 @@ Write the selected capture-buffer prefix through the supplied native writer, ret
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Capture.Receive](#word-authoring-runtime-capture-receive). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Capture.Receive`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-capture-46-46 -->
+<!-- example:glossary-runtime-capture-write-caller -->
 
 </details>
 
@@ -14515,9 +13270,9 @@ Write the supplied native text through the selected formatter and return its for
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Error.Display](#word-authoring-runtime-error-display). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Error.Display`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-errors-68-68 -->
+<!-- example:glossary-runtime-error-write-caller -->
 
 </details>
 
@@ -14534,9 +13289,9 @@ Create an async operation that writes the supplied bytes through the selected ou
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This statement is used inside [Runtime.Show](#word-authoring-runtime-show). Its enclosing native signature, preceding local bindings and selected native module are required.
+This statement is used inside `Runtime.Show`. Its enclosing native signature and preceding bindings remain required.
 
-<!-- example:glossary-runtime-eng-shutdown-67-67 -->
+<!-- example:glossary-runtime-write-caller -->
 
 </details>
 
@@ -14817,7 +13572,7 @@ Large source integers may already have rounded. Print reports that binary64 valu
 
 <a id="context-io--errors-and-return-behavior"></a>
 
-Print has no public return value. Its private Write consumes the rendered byte vector, obtains stdout and one guard, invokes a Lined Sender while that guard remains live, and uses [Storage.Result.Expect](#word-authoring-storage-result-expect) with `failed printing to stdout`. An output failure panics in the native App context. It is not a compiler diagnostic. The guard is released on success or unwinding. The program can inspect the App's Error after Await.
+Print has no public return value. Its private Write consumes the rendered byte vector, obtains stdout and one guard, invokes a Lined Sender while that guard remains live, and uses [Storage.Expect](#word-authoring-storage-expect) with `failed printing to stdout`. An output failure panics in the native App context. It is not a compiler diagnostic. The guard is released on success or unwinding. The program can inspect the App's Error after Await.
 
 Send, Lined and Flush instead return the native IO Result for the caller to handle. [Storage's result words](#context-storage--results-and-errors) distinguish selection, propagation and the explicit Expect panic policy.
 
@@ -15060,13 +13815,13 @@ The groups below explain the shared policies rather than cataloging every repres
 Use Storage from `storage`.
 ```
 
-Qualify the selected member in a Function with the required native signature, such as `a New Storage's Result's Expecter of Value and Message`. Importing Storage reuses the canonical dictionary already loaded privately by prelude. It does not publish its helpers globally. The [native callers](#context-storage--native-callers) below show complete enclosing declarations and actual calls.
+Qualify the selected member in a Function with the required native signature, such as `a New Storage's Expecter of Value and Message`. Importing Storage reuses the canonical dictionary already loaded privately by prelude. It does not publish its helpers globally. The [native callers](#context-storage--native-callers) below show complete enclosing declarations and actual calls.
 
 | Task | Composition |
 | --- | --- |
 | Choose an optional or fallible outcome | [Option.Select](#word-authoring-storage-option-select), [Result.Select](#word-authoring-storage-result-select) |
 | Turn absence into a runtime failure | [Require](#word-authoring-storage-require) |
-| Choose an explicit panic policy | [Result.Expect](#word-authoring-storage-result-expect) |
+| Choose an explicit panic policy | [Expect](#word-authoring-storage-expect) |
 | Visit values or pairs with explicit callback policy | [Iteration and continuations](#context-storage--iteration-and-continuations) |
 | Construct a result or return from the caller | [Returns and control flow](#context-storage--returns-and-control-flow) |
 | Retain shared identity or append exact bytes | [Ownership and bytes](#context-storage--ownership-and-bytes) |
@@ -15144,6 +13899,6 @@ Enclose builds one output buffer from the opening delimiter, then extends it wit
 
 <a id="context-storage--sources-and-witnesses"></a>
 
-The [source dictionary](../../builtins/eng/storage/dictionary.l) includes bindings, value representations, control, scalar display, collections, program storage, traversal and execution compositions in source order. These files add no namespaces or export wrappers. Shared [Runtime](../stdlib/eng/runtime.md) and [Formatting](../stdlib/eng/format.md) bindings and operators use Storage's canonical definitions. The existing Function.Target binding resolves to Tuple.Second's canonical by-value projection. Runtime casts use Storage.Integral. Formatting's private fixed-signature cast descriptors compose through that same operation while retaining their nominal targets. There is no separate Numeric dictionary or new implicit arithmetic vocabulary.
+The [source dictionary](../../builtins/eng/storage/dictionary.l) includes bindings, value representations, control, scalar display, collections, program storage, traversal and execution compositions in source order. These files add no namespaces or export wrappers. Shared [Runtime](../stdlib/eng/runtime.md) and [Formatting](../stdlib/eng/format.md) bindings and operators use Storage's canonical definitions. The existing Function.Target binding resolves to Tuple.Second's canonical by-value projection. Runtime casts use Storage.Cast. Formatting's private fixed-signature cast descriptors compose through that same operation while retaining their nominal targets. There is no separate Numeric dictionary or new implicit arithmetic vocabulary.
 
 Existing tests cover [namespaces, lazy failures, selectors, bytes and retention](../../lyger/word_library_acceptance_test.go), [traversal and continuation policies](../../lyger/word_library_traversal_test.go), [caller returns](../../lyger/word_library_reject_test.go), and [selected App retention](../../lyger/word_library_ownership_test.go). These implementation contracts complement the language's [copying and aliasing rules](../spec/values.md#conversion-and-aliasing-boundaries).

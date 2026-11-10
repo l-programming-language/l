@@ -110,6 +110,9 @@ func (e *orchestrationEmitter) captureEnvironment(values []*orchestrationValue, 
 // Functions borrow root state for published declarations and continuations.
 // Explicit Function captures remain independent snapshots of these values.
 func (e *orchestrationEmitter) programContext(actions []*record) ([]string, error) {
+	if len(e.compilation.definitionTemporaries) == 0 {
+		defer e.compilation.definitionScope()()
+	}
 	start := len(e.pending)
 	e.programStorage = make(map[*orchestrationStorage]int)
 	e.programActions = make(map[*record]int)
@@ -153,9 +156,11 @@ func (e *orchestrationEmitter) programContext(actions []*record) ([]string, erro
 	if err != nil {
 		return nil, err
 	}
+	cloned := e.compilation.definitionLabel()
 	context, err := e.word("Storage.Context.Create", map[string]DefinitionArgument{
 		"Name": definitionReferenceArgument("lContext"), "Runtime": definitionReferenceArgument("runtime"),
-		"Program": definitionReferenceArgument(program), "Binding": definitionReferenceArgument("lProgram"),
+		"Cloned": definitionReferenceArgument(cloned), "Binding": definitionReferenceArgument("lProgram"),
+		"Values": definitionAtomListArgument(definitionReferenceArgument(cloned), definitionReferenceArgument(program)),
 	})
 	if err != nil {
 		return nil, err

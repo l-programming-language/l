@@ -44,7 +44,7 @@ func TestLibrarySharedFoundationsHaveCanonicalOwners(t *testing.T) {
 	runtime := libraryFoundationUnit(t, c, "Runtime")
 	for _, test := range []struct{ local, owner string }{
 		{"Sum", "Storage.Sum"}, {"Agreement", "Storage.Agreement"}, {"Choice", "Storage.Choice"},
-		{"Alternative", "Storage.Result.Alternative"},
+		{"Unwrap", "Storage.Unwrap"},
 		{"First", "Storage.Tuple.First"}, {"Second", "Storage.Tuple.Second"},
 		{"Presence", "Storage.Presence"}, {"Equality", "Storage.Equality"},
 		{"Description", "Storage.Description"}, {"Encoding", "Storage.Encoding"},
@@ -139,7 +139,7 @@ func TestLibraryCastOwnershipAndDescriptorTargets(t *testing.T) {
 				files[name] = &fstest.MapFile{Data: bytes.ReplaceAll(file.Data, []byte(marker), []byte(replacement))}
 			}
 			if found != 1 {
-				t.Fatalf("selected Storage.Integral definitions = %d; want one", found)
+				t.Fatalf("selected Storage.Cast definitions = %d; want one", found)
 			}
 		}
 		result, err := NewLygerService(Options{Resources: files}).Compile([]byte("Use Formatting from `format`.\nUse Runtime from `runtime`.\n"), filepath.Join(t.TempDir(), "casts.l"))
@@ -173,7 +173,7 @@ func TestLibraryCastOwnershipAndDescriptorTargets(t *testing.T) {
 			t.Fatal(err)
 		}
 		if observed := bytes.Contains(runtimeAML, []byte("Operator: as, Operands: &[(")); observed != changed {
-			t.Fatalf("Runtime cast bypassed selected Storage.Integral: changed=%t, observed=%t", changed, observed)
+			t.Fatalf("Runtime cast bypassed selected Storage.Cast: changed=%t, observed=%t", changed, observed)
 		}
 		if !changed {
 			testNativeDefinitionLibrary(t, c, "Formatting.Casts", "casts", `#[path="src/casts.rs"] mod generated; fn main() {
@@ -196,9 +196,9 @@ func TestLibrarySharedFoundationConsumerNative(t *testing.T) {
 		"Create \"Second\" as a New Storage's Tuple's Second of Pair.\n" +
 		"Return a New Storage's Tuple of First, Agreed, and Second.\n\n" +
 		"    Publicly create Consumer's \"Fallback\" as a Generic `fallback` Function with Inputs of \"value\" as `Result<u64, u8>` and \"other\" as `u64` and Outputs of `u64`.\n" +
-		"Return a New Storage's Result's Alternative of Value and Other.\n\n" +
+		"Return a New Storage's Unwrapper of Value and Other.\n\n" +
 		"    Publicly create Consumer's \"Required\" as a Generic `required` Function with Inputs of \"value\" as `Option<Box<u8>>` and Outputs of `Box<u8>`.\n" +
-		"Return a New Storage's Result's Expecter of Value and `present payload`.\n"
+		"Return a New Storage's Expecter of Value and `present payload`.\n"
 	c := compileDefinitionSource(t, source, "independent-foundation-consumer.l")
 	testNativeDefinitionLibrary(t, c, "Consumer", "foundation_consumer", `#[path="src/foundation_consumer.rs"] mod generated;
 fn main() {

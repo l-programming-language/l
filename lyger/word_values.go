@@ -48,6 +48,23 @@ func (e *orchestrationEmitter) valueBinding(word string, arguments map[string]De
 	return e.describedValueBinding(word, nil, arguments)
 }
 
+// Source sequences with several intermediate bindings have no implicit result.
+// Their caller supplies the final label along with every producer and consumer.
+func (e *orchestrationEmitter) explicitValueBinding(word, result string, arguments map[string]DefinitionArgument) (string, error) {
+	depth := e.contractValueDepth
+	e.contractValueDepth++
+	body, err := e.word(word, arguments)
+	e.contractValueDepth = depth
+	if err != nil {
+		return "", err
+	}
+	e.pending = append(e.pending, body...)
+	if depth == 0 {
+		e.recordContractNativeEmission(word, nil, arguments, result)
+	}
+	return result, nil
+}
+
 func (e *orchestrationEmitter) describedValueBinding(word string, descriptors []string, arguments map[string]DefinitionArgument) (string, error) {
 	depth := e.contractValueDepth
 	e.contractValueDepth++
@@ -74,7 +91,18 @@ func (e *orchestrationEmitter) describedValueBinding(word string, descriptors []
 			return "", err
 		}
 	} else {
-		arguments["Name"] = definitionReferenceArgument(name)
+		node, selectionErr := e.compilation.definitionConstruction(rec, descriptors...)
+		if selectionErr != nil {
+			return "", selectionErr
+		}
+		header, _, _, headerErr := e.compilation.constructionHeader(node, false, make(map[*record]bool))
+		if headerErr != nil {
+			return "", headerErr
+		}
+		if header.implicitName == nil || header.implicitName.Type != "Label" {
+			return "", lerrors.InvalidInput.Errorf("%s requires an explicit result binding", word)
+		}
+		arguments[header.implicitName.Name] = definitionReferenceArgument(name)
 		body, err = e.describedWord(word, descriptors, arguments)
 	}
 	if err != nil {
@@ -118,7 +146,7 @@ func (e *orchestrationEmitter) borrowedResultBinding(word string, arguments map[
 }
 
 func (e *orchestrationEmitter) checkedBinding(value string) (string, error) {
-	result, err := e.describedValueBinding("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Value": definitionReferenceArgument(value)})
+	result, err := e.describedValueBinding("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Attempt": definitionReferenceArgument(value)})
 	if err == nil {
 		e.recordContractCheckedResult(value)
 	}

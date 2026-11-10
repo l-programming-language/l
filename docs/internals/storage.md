@@ -32,7 +32,7 @@ Use Storage from `storage`.
 
 <a id="resultexpect"></a>
 
-[Result.Expect](../reference/word-glossary.md#word-authoring-storage-result-expect).
+[Expect](../reference/word-glossary.md#word-authoring-storage-expect).
 
 <a id="resultselect"></a>
 

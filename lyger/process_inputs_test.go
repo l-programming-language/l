@@ -142,7 +142,7 @@ func TestStructuredProcessInputs(t *testing.T) {
 			"Choose Value, a New Present using a New Process with Inputs of \"payload\" as `f64` for Returning Payload, and a New Absent using a New Process for Returning 7.\n",
 			"assert_eq!(generated::exercise(Some(3.0)), 3.0); assert_eq!(generated::exercise(None), 7.0);"},
 		{"pairs", "\"values\" as `&[(u64, u64)]`", "u64",
-			"Walk Values and a New Process with Inputs of \"first\" as `&u64` and \"second\" as `&u64` for Returning a New Storage's Dereference of Second.\nReturn a New Storage's Integral of 0 and `u64`.\n",
+			"Walk Values and a New Process with Inputs of \"first\" as `&u64` and \"second\" as `&u64` for Returning a New Storage's Dereferencer of Second.\nReturn a New Storage's Caster of 0 and `u64`.\n",
 			"assert_eq!(generated::exercise(&[(2, 9), (3, 4)]), 9); assert_eq!(generated::exercise(&[]), 0);"},
 		{"result", "\"value\" as `Option<f64>`", "Result<f64, f64>",
 			"Choose Value, a New Present using a New Process with Inputs of \"payload\" as `f64` for Returning a New Storage's Success of Payload, and a New Absent using a New Process for Creating \"problem\" as a New Storage's Success of 7 and then Returning Problem.\n",

@@ -363,7 +363,18 @@ func buildGrammarClauses(term grammarTerm, tokens []*token, gram *grammar) ([]*c
 		leading, tokens = tokens[0], tokens[1:]
 	}
 	clauses, separators, err := grammarSequence(tokens, term.Multiple, func(input []*token) (*clauseGram, []*token, error) {
+		signatureError := gram.signatureError
 		clause, err := buildGrammarNode(initClauseGram(term.Name, input, gram))
+		if err != nil && term.Name == "clause" {
+			// An unqualified clause admits the declared forms of its selected
+			// word. Keep a successful root parse; retry its same-spelling
+			// passive only when that first grammar candidate cannot consume it.
+			head := clauseHead(input)
+			if head != nil && head.grammaticalForm("root") != nil && head.grammaticalForm("passive") != nil {
+				gram.signatureError = signatureError
+				clause, err = buildGrammarNode(initClauseGram("clause.passive", input, gram))
+			}
+		}
 		if err != nil {
 			return nil, nil, err
 		}

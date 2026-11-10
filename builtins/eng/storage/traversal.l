@@ -73,8 +73,8 @@ Create "Borrowed" as a New Storage's Borrower of Values.
 Create "Pairs" as a New Storage's Pairer of Iterator and Borrowed.
 Storage.Audit Pairs, Storage's Environment's Checker, and `capture initialization type mismatch`.
 Create "Cell" as a New Storage's Cell of Values.
-Create "Shared" as a New Storage's Shared of Cell.
-Create "Signature" as a New Storage's Shared of Types.
+Create "Shared" as a New Storage's Sharer of Cell.
+Create "Signature" as a New Storage's Sharer of Types.
 Create "Environment" as a New Storage's Environment's Content of Signature and Shared.
 Return a New Storage's Success of Environment.
 

@@ -19,7 +19,7 @@ It describes any Storage's Binding as `<DEF>OB{|Key: ~mut <@Name|Label@>: Option
 It describes any Storage's Vector as `<DEF>MOB{|Key: ~<@Name|Label@>: Vec<<@Type|Type@>>~|}^KY{|Key: ~Vec::new~|}<DEF>`.
 It describes any Storage's Tuple as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~()~|}<DEF>`.
 Define Storage's "Checked" as a New Adjective describing any Storage's Binding.
-It describes any Storage's Binding as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>?~|}<DEF>`.
+It describes any Storage's Binding as `<DEF>OB{|Key: ~<@Checked|Label@>~, Value: ~<@Attempt@>?~|}<DEF>`.
 
     Publicly create Storage's Pointer's "Copy|--ies|--ied|-ing|--ier" as a Generic Function with Inputs of "value" as `&LPointer` and Outputs of Storage's Pointer.
 Create "Element" as a New Storage's Pointer's Element of Value.

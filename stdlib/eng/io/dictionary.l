@@ -29,7 +29,7 @@ Create "Held" as a New Locker of Device.
 Create "Destination" as a New Storage.Editable Storage's Borrower of Held.
 Create "Payload" as a New Bytes of Value.
 Create "Receipt" as a New IO.Lined IO's Sender of Destination and Payload.
-Create "Accepted" as a New Storage's Result's Expecter of Receipt and `failed printing to stdout`.
+Create "Accepted" as a New Storage's Expecter of Receipt and `failed printing to stdout`.
 Return a New Storage's Nothing.
 
     Publicly create any Number's "Render|-s|-ed|-ing|-er" as a Generic Function with Inputs of "value" as `f64` and Outputs of `Vec<u8>`.

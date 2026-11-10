@@ -3,17 +3,17 @@
   "sourceHashes": {
     "builtins/eng/core.l": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
-    "lyger/binding.go": "ae768960f2e1e9bb6dea5e5154844dc3a4d3638cc2f8815572c99dafc348ab35",
+    "lyger/binding.go": "1c82c4334e2bca7481c8a4fd0253f66bf70c5cb82c6c6bdccb908ce73d7a9578",
     "lyger/construction.go": "59462e449a78c91f4f904b7359244ad379d5a400628dacea6616e774324eaaf7",
     "lyger/constructor_grammar.go": "cbd8d830bb3a8d0625e60d237afe5749155229b058a82ad6cac2eab44f8386f8",
-    "lyger/function_composition.go": "028b2b49eb47681cc23e3b3272fa2ba5b689d2ca8c7596453471e1a69f06f4ea",
+    "lyger/function_composition.go": "d5ef2c9e82bbc43c82e07a7d586e7f78f63c04c8d56747483bb8c5976fd7f272",
     "lyger/function_definitions.go": "1888437b6c54abf864ee600cb576e7a2bf905204777e044d86382da8ff8595dd",
     "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
-    "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
+    "lyger/grammar_match.go": "f451e7aff7aefae4a4cd63293a60eff4ff04df38c8a563c0139f4468044f55ca",
     "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
-    "lyger/instructions.go": "efb8cc58f9665652dd8a1aa480ae7cc4b9d71e0b3bf4c14b22787deb8cc9884e",
+    "lyger/instructions.go": "c2fa788245436f92036891370e9dc180a0646772d0efa96ec3cec8e3459f7c34",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
-    "lyger/lowering.go": "303d677902fb4fbc21eb0e574fb5b2e564ce9eb0269741c8cefddef3664a3ff9",
+    "lyger/lowering.go": "b483973c7749a22f33d727013a4217bb5d814a3013fdf9ac5282f59841d1c2b5",
     "lyger/process_inputs.go": "8d694eebf5de74b5585f10a04c24146426918036ebec3906d97cf4602721dfce",
     "lyger/runtime_values_source.go": "46a2db2854dca407019d7f0a578dce89394ae3fd835996831785f05317d8bc21",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
@@ -22,14 +22,15 @@
     "lyger/source_descriptors.go": "215e04ea143c33457a1664be7c760966284f11beef998fa51effb3aa2aafe8e9",
     "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
     "lyger/types.go": "08db7741ed9a099f34f4bd84a0af3e22f4f62e44e396ca5adca8dc20b35386ba",
-    "lyger/word_values.go": "449b35c1a97327533fa663131fa3817c71b30675cce7cf63d387eb27578e1240"
+    "lyger/word_values.go": "f6c36a20049c82c0a4c3a1ecd2dee8aa9240624cb36b38535a6487d27c6de1f1",
+    "lyger/token_forms.go": "41bc8a6d505fdea4f6c351f73060f0fd422745a5b5c083c8354fe7ade4013d6a"
   },
   "entries": {
     "value": {
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type\u2019s support boundary before using a configured value pattern.",
+      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -161,7 +162,7 @@
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type\u2019s support boundary before using a configured value pattern.",
+      "notes": "The cases enumerate recognizers, including categories whose general executable construction is not established. Consult each type’s support boundary before using a configured value pattern.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -441,7 +442,7 @@
       "doc": "docs/spec/definitions.md#source-actions",
       "topic": "Source actions",
       "support": "partial",
-      "notes": "Generic clauses call source-defined vocabulary with resolved typed arguments. Runtime captures use retained typed environments. Asynchronous methods are not introduced."
+      "notes": "Grammar selects a declared passive form of the already resolved canonical word, including identical root/passive spellings. Source actions retain their selected definitions. General passive Function-call signatures are unsupported and reject without dropping operands."
     },
     "clause.generic.applicative": {
       "doc": "docs/spec/definitions.md#source-actions",
@@ -561,7 +562,7 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Use the documented Put/Place and typed-read operations. These outer collection forms add no removal or iteration. Recognizing a grammatical form does not establish another operation API."
+      "notes": "Passive Put uses its grammatical subject as the value and the existing List/Map phrase as the destination and key. It reuses checked update lowering. Pointer passive syntax and additional collection operations are not introduced."
     },
     "clause.expansive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
@@ -813,25 +814,25 @@
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization."
     },
     "clause.observative.active": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization."
     },
     "clause.observative.passive": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization."
     },
     "clause.observative.applicative": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Show emits the resolved operand without Print\u2019s added newline; Output reads are subject to process finalization."
+      "notes": "Show emits the resolved operand without Print’s added newline; Output reads are subject to process finalization."
     },
     "clause.terminative.imperative": {
       "doc": "docs/spec/control-flow.md#exit-and-return",

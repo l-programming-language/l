@@ -444,7 +444,7 @@ test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ 
     ['/docs/guide/apps-and-services/', '../lyger/test/workspace/services.l', 1, 12],
     ['/docs/spec/definitions/', '../cmd/l/test/runnable_service/probe.l', 0, 3],
     ['/docs/guide/definitions/', '../docs/examples/composed-functions.l', 0, undefined],
-    ['/docs/guide/native-definitions/', '../builtins/eng/storage/control.l', 24, 26],
+    ['/docs/guide/native-definitions/', '../builtins/eng/storage/control.l', 23, 25],
     ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 16, 19],
     ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 20, 24],
     ['/docs/guide/first-program/', '../demo/basic/main.l', 0, undefined],

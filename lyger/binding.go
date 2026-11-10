@@ -233,8 +233,13 @@ func constructorModifierPOS(tokens []*token, index int) partOfSpeech {
 }
 
 func bindingContextPOS(tokens []*token, index int) partOfSpeech {
-	if index > 0 && tokens[index-1].hasRole("verb", "action.passive") {
-		return posVerb
+	for previous := index - 1; previous >= 0; previous-- {
+		if tokens[previous].hasRole("verb", "action.passive") {
+			return posVerb
+		}
+		if tokens[previous].getPOS(true) != "adverb" && !tokens[previous].isPossessive() {
+			break
+		}
 	}
 	return constructorModifierPOS(tokens, index)
 }

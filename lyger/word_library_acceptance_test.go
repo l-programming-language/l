@@ -57,7 +57,7 @@ func TestWordLibraryCatalog(t *testing.T) {
 		{"N02", "Storage.Option.Select", "verb", "Select Selects Selected Selecting Selector", false},
 		{"N03", "Storage.Result", "dictionary", "Result", false},
 		{"N04", "Storage.Result.Select", "verb", "Select Selects Selected Selecting Selector", false},
-		{"N05", "Storage.Result.Expect", "verb", "Expect Expects Expected Expecting Expecter", false},
+		{"N05", "Storage.Expect", "verb", "Expect Expects Expected Expecting Expecter", false},
 		{"N06", "Storage.Release", "verb", "Release Releases Released Releasing Releaser", false},
 		{"N07", "Storage.Paired", "adjective", "Paired", false},
 		{"N08", "Storage.Bytes.Extend", "verb", "Extend Extends Extended Extending Extender", false},
@@ -198,6 +198,7 @@ func TestWordLibraryRetiredHelpers(t *testing.T) {
 	c.Make()
 	for _, retired := range []struct{ owner, forms string }{
 		{"Storage", "Demand Demands Demanded Demanding Demander"},
+		{"Storage", "Optional"},
 		{"IO", "Slice"},
 		{"Runtime", "Dispose Disposes Disposed Disposing Disposer"},
 		{"Runtime", "Retain Retains Retained Retaining Retainer"},
@@ -214,7 +215,7 @@ func TestWordLibraryRetiredHelpers(t *testing.T) {
 			})
 		}
 	}
-	for _, name := range []string{"Storage.Optional", "Storage.Pair", "Formatting.Indexed"} {
+	for _, name := range []string{"Storage.Extract", "Storage.Pair", "Formatting.Indexed"} {
 		t.Run("retained-"+name, func(t *testing.T) {
 			if c.Error != nil {
 				t.Fatal(c.Error)
@@ -478,7 +479,7 @@ func TestWordLibraryIOBehavior(t *testing.T) {
 		"    Publicly create Checks's \"Send\" as a Generic `send` Function with Inputs of \"writer\" as `&mut crate::Recorder` and \"payload\" as `&[u8]` and Outputs of `std::io::Result<()>`.\nReturn a New IO's Sender of Writer and Payload.\n\n" +
 		"    Publicly create Checks's \"Line\" as a Generic `line` Function with Inputs of \"writer\" as `&mut crate::Recorder` and \"payload\" as `&[u8]` and Outputs of `std::io::Result<()>`.\nReturn a New IO.Lined IO's Sender of Writer and Payload.\n\n" +
 		"    Publicly create Checks's \"Flush\" as a Generic `flush` Function with Inputs of \"writer\" as `&mut crate::Recorder` and Outputs of `std::io::Result<()>`.\nReturn a New IO's Flusher of Writer.\n\n" +
-		"    Publicly create Checks's \"Expect\" as a Generic `expect` Function with Inputs of \"value\" as `Result<Box<u8>, &'static str>` and \"message\" as `&str` and Outputs of `Box<u8>`.\nReturn a New Storage's Result's Expecter of Value and Message.\n"
+		"    Publicly create Checks's \"Expect\" as a Generic `expect` Function with Inputs of \"value\" as `Result<Box<u8>, &'static str>` and \"message\" as `&str` and Outputs of `Box<u8>`.\nReturn a New Storage's Expecter of Value and Message.\n"
 	c := compileDefinitionSource(t, source, "word-io.l")
 	observer := `use std::io::{self, Write};
 use std::collections::VecDeque;
@@ -612,7 +613,7 @@ func TestWordLibrarySelectorScopes(t *testing.T) {
 	source := "Use Storage from `storage`.\nCreate \"Checks\" as a Dictionary.\n" +
 		"Define \"Sum\" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: +, Operands: &[<@Left@>, <@Right@>]&}Op]&~|}<DEF>`.\n\n" +
 		"    Publicly create Checks's \"Choose\" as a Generic `choose` Function with Inputs of \"left\" as `Option<u64>` and \"right\" as `Result<u64, u8>` and Outputs of `Result<u64, u8>`.\n" +
-		"Storage.Option.Select Left, a New Process with Inputs of \"Outer\" as `u64` for Storage.Result.Selecting Right, a New Process with Inputs of \"Inner\" as `u64` for Returning a New Storage's Success of a New Sum of Outer and Inner, and a New Process with Inputs of \"Failure\" as `u8` for Returning a New Storage's Rejection of Failure, and a New Process for Returning a New Storage's Success of a New Storage's Integral of 42 and `u64`.\n\n" +
+		"Storage.Option.Select Left, a New Process with Inputs of \"Outer\" as `u64` for Storage.Result.Selecting Right, a New Process with Inputs of \"Inner\" as `u64` for Returning a New Storage's Success of a New Sum of Outer and Inner, and a New Process with Inputs of \"Failure\" as `u8` for Returning a New Storage's Rejection of Failure, and a New Process for Returning a New Storage's Success of a New Storage's Caster of 42 and `u64`.\n\n" +
 		"Define \"Offer\" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::take_option~|}<DEF>`.\n" +
 		"Define \"Response\" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::take_result~|}<DEF>`.\n" +
 		"Define \"Acceptedpayload\" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::accepted_payload~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +

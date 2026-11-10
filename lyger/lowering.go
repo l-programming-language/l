@@ -704,7 +704,7 @@ func (c *Compilation) lowerAppBody(app *App) ([]DefinitionInstance, error) {
 	}
 	var body []DefinitionInstance
 	for _, stmt := range c.Statements {
-		if stmt.passiveLifecycle() {
+		if stmt.passiveLifecycle() || stmt.passivePut() {
 			continue
 		}
 		target, err := c.statementApp(stmt)

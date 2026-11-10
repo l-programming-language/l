@@ -383,6 +383,9 @@ func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) 
 		}
 	}
 	if clause.verb.binding != nil && clause.verb.binding.Record.isFunction() {
+		if strings.HasSuffix(clause.gType, ".passive") {
+			return nil, lerrors.Unsupported.Errorf("passive Function invocation is unsupported by the current operand grammar")
+		}
 		return b.functionOperation(clause, ctx, instructionInvoke)
 	}
 	lex := clause.verb.lexeme()
@@ -417,16 +420,10 @@ func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) 
 	var err error
 	switch kind {
 	case instructionUpdate:
-		if clause.phrase == nil || clause.phrase.subject == nil {
-			return nil, lerrors.InvalidInput.Errorf("update requires a destination")
+		if clause.passivePut() {
+			return nil, lerrors.Unsupported.Errorf("passive Put requires a grammatical subject")
 		}
-		current.Target, err = b.nominalValue(clause.phrase.subject.noun, clause.phrase.subject.tokens, ctx)
-		if err == nil {
-			current.Value, err = b.objectValue(clause.obj, ctx)
-		}
-		if err == nil && clause.phrase.phrase != nil {
-			current.Key, err = b.phraseValue(clause.phrase.phrase, ctx)
-		}
+		current, err = b.update(clause, nil, ctx)
 	case instructionAssign:
 		if clause.subject == nil {
 			return nil, lerrors.InvalidInput.Errorf("runtime assignment requires a named subject")
@@ -484,6 +481,73 @@ func (b *instructionBuilder) clause(clause *clauseGram, ctx instructionContext) 
 		return nil, err
 	}
 	return append([]*instruction{current}, following...), nil
+}
+
+// update normalizes both imperative operands and a passive grammatical subject
+// into the existing typed update instruction. Grammar and runtime interfaces
+// remain identical; passive Put admits only the configured collection cases.
+func (b *instructionBuilder) update(clause *clauseGram, subject *subjectGram, ctx instructionContext) (*instruction, error) {
+	if clause.phrase == nil || clause.phrase.subject == nil {
+		return nil, lerrors.InvalidInput.Errorf("update requires a destination")
+	}
+	current := ctx.newInstruction(instructionUpdate)
+	current.SourceToken = clause.verb
+	var err error
+	current.Target, err = b.nominalValue(clause.phrase.subject.noun, clause.phrase.subject.tokens, ctx)
+	if err != nil {
+		return nil, err
+	}
+	if subject != nil {
+		if current.Target.Type != valueList && current.Target.Type != valueMap {
+			return nil, lerrors.Unsupported.Errorf("passive Put requires a List or Map destination, got %s", current.Target.Type)
+		}
+		current.Value, err = b.nominalValue(subject.noun, subject.tokens, ctx)
+	} else {
+		current.Value, err = b.objectValue(clause.obj, ctx)
+	}
+	if err == nil && clause.phrase.phrase != nil {
+		current.Key, err = b.phraseValue(clause.phrase.phrase, ctx)
+	}
+	return current, err
+}
+
+func (clause *clauseGram) passivePut() bool {
+	if clause == nil || clause.verb == nil || !strings.HasSuffix(clause.gType, ".passive") {
+		return false
+	}
+	role, native := clause.verb.nativeRole()
+	return native && role == rolePut
+}
+
+func (statement *lStatement) passivePut() bool {
+	return statement != nil && statement.sGram != nil && statement.sGram.subject != nil &&
+		statement.sGram.predicate != nil && len(statement.sGram.predicate.clauses) > 0 &&
+		statement.sGram.predicate.clauses[0].passivePut()
+}
+
+func (b *instructionBuilder) passivePut(subject *subjectGram, clauses []*clauseGram, ctx instructionContext) ([]*instruction, error) {
+	var instructions []*instruction
+	for _, clause := range clauses {
+		if !clause.passivePut() {
+			following, err := b.clause(clause, ctx)
+			if err != nil {
+				return nil, err
+			}
+			instructions = append(instructions, following...)
+			continue
+		}
+		current, err := b.update(clause, subject, ctx)
+		if err != nil {
+			return nil, err
+		}
+		instructions = append(instructions, current)
+		following, err := b.clauses(clause.clauses, ctx)
+		if err != nil {
+			return nil, err
+		}
+		instructions = append(instructions, following...)
+	}
+	return instructions, nil
 }
 
 func (b *instructionBuilder) customCall(clause *clauseGram, ctx instructionContext) ([]*instruction, error) {
@@ -685,6 +749,14 @@ func (b *instructionBuilder) statement(statement *lStatement, ctx instructionCon
 	// The integrating pass owns declarations and application-body effects.
 	// Other subjective effects must not silently disappear from outer IR.
 	if subject := statement.sGram.subject; subject != nil {
+		if statement.passivePut() {
+			instructions, err := b.passivePut(subject, predicate.clauses, ctx)
+			if err != nil {
+				return nil, false, err
+			}
+			following, err := b.clauses(statement.sGram.clauses, ctx)
+			return append(instructions, following...), false, err
+		}
 		if statement.passiveLifecycle() {
 			var instructions []*instruction
 			target, err := b.nominalValue(subject.noun, subject.tokens, ctx)

@@ -21,11 +21,10 @@ Define Runtime's "Cloned" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~cloned
 Define Runtime's "Collection" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~collect~, Receiver: ~<@Iterator@>~, GenericTypes: ~Vec<_>~|}<DEF>`.
 Define Runtime's "Take|-s|----ook|--ing|-r" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~take~, Receiver: ~<@Value@>~|}<DEF>`.
 Define Runtime's "Abort|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~abort~, Receiver: ~<@Task@>~|}<DEF>`.
-Define Runtime's "Join|-s|-ed|-ing|-er" to `<DEF>BOP^X{|Iterable: ~<@Values@>~, Key: ~item~, RangeArity: ~1~|}^W^(MOB{|Key: ~pending~|}^KY{|Key: ~<@Action@>~, Inputs: ~&[item]&~|}*COB{|Key: ~_~|}^DV{|Key: ~pending~|})<DEF>`.
+Create Runtime's "Join|-s|-ed|-ing|-er" for Processing a New Storage's Iteration of any Thing and a New Process with Inputs of "Item" as `_` for Creating "Scheduled" as a New Storage.Produced Storage's Binding of a New Function's Invoker of any Thing and Item and then Creating "Completed" as a New Storage's Awaiter of Scheduled.
 Define Runtime's "Flush|-es|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~tokio::io::AsyncWriteExt::flush~, Inputs: ~&[<@Output@>]&~|}<DEF>`.
 Define Runtime's "Write|-s|----ote|--ing|-r" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~tokio::io::AsyncWriteExt::write_all~, Inputs: ~&[<@Output@>, <@Bytes@>]&~|}<DEF>`.
 Define Runtime's "Failure" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~err~, Receiver: ~<@Value@>~|}<DEF>`.
-Define Runtime's "Faults" as `<DEF>MOB{|Key: ~mut <@Name|Label@>: Vec<Error>~|}^KY{|Key: ~Vec::new~|}<DEF>`.
 Define Runtime's "Push|-es|-ed|-ing|-er" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~push~, Receiver: ~<@Values@>~, Inputs: ~&[<@Value@>]&~|}<DEF>`.
 Define Runtime's "Acquire|-s|-d|--ing|-r" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~lock~, Receiver: ~<@Mutex@>~|}<DEF>`.
 Define Runtime's Terminal's "Record|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~terminal_entered~, Receiver: ~<@Value@>.inner.dependencies~, Inputs: ~&[<@Request@>]&~|}<DEF>`.
@@ -34,14 +33,14 @@ Define Runtime's "Exit" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~crate::runti
 
     Publicly create Runtime's "Fail|-s|-ed|-ing|-er" as a Generic `runtime_fail` Function with Inputs of "value" as `&Runtime` and "error" as `Option<Error>` and Outputs of Runtime's Error.
 Create "Available" as a New Presence of Error.
-If Available, Create "Fault" as a New Storage's Result's Expecter of Error and `present failure` and then Create "Selected" as a New Runtime's Refuser of Value and Fault and then Return Selected.
+If Available, Create "Fault" as a New Storage's Expecter of Error and `present failure` and then Create "Selected" as a New Runtime's Refuser of Value and Fault and then Return Selected.
 Return a New Runtime's Refuser of Value and a New Runtime's Error's Describer of `cannot exit with an absent Error`.
 
     Create Runtime's "Refuse|-s|-d|--ing|-r" as a Generic `runtime_fail_present` Function with Inputs of "value" as `&Runtime` and "error" as `Error` and Outputs of Runtime's Error.
 Create "Request" as a New Runtime's Fatal.
 Runtime.Terminal.Record Value and Request.
 Create "Wrapped" as a New Present of a New Runtime's Error's Copier of a New Storage's Borrower of Error.
-Create "One" as a New Runtime's Byte of 1.
+Create "One" as a New Storage's Caster of 1 and `u8`.
 Create "Requested" as a New Runtime's Requester of Value and One and Wrapped.
 Return Error.
 
@@ -49,7 +48,7 @@ Return Error.
 Create "Request" as a New Runtime's Exit.
 Runtime.Terminal.Record Value and Request.
 Create "Missing" as a New Absent.
-Create "Zero" as a New Runtime's Byte of 0.
+Create "Zero" as a New Storage's Caster of 0 and `u8`.
 Create "Requested" as a New Runtime's Requester of Value and Zero and Missing.
 Return a New Runtime's Error's Canceller.
 
@@ -58,16 +57,16 @@ Create "Initial" as a New Runtime's Checker of Value.
 Create "Rejected" as a New Runtime's Fault of Initial.
 If Rejected, Return Initial.
 Create "Inner" as a New Runtime's Reference of Value.
-Create "Locked" as a New Runtime's Completion of a New Runtime's Acquirer of a New Runtime's Inner's Stdout of Inner.
+Create "Locked" as a New Storage's Awaiter of a New Runtime's Acquirer of a New Runtime's Inner's Stdout of Inner.
 Create "Guard" as a New Mutable Binding of Locked.
 Create "Current" as a New Runtime's Checker of Value.
 Create "Cancelled" as a New Runtime's Fault of Current.
 If Cancelled, Return Current.
 Create "Output" as a New Storage.Editable Storage's Reference of Guard.
-Create "Written" as a New Runtime's Completion of a New Runtime's Writer of Output and Bytes.
+Create "Written" as a New Storage's Awaiter of a New Runtime's Writer of Output and Bytes.
 Create "Failed" as a New Runtime's Fault of Written.
 If Failed, Create "Cause" as a New Runtime's Rejecter of Written and then Create "Reason" as a New Runtime's Error's Explainer of `write application stdout` and Cause and then Create "Fault" as a New Runtime's Refuser of Value and Reason and then Create "Failedresult" as a New Failure of Fault and then Return Failedresult.
-Create "Flushed" as a New Runtime's Completion of a New Runtime's Flusher of Output.
+Create "Flushed" as a New Storage's Awaiter of a New Runtime's Flusher of Output.
 Create "Incomplete" as a New Runtime's Fault of Flushed.
 If Incomplete, Create "Later" as a New Runtime's Rejecter of Flushed and then Create "Explanation" as a New Runtime's Error's Explainer of `flush application stdout` and Later and then Create "Fatal" as a New Runtime's Refuser of Value and Explanation and then Create "Erroneous" as a New Failure of Fatal and then Return Erroneous.
 Return a New Success of a New Nothing.
@@ -75,15 +74,15 @@ Return a New Success of a New Nothing.
     Create Runtime's "Report|-s|-ed|-ing|-er" as a Generic Pending `runtime_report` Function with Inputs of "value" as `&Runtime` and "diagnostic" as `Option<Vec<u8>>` and "status" as `u8` and Outputs of `std::pin::Pin<Box<dyn std::future::Future<Output = u8> + Send + '_>>`.
 Create "Available" as a New Presence of Diagnostic.
 If Available is false, Return Status.
-Create "Bytes" as a New Storage's Result's Expecter of Diagnostic and `supplied diagnostic`.
+Create "Bytes" as a New Storage's Expecter of Diagnostic and `supplied diagnostic`.
 Create "Inner" as a New Runtime's Reference of Value.
-Create "Locked" as a New Runtime's Completion of a New Runtime's Acquirer of a New Runtime's Inner's Stderr of Inner.
+Create "Locked" as a New Storage's Awaiter of a New Runtime's Acquirer of a New Runtime's Inner's Stderr of Inner.
 Create "Output" as a New Storage.Editable Storage's Reference of a New Mutable Binding of Locked.
 Create "Reference" as a New Storage's Borrower of Bytes.
-Create "One" as a New Runtime's Byte of 1.
-Create "Failed" as a New Runtime's Fault of a New Runtime's Completion of a New Runtime's Writer of Output and Reference.
+Create "One" as a New Storage's Caster of 1 and `u8`.
+Create "Failed" as a New Runtime's Fault of a New Storage's Awaiter of a New Runtime's Writer of Output and Reference.
 If Failed, Return One.
-Create "Incomplete" as a New Runtime's Fault of a New Runtime's Completion of a New Runtime's Flusher of Output.
+Create "Incomplete" as a New Runtime's Fault of a New Storage's Awaiter of a New Runtime's Flusher of Output.
 Return a New Choice of Incomplete and One and Status.
 
     Publicly create Runtime's Terminal's "Copy|--ies|--ied|-ing|--ier" as a Generic `terminal_copy` Function with Inputs of "value" as `&Terminal` and Outputs of Runtime's Terminal.
@@ -115,7 +114,7 @@ Return a New Nothing.
 Create "Available" as a New Runtime's Observer of Receiver.
 Create "Ready" as a New Presence of Available.
 If Ready, Runtime.Replace Outcome and Available and then Return true.
-Create "Closed" as a New Runtime's Fault of a New Runtime's Completion of a New Runtime's Changer of Receiver.
+Create "Closed" as a New Runtime's Fault of a New Storage's Awaiter of a New Runtime's Changer of Receiver.
 If Closed is false, Return false.
 Create "Result" as a New Present of a New Failure of a New Runtime's Error's Describer of `runtime shutdown notification closed`.
 Runtime.Replace Outcome and Result.
@@ -128,10 +127,10 @@ Create "Receiver" as a New Mutable Binding of a New Runtime's Subscriber of a Ne
 Create "Outcome" as a New Mutable Binding of a New Absent.
 Create "Notification" as a New Storage.Editable Storage's Borrower of Receiver.
 Create "Destination" as a New Storage.Editable Storage's Borrower of Outcome.
-Runtime.Repeat a New Process for Runtime.Halting a New Runtime's Completion of a New Runtime's Listener of Notification and Destination.
+Runtime.Repeat a New Process for Runtime.Halting a New Storage's Awaiter of a New Runtime's Listener of Notification and Destination.
 Storage.Release Receiver.
 Create "Optional" as a New Runtime's Taker of Destination.
-Return a New Storage's Result's Expecter of Optional and `completed shutdown`.
+Return a New Storage's Expecter of Optional and `completed shutdown`.
 
     Create Runtime's "Read|-s|-|-ing|-er" as a Generic `runtime_status` Function with Inputs of "value" as `&Runtime` and Outputs of `Option<u8>`.
 Create "Guard" as a New Locker of a New Runtime's Admission of a New Runtime's Reference of Value.
@@ -144,8 +143,8 @@ Create "Target" as a New Runtime's State's Finalize of Guard.
 Runtime.Replace Target and true.
 Create "Optional" as a New Storage's Copier of a New Runtime's State's Terminal of Guard.
 Create "Present" as a New Presence of Optional.
-If Present, Create "Terminal" as a New Storage's Result's Expecter of Optional and `selected terminal` and then Return Terminal.
-Create "Zero" as a New Runtime's Byte of 0.
+If Present, Create "Terminal" as a New Storage's Expecter of Optional and `selected terminal` and then Return Terminal.
+Create "Zero" as a New Storage's Caster of 0 and `u8`.
 Return a New Runtime's Terminal's Content of Zero and a New Absent.
 
     Create Runtime's "Remember|-s|-ed|-ing|-er" as a Generic `runtime_final_status` Function with Inputs of "value" as `&Runtime` and "status" as `u8` and Outputs of `u8`.
@@ -162,40 +161,40 @@ If Failed is false, Return Unit.
 Create "Error" as a New Runtime's Rejecter of Result.
 Create "Cancelled" as a New Runtime's Error's Checker of a New Storage's Borrower of Error.
 If Cancelled, Return Unit.
-Create "One" as a New Runtime's Byte of 1.
+Create "One" as a New Storage's Caster of 1 and `u8`.
 Create "Requested" as a New Runtime's Requester of Value and One and a New Present of Error.
 Return Unit.
 
     Create Runtime's "Diagnose|-s|-d|--ing|-r" as a Generic `runtime_diagnostics` Function with Inputs of "primary" as `Option<Error>` and "cleanup" as `Option<Error>` and Outputs of `Option<Vec<u8>>`.
-Create "Errors" as a New Runtime's Faults.
-Runtime.Supervision.Extend Errors and Primary.
-Runtime.Supervision.Extend Errors and Cleanup.
+Create "Errors" as a New Storage's Vector's Buffer of `Error`.
+Extend Errors and Primary.
+Extend Errors and Cleanup.
 Create "Joined" as a New Runtime's Error's Joiner of Errors.
 Create "Available" as a New Presence of Joined.
 If Available is false, Create "Missing" as a New Absent and then Return Missing.
-Create "Rendered" as a New Runtime's Error's Renderer of a New Storage's Borrower of a New Storage's Result's Expecter of Joined and `present diagnostic`.
+Create "Rendered" as a New Runtime's Error's Renderer of a New Storage's Borrower of a New Storage's Expecter of Joined and `present diagnostic`.
 Create "Buffer" as a New Mutable Binding of Rendered.
-Create "Separated" as a New Runtime's Error's Separator of Buffer.
+Create "Separated" as a New Storage's Appender of Buffer and a New Storage's Caster of 10 and `u8`.
 Return a New Present of Buffer.
 
     Publicly create Runtime's "Finish|-es|-ed|-ing|-er" as a Generic Pending `runtime_finish` Function with Inputs of "value" as `&Runtime` and "result" as `Result<()>` and Outputs of `std::pin::Pin<Box<dyn std::future::Future<Output = u8> + Send + '_>>`.
 Create "Inner" as a New Runtime's Reference of Value.
-Create "Guard" as a New Runtime's Completion of a New Runtime's Acquirer of a New Runtime's Inner's Gate of Inner.
+Create "Guard" as a New Storage's Awaiter of a New Runtime's Acquirer of a New Runtime's Inner's Gate of Inner.
 Create "Previous" as a New Runtime's Reader of Value.
 Create "Finalized" as a New Presence of Previous.
-If Finalized, Create "Recorded" as a New Storage's Result's Expecter of Previous and `finalized status` and then Return Recorded.
+If Finalized, Create "Recorded" as a New Storage's Expecter of Previous and `finalized status` and then Return Recorded.
 Create "Handled" as a New Runtime's Resolver of Value and Result.
-Create "Cleanup" as a New Runtime's Failure of a New Runtime's Completion of a New Runtime's Cleaner of Value.
+Create "Cleanup" as a New Runtime's Failure of a New Storage's Awaiter of a New Runtime's Cleaner of Value.
 Create "Failed" as a New Presence of Cleanup.
 Create "Terminal" as a New Runtime's Concluder of Value.
 Create "Previousstatus" as a New Runtime's Terminal's Status of Terminal.
-Create "Incomplete" as a New Agreement of Failed and a New Equality of Previousstatus and a New Runtime's Byte of 0.
-Create "One" as a New Runtime's Byte of 1.
+Create "Incomplete" as a New Agreement of Failed and a New Equality of Previousstatus and a New Storage's Caster of 0 and `u8`.
+Create "One" as a New Storage's Caster of 1 and `u8`.
 Create "Status" as a New Choice of Incomplete and One and Previousstatus.
-Create "Stopped" as a New Runtime's Completion of a New Runtime's Queller of Value.
+Create "Stopped" as a New Storage's Awaiter of a New Runtime's Queller of Value.
 Create "Primary" as a New Storage's Copier of a New Runtime's Terminal's Error of Terminal.
 Create "Optional" as a New Runtime's Diagnoser of Primary and Cleanup.
-Return a New Runtime's Rememberer of Value and a New Runtime's Completion of a New Runtime's Reporter of Value, Optional, and Status.
+Return a New Runtime's Rememberer of Value and a New Storage's Awaiter of a New Runtime's Reporter of Value, Optional, and Status.
 
 Define Runtime's "Catch|-es|----ught|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::runtime::host::catch~, Inputs: ~&[<@Future@>]&~|}<DEF>`.
 Define Runtime's "Resume|-s|-d|--ing|-r" to `<DEF>MOB{|Key: ~_~|}^KY{|Key: ~std::panic::resume_unwind~, Inputs: ~&[<@Panic@>]&~|}<DEF>`.
@@ -208,15 +207,15 @@ Return a New Runtime's Selected of Guard.
 Create "Inner" as a New Runtime's Reference of Value.
 Create "Receiver" as a New Mutable Binding of a New Runtime's Subscriber of a New Runtime's Inner's Cancellation of Inner.
 Create "Cancelling" as a New Runtime's Waiter of a New Storage.Editable Storage's Borrower of Receiver.
-Create "Finished" as a New Runtime's Completion of a New Runtime's Racer of Cancelling and a New Runtime's Catcher of Source.
+Create "Finished" as a New Storage's Awaiter of a New Runtime's Racer of Cancelling and a New Runtime's Catcher of Source.
 Create "Cancelled" as a New Runtime's Valid of Finished.
-If Cancelled, Create "Reason" as a New Runtime's Error's Canceller and then Create "Rejected" as a New Failure of Reason and then Create "Cleaning" as a New Runtime's Finisher of Value and Rejected and then Create "Interrupted" as a New Runtime's Completion of Cleaning and then Return Interrupted.
+If Cancelled, Create "Reason" as a New Runtime's Error's Canceller and then Create "Rejected" as a New Failure of Reason and then Create "Cleaning" as a New Runtime's Finisher of Value and Rejected and then Create "Interrupted" as a New Storage's Awaiter of Cleaning and then Return Interrupted.
 Create "Result" as a New Runtime's Rejecter of Finished.
 Create "Panicked" as a New Runtime's Fault of Result.
-If Panicked is false, Create "Completed" as a New Storage's Result's Expecter of Result and `completed source execution` and then Create "Settling" as a New Runtime's Finisher of Value and Completed and then Create "Settled" as a New Runtime's Completion of Settling and then Return Settled.
+If Panicked is false, Create "Completed" as a New Storage's Expecter of Result and `completed source execution` and then Create "Settling" as a New Runtime's Finisher of Value and Completed and then Create "Settled" as a New Storage's Awaiter of Settling and then Return Settled.
 Create "Panic" as a New Runtime's Rejecter of Result.
-Create "Status" as a New Runtime's Completion of a New Runtime's Finisher of Value and a New Success of a New Nothing.
-Create "Zero" as a New Runtime's Byte of 0.
+Create "Status" as a New Storage's Awaiter of a New Runtime's Finisher of Value and a New Success of a New Nothing.
+Create "Zero" as a New Storage's Caster of 0 and `u8`.
 If Status isnt Zero, Return Status.
 Create "Selected" as a New Runtime's Decider of Value.
 If Selected, Return Status.
@@ -243,7 +242,7 @@ Return a New Runtime's Taker of Guard.
     Create Runtime's "Quell|-s|-ed|-ing|-er" as a Generic Pending `runtime_quell` Function with Inputs of "value" as `&Runtime` and Outputs of `std::pin::Pin<Box<dyn std::future::Future<Output = ()> + Send + '_>>`.
 Create "Optional" as a New Runtime's Unsubscriber of Value.
 Create "Available" as a New Presence of Optional.
-If Available, Create "Task" as a New Storage's Result's Expecter of Optional and `present signal task` and then Runtime.Abort Task and then Create "Stopped" as a New Runtime's Completion of Task.
+If Available, Create "Task" as a New Storage's Expecter of Optional and `present signal task` and then Runtime.Abort Task and then Create "Stopped" as a New Storage's Awaiter of Task.
 Return a New Nothing.
 
     Create Runtime's "Assess|-es|-ed|-ing|-or" as a Generic `runtime_cleanup` Function with Inputs of "value" as `&Runtime` and Outputs of `Result<()>`.
@@ -251,23 +250,23 @@ Create "Guard" as a New Locker of a New Runtime's Admission of a New Runtime's R
 Create "Errors" as a New Runtime's Collection of a New Runtime's Cloned of a New Runtime's State's Errors of Guard.
 Create "Joined" as a New Runtime's Error's Joiner of Errors.
 Create "Available" as a New Presence of Joined.
-If Available, Create "Reason" as a New Storage's Result's Expecter of Joined and `present cleanup error` and then Create "Failed" as a New Failure of Reason and then Return Failed.
+If Available, Create "Reason" as a New Storage's Expecter of Joined and `present cleanup error` and then Create "Failed" as a New Failure of Reason and then Return Failed.
 Return a New Success of a New Nothing.
 
     Create Runtime's Invocation's "Settle|-s|-d|--ing|-r" as a Generic Pending `invocation_settle` Function with Inputs of "value" as `&std::sync::Arc<Invocation>` and Outputs of `std::pin::Pin<Box<dyn std::future::Future<Output = ()> + Send + '_>>`.
-Create "Terminated" as a New Runtime's Completion of a New Runtime's Invocation's Terminator of Value and false.
+Create "Terminated" as a New Storage's Awaiter of a New Runtime's Invocation's Terminator of Value and false.
 Create "Failed" as a New Runtime's Fault of Terminated.
 Create "Unit" as a New Nothing.
 If Failed is false, Return Unit.
 Create "Reason" as a New Runtime's Rejecter of Terminated.
-Create "Errors" as a New Runtime's Faults.
+Create "Errors" as a New Storage's Vector's Buffer of `Error`.
 Runtime.Push Errors and Reason.
-Create "Killed" as a New Runtime's Completion of a New Runtime's Invocation's Killer of Value.
+Create "Killed" as a New Storage's Awaiter of a New Runtime's Invocation's Killer of Value.
 Create "Remaining" as a New Runtime's Fault of Killed.
 If Remaining, Create "Second" as a New Runtime's Rejecter of Killed and then Runtime.Push Errors and Second.
 Create "Joined" as a New Runtime's Error's Joiner of Errors.
 Create "Available" as a New Presence of Joined.
-If Available, Create "Combined" as a New Storage's Result's Expecter of Joined and `present cleanup error` and then Create "Recorded" as a New Runtime's Invocation's Recorder of Value and Combined.
+If Available, Create "Combined" as a New Storage's Expecter of Joined and `present cleanup error` and then Create "Recorded" as a New Runtime's Invocation's Recorder of Value and Combined.
 Return Unit.
 
     Create Runtime's "Reap|-s|-ed|-ing|-er" as a Generic Pending `runtime_reap` Function with Inputs of "value" as `Runtime` and "owned" as `Vec<std::sync::Arc<Invocation>>` and Outputs of `std::pin::Pin<Box<dyn std::future::Future<Output = ()> + Send>>`.
@@ -276,7 +275,7 @@ Runtime.Join Invocations and Runtime's Invocation's Settler.
 Runtime.Join Invocations and Runtime's Invocation's Completer.
 Create "Borrowed" as a New Storage's Borrower of Value.
 Create "Result" as a New Runtime's Assessor of Borrowed.
-Create "Stopped" as a New Runtime's Completion of a New Runtime's Queller of Borrowed.
+Create "Stopped" as a New Storage's Awaiter of a New Runtime's Queller of Borrowed.
 Create "Inner" as a New Runtime's Reference of Value.
 Create "Notification" as a New Runtime's Inner's Notification of Inner.
 Create "Wrapped" as a New Present of Result.
@@ -288,7 +287,7 @@ Create "Optional" as a New Runtime's Gatherer of Value.
 Create "Available" as a New Presence of Optional.
 Create "Unit" as a New Nothing.
 If Available is false, Return Unit.
-Create "Owned" as a New Storage's Result's Expecter of Optional and `selected shutdown owner`.
+Create "Owned" as a New Storage's Expecter of Optional and `selected shutdown owner`.
 Create "Handle" as a New Runtime's Copier of Value.
 Create "Spawned" as a New Runtime's Spawner of a New Runtime's Reaper of Handle and Owned.
 Return Unit.

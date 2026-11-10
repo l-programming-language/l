@@ -477,8 +477,8 @@ func TestWordLibraryTransparentValueWrapper(t *testing.T) {
 func TestWordLibrarySourceConstructorSpecialization(t *testing.T) {
 	source := "Use Storage from `storage`.\n" +
 		"Define \"Acquire\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\n" +
-		"Define \"Amount\" as a New Storage's Integral of any Thing and `i32`.\n" +
-		"Define \"Large\" as a New Adjective describing any Amount.\nIt describes any Amount as a New Storage's Integral of any Thing and `u128`.\n" +
+		"Define \"Amount\" as a New Storage's Caster of any Thing and `i32`.\n" +
+		"Define \"Large\" as a New Adjective describing any Amount.\nIt describes any Amount as a New Storage's Caster of any Thing and `u128`.\n" +
 		"Define \"Joined\" as a New Storage's Tuple of any Thing and any Thing.\n\n" +
 		"    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `(i32, u128, (f64, f64))`.\n" +
 		"Create \"Plain\" as a New Amount of a New Acquire.\nCreate \"Expanded\" as a New Large Amount of a New Acquire.\n" +
@@ -521,7 +521,7 @@ func TestWordLibraryFunctionReplacementRequiresFunctionBase(t *testing.T) {
 func TestWordLibrarySourceDescriptorCycles(t *testing.T) {
 	for _, replacement := range []string{"Changed Amount", "Amount"} {
 		t.Run(replacement, func(t *testing.T) {
-			source := "Use Storage from `storage`.\nDefine \"Amount\" as a New Storage's Integral of any Thing and `i32`.\nDefine \"Changed\" as a New Adjective describing any Amount.\nIt describes any Amount as a New " + replacement + ".\n\n" +
+			source := "Use Storage from `storage`.\nDefine \"Amount\" as a New Storage's Caster of any Thing and `i32`.\nDefine \"Changed\" as a New Adjective describing any Amount.\nIt describes any Amount as a New " + replacement + ".\n\n" +
 				"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `i32`.\nReturn a New Changed Amount of Value.\n"
 			result, err := NewLygerService(Options{}).Compile([]byte(source), filepath.Join(t.TempDir(), "cycle.l"))
 			if err == nil {

@@ -93,30 +93,39 @@ func (c *Compilation) instantiateDefinition(rec *record, arguments map[string]De
 	if len(c.definitionTemporaries) == 0 {
 		defer c.definitionScope()()
 	}
-	used := make(map[string]bool)
-	node := &constructionNode{Definition: rec, Nominal: rec.ID}
-	for _, name := range descriptors {
-		modifier, err := c.builtinRecord(name)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		descriptor := c.Semantics.Descriptors[modifier]
-		if descriptor == nil {
-			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s is not a descriptor", name)
-		}
-		matched, err := c.applyDescriptor(node, descriptor, nominalIdentity{definition: rec}, make(map[*descriptorRule]bool), constructionConcrete, nil)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		if !matched {
-			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s does not describe %s", name, rec.ID)
-		}
+	node, err := c.definitionConstruction(rec, descriptors...)
+	if err != nil {
+		return DefinitionInstance{}, err
 	}
+	used := make(map[string]bool)
 	bound, err := c.instantiateNamedConstruction(node, arguments, used, make(map[*record]bool))
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
 	return bound, validateDefinitionArguments(rec, arguments, used)
+}
+
+// Result naming and construction use the same selected descriptor chain.
+func (c *Compilation) definitionConstruction(rec *record, descriptors ...string) (*constructionNode, error) {
+	node := &constructionNode{Definition: rec, Nominal: rec.ID}
+	for _, name := range descriptors {
+		modifier, err := c.builtinRecord(name)
+		if err != nil {
+			return nil, err
+		}
+		descriptor := c.Semantics.Descriptors[modifier]
+		if descriptor == nil {
+			return nil, lerrors.TypeMismatch.Errorf("%s is not a descriptor", name)
+		}
+		matched, err := c.applyDescriptor(node, descriptor, nominalIdentity{definition: rec}, make(map[*descriptorRule]bool), constructionConcrete, nil)
+		if err != nil {
+			return nil, err
+		}
+		if !matched {
+			return nil, lerrors.TypeMismatch.Errorf("%s does not describe %s", name, rec.ID)
+		}
+	}
+	return node, nil
 }
 
 func validateDefinitionArguments(rec *record, arguments map[string]DefinitionArgument, used map[string]bool) error {

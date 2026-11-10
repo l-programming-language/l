@@ -348,7 +348,7 @@ func (l *lStatement) loadGram() error {
 		family, _ := statementTypeMap(l.sType) //nolint:errcheck // The original grammar error stays primary; unknown is the intended fallback diagnostic prefix.
 		return fmt.Errorf("%s: %w", family, err)
 	}
-	return nil
+	return l.sGram.commitForms()
 }
 
 // newLStatement inputs rawBytes and grammar, and loads them into headBytes, stmtBytes, and tokens

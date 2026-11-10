@@ -72,6 +72,8 @@ The implicit core defines the two lifecycle words this way:
 
 `Starting` in the second definition uses an inflection of the preceding `Start`. The pronoun `it` refers to the action's bound App operand. The inflection bars declare forms of one lexical identity, while `and then` sequences the action's steps. These builtin definitions are already loaded; do not redeclare them in a user program.
 
+When declared forms share a spelling, context-free lookup keeps the root form. The enclosing grammar can select another declared role of that same canonical word. Failed alternatives do not change the token binding. A complete Function-value assignment, such as `"Saved" is Read`, retains assignment precedence. This does not introduce general passive Function calls.
+
 An active noun form can serve as an applicative verb, a descriptive noun form as an adjective, and an objective verb form as a noun. These conversions preserve the canonical definition. Prefix storage exists internally, but source label declaration currently assigns its root first and does not establish a general public prefix-declaration language.
 
 ## Literal and token precedence

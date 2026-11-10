@@ -35,7 +35,7 @@ func TestRuntimeSelectionRequiresImmutableAuditedResources(t *testing.T) {
 func TestRuntimeSelectionIncludesPrivateHostRoots(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
 	const path = "runtime/eng/dictionary.l"
-	files[path].Data = append(files[path].Data, []byte("\n    Create Runtime's \"Hidden\" as a Generic `runtime_host_only` Function with No Inputs and Outputs of `u8`.\nReturn a New Runtime's Byte of 1.\n\nPublicly use Runtime's Hidden as Runtime's Host's \"Hidden\".\n")...)
+	files[path].Data = append(files[path].Data, []byte("\n    Create Runtime's \"Hidden\" as a Generic `runtime_host_only` Function with No Inputs and Outputs of `u8`.\nReturn a New Storage's Caster of 1 and `u8`.\n\nPublicly use Runtime's Hidden as Runtime's Host's \"Hidden\".\n")...)
 	result, err := NewLygerService(Options{Resources: files}).Compile([]byte("Use Runtime from `runtime`.\n"), "host.l")
 	if err != nil {
 		t.Fatal(err)

@@ -221,6 +221,9 @@ func (e *orchestrationEmitter) collectFunctionContracts(body []*orchestrationIns
 }
 
 func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruction) ([]string, error) {
+	if len(e.compilation.definitionTemporaries) == 0 {
+		defer e.compilation.definitionScope()()
+	}
 	var types []runtimeTypeRef
 	if current.Source.Kind == instructionReturn {
 		types = current.Source.Function.Outputs
@@ -254,8 +257,14 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		if err != nil {
 			return nil, err
 		}
-		name := fmt.Sprintf("lCalled%d", e.functionCall)
-		e.functionCall++
+		name := e.compilation.definitionLabel()
+		captured := e.compilation.definitionLabel()
+		context := e.compilation.definitionLabel()
+		future := e.compilation.definitionLabel()
+		outcome := e.compilation.definitionLabel()
+		flow := e.compilation.definitionLabel()
+		selected := e.compilation.definitionLabel()
+		payload := e.compilation.definitionLabel()
 		returnContract := contract
 		var stopped string
 		if e.functionDepth > 0 {
@@ -283,7 +292,7 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		if contract.Invoke == nil {
 			return nil, lerrors.InvalidConfiguration.Errorf("Function requires its Invoke composition")
 		}
-		invoked := append([]DefinitionArgument{definitionReferenceArgument(name + "Context"), definitionReferenceArgument(name + "Environment")}, arguments...)
+		invoked := append([]DefinitionArgument{definitionReferenceArgument(context), definitionReferenceArgument(captured)}, arguments...)
 		invocation, err := e.compilation.instantiateDefinition(contract.Invoke, map[string]DefinitionArgument{
 			"Target": definitionReferenceArgument(name + ".1"), "Arguments": definitionAtomListArgument(invoked...),
 		})
@@ -295,7 +304,11 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 			return nil, err
 		}
 		result, err := e.word("Storage.Invoke", map[string]DefinitionArgument{
-			"Value": definitionReferenceArgument(target), "Name": definitionReferenceArgument(name), "Context": definitionReferenceArgument("lContext"),
+			"Value": definitionReferenceArgument(target), "Name": definitionReferenceArgument(name),
+			"Captured": definitionReferenceArgument(captured), "Context": definitionReferenceArgument(context), "SourceContext": definitionReferenceArgument("lContext"),
+			"Future": definitionReferenceArgument(future), "Outcome": definitionReferenceArgument(outcome),
+			"Checked": definitionReferenceArgument(flow), "Attempt": definitionReferenceArgument(outcome),
+			"Selection": definitionReferenceArgument(selected), "Subject": definitionReferenceArgument(flow), "Payload": definitionReferenceArgument(payload),
 			"Invocation": {Kind: "Definition", Definition: &invocation}, "Exit": {Kind: "Syllable", Definition: &exitProcess}, "Copy": copier,
 		})
 		if err != nil {
@@ -303,7 +316,7 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 		}
 		for index, target := range current.Results {
 			start := len(e.pending)
-			stored, err := e.storeRuntimeValue(target.Storage, fmt.Sprintf("%sResult.%d", name, index))
+			stored, err := e.storeRuntimeValue(target.Storage, fmt.Sprintf("%s.%d", selected, index))
 			if err != nil {
 				return nil, err
 			}
@@ -319,6 +332,9 @@ func (e *orchestrationEmitter) functionInstruction(current *orchestrationInstruc
 }
 
 func (e *orchestrationEmitter) constructFunction(current *orchestrationInstruction) ([]string, error) {
+	if len(e.compilation.definitionTemporaries) == 0 {
+		defer e.compilation.definitionScope()()
+	}
 	function := current.Function
 	defer e.compilation.withDefinitionReturn(functionReturnContext(function.Source))()
 	captureTypes, captures, err := e.captureEnvironment(function.Captures, function.CaptureHandles)
@@ -331,7 +347,9 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 		return nil, err
 	}
 	inputs := []DefinitionProperty{{Key: "lContext", Type: "&(runtime::Runtime, LProgram)"}, {Key: "lEnvironment", Type: "LEnvironment"}}
-	body, err := e.word("Storage.Context.Read", map[string]DefinitionArgument{"Context": definitionReferenceArgument("lContext")})
+	body, err := e.word("Storage.Context.Read", map[string]DefinitionArgument{
+		"Context": definitionReferenceArgument("lContext"), "RuntimeBinding": definitionReferenceArgument("runtime"), "ProgramBinding": definitionReferenceArgument("lProgram"),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -339,17 +357,23 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 	if err != nil {
 		return nil, err
 	}
-	self, err := e.word("Storage.Function.Retain", map[string]DefinitionArgument{"Name": definitionReferenceArgument(function.Self.name()), "Environment": definitionReferenceArgument("lEnvironment"), "Function": definitionReferenceArgument(name), "Type": definitionTypeArgument(pointer), "Copy": copier})
+	retained, converted := e.compilation.definitionLabel(), e.compilation.definitionLabel()
+	self, err := e.word("Storage.Function.Retain", map[string]DefinitionArgument{
+		"Name": definitionReferenceArgument(function.Self.name()), "Environment": definitionReferenceArgument("lEnvironment"), "Value": definitionReferenceArgument(name), "Type": definitionTypeArgument(pointer), "Copy": copier,
+		"Captured": definitionReferenceArgument(retained), "Converted": definitionReferenceArgument(converted),
+		"Values": definitionAtomListArgument(definitionReferenceArgument(retained), definitionReferenceArgument(converted)),
+	})
 	if err != nil {
 		return nil, err
 	}
 	body = append(body, self...)
 	for index, app := range e.plan.Apps {
-		bound, err := e.namedBinding(e.apps[app]+"Outcome", "Storage.Program.Select", map[string]DefinitionArgument{"Program": definitionReferenceArgument("lProgram"), "Index": definitionIndexArgument(uint64(index))})
+		outcome := e.compilation.definitionLabel()
+		bound, err := e.namedBinding(outcome, "Storage.Program.Select", map[string]DefinitionArgument{"Program": definitionReferenceArgument("lProgram"), "Index": definitionIndexArgument(uint64(index))})
 		if err != nil {
 			return nil, err
 		}
-		checked, err := e.describedWord("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Name": definitionReferenceArgument(e.apps[app]), "Value": definitionReferenceArgument(e.apps[app] + "Outcome")})
+		checked, err := e.describedWord("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Checked": definitionReferenceArgument(e.apps[app]), "Attempt": definitionReferenceArgument(outcome)})
 		bound = append(bound, checked...)
 		if err != nil {
 			return nil, err
@@ -395,7 +419,10 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 	if err != nil {
 		return nil, err
 	}
-	process, err := e.functionOperation(function.Source, "Suspend", map[string]DefinitionArgument{"Body": {Kind: "Syllable", Definition: &bodyProcess}})
+	future, pinned := e.compilation.definitionLabel(), e.compilation.definitionLabel()
+	process, err := e.functionOperation(function.Source, "Suspend", map[string]DefinitionArgument{
+		"Body": {Kind: "Syllable", Definition: &bodyProcess}, "Future": definitionReferenceArgument(future), "Pinned": definitionReferenceArgument(pinned), "Value": definitionReferenceArgument(future),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -423,9 +450,12 @@ func (e *orchestrationEmitter) constructFunction(current *orchestrationInstructi
 	if err != nil {
 		return nil, err
 	}
+	capture, checked, target := e.compilation.definitionLabel(), e.compilation.definitionLabel(), e.compilation.definitionLabel()
 	bindings, err := e.functionOperation(function.Source, "Bind", map[string]DefinitionArgument{
-		"Name": definitionReferenceArgument(created), "Function": definitionReferenceArgument(name), "Type": definitionTypeArgument(pointer),
+		"Name": definitionReferenceArgument(created), "Value": definitionReferenceArgument(name), "Type": definitionTypeArgument(pointer),
 		"Environment": {Kind: "Definition", Definition: &environment},
+		"Capture":     definitionReferenceArgument(capture), "Checked": definitionReferenceArgument(checked), "Attempt": definitionReferenceArgument(capture), "Converted": definitionReferenceArgument(target),
+		"Values": definitionAtomListArgument(definitionReferenceArgument(checked), definitionReferenceArgument(target)),
 	})
 	if err != nil {
 		return nil, err

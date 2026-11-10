@@ -20,7 +20,7 @@ Create "Uneven" as a New Equality of Divisible and false.
 Create "Decreasing" as a New Equality of Increasing and false.
 Create "Invalid" as a New Agreement of Decreasing and Uneven.
 If Invalid, Return Failure.
-Create "Expanded" as a New Alternative of Optional and Value.
+Create "Expanded" as a New Unwrapper of Optional and Value.
 Create "Shortened" as a New Quotient of Value and Five.
 Create "Selected" as a New Choice of Increasing and Expanded and Shortened.
 Create "One" as a New Integer of 1.
@@ -30,7 +30,7 @@ Create "Next" as a New Choice of Increasing and Lower and Higher.
 Return a New Formatting's Scaler of Selected and Next.
 
     Create Formatting's "Balance|-s|-d|--ing|--er" as a Generic Function with Inputs of "value" as `f64` and "coefficient" as `u128` and "exponent" as `i32` and Outputs of `bool`.
-Create "Bits" as a New Representation of a New Absolute of Value.
+Create "Bits" as a New Representation of a New Magnitude of Value.
 Create "Precision" as a New Unsigned Integer of 52.
 Create "Shifted" as a New Shifter of Bits and Precision.
 Create "Mask" as a New Unsigned Integer of 2047.
@@ -118,15 +118,15 @@ Return a New Encoding of Buffer.
 
     Create Formatting's "Render|-s|-ed|-ing|-er" as a Generic Function with Inputs of "digits" as `&str` and "exponent" as `&str` and "value" as `f64` and Outputs of `Vec<u8>`.
 Create "Reading" as a New Parser of Exponent.
-Create "Power" as a New Storage's Result's Expecter of Reading and `native finite float exponent`.
-Create "Magnitude" as a New Trimmer of Digits and `-`.
-Create "Separated" as a New Splitter of Magnitude and `.`.
-Create "Default" as a New Storage's Tuple of Magnitude and ``.
-Create "Size" as a New Length of a New Second of a New Alternative of Separated and Default.
+Create "Power" as a New Storage's Expecter of Reading and `native finite float exponent`.
+Create "Stripped" as a New Trimmer of Digits and `-`.
+Create "Separated" as a New Splitter of Stripped and `.`.
+Create "Default" as a New Storage's Tuple of Stripped and ``.
+Create "Size" as a New Length of a New Second of a New Unwrapper of Separated and Default.
 Create "Places" as a New Integer of Size.
 Create "Decimal" as a New Difference of Power and Places.
-Create "Amount" as a New Wide Parser of a New Replacement of Magnitude and `.` and ``.
-Create "Whole" as a New Storage's Result's Expecter of Amount and `native finite float digits`.
+Create "Amount" as a New Wide Parser of a New Replacement of Stripped and `.` and ``.
+Create "Whole" as a New Storage's Expecter of Amount and `native finite float digits`.
 Create "Two" as a New Wide Integer of 2.
 Create "Rest" as a New Remainder of Whole and Two.
 Create "One" as a New Wide Integer of 1.
@@ -139,7 +139,7 @@ Create "Normal" as a New Formatting's Reducer of Chosen and Decimal.
 Create "Significant" as a New First of Normal.
 Create "Distance" as a New Second of Normal.
 Create "Symbols" as a New Description of Significant.
-Create "Measure" as a New Absolute of Value.
+Create "Measure" as a New Magnitude of Value.
 Create "Bounds" as a New Interval of 0.0001 and 1000000.
 Create "Ordinary" as a New Membership of Bounds and Measure.
 If Ordinary, Create "Decimaltext" as a New Formatting's Expander of Symbols and Distance and then Create "Ready" as a New Formatting's Finisher of Decimaltext and Value and then Return Ready.
@@ -152,7 +152,7 @@ Create "Spelling" as a New Notation of Value.
 Create "Separated" as a New Splitter of Spelling and `e`.
 Create "Exists" as a New Presence of Separated.
 If Exists is false, Create "Encoded" as a New Encoding of Spelling and then Return Encoded.
-Create "Components" as a New Storage's Result's Expecter of Separated and `native scientific notation`.
+Create "Components" as a New Storage's Expecter of Separated and `native scientific notation`.
 Create "Characters" as a New First of Components.
 Create "Order" as a New Second of Components.
 Return a New Formatting's Renderer of Characters and Order and Value.

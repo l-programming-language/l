@@ -1,5 +1,5 @@
 Define Storage's "Verify|--ies|--ied|-ing|--ier" to `<DEF>OB{|Key: ~_~, Value: ~<@Value@>?~|}<DEF>`.
-Define Storage's "Get|-s|--ot|-ting|-ter" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~get~, Receiver: ~<@Collection@>~, Inputs: ~&[<@Index@>]&~|}<DEF>`.
+Define Storage's "Get|-s|---ot|-ting|-ter" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~get~, Receiver: ~<@Collection@>~, Inputs: ~&[<@Index@>]&~|}<DEF>`.
 Define Storage's "Locate|-s|-d|--ing|--or" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~get_mut~, Receiver: ~<@Collection@>~, Inputs: ~&[<@Index@>]&~|}<DEF>`.
 Define Storage's "Replace|-s|-d|--ing|--er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::mem::replace~, Inputs: ~&[<@Target@>, <@Value@>]&~|}<DEF>`.
 Create Storage's "Examine|-s|-d|--ing|--er" for Processing a New Process for Creating "Outcome" as a New Storage's Applier of any Thing, any Thing, and any Thing and then Storage.Verifying Outcome.
@@ -12,13 +12,13 @@ Return a New Storage's Rejection of Failure.
 
 Create Storage's "Index" as a Dictionary.
 Define Storage's Index's "Limit" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: as, Operands: &[usize::MAX, f64]&}Op]&~|}<DEF>`.
-Define Storage's "Integral" as `<DEF>DOB{|Key: ~<@Name|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: as, Operands: &[<@Value@>, <@Type|Type@>]&}Op]&~|}<DEF>`.
-Define Storage's "Dereference" as `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~*<@Value@>~|}<DEF>`.
+Define Storage's "Cast|-s|-|-ing|-er" to `<DEF>DOB{|Key: ~<@Converted|Label@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: as, Operands: &[<@Value@>, <@Type|Type@>]&}Op]&~|}<DEF>`.
+Define Storage's "Dereference|-s|-d|--ing|-r" to `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~*<@Value@>~|}<DEF>`.
 Define Storage's Number's "Fraction" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~fract~, Receiver: ~<@Value@>~|}<DEF>`.
-Define Storage's Number's "Finite" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~is_finite~, Receiver: ~<@Value@>~|}<DEF>`.
+Define "Finiteness" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~is_finite~, Receiver: ~<@Value@>~|}<DEF>`.
 
     Publicly create Storage's Index's "Check|-s|-ed|-ing|-er" as a Generic `l_index` Function with Inputs of "index" as `f64` and Outputs of `runtime::Result<usize>`.
-Create "Finite" as a New Storage's Number's Finite of Index.
+Create "Finite" as a New Finiteness of Index.
 If Finite is false, Storage.Reject `index must be a nonnegative integer`.
 If Index less than 0, Storage.Reject `index must be a nonnegative integer`.
 Create "Fraction" as a New Storage's Number's Fraction of Index.
@@ -26,15 +26,15 @@ If Fraction isnt 0, Storage.Reject `index must be a nonnegative integer`.
 Create "Limit" as a New Storage's Index's Limit.
 If Index greater than Limit, Storage.Reject `index must be a nonnegative integer`.
 If Index is Limit, Storage.Reject `index must be a nonnegative integer`.
-Create "Integral" as a New Storage's Integral of Index and `usize`.
+Create "Integral" as a New Storage's Caster of Index and `usize`.
 Return a New Storage's Success of Integral.
 
     Publicly create Storage's Bytes's "Read|-s||-ing|-er" as a Generic `l_byte_get` Function with Inputs of "bytes" as `&[u8]` and "index" as `f64` and Outputs of `runtime::Result<f64>`.
 Create "Position" as a New Storage.Checked Binding of a New Storage's Index's Checker of Index.
 Create "Found" as a New Storage's Getter of Bytes and Position.
 Create "Reference" as a New Storage.Checked Binding of a New Storage's Requirer of Found and `byte index out of bounds`.
-Create "Value" as a New Storage's Dereference of Reference.
-Create "Number" as a New Storage's Integral of Value and `f64`.
+Create "Value" as a New Storage's Dereferencer of Reference.
+Create "Number" as a New Storage's Caster of Value and `f64`.
 Return a New Storage's Success of Number.
 
     Publicly create Storage's List's "Check|-s|-ed|-ing|-er" as a Generic Function with Inputs of "value" as `&LValue` and "expected" as `&[u64]` and Outputs of `runtime::Result<()>`.
@@ -113,7 +113,7 @@ Create "Borrowed" as a New Storage's Borrower of Value.
 Create "Checked" as a New Storage's Value's Checker of Borrowed, Expected, and `Pointer initialization type mismatch`.
 Storage.Verify Checked.
 Create "Cell" as a New Storage's Cell of Value.
-Create "Target" as a New Storage's Shared of Cell.
+Create "Target" as a New Storage's Sharer of Cell.
 Create "Pointer" as a New Storage's Pointer's Content of Element and Target.
 Return a New Storage's Success of Pointer.
 
@@ -125,7 +125,7 @@ Define Storage's "Remember|-s|-ed|-ing|-er" to `<DEF>MOB{|Key: ~<@Name|Label@>~|
 
     Publicly create Storage's "Identify|--ies|--ied|-ing|--ier" as a Generic Storage.Polymorphic Storage.Routine with Inputs of "value" as `&std::rc::Rc<T>` and Outputs of `usize`.
 Create "Address" as a New Storage's Address of Value.
-Return a New Storage's Integral of Address and `usize`.
+Return a New Storage's Caster of Address and `usize`.
 
     Publicly create Storage's Pointer's "Read|-s||-ing|-er" as a Generic `l_pointer_get` Function with Inputs of "pointer" as `&LPointer` and Outputs of `runtime::Result<LValue>`.
 Create "Target" as a New Storage's Pointer's Target of Pointer.

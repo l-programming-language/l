@@ -1064,6 +1064,7 @@ type clauseGram struct {
 	adverbs      []*token
 	prepositions []*token // i.e. in clause.receptive.active
 	verb         *token
+	verbForm     *tokenForm
 	obj          *objectGram  // i.e. in clause.declarative.active
 	subject      *subjectGram // i.e. in clause.definitive.applicative
 	predicate    *predicateGram
@@ -1094,20 +1095,14 @@ func (clause *clauseGram) orderedObjects() []*objectGram {
 
 // subTypeSwitch checks for a clauseGram subType if one isn't provided in the sType
 func (sb *clauseGram) subTypeSwitch() string {
-	var primeVerb *token
-	for _, t := range sb.tokens {
-		curType := t.getPOS(true)
-		if curType != "adverb" && curType != "verb" {
-			return ""
-		}
-		if curType == "verb" {
-			primeVerb = t
-			break
-		}
-	}
+	primeVerb := clauseHead(sb.tokens)
 	if primeVerb != nil {
 		sb.verb = primeVerb
-		return strings.Replace(primeVerb.tType, "verbs.", "", 1)
+		lexicalType := primeVerb.tType
+		if sb.verbForm != nil {
+			lexicalType = sb.verbForm.lexicalType
+		}
+		return strings.Replace(lexicalType, "verbs.", "", 1)
 	}
 	return ""
 }
@@ -1119,6 +1114,13 @@ func (sb *clauseGram) loadTyping(sType string) error {
 		return err
 	}
 	splitTypes := strings.Split(sb.sType, ".")
+	if head := clauseHead(sb.tokens); head != nil && len(splitTypes) > 1 {
+		form := splitTypes[1]
+		if len(splitTypes) > 2 {
+			form = splitTypes[2]
+		}
+		sb.verbForm = head.grammaticalForm(form)
+	}
 	if len(splitTypes) < 3 {
 		subType := sb.subTypeSwitch()
 		if subType == "" {
@@ -1480,6 +1482,9 @@ func (sg *statementGram) getPrimaryType() string {
 		pTok := false
 		for _, sToken := range sg.tokens {
 			if pTok {
+				if sToken.getPOS(true) == "adverb" || sToken.isPossessive() {
+					continue
+				}
 				// The same bound Function is a value after the copula and an
 				// invocation word at the head of an ordinary active clause.
 				if sToken.binding != nil && sToken.binding.Record.isFunction() && (sToken.binding.Form == "root" || sToken.binding.Form == "objective") {
@@ -1552,7 +1557,38 @@ func (sg *statementGram) gramSwitch(term grammarTerm) error {
 
 // build identifies and inits & builds pointers to subjectGram and predicateGram for subject and predicate
 func (sg *statementGram) build() error {
-	casedStr, err := sg.rule.getCasedStructure(sg.getPrimaryType())
+	primary := sg.getPrimaryType()
+	if primary == "assign" {
+		for index, tok := range sg.tokens {
+			if !tok.hasRole("verb", "action.passive") {
+				continue
+			}
+			head := clauseHead(sg.tokens[index+1:])
+			if head != nil && head.binding != nil && head.binding.Record.isFunction() && head.grammaticalForm("passive") != nil {
+				// A complete Function-value assignment wins. Only an incomplete
+				// assignment retries the same record as a declared passive verb.
+				candidate := sg.clone()
+				signatureError := sg.gram.signatureError
+				if err := candidate.buildCase(primary); err == nil {
+					*sg = candidate
+					return nil
+				}
+				sg.gram.signatureError = signatureError
+				candidate = sg.clone()
+				if err := candidate.buildCase("generic"); err != nil {
+					return err
+				}
+				*sg = candidate
+				return nil
+			}
+			break
+		}
+	}
+	return sg.buildCase(primary)
+}
+
+func (sg *statementGram) buildCase(primary string) error {
+	casedStr, err := sg.rule.getCasedStructure(primary)
 	if err != nil {
 		return err
 	}

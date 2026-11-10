@@ -1,20 +1,20 @@
     Create Runtime's Signals' "Interpret|-s|-ed|-ing|-er" as a Generic `runtime_signal_fault` Function with Inputs of "status" as `u8` and Outputs of `Option<Error>`.
-Create "One" as a New Runtime's Byte of 1.
+Create "One" as a New Storage's Caster of 1 and `u8`.
 If Status is One, Create "Fault" as a New Runtime's Error's Describer of `application output pipe closed` and then Create "Wrapped" as a New Present of Fault and then Return Wrapped.
 Return a New Absent.
 
     Create Runtime's Signals' "Watch|-es|-ed|-ing|-er" as a Generic Pending `runtime_signal_watch` Function with Inputs of "signals" as `crate::process::Signals` and "owner" as `std::sync::Weak<RuntimeInner>` and Outputs of `std::pin::Pin<Box<dyn std::future::Future<Output = ()> + Send>>`.
 Create "Receiver" as a New Mutable Binding of Signals.
-Create "Event" as a New Runtime's Completion of a New Runtime's Receiver of Receiver.
+Create "Event" as a New Storage's Awaiter of a New Runtime's Receiver of Receiver.
 Create "Optional" as a New Runtime's Ascender of Owner.
 Create "Available" as a New Presence of Optional.
 Create "Unit" as a New Nothing.
 If Available is false, Return Unit.
-Create "Handle" as a New Runtime's Handle's Content of a New Storage's Result's Expecter of Optional and `present signal runtime`.
+Create "Handle" as a New Runtime's Handle's Content of a New Storage's Expecter of Optional and `present signal runtime`.
 Create "Reference" as a New Storage's Borrower of Handle.
 Create "Failed" as a New Runtime's Fault of Event.
-If Failed, Create "Cause" as a New Runtime's Rejecter of Event and then Create "Fault" as a New Runtime's Error's Explainer of `receive application signal` and Cause and then Create "Wrapped" as a New Present of Fault and then Create "One" as a New Runtime's Byte of 1 and then Create "Requested" as a New Runtime's Requester of Reference, One, and Wrapped and then Return Unit.
-Create "Status" as a New Storage's Result's Expecter of Event and `received application signal`.
+If Failed, Create "Cause" as a New Runtime's Rejecter of Event and then Create "Fault" as a New Runtime's Error's Explainer of `receive application signal` and Cause and then Create "Wrapped" as a New Present of Fault and then Create "One" as a New Storage's Caster of 1 and `u8` and then Create "Requested" as a New Runtime's Requester of Reference, One, and Wrapped and then Return Unit.
+Create "Status" as a New Storage's Expecter of Event and `received application signal`.
 Create "Error" as a New Runtime's Signals' Interpreter of Status.
 Create "Request" as a New Runtime's Signal of Status.
 Create "Dependencies" as a New Runtime's Authority of a New Runtime's Reference of Handle.
@@ -23,7 +23,7 @@ Create "Selected" as a New Runtime's Requester of Reference, Status, and Error.
 Return Unit.
 
     Create Runtime's "Attach|-es|-ed|-ing|-er" as a Generic `runtime_attach` Function with Inputs of "value" as `&Runtime` and "task" as `tokio::task::JoinHandle<()>` and Outputs of `()`.
-Create "Locked" as a New Locker of a New Runtime's Task of a New Runtime's Reference of Value.
+Create "Locked" as a New Locker of a New Runtime's Inner's Signals of a New Runtime's Reference of Value.
 Create "Reference" as a New Storage.Editable Storage's Reference of a New Mutable Binding of Locked.
 Create "Retained" as a New Present of Task.
 Runtime.Replace Reference and Retained.
@@ -41,6 +41,6 @@ Return a New Success of Handle.
 
     Publicly create Runtime's "Open|-s|-ed|-ing|-er" as a Generic `runtime_new` Function with No Inputs and Outputs of `Result<Runtime>`.
 Create "Dependencies" as a New Runtime's Dependencies of a New Runtime's Native.
-Create "Output" as a New Runtime.Output Runtime's Pinner of a New Runtime's Stdout.
-Create "Error" as a New Runtime.Output Runtime's Pinner of a New Runtime's Stderr.
+Create "Output" as a New Runtime.Output Storage's Pinner of a New Runtime's Stdout.
+Create "Error" as a New Runtime.Output Storage's Pinner of a New Runtime's Stderr.
 Return a New Runtime's Installer of Dependencies, Output, and Error.

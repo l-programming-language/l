@@ -19,7 +19,7 @@ func (c *Compilation) futureEntry(name, output string, body []string) (Definitio
 		return DefinitionInstance{}, err
 	}
 	future, err := c.instantiateBuiltin("Storage.Future", map[string]DefinitionArgument{
-		"Name": definitionReferenceArgument("lEntryFuture"), "Body": {Kind: "Definition", Definition: &process},
+		"Future": definitionReferenceArgument("lEntryFuture"), "Body": {Kind: "Definition", Definition: &process},
 	})
 	if err != nil {
 		return DefinitionInstance{}, err

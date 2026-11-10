@@ -24,7 +24,7 @@ for current signatures and policies.
 | Storage.Propagate | Verify an explicit callback result |
 | Storage.Function.Success / Completion | Parameterized Storage.Success |
 | Storage.Rejection.Error / Result | Failure / Rejection with explicit arguments |
-| IO.Check / Stream | Storage.Result.Expect with a message / IO.Output |
+| IO.Check / Stream | Storage.Expect with a message / IO.Output |
 | Storage.Indexed on Iteration or Applier | Storage.Paired; unrelated Indexed meanings remain valid |
 | Storage.Fallible on Routine | Explicit generic constructor arguments |
 
