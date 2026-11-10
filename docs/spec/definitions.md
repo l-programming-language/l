@@ -26,7 +26,7 @@ In the maintained English grammar, `Define "Word" as` followed by a complete bac
 
 A Function declaration binds its invocation verb, including through a selected source constructor. Ordinary source Functions retain Function value storage while exposing that verb's morphology; native/generic Functions use lexical definition records. The invocation word and value share canonical identity. Explicit adjective descriptors register their nominal targets and construction rules separately.
 
-Keep the declared lexical family, a form's grammatical role at use, storage/value category and canonical identity distinct. The objective form of a verb serves as an actor noun without a second independent noun definition. A passive verb form does not automatically become an adjective descriptor. An explicit descriptor and a same-spelled inflection can be distinct meanings selected by grammar. English spelling cannot determine which declaration was registered.
+Keep lexical family, grammatical role at use, storage category and canonical identity distinct. A verb's objective form serves as an actor noun. A noun or alias defined from that actor keeps its nominal role without changing the verb. Root aliases retain the verb family. Passive forms do not become descriptors or actor constructors. New/Generic construction requires a nominal role, a Function's root constructor, or a root reference with an applied descriptor targeting its canonical actor. Arbitrary modifiers do not supply that role.
 
 See [registration](../../lyger/registration.go), [Function binding](../../lyger/binding.go), and the [Function identity](../../lyger/function_invocation_words_test.go) and [modifier homonym](../../lyger/word_library_pos_test.go) witnesses. The [authoring convention](../guide/definitions.md#organize-words-by-meaning-and-grammatical-role) governs design choices without changing these rules.
 
@@ -42,11 +42,11 @@ Calls check argument count and nominal type. A one-argument source action with c
 
 Quoted labels list bar-separated forms. Nouns use root/plural/descriptive/active positions, while verbs use root/active/passive/applicative/objective positions. One leading hyphen appends a suffix. Additional hyphens remove trailing root bytes first. See [lexical rules](lexical-structure.md#vocabulary-and-inflection).
 
-`Start|-s|-ed|-ing|-er` produces Start, Starts, Started, Starting and Starter. `Execute|-s|-d|--ing|--or` trims the final e for Executing/Executor. Grammatical roles can change while ownership remains canonical. Inflection does not publish private helpers.
+`Start|-s|-ed|-ing|-er` produces Start, Starts, Started, Starting and Starter. `Execute|-s|-d|--ing|--or` trims the final e for Executing/Executor. Source-action and Function clauses require the requested declared form on their selected identity. Configured native operations retain their grammar-owned forms, including passive `Worker is run`. Inflection does not publish private helpers or change ownership.
 
 ## Descriptors and constructors
 
-When the selected construction header begins with an unscoped Label slot, that slot names the result. Descriptors use that selected result slot, which need not be named `Name`. Scoped pattern and iteration labels retain their binding roles.
+When the selected construction header starts with an unscoped Label, that slot names its result, regardless of spelling. Transparent source forwarding inherits this contract, including zero-operand constructors and descriptor replacements. Multi-stage compositions require explicit results. Scoped pattern and iteration labels keep their binding roles; forwarding preserves App capture rejection.
 
 Descriptors bind nominal identities to ordered construction rules. A source noun can bind typed formals and fixed operands to another constructor, as Formatting's Integer specializes Storage.Cast. A replacement constructs directly from those operands. A wrapper explicitly names the base result and retains its evaluation. Matching rules apply in authored order. Same-named private declarations remain distinct, and aliases preserve identity. Missing constructors and recursive expansion reject.
 

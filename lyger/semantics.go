@@ -147,10 +147,18 @@ func (c *Compilation) prepareAlias(site registrationSite) (extractedDeclaration,
 	value := &entry{}
 	value.bindFrom(target.Value)
 	id := strings.Trim(string(alias.rawBytes), `"`)
+	kind := target.Type
 	if value.Lexeme != nil {
 		value.Lexeme.Root = strings.ToLower(id)
+		// An explicitly selected actor aliases that nominal role, not the
+		// operation's other inflections. Root aliases keep their whole family.
+		if binding.POS == "verb" && binding.Form == "objective" {
+			value.Lexeme.POS = "noun"
+			value.Lexeme.Prefixes, value.Lexeme.Postfixes = nil, nil
+			kind = value.Lexeme.getValueType()
+		}
 	}
-	return extractedDeclaration{Token: alias, Record: &record{ID: id, Type: target.Type, Value: value, function: canonical.function}, Alias: target}, nil
+	return extractedDeclaration{Token: alias, Record: &record{ID: id, Type: kind, Value: value, function: canonical.function}, Alias: target}, nil
 }
 
 func (c *Compilation) prepareDescriptor(stmt *lStatement, site registrationSite, prepared *statementRegistration) error {
@@ -252,6 +260,9 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 		return prepared, err
 	}
 	for _, site := range sites {
+		if err := c.constructionValueRoles(site.valueObject()); err != nil {
+			return statementRegistration{}, err
+		}
 		if handled, err := c.prepareDefinitionBindingSite(stmt, site, &prepared); handled || err != nil {
 			if err != nil {
 				return statementRegistration{}, err

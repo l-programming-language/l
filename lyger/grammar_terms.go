@@ -239,6 +239,15 @@ const (
 
 // typeToken associates a grammar structure's default typed token field.
 func (term grammarTerm) typeToken(available []*token) (*token, error) {
+	if term.Pattern <= patternInvalid || term.Pattern >= typePatternCount {
+		return nil, lerrors.InvalidConfiguration.Errorf("unsupported type pattern %s", term.Pattern)
+	}
+	if len(available) > 0 && strings.HasPrefix(term.Pattern.TokenType(), "primitive.") {
+		raw := available[0].rawBytes
+		if !isText(raw) && !isTruth(raw) && !isNum(raw) && string(raw) != "null" {
+			return nil, lerrors.Syntax.Errorf("%q is a reference, not a literal", raw)
+		}
+	}
 	if len(available) > 0 {
 		actual := available[0].tType
 		if term.Pattern == patternType {

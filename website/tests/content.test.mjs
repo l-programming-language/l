@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
+import { parseFragment } from 'parse5';
 import { parse as parseYAML } from 'yaml';
 import { anchors, parseDocument, parseMarkdown, preparePage, validateMap, validateStdlib, stdlibCatalog } from '../scripts/content.mjs';
 import { deriveWords } from '../scripts/words.mjs';
@@ -232,7 +233,19 @@ test('fragment resolution rejects missing local and mapped headings', async (t) 
   }
 });
 
-test('source inclusions safely fence braces, backticks and tags and retain bytes', async (t) => {
+function fragmentCode(output) {
+  const elements = (node) => [node, ...(node.childNodes ?? []).flatMap(elements)];
+  const blocks = elements(parseFragment(output)).filter((node) => node.tagName === 'pre');
+  assert.equal(blocks.length, 1);
+  assert.ok(blocks[0].attrs.some((attr) => attr.name === 'tabindex' && attr.value === '0'));
+  assert.ok(blocks[0].attrs.some((attr) => attr.name === 'aria-label' && attr.value));
+  const code = blocks[0].childNodes[0];
+  assert.equal(code.tagName, 'code');
+  assert.ok(code.childNodes.every((node) => node.nodeName === '#text'), 'fragments need no syntax-highlighter subtree');
+  return code.childNodes.map((node) => node.value).join('');
+}
+
+test('source fragments preserve literal code without per-token presentation markup', async (t) => {
   const code = '"literal" is `<BOOK>{value}</BOOK>`.\n*** ```` and [not a link](absent.md) ***\n';
   const input = '# Included source\n\n<!-- example:edge -->\n';
   const root = await fixture(t, { 'docs/start.md': input, 'examples/path with spaces.l': code });
@@ -240,10 +253,7 @@ test('source inclusions safely fence braces, backticks and tags and retain bytes
     id: 'edge', source: 'examples/path with spaces.l', sha256: sha256(code), lang: 'text',
     description: 'Literal source bytes.', classification: 'fragment', validation: 'existing-witness-not-run',
   }] });
-  assert.ok(output.includes('`````text title="examples/path with spaces.l"\n' + code + '`````'));
-  const tree = parseMarkdown(output.replace(/^---\n[\s\S]*?\n---\n/, ''));
-  assert.equal(tree.children.filter((node) => node.type === 'code').length, 1);
-  assert.equal(tree.children.find((node) => node.type === 'code').value, code.trimEnd());
+  assert.equal(fragmentCode(output), code);
   assert.match(output, /<div data-pagefind-ignore>[\s\S]*existing-witness-not-run[\s\S]*<\/div>/);
   assert.match(output, /\*\*Fragment\.\*\* Source:/);
   assert.match(output, /<summary>Example evidence<\/summary>[\s\S]*existing-witness-not-run[\s\S]*<\/details>/);
@@ -276,17 +286,14 @@ test('canonical excerpts retain selected line bytes, escape literal content and 
     classification: 'fragment', validation: 'existing-witness-not-run',
   };
   const { output } = await project(root, input, { examples: [example] });
-  assert.ok(output.includes('`````l title="examples/path with spaces.l (lines 2–3)"\n' + selected + '`````'));
+  assert.ok(output.includes('&quot;literal&quot; is `&lt;BOOK&gt;{value}&lt;/BOOK&gt;`.\r\n*** ```` and [not a link](absent.md) ***\r\n</code></pre>'));
   assert.match(output, /Source: `examples\/path with spaces\.l \(lines 2–3\)`/);
   assert.doesNotMatch(output, /not selected/);
-  const tree = parseMarkdown(output.replace(/^---\n[\s\S]*?\n---\n/, ''));
-  const blocks = tree.children.filter((node) => node.type === 'code');
-  assert.equal(blocks.length, 1);
-  assert.equal(blocks[0].value, selected.trimEnd());
+  assert.equal(fragmentCode(output), selected.replaceAll('\r\n', '\n'));
   assert.equal(await fs.readFile(path.join(root, example.source), 'utf8'), code);
 
   const { output: finalLine } = await project(root, input, { examples: [{ ...example, lines: { start: 4, end: 4 } }] });
-  assert.ok(finalLine.includes('\nnot selected after\n```'));
+  assert.equal(fragmentCode(finalLine), 'not selected after');
   assert.match(finalLine, /lines 4–4/);
 });
 

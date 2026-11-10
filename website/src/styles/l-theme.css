@@ -19,7 +19,7 @@
   @media (max-width: 49.99rem) { .l-table-hint { display: block; margin-bottom: .5rem; } }
   .sl-markdown-content :not(pre) > code { overflow-wrap: anywhere; }
   .l-word-facts a { color: var(--sl-color-accent-high); }
-  .l-word-definition pre { max-width: 100%; overflow-x: auto; }
+  .sl-markdown-content pre { max-width: 100%; overflow-x: auto; }
   .expressive-code { max-width: 100%; min-width: 0; }
   .expressive-code pre { overflow-x: auto !important; }
   .l-section-art { margin: 1.5rem auto; max-width: 34rem; }

@@ -11,6 +11,9 @@ import { safeFile, sha256 } from './lib.mjs';
 import { sourceURL } from './provenance.mjs';
 import { wordFacts, wordIndex } from './words.mjs';
 
+const html = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+const sourceCode = (code, language, label) => `<pre tabindex="0" role="region" aria-label="${html(label)}"><code class="language-${html(language)}">${html(code)}</code></pre>`;
+
 export function parseMarkdown(text, mdx = false) {
   const parser = unified().use(remarkParse).use(remarkGfm);
   if (mdx) parser.use(remarkMdx);
@@ -168,7 +171,6 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
       if (word) {
         const selected = words.find((entry) => entry.id === word[1] && entry.source === page.source);
         if (!selected) throw new Error(`Unknown word marker ${word[1]} in ${page.source}`);
-        const html = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
         add(node, wordFacts(selected, words, (source) => {
           const url = sourceURL(root, source, identity);
           return url ? `<a href="${html(url)}"><code>${html(source)}</code></a>` : `<code>${html(source)}</code>`;
@@ -181,7 +183,6 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
         const selected = words.find((entry) => entry.id === definition[1] && entry.source === page.source);
         if (!selected?.word.definitions) throw new Error(`Unknown word-definition marker ${definition[1]} in ${page.source}`);
         if (selected.definitionMarker?.position.start.offset !== node.position.start.offset) throw new Error(`Word-definition marker outside its canonical word section: ${definition[1]} in ${page.source}`);
-        const html = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
         const excerpts = [];
         for (const reference of selected.word.definitions) {
           const bytes = await fs.readFile(await safeFile(root, reference.source));
@@ -195,7 +196,7 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
           const source = link ? `<a href="${html(link)}#L${start}-L${end}"><code>${html(label)}</code></a>` : `<code>${html(label)}</code>`;
           const language = path.posix.extname(reference.source).slice(1);
           const kind = { l: 'L source', json: 'Configured JSON', go: 'Compiler definition' }[language];
-          excerpts.push(`<p>${kind}: ${source}.</p>\n<pre tabindex="0" role="region" aria-label="${html(selected.name)} source definition"><code class="language-${language}">${html(code)}</code></pre>`);
+          excerpts.push(`<p>${kind}: ${source}.</p>\n${sourceCode(code, language, `${selected.name} source definition`)}`);
         }
         add(node, `<details class="l-word-definition" data-pagefind-ignore><summary>Source definition</summary>\n${excerpts.join('\n')}\n</details>`);
         continue;
@@ -253,10 +254,13 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
         sourceFragment = `#L${start}-L${end}`;
       }
       const fence = '`'.repeat(Math.max(3, ...[...code.matchAll(/`+/g)].map((m) => m[0].length + 1)));
+      const language = example.lang ?? example.language ?? 'l';
+      const block = example.classification === 'fragment' ? sourceCode(code, language, sourceLabel)
+        : `${fence}${language} title="${sourceLabel}"\n${code}${code.endsWith('\n') ? '' : '\n'}${fence}`;
       const link = sourceURL(root, example.source, identity);
       const runtimeFailure = example.classification === 'runnable' && Number.isInteger(example.expectedExit) && example.expectedExit !== 0;
       const label = runtimeFailure ? 'Complete program · expected runtime failure' : { runnable: 'Complete program', 'compile-only': 'Compile-only example', invalid: 'Expected compilation failure', fragment: 'Fragment' }[example.classification];
-      add(node, `${fence}${example.lang ?? example.language ?? 'l'} title="${sourceLabel}"\n${code}${code.endsWith('\n') ? '' : '\n'}${fence}\n\n<div data-pagefind-ignore>\n\n**${label}.** Source: ${link ? `[${sourceLabel}](${link}${sourceFragment})` : `\`${sourceLabel}\``}.${displayNote}\n\n<details>\n<summary>Example evidence</summary>\n\n${example.description} **${example.validation}**. [Evidence guide](/docs/contributing/evidence/).\n\n</details>\n\n</div>`);
+      add(node, `${block}\n\n<div data-pagefind-ignore>\n\n**${label}.** Source: ${link ? `[${sourceLabel}](${link}${sourceFragment})` : `\`${sourceLabel}\``}.${displayNote}\n\n<details>\n<summary>Example evidence</summary>\n\n${example.description} **${example.validation}**. [Evidence guide](/docs/contributing/evidence/).\n\n</details>\n\n</div>`);
       continue;
     }
     if (node.type.endsWith('Reference')) {

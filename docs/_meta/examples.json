@@ -2546,13 +2546,13 @@
       "source": "lyger/word_values.go",
       "classification": "fragment",
       "description": "Bind the resolved Truth or finite Number atom to the selected literal definition.",
-      "sha256": "f6c36a20049c82c0a4c3a1ecd2dee8aa9240624cb36b38535a6487d27c6de1f1",
+      "sha256": "bd6d87e37529ac0784542913d44f8a1944ebd4e536497955e4eec0ceb4829e34",
       "validation": "static-inspection",
       "witnesses": [],
       "lang": "go",
       "lines": {
-        "start": 246,
-        "end": 260
+        "start": 242,
+        "end": 256
       }
     },
     {
@@ -2630,13 +2630,13 @@
       "source": "lyger/word_values.go",
       "classification": "fragment",
       "description": "Specialize the selected visitor Function with the resolved native type atom.",
-      "sha256": "f6c36a20049c82c0a4c3a1ecd2dee8aa9240624cb36b38535a6487d27c6de1f1",
+      "sha256": "bd6d87e37529ac0784542913d44f8a1944ebd4e536497955e4eec0ceb4829e34",
       "validation": "static-inspection",
       "witnesses": [],
       "lang": "go",
       "lines": {
-        "start": 338,
-        "end": 349
+        "start": 334,
+        "end": 345
       }
     },
     {

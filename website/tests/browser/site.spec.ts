@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 
-// The glossary's roughly 70,000 nodes make a DOM snapshot on each traced action
+// The large glossary makes a DOM snapshot on each traced action
 // dominate navigation time. Keep failure traces, screenshots, sources and action/
 // network evidence; automatic failure screenshots and error context retain diagnostics.
 test.use({ trace: { mode: 'retain-on-failure', snapshots: false, screenshots: true, sources: true } });
@@ -308,6 +308,20 @@ test('word navigation and source disclosures support keyboard focus', async ({ p
   await expect(disclosure.locator('a').first()).toBeVisible();
   await page.keyboard.press('Enter');
   await expect(disclosure).not.toHaveAttribute('open', '');
+  await page.goto(wordURL('authoring:Storage.Program.Select'));
+  const example = page.locator(wordAnchor('authoring:Storage.Program.Select')).locator('xpath=following::details[normalize-space(summary)="Usage example"][1]');
+  await example.locator('summary').first().focus();
+  await page.keyboard.press('Enter');
+  const code = example.locator('pre').first();
+  await expect(code).toBeVisible();
+  await code.focus();
+  await expect(code).toBeFocused();
+  await expect(code).toHaveAttribute('aria-label', /\.l/);
+  await expect(code.locator('code > *')).toHaveCount(0);
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(() => code.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await page.screenshot({ path: 'reports/screenshots/fragment-keyboard-390.png' });
 });
 
 test('previous word routes and anchors retain access to their canonical glossary meanings', async ({ page }) => {
@@ -439,6 +453,11 @@ test('mobile navigation and visible keyboard focus', async ({ page }) => {
 });
 
 test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ page }) => {
+  const sourceBlocks = (language: string) => page.locator(`pre[data-language="${language}"], pre:has(> code.language-${language})`).evaluateAll((pres) => pres.map((pre) => {
+    // Complete examples have Expressive Code lines; fragments retain one text node.
+    const lines = [...pre.querySelectorAll('.ec-line .code')];
+    return (lines.length ? lines.map((line) => line.textContent?.replace(/\n$/, '')).join('\n') : pre.querySelector('code')?.textContent ?? '').trimEnd();
+  }));
   for (const [route, fixture, start, end] of [
     ['/docs/guide/apps-and-services/', '../cmd/l/test/runnable_service/canonical-io.l', 0, undefined],
     ['/docs/guide/apps-and-services/', '../lyger/test/workspace/services.l', 1, 12],
@@ -451,21 +470,18 @@ test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ 
   ] as const) {
     await page.goto(route);
     const source = (await fs.readFile(fixture, 'utf8')).split('\n').slice(start, end).join('\n').trimEnd();
-    // Expressive Code uses divs per line and a newline sentinel for empty lines.
-    const blocks = await page.locator('pre[data-language="l"]').evaluateAll((pres) => pres.map((pre) => [...pre.querySelectorAll('.ec-line .code')].map((line) => line.textContent?.replace(/\n$/, '')).join('\n').trimEnd()));
-    expect(blocks).toContain(source);
+    expect(await sourceBlocks('l')).toContain(source);
   }
   await expect(page.locator('pre[data-language="sh"]').first()).toContainText(/^l build main\.l/);
   await page.goto('/docs/stdlib/');
-  expect(JSON.parse((await page.locator('pre[data-language="json"] code').textContent())!)).toEqual(JSON.parse(await fs.readFile('../dictionaries.json', 'utf8')));
+  expect(JSON.parse((await sourceBlocks('json'))[0])).toEqual(JSON.parse(await fs.readFile('../dictionaries.json', 'utf8')));
   await page.goto('/docs/reference/logemes/rust-contract/');
   await expect(page.locator('pre[data-language="rust"]')).toContainText("'outer: loop {");
   await page.goto('/docs/internals/aml-protocol/');
   const reference = await fs.readFile('../logiceme/AML.md', 'utf8');
   const aml = reference.match(/## Complete composed example\n[\s\S]*?```text\n([\s\S]*?)\n```/);
   expect(aml).not.toBeNull();
-  const blocks = await page.locator('pre[data-language="text"]').evaluateAll((pres) => pres.map((pre) => [...pre.querySelectorAll('.ec-line .code')].map((line) => line.textContent?.replace(/\n$/, '')).join('\n')));
-  expect(blocks.map((x) => x.trimEnd())).toContain(aml![1].trimEnd());
+  expect(await sourceBlocks('text')).toContain(aml![1].trimEnd());
   expect(await page.locator('main app, main logeme, main outline').count()).toBe(0);
 });
 

@@ -146,13 +146,38 @@ func TestSameSpellingFormsKeepDescriptorHomonymsSeparate(t *testing.T) {
 }
 
 func TestSameSpellingFormsRequireDeclaredCandidate(t *testing.T) {
-	word := indexedTestWord(t, "Read", `"Read|-s||-ing|-er"`, true)
-	statement := boundFormStatement(t, "Target is Read Value", map[string]*record{"Read": word})
-	if err := statement.loadGram(); err == nil {
-		t.Fatal("Function without a declared passive gained a passive fallback")
+	for _, family := range []struct {
+		label    string
+		rejected []string
+	}{
+		{`"Read|-s||-ing|-er"`, []string{"Read", "Reads", "Reading"}},
+		{`"Read|-s|-|-ing|-er"`, []string{"Reads", "Reading"}},
+	} {
+		for _, callable := range []bool{false, true} {
+			for _, spelling := range family.rejected {
+				t.Run(fmt.Sprintf("%s/%s/callable=%t", family.label, spelling, callable), func(t *testing.T) {
+					word := indexedTestWord(t, "Read", family.label, callable)
+					statement := boundFormStatement(t, "Target is "+spelling+" Value", map[string]*record{"Read": word})
+					verb := statement.tokens[2]
+					before, category := verb.binding, verb.tType
+					if err := statement.loadGram(); err == nil {
+						t.Fatal("undeclared or incorrect passive accepted")
+					}
+					if verb.binding != before || verb.tType != category || verb.binding.Record != word {
+						t.Fatal("failed passive changed the selected identity or form")
+					}
+				})
+			}
+		}
 	}
-	if statement.tokens[2].binding.Form != "root" {
-		t.Fatal("failed undeclared passive changed its root token")
+}
+
+func TestSameSpellingSourceActionRequiresDeclaredPassive(t *testing.T) {
+	for _, spelling := range []string{"Read", "Reads", "Reading"} {
+		source := distributionIOImport + "Create \"Read|-s||-ing|-er\" for Printing any Text.\nCreate \"Worker\" as a New Basic App.\nWorker is " + spelling + " `payload`.\n"
+		if _, err := distributionFrontend(t, source, nil); !errors.Is(err, lerrors.Syntax) {
+			t.Errorf("%s without a passive declaration: %v", spelling, err)
+		}
 	}
 }
 
@@ -338,6 +363,195 @@ func TestSameSpellingFunctionPassiveRejectsUnsupportedLowering(t *testing.T) {
 		_, err := distributionFrontend(t, source+"Define \"Target\" as 1.\nDefine \"Payload\" as `value`.\nTarget is Read Payload.\n", nil)
 		if !errors.Is(err, lerrors.Unsupported) || !strings.Contains(err.Error(), "passive Function invocation") {
 			t.Fatalf("unsupported passive operands were dropped or misdiagnosed: %v", err)
+		}
+	}
+}
+
+func TestConstructionRequiresNominalRole(t *testing.T) {
+	const leaf = "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n"
+	for _, declaration := range []string{leaf, "Create \"Fold|-s|-ed|-ing|-er\" for Showing any Number.\n"} {
+		for _, spelling := range []string{"Fold", "Folds", "Folded", "Folding"} {
+			for _, modifier := range []string{"New", "Generic"} {
+				source := declaration + "Create \"Selected\" as a " + modifier + " " + spelling + " of 7.\n"
+				c := paragraphPublicationSource(t, source)
+				if !errors.Is(c.Error, lerrors.Syntax) {
+					t.Errorf("%s %s accepted an operation as a noun: %v", modifier, spelling, c.Error)
+				}
+			}
+		}
+	}
+	for name, source := range map[string]string{
+		"actor":         leaf + "Create \"Selected\" as a New Folder of 7.\n",
+		"alias actor":   leaf + "Use Fold as \"Alias\".\nCreate \"Selected\" as a New Aliaser of 7.\n",
+		"noun alias":    "Define \"Folded\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nUse Folded as \"Alias\".\nCreate \"Selected\" as a New Alias.\n",
+		"descriptor":    leaf + "Define \"Folded\" as a New Adjective describing any Folder.\nIt describes any Folder as `<DEF><@Folder@><DEF>`.\nCreate \"Selected\" as a New Folded Folder of 7.\n",
+		"foreign noun":  leaf + "Create \"Other\" as a Dictionary.\nDefine Other's \"Folded\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nCreate \"Selected\" as a New Other.Folded.\n",
+		"Function type": identityFunction + runtimeFunctionReadSource,
+	} {
+		t.Run(name, func(t *testing.T) {
+			c := paragraphPublicationSource(t, source)
+			if c.Error != nil {
+				t.Fatal(c.Error)
+			}
+			if name == "Function type" {
+				return
+			}
+			want := map[string]string{"actor": "Fold", "alias actor": "Fold", "noun alias": "Folded", "descriptor": "Fold", "foreign noun": "Other.Folded"}[name]
+			last := c.Statements[len(c.Statements)-1]
+			matched := false
+			for _, tok := range last.tokens {
+				if tok.binding == nil || tok.isDeclare() || tok.isPossessive() || tok.getPOS(true) != "noun" {
+					continue
+				}
+				canonical, err := canonicalRecord(tok.binding.Record, c.Semantics.Aliases)
+				if err != nil || canonical.ID != want {
+					t.Fatalf("construction selected %v, want %s: %v", canonical, want, err)
+				}
+				matched = true
+			}
+			if !matched {
+				t.Fatal("construction has no original nominal binding")
+			}
+		})
+	}
+}
+
+func TestSourceActionConstructorRequiresNominalRole(t *testing.T) {
+	for _, form := range []string{"Fold", "Folded"} {
+		source := "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+			"Create \"Wrap|-s|-ped|-ping|-per\" for Processing a New " + form + " of any Number.\nCreate \"Worker\" as a New Basic App.\nWorker Wraps 7.\n"
+		_, err := distributionFrontend(t, source, nil)
+		if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "construction requires a noun or actor") {
+			t.Fatalf("deferred %s constructor accepted: %v", form, err)
+		}
+	}
+}
+
+func TestConstructorRolePreservesSelectedIdentity(t *testing.T) {
+	for _, word := range []string{"Storage.Share", "Storage.Shared", "Storage's Shared", "Spared"} {
+		source := "Use Storage from `storage`.\nUse Storage.Share as \"Spare\".\nDefine \"Shared\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nCreate \"Selected\" as a New " + word + " of 7.\n"
+		c := paragraphPublicationSource(t, source)
+		if !errors.Is(c.Error, lerrors.Syntax) || !strings.Contains(c.Error.Error(), "construction requires a noun or actor") {
+			t.Fatalf("%s selected a non-nominal construction: %v", word, c.Error)
+		}
+	}
+	c := paragraphPublicationSource(t, "Use Storage from `storage`.\nDefine \"Shared\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nCreate \"Selected\" as a New Shared.\n")
+	if c.Error != nil {
+		t.Fatal(c.Error)
+	}
+}
+
+func TestConstructedActorValueRegistersNoun(t *testing.T) {
+	c := paragraphPublicationSource(t, "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\nDefine \"Parcel\" as a New Folder of any Thing.\n")
+	if c.Error != nil {
+		t.Fatal(c.Error)
+	}
+	record := c.Memory["Parcel"]
+	if record == nil || record.bindingWord().POS != "noun" {
+		t.Fatal("constructed actor value inherited its operation's verb role")
+	}
+	if matched, _ := record.binding(newBindingQuery([]byte("Parcel"))); matched == nil || matched.lexicalType() != "nouns.generic.root" {
+		t.Fatal("noun specialization lost its lexical binding")
+	}
+}
+
+func TestSameSpellingFormsBuildMemoryRetry(t *testing.T) {
+	const source = "Create \"Worker\" as a New Basic App.\nCreate \"Read|-s|-|-ing|-er\" for Showing any Thing.\n" +
+		"Define \"Item\" as `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+		"Define \"Wrapped\" as a New Adjective describing any Item.\nWorker is Read a New Wrapped Item of 7.\n" +
+		"It describes any Item as `<DEF><@Item@><DEF>`.\n"
+	c := newCompilation([]byte(source), "retry-forms.l")
+	c.init(canonicalTestOptions())
+	for _, phase := range []func(){c.preProcess, c.build, c.scan} {
+		phase()
+		if c.Error != nil {
+			t.Fatal(c.Error)
+		}
+	}
+	var statement *lStatement
+	for _, candidate := range testProgramStatements(c.Statements) {
+		if candidate.source.Span.Start.Line == 5 {
+			statement = candidate
+		}
+	}
+	if statement == nil {
+		t.Fatal("missing original caller")
+	}
+	verb, span := statement.tokens[2], statement.source.Span
+	var selected *record
+	failed := 0
+	c.Gram.constructorSignature = func(noun *token, modifiers []*token, named bool) (grammarArity, error) {
+		arity, err := c.constructorGrammarSignature(noun, modifiers, named)
+		if noun.scope == verb.scope && errors.Is(err, lerrors.UnresolvedReference) {
+			failed++
+			if verb.binding == nil || verb.binding.Form != "root" {
+				t.Fatal("unresolved grammar committed passive form")
+			}
+			selected = verb.binding.Record
+		}
+		return arity, err
+	}
+	c.analyze()
+	if c.Error != nil {
+		t.Fatal(c.Error)
+	}
+	if failed == 0 || selected == nil || statement.tokens[2] != verb || verb.binding.Record != selected || verb.binding.Form != "passive" || statement.source.Span != span || string(verb.rawBytes) != "Read" {
+		t.Fatalf("real unresolved-reference retry lost identity, form, or provenance: attempts=%d binding=%+v", failed, verb.binding)
+	}
+}
+
+func TestSameSpellingNativeFunctionRequiresDeclaredPassive(t *testing.T) {
+	for _, word := range []string{"Read", "Reads", "Reading"} {
+		source := "    Publicly create \"Read|-s||-ing|-er\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\nCreate \"Worker\" as a New Basic App.\nWorker is " + word + " 7.\n"
+		_, err := distributionFrontend(t, source, nil)
+		if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "declared passive form") {
+			t.Fatalf("%s acquired an undeclared native Function passive: %v", word, err)
+		}
+	}
+}
+
+func TestConstructorRoleActorAliasAndDescriptor(t *testing.T) {
+	const words = "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\nCreate \"Catalog\" as a Dictionary.\nUse Folder as Catalog's \"Parcel\".\nUse Catalog.Parcel as \"Copy\".\nUse Fold as \"Relay\".\nUse Folded as \"Spared\".\n" +
+		"Define \"Tracked\" as a New Adjective describing any Folder.\nIt describes any Folder as `<DEF><@Folder@><DEF>`.\n"
+	c := paragraphPublicationSource(t, words+"Create \"Selected\" as a New Copy of 7.\nCreate \"Wrapped\" as a New Tracked Relay of 7.\nCreate \"Passivealias\" as a New Tracked Spared of 7.\n")
+	if c.Error != nil {
+		t.Fatal(c.Error)
+	}
+	aliasedTarget := strings.ReplaceAll(strings.ReplaceAll(words, "any Folder", "any Copy"), "<@Folder@>", "<@Copy@>")
+	if throughAlias := paragraphPublicationSource(t, aliasedTarget+"Create \"Wrapped\" as a New Tracked Relay of 7.\n"); throughAlias.Error != nil {
+		t.Fatal(throughAlias.Error)
+	}
+	for _, name := range []string{"Catalog.Parcel", "Copy"} {
+		alias := c.Memory[name]
+		if alias == nil || alias.bindingWord().POS != "noun" || len(alias.bindingWord().Postfixes) != 0 || len(alias.bindingWord().Prefixes) != 0 {
+			t.Fatalf("actor alias %s inherited operation morphology", name)
+		}
+		canonical, err := canonicalRecord(alias, c.Semantics.Aliases)
+		if err != nil || canonical != c.Memory["Fold"] {
+			t.Fatalf("actor alias %s lost canonical identity: %v", name, err)
+		}
+	}
+	for spelling, form := range map[string]string{"Relay": "root", "Relayed": "passive", "Relayer": "objective"} {
+		binding, ok := c.Memory["Relay"].binding(newBindingQuery([]byte(spelling)))
+		if !ok || binding.Form != form || binding.POS != "verb" {
+			t.Fatalf("root alias lost %s: %+v", form, binding)
+		}
+	}
+	passiveAlias := c.Memory["Spared"]
+	if passiveAlias == nil || passiveAlias.bindingWord().POS != "verb" || c.Semantics.Aliases[passiveAlias] != c.Memory["Fold"] {
+		t.Fatal("passive source alias lost its renamed verb family")
+	}
+	for _, statement := range testProgramStatements(c.Statements) {
+		for _, tok := range statement.tokens {
+			if string(tok.rawBytes) == "Folded" && (tok.binding == nil || tok.binding.Record != c.Memory["Fold"] || tok.binding.Form != "passive") {
+				t.Fatal("aliasing changed the original passive source role")
+			}
+		}
+	}
+	for _, construction := range []string{"Relay", "Relayed", "Public Relay", "Tracked Relayed", "Spared", "Public Spared", "Tracked Folded", "Tracked Spareded"} {
+		bad := paragraphPublicationSource(t, words+"Create \"Invalid\" as a New "+construction+" of 7.\n")
+		if !errors.Is(bad.Error, lerrors.Syntax) {
+			t.Fatalf("unrelated operation role %s accepted: %v", construction, bad.Error)
 		}
 	}
 }

@@ -80,16 +80,13 @@ func (e *orchestrationEmitter) describedValueBinding(word string, descriptors []
 	}
 	var body []string
 	if function := rec.function; function != nil && function.Native {
-		invocation, err := e.compilation.instantiateDescribedBuiltin(word, descriptors, arguments)
-		if err != nil {
-			return "", err
+		invocation, invocationErr := e.compilation.instantiateDescribedBuiltin(word, descriptors, arguments)
+		if invocationErr != nil {
+			return "", invocationErr
 		}
 		body, err = e.describedWord("Storage.Binding", []string{"Storage.Produced"}, map[string]DefinitionArgument{
 			"Name": definitionReferenceArgument(name), "Value": {Kind: "Definition", Definition: &invocation},
 		})
-		if err != nil {
-			return "", err
-		}
 	} else {
 		node, selectionErr := e.compilation.definitionConstruction(rec, descriptors...)
 		if selectionErr != nil {
@@ -109,10 +106,9 @@ func (e *orchestrationEmitter) describedValueBinding(word string, descriptors []
 		return "", err
 	}
 	e.pending = append(e.pending, body...)
+	e.contractValueDepth = depth
 	if depth == 0 {
-		e.contractValueDepth = 0
 		e.recordContractNativeEmission(word, descriptors, arguments, name)
-		e.contractValueDepth = 1
 	}
 	return name, nil
 }

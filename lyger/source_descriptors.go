@@ -41,7 +41,7 @@ func (c *Compilation) descriptorBaseArgument(rule *descriptorRule, object *objec
 	return identity == rule.Target, err
 }
 
-func (c *Compilation) instantiateSourceDescriptor(rule *descriptorRule, base DefinitionInstance, original []DefinitionArgument, name string, active, dynamic map[*record]bool) (DefinitionInstance, error) {
+func (c *Compilation) instantiateSourceDescriptor(rule *descriptorRule, base DefinitionInstance, original []DefinitionArgument, name string, local map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool) (DefinitionInstance, error) {
 	leave, err := c.sourceDescriptorScope(rule)
 	if err != nil {
 		return DefinitionInstance{}, err
@@ -57,6 +57,10 @@ func (c *Compilation) instantiateSourceDescriptor(rule *descriptorRule, base Def
 	node, err := c.constructObject(object, make(map[*descriptorRule]bool))
 	if err != nil {
 		return DefinitionInstance{}, err
+	}
+	if len(node.Arguments) == 0 && used != nil {
+		node.Name = name
+		return c.instantiateNamedConstruction(node, local, used, active, dynamic, original...)
 	}
 	var arguments []DefinitionArgument
 	if len(node.Arguments) == 0 {
@@ -371,6 +375,9 @@ func (c *Compilation) inheritedHeader(objects []*objectGram, owner string, named
 		child, _, _, err := c.constructionHeader(node, object.name != nil, active)
 		if err != nil {
 			return header, err
+		}
+		if len(objects) == 1 && object.name == nil && child.implicitName != nil {
+			return child, nil
 		}
 		if child.fixed && len(child.parameters) == 0 {
 			continue

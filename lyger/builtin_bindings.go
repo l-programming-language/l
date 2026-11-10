@@ -98,7 +98,7 @@ func (c *Compilation) instantiateDefinition(rec *record, arguments map[string]De
 		return DefinitionInstance{}, err
 	}
 	used := make(map[string]bool)
-	bound, err := c.instantiateNamedConstruction(node, arguments, used, make(map[*record]bool))
+	bound, err := c.instantiateNamedConstruction(node, arguments, used, make(map[*record]bool), nil)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
@@ -137,7 +137,7 @@ func validateDefinitionArguments(rec *record, arguments map[string]DefinitionArg
 	return nil
 }
 
-func (c *Compilation) instantiateNamedObject(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
+func (c *Compilation) instantiateNamedObject(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
 	node, err := c.constructObject(object, make(map[*descriptorRule]bool))
 	if err != nil {
 		return DefinitionInstance{}, err
@@ -147,33 +147,36 @@ func (c *Compilation) instantiateNamedObject(object *objectGram, arguments map[s
 			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s received %d unused arguments", node.Nominal, len(values))
 		}
 		for _, parameter := range node.Arguments {
-			value, _, err := c.namedObjectArgument(parameter, arguments, used, active)
+			value, _, err := c.namedObjectArgument(parameter, arguments, used, active, dynamic)
 			if err != nil {
 				return DefinitionInstance{}, err
 			}
 			values = append(values, value)
 		}
 	}
-	return c.instantiateNamedConstruction(node, arguments, used, active, values...)
+	return c.instantiateNamedConstruction(node, arguments, used, active, dynamic, values...)
 }
 
-func (c *Compilation) namedObjectArgument(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool) (DefinitionArgument, bool, error) {
-	return c.definitionOperand(object, active, nil, func(child *objectGram) (DefinitionInstance, bool, error) {
-		instance, err := c.instantiateNamedObject(child, arguments, used, active)
+func (c *Compilation) namedObjectArgument(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool) (DefinitionArgument, bool, error) {
+	return c.definitionOperand(object, active, dynamic, func(child *objectGram) (DefinitionInstance, bool, error) {
+		instance, err := c.instantiateNamedObject(child, arguments, used, active, dynamic)
 		return instance, false, err
 	})
 }
 
-func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local map[string]DefinitionArgument, localUsed map[string]bool, active map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
+func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local map[string]DefinitionArgument, localUsed map[string]bool, active, dynamic map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
+	if err := node.validateRole(dynamic); err != nil {
+		return DefinitionInstance{}, err
+	}
 	var signatures map[*record]bool
-	if len(node.Wrappers) > 0 || len(values) > 0 {
+	if len(node.Wrappers) > 0 || len(values) > 0 || node.Name != "" {
 		signatures = make(map[*record]bool)
 	}
 	header, wrappers, selected, err := c.constructionHeader(node, node.Source != nil && node.Source.name != nil, signatures)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	return c.instantiateConstruction(node, header, wrappers, selected, values, local, localUsed, active, nil)
+	return c.instantiateConstruction(node, header, wrappers, selected, values, local, localUsed, active, dynamic)
 }
 
 func (c *Compilation) instantiateConstruction(node *constructionNode, header definitionHeader, wrappers []*DefinitionTemplate, selected int, values []DefinitionArgument, local map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool) (DefinitionInstance, error) {
@@ -197,7 +200,7 @@ func (c *Compilation) instantiateConstruction(node *constructionNode, header def
 	if selected == len(wrappers) {
 		instance, err = c.instantiateSourceCall(node.Definition, arguments, local, used, active, dynamic)
 	} else if wrappers[selected] == nil {
-		instance, err = c.instantiateSourceDescriptor(node.Wrappers[selected], DefinitionInstance{}, arguments, node.Name, active, dynamic)
+		instance, err = c.instantiateSourceDescriptor(node.Wrappers[selected], DefinitionInstance{}, arguments, node.Name, local, used, active, dynamic)
 	} else {
 		bindings, bindErr := bindDefinitionArguments(header.template, arguments, local, used)
 		if bindErr != nil {
@@ -239,7 +242,7 @@ func (c *Compilation) instantiateConstruction(node *constructionNode, header def
 	}
 	for index := selected - 1; index >= 0; index-- {
 		if wrappers[index] == nil {
-			instance, err = c.instantiateSourceDescriptor(node.Wrappers[index], instance, values, node.Name, active, dynamic)
+			instance, err = c.instantiateSourceDescriptor(node.Wrappers[index], instance, values, node.Name, local, used, active, dynamic)
 		} else {
 			instance, err = c.instantiateDescriptorWrapper(node.Wrappers[index], wrappers[index], instance, local, used)
 		}

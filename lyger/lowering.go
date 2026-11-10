@@ -240,14 +240,14 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 	}
 	if used != nil {
 		if object != nil {
-			return c.instantiateNamedObject(object, named, used, active, args...)
+			return c.instantiateNamedObject(object, named, used, active, dynamic, args...)
 		}
 		if len(args) > 0 {
 			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("constructor %s requires a declared parameter signature", rec.ID)
 		}
 		return c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
 			instance, _, err := c.instantiateSourceAction(action, active, dynamic, func(object *objectGram) (DefinitionArgument, bool, error) {
-				return c.namedObjectArgument(object, named, used, active)
+				return c.namedObjectArgument(object, named, used, active, dynamic)
 			})
 			return instance, err
 		})
@@ -512,6 +512,9 @@ func (c *Compilation) bindFormalMember(object *objectGram, arguments []Definitio
 }
 
 func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inherited []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionInstance, bool, error) {
+	if err := node.validateRole(dynamic); err != nil {
+		return DefinitionInstance{}, false, err
+	}
 	inputs := c.processInputArguments(node.Source)
 	header, wrappers, selected, err := c.constructionHeader(node, node.Source != nil && node.Source.name != nil, make(map[*record]bool))
 	if err != nil {

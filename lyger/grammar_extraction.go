@@ -92,6 +92,46 @@ func (sb *objectGram) referenceID() string {
 	return nominalRecordID(sb.article, sb.noun, sb.adjectives)
 }
 
+// Construction uses nominal forms; a Function root also names its callable type.
+// Inspect the selected token, leaving its operation family and aliases intact.
+func (sb *objectGram) constructionRole() error {
+	if sb == nil || sb.noun == nil || sb.noun.lexeme() == nil || sb.noun.getPOS(true) == "noun" || sb.noun.getPOS(true) == "type" || sb.noun.tType == "" && sb.noun.lexeme().POS == "noun" {
+		return nil
+	}
+	binding := sb.noun.binding
+	if binding != nil && binding.Form == "root" && (binding.Record.isFunction() || binding.Record.function != nil) {
+		return nil
+	}
+	for _, modifier := range sb.adjectives {
+		if modifier.hasRole("adjective", "initialization") || modifier.hasRole("adjective", "abstraction") {
+			return lerrors.Syntax.Errorf("construction requires a noun or actor, got %q", sb.noun.rawBytes)
+		}
+	}
+	return nil
+}
+
+// Declaration values are checked even when unused. Directive bodies retain
+// their deferred source-action semantics and are checked when instantiated.
+func (c *Compilation) constructionValueRoles(sb *objectGram) error {
+	if err := sb.constructionRole(); err != nil {
+		node, err := c.constructObjectMode(sb, make(map[*descriptorRule]bool), constructionHeaderOnly)
+		if err != nil {
+			return err
+		}
+		if err := node.validateRole(nil); err != nil {
+			return err
+		}
+	}
+	if sb != nil {
+		for _, operand := range constructorOperands(sb) {
+			if err := c.constructionValueRoles(operand); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // getValue returns a record entry and valueType for the assignable value of the objectGram
 func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
 	if value, kind, handled, err := runtimeObjectEntry(sb); handled {
@@ -116,6 +156,11 @@ func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
 		value.bindFrom(sb.noun.mem)
 		switch value.Type {
 		case storageLexeme:
+			// An actor constructs a nominal value; its operation keeps its own
+			// verb family on the selected source token and canonical record.
+			if sb.noun.getPOS(true) == "noun" {
+				value.Lexeme.POS = "noun"
+			}
 			value.Lexeme.Adjectives = append(value.Lexeme.Adjectives, valueModifiers(sb.adjectives)...)
 			return value, value.Lexeme.getValueType(), nil
 		case storagePrimitive, storageApplicative, storageIterative:

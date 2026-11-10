@@ -30,6 +30,28 @@ type constructionNode struct {
 	contractIdentity   string
 }
 
+// Preserve canonical runtime-capture diagnostics before rejecting a wrong-role
+// constructor in a deferred body. Both named and positional expansion use this.
+func (node *constructionNode) validateRole(dynamic map[*record]bool) error {
+	if err := node.Source.constructionRole(); err != nil {
+		rec := node.Definition
+		if rec != nil && (dynamic[rec] || rec.Value != nil && rec.Value.Runtime != nil) {
+			return lerrors.Unsupported.Errorf("runtime value %s cannot be captured by an App body", rec.ID)
+		}
+		// A selected descriptor can construct its canonical actor target from
+		// a root reference. Unrelated modifiers and passive forms cannot.
+		if binding := node.Source.noun.binding; binding != nil && binding.Form == "root" {
+			for _, rule := range node.Wrappers {
+				if rule.Target.definition == rec && rule.Object != nil && rule.Object.noun != nil && rule.Object.noun.getPOS(true) == "noun" {
+					return nil
+				}
+			}
+		}
+		return err
+	}
+	return nil
+}
+
 type applicationConstruction struct {
 	App    *App
 	Root   *constructionNode

@@ -159,7 +159,7 @@ func TestWordLibraryNamedSourceWrapperEvaluatesForwardedInputOnce(t *testing.T) 
 	instance, err := c.instantiateNamedConstruction(node, map[string]DefinitionArgument{
 		"context": {Kind: definitionArgDefinition.String(), Definition: &acquire},
 		"value":   definitionReferenceArgument("value"),
-	}, make(map[string]bool), make(map[*record]bool))
+	}, make(map[string]bool), make(map[*record]bool), nil)
 	if err != nil {
 		t.Fatal(err)
 	}

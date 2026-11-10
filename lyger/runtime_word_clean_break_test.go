@@ -2,6 +2,7 @@ package Lyger
 
 import (
 	"bytes"
+	"strconv"
 	"strings"
 	"testing"
 	"testing/fstest"
@@ -115,7 +116,74 @@ func TestRuntimeWordCleanBreakReleasesReplacedInvocationBeforeSpawn(t *testing.T
 	if insert < 0 || release <= insert || spawn <= release {
 		t.Fatalf("replaced invocation must be released after insertion and before spawn: %s", definition.Expression)
 	}
+	for _, delayed := range []bool{false, true} {
+		t.Run(map[bool]string{false: "selected", true: "delayed-release-control"}[delayed], func(t *testing.T) {
+			files := dictionaryIndexFilesystem(t)
+			process := files["runtime/eng/process.l"]
+			process.Data = bytes.ReplaceAll(process.Data, []byte("Key: ~tokio::spawn~"), []byte("Key: ~crate::runtime::host::observe_spawn~"))
+			if delayed {
+				// A provider-only negative control changes source order, never Rust.
+				app := files["runtime/eng/app.l"]
+				const release = "Storage.Release Previous.\n"
+				const tail = "Return a New Nothing.\n"
+				if bytes.Count(app.Data, []byte(release)) != 1 || !bytes.HasSuffix(app.Data, []byte(tail)) {
+					t.Fatal("release control no longer selects the final Supervise body")
+				}
+				app.Data = bytes.Replace(app.Data, []byte(release), nil, 1)
+				app.Data = append(bytes.TrimSuffix(app.Data, []byte(tail)), []byte(release+tail)...)
+			}
+			files["runtime/rust/host.rs"].Data = append(files["runtime/rust/host.rs"].Data, []byte(replacedInvocationObserver)...)
+			deriveTestRuntime(t, files)
+			c := NewLygerService(Options{Resources: files}).NewCompilation([]byte("Create \"Checks\" as a Dictionary.\n"), "runtime-insertion-release.l")
+			c.Make()
+			if c.Error != nil {
+				t.Fatal(c.Error)
+			}
+			wordLibraryRuntimeObserver(t, c, "Checks", strings.ReplaceAll(`pub(crate) fn exercise() {
+ std::thread::spawn(|| tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap().block_on(crate::runtime::host::observe_replacement(EXPECTED))).join().unwrap();
+ println!("word-library error assertions reached");
+}`, "EXPECTED", strconv.FormatBool(!delayed)))
+		})
+	}
 }
+
+const replacedInvocationObserver = `
+static REPLACED: Mutex<Option<(std::sync::Weak<Invocation>, usize, bool)>> = Mutex::new(None);
+pub(crate) fn observe_spawn<F>(future: F) -> tokio::task::JoinHandle<F::Output>
+where F: Future + Send + 'static, F::Output: Send + 'static {
+ if let Some((old, count, released)) = REPLACED.lock().unwrap().as_mut() {
+  *count += 1; *released = old.upgrade().is_none();
+ }
+ tokio::spawn(future)
+}
+pub(crate) async fn observe_replacement(expected: bool) {
+ use tokio::io::AsyncWriteExt;
+ let owner = super::runtime_assemble(Arc::new(NativeDependencies), Box::pin(tokio::io::sink()), Box::pin(tokio::io::sink()));
+ let allocate = || super::invocation_allocate(std::sync::Weak::new(), Arc::downgrade(&owner.inner), 41, Arc::new(NativeDependencies), tokio::time::Duration::from_secs(2), None);
+ let (old, _) = allocate(); let old_weak = Arc::downgrade(&old);
+ let (new, receiver) = allocate();
+ let mut command = Command::new("/bin/sh"); command.arg("-c").arg("read value").stdin(std::process::Stdio::piped()).kill_on_drop(true);
+ process::configure(&mut command).unwrap();
+ let mut child = command.spawn().unwrap(); let pid = child.id().unwrap(); let mut input = child.stdin.take().unwrap();
+ {
+  let mut admission = lock(&owner.inner.state);
+  assert!(admission.owned.insert(41, old).is_none());
+  assert_eq!(old_weak.strong_count(), 1, "map must be the old invocation's sole owner");
+  *REPLACED.lock().unwrap() = Some((old_weak.clone(), 0, false));
+  super::app_supervise(&new, child, receiver, &mut admission, &owner);
+  assert_eq!(admission.owned.len(), 1); assert!(Arc::ptr_eq(admission.owned.get(&41).unwrap(), &new));
+ }
+ let (_, count, released) = REPLACED.lock().unwrap().take().unwrap();
+ input.write_all(b"done\n").await.unwrap(); drop(input);
+ tokio::time::timeout(tokio::time::Duration::from_secs(5), super::invocation_completed(&new)).await.unwrap();
+ assert!(lock(&owner.inner.state).owned.is_empty());
+ assert_eq!(lock(&new.state).snapshot.as_ref().unwrap().status, Some(0));
+ assert!(new.group.lock().await.cleaned);
+ assert_eq!(nix::sys::signal::kill(nix::unistd::Pid::from_raw(pid as i32), None), Err(nix::errno::Errno::ESRCH));
+ assert!(old_weak.upgrade().is_none()); assert_eq!(count, 1);
+ assert_eq!(released, expected, "old invocation must be released before delegating Spawn");
+}
+`
 
 func TestRuntimeWordCleanBreakErrorIdentityAndBytesNative(t *testing.T) {
 	source := "Use Runtime from `runtime`.\nUse Storage from `storage`.\n\n" +

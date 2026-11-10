@@ -433,27 +433,11 @@ func (sb *valueGram) getUnassociatedTokens() []*token {
 
 // typeSwitch inits associates tokens to valueGram fields based on the decoded type pattern and token order
 func (sb *valueGram) typeSwitch(term grammarTerm) error {
-	available := sb.getUnassociatedTokens()
-	if len(available) > 0 && strings.HasPrefix(term.Pattern.TokenType(), "primitive.") {
-		raw := available[0].rawBytes
-		literal := isText(raw) || isTruth(raw) || isNum(raw) || string(raw) == "null"
-		if !literal {
-			return lerrors.Syntax.Errorf("%q is a reference, not a literal", raw)
-		}
+	noun, err := term.typeToken(sb.getUnassociatedTokens())
+	if err == nil && noun != nil {
+		sb.noun = noun
 	}
-	switch term.Pattern {
-	case patternType, patternList, patternDictionary, patternText, patternNumber, patternTruth, patternNull:
-		noun, err := term.typeToken(sb.getUnassociatedTokens())
-		if err != nil {
-			return err
-		}
-		if noun != nil {
-			sb.noun = noun
-		}
-	default:
-		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled VALUE Type Error: "+term.Pattern.TokenType())
-	}
-	return nil
+	return err
 }
 
 func (sb *valueGram) gramSwitch(term grammarTerm) error {
@@ -758,19 +742,6 @@ func (sb *objectGram) lexSwitch(term grammarTerm) error {
 
 // typeSwitch inits associates tokens to objectGram fields based on the decoded type pattern and token order
 func (sb *objectGram) typeSwitch(term grammarTerm) error {
-	available := sb.getUnassociatedTokens()
-	if len(available) > 0 && strings.HasPrefix(term.Pattern.TokenType(), "primitive.") {
-		raw := available[0].rawBytes
-		literal := isText(raw) || isTruth(raw) || isNum(raw) || string(raw) == "null"
-		if !literal {
-			return lerrors.Syntax.Errorf("%q is a reference, not a literal", raw)
-		}
-	}
-	switch term.Pattern {
-	case patternType, patternList, patternDictionary, patternText, patternNumber, patternTruth, patternNull:
-	default:
-		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Object Type Error: "+term.Pattern.TokenType())
-	}
 	noun, err := term.typeToken(sb.getUnassociatedTokens())
 	if err != nil || noun == nil {
 		return err
@@ -1093,59 +1064,46 @@ func (clause *clauseGram) orderedObjects() []*objectGram {
 	return nil
 }
 
-// subTypeSwitch checks for a clauseGram subType if one isn't provided in the sType
-func (sb *clauseGram) subTypeSwitch() string {
-	primeVerb := clauseHead(sb.tokens)
-	if primeVerb != nil {
-		sb.verb = primeVerb
-		lexicalType := primeVerb.tType
-		if sb.verbForm != nil {
-			lexicalType = sb.verbForm.lexicalType
-		}
-		return strings.Replace(lexicalType, "verbs.", "", 1)
-	}
-	return ""
-}
-
-// loadTyping parses sType into gType (grammar type) and cType (case type)
+// loadTyping validates a contextual form against the selected lexical identity.
+// The view is committed only after the complete statement succeeds.
 func (sb *clauseGram) loadTyping(sType string) error {
 	typing := grammarTyping{&sb.sType, &sb.gType, &sb.cType}
 	if err := typing.decode(sType); err != nil {
 		return err
 	}
-	splitTypes := strings.Split(sb.sType, ".")
-	if head := clauseHead(sb.tokens); head != nil && len(splitTypes) > 1 {
-		form := splitTypes[1]
-		if len(splitTypes) > 2 {
-			form = splitTypes[2]
+	parts := strings.Split(sb.sType, ".")
+	head := clauseHead(sb.tokens)
+	if head != nil && len(parts) > 1 {
+		form := parts[1]
+		if len(parts) > 2 {
+			form = parts[2]
 		}
 		sb.verbForm = head.grammaticalForm(form)
+		// Source bindings own their declared morphology; configured native
+		// operation roles retain their existing grammar contract.
+		if len(parts) > 2 && head.binding != nil && sb.verbForm == nil {
+			return lerrors.Syntax.Errorf("%q has no declared %s form", head.rawBytes, form)
+		}
 	}
-	if len(splitTypes) < 3 {
-		subType := sb.subTypeSwitch()
-		if subType == "" {
+	if len(parts) < 3 {
+		if head == nil {
 			return lerrors.Syntax.Errorf("clause typing error: first tokens of a clause must be an adverb or verb")
 		}
-		if len(splitTypes) == 2 {
-			caseMatch := false
-			// eVerb; i.e. applicative, imperative, etc.
-			eVerb := splitTypes[1]
-			for _, sStr := range strings.Split(subType, ".") {
-				if strings.ToLower(eVerb) == strings.ToLower(sStr) { //nolint:staticcheck // SA6005: preserve lowercase identity for Unicode grammar names; EqualFold equates additional names.
-					caseMatch = true
-					break
-				} else if strings.ToLower(eVerb) == "imperative" && strings.ToLower(sStr) == "root" {
-					caseMatch = true
-					subType = strings.Replace(subType, ".root", ".imperative", 1)
-					break
-				}
-			}
-			if !caseMatch {
-				return lerrors.Syntax.Errorf("%s", "clause typing error: expected "+subType+" to be of type "+eVerb)
-			}
-			sb.sType = strings.Replace(sb.sType, "."+eVerb, "", 1) // [clause.imperative] to [clause]
+		sb.verb = head
+		lexicalType := head.tType
+		if sb.verbForm != nil {
+			lexicalType = sb.verbForm.lexicalType
 		}
-		sb.sType += "." + subType
+		subType := strings.TrimPrefix(lexicalType, "verbs.")
+		category, form, _ := strings.Cut(subType, ".")
+		if len(parts) == 2 {
+			if parts[1] == "imperative" && strings.ToLower(form) == "root" {
+				subType = category + ".imperative"
+			} else if parts[1] != strings.ToLower(category) && parts[1] != strings.ToLower(form) {
+				return lerrors.Syntax.Errorf("clause typing error: expected %s to be of type %s", subType, parts[1])
+			}
+		}
+		sb.sType = parts[0] + "." + subType
 	}
 	if typing.decompose(familyClause, grammarCaseInferred) {
 		return nil

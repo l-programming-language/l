@@ -2,43 +2,139 @@ package Lyger
 
 import (
 	"bytes"
+	"errors"
 	"path/filepath"
 	"strings"
 	"testing"
 	"testing/fstest"
 
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
+	"github.com/l-programming-language/l/lerrors"
 	Logiceme "github.com/l-programming-language/l/logiceme"
 )
+
+func TestValueBindingForwardingPreservesCaptureBoundary(t *testing.T) {
+	for _, word := range []string{"Capture", "Forwarded", "Routed Carrier", "Nested"} {
+		t.Run(word, func(t *testing.T) {
+			source := "If false, define \"Capture\" as `<DEF>MOB{|Key: ~<@Held|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+				"Define \"Carrier\" as `<DEF>MOB{|Key: ~<@Held|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+				"Define \"Routed\" as a New Adjective describing any Carrier.\nIt describes any Carrier as a New Capture.\n" +
+				"Define \"Forwarded\" as a New Capture.\nDefine \"Nested\" as a New Carrier of a New Capture.\n" +
+				"Create \"Speak|-s|-ed|-ing\" for Processing a New " + word + ".\nCreate \"Worker\" as a New Basic App.\nThe App Speaks 7.\n"
+			_, err := distributionFrontend(t, source, nil)
+			if !errors.Is(err, lerrors.Unsupported) || !strings.Contains(err.Error(), "runtime value Capture cannot be captured") {
+				t.Fatalf("forwarded construction lost canonical capture rejection: %v", err)
+			}
+		})
+	}
+}
 
 func TestValueBindingUsesSelectedResultLabel(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
 	const core = "builtins/eng/core.l"
 	files[core] = &fstest.MapFile{Data: append(append([]byte(nil), files[core].Data...), []byte("\n"+
 		"Define \"Carrier\" as `<DEF>OB{|Key: ~<@Held|Label@>~, Value: ~<@Value@>~|}<DEF>`.\n"+
+		"Define \"Forwarded\" as a New Carrier.\nUse Forwarded as \"Relayed\".\n"+
 		"Define \"Marked\" as a New Adjective describing any Carrier.\n"+
-		"It describes any Carrier as `<DEF>OB{|Key: ~<@Written|Label@>~, Value: ~<@Operand@>~|}<DEF>`.\n")...)}
-	c := NewLygerService(Options{Language: "eng", Resources: files}).NewCompilation([]byte("Use Storage from `storage`.\n"), "result-label.l")
+		"It describes any Carrier as `<DEF>OB{|Key: ~<@Written|Label@>~, Value: ~<@Operand@>~|}<DEF>`.\n"+
+		"Define \"Parcel\" as a New Marked Carrier.\n"+
+		"Define \"Routed\" as a New Adjective describing any Carrier.\nIt describes any Carrier as a New Parcel.\n"+
+		"Define \"Vacant\" as `<DEF>OB{|Key: ~<@Receipt|Label@>~, Value: ~()~|}<DEF>`.\nDefine \"EmptyParcel\" as a New Vacant.\n"+
+		"Define \"Stages\" as a New Process of a New Carrier and a New Vacant.\n")...)}
+	const source = "Define \"Acquire\" as `<DEF>MOB{|Key: ~<@Acquired|Label@>~|}^KY{|Key: ~crate::acquire~|}<DEF>`.\n\n" +
+		"    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `f64`.\nReturn a New Routed Carrier of a New Acquire.\n"
+	c := NewLygerService(Options{Language: "eng", Resources: files}).NewCompilation([]byte(source), "result-label.l")
 	c.Make()
 	if c.Error != nil {
 		t.Fatal(c.Error)
 	}
 	for _, test := range []struct {
-		name, operand string
-		descriptors   []string
-	}{{name: "ordinary", operand: "Value"}, {name: "descriptor", operand: "Operand", descriptors: []string{"Marked"}}} {
+		name, word, operand string
+		descriptors         []string
+	}{
+		{name: "ordinary", word: "Carrier", operand: "Value"},
+		{name: "descriptor", word: "Carrier", operand: "Operand", descriptors: []string{"Marked"}},
+		{name: "forwarded", word: "Forwarded", operand: "Value"},
+		{name: "alias", word: "Relayed", operand: "Value"},
+		{name: "selected source", word: "Parcel", operand: "Operand"},
+		{name: "source descriptor", word: "Carrier", operand: "Operand", descriptors: []string{"Routed"}},
+		{name: "zero operands", word: "EmptyParcel"},
+	} {
 		t.Run(test.name, func(t *testing.T) {
 			emitter := orchestrationEmitter{compilation: c}
 			for _, input := range []string{"first_operand", "second_operand"} {
-				result, err := emitter.describedValueBinding("Carrier", test.descriptors, map[string]DefinitionArgument{test.operand: definitionReferenceArgument(input)})
+				arguments, value := map[string]DefinitionArgument{}, "()"
+				if test.operand != "" {
+					arguments[test.operand], value = definitionReferenceArgument(input), input
+				}
+				result, err := emitter.describedValueBinding(test.word, test.descriptors, arguments)
 				if err != nil {
 					t.Fatal(err)
 				}
-				if len(emitter.pending) == 0 || !strings.Contains(emitter.pending[len(emitter.pending)-1], "Key: ~"+result+"~, Value: ~"+input+"~") {
+				if len(emitter.pending) == 0 || strings.Count(emitter.pending[len(emitter.pending)-1], "Key: ~"+result+"~, Value: ~"+value+"~") != 1 {
 					t.Fatalf("selected constructor lost explicit result or operand: %v", emitter.pending)
+				}
+				instance, err := c.instantiateDescribedBuiltin(test.word, test.descriptors, arguments)
+				if err != nil || instance.Span.Path != core {
+					t.Fatalf("selected constructor lost definition-site provenance: %s, %v", instance.Span.Path, err)
 				}
 			}
 		})
+	}
+	emitter := orchestrationEmitter{compilation: c}
+	if _, err := emitter.valueBinding("Stages", nil); err == nil || !strings.Contains(err.Error(), "requires an explicit result binding") {
+		t.Fatalf("multi-stage construction acquired an implicit result: %v", err)
+	}
+	testNativeDefinitionLibrary(t, c, "Exercise", "forwarded_result", `static CALLS:std::sync::atomic::AtomicUsize=std::sync::atomic::AtomicUsize::new(0);pub fn acquire()->f64{CALLS.fetch_add(1,std::sync::atomic::Ordering::SeqCst);7.0}#[path="src/forwarded_result.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),7.0);assert_eq!(CALLS.load(std::sync::atomic::Ordering::SeqCst),1);}`)
+}
+
+func TestValueBindingTransparentSelectedStorage(t *testing.T) {
+	files := dictionaryIndexFilesystem(t)
+	for _, test := range []struct{ path, declaration, leaf string }{
+		{"builtins/eng/storage/execution.l", "Define Storage's \"Literal\" as ", "LiteralAtom"},
+		{"builtins/eng/storage/execution.l", "Define Storage's \"Completion\" as ", "CompletionAtom"},
+		{"builtins/eng/storage/values.l", "It describes any Storage's Tuple as ", "EmptyTuple"},
+	} {
+		start := bytes.Index(files[test.path].Data, []byte(test.declaration))
+		if start < 0 {
+			t.Fatalf("missing selected %s", test.declaration)
+		}
+		end := start + bytes.IndexByte(files[test.path].Data[start:], '\n')
+		leaf := bytes.Replace(files[test.path].Data[start:end], []byte(test.declaration), []byte("Define \""+test.leaf+"\" as "), 1)
+		replacement := append([]byte(test.declaration+"a New "+test.leaf+".\n"), leaf...)
+		files[test.path] = &fstest.MapFile{Data: bytes.Replace(files[test.path].Data, files[test.path].Data[start:end], replacement, 1)}
+	}
+	c := NewLygerService(Options{Language: "eng", Resources: files}).NewCompilation([]byte("Define \"Value\" as 7. Show Value.\n"), "transparent-storage.l")
+	c.Make()
+	if c.Error != nil {
+		t.Fatal(c.Error)
+	}
+	emitter := orchestrationEmitter{compilation: c}
+	if _, err := emitter.valueBinding("Storage.Completion", nil); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := emitter.results(nil); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := (&CompilationResult{Compilation: c}).OrchestratorUnit("entry", nil); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestValueBindingNativePreservesSelectedBindingError(t *testing.T) {
+	c := compileDefinitionSource(t, "Use Storage from `storage`.\n", "binding-error.l")
+	produced, err := c.builtinRecord("Storage.Produced")
+	if err != nil {
+		t.Fatal(err)
+	}
+	delete(c.Semantics.Descriptors, produced)
+	emitter := orchestrationEmitter{compilation: c}
+	_, err = emitter.valueBinding("Storage.Value.Copy", map[string]DefinitionArgument{"Value": definitionReferenceArgument("operand")})
+	if !errors.Is(err, lerrors.TypeMismatch) || !strings.Contains(err.Error(), "Storage.Produced is not a descriptor") {
+		t.Fatalf("native result binding lost its selected descriptor failure: %v", err)
+	}
+	if len(emitter.pending) != 0 {
+		t.Fatalf("failed binding published partial output: %v", emitter.pending)
 	}
 }
 
@@ -90,7 +186,7 @@ func TestStorageStagesUseExplicitBindings(t *testing.T) {
 func TestStorageStagesDoNotRetainPublicAliases(t *testing.T) {
 	c := compileDefinitionSource(t, "Use Storage from `storage`.\n", "retired-stages.l")
 	for _, name := range []string{
-		"Storage.Closure", "Storage.Closure.Environment", "Storage.Closure.Context", "Storage.Outcome",
+		"Storage.Closure", "Storage.Closure.Environment", "Storage.Closure.Context", "Storage.Binding.Environment", "Storage.Binding.Context", "Storage.Outcome",
 		"Storage.Function.Pending", "Storage.Function.Pinned", "Storage.Function.Ready", "Storage.Function.Capture", "Storage.Function.Pair", "Storage.Function.Snapshot", "Storage.Function.Identity",
 		"Storage.Context.Runtime", "Storage.Context.Pair", "Storage.Context.Binding", "Storage.Context.First", "Storage.Context.Second",
 		"Storage.App.Path", "Storage.App.Handle", "Storage.App.Source", "Storage.App.Attribution",
