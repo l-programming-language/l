@@ -221,7 +221,7 @@ func (b *builder) process() error {
 	if b.Gram == nil {
 		return lerrors.Internal.Errorf("cannot build source without an import grammar")
 	}
-	bootstrap, origin, err := b.resourceSource("builtins/" + b.Gram.language + "/prelude.l")
+	bootstrap, origin, err := b.resourceSource("builtins/" + b.Gram.language + "/core.l")
 	if err != nil {
 		return err
 	}

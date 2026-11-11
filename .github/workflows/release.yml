@@ -98,7 +98,7 @@ jobs:
         run: node scripts/release/github.mjs guard --policy website/ci-templates/release-policy.json --publication "$PUBLICATION"
       - name: Prepare pinned tools and dependencies
         uses: ./.github/actions/prepare
-      - name: Run the complete canonical gate
+      - name: Run the temporary Hello World gate
         run: |
           date -u +%Y-%m-%dT%H:%M:%SZ > "$RUNNER_TEMP/release-started"
           scripts/l-check

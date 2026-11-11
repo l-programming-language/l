@@ -64,7 +64,7 @@ func readContract(root string) (contract, string, error) {
 		return c, "", fmt.Errorf("contract must contain one JSON object")
 	}
 	if c.SchemaVersion != 2 || strings.TrimSpace(c.Module) == "" || len(c.Tests) == 0 || len(c.ProtectedFiles) == 0 {
-		return c, "", fmt.Errorf("contract requires schema_version 2, module, protected_files, and original tests")
+		return c, "", fmt.Errorf("contract requires schema_version 2, module, protected_files, and named tests")
 	}
 	paths := make(map[string]bool)
 	for _, file := range c.ProtectedFiles {
@@ -118,6 +118,16 @@ func contractPath(root, relative string) (string, error) {
 }
 
 func inspectIntegrity(root string, c contract, originalContractHash string) integrityReport {
+	return inspectIntegrityWithDocuments(root, c, originalContractHash, true)
+}
+
+// The temporary reset gate checks frozen assets without running document or
+// retired fixture checks. Doctor retains the separate maintained-link check.
+func inspectFrozenIntegrity(root string, c contract, originalContractHash string) integrityReport {
+	return inspectIntegrityWithDocuments(root, c, originalContractHash, false)
+}
+
+func inspectIntegrityWithDocuments(root string, c contract, originalContractHash string, documents bool) integrityReport {
 	r := integrityReport{OK: true, Checks: []integrityCheck{}}
 	add := func(kind, path string, err error) {
 		check := integrityCheck{Kind: kind, Path: path, OK: err == nil}
@@ -171,7 +181,10 @@ func inspectIntegrity(root string, c contract, originalContractHash string) inte
 		}
 		add("absent_file", relative, err)
 	}
-	add("source_inventory", "demo, cmd/l/test, lyger/test, testdata", inspectSourceMembership(root, c.ProtectedFiles))
+	add("template_inventory", "builtins/segments, builtins/templates", inspectTemplateMembership(root, c.ProtectedFiles))
+	if !documents {
+		return r
+	}
 	err = filepath.WalkDir(root, func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -207,17 +220,16 @@ func inspectIntegrity(root string, c contract, originalContractHash string) inte
 	return r
 }
 
-// Derive the current source inventory from the same locks used for byte integrity.
-func inspectSourceMembership(root string, files []fileContract) error {
-	roots := []string{"demo", "cmd/l/test", "lyger/test", "testdata"}
+// Only logeme assets are frozen during the source-library reset. Other fixture
+// sources may be restored or replaced without becoming integrity prerequisites.
+func inspectTemplateMembership(root string, files []fileContract) error {
+	roots := []string{"builtins/segments", "builtins/templates"}
 	expected := make(map[string]bool)
 	for _, file := range files {
-		if strings.HasSuffix(file.Path, ".l") {
-			for _, directory := range roots {
-				if strings.HasPrefix(file.Path, directory+"/") {
-					expected[file.Path] = true
-					break
-				}
+		for _, directory := range roots {
+			if strings.HasPrefix(file.Path, directory+"/") {
+				expected[file.Path] = true
+				break
 			}
 		}
 	}
@@ -230,7 +242,7 @@ func inspectSourceMembership(root string, files []fileContract) error {
 			if err != nil {
 				return err
 			}
-			if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".l") {
+			if entry.IsDir() {
 				return nil
 			}
 			relative, err := filepath.Rel(root, path)
@@ -239,7 +251,7 @@ func inspectSourceMembership(root string, files []fileContract) error {
 			}
 			relative = filepath.ToSlash(relative)
 			if !expected[relative] {
-				return fmt.Errorf("unprotected L source: %s", relative)
+				return fmt.Errorf("unprotected logeme asset: %s", relative)
 			}
 			delete(expected, relative)
 			return nil
@@ -249,7 +261,7 @@ func inspectSourceMembership(root string, files []fileContract) error {
 		}
 	}
 	if len(expected) != 0 {
-		return fmt.Errorf("protected L source missing from source inventory")
+		return fmt.Errorf("protected logeme asset missing from template inventory")
 	}
 	return nil
 }

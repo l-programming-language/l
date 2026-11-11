@@ -2,17 +2,12 @@
 
 Read [LOGEMES.md](LOGEMES.md), [CONTRACTS.md](CONTRACTS.md), and the
 [backend instructions](../logiceme/AGENTS.md) before changing composition.
-Root [ownership and validation rules](../AGENTS.md#current-contract) apply here;
+Root [ownership and validation rules](../AGENTS.md#current-reset-boundary) apply here;
 this file adds the asset-specific boundaries.
 
 ## Source and asset ownership
 
-Follow the root layout and source-ownership rules: one registry/prelude, one
-Storage dictionary, a replaceable Runtime standard library with separate
-authored/native/generated resources, and explicit
-Formatting without supervision imports. Use the selected `fs.FS` and explicit
-[embedding list](../distribution.go); definitions and source compositions own
-behavior, with no Statement/EA algorithm escape or separate frontend implementation.
+Only `eng/core.l` remains as authored builtin L. It loads directly and includes Print, composed through Process and a private single-call native output leaf. Storage and prelude are deleted; all standard-library authored/native/generated resources are deleted. Do not restore them or implement their policies in Go/Rust. The existing explicit embedding list selects only retained resources.
 
 Letters retain their abstract owners: F/O defines, B/A declares, D/E calculates,
 G/I selects and C/V handles asynchrony. Before composing a form, state its letter
@@ -51,13 +46,9 @@ and dependencies. The [Rust suite](../logiceme/testdata/lucid/README.md) owns th
 inventory and separate native-compilation stage; its [ledger](../logiceme/testdata/lucid/FAILURES.md)
 is historical evidence. Preserve independent expectations, shared interpreter tests,
 pins, locks, deadlines and exposing regressions. Follow root acceptance instructions
-for the full gate; compilation and documentation checks do not establish execution.
+for the temporary hello-world gate; compilation and documentation checks do not establish execution.
 
 Sections, general ownership inference and new mutability metadata remain separate
 work. Do not introduce unsafe generated implementation code.
 
-L owns runtime supervision, capture and cleanup policy; native inputs retain host,
-executor and OS mechanisms. Use the [supervised native regressions](../testdata/integration/IMPLEMENTATION.md)
-for runtime evidence. Sole-library bundles omit executable support and export
-nonprivate composed items. The coordinator owns dependency/build policy. Generated
-installer/start/stop scripts remain artifacts, never local validation commands.
+Runtime is absent pending reconstruction in L. No lifecycle or cleanup support is implied by the retained native syntax templates. Generated installer/start/stop scripts remain artifacts, never local validation commands.

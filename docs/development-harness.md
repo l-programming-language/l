@@ -1,6 +1,14 @@
 # Development and acceptance
 
-Use the repository harness for current-input integrity and the ordinary build/test gate. The [architecture](architecture.md), [build/runtime contract](cli-build.md) and [error model](error-model.md) describe supported behavior.
+## Temporary core-only gate
+
+The standard libraries and non-core builtin L sources have been removed for rebuilding. Run `scripts/l-check` for the temporary hello-world gate. It uses the existing supervised CI runner to execute the restored source/compiler tests, real standalone App build and output checks, runtime-effect rejection, selected Print behavior, and frozen logeme checks. Reports are under `.harness/runs/ci-hello-*`.
+
+Only the 18 Rust segments and four retained logeme templates are protected. Other tests and fixtures may be redesigned or removed within authorized work; tests enforcing retired words or invalid source are not requirements. `scripts/l-harness frozen` checks the exact protected files and inventory. Keep their bytes/interfaces and hash expectations unchanged.
+
+This is deliberately reduced coverage. The full-module, runtime, website and tagged-native suites below are retained for future reconstruction and are not completion gates or current passing claims. `scripts/l-ci check`, `acceptance`, `native`, and the old harness `verify` still invoke those historical suites explicitly. The documentation and quality workflows are manual-only during this reset. Publication remains disabled.
+
+Use pinned tools and existing supervision/deadlines. The sections below describe the previous full validation setup and its retained tooling; they do not override this temporary gate. The [build guide](cli-build.md) states the supported executable boundary.
 
 ## Validation authorization
 
@@ -16,7 +24,7 @@ commits, or reopens. Manual dispatch, including macOS, requires explicit
 authorization. The required `L CI` check on `main` remains removed. Restoring it is
 a separate decision. Pull-request, deletion and force-push protections remain.
 
-## Full validation
+## Historical full validation (inactive during reset)
 
 For authorized full validation, prepare pinned tools and dependencies with
 `scripts/l-ci bootstrap`, then run `scripts/l-check`. The shared CI launcher sets child `GOMAXPROCS` to the smaller
@@ -323,15 +331,9 @@ Protected fixture changes still require a finite approved amendment.
 
 ## Current integrity and amendments
 
-[harness/contract.json](../harness/contract.json) protects current test sources, expected-value helpers, inputs, case oracles and canonical resources with explicit approved hashes. It records required absent paths and the original named-test obligations. Current source membership is derived from the protected source paths, not an old migration ledger. Expected helpers outside `_test.go` are equally protected. Adding a current fixture must update the current contract through review, not revive a historical migration manifest.
+[harness/contract.json](../harness/contract.json) now locks only `builtins/segments/` and `builtins/templates/`. The old fixture, lexical-resource and expected-output protections are removed. Do not modify the frozen logeme bytes or expected hashes. Other fixtures should follow the intended source language rather than preserve obsolete syntax or word identities.
 
-Never regenerate hashes or expected values to make an implementation failure pass. Preserve raw expected streams/statuses, actual behavioral assertions, canonical grammar/vocabulary and source-defined builtins. A fixture/oracle amendment requires explicit authorization identifying its exact scope and reason. Historical exceptions grant no standing permission to change expectations. Source expansion preserves declaration targets, typed slots and order. Compiler output must follow source semantics rather than fixture-specific substitutions.
-
-The [implementation ledger](../testdata/integration/IMPLEMENTATION.md) records
-revision-specific evidence. Historical migration counts and approved amendments
-do not redefine the current contract or authorize further fixture changes.
-
-The harness checks current files directly. Ordinary build, tests, doctor and verify do not require archived documents, attachments, historical baseline reports, a Git object lookup, or a network fetch for provenance. Initial Go dependency setup can still need network access. Markdown link checking discovers maintained documentation. It does not preserve a closed list of obsolete plans. Repository skills remain under `.agents/skills`.
+Reports from the previous full gate are revision-specific history. A temporary hello-world pass does not establish Runtime, collections, source contracts or website correctness. Preserve exact expected output and failure observations in the active tests; never substitute a cached demo executable or weaken an assertion to hide an implementation defect.
 
 ## Reproducible execution and evidence
 

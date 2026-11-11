@@ -48,12 +48,11 @@ small and assertions meaningful; do not weaken tests to accommodate an
 implementation defect. Explain when a documentation or maintenance change needs
 no new behavioral test.
 
-[harness/contract.json](harness/contract.json) protects current inputs, canonical
-resources, assertions, expected-value helpers, and literal expected bytes.
-Changing a protected item requires explicit author approval identifying the
-finite scope and reason. Earlier amendments are not standing permission.
-Follow the [integrity policy](docs/development-harness.md#current-integrity-and-amendments);
-never regenerate expectations or hashes just to make a failure pass.
+During the current core-only reset, only logeme templates are protected by
+[harness/contract.json](harness/contract.json). Other fixtures and tests may change
+within authorized work, including removing assertions that require retired words
+or invalid L. Preserve the exact active hello-world output and the frozen
+logeme bytes/interfaces. Do not alter hashes to hide a failure.
 
 Logeme changes need particular care. Read the
 [builtin contracts](builtins/CONTRACTS.md), [logeme semantics](builtins/LOGEMES.md),
@@ -88,27 +87,15 @@ Follow the [validation policy](docs/development-harness.md#validation-authorizat
 Explicit task authorization covers its bounded baseline, regression, native and
 completion checks without repeated permission requests. Report unrun stages.
 
-For authorized full validation, run from the repository root:
+During the reset, run `scripts/l-check` for the temporary hello-world gate. It
+executes source/compiler checks, real App compilation and execution, unsupported
+runtime-effect rejection, selected Print behavior and frozen logeme integrity.
+Use pinned tools and existing supervision. Report this reduced scope accurately;
+the prior full-module/native/runtime/website suites are not current completion
+requirements or passing claims. See the [current gate](docs/development-harness.md#temporary-core-only-gate).
 
-```sh
-scripts/l-ci bootstrap
-scripts/l-check
-```
-
-The full command requires workflow lint, both complete Go lint profiles,
-harness doctor and unfiltered acceptance, and the tagged native-compilation
-stage. Resolve every lint warning/error. Focused checks do not replace full
-acceptance, and an earlier passing revision does not validate new changes.
-Preserve test discovery, runtime watchdogs, concurrency, and the
-[finite validation budgets](docs/development-harness.md#validation-budgets).
-
-Pull-request events run hosted Linux validation automatically. The existing
-`L CI` gate, documentation checks, dedicated lint/security checks, and issue-link
-check provide separate results. Website checks validate content and the static
-site; they do not establish compiler or native-runtime correctness. Linux
-results do not establish macOS validation. Consult the workflow logs and retained
-reports for the current revision, and distinguish failures, skipped checks,
-and checks still running. The development guide owns branch-protection policy.
+Publication is disabled. Do not dispatch workflows, publish, or deploy without
+separate authorization. Automatic PR CI runs the temporary gate only.
 
 ## Open a pull request
 

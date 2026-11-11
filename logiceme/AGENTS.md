@@ -52,17 +52,7 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
   [topology and libraries](../builtins/README.md#frontend-topology-and-library-packages).
   Preserve EA's standalone literal-file boundary without using it to replace
   the composition under test.
-- The CLI workspace-entry bridge places canonical runtime/process assets in a
-  dedicated library through typed header/support assembly. Keep its allocated
-  package/path separate from AML metadata. Ordinary Evaluate/IncludeRuntime
-  callers retain their inline-runtime bundles; do not rewrite completed source
-  or expose the private runtime placement as a glyph input.
-- Read native runtime inputs from `stdlib/runtime/rust/*.rs` and derived source support
-  from `stdlib/runtime/generated/`. Both inline and workspace assembly use those same
-  selected resources. Keep native input bytes and generated module topology
-  unchanged during relocation; regenerate AML from `stdlib/<language>/runtime/` through
-  the composition tool. Writer and reader must agree on canonical fingerprints,
-  and missing selected resources must fail without old-path or provider fallback.
+- During the core-only reset the CLI compiles one App bundle with runtime inclusion disabled. Native/generated Runtime resources are removed. Do not restore a native runtime, emit a replacement orchestrator, or repair missing source libraries in the backend. Runtime-dependent APIs are outside the current supported build boundary.
 
 ## Workflow and verification
 
@@ -91,8 +81,10 @@ resources outside an explicit finite amendment. Generated install/start/stop
 scripts are artifacts, never local validation commands. Keep process supervision
 and raw stdout/continuation semantics in dedicated support, not glyphs.
 
-Root [acceptance instructions](../AGENTS.md#current-contract) and the
+Root [acceptance instructions](../AGENTS.md#current-reset-boundary) and the
 [validation policy](../docs/development-harness.md#validation-authorization)
 govern local and hosted checks. Report proposed, implemented, generated, compiled
 and runtime-verified separately, including unrun stages. Focused checks do not
 establish full validation; documentation checks establish no native result.
+
+Current completion is the temporary hello-world gate in root instructions. Former runtime/full-suite obligations above are reconstruction context, not a requirement to preserve removed libraries or their tests. Only logeme templates remain protected during this reset.

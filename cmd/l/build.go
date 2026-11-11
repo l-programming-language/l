@@ -15,7 +15,6 @@ import (
 	"github.com/l-programming-language/l/contracts"
 	"github.com/l-programming-language/l/internal/timing"
 	"github.com/l-programming-language/l/lerrors"
-	Lyger "github.com/l-programming-language/l/lyger"
 )
 
 const companionOwner = "l-executable-v1\n"
@@ -57,9 +56,6 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 	}
 	if generated == nil || generated.Compilation == nil {
 		return "", lerrors.Internal.Errorf("source generation produced no program")
-	}
-	if err := Lyger.CheckRuntimeResources(c.options.Resources); err != nil {
-		return "", fmt.Errorf("check runtime resources: %w", err)
 	}
 	setup := timing.Start("workspace.prepare", c.cli.mainPath)
 	defer func() { setup(resultErr) }()
@@ -148,9 +144,9 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 		recorder = &nativeBuildRecorder{environment: environment}
 		ctx = context.WithValue(ctx, nativeBuildEvidenceKey{}, recorder)
 	}
-	entry := filepath.Join(stage, "orchestrator")
+	entry := filepath.Join(stage, "entry")
 	setup(nil)
-	buildErr := compileCargoWorkspace(ctx, workspace.apps, workspace.entry, workspace.libraries, workspace.support, filepath.Join(stage, "workspace"), destinations, entry)
+	buildErr := compileCargoWorkspace(ctx, nil, workspace.entry, nil, nil, filepath.Join(stage, "workspace"), nil, entry)
 	if buildErr != nil {
 		buildErr = fmt.Errorf("build Rust workspace: %w", buildErr)
 	}
@@ -159,6 +155,11 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 	}
 	if buildErr != nil {
 		return "", buildErr
+	}
+	// The published entry and its immutable generation retain the same Cargo
+	// artifact. There is no generated launcher or process-supervision program.
+	if err := copyCargoArtifact(entry, destinations[0]); err != nil {
+		return "", err
 	}
 	for index, destination := range destinations {
 		content, err := os.ReadFile(destination)

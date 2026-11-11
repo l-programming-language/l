@@ -71,8 +71,8 @@ func validateHarnessOutcome(report harnessReport, command string) error {
 	if command == "verify" && (report.AcceptancePassed == nil || !*report.AcceptancePassed) {
 		return errors.New("harness did not establish acceptance")
 	}
-	if command == "doctor" && report.AcceptancePassed != nil {
-		return errors.New("doctor unexpectedly claims acceptance")
+	if (command == "doctor" || command == "frozen") && report.AcceptancePassed != nil {
+		return fmt.Errorf("%s unexpectedly claims acceptance", command)
 	}
 	if command == "verify" {
 		parallel, err := strconv.Atoi(report.Environment["test_case_parallelism"])
@@ -101,7 +101,7 @@ func validateHarnessOutcome(report harnessReport, command string) error {
 			return errors.New("acceptance report lacks named outcomes")
 		}
 	} else if len(report.Commands) != 0 {
-		return errors.New("doctor unexpectedly ran compiler commands")
+		return fmt.Errorf("%s unexpectedly ran compiler commands", command)
 	}
 	return nil
 }

@@ -76,8 +76,47 @@ func TestCurrentIntegrity(t *testing.T) {
 		t.Run("extra source/"+directory, func(t *testing.T) {
 			root, c, hash := integrityFixture(t)
 			writeIntegrityFile(t, root, directory+"/extra.l", "unreviewed source")
-			if report := inspectIntegrity(root, c, hash); report.OK {
-				t.Fatal("unprotected source passed integrity")
+			if report := inspectIntegrity(root, c, hash); !report.OK {
+				t.Fatal("unprotected source affected logeme integrity")
+			}
+		})
+	}
+}
+
+func TestFrozenIntegrityChecksOnlyLogemesAndEnvironment(t *testing.T) {
+	t.Setenv("L_HARNESS_ORIGINAL_GOFLAGS", "")
+	for _, mode := range []string{"unrelated source and links", "changed template", "missing template", "added template"} {
+		t.Run(mode, func(t *testing.T) {
+			root, c, _ := integrityFixture(t)
+			name := "builtins/templates/install/cargo.lu"
+			writeIntegrityFile(t, root, name, "frozen")
+			digest, err := testgate.FileHash(filepath.Join(root, name))
+			if err != nil {
+				t.Fatal(err)
+			}
+			c.ProtectedFiles = []fileContract{{Path: name, SHA256: digest}}
+			c.AbsentFiles = nil
+			if err := testgate.WriteJSON(filepath.Join(root, "harness/contract.json"), c); err != nil {
+				t.Fatal(err)
+			}
+			_, hash, err := readContract(root)
+			if err != nil {
+				t.Fatal(err)
+			}
+			writeIntegrityFile(t, root, "testdata/new.l", "new source")
+			writeIntegrityFile(t, root, "README.md", "[retired library](stdlib/missing.l)")
+			switch mode {
+			case "changed template":
+				writeIntegrityFile(t, root, name, "changed")
+			case "missing template":
+				if err := os.Remove(filepath.Join(root, name)); err != nil {
+					t.Fatal(err)
+				}
+			case "added template":
+				writeIntegrityFile(t, root, "builtins/segments/new.lu", "new template")
+			}
+			if report := inspectFrozenIntegrity(root, c, hash); report.OK != (mode == "unrelated source and links") {
+				t.Fatalf("unexpected frozen integrity: %+v", report)
 			}
 		})
 	}

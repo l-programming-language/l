@@ -1,5 +1,7 @@
 # Building and running L programs
 
+> **Core-only reset:** The current core-only build supports one standalone App whose body uses core Print and static Text. Build and run the emitted executable directly. Source-level Build, Run, Stop, Await, Execute, Error/Output inspection and other runtime-dependent top-level effects are unavailable and reject. The former runtime contract below is reconstruction context, not currently implemented support.
+
 This guide describes the Rust-only generation and native CLI runtime path. L, Lyger and Logiceme are implemented in Go. Building L programs requires the pinned Rust 1.98.1 toolchain and retained dependencies available locally. Published binaries need no language compiler or L installation.
 
 On native macOS or Linux:

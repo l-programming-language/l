@@ -2,7 +2,7 @@
 
 The CLI validates sources, coordinates Cargo workspaces, builds Rust and publishes artifacts. Lyger resolves L semantics into AML; Logiceme renders native source from canonical compositions. The CLI must not lower Functions, infer ownership or repair returned Rust. L, Lyger and Logiceme remain Go implementations. Follow [architecture](../../docs/architecture.md), [CLI/runtime semantics](../../docs/cli-build.md) and [acceptance](../../docs/development-harness.md).
 
-`TestCompilerInitialize` in `compiler_test.go` compares the complete compiler struct. `TestCompilerCompile` separately checks raw source, the returned observable AML, unchanged initialized state, the returned expanded view and the originating-user-source projection. Protected `helpers.go` contains expected constructors and INITTEST/COMPTEST despite not being named `_test.go`. Source observers preserve literal bytes without requiring a particular native helper implementation. Preserve field count/order for positional literals, the required empty CLI Compilation, and nil-versus-empty distinctions. The returned working result owns the real graph; never discard it or substitute fixture constants to satisfy the tested view.
+`TestCompilerInitialize` in `compiler_test.go` compares the complete compiler struct. `TestCompilerCompile` separately checks raw source, the returned observable AML, unchanged initialized state, the returned expanded view and the originating-user-source projection. `helpers.go` contains expected constructors and INITTEST/COMPTEST despite not being named `_test.go`. Source observers preserve literal bytes without requiring a particular native helper implementation. Preserve field count/order for positional literals, the required empty CLI Compilation, and nil-versus-empty distinctions. The returned working result owns the real graph; never discard it or substitute fixture constants to satisfy the tested view.
 
 Preserve the three-field `cliData` and nine-field `compiler`; frontend metadata records Rust output. Use a fresh argument parser and separate runtime-only options; the compiler stores `Lyger.Options` by value. Raw source, expanded source, cached/stamped source and backend markup are different representations. The full expanded view is `compiledBytes`/`result.ExpandedSource`; COMPTEST now equals INITTEST and fixes the originating-user-source projection, including comments. Expansion preserves descriptor targets, typed parameters and source order without changing Function into Definition or substituting Noun.Process.
 
@@ -14,16 +14,10 @@ The [Rust suite](../../testdata/integration/README.md) keeps Go test runners her
 
 The workspace has one orchestrator binary, ordered App binaries and App-constructed Service libraries. Standalone Service declarations add no package or executable. Preserve version-1 manifests and the App artifact inventory. Start and Execute retain their `any App` builtin signatures. Match Cargo artifact messages to actual manifest and target identities before publication. Build with the pinned Rust toolchain and retained frozen/offline resolution. Cache reuse must preserve current source/artifact identity under concurrent builds; hold the native cache lock until artifacts have private snapshots. Never substitute a cached expected executable. Preserve the [approved budgets](../../docs/development-harness.md#validation-budgets) and runtime watchdogs; further changes require explicit scope. Native runtime execution is covered only by supervised parity tests; deployment scripts remain unexecuted.
 
-The compiler-owned runtime library is a separate workspace member. Allocate its
-package and dependency identity without collisions; use Logiceme's explicit
-workspace-entry bridge rather than editing returned source. Preserve the selected
-runtime/process bytes and ordinary direct-API bundle layout. Library reuse does
-not authorize ignoring source paths or bypassing Cargo graph/source invalidation.
-Root `dictionaries.json` is the only registry. The selected prelude privately
-loads foundational support; builtin App behavior requires no user Storage or
-Runtime import. Distribution and publication protection must include the new
-`stdlib/eng/runtime/`, `stdlib/runtime/{rust,generated}` resources and foundational Storage includes.
+During the core-only reset, there is no runtime library or orchestrator. `process()` validates a sole standalone App and generates it through the existing frontend/backend pipeline. Build the returned App bundle directly with the existing pinned Cargo supervision and atomic artifact publication. Reject runtime-dependent top-level effects and multiple Apps; do not silently discard them or synthesize a runner. The root registry is empty and core loads directly. Runtime will be reconstructed in L later.
 Offline contract inspection must never generate, compile or probe tools to repair
 missing or stale distribution resources.
 
-Follow root [acceptance instructions](../../AGENTS.md#current-contract) and the [validation policy](../../docs/development-harness.md#validation-authorization). Task-authorized validation proceeds without repeated permission requests. Focused checks aid diagnosis and do not establish full validation; report unrun stages.
+Follow root [acceptance instructions](../../AGENTS.md#temporary-acceptance) and the [validation policy](../../docs/development-harness.md#validation-authorization). Task-authorized validation proceeds without repeated permission requests. Focused checks aid diagnosis and do not establish full validation; report unrun stages.
+
+The previous companion/runtime descriptions above are historical design context. Current completion uses only the temporary hello-world gate. Only frozen logeme assets are protected; original fixtures and expectations may be changed for the authorized reset.

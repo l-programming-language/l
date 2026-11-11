@@ -1,5 +1,17 @@
 <img src="website/public/assets/l/brand/logo-tile.svg" alt="L logo" width="112" height="112">
 
+> **Development reset:** This checkout currently supports a standalone App with core Print. Standard libraries and Runtime are removed pending reconstruction in L. Run `scripts/l-check` for the temporary hello-world gate. Broader examples and documentation describe the prior implementation and are outside this gate. Publication is disabled.
+
+Build and run the current hello-world example with the checkout's compiler:
+
+```sh
+scripts/l-go run ./cmd/l build --output-dir .harness/hello demo/basic/main.l
+.harness/hello/main
+```
+
+It prints `Hello World!` followed by a newline. Source-level process supervision is unavailable until Runtime is rebuilt.
+
+
 # L
 
 L is a human-readable programming language with applications as values. It

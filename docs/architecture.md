@@ -1,5 +1,7 @@
 # Architecture of `l`
 
+> **Core-only reset:** The project is in a core-only reset. `core.l` loads directly and supplies Print. The authored libraries, Storage, prelude, and native/generated Runtime assets have been removed. The CLI directly compiles one standalone App; no orchestrator or runtime is linked. The detailed architecture below describes the previous library/runtime implementation and is retained as reconstruction context, not a current capability claim.
+
 This map describes the current compiler. [Build and execution semantics](cli-build.md) define the native runtime contract. [The development guide](development-harness.md) defines acceptance and current-input protection.
 
 ## Language and compiler responsibilities

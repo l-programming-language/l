@@ -69,7 +69,7 @@ func runCLI(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		_, _ = fmt.Fprintln(stderr, message) //nolint:errcheck // Console diagnostics are best-effort; checked reports and command status determine acceptance.
 		return 2
 	}
-	usage := "usage: l-harness doctor | verify | diagnose [--frontend] | diff EXPECTED ACTUAL"
+	usage := "usage: l-harness frozen | doctor | verify | diagnose [--frontend] | diff EXPECTED ACTUAL"
 	var frontend bool
 	if len(args) > 0 && args[0] == "diagnose" {
 		flags := flag.NewFlagSet("diagnose", flag.ContinueOnError)
@@ -78,7 +78,7 @@ func runCLI(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		if err := flags.Parse(args[1:]); err != nil || flags.NArg() != 0 {
 			return fail(usage)
 		}
-	} else if len(args) == 0 || len(args) != map[string]int{"doctor": 1, "verify": 1, "diff": 3}[args[0]] {
+	} else if len(args) == 0 || len(args) != map[string]int{"frozen": 1, "doctor": 1, "verify": 1, "diff": 3}[args[0]] {
 		return fail(usage)
 	}
 	command := args[0]
@@ -137,7 +137,11 @@ func runCLI(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		}
 		r.Environment["go_executable"] = goPath
 	}
-	r.IntegrityBefore = inspectIntegrity(root, c, contractHash)
+	inspect := inspectIntegrity
+	if command == "frozen" {
+		inspect = inspectFrozenIntegrity
+	}
+	r.IntegrityBefore = inspect(root, c, contractHash)
 	code := 0
 	if !r.IntegrityBefore.OK {
 		code = 2
@@ -248,7 +252,7 @@ func runCLI(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 			}
 		}
 	}
-	r.IntegrityAfter = inspectIntegrity(root, c, contractHash)
+	r.IntegrityAfter = inspect(root, c, contractHash)
 	if !r.IntegrityAfter.OK {
 		code = 2
 		if r.Error == "" {
@@ -272,8 +276,8 @@ func runCLI(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 			}
 		}
 	}
-	if command == "doctor" && code == 0 {
-		_, _ = fmt.Fprintf(stdout, "doctor: pass (%d checks)\n", len(r.IntegrityAfter.Checks)) //nolint:errcheck // Console diagnostics are best-effort; checked reports and command status determine acceptance.
+	if (command == "doctor" || command == "frozen") && code == 0 {
+		_, _ = fmt.Fprintf(stdout, "%s: pass (%d checks)\n", command, len(r.IntegrityAfter.Checks)) //nolint:errcheck // Console diagnostics are best-effort; checked reports and command status determine acceptance.
 	} else if command == "verify" {
 		_, _ = fmt.Fprintf(stdout, "acceptance_passed: %t\n", *r.AcceptancePassed) //nolint:errcheck // Console diagnostics are best-effort; checked reports and command status determine acceptance.
 	} else if command == "diagnose" {
