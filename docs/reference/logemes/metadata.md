@@ -37,4 +37,4 @@ native E0794/E0392/E0107 failures where appropriate.
 
 ## Imports and support
 
-Imports remain file-owned Headers, separate from module declarations and Cargo dependencies. Preparation gathers nested imports before the file opener renders. Runtime support selection belongs to Evaluate options/source assembly, not arbitrary glyph metadata. See [metadata validation](../../../logiceme/glyph_metadata_validation.go), [preparation](../../../logiceme/glyph_prepare.go) and the maintained [local-input contract](../../../builtins/README.md#lifetime-and-generic-inputs).
+Imports remain file-owned Headers, separate from module declarations and Cargo dependencies. Preparation gathers nested imports before the file opener renders. Retained Evaluate options do not restore absent runtime assets, and arbitrary glyph metadata cannot select a runtime. See [metadata validation](../../../logiceme/glyph_metadata_validation.go), [preparation](../../../logiceme/glyph_prepare.go) and the maintained [local-input contract](../../../builtins/README.md#lifetime-and-generic-inputs).

@@ -10,7 +10,7 @@ Follow [local development](../docs/contributing/local-development.md) for the pi
 
 ## Website verification
 
-The [verification recipe](../docs/contributing/local-development.md#check-the-built-site) runs content/reference checks, unit tests, one static build, and browser checks. Reports and screenshots are ignored under `reports/`; [recorded results](reports/validation.md) apply to their documented revision.
+The [verification recipe](../docs/contributing/local-development.md#check-the-built-site) runs content/reference checks, unit tests, one static build, and browser checks. Reports and screenshots are ignored under `reports/` and apply only to the checkout and commands that produced them.
 
 ## Content and references
 

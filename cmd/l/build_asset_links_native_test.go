@@ -31,7 +31,7 @@ func TestBuildAcceptsLinkedResourceBundle(t *testing.T) {
 	}
 	project := t.TempDir()
 	main := filepath.Join(project, "main.l")
-	source := "Use IO's Print from `io` as \"Print\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints `linked resources`.\nExecute Worker.\nShow Worker's Output.\n"
+	source := "\nCreate \"Worker\" as a New Basic App.\nThe App Prints `linked resources`.\n"
 	if err := os.WriteFile(main, []byte(source), 0600); err != nil {
 		t.Fatal(err)
 	}

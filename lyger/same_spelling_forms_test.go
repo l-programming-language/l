@@ -174,7 +174,7 @@ func TestSameSpellingFormsRequireDeclaredCandidate(t *testing.T) {
 
 func TestSameSpellingSourceActionRequiresDeclaredPassive(t *testing.T) {
 	for _, spelling := range []string{"Read", "Reads", "Reading"} {
-		source := distributionIOImport + "Create \"Read|-s||-ing|-er\" for Printing any Text.\nCreate \"Worker\" as a New Basic App.\nWorker is " + spelling + " `payload`.\n"
+		source := distributionCorePrefix + "Create \"Read|-s||-ing|-er\" for Printing any Text.\nCreate \"Worker\" as a New Basic App.\nWorker is " + spelling + " `payload`.\n"
 		if _, err := distributionFrontend(t, source, nil); !errors.Is(err, lerrors.Syntax) {
 			t.Errorf("%s without a passive declaration: %v", spelling, err)
 		}
@@ -245,18 +245,6 @@ func TestSameSpellingFunctionAssignmentPriority(t *testing.T) {
 	}
 }
 
-func TestSameSpellingSourcePassiveAliasDefinitionSite(t *testing.T) {
-	files := dictionaryIndexFilesystem(t)
-	library := "\nDefine \"Secret\" as `library`.\nPublicly create IO's \"Read|-s|-|-ing|-er\" for IO.Printing Secret and then IO.Printing any Text.\n"
-	files["stdlib/eng/io/dictionary.l"].Data = append(files["stdlib/eng/io/dictionary.l"].Data, []byte(library)...)
-	source := "Use IO's Read from `io` as \"Alias\".\nDefine \"Secret\" as `caller shadow`.\nCreate \"Worker\" as a New Basic App.\nWorker is Alias `payload`.\nRun Worker.\nAwait Worker.\nShow Worker's Output.\n"
-	result, err := NewLygerService(Options{Resources: files}).Compile([]byte(source), "/project/forms.l")
-	if err != nil {
-		t.Fatal(err)
-	}
-	captureNativeResult(t, result.Compilation, "library\npayload\n")
-}
-
 func TestPutGrammaticalOperands(t *testing.T) {
 	for _, tc := range []struct{ source, form string }{
 		{"Put Value in Items", "root"},
@@ -306,19 +294,6 @@ func TestConfiguredFormCorrections(t *testing.T) {
 	}
 }
 
-func TestPassivePutNative(t *testing.T) {
-	for _, tc := range []struct{ name, source, want string }{
-		{"list", "Define \"Payload\" as 7.\nDefine \"Items\" as a New List of Number.\nPayload is Put in Items.\nShow Items.\n", "[7]"},
-		{"map", "Define \"Payload\" as `value`.\nDefine \"Items\" as a New Map of Text.\nPayload is Put in Items as `key`.\nShow a New Text from Items at `key`.\n", "value"},
-		{"root-list", "Define \"Payload\" as 7.\nDefine \"Items\" as a New List of Number.\nPut Payload in Items.\nShow Items.\n", "[7]"},
-		{"root-map", "Define \"Payload\" as `value`.\nDefine \"Items\" as a New Map of Text.\nPut Payload in Items as `key`.\nShow a New Text from Items at `key`.\n", "value"},
-	} {
-		t.Run(tc.name, func(t *testing.T) {
-			runtimeBundleResult(t, runtimeValuesBundle(t, tc.source), tc.want, "")
-		})
-	}
-}
-
 func TestPassivePutAppValueIsOuterUpdate(t *testing.T) {
 	result := requireDistributionFrontend(t, "Create \"Worker\" as a New Basic App.\nDefine \"Items\" as a New List of App.\nWorker is Put in Items.\n", nil)
 	var updates []*instruction
@@ -330,11 +305,6 @@ func TestPassivePutAppValueIsOuterUpdate(t *testing.T) {
 	if len(updates) != 1 || updates[0].Value.Type != valueApp || updates[0].Target.Type != valueList {
 		t.Fatalf("App value was not retained in exactly one outer update: %+v", updates)
 	}
-}
-
-func TestPassivePutContinuationNative(t *testing.T) {
-	source := "Define \"Payload\" as 7.\nDefine \"Items\" as a New List of Number.\nDefine \"Others\" as a New List of Number.\nPayload is Put in Items and then Put in Others and then Put 8 in Items.\nShow Items and Others.\n"
-	runtimeBundleResult(t, runtimeValuesBundle(t, source), "[7, 8][7]", "")
 }
 
 func TestPassivePutRejectsUnsupportedAndIncompatibleOperands(t *testing.T) {
@@ -424,20 +394,6 @@ func TestSourceActionConstructorRequiresNominalRole(t *testing.T) {
 		if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "construction requires a noun or actor") {
 			t.Fatalf("deferred %s constructor accepted: %v", form, err)
 		}
-	}
-}
-
-func TestConstructorRolePreservesSelectedIdentity(t *testing.T) {
-	for _, word := range []string{"Storage.Share", "Storage.Shared", "Storage's Shared", "Spared"} {
-		source := "Use Storage from `storage`.\nUse Storage.Share as \"Spare\".\nDefine \"Shared\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nCreate \"Selected\" as a New " + word + " of 7.\n"
-		c := paragraphPublicationSource(t, source)
-		if !errors.Is(c.Error, lerrors.Syntax) || !strings.Contains(c.Error.Error(), "construction requires a noun or actor") {
-			t.Fatalf("%s selected a non-nominal construction: %v", word, c.Error)
-		}
-	}
-	c := paragraphPublicationSource(t, "Use Storage from `storage`.\nDefine \"Shared\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nCreate \"Selected\" as a New Shared.\n")
-	if c.Error != nil {
-		t.Fatal(c.Error)
 	}
 }
 

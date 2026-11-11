@@ -279,17 +279,18 @@ func TestConfiguredDictionaryImportBindings(t *testing.T) {
 		t.Run(fmt.Sprint(namespace), func(t *testing.T) {
 			root := t.TempDir()
 			cfg := configuredImportAssets(t, root, [3]string{"Adopt", "via", "named"})
-			source := "Adopt IO's Print via `io`.\n"
+			installTestDictionary(t, cfg.Resources.(fstest.MapFS), "catalog", "Catalog", "Create \"Catalog\" named a Dictionary.\nCreate Catalog's \"Emit|-s|-ted|-ting|-ter\" for Printing any Text.\n")
+			source := "Adopt Catalog's Emit via `catalog` named \"Display\".\n"
 			if namespace {
-				source = "Adopt IO via `io`.\nAdopt IO's Print named \"Print\".\n"
+				source = "Adopt Catalog via `catalog`.\nAdopt Catalog's Emit named \"Display\".\n"
 			}
-			source += "Create \"Hello\" named a New Basic App.\nThe App Prints `dialect`.\nExecute Hello.\n"
+			source += "Create \"Hello\" named a New Basic App.\nThe App Displays `dialect`.\n"
 			main := writeSourceFile(t, root, "main.l", source)
 			result, err := NewLygerService(cfg).Compile([]byte(source), main)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !bytes.Contains(result.BackendAML, []byte(`Inputs: ~&["dialect"]&~`)) {
+			if !bytes.Contains(result.BackendAML, []byte(`::std::println!("{}", "dialect")`)) {
 				t.Fatalf("selected dictionary failed under configured import words: %s", result.BackendAML)
 			}
 		})

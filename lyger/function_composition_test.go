@@ -2,90 +2,11 @@ package Lyger
 
 import (
 	"bytes"
+	Logiceme "github.com/l-programming-language/l/logiceme"
 	"strings"
 	"testing"
 	"testing/fstest"
-
-	Logiceme "github.com/l-programming-language/l/logiceme"
 )
-
-// These independently authored resource mutations prove that both ordinary
-// Functions and Main construction consume the selected canonical definitions.
-func TestCanonicalFunctionDefinitionsOwnEmission(t *testing.T) {
-	const core = "builtins/eng/core.l"
-	for _, test := range []struct{ member, from, to string }{
-		{"Function", "^(<@Process@>)", "^(W^(BOD^E{|Statement: ~/* selected_Function */~|})*<@Process@>)"},
-		{"Return", "return <@Statement@>;", "return /* selected_Return */ <@Statement@>;"},
-		{"Invoke", "Key: ~(<@Target@>)~", "Key: ~(/* selected_Invoke */ <@Target@>)~"},
-	} {
-		t.Run(test.member, func(t *testing.T) {
-			files := dictionaryIndexFilesystem(t)
-			original := bytes.Clone(files[core].Data)
-			lines := strings.Split(string(original), "\n")
-			changed := false
-			for i, line := range lines {
-				if !strings.Contains(line, `"`+test.member) || !strings.Contains(line, test.from) {
-					continue
-				}
-				lines[i] = strings.Replace(line, test.from, test.to, 1)
-				changed = true
-				break
-			}
-			if !changed {
-				t.Fatal("test mutation did not select its builtin definition")
-			}
-			selected := []byte(strings.Join(lines, "\n"))
-			files[core] = &fstest.MapFile{Data: selected}
-			deriveTestRuntime(t, files)
-			source := identityFunction + "Identity `value` as \"Result\".\nCreate \"Child\" as a New Basic App.\n"
-			if test.member == "Return" {
-				source = strings.Replace(source, "Return Value.", "Use Return as \"Finish\".\nFinish Value.", 1)
-			}
-			result, unit, bundle, err := builtinProcessGenerate(files, source)
-			if err != nil {
-				t.Fatal(err)
-			}
-			marker := "/* selected_" + test.member + " */"
-			if !bytes.Contains(unit.BackendAML, []byte(marker)) || !strings.Contains(builtinProcessRust(bundle), marker) {
-				t.Fatal("selected definition did not control ordinary Function AML and Rust")
-			}
-			if test.member == "Function" {
-				units, err := result.ApplicationUnits()
-				if err != nil || len(units) != 1 {
-					t.Fatalf("Main construction: %v", err)
-				}
-				child, err := Logiceme.NewLogicemeService(files).Evaluate(units[0].BackendAML)
-				if err != nil || !bytes.Contains(units[0].BackendAML, []byte(marker)) || !strings.Contains(builtinProcessRust(child), marker) {
-					t.Fatalf("Main did not use the same Function definition: %v", err)
-				}
-			}
-			if !bytes.Equal(files[core].Data, selected) {
-				t.Fatal("generation mutated canonical source")
-			}
-		})
-	}
-}
-
-func TestCanonicalFunctionMissingMemberDoesNotFallBack(t *testing.T) {
-	for _, member := range []string{"Return", "Invoke"} {
-		t.Run(member, func(t *testing.T) {
-			files := dictionaryIndexFilesystem(t)
-			const core = "builtins/eng/core.l"
-			var kept []string
-			for _, line := range strings.Split(string(files[core].Data), "\n") {
-				if strings.HasPrefix(line, `Define any Function's "`+member) {
-					continue
-				}
-				kept = append(kept, line)
-			}
-			files[core] = &fstest.MapFile{Data: []byte(strings.Join(kept, "\n"))}
-			_, _, _, err := builtinProcessGenerate(files, functionSource("Work", "", "", "Show `body`.")+"Work.\n")
-			if err == nil || !strings.Contains(err.Error(), member) {
-				t.Fatalf("missing bound %s composition did not reject: %v", member, err)
-			}
-		})
-	}
-}
 
 func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
 	source := "Define \"Callerreturn\" to `<DEF>BOD^E{|Statement: ~return /* caller */ <@Statement@>;~|}<DEF>`.\n" +
@@ -126,5 +47,38 @@ func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
 	aml := strings.Join(statements, "*")
 	if !strings.Contains(aml, "/* selected invocation */") || !strings.Contains(aml, "/* caller */") || strings.Contains(aml, "/* callee */") {
 		t.Fatalf("invocation or enclosing return lost its selected definition: %s", aml)
+	}
+}
+
+// Main construction must consume the selected Function definition even when
+// the standalone App needs no Runtime composition.
+func TestCanonicalFunctionDefinitionsOwnEmission(t *testing.T) {
+	const core = "builtins/eng/core.l"
+	const marker = "/* selected_Function */"
+	files := dictionaryIndexFilesystem(t)
+	original := bytes.Clone(files[core].Data)
+	from := []byte("^(<@Process@>)")
+	if bytes.Count(original, from) != 1 {
+		t.Fatal("mutation must select exactly the core Function composition")
+	}
+	selected := bytes.Replace(original, from, []byte("^(W^(BOD^E{|Statement: ~"+marker+"~|})*<@Process@>)"), 1)
+	files[core] = &fstest.MapFile{Data: selected}
+	result, err := NewLygerService(Options{Resources: files}).Compile([]byte("Create \"Child\" as a New Basic App.\nThe App Prints `selected`.\n"), "selected-function.l")
+	if err != nil {
+		t.Fatal(err)
+	}
+	units, err := result.ApplicationUnits()
+	if err != nil || len(units) != 1 {
+		t.Fatalf("standalone App units: %v, %v", units, err)
+	}
+	bundle, err := Logiceme.NewLogicemeService(files).Evaluate(units[0].BackendAML)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Contains(units[0].BackendAML, []byte(marker)) || !strings.Contains(builtinProcessRust(bundle), marker) {
+		t.Fatal("selected Function definition did not control App AML and Rust")
+	}
+	if !bytes.Equal(files[core].Data, selected) {
+		t.Fatal("generation mutated selected source")
 	}
 }

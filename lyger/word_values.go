@@ -23,7 +23,6 @@ func (e *orchestrationEmitter) describedWord(name string, descriptors []string, 
 	if err != nil {
 		return nil, err
 	}
-	e.recordContractNativeEmission(name, descriptors, arguments, "")
 	e.dependencies = append(e.dependencies, instance.Dependencies...)
 	return builtinProcessExpressions(&DefinitionTemplate{Span: instance.Span}, instance)
 }
@@ -51,24 +50,15 @@ func (e *orchestrationEmitter) valueBinding(word string, arguments map[string]De
 // Source sequences with several intermediate bindings have no implicit result.
 // Their caller supplies the final label along with every producer and consumer.
 func (e *orchestrationEmitter) explicitValueBinding(word, result string, arguments map[string]DefinitionArgument) (string, error) {
-	depth := e.contractValueDepth
-	e.contractValueDepth++
 	body, err := e.word(word, arguments)
-	e.contractValueDepth = depth
 	if err != nil {
 		return "", err
 	}
 	e.pending = append(e.pending, body...)
-	if depth == 0 {
-		e.recordContractNativeEmission(word, nil, arguments, result)
-	}
 	return result, nil
 }
 
 func (e *orchestrationEmitter) describedValueBinding(word string, descriptors []string, arguments map[string]DefinitionArgument) (string, error) {
-	depth := e.contractValueDepth
-	e.contractValueDepth++
-	defer func() { e.contractValueDepth = depth }()
 	if arguments == nil {
 		arguments = make(map[string]DefinitionArgument)
 	}
@@ -106,10 +96,6 @@ func (e *orchestrationEmitter) describedValueBinding(word string, descriptors []
 		return "", err
 	}
 	e.pending = append(e.pending, body...)
-	e.contractValueDepth = depth
-	if depth == 0 {
-		e.recordContractNativeEmission(word, descriptors, arguments, name)
-	}
 	return name, nil
 }
 
@@ -142,11 +128,7 @@ func (e *orchestrationEmitter) borrowedResultBinding(word string, arguments map[
 }
 
 func (e *orchestrationEmitter) checkedBinding(value string) (string, error) {
-	result, err := e.describedValueBinding("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Attempt": definitionReferenceArgument(value)})
-	if err == nil {
-		e.recordContractCheckedResult(value)
-	}
-	return result, err
+	return e.describedValueBinding("Storage.Binding", []string{"Storage.Checked"}, map[string]DefinitionArgument{"Attempt": definitionReferenceArgument(value)})
 }
 
 func (e *orchestrationEmitter) vector(values []DefinitionArgument, elementType string) (string, error) {

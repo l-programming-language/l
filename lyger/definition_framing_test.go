@@ -108,13 +108,6 @@ func TestDefinitionNullIsTypedAtom(t *testing.T) {
 	}
 }
 
-func TestDefinitionNullCompleteApplication(t *testing.T) {
-	source := []byte("Use IO's Print from `io`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints Null.\n")
-	if got := runSourceIO(t, source, "null-io.l"); !bytes.Equal(got, []byte("<nil>\n")) {
-		t.Fatalf("Null output: %q", got)
-	}
-}
-
 func TestDefinitionLifetimeCompleteApplication(t *testing.T) {
 	flat := parseTestDefinition(t, `<DEF>FW{|Key: ~borrow~, Lifetimes: ~'a~, Inputs: ~&[Prop{Key: value, Type: &'a str}Prop]&~, Outputs: ~&[&'a str]&~|}^W^BOD^E{|Statement: ~return value;~|}<DEF>`)
 	borrow := bindTestDefinition(t, flat, nil)
@@ -135,7 +128,7 @@ func TestDefinitionLifetimeCompleteApplication(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	binary := buildActualBundle(t, bundle, "Worker", false, "")
+	binary := buildActualBundle(t, bundle, "Worker", false)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	command := exec.CommandContext(ctx, binary)

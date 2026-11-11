@@ -36,9 +36,9 @@ Static inspection establishes what source and contracts currently say. An existi
 
 Example labels distinguish a **complete program**, a **compile-only example**, an **expected compilation failure**, and a **fragment** that needs surrounding code. Complete programs that intentionally exit unsuccessfully are marked **expected runtime failure**. Expand **Example evidence** for the source description and validation record. `existing-witness-not-run` identifies retained tests, not a fresh execution.
 
-Source-generation success establishes returned source bytes. Independent expected-Rust compilation establishes feasibility of an oracle. Compiling generated Rust establishes that returned artifacts compile. Supervised runtime checks establish behavior on their actual host and inputs. Full acceptance adds the unfiltered inventory, integrity and original-outcome requirements.
+Source-generation success establishes returned source bytes. Independent expected-Rust compilation establishes feasibility of an oracle. Compiling generated Rust establishes that returned artifacts compile. Supervised runtime checks establish behavior on their actual host and inputs. The temporary hello-world gate checks its selected outcomes and frozen logeme inputs. The former unfiltered suites remain outside current completion requirements.
 
-The [implementation ledger](../../testdata/integration/IMPLEMENTATION.md) identifies the tested source, host and validation stages. It does not validate a later checkout. The [Lucid guide](../../logiceme/testdata/lucid/README.md) covers generation, native compilation and three focused future execution checks. The [Service ledger](../../testdata/service-execution/coverage.md) separates generation, native and runtime witnesses.
+The [Lucid guide](../../logiceme/testdata/lucid/README.md) separates generation, native compilation and bounded execution. Historical results apply only to their recorded revision and host. They do not validate the current checkout.
 
 ## Resolve a discrepancy without changing semantics
 

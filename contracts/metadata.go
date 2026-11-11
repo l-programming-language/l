@@ -325,22 +325,6 @@ func validateDocument(document any) error {
 	return validatable.Validate()
 }
 
-// ReadManifestIndex uses the same closed-object and duplicate-key rules as
-// contract documents. An empty manifest array is valid; a null one is not.
-func ReadManifestIndex(data []byte) ([]string, error) {
-	var index struct {
-		Version   string   `json:"schema_version"`
-		Manifests []string `json:"manifests"`
-	}
-	if err := decodeModel(data, &index); err != nil {
-		return nil, err
-	}
-	if index.Version != SchemaVersion || index.Manifests == nil {
-		return nil, fmt.Errorf("contract index requires version %s and a manifests array", SchemaVersion)
-	}
-	return index.Manifests, nil
-}
-
 func decodeModel(data []byte, target any) error {
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.UseNumber()

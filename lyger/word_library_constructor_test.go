@@ -172,18 +172,6 @@ func TestWordLibraryNamedSourceWrapperEvaluatesForwardedInputOnce(t *testing.T) 
 	}
 }
 
-func TestWordLibrarySourceWrapperProjectionPreservesTarget(t *testing.T) {
-	source := "Define \"Relay|-s|-ed|-ing|-er\" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
-		"Define \"Finish|-es|-ed|-ing|-er\" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~finish~, Inputs: ~&[<@Context@>, <@Receipt@>]&~|}<DEF>`.\n" +
-		"Define \"Observed\" as a New Adjective describing any Relayer.\n" +
-		"It describes any Relayer as a New Finisher of any Thing and any Relayer.\n"
-	analysis := analyzeContractSource(t, NewLygerService(canonicalTestOptions()), []byte(source), sourceAdjectivePath, ContractAnalysisOptions{})
-	projection := sourceProjectionNamed(t, analysis, "Observed")
-	if projection.After.Constructor != "" || len(projection.After.Wrappers) != 1 || len(projection.Footprints) != 1 || projection.Footprints[0].Target.Path[0] != "wrappers" {
-		t.Fatalf("source wrapper changed its target in symbolic projection: %+v", projection)
-	}
-}
-
 func TestWordLibraryAliasedFunctionBoundary(t *testing.T) {
 	source := "Define \"Choose|-s|-d|--ing|-r\" to `<DEF>BOG^GI{|Key: ~<@Condition@>~|}^(E{|Statement: ~true~|}*<@Left@>*E{|Statement: ~false~|}*<@Right@>)<DEF>`.\n\n" +
 		"    Publicly create \"Forward\" as a Generic Function with Inputs of \"first\" as `u64` and \"second\" as `u64` and Outputs of `u64`.\nReturn Second.\n\n" +
@@ -474,26 +462,6 @@ func TestWordLibraryTransparentValueWrapper(t *testing.T) {
 	}
 }
 
-func TestWordLibrarySourceConstructorSpecialization(t *testing.T) {
-	source := "Use Storage from `storage`.\n" +
-		"Define \"Acquire\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\n" +
-		"Define \"Amount\" as a New Storage's Caster of any Thing and `i32`.\n" +
-		"Define \"Large\" as a New Adjective describing any Amount.\nIt describes any Amount as a New Storage's Caster of any Thing and `u128`.\n" +
-		"Define \"Joined\" as a New Storage's Tuple of any Thing and any Thing.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `(i32, u128, (f64, f64))`.\n" +
-		"Create \"Plain\" as a New Amount of a New Acquire.\nCreate \"Expanded\" as a New Large Amount of a New Acquire.\n" +
-		"Create \"Values\" as a New Joined of a New Acquire and a New Acquire.\nReturn a New Storage's Tuple of Plain, Expanded, and Values.\n"
-	c := compileDefinitionSource(t, source, "source-specialization.l")
-	testNativeDefinitionLibrary(t, c, "Exercise", "specialization", `
-static CALLS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
-pub fn acquire() -> f64 { 4294967296.0 + CALLS.fetch_add(1, std::sync::atomic::Ordering::SeqCst) as f64 }
-#[path="src/specialization.rs"] mod generated;
-fn main() {
- assert_eq!(generated::exercise(), (i32::MAX, 4294967297, (4294967298.0, 4294967299.0)));
- assert_eq!(CALLS.load(std::sync::atomic::Ordering::SeqCst), 4);
-}`)
-}
-
 func TestWordLibrarySourceFunctionReplacementRejects(t *testing.T) {
 	source := "Define \"Changed\" as a New Adjective describing any Function.\nIt describes any Function as a New Function of any Process.\nDefine \"Wrapped\" as a New Changed Function.\n\n" +
 		"    Publicly create \"Exercise\" as a Generic Changed Function with No Inputs and Outputs of `f64`.\nReturn 7.\n"
@@ -503,34 +471,6 @@ func TestWordLibrarySourceFunctionReplacementRejects(t *testing.T) {
 	}
 	if _, err := c.ComposeLibrary("Exercise", "source_function"); !errors.Is(err, lerrors.TypeMismatch) {
 		t.Fatalf("source replacement of a Function signature must reject: %v", err)
-	}
-}
-
-func TestWordLibraryFunctionReplacementRequiresFunctionBase(t *testing.T) {
-	c := compileDefinitionSource(t, "Use Storage from `storage`.\nDefine \"Scalar\" as a New Storage's Nothing.\nDefine \"Callable\" as a New Adjective describing any Scalar.\nIt describes any Scalar as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n", "function-base.l")
-	node := &constructionNode{Definition: c.Memory["Scalar"], Nominal: "Scalar", Name: "probe", InputsDefined: true, OutputsDefined: true, Wrappers: c.Semantics.Descriptors[c.Memory["Callable"]].Rules}
-	body, err := c.instantiateDescribedBuiltin("Process", []string{"Storage.Empty"}, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err := c.instantiateFunctionConstructor(node, DefinitionArgument{Kind: "Definition", Definition: &body}, false, make(map[*record]bool)); !errors.Is(err, lerrors.TypeMismatch) {
-		t.Fatalf("replacement must not turn a non-Function base into a Function: %v", err)
-	}
-}
-
-func TestWordLibrarySourceDescriptorCycles(t *testing.T) {
-	for _, replacement := range []string{"Changed Amount", "Amount"} {
-		t.Run(replacement, func(t *testing.T) {
-			source := "Use Storage from `storage`.\nDefine \"Amount\" as a New Storage's Caster of any Thing and `i32`.\nDefine \"Changed\" as a New Adjective describing any Amount.\nIt describes any Amount as a New " + replacement + ".\n\n" +
-				"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `i32`.\nReturn a New Changed Amount of Value.\n"
-			result, err := NewLygerService(Options{}).Compile([]byte(source), filepath.Join(t.TempDir(), "cycle.l"))
-			if err == nil {
-				_, err = result.Compilation.ComposeLibrary("Exercise", "cycle")
-			}
-			if replacement == "Amount" && err != nil || replacement != "Amount" && !errors.Is(err, lerrors.Cycle) {
-				t.Fatalf("source descriptor replacement %q: %v", replacement, err)
-			}
-		})
 	}
 }
 

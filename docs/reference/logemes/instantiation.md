@@ -26,4 +26,4 @@ CV constructs an unscheduled future from one W body: local Capture is Infer by d
 
 Rust Execute/Execution exclude Deferred from inputs, forwarding and rendering. Supplying Deferred is unsupported even when its value is False. There is no deferred-call or destructor/RAII cleanup contract inferred from V/MV. Four malformed cases and [scheduling tests](../../../logiceme/lucid_scheduling_test.go) preserve this rejection.
 
-Read [Execution](../../../builtins/segments/vowels/execution.lu), [Execute](../../../builtins/segments/consonants/execute.lu), and [execution without Deferred](../../../builtins/README.md#execution-without-deferred). Runtime launch, Stop, Await and cleanup belong to the [CLI/runtime contract](../../cli-build.md), not these scheduling templates.
+Read [Execution](../../../builtins/segments/vowels/execution.lu), [Execute](../../../builtins/segments/consonants/execute.lu), and [execution without Deferred](../../../builtins/README.md#execution-without-deferred). Runtime launch, Stop, Await and cleanup are unavailable under the current [build boundary](../../cli-build.md). Scheduling templates do not supply them.

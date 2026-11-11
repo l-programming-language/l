@@ -1,27 +1,46 @@
-# Lyger frontend
+# Working on Lyger
 
-Read [architecture](../docs/architecture.md), [runtime semantics](../docs/cli-build.md) and [acceptance](../docs/development-harness.md). Use the frontend-trace skill to locate the earliest failing boundary.
+Read root [instructions](../AGENTS.md), [architecture](../docs/architecture.md),
+[definition semantics](../docs/spec/definitions.md) and
+[development guidance](../docs/development-harness.md). Use frontend tracing for
+compiler diagnosis and word authoring/review for vocabulary design.
 
-The implicit source unit now loads `builtins/<configured-language>/core.l` directly. The authored libraries and prelude are removed, and `dictionaries.json` contains no bundled entries. Do not restore source support or compiler-authored replacements to satisfy old tests. The current supported build is a standalone App using core Print. Runtime-dependent top-level instructions must reject. Keep ordinary source ownership and selected-provider isolation; root instructions define the temporary hello-world gate.
+Core loads directly from `builtins/<language>/core.l`. The bundled dictionary
+registry is empty. Preserve selected-provider isolation and source ownership;
+do not restore Storage, prelude or other removed libraries to satisfy old tests.
+The current CLI build boundary is one standalone App using core Print.
 
-Lyger selects and instantiates canonical definitions, resolves source paths, and plans storage, mutation, captures, effects and definite assignment. Its output is AML with complete typed bindings; Logiceme owns native rendering. Do not embed a Function execution runtime or hide authored Function bodies, closures, invocations or returns in Go strings, including `Statement`/EA. Bind resolved native type/name/value atoms into approved AML fields; type atoms may describe native function-pointer/future signatures but contain no executable body or closure. Existing typed storage helpers remain permitted; they must not implement Function dispatch. Authored native leaves remain opaque. Instantiate the recognized Function template and bind its invocation verb; do not add a `Call` primitive or a second lowering implementation. Preserve approved AML lifetime/generic inputs without inventing fields or rewriting completed Rust. Existing native emitters do not authorize more such code.
+## Frontend boundaries
 
-Explicit typed Process inputs and generated intermediate bindings must retain canonical identity, lexical scope, declared ownership and original source spans through expansion and AML. Use the existing hygienic label discipline; do not infer roles from rendered Rust or add process-wide counters. Preserve existing syllables and frozen template interfaces.
+Lyger owns grammar, bindings, types, paragraph activation, definite assignment,
+captures and source composition. It emits typed AML through selected definitions;
+Logiceme owns native rendering. Do not generate Function bodies, closures,
+invocations or returns in Go strings, Statement or EA. Native type/name/lifetime
+atoms contain no executable body. Preserve approved logeme interfaces.
 
-Keep lexical part of speech, morphology/possession, storage category and value type distinct. Preserve original spans, source order, literal bytes, typed origins and paragraph identity through preprocessing/imports. Retry order never determines pronouns: they bind the last subject defined in their source paragraph. AML Class/Text groups source-file Objects recursively. It is not an L paragraph, lexical scope, or runtime activation; the former Feature/PARAGRAPH layer has been removed.
+Keep lexical POS, inflection role, storage category and value type distinct.
+Preserve original spans, source order, literal bytes, typed origins and paragraph
+identity through imports and expansion. Pronouns follow source order within their
+paragraph, independently of resolution retry order. Aliases and descriptors
+retain canonical identity and definition-site scope. Explicit typed Process
+inputs and intermediates use lexical allocation, never rendered-name recovery or
+global temporary counters.
 
-Maintain literal-pool, semantic-memory and ordered-instruction ownership. Lower through existing application structures and render required output views without discarding the graph to match CLI state. Only frozen logeme assets remain protected; grammar/vocabulary and tests may change within authorized redesign. There are no mirror synchronization groups. Only diagnostic views may normalize UUIDs/map order.
+Literal pools, semantic memory and ordered instructions have separate ownership.
+Publish complete AML views atomically, retaining the full semantic graph. Only
+diagnostic views may normalize UUIDs or map order. Explicit file includes remain
+confined to the selected provider and dictionary root.
 
-Retain `ApplicationUnits`, `AppArtifact` and `OrchestratorUnit` with their App contracts. Workspace projection preserves App-constructed Service libraries and primary Service topology. Standalone Service declarations remain structural and create no packages; standalone Service body effects reject. Build/Run/Stop/Await and implicit Output/Error require an App. Preserve lexical action/member shadowing, the source-defined `any App` signatures of Start/Execute, and App-only continuation ownership. Classes remain source groups. See the [Service boundary coverage](../testdata/service-execution/coverage.md).
+Preserve generic compiler coverage for lexical resolution, imports, assignment,
+typed construction, captures and source hierarchy. Recognition does not prove a
+construct can execute without removed support. Tests of deleted vocabulary are
+not requirements for rebuilding it. Do not retain compatibility aliases, source
+rewrites or hardcoded native substitutes to make them pass.
 
-Reuse glyph composition. Assignments retain source positions; definite assignment intersects continuing paths and excludes exits. Output availability is checked at runtime and stored Output remains a snapshot. Function tests must trace the selected definition through source expansion and complete AML, and demonstrate that changing it changes the emitted composition. Cover signatures, captures and lifetimes; final-Rust assertions alone cannot prove resource authority.
+## Verification
 
-Use selected resource filesystems and the implicit core unit. Bundled IO is removed. Explicit `.l` inclusions retain their provider and ownership; dictionary exports retain canonical definitions/private helpers. Do not restore adjacent bootstraps, configuration mirrors, semantic rewrite helpers or fallback loading. Root guidance governs fixed expectations and finite amendments.
-
-Recursive source construction retains interleaved Class/Object membership in both AML views. Emit StructureVersion 2 for populated Classes, direct child Dimensions, and immediate Class Parent. Preserve atomic publication of complete AML views, book-wide identities, and explicit Object Attributes; never inject shared code through a Class.
-
-The [Rust frontend suite](test/README.md) preserves language, ownership, source-order, literal and runtime obligations with canonical Rust fixtures. Tests call real compilation and pass actual, unmodified AML to the backend. The [implementation ledger](../testdata/integration/IMPLEMENTATION.md) records verification by phase; a historical snapshot is not the status of this checkout.
-
-Follow root [acceptance instructions](../AGENTS.md#temporary-acceptance), the [validation policy](../docs/development-harness.md#validation-authorization) and [approved budgets](../docs/development-harness.md#validation-budgets). Task-authorized checks proceed without repeated permission requests; manual CI dispatch requires explicit authorization. Focused checks do not establish full validation; report unrun stages.
-
-The App/runtime and former suite descriptions above retain compiler design context. They do not require preserving removed libraries, old vocabulary assertions, or the former full gate during this reset.
+Run the root temporary hello-world gate with pinned tools and existing budgets.
+Keep the exact core output, unsupported-effect rejection and frozen logeme bytes.
+Native observers must exercise actual generated source without implementing the
+operation themselves. Report source analysis, generation, compilation and runtime
+execution separately, including unrun suites.

@@ -1,12 +1,11 @@
 package Lyger
 
 import (
-	"errors"
 	"fmt"
-	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
+
 	Logiceme "github.com/l-programming-language/l/logiceme"
 	"io/fs"
-	"os/exec"
+
 	"strings"
 	"testing"
 )
@@ -85,29 +84,6 @@ func TestOrdinaryFunctionAliasKeepsSelectedActivation(t *testing.T) {
 	}
 	if body[0].Function.Body == body[2].Function.Body || body[0].Function.Inputs[0] == body[2].Function.Inputs[0] {
 		t.Fatal("Function activations shared parameter storage")
-	}
-}
-
-func TestOrdinaryFunctionsNative(t *testing.T) {
-	source := functionSource("Done", "", "Text", "If false, Exit with an Error of `unused`, else Exit.") + identityFunction +
-		functionSource("Pair", "\"First\" as Text and \"Second\" as Number", "Text and Number", "Return First and Second.") +
-		functionSource("Apply", "\"Callback\" as Identity and \"Message\" as Text", "Text", "Callback Message as \"Nested\".\nReturn Nested.") +
-		functionSource("Select", "", "Identity", "Return Identity.") +
-		functionSource("Again", "\"Ready\" as Truth and \"Message\" as Text", "Text", "If Ready, Return Message.\nAgain true and Message as \"Nested\".\nReturn Nested.") +
-		"Define \"Prefix\" as `capture`.\n\n" + functionSource("Read", "", "Text", "Return Prefix.") +
-		"Identity `one` as \"One\".\nIdentity `two` as \"Two\".\nPair `pair` and 7 as \"Label\" and \"Count\".\nApply Identity and `callback` as \"Applied\".\nSelect as \"Chosen\".\nChosen `selected` as \"Selected\".\nAgain false and `recursive` as \"Repeated\".\nRead as \"Captured\".\nUse Identity as \"Saved\".\nSaved `alias` as \"Aliased\".\nShow One and Two and Label and Count and Applied and Selected and Repeated and Captured and Aliased.\nDone as \"NeverRead\".\nShow `must not continue`.\n"
-	captureNativeResult(t, executableTestResult(t, memberResolutionSource{main: source}).Compilation, "onetwopair7callbackselectedrecursivecapturealias")
-}
-
-func TestOrdinaryFunctionErrorNative(t *testing.T) {
-	source := functionSource("RejectCall", "", "", "Exit with an Error of `failed`.") + functionSource("Relay", "", "", "RejectCall.\nShow `unexpected-function`.") + "Relay.\nShow `unexpected-root`.\n"
-	bundle := runtimeValuesBundle(t, source)
-	recordBundle(t, bundle)
-	binary := buildActualBundle(t, bundle, "entry", true, "")
-	stdout, stderr, err := nativetest.RuntimeExecution.Run(t, binary, "", nil)
-	var exit *exec.ExitError
-	if !errors.As(err, &exit) || exit.ExitCode() != 1 || len(stdout) != 0 || string(stderr) != "failed\n" {
-		t.Fatalf("Function error stdout=%q stderr=%q error=%v", stdout, stderr, err)
 	}
 }
 

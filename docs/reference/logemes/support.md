@@ -10,7 +10,7 @@ Malformed compositions must return classified errors without changing inputs, re
 
 ## What the evidence does not say
 
-Generation, compilation, and execution establish different facts. Compile-only selection and scheduling cases do not establish runtime fairness, cancellation, cleanup, or lifetime inference. Generated start/stop scripts remain unexecuted. See the [backend ledger](../../../logiceme/testdata/lucid/FAILURES.md) and separate [frontend/runtime ledger](../../../testdata/integration/IMPLEMENTATION.md) for results tied to specific revisions and hosts.
+Generation, compilation, and execution establish different facts. Compile-only selection and scheduling cases do not establish runtime fairness, cancellation, cleanup, or lifetime inference. Generated start/stop scripts remain unexecuted. See the [backend ledger](../../../logiceme/testdata/lucid/FAILURES.md) for results tied to specific revisions and hosts.
 
 ## Integration limits
 
@@ -18,4 +18,4 @@ Deferred and three-part loops are unsupported. CV/DV and CO/COB provide [bounded
 
 ## Support assets
 
-Config/Cargo templates supply configuration and manifests, while start/stop templates produce deployment artifacts. [Runtime support](../../cli-build.md#source-generation-and-native-builds) combines authored L policy with bounded host adapters. These assets are separate from the eighteen segments and L's public standard library.
+Config/Cargo templates supply configuration and manifests, while start/stop templates produce deployment artifacts. Runtime and the standard libraries have been removed. Retained templates are separate from source vocabulary and do not supply lifecycle or cleanup behavior.

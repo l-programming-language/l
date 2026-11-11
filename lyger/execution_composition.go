@@ -11,28 +11,26 @@ import (
 // orchestrationEmitter binds a checked plan to AML and typed runtime operands.
 // Function execution composes selected definitions; source bindings are resolved.
 type orchestrationEmitter struct {
-	definitionBindings  []DefinitionBinding
-	definitionActive    map[*record]bool
-	definitionDynamic   map[*record]bool
-	compilation         *Compilation
-	pending             []string
-	dependencies        []DefinitionInstance
-	valueCount          int
-	plan                *orchestrationPlan
-	artifacts           map[*App]string
-	apps                map[*App]string
-	invocation          int
-	processSelection    int
-	functionDepth       int
-	functionWords       *sourceFunction
-	functionItems       []string
-	functionContracts   map[*record]*sourceFunction
-	functionEmitted     map[int]bool
-	programStorage      map[*orchestrationStorage]int
-	programActions      map[*record]int
-	processes           *builtinProcessCatalog
-	contractInstruction *instruction
-	contractValueDepth  int
+	definitionBindings []DefinitionBinding
+	definitionActive   map[*record]bool
+	definitionDynamic  map[*record]bool
+	compilation        *Compilation
+	pending            []string
+	dependencies       []DefinitionInstance
+	valueCount         int
+	plan               *orchestrationPlan
+	artifacts          map[*App]string
+	apps               map[*App]string
+	invocation         int
+	processSelection   int
+	functionDepth      int
+	functionWords      *sourceFunction
+	functionItems      []string
+	functionContracts  map[*record]*sourceFunction
+	functionEmitted    map[int]bool
+	programStorage     map[*orchestrationStorage]int
+	programActions     map[*record]int
+	processes          *builtinProcessCatalog
 }
 
 func (r *CompilationResult) OrchestratorUnit(id string, companions []AppArtifact) (BuildUnit, error) {
@@ -492,18 +490,8 @@ func (e *orchestrationEmitter) instructions(body []*orchestrationInstruction) ([
 	return result, nil
 }
 
-// attributedInstruction retains the actual typed source operation while helper
-// selection runs. Analysis observes selections, never the emitted strings.
+// attributedInstruction retains source attribution for the selected operation.
 func (e *orchestrationEmitter) attributedInstruction(current *orchestrationInstruction) ([]string, []string, error) {
-	previous := e.contractInstruction
-	e.contractInstruction = current.Source
-	defer func() { e.contractInstruction = previous }()
-	if recorder := e.compilation.contractRecorder; recorder != nil {
-		if recorder.nativeEmissions == nil {
-			recorder.nativeEmissions = make(map[*instruction][]contractNativeEmission)
-		}
-		recorder.nativeEmissions[current.Source] = nil
-	}
 	attribution, err := e.attribution(current)
 	if err != nil {
 		return nil, nil, err

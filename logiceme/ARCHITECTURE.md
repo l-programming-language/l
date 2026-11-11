@@ -5,9 +5,9 @@ assembler. [LOGEMES.md](../builtins/LOGEMES.md) defines the logical alphabet;
 [CONTRACTS.md](../builtins/CONTRACTS.md) defines invariants; [AML.md](AML.md)
 defines the input boundary. This map distinguishes existing entry points from
 required architecture: a template route is not evidence that every contract is met.
-The frontend, CLI and raw API generate Rust. Runtime support is the only
-generation option; no output-target selector remains. See the [implementation record](../testdata/integration/IMPLEMENTATION.md)
-for dated generation, native execution and acceptance evidence.
+The frontend, CLI and raw API generate Rust. The current CLI uses runtime-free
+source generation; deleted Runtime assets are not available. See the
+[temporary gate](../docs/development-harness.md#temporary-core-only-gate).
 
 ## Position in L
 
@@ -188,46 +188,24 @@ library targets; native EA contents remain opaque. See the
 [topology contract](../builtins/README.md#frontend-topology-and-library-packages).
 
 Validate normalized final paths, duplicates and reserved support collisions.
-Do not infer cross-App modules. Keep source bundles atomic on failure. Runtime
-policy is composed from L source into `stdlib/runtime/generated/`; `stdlib/runtime/rust/`
-retains native executor and host/platform inputs. Non-runtime support templates
-own configuration and packaging. Segment templates do not contain runtime policy.
+Do not infer cross-App modules. Keep source bundles atomic on failure. Retained
+support templates own configuration and packaging; segment templates contain no
+runtime policy. Authored/native/generated Runtime assets have been removed.
 
 Each Rust package has a Cargo manifest. Explicit topology supports binary targets
 and a sole library-only package. A library-only package has declared sources and
 Cargo.toml, without executable config/runtime/start/stop artifacts; IncludeRuntime
 and supplied SETTINGS reject. Mixed packages retain one Primary binary and at
-most one library. The CLI builds validated packages together as a workspace.
+most one library. The current CLI builds one standalone App package.
 
-Runtime assembly wraps the first/orchestrator book and consumes the future
-returned by its composed function, whose generated signature is:
+Plain composed entries with SETTINGS receive a prepared initialization operation
+before user effects. EA remains an opaque whole-file boundary. The retained
+IncludeRuntime API cannot supply support absent from its selected provider; the
+CLI does not use it or generate an orchestrator.
 
-```rust
-fn l_main(runtime: &runtime::Runtime) -> impl std::future::Future<Output = runtime::Result<()>> + '_
-```
-
-Companion entries remain ordinary entry points. IncludeRuntime installs the
-known pinned runtime dependency rows, rejecting conflicting supplied rows. The
-assembler does not resolve crate versions, retry builds, translate Go source or
-infer dependencies from `use` statements.
-
-The CLI's `EvaluateWorkspaceEntry` bridge renders the entry and a separate
-runtime library under the [runtime selection contract](../docs/cli-build.md#source-generation-and-native-builds).
-It selects the runtime import before rendering the header, then links the entry
-wrapper. Allocated package identities and dependency paths stay outside AML
-metadata. Ordinary `Evaluate`/`IncludeRuntime` retain inline-runtime bundles.
-Both paths select the same native inputs and generated composition from the
-complete resource provider, without probing obsolete resource paths.
-
-The runtime wrapper supplies configuration startup before creating Tokio and
-executes the composed future through Runtime supervision. Plain composed entries
-with SETTINGS receive a prepared initialization operation before user effects.
-EA remains an opaque whole-file path with its distinct support handling.
-
-Lucid cases use `IncludeRuntime: false`; three future cases also execute generated
-programs. Frontend, topology and runtime regressions separately exercise native
-outputs. Consult their [implementation evidence](../testdata/integration/IMPLEMENTATION.md)
-independently of the Lucid ledger; focused checks establish no full-acceptance result.
+Lucid cases use `IncludeRuntime: false`; three future cases have separate
+execution observers. Generation, native compilation and execution remain distinct
+claims. The temporary hello-world gate does not run the complete Lucid matrix.
 
 ## Cross-cutting invariants
 

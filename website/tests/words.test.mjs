@@ -235,7 +235,7 @@ test('advanced builtin audience does not change implicit availability or remove 
   assert.match(wordIndex(words, 'builtins'), /Retain.*authoring/s);
 });
 
-test('ordinary Function.Return remains discoverable in application vocabulary', async () => {
+test('retained Function.Return declaration has a partial support boundary', async () => {
   const { entries } = JSON.parse(await fs.readFile(new URL('../../docs/_meta/semantics.json', import.meta.url), 'utf8'));
   const record = entries.find((entry) => entry.id === 'builtin:function.return');
   const source = record.doc.split('#')[0];
@@ -255,6 +255,7 @@ test('ordinary Function.Return remains discoverable in application vocabulary', 
   const words = deriveWords({ entries: [record], pages: [owner], documents: new Map([[source, parseDocument(section)]]) });
   assert.equal(words[0].link, owner.route + '#' + record.doc.split('#')[1]);
   assert.equal(words[0].audience, 'application');
+  assert.equal(words[0].support, 'partial');
   assert.match(wordIndex(words), /Application vocabulary[\s\S]*Function\.Return/);
   assert.doesNotMatch(wordIndex(words), /Advanced word authoring/);
 });
@@ -262,15 +263,6 @@ test('ordinary Function.Return remains discoverable in application vocabulary', 
 test('two meanings cannot claim the same rendered canonical anchor', () => {
   const source = '# Words\n\n## First\n\n<a id="same"></a>\n\n<!-- word:x -->\n\nFirst meaning.\n\n## Second\n\n<a id="same"></a>\n\n<!-- word:y -->\n\nSecond meaning.\n';
   assert.throws(() => derive([entry('x', 'First', 'same'), entry('y', 'Second', 'same')], source), /Ambiguous.*anchor/);
-});
-
-test('reviewed IO.Lined applies to the selected IO.Send actor, not a same-spelled foreign actor', async () => {
-  const { entries } = JSON.parse(await fs.readFile(new URL('../../docs/_meta/semantics.json', import.meta.url), 'utf8'));
-  const lined = entries.find((record) => record.name === 'IO.Lined');
-  const send = entries.find((record) => record.name === 'IO.Send');
-  assert.deepEqual(lined.word.targets, [{ entry: send.id, form: 'Sender' }]);
-  assert.deepEqual(send.word.formRoles.Sender, { partOfSpeech: 'noun', role: 'actor' });
-  assert.ok(lined.sources.includes('stdlib/eng/io/dictionary.l'));
 });
 
 test('noun active forms expose their actual applicative verb role', async () => {

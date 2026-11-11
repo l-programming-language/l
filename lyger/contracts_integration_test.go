@@ -12,7 +12,7 @@ import (
 	"github.com/l-programming-language/l/contracts"
 )
 
-const contractsSource = "Use IO's Print from `io` as \"Print\".\nUse Basic as \"Compact\".\nCreate \"First\" as a New Basic App.\nThe App Prints `one`.\nCreate \"Second\" as a New Compact App.\nThe App Prints `two`.\nRun First.\nAwait First.\nShow First's Output.\n"
+const contractsSource = "Use Basic as \"Compact\".\nCreate \"First\" as a New Basic App.\nThe App Prints `one`.\nCreate \"Second\" as a New Compact App.\nThe App Prints `two`.\n"
 
 func TestContractsTrackA(t *testing.T) {
 	service := NewLygerService(Options{})
@@ -52,7 +52,7 @@ func TestContractsTrackA(t *testing.T) {
 	t.Run("LEX-007", func(t *testing.T) {
 		found := false
 		for _, binding := range observed.Bindings {
-			if binding.CanonicalName == "IO.Print" && strings.Contains(binding.Origin.Source, "main.l") && binding.Spelling == "Prints" {
+			if binding.CanonicalName == "Print" && strings.Contains(binding.Origin.Source, "main.l") && binding.Spelling == "Prints" {
 				found = true
 				if binding.DefinitionEnvironment == binding.UseEnvironment {
 					t.Fatal("dictionary definition and caller environments collapsed")
@@ -63,7 +63,7 @@ func TestContractsTrackA(t *testing.T) {
 			}
 		}
 		if !found {
-			t.Fatal("missing imported IO.Print binding")
+			t.Fatal("missing imported Print binding")
 		}
 	})
 	t.Run("BASE-008", func(t *testing.T) {
@@ -138,8 +138,9 @@ func TestContractsRepeatedSourceOrigins(t *testing.T) {
 
 func TestContractsDefinitionSiteHelperShadow(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
-	files["stdlib/eng/io/dictionary.l"] = &fstest.MapFile{Data: []byte("Create \"IO\" as a Dictionary.\nDefine \"Secret\" as `dictionary owned`.\nCreate IO's \"Reveal|-s|-ed|-ing|-er\" for Showing Secret and then Showing any Text.\n")}
-	source := "Use IO's Reveal from `io` as \"Reveal\".\nDefine \"Secret\" as `caller shadow`.\nReveal `argument`.\n"
+	installTestDictionary(t, files, "catalog", "Catalog", "Create \"Catalog\" as a Dictionary.\n")
+	files["stdlib/eng/catalog/dictionary.l"] = &fstest.MapFile{Data: []byte("Create \"Catalog\" as a Dictionary.\nDefine \"Secret\" as `dictionary owned`.\nCreate Catalog's \"Reveal|-s|-ed|-ing|-er\" for Showing Secret and then Showing any Text.\n")}
+	source := "Use Catalog's Reveal from `catalog` as \"Reveal\".\nDefine \"Secret\" as `caller shadow`.\nReveal `argument`.\n"
 	_, snapshot := resolveContractSource(t, NewLygerService(Options{Resources: files}), []byte(source), "/project/hygiene.l")
 	var caller contracts.DefinitionKey
 	var generated []contracts.ResolvedBinding
@@ -157,7 +158,7 @@ func TestContractsDefinitionSiteHelperShadow(t *testing.T) {
 	// Native Show carries the argument binding in its definition-site token.
 	owned := false
 	for _, binding := range snapshot.Bindings {
-		if binding.CanonicalName == "Secret" && binding.Origin.Source == "resource:stdlib/eng/io/dictionary.l" {
+		if binding.CanonicalName == "Secret" && binding.Origin.Source == "resource:stdlib/eng/catalog/dictionary.l" {
 			owned = true
 			if binding.Definition == caller || !strings.HasPrefix(binding.DefinitionOrigin.Source, "resource:") {
 				t.Fatal("caller captured dictionary helper")
@@ -171,34 +172,6 @@ func TestContractsDefinitionSiteHelperShadow(t *testing.T) {
 		if binding.Definition == caller || binding.DefinitionEnvironment == binding.UseEnvironment {
 			t.Fatal("expanded body captured caller helper")
 		}
-	}
-}
-
-func TestContractsDictionaryDiscoveryDoesNotCertify(t *testing.T) {
-	service := NewLygerService(Options{})
-	result, err := service.VerifyDictionaryContracts("io", ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(result.Definitions) == 0 || len(result.Obligations) == 0 || contracts.AllEstablished(result.Obligations) {
-		t.Fatal("loading a dictionary became conformance proof")
-	}
-	for _, definition := range result.Definitions {
-		if definition.Origin.Source != "resource:stdlib/eng/io/dictionary.l" {
-			t.Fatal("dictionary verification selected an unrelated declaration")
-		}
-	}
-	directory := t.TempDir()
-	path := filepath.Join(directory, "adjective.l")
-	if err := os.WriteFile(path, []byte("\"Compact\" describes a Generic App with a New Main Service using any Process.\n"), 0600); err != nil {
-		t.Fatal(err)
-	}
-	declared, err := service.VerifyDictionaryContracts(path, ContractAnalysisOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(declared.Certificates) != 1 || declared.Certificates[0].Mode != "instantiation_only" || declared.Certificates[0].Status != contracts.Unresolved {
-		t.Fatalf("uninstantiated source adjective disappeared or self-certified: %+v", declared.Certificates)
 	}
 }
 
@@ -217,32 +190,6 @@ func TestContractsOriginalTokenSpans(t *testing.T) {
 			t.Fatalf("span %q differs from token %q", source[start:end], binding.Spelling)
 		}
 	}
-}
-
-func TestContractsAnalysisIncludesLateHelpers(t *testing.T) {
-	analysis := analyzeContractSource(t, NewLygerService(Options{}), []byte(contractsSource), "/project/main.l", ContractAnalysisOptions{})
-	if len(analysis.Lowering.Steps) == 0 || len(analysis.Lowering.Native) == 0 {
-		t.Fatal("helper composition missing from inventory")
-	}
-	if len(analysis.Orchestrator.BackendAML) == 0 {
-		t.Fatal("source-only orchestration preparation missing")
-	}
-	for _, name := range []string{"NoHeapAllocation", "NoBlocking"} {
-		obligations := contracts.CheckProfile(analysis.Summary, contracts.Profile{Name: name, Scope: "whole_region"})
-		if contracts.AllEstablished(obligations) {
-			t.Fatal("unapproved native closure established " + name)
-		}
-	}
-}
-
-// Successful analysis setup is shared; negative cases call the API directly.
-func analyzeContractSource(t *testing.T, service *LygerService, source []byte, path string, options ContractAnalysisOptions) *ContractAnalysis {
-	t.Helper()
-	analysis, err := service.AnalyzeContracts(source, path, options)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return analysis
 }
 
 func contractJSON(t *testing.T, value any) []byte {

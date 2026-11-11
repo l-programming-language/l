@@ -259,43 +259,25 @@ func TestControllerHelper(t *testing.T) {
 	_, _ = conn.Read(data) //nolint:errcheck // The helper waits for release or disconnection; either read outcome ends its lifetime.
 }
 func TestManifest(t *testing.T) {
-	t.Run("all-fixtures", func(t *testing.T) {
-		for _, prefix := range []struct {
-			letter string
-			count  int
-		}{{"F", 24}, {"N", 12}} {
-			for i := 1; i <= prefix.count; i++ {
-				f := LoadFixture(t, fmt.Sprintf("%s%02d", prefix.letter, i))
-				t.Run(f.ID, func(t *testing.T) {
-					dir := Materialize(t, f)
-					wantFiles := make(map[string]bool)
-					for _, name := range f.Files {
-						got, err := os.ReadFile(filepath.Join(dir, name))
-						if err != nil {
-							t.Fatal(err)
-						}
-						want, err := os.ReadFile(filepath.Join(f.Directory, name))
-						if err != nil {
-							t.Fatal(err)
-						}
-						if !bytes.Equal(got, want) {
-							t.Errorf("materialization changed %s/%s", f.ID, name)
-						}
-						wantFiles[filepath.Clean(filepath.Join(dir, name))] = true
-					}
-					if err := filepath.WalkDir(filepath.Dir(dir), func(path string, entry os.DirEntry, err error) error {
-						if err != nil {
-							return err
-						}
-						if !entry.IsDir() && !wantFiles[path] {
-							t.Errorf("undeclared materialized dependency %s", path)
-						}
-						return nil
-					}); err != nil {
-						t.Fatal(err)
-					}
-				})
-			}
+	t.Run("materialization", func(t *testing.T) {
+		directory := t.TempDir()
+		source := []byte("Create \"Hello\" as a New Basic App.\nThe App Prints `hello`.\n")
+		if err := os.WriteFile(filepath.Join(directory, "main.l"), source, 0600); err != nil {
+			t.Fatal(err)
+		}
+		fixture, err := DecodeFixture([]byte(`{"id":"F01","title":"standalone App","profile":"print","files":["main.l"],"assertions":["source bytes"],"expected_runtime":{"stdout":"hello\n","exit_status":0}}`))
+		if err != nil {
+			t.Fatal(err)
+		}
+		fixture.Directory = directory
+		materialized := Materialize(t, fixture)
+		actual, err := os.ReadFile(filepath.Join(materialized, "main.l"))
+		if err != nil || !bytes.Equal(actual, source) {
+			t.Fatalf("materialization changed source: %v", err)
+		}
+		entries, err := os.ReadDir(materialized)
+		if err != nil || len(entries) != 1 || entries[0].Name() != "main.l" {
+			t.Fatalf("unexpected materialized dependencies: %v %v", entries, err)
 		}
 	})
 	t.Run("malformed-manifests", func(t *testing.T) {

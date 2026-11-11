@@ -9,12 +9,9 @@ import (
 
 func TestContractsBackendPreflight(t *testing.T) {
 	service := NewLogicemeService(nil)
-	for _, runtime := range []bool{false, true} {
+	{
 		input := libraryFixture(t)
-		if runtime {
-			input = workspaceRuntimeInput()
-		}
-		options := GenerationOptions{IncludeRuntime: runtime}
+		options := GenerationOptions{}
 		ordinary, err := service.Evaluate(input, options)
 		if err != nil {
 			t.Fatal(err)
@@ -48,26 +45,6 @@ func TestContractsBackendPreflight(t *testing.T) {
 		if err := contracts.VerifyInventory(inventory, prepared.Inventory()); err == nil {
 			t.Fatal("inventory tampering retained old assurance")
 		}
-	}
-}
-
-func TestContractsWorkspacePreflight(t *testing.T) {
-	service := NewLogicemeService(nil)
-	placement := WorkspaceRuntime{Package: "l_runtime_support", RelativeDirectory: "../support/runtime"}
-	ordinary, support, err := service.EvaluateWorkspaceEntry(workspaceRuntimeInput(), placement)
-	if err != nil {
-		t.Fatal(err)
-	}
-	prepared, err := service.PrepareWorkspaceContractGeneration(workspaceRuntimeInput(), placement)
-	if err != nil {
-		t.Fatal(err)
-	}
-	generated, library, err := prepared.RenderWorkspace()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !reflect.DeepEqual(ordinary, generated) || !reflect.DeepEqual(support, library) {
-		t.Fatal("workspace preflight changed entry sources")
 	}
 }
 

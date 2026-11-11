@@ -93,19 +93,6 @@ func TestStaticFunctionBindsLocalConstructor(t *testing.T) {
 	}
 }
 
-func TestScopedStaticFunctionBindsLocalConstructor(t *testing.T) {
-	source := "Define \"Storage\" as a New Dictionary.\nDefine \"Subtract|-s|-ed|-ing|-or\" to `<DEF>DOB{|Key: ~<@Name@>~|}^DE{|Ops: ~&[Op{Type: Calculate, Operator: -, Operands: &[<@Left@>, <@Right@>]&}Op]&~|}<DEF>`.\n\n" +
-		"    Publicly create Storage's \"Reduce|-s|-d|--ing|--er\" as a Generic `native_reduce` Function with Inputs of \"left\" as `f64` and \"right\" as `f64` and Outputs of `f64`.\nCreate \"Result\" as a New Subtractor of Left and Right.\nReturn Result.\n"
-	c := compileDefinitionSource(t, source, "locals.l")
-	definition, err := c.ComposeDefinition("Storage.Reduce")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(definition.Expression, "Key: ~native_reduce~") || !strings.Contains(definition.Expression, "Operands: &[left, right]&") || !strings.Contains(definition.Expression, "return result;") {
-		t.Fatalf("local constructor lost references: %s", definition.Expression)
-	}
-}
-
 func TestStaticFunctionBranchComposition(t *testing.T) {
 	source := "    Publicly create \"Choose|-s|--ing|--r\" as a Generic Function with Inputs of \"flag\" as `bool` and \"left\" as `f64` and \"right\" as `f64` and Outputs of `f64`.\nIf Flag, Return Left, else Return Right.\n"
 	c := compileDefinitionSource(t, source, "branch.l")

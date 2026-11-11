@@ -10,7 +10,7 @@ import (
 // the former applies one operation across operands; the latter runs the whole
 // action body for each operand. These cases exercise both grammar and binding.
 func TestPhase1NativeLifecycleCoordination(t *testing.T) {
-	const apps = "Use IO's Print from `io` as \"Print\".\n\"message\" is `child`.\nCreate \"First\" as a New Basic App.\nThe App Prints message.\nCreate \"Second\" as a New Basic App.\nThe App Prints message.\nUse First as \"Job\".\n"
+	const apps = "\n\"message\" is `child`.\nCreate \"First\" as a New Basic App.\nThe App Prints message.\nCreate \"Second\" as a New Basic App.\nThe App Prints message.\nUse First as \"Job\".\n"
 	for _, operation := range []struct{ root, kind string }{{"Build", "build"}, {"Run", "run"}, {"Stop", "stop"}, {"Await", "await"}} {
 		t.Run(operation.root, func(t *testing.T) {
 			r := phase1Require(t, apps+operation.root+" Second and Job.\n", nil)

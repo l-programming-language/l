@@ -1,37 +1,31 @@
-# Iterative Types
+# Collection and namespace categories
 
-| Type | Meaning | Operations |
-| --- | --- | --- |
-| [List](#lists) | Ordered owned values with an element type. | Construct, append, read and replace by zero-based index. |
-| [Map](#maps) | Owned typed values keyed by Text bytes. | Insert, read and replace. Keys have deterministic byte order. |
-| [Dictionary](#dictionaries) | A vocabulary namespace with its own owner. | Declare and import words. Use Map for runtime key/value data. |
-
-Assignment, arguments, results and captures snapshot ordinary elements while retaining nested [Pointer](values.md#pointer) identity. These operations introduce no implicit traversal, membership or removal API.
+List, Map and Dictionary remain distinct compiler meanings. The current standalone Print path does not provide runtime collection operations or the deleted Storage library.
 
 ## Lists
 
-[List in the Word Glossary](../reference/word-glossary.md#word-type-list).
+[List](../reference/word-glossary.md#word-type-list) denotes an ordered collection category.
 
 ### Declare a List
 
-[Declare a List in the Word Glossary](../reference/word-glossary.md#word-type-list--declare-a-list).
+A recognized declaration category is not an executable collection implementation. Consult the selected definition and current build boundary before relying on construction or updates.
 
 ## Maps
 
-[Map in the Word Glossary](../reference/word-glossary.md#word-type-map).
+[Map](../reference/word-glossary.md#word-type-map) denotes a keyed collection category. It is distinct from a vocabulary namespace.
 
 ## Dictionaries
 
-[Dictionary in the Word Glossary](../reference/word-glossary.md#word-type-dictionary).
+[Dictionary](../reference/word-glossary.md#word-type-dictionary) owns source vocabulary and its lexical namespace. The root registry is empty. Project declarations and explicit imports retain canonical ownership; see [imports](imports.md).
 
 ## Put
 
-[Put in the Word Glossary](../reference/word-glossary.md#word-builtin-put).
+[Put](../reference/word-glossary.md#word-builtin-put) remains configured vocabulary. Runtime insertion is outside the current executable boundary.
 
 ## Place
 
-[Place in the Word Glossary](../reference/word-glossary.md#word-builtin-place).
+[Place](../reference/word-glossary.md#word-builtin-place) remains configured vocabulary. Runtime replacement is outside the current executable boundary.
 
 ## Sources and witnesses
 
-[Runtime values](../../lyger/runtime_types.go), [source operations](../../lyger/runtime_values_source.go), and [value regressions](../../lyger/runtime_values_test.go) define runtime collections. [Member-resolution tests](../../lyger/member_resolution_regression_test.go) cover vocabulary ownership.
+See [value types](../../lyger/types.go), [member resolution](../../lyger/semantic_resolution.go) and [execution limits](execution.md). Retained collection tests are historical regression material.

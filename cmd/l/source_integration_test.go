@@ -40,7 +40,7 @@ func TestDemoGeneratesBuildableSource(t *testing.T) {
 			}
 			if tc.name == "renamed vocabulary" {
 				directory := t.TempDir()
-				source = []byte("Use IO's Print from `io` as \"Display\".\nUse Execute as \"Launch\".\nUse Basic as \"Plain\".\n\"message\" is `" + tc.text + "`.\nCreate \"" + tc.app + "\" as a New Plain App.\nThe App Displays message.\nLaunch it.\nShow it's Output.\n")
+				source = []byte("Use Print as \"Display\".\nUse Basic as \"Plain\".\n\"message\" is `" + tc.text + "`.\nCreate \"" + tc.app + "\" as a New Plain App.\nThe App Displays message.\n")
 				sourcePath = filepath.Join(directory, "story.l")
 			}
 			compiler := newCompiler(&cliData{jobType: "build", mainPath: sourcePath, osType: "ubuntu"})

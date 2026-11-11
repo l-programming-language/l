@@ -9,7 +9,7 @@ Read [frontend guidance](../../../lyger/AGENTS.md), [architecture](../../../docs
 
 Follow only necessary boundaries:
 
-- Resources/source: selected filesystem and root `dictionaries.json`, prelude/core builtin unit and privately loaded Storage dictionary, typed process-operation definitions and source-defined construction descriptors, package-local fixtures, literal pool, typed origins and program-source projection. Includes retain their owning unit and resource root. Adjacent builtin.l is never loaded implicitly.
+- Resources/source: selected filesystem and root `dictionaries.json`, direct core builtin unit (the bundled dictionary registry is currently empty), typed process-operation definitions and source-defined construction descriptors, package-local fixtures, literal pool, typed origins and program-source projection. Includes retain their owning unit and resource root. Adjacent builtin.l is never loaded implicitly.
 - Imports: raw spans/literal identity versus normalized path/alias values; provider ownership and canonical dictionary exports/private helpers.
 - Tokens: lexical role, morphology/possession, declaration/reference status, storage and value types before/after binding.
 - Grammar: selected case, consumed spans and remaining tokens; failed alternatives cannot count as successful consumption.

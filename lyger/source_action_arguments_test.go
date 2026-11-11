@@ -1,7 +1,6 @@
 package Lyger
 
 import (
-	"strings"
 	"testing"
 )
 
@@ -47,13 +46,4 @@ func TestSourceActionArgumentBoundaries(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestSourceActionArgumentsNative(t *testing.T) {
-	var source, output strings.Builder
-	for _, tc := range sourceActionArgumentCases {
-		source.WriteString("\n    " + tc.source)
-		output.WriteString(tc.output)
-	}
-	captureNativeResult(t, compileMemberResolutionSource(t, memberResolutionSource{main: source.String()}), output.String())
 }

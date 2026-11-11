@@ -1,7 +1,6 @@
 package distribution_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"io/fs"
@@ -15,170 +14,86 @@ import (
 	Lyger "github.com/l-programming-language/l/lyger"
 )
 
-// LAY-003, 005, 009, 016, 024, 044, 046: one physical distribution layout.
-func TestLibraryLayoutResources(t *testing.T) {
-	for _, name := range []string{
-		"dictionaries.json", "builtins/eng/prelude.l", "builtins/eng/core.l",
-		"builtins/eng/storage/dictionary.l", "stdlib/eng/runtime/dictionary.l",
-		"stdlib/runtime/generated/support.aml", "stdlib/runtime/generated/support.json",
-		"stdlib/runtime/rust/main.rs", "stdlib/runtime/rust/host.rs",
-		"stdlib/runtime/rust/process_unix.rs", "stdlib/runtime/rust/process_other.rs",
-		"stdlib/eng/format/dictionary.l", "stdlib/eng/io/dictionary.l",
-	} {
+func TestCoreResourceLayout(t *testing.T) {
+	for _, name := range []string{"dictionaries.json", "builtins/eng/core.l"} {
 		if _, err := fs.ReadFile(distribution.Files(), name); err != nil {
-			t.Errorf("required canonical resource %s: %v", name, err)
+			t.Errorf("required resource %s: %v", name, err)
 		}
 	}
-	for _, name := range []string{"stdlib/index.json", "stdlib/eng/storage", "builtins/runtime", "builtins/templates/runtime", "runtime"} {
+	for _, name := range []string{"builtins/eng/prelude.l", "builtins/eng/storage", "stdlib", "builtins/runtime", "builtins/templates/runtime", "runtime"} {
 		if _, err := fs.Stat(distribution.Files(), name); !errors.Is(err, fs.ErrNotExist) {
 			t.Errorf("retired resource %s remains available: %v", name, err)
 		}
 	}
-	core, err := fs.ReadFile(distribution.Files(), "builtins/eng/core.l")
+	data, err := fs.ReadFile(distribution.Files(), "dictionaries.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if strings.Contains(string(core), "from `storage`") {
-		t.Error("core still owns foundational support loading")
+	var registry struct {
+		Languages map[string]map[string]json.RawMessage `json:"languages"`
+	}
+	if err := json.Unmarshal(data, &registry); err != nil {
+		t.Fatal(err)
+	}
+	for language, entries := range registry.Languages {
+		if len(entries) != 0 {
+			t.Errorf("bundled dictionaries remain for %s: %v", language, entries)
+		}
 	}
 }
 
-// LAY-006, 014, 043: a complete selected provider is the positive control;
-// a misleading former registry must not repair a missing canonical registry.
-func TestLibraryLayoutRegistryNoFallback(t *testing.T) {
+func TestSelectedRegistryHasNoFallback(t *testing.T) {
 	files := distributiontest.Files(t)
-	source := []byte("Create \"Worker\" as a New Basic App.\n")
+	files["dictionaries.json"] = &fstest.MapFile{Data: []byte(`{"format":1,"languages":{"eng":{"probe":{"entry":"stdlib/eng/probe.l","dictionary":"Probe"}}}}`)}
+	files["stdlib/eng/probe.l"] = &fstest.MapFile{Data: []byte("Create \"Probe\" as a Dictionary.\n")}
 	compile := func() error {
-		_, err := Lyger.NewLygerService(Lyger.Options{Resources: files}).Compile(source, filepath.Join(t.TempDir(), "main.l"))
+		_, err := Lyger.NewLygerService(Lyger.Options{Resources: files}).Compile([]byte("Use Probe from `probe`.\n"), filepath.Join(t.TempDir(), "main.l"))
 		return err
 	}
 	if err := compile(); err != nil {
 		t.Fatalf("complete selected provider: %v", err)
 	}
-	if current := files["dictionaries.json"]; current != nil {
-		files["stdlib/index.json"] = &fstest.MapFile{Data: append([]byte(nil), current.Data...)}
-	}
+	files["stdlib/index.json"] = &fstest.MapFile{Data: append([]byte(nil), files["dictionaries.json"].Data...)}
 	delete(files, "dictionaries.json")
-	err := compile()
-	if !errors.Is(err, fs.ErrNotExist) || !strings.Contains(err.Error(), "dictionaries.json") {
-		t.Fatalf("missing canonical registry must reject despite old registry: %v", err)
+	if err := compile(); !errors.Is(err, fs.ErrNotExist) || !strings.Contains(err.Error(), "dictionaries.json") {
+		t.Fatalf("missing selected registry must reject despite old registry: %v", err)
 	}
 }
 
-// LAY-025, 027, 028: registry identity participates in runtime provenance even
-// when all old source bytes remain available to the selected provider.
-func TestLibraryLayoutCompositionRegistryIdentity(t *testing.T) {
-	files := distributiontest.Files(t)
-	manifest, _, err := distribution.LoadRuntimeComposition(files)
+func TestCoreSourceUnitOwnership(t *testing.T) {
+	result, err := Lyger.NewLygerService(Lyger.Options{}).Compile([]byte("Create \"Worker\" as a New Basic App.\nThe App Prints `owned`.\n"), filepath.Join(t.TempDir(), "main.l"))
 	if err != nil {
-		t.Fatalf("valid composition control: %v", err)
-	}
-	if manifest.Sources["dictionaries.json"] == "" {
-		t.Error("composition omits the selected registry fingerprint")
-	}
-	files["dictionaries.json"].Data = append(files["dictionaries.json"].Data, '\n')
-	if _, _, err := distribution.LoadRuntimeComposition(files); err == nil || !strings.Contains(err.Error(), "dictionaries.json") || !strings.Contains(err.Error(), "stale") {
-		t.Fatalf("changed registry retained stale composition: %v", err)
-	}
-}
-
-func TestLibraryLayoutRegistryRetargetInvalidatesSupport(t *testing.T) {
-	files := distributiontest.Files(t)
-	if _, _, err := distribution.LoadRuntimeComposition(files); err != nil {
 		t.Fatal(err)
 	}
-	const old = "builtins/eng/storage/dictionary.l"
-	const replacement = "builtins/eng/storage/selected.l"
-	files[replacement] = &fstest.MapFile{Data: bytes.Clone(files[old].Data)}
-	files["dictionaries.json"].Data = bytes.ReplaceAll(files["dictionaries.json"].Data, []byte(old), []byte(replacement))
-	// The remapped dictionary is valid and the former sources still exist.
-	if _, err := Lyger.NewLygerService(Lyger.Options{Resources: files}).Compile([]byte("Create \"Worker\" as a New Basic App.\n"), filepath.Join(t.TempDir(), "main.l")); err != nil {
-		t.Fatalf("valid remapping control: %v", err)
+	builtins := 0
+	for _, unit := range result.Compilation.SourceUnits {
+		if unit.Kind == Lyger.SourceBuiltin {
+			builtins++
+			if unit.Origin.Name != "builtins/eng/core.l" {
+				t.Fatalf("builtin origin: %s", unit.Origin.Name)
+			}
+		}
+		if unit.Kind == Lyger.SourceDictionary {
+			t.Fatalf("core loaded an implicit dictionary: %s", unit.Dictionary)
+		}
 	}
-	if _, _, err := distribution.LoadRuntimeComposition(files); err == nil || !strings.Contains(err.Error(), "dictionaries.json") || !strings.Contains(err.Error(), "stale") {
-		t.Fatalf("retargeted registry retained old composition: %v", err)
-	}
-}
-
-// LAY-007, 025, 027: a manifest cannot name arbitrary provider files or retain
-// the former canonical runtime root. The complete manifest is the control.
-func TestLibraryLayoutManifestPathPolicy(t *testing.T) {
-	for _, name := range []string{"../source.l", "/source.l", "stdlib/runtime/generated/extra.l", "stdlib/runtime/rust/extra.l", "builtins/runtime/eng/extra.l", "runtime/eng/extra.l", "fixture/extra.l", "other.json", "stdlib/eng/runtime/bad\\file.l"} {
-		t.Run(name, func(t *testing.T) {
-			files := distributiontest.Files(t)
-			manifest, _, err := distribution.LoadRuntimeComposition(files)
-			if err != nil {
-				t.Fatal(err)
-			}
-			manifest.Sources[name] = manifest.Sources["builtins/eng/core.l"]
-			files[name] = &fstest.MapFile{Data: bytes.Clone(files["builtins/eng/core.l"].Data)}
-			raw, err := json.Marshal(manifest)
-			if err != nil {
-				t.Fatal(err)
-			}
-			files["stdlib/runtime/generated/support.json"] = &fstest.MapFile{Data: raw}
-			if _, _, err := distribution.LoadRuntimeComposition(files); err == nil || !strings.Contains(err.Error(), "source path") {
-				t.Fatalf("invalid manifest path accepted: %v", err)
-			}
-		})
+	if builtins != 1 {
+		t.Fatalf("builtin units=%d, want one", builtins)
 	}
 }
 
-// LAY-008, 010, 012, 014: bootstrap and includes preserve their unit ownership;
-// later explicit imports reuse the canonical dictionary within that compilation.
-func TestLibraryLayoutBootstrapOwnership(t *testing.T) {
-	for _, explicit := range []bool{false, true} {
-		source := "Create \"Worker\" as a New Basic App.\n"
-		if explicit {
-			source = "Use Storage from `storage`.\n" + source
-		}
-		result, err := Lyger.NewLygerService(Lyger.Options{}).Compile([]byte(source), filepath.Join(t.TempDir(), "main.l"))
-		if err != nil {
-			t.Fatal(err)
-		}
-		builtins, storage, coreDeclarations := 0, 0, 0
-		for _, unit := range result.Compilation.SourceUnits {
-			if unit.Kind == Lyger.SourceBuiltin {
-				builtins++
-				if unit.Origin.Name != "builtins/eng/prelude.l" {
-					t.Fatalf("builtin origin: %s", unit.Origin.Name)
-				}
-			}
-			if unit.Dictionary == "Storage" {
-				storage++
-			}
-		}
-		for _, statement := range result.Compilation.SourceStatements {
-			if strings.Contains(string(statement.Raw), `Define "Function|-s|-al|-ing"`) {
-				coreDeclarations++
-				if statement.Unit.Kind != Lyger.SourceBuiltin || statement.Origin.Name != "builtins/eng/core.l" {
-					t.Fatalf("core definition lost unit/origin: %+v", statement.Origin)
-				}
-			}
-		}
-		if builtins != 1 || storage != 1 || coreDeclarations != 1 {
-			t.Fatalf("builtin/storage/core counts=%d/%d/%d", builtins, storage, coreDeclarations)
-		}
+func TestSelectedCoreSourceHasNoFallback(t *testing.T) {
+	files := distributiontest.Files(t)
+	compile := func() error {
+		_, err := Lyger.NewLygerService(Lyger.Options{Resources: files}).Compile([]byte("Create \"Worker\" as a New Basic App.\n"), filepath.Join(t.TempDir(), "main.l"))
+		return err
 	}
-}
-
-func TestLibraryLayoutSelectedSourceMissing(t *testing.T) {
-	for _, name := range []string{"builtins/eng/prelude.l", "builtins/eng/core.l", "builtins/eng/storage/dictionary.l"} {
-		t.Run(name, func(t *testing.T) {
-			files := distributiontest.Files(t)
-			source := []byte("Create \"Worker\" as a New Basic App.\n")
-			compile := func() error {
-				_, err := Lyger.NewLygerService(Lyger.Options{Resources: files}).Compile(source, filepath.Join(t.TempDir(), "main.l"))
-				return err
-			}
-			if err := compile(); err != nil {
-				t.Fatalf("complete provider: %v", err)
-			}
-			files["stdlib/eng/storage/dictionary.l"] = &fstest.MapFile{Data: append([]byte(nil), files["builtins/eng/storage/dictionary.l"].Data...)}
-			delete(files, name)
-			if err := compile(); !errors.Is(err, fs.ErrNotExist) || !strings.Contains(err.Error(), name) {
-				t.Fatalf("missing selected %s: %v", name, err)
-			}
-		})
+	if err := compile(); err != nil {
+		t.Fatalf("complete selected provider: %v", err)
+	}
+	files["builtins/eng/prelude.l"] = &fstest.MapFile{Data: append([]byte(nil), files["builtins/eng/core.l"].Data...)}
+	delete(files, "builtins/eng/core.l")
+	if err := compile(); !errors.Is(err, fs.ErrNotExist) || !strings.Contains(err.Error(), "builtins/eng/core.l") {
+		t.Fatalf("missing selected core used a fallback: %v", err)
 	}
 }

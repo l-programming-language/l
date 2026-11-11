@@ -106,7 +106,7 @@ func TestCargoWorkspaceAllowsDistinctBinaryTargets(t *testing.T) {
 
 func TestCLICaseEquivalentCompanionNames(t *testing.T) {
 	parallelIndependentBuildRoot(t)
-	const source = "Use IO's Print from `io` as \"Print\".\n\n" +
+	const source = "\n\n" +
 		"Create \"Worker\" as a New Basic App.\nThe App Prints `upper`.\nExecute it.\nShow it's Output.\n\n" +
 		"Create \"worker\" as a New Basic App.\nThe App Prints `lower`.\nExecute it.\nShow it's Output.\n"
 	project := t.TempDir()

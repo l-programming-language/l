@@ -28,7 +28,6 @@ const semanticLink = (review) => {
 };
 const cliHelpSources = [
   ['cmd/l/command.go', 'buildUsage', 'Build and top-level help'],
-  ['cmd/l/contracts.go', 'contractsUsage', 'Contracts help'],
 ];
 export const referenceInputs = ['lexicon/eng/grammar.json', 'lexicon/eng/vocabulary.json', 'dictionaries.json', ...cliHelpSources.map(([file]) => file), 'lyger/value_kinds.go', 'logiceme/lucid_generation_test.go', 'logiceme/testdata/lucid/templates.sha256.json'];
 

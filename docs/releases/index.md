@@ -2,9 +2,9 @@
 
 Publication of new releases is currently disabled pending [reviewed activation](../../website/DEPLOYMENT.md#deliberate-activation-after-review). When enabled, manual releases from main require native validation, installer checks and documentation tests. Binaries and matching docs archives form one immutable release; Pages deployment follows. Merging a change does not publish a release.
 
-## Download L
+## Current checkout
 
-[L v0.0.1](https://github.com/l-programming-language/l/releases/tag/v0.0.1) is available for Apple Silicon macOS and Linux. Follow [Install L](../cli/installation.md) to get started, or browse [GitHub Releases](https://github.com/l-programming-language/l/releases) for other published versions.
+The core-only reset has removed authored libraries and Runtime. Build the compiler from this checkout to use its standalone App/Print boundary. Previously published binaries may embed older vocabulary and do not validate current behavior. See [installation](../cli/installation.md).
 
 ## Versioning and compatibility
 
@@ -14,25 +14,7 @@ Backward compatibility is **not guaranteed before `v1.0.0`**. Read the release n
 
 ## Current-source word changes
 
-The current source tree removes these former interfaces without aliases. This
-note describes source migration, not an additional published release. Use the
-[Storage reference](../internals/storage.md) and [IO reference](../stdlib/eng/io.md)
-for current signatures and policies.
-
-| Removed interface | Replacement |
-| --- | --- |
-| Storage.Propagate | Verify an explicit callback result |
-| Storage.Function.Success / Completion | Parameterized Storage.Success |
-| Storage.Rejection.Error / Result | Failure / Rejection with explicit arguments |
-| IO.Check / Stream | Storage.Expect with a message / IO.Output |
-| Storage.Indexed on Iteration or Applier | Storage.Paired; unrelated Indexed meanings remain valid |
-| Storage.Fallible on Routine | Explicit generic constructor arguments |
-
-Require now constructs its error only on absence. Its message still evaluates
-normally. Accept releases the old error before replacement. Core Retain takes an
-explicit borrowed Arc. Removed implementation helpers Storage.Demand, IO.Slice,
-Runtime.Dispose and Runtime.Retain use Require, the shared byte view,
-Storage.Release and core Retain respectively. No compatibility route remains.
+Only `builtins/eng/core.l` remains as authored builtin source, and the root dictionary registry is empty. Storage, IO, Formatting, Runtime and prelude are removed without compatibility aliases. Core Print accepts Text and adds one newline. Runtime-dependent lifecycle and capture are unavailable pending reconstruction in L.
 
 ## Inspect this site's provenance
 

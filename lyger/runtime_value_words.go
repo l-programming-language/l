@@ -181,8 +181,27 @@ func (e *orchestrationEmitter) storeRuntimeValue(slot *orchestrationStorage, val
 	return e.word(word, map[string]DefinitionArgument{"Name": definitionReferenceArgument(slot.name()), "Value": definitionReferenceArgument(value)})
 }
 
+func selectedRuntimeUpdate(current *orchestrationInstruction) string {
+	if current == nil || current.Target == nil {
+		return ""
+	}
+	switch current.Target.Type {
+	case valuePointer:
+		return "Storage.Pointer.Update"
+	case valueList:
+		if current.Key != nil {
+			return "Storage.List.Update"
+		}
+		return "Storage.List.Append"
+	case valueMap:
+		return "Storage.Map.Update"
+	default:
+		return ""
+	}
+}
+
 func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) ([]string, error) {
-	selection := selectedRuntimeUpdate(current)
+	word := selectedRuntimeUpdate(current)
 	target, err := e.value(current.Target)
 	if err != nil {
 		return nil, err
@@ -197,7 +216,7 @@ func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) 
 		if err = e.borrowArgument(args, "Pointer", false); err != nil {
 			return nil, err
 		}
-		_, err = e.resultBinding(selection.Word, args)
+		_, err = e.resultBinding(word, args)
 		return nil, err
 	}
 	snapshot, err := e.copyValue(target)
@@ -208,7 +227,6 @@ func (e *orchestrationEmitter) runtimeUpdate(current *orchestrationInstruction) 
 	if err != nil {
 		return nil, err
 	}
-	word := selection.Word
 	args["List"] = definitionReferenceArgument(mutable)
 	if current.Key != nil {
 		key, err := e.transferRuntimeValue(current.Key, current.Key.RuntimeType)

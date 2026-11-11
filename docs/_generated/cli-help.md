@@ -20,24 +20,3 @@ Developer overrides: --language LANGUAGE (default: eng); --assets ROOT (complete
 Optional native provenance: --native-evidence-output PATH records tools, compilation, and artifacts.
 -os/--os is unsupported; target OS selection is planned after v0.0.1.
 ```
-
-## Contracts help
-
-From `contractsUsage` in [cmd/l/contracts.go](../../cmd/l/contracts.go).
-
-```text
-Usage: l contracts inspect [--format text|json] [--output PATH] INPUT
-       l contracts check --profile NAME [--profile NAME ...] [--report PATH] INPUT
-       l contracts check --request-file PATH [--native-environment PATH] [--report PATH] INPUT
-       l contracts evidence capture --output PATH [--target HOST_TRIPLE] INPUT
-       l contracts explain --binding OCCURRENCE_OR_SOURCE:BYTE_OFFSET INPUT
-       l contracts verify-dictionary [--report PATH] DICTIONARY
-       l contracts verify-dictionary --assurance symbolic --adjective MEANING_OR_SOURCE:BYTE_OFFSET [--adjective ...] DICTIONARY
-Options precede input. Common options: --assets ROOT, --language eng,
---manifest PATH (repeatable), --trust-policy PATH, --native-environment PATH,
---format text|json. Inspection and checking never execute external tools.
-Explicit evidence capture queries installed tools; it never builds or runs Apps.
-Inspection preserves current resolution; source-facing contract selection is unsupported.
-Assurance defaults to implementation. Symbolic assurance checks only selected
-source adjective definitions; native/runtime assurance remains separate.
-```

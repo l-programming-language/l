@@ -3,7 +3,6 @@
 package cli
 
 import (
-	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,45 +10,21 @@ import (
 
 	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
-	Lyger "github.com/l-programming-language/l/lyger"
 )
-
-// The test deliberately edits a selected provider. Regeneration is an explicit
-// fixture operation through the real frontend, never a CLI loading side effect.
-func regenerateProvider(t *testing.T, root string) {
-	t.Helper()
-	aml, manifest, err := Lyger.ComposeRuntimeResources(os.DirFS(root))
-	if err != nil {
-		t.Fatal(err)
-	}
-	raw, err := json.Marshal(manifest)
-	if err != nil {
-		t.Fatal(err)
-	}
-	write(t, filepath.Join(root, "stdlib/runtime/generated/support.aml"), string(aml))
-	write(t, filepath.Join(root, "stdlib/runtime/generated/support.json"), string(raw))
-}
 
 // LAY-041–043: installed CLI, away-from-checkout native positive control, then
 // missing new resources with usable old-path copies deliberately left behind.
 func TestLibraryLayoutInstalledProviderIsolation(t *testing.T) {
 	nativeCases.Parallel(t)
 	compiler := standalone(t)
-	source := "Use IO's Print from `io` as \"Print\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints `layout|`.\nExecute Worker.\nShow Worker's Output.\n"
+	source := "Create \"Worker\" as a New Basic App.\nThe App Prints `layout|`.\n"
 	assets := distributiontest.CompleteOverride(t)
 	control := project(t, source, nil)
 	binary := buildProgram(t, compiler, control, "main.l", assets)
 	outcome(t, binary, t.TempDir(), nil, 0, "layout|\n", "")
 	for _, tc := range []struct{ current, former string }{
-		{"dictionaries.json", "stdlib/index.json"},
-		{"builtins/eng/prelude.l", "builtin.l"},
-		{"builtins/eng/storage/dictionary.l", "stdlib/eng/storage/dictionary.l"},
-		{"stdlib/eng/runtime/dictionary.l", "runtime/eng/dictionary.l"},
-		{"stdlib/runtime/generated/support.aml", "runtime/generated/support.aml"},
-		{"stdlib/runtime/generated/support.json", "runtime/generated/support.json"},
-		{"stdlib/runtime/rust/host.rs", "runtime/rust/host.rs"},
-		{"stdlib/runtime/generated/support.aml", "builtins/runtime/support.aml"},
-		{"stdlib/runtime/rust/host.rs", "builtins/templates/runtime/host.lu"},
+		{"builtins/eng/core.l", "builtins/eng/prelude.l"},
+		{"lexicon/eng/grammar.json", "grammar.json"},
 	} {
 		t.Run(tc.current, func(t *testing.T) {
 			selected := filepath.Join(assets, filepath.FromSlash(tc.current))

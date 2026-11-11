@@ -6,7 +6,7 @@
 l build [--output-dir DIRECTORY] [main.l]
 ```
 
-English grammar, vocabulary, builtins, standard library and backend resources are embedded in `l`, so no resource selection or separate bundle is needed. Build options precede the single source filename, which defaults to `main.l` in the invocation directory. `--` ends option parsing for filenames beginning with a dash.
+English grammar, vocabulary, core and backend resources are embedded in `l`, so no resource selection or separate bundle is needed. Build options precede the single source filename, which defaults to `main.l` in the invocation directory. `--` ends option parsing for filenames beginning with a dash.
 
 ```sh
 l build main.l
@@ -24,7 +24,7 @@ Options accept single or double hyphens and either a separate value or `=value`.
 | `--native-evidence-output PATH` | Disabled | Record explicit native-environment observations, actual Cargo results and artifact identities in a separate JSON document. See [build evidence](../cli-build.md#optional-native-build-evidence). |
 | `--` | None | Stop flag parsing before the optional filename. |
 
-Relative source and output paths use the invocation directory without changing it. [Resource overrides](../development-harness.md#compiler-defaults) support compiler development and [Runtime replacement](../stdlib/eng/runtime.md#select-a-replacement). Ordinary builds need neither override.
+Relative source and output paths use the invocation directory without changing it. [Resource overrides](../development-harness.md#compiler-defaults) support compiler development. Ordinary builds need neither override.
 
 ## Target OS
 
@@ -40,25 +40,9 @@ In `v0.0.1`, builds target the host OS and architecture. `-os`/`--os` is rejecte
 
 ## Published files
 
-![Cargo builds the orchestrator, App binaries and additional App-constructed Service libraries. Standalone Service declarations produce no artifacts.](../../website/public/assets/l/illustrations/native-builds.svg)
+For `main.l`, the executable is `main`. The retained publication machinery also writes `main.apps/` with ownership metadata and an immutable generation containing a manifest and `app-000`. The executable and generation copy contain the same standalone App artifact; there is no separate launcher or child-process runtime.
 
-For `main.l`, successful publication yields:
-
-```text
-main
-main.apps/
-  .l-owner
-  generations/
-    <generation-id>/
-      manifest.json
-      app-000
-```
-
-The version-1 manifest lists App binaries under `apps`. App-constructed Service libraries are build dependencies, not executable companions. Standalone Service declarations add no packages.
-
-Builds privately compile and validate all artifacts before publishing an immutable companion generation and atomically replacing the orchestrator. Failures preserve working output, and old generations remain for running programs. Unrelated outputs and symlinked companion/generation directories are rejected.
-
-Move the executable and its `.apps` directory together: it finds companions relative to itself. The source filename stem determines the output basename. The [publication contract](../cli-build.md#output-and-publication) covers failure and concurrent-build details.
+Artifacts finish in private staging before the executable is atomically replaced. Failed builds preserve working output. Unrelated destinations and symlinked generation directories reject. The [publication contract](../cli-build.md#output-and-publication) explains this retained layout.
 
 ## Streams and statuses
 

@@ -45,7 +45,7 @@ func TestParagraphsCoordinatedDeclarations(t *testing.T) {
 	}
 }
 
-const paragraphGlobals = "Use IO's Print from `io` as \"Print\".\n\"x1\" is `Hello World!`.\n\"x2\" is `Hello Again World!`.\n"
+const paragraphGlobals = "\n\"x1\" is `Hello World!`.\n\"x2\" is `Hello Again World!`.\n"
 
 func paragraphBlock(app, input, owner string) string {
 	return "\n    Create \"" + app + "\" as a New Basic App.\nThe App Prints " + input + ".\nDefine \"y\" as " + owner + " Output.\nShow y.\n"

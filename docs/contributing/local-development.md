@@ -47,7 +47,7 @@ npm run examples:verify -- --compiler /absolute/path/to/l --id basic
 ```
 
 Omit `--id` to check every complete registered example. This does not execute
-arbitrary Markdown fences or replace full compiler acceptance.
+arbitrary Markdown fences or replace the temporary hello-world gate.
 `website/reports/examples-verification.json` is replaced on each invocation.
 `running` is incomplete, `failed` names the failed stage, and only `passed` records
 a completed selection.
@@ -73,6 +73,6 @@ The check requires `http://127.0.0.1:4321/install.sh` to serve the exact bootstr
 
 It then runs the documented versioned installer and manual PATH commands in a separate home with a fresh native cache, reusing the isolated Rust dependencies prepared above. This stage compares the installed compiler bytes, checks that no bootstrap activation file was created, and separately builds and runs the same program offline. Its dependency setup is warm; the original bootstrap and shell observations remain separate.
 
-Per-stage logs and `report.json` are retained under `website/reports/install-smoke-*/`. Temporary installation files are removed afterward. Report the host, released version, completed stages, unavailable shell checks, and evidence path. This verifies the installation flow on that host. It is not the full compiler acceptance gate or evidence for other platforms.
+Per-stage logs and `report.json` are retained under `website/reports/install-smoke-*/`. Temporary installation files are removed afterward. Report the host, released version, completed stages, unavailable shell checks, and evidence path. This verifies the installation flow on that host. It is not the temporary hello-world gate or evidence for other platforms.
 
-Documentation CI runs routine website checks on pull requests. The legacy-named `ci:verify-disabled` command validates the canonical workflows and their authorization boundaries. Publication is disabled pending separate reviewed [activation](../../website/DEPLOYMENT.md#deliberate-activation-after-review).
+Website checks are outside the temporary gate and are not implied by a documentation edit. The legacy-named `ci:verify-disabled` command validates the canonical workflows and their authorization boundaries. Publication is disabled pending separate reviewed [activation](../../website/DEPLOYMENT.md#deliberate-activation-after-review).

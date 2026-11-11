@@ -45,21 +45,19 @@ The value rule recognizes definitive references and Text/Number/Truth/Null/type/
 
 Articles and adjectives modify these positions. `a`/`an` is indefinite, `the` definite, `any` identifies variable arguments in supported action signatures, and `no` expresses absence or a supported negative condition. These roles are not interchangeable decoration.
 
-A subject identifies what is being defined or acted upon, while an object supplies the action operand. That distinction matters for `The App Prints message`: the App owns the native body effect, while message supplies Print's argument. In `Run Worker`, Worker is the outer lifecycle operand.
+A subject identifies what is being defined or acted upon, while an object supplies the action operand. That distinction matters for `The App Prints message`: the App owns the native body effect, while message supplies Print's argument.
 
 ### Read a complete sentence in context
 
-The [complete first program](../guide/first-program.md#read-the-program) gives those grammatical roles a concrete meaning:
+The [complete first program](../guide/first-program.md#the-source) gives those grammatical roles a concrete meaning:
 
 | Source phrase | Role in this program |
 | --- | --- |
 | `"message" is` followed by Text | Declares a name and assigns its literal value |
 | `Create "Hello" as a New Basic App` | Imperative declaration. The word `as` introduces the construction |
 | `The App Prints message` | Active statement: App is the subject, Prints is the action, and message is its operand |
-| `Execute Hello` | Imperative source-action call with Hello as its argument |
-| `Hello's Output` | Member access, used here as the operand of Show |
 
-`The App` associates Print with the App's generated body. The outer Execute and Show sentences control execution and display its result. Grammatical form does not erase that ownership distinction.
+`The App` associates Print with the App's generated body. The built standalone App performs that output directly. Grammatical form does not erase that ownership distinction.
 
 ### Any
 
@@ -89,13 +87,9 @@ Signature phrases declare ordered Function inputs and outputs, argument phrases 
 
 ### Compose an action with `for`
 
-These two builtin declarations use a directive phrase:
+`for` introduces a source action body. Core Print uses this form to compose its private output leaf through Process. Typed arguments, inflections and pronouns retain their declared meaning; `and then` is source sequencing rather than the grammar JSON's notation.
 
-<!-- example:lexical-action-inflections -->
-
-`for` introduces the action body. `Building`, `Running`, `Starting`, and `Awaiting` are applicative verb forms in that body. The phrase `any App` declares the argument, and `it` refers to it. The source conjunction `and then` separates the actions. The bars inside each quoted label declare inflections. They are unrelated to the grammar JSON's sequence notation. These definitions are implicitly loaded already, so do not redeclare them in a program.
-
-In the basic program, `from` and `as` select the IO dictionary and local alias. The [Main descriptor example](lexical-types.md#describe-with-an-adjective) uses `of`, `with`, and `using` in Function/Object/Service construction.
+The [Main descriptor](lexical-types.md#describe-with-an-adjective) uses `of`, `with` and `using` in Function/Object/Service construction. Core is already loaded.
 
 ### As
 
@@ -148,37 +142,31 @@ Most action families have imperative, active, passive, and applicative clauses. 
 | Action family | Root | Current semantic boundary |
 | --- | --- | --- |
 | Declarative | Create | Named values, actions, and supported construction |
-| Definitive | Define | Scalar/runtime definitions and native-backed definitions |
+| Definitive | Define | Value and native-backed definitions |
 | Descriptive | Describe | Source descriptors and bounded construction refinements |
 | Associative | Use | Aliases and explicit imports |
-| Generative | Build | Checked App operation |
-| Executive | Run | Launch without join |
-| Suspensive | Await | Join/finalize and activate continuation once |
-| Interruptive | Stop | Request termination without join |
-| Observative | Show | Write supported value bytes to outer output |
-| Terminative | Exit | Terminate the whole program |
-| Expansive / locative | Put / Place | Supported collection insertion and replacement |
+| Generative | Build | Unavailable runtime effect |
+| Executive | Run | Unavailable runtime effect |
+| Suspensive | Await | Unavailable runtime effect |
+| Interruptive | Stop | Unavailable runtime effect |
+| Observative | Show | Unavailable runtime observation |
+| Terminative | Exit | Unavailable runtime effect |
+| Expansive / locative | Put / Place | Runtime updates outside the standalone boundary |
 | Receptive / reductive | Get / Take | Recognized collection forms with no established general execution |
 | Inflective / deflective | Import / Export | Configured roots that do not replace supported Use import syntax |
 | Generic | Source-defined word | Depends on bound typed definition/action |
 
-These forms are not freely interchangeable in all owners. Imperative and outer passive Await are implemented. Await inside an active App or Service body parses but rejects unsupported ownership. A standalone applicative sentence is not an executable statement simply because applicative clauses can appear in an action body.
+Grammatical voice does not widen the current executable boundary. Build, Run, Await, Stop, Show and Exit reject as runtime-dependent effects. Standalone applicative clauses do not become executable statements merely because action bodies use them.
 
-### Supported passive Await
+<a id="supported-passive-await"></a>
 
-This canonical example uses an imperative Run followed by passive Await:
+### Passive Await
 
-<!-- example:grammar-passive-await -->
-
-`Worker is awaited` is an outer join operation, with the same lifecycle role as `Await Worker`. The following Show reads finalized output. The existing LANG-02 runtime witness expects `passive` followed by one newline. The active `The App Prints message` sentence still supplies the App body. Grammatical voice and effect ownership are separate concerns.
+The grammar recognizes passive Await, but lifecycle execution is unavailable. No outer-program workaround supplies the removed Runtime.
 
 ### Recognized but rejected active Await
 
-This negative fixture deliberately puts Await in an App body:
-
-<!-- example:grammar-active-await-rejected -->
-
-**Rejected at executable-body lowering.** `Controller awaits Worker` can be classified grammatically, but source-level child-body process supervision is unsupported. Compilation rejects that statement. It does not silently move it to the orchestrator. Put lifecycle orchestration in the outer program, as in the preceding passive example. This negative fixture is an existing rejection witness, not a program to run or a newly observed diagnostic.
+App-body Await is also unavailable. Unsupported effects must reject without being moved, omitted or replaced by a generated runner.
 
 ### Get
 
@@ -198,23 +186,19 @@ This negative fixture deliberately puts Await in an App body:
 
 ## Conditions
 
-The condition rule contains truth, has, equals, is, isnt, less, greater, less_equal, and greater_equal cases. Exact spellings arise from configured is/isnt, have/has, equal/equals, less/greater, than, not, and articles. Equality requires matching supported scalar types, ordering requires Number, and has is limited to a target's Error.
+The condition rule recognizes truth, has, equality, inequality and ordering forms. Their exact spellings come from configured vocabulary. A branch separator comma is source punctuation, distinct from the grammar configuration's `|` sequence notation.
 
-The configured if/else/otherwise/while families are not equally executable. A single-condition If, an attached plain else, and paragraph-local otherwise have instruction support. The configured `else if` continuation and documented While example reject during grammar processing. While also has no outer instruction implementation. Multiple joined conditions reject during instruction lowering, so the grammar's repeated CONDITION form does not establish boolean conjunction or short-circuit evaluation.
-
-The [Truth conditional example](../reference/word-glossary.md#word-type-truth) shows an actual `If enabled equals true, await Worker, else exit` statement with its declarations and execution context. It compares Truth operands and attaches an else branch to that If. For complete branch examples and explicitly rejected loop forms, see [operations and control flow](control-flow.md). A branch separator comma is source punctuation. It is not the grammar configuration's `|` sequence marker.
+Recognition does not supply runtime selection, error inspection, boolean short-circuiting or general loops. Keep [control-flow limits](control-flow.md) distinct from this grammar inventory.
 
 ## Predicates and statements
 
-Predicates assemble clauses in imperative, active, passive, applicative, or conditional form. Passive predicates include assignment. Statements choose objective imperative/conditional or subjective active/passive organization. Subjective App effects contribute application body code, while outer instructions control orchestration. Standalone Service body effects reject. The same action spelling can therefore be valid in one ownership context and rejected in another.
-
-Source order is retained after expansion. A sequence of native unary lifecycle operands runs each operation in order. A source-defined action with one parameter and several coordinated actuals expands its complete action body for each actual before proceeding to the next.
+Predicates assemble clauses in imperative, active, passive, applicative or conditional form. Statements choose objective or subjective organization. In the supported example, the App subject owns its Print body. Source order, ownership and paragraph provenance survive expansion.
 
 ## Vocabulary reference
 
 Nouns include pronouns, Input/Output/Error, List/Map/Dictionary, Null/Thing/Text/Number/Byte/Truth/Pointer, native Func/Prop/Op concepts, Definition/Attribute, and Object/Class/Service/App. The adjective entries are Public, New, and Generic. Adverbs are Publicly, Not, Less, Greater, and Then. Prepositions are as/of/at/with/in/out/by/from/to/than/for. Articles are any/no/a/the, conjunctions and/or, and evaluations if/else/otherwise/while.
 
-The [builtin vocabulary](../reference/word-glossary.md#context-builtin-vocabulary--builtin-vocabulary) includes configured words and source-defined core words. Standard-library words such as Print require import. New words compose existing definitions. Vocabulary recognition alone does not implement an action.
+The [builtin vocabulary](../reference/word-glossary.md) includes configured words and source-defined core words. Core Print is implicit; no standard-library dictionary is bundled. New words compose existing definitions. Vocabulary recognition alone does not implement an action.
 
 ## Sources and witnesses
 

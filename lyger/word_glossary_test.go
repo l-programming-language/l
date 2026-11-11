@@ -46,20 +46,7 @@ type glossaryEntry struct {
 // distinction and catches new nested members, aliases, and source-unit changes.
 func TestWordGlossarySourceInventory(t *testing.T) {
 	options := canonicalTestOptions()
-	index, err := readDictionaryIndex(options.Resources)
-	if err != nil {
-		t.Fatal(err)
-	}
-	keys := make([]string, 0, len(index.Languages["eng"]))
-	for key := range index.Languages["eng"] {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	var source strings.Builder
-	for _, key := range keys {
-		fmt.Fprintf(&source, "Use %s from `%s`.\n", index.Languages["eng"][key].Dictionary, key)
-	}
-	c := NewLygerService(options).NewCompilation([]byte(source.String()), "word-glossary-inventory.l")
+	c := NewLygerService(options).NewCompilation([]byte("Create \"Glossary\" as a New Basic App.\n"), "word-glossary-inventory.l")
 	c.Make()
 	if c.Error != nil {
 		t.Fatal(c.Error)
@@ -101,7 +88,7 @@ func TestWordGlossarySourceInventory(t *testing.T) {
 			}
 			tail := strings.TrimPrefix(member, canonical.ID+".")
 			resolver := c.resolver()
-			// Storage.Paired is both an adjective and Pair's passive spelling.
+			// A passive spelling can also have its own adjective declaration.
 			// Check the declaration's grammatical role, not an untyped lookup
 			// that would incorrectly discard one of those two meanings.
 			if word := rec.bindingWord(); word != nil {
@@ -118,14 +105,6 @@ func TestWordGlossarySourceInventory(t *testing.T) {
 			}
 			visit(name+"."+tail, rec, ancestors)
 		}
-	}
-	for _, key := range keys {
-		name := index.Languages["eng"][key].Dictionary
-		rec, lookupErr := c.exportedRecord(name)
-		if lookupErr != nil {
-			t.Fatal(lookupErr)
-		}
-		visit(name, rec, make(map[*record]bool))
 	}
 	// Discover core declarations from the selected builtin unit rather than a
 	// list of names. Dictionary-private roots and Function/Process locals never
@@ -300,30 +279,6 @@ func TestWordGlossarySourceInventory(t *testing.T) {
 		t.Errorf("%d externally reachable canonical meanings lack glossary entries:\n%s", len(missing), strings.Join(missing, "\n"))
 	}
 	t.Logf("checked %d external paths coalesced to %d source-owned meanings", len(paths), len(meanings))
-}
-
-// These wrappers demonstrate calls with the selected native signatures. AML
-// composition checks source binding and Function construction only; host-native
-// type integration and execution are intentionally not claimed by this test.
-func TestWordGlossaryNativeExamples(t *testing.T) {
-	for _, filename := range []string{"word-native-functions.l", "word-native-namespaces.l"} {
-		t.Run(filename, func(t *testing.T) {
-			data, err := os.ReadFile("../docs/examples/" + filename)
-			if err != nil {
-				t.Fatal(err)
-			}
-			c := NewLygerService(canonicalTestOptions()).NewCompilation(data, filename)
-			c.Make()
-			if c.Error != nil {
-				t.Fatal(c.Error)
-			}
-			if filename == "word-native-functions.l" {
-				if _, err = c.ComposeLibrary("GlossaryExamples", "glossaryexamples"); err != nil {
-					t.Fatal(err)
-				}
-			}
-		})
-	}
 }
 
 func glossarySourceDefinitions(t *testing.T, c *Compilation, rec *record) []glossaryDefinition {

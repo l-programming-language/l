@@ -53,7 +53,7 @@ func TestMemberSourceGeneratesBuildableSource(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			directory := t.TempDir()
-			library := "Use IO's Print from `io` as \"Emit\".\nCreate \"Archive\" as a Dictionary.\nUse Emit as " + tc.owner + " \"Render\".\n"
+			library := "Use Print as \"Emit\".\nCreate \"Archive\" as a Dictionary.\nUse Emit as " + tc.owner + " \"Render\".\n"
 			body := tc.aliases + "\"message\" is `" + tc.text + "`.\n" +
 				"Create \"" + tc.app + "\" as a New Basic App.\nThe App Displays message.\n" + tc.runtimeMembers
 			source := []byte("Use `library.l`.\n" + body)

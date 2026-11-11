@@ -1,3 +1,3 @@
-Show `A backtick: \``.
-Show `The characters \n stay backslash and n`.
-Show `雪 {braces} <DEF> ordinary text`.
+"tick" is `A backtick: \``.
+"characters" is `The characters \n stay backslash and n`.
+"unicode" is `雪 {braces} <DEF> ordinary text`.

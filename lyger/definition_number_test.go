@@ -2,13 +2,16 @@ package Lyger
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"math"
+	"os/exec"
 	"reflect"
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/l-programming-language/l/lerrors"
 	Logiceme "github.com/l-programming-language/l/logiceme"
@@ -169,7 +172,7 @@ func TestDefinitionNumberNativeBits(t *testing.T) {
 	if !bytes.Equal(document, before) {
 		t.Fatal("Number generation changed backend input")
 	}
-	if got := runRawTextBundle(t, bundle); string(got) != want.String() {
+	if got := runNumberBundle(t, bundle); string(got) != want.String() {
 		t.Fatalf("native Number bits = %q; want %q", got, want.String())
 	}
 }
@@ -193,10 +196,24 @@ func TestDefinitionNumberSourceAction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := runRawTextBundle(t, bundle); string(got) != "4008000000000000\n8000000000000000\n4340000000000000\n" {
+	if got := runNumberBundle(t, bundle); string(got) != "4008000000000000\n8000000000000000\n4340000000000000\n" {
 		t.Fatalf("L Number action lost binary64 values: %q", got)
 	}
 	if !bytes.Equal(source, before) {
 		t.Fatal("Number action compilation changed source input")
 	}
+}
+
+func runNumberBundle(t *testing.T, bundle Logiceme.Executable) []byte {
+	t.Helper()
+	binary := buildActualBundle(t, bundle, "Worker", false)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	command := exec.CommandContext(ctx, binary)
+	var stdout, stderr bytes.Buffer
+	command.Stdout, command.Stderr = &stdout, &stderr
+	if err := command.Run(); err != nil || stderr.Len() != 0 {
+		t.Fatalf("numeric standalone application: %v; stderr=%q", err, stderr.Bytes())
+	}
+	return stdout.Bytes()
 }

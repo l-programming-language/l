@@ -11,7 +11,7 @@ const paragraphDescriptorWidget = "Define \"Widget|-s|-al|-ing\" as `<DEF>FW{|Fu
 func TestParagraphDescriptorTargetDeclarationIdentity(t *testing.T) {
 	for _, target := range []string{"Widget", "Handle"} {
 		t.Run(target, func(t *testing.T) {
-			source := paragraphSource(t)
+			source := memberResolutionSource{}
 			source.main = paragraphDescriptorWidget +
 				"Use Widget as \"Handle\".\n" +
 				"\"Restricted\" is a New Adjective describing any Widget.\n" +
@@ -36,7 +36,7 @@ func TestParagraphDescriptorNominalConstructionIdentity(t *testing.T) {
 		{"distinct same spelling", "Widget", "\n    " + paragraphDescriptorWidget, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			source := paragraphSource(t)
+			source := memberResolutionSource{}
 			source.main = paragraphGlobals + paragraphDescriptorWidget +
 				"Use Widget as \"Handle\".\n" +
 				"\"Wrapped\" describes any Widget as `<DEF>[[\"A\", \"<@Widget@>\"]]<DEF>`.\n" +
@@ -81,7 +81,7 @@ func TestParagraphDescriptorNominalConstructionIdentity(t *testing.T) {
 				t.Fatal("descriptor alias changed its canonical function or wrapper")
 			}
 			units, err := (&CompilationResult{Compilation: compilation}).ApplicationUnits()
-			if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`Inputs: ~&["Hello World!"]&~`)) {
+			if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`::std::println!("{}", "Hello World!");`)) {
 				t.Fatalf("canonical nominal failed to produce the source-defined App body: %v", err)
 			}
 		})
@@ -89,14 +89,14 @@ func TestParagraphDescriptorNominalConstructionIdentity(t *testing.T) {
 }
 
 func TestParagraphDescriptorNativeTargetControl(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphWitness
 	compilation := executableTestResult(t, source).Compilation
 	if len(compilation.Semantics.Constructions) != 1 || compilation.Semantics.Constructions[0].Root.Nominal != "app" {
 		t.Fatal("native App target did not retain its constructor")
 	}
 	units, err := (&CompilationResult{Compilation: compilation}).ApplicationUnits()
-	if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`Inputs: ~&["Hello World!"]&~`)) {
+	if err != nil || len(units) != 1 || !bytes.Contains(units[0].BackendAML, []byte(`::std::println!("{}", "Hello World!");`)) {
 		t.Fatalf("native target did not produce its original body: %v", err)
 	}
 }

@@ -3,7 +3,6 @@ package Lyger
 import (
 	"fmt"
 	"strings"
-	"testing"
 )
 
 var functionReuseSource = identityFunction + `    Publicly create "Reuse" as a New Function with Inputs of "Callback" as Identity and Outputs of Identity.
@@ -59,13 +58,5 @@ func functionTransferCases() []struct{ name, source, output, diagnostic string }
 		{"boxing", boxing, output, ""},
 		{"argument check", setup + functionSource("Keep|-s|-ed|-ing", "\"Value\" as Thing", "", "Show `unreachable`.") + "Create \"Forward|-s|-ed|-ing\" for Keeping any Null.\nForward a New Null from boxed.\n", "", "runtime value type mismatch"},
 		{"return check", setup + functionSource("Reject", "", "Thing", "Define \"Nothing\" as a New Null from boxed.\nReturn Nothing.") + "Reject as \"Result\".\nShow Result.\n", "", "runtime value type mismatch"},
-	}
-}
-
-func TestFunctionTransfersNative(t *testing.T) {
-	for _, tc := range functionTransferCases() {
-		t.Run(tc.name, func(t *testing.T) {
-			runtimeBundleResult(t, runtimeValuesBundle(t, tc.source), tc.output, tc.diagnostic)
-		})
 	}
 }

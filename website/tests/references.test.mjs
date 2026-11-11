@@ -14,7 +14,7 @@ const jsonText = (value) => JSON.stringify(value, null, 2) + '\n';
 const segment = 'builtins/segments/rust/a.def';
 const page = (source, route) => ({ source, route, title: source, description: 'Synthetic reference witness.', section: 'Reference', order: 1, role: 'implementation', generated: source.startsWith('docs/_generated/') });
 
-test('canonical word routes converge on the glossary while native and library indexes retain distinct scopes', async () => {
+test('current core catalog has canonical glossary routes and no retired library records', async () => {
   const root = new URL('../../', import.meta.url);
   const map = JSON.parse(await fs.readFile(new URL('website/content-map.json', root), 'utf8'));
   const semantic = JSON.parse(await fs.readFile(new URL('docs/_meta/semantics.json', root), 'utf8'));
@@ -30,11 +30,9 @@ test('canonical word routes converge on the glossary while native and library in
   assert.equal(native.title, 'Native Words');
   const nativeTree = parseMarkdown(await fs.readFile(new URL(native.source, root), 'utf8'));
   assert.deepEqual(nativeTree.children.filter((node) => node.type === 'html' && /word-index/.test(node.value)).map((node) => node.value), ['<!-- word-index:builtins -->']);
-  for (const route of ['/docs/reference/builtins/', '/docs/reference/builtins/definitions/', '/docs/reference/builtins/lifecycle/']) {
-    const retained = map.pages.find((page) => page.route === route);
-    assert.ok(retained, route);
-    assert.equal(retained.sidebar, false, `${route} retains links without competing navigation`);
-  }
+  assert.ok(canonical.some((entry) => entry.id === 'builtin:print'));
+  assert.ok(semantic.entries.every((entry) => !entry.dictionary));
+  assert.ok(map.pages.every((page) => !page.route.startsWith('/docs/stdlib/')));
 });
 
 async function write(root, relative, content) {
@@ -62,7 +60,6 @@ async function fixture(t) {
     'dictionaries.json': jsonText(index),
     'stdlib/eng/io/dictionary.l': 'Create "IO" as a Dictionary.\n',
     'cmd/l/command.go': 'package main\nconst buildUsage = `l build [SOURCE]\nOptions: --help\n`\n',
-    'cmd/l/contracts.go': 'package main\nconst contractsUsage = `l contracts inspect INPUT\nl contracts verify-dictionary --assurance symbolic --adjective MEANING DICTIONARY\n`\n',
     'cmd/l/command_test.go': '// Existing CLI witness; fixture is never compiled.\n',
     'lyger/value_kinds.go': 'package Lyger\nvar valueTypeNames = [valueTypeCount]string{\n valueText: "Text",\n}\n',
     'lyger/grammar_terms.go': '// source notation implementation\n',
@@ -95,7 +92,7 @@ async function fixture(t) {
     'verbs.Show': { support: 'supported', topic: 'Statement structure', doc: 'docs/spec/grammar.md#statement-structure', notes: 'Reviewed source action.', wordRef: 'builtin:show' },
   })));
   await write(root, 'docs/_meta/cli-review.json', jsonText({
-    schemaVersion: 1, sourceHashes: { 'cmd/l/command.go': sha256(files['cmd/l/command.go']), 'cmd/l/contracts.go': sha256(files['cmd/l/contracts.go']) },
+    schemaVersion: 1, sourceHashes: { 'cmd/l/command.go': sha256(files['cmd/l/command.go']) },
     entries: ['build', '-os'].map((name) => ({
       id: `cli:${name}`, kind: 'cli', name, role: 'normative', support: name === '-os' ? 'rejected' : 'supported',
       doc: `docs/cli/build.md#${name === '-os' ? 'target-os' : 'command-syntax'}`,
@@ -147,9 +144,6 @@ test('mechanical reference inventory is deterministic and preserves evidence-sta
   assert.match(first.files['docs/_generated/grammar.md'], /&lt;subject&gt; &#124; predicate/);
   assert.match(first.files['docs/_generated/cli-help.md'], /source-derived.*, not runtime-captured/);
   assert.ok(first.files['docs/_generated/cli-help.md'].includes('l build [SOURCE]\nOptions: --help\n'));
-  assert.ok(first.files['docs/_generated/cli-help.md'].includes('l contracts inspect INPUT\nl contracts verify-dictionary --assurance symbolic --adjective MEANING DICTIONARY\n'));
-  assert.match(first.files['docs/_generated/cli-help.md'], /From `contractsUsage` in \[cmd\/l\/contracts.go\]/);
-  assert.equal(first.inventory.inputs['cmd/l/contracts.go'], sha256(await fs.readFile(path.join(root, 'cmd/l/contracts.go'))));
   assert.match(first.files['docs/_generated/lucid.md'], /Runtime execution is a separate witness\. This inventory reports no validation run/);
   assert.match(first.files['docs/_generated/lucid.md'], /Intentional rejection: E0603/);
   assert.ok(Object.values(first.inventory.inputs).every((hash) => /^[a-f0-9]{64}$/.test(hash)));
@@ -282,23 +276,11 @@ test('changed CLI implementation cannot be approved by mechanical snapshot gener
   assert.deepEqual(await fs.readFile(path.join(root, 'docs/_meta/cli-review.json')), reviewBytes);
 });
 
-test('contracts parser changes require independent review before snapshot generation', async (t) => {
+test('build help extraction rejects an unrecognized constant after parser review', async (t) => {
   const { root } = await fixture(t);
-  await references({ root, write: true });
-  const helpBytes = await fs.readFile(path.join(root, 'docs/_generated/cli-help.md'));
-  const reviewBytes = await fs.readFile(path.join(root, 'docs/_meta/cli-review.json'));
-  await fs.appendFile(path.join(root, 'cmd/l/contracts.go'), 'flags.StringVar(&command.NewOption, "new-option", "", "new contracts behavior")\n');
-  await assert.rejects(generateReferences(root), /Reviewed CLI dependency changed: cmd\/l\/contracts.go/);
-  await assert.rejects(references({ root, write: true }), /snapshot generation cannot approve this change/);
-  assert.deepEqual(await fs.readFile(path.join(root, 'docs/_generated/cli-help.md')), helpBytes);
-  assert.deepEqual(await fs.readFile(path.join(root, 'docs/_meta/cli-review.json')), reviewBytes);
-});
-
-test('contracts help extraction rejects an unrecognized constant after parser review', async (t) => {
-  const { root } = await fixture(t);
-  await write(root, 'cmd/l/contracts.go', 'package main\nvar contractsUsage = "changed representation"\n');
-  await editJSON(root, 'docs/_meta/cli-review.json', (value) => { value.sourceHashes['cmd/l/contracts.go'] = sha256('package main\nvar contractsUsage = "changed representation"\n'); });
-  await assert.rejects(generateReferences(root), /raw-string constant contractsUsage/);
+  await write(root, 'cmd/l/command.go', 'package main\nvar buildUsage = "changed representation"\n');
+  await editJSON(root, 'docs/_meta/cli-review.json', (value) => { value.sourceHashes['cmd/l/command.go'] = sha256('package main\nvar buildUsage = "changed representation"\n'); });
+  await assert.rejects(generateReferences(root), /raw-string constant buildUsage/);
 });
 
 test('CLI review cannot omit its approval hash or substitute unrelated inventory entries', async (t) => {
@@ -306,11 +288,6 @@ test('CLI review cannot omit its approval hash or substitute unrelated inventory
     const { root } = await fixture(subtest);
     await editJSON(root, 'docs/_meta/cli-review.json', (value) => { delete value.sourceHashes['cmd/l/command.go']; });
     await assert.rejects(generateReferences(root), /reviewed command.go hash/);
-  });
-  await t.test('missing contracts hash', async (subtest) => {
-    const { root } = await fixture(subtest);
-    await editJSON(root, 'docs/_meta/cli-review.json', (value) => { delete value.sourceHashes['cmd/l/contracts.go']; });
-    await assert.rejects(generateReferences(root), /reviewed contracts.go hash/);
   });
   await t.test('wrong kind', async (subtest) => {
     const { root } = await fixture(subtest);

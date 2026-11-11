@@ -217,7 +217,7 @@ func TestFrontendRecursiveClassSource(t *testing.T) {
 		"/src/__l_class_middle.rs": {"mod leaf;"},
 		"/src/__l_class_leaf.rs":   {"mod main;"},
 	})
-	buildActualBundle(t, bundle, units[0].ID, false, "")
+	buildActualBundle(t, bundle, units[0].ID, false)
 
 }
 
@@ -278,7 +278,7 @@ func TestFrontendInterleavedClassSource(t *testing.T) {
 		"/src/__l_class_branch.rs": {"mod first;", "mod leaf;", "mod last;"},
 		"/src/__l_class_leaf.rs":   {"mod deep;"},
 	})
-	buildActualBundle(t, bundle, units[0].ID, false, "")
+	buildActualBundle(t, bundle, units[0].ID, false)
 }
 
 func assertClassModules(t *testing.T, bundle Logiceme.Executable, expected map[string][]string) {

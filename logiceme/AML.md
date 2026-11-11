@@ -9,10 +9,9 @@ The [Rust suite](testdata/lucid/README.md) preserves the original flat composed
 baseline and adds scoped selection, iteration, declaration, invocation, callable,
 trait, empty-composition, keyed-pattern and generic/lifetime coverage. Its
 inventory and dated results distinguish generation, native compilation, and
-bounded execution of three future cases. Separate [frontend/runtime
-evidence](../testdata/integration/IMPLEMENTATION.md) covers the Rust
-CLI and supervised native programs. Source-graph schemas
-and preparation branches are documented separately.
+bounded execution of three future cases. Source-graph schemas and preparation
+branches are documented separately. Current CLI execution is limited to core
+Print in a standalone App.
 
 ## Preserve the representation boundary
 
@@ -258,8 +257,8 @@ emitted.
 The matching Chapter contains main's Sentence and Models' TEXT. Models contains
 its root Sentence and Details' TEXT. Details contains its root Sentence. Each
 composed Sentence starts with A. The [Lucid suite](testdata/lucid/README.md) covers
-flat compositions. The [topology tests](../testdata/integration/IMPLEMENTATION.md)
-separately check recursive topology and actual library use.
+flat compositions. Independent backend topology tests check recursive modules
+and native library use without the removed L libraries.
 
 The compiler emits crate-root safety attributes, child module declarations and
 relative `#[path]` attributes from the validated graph. It inserts these structural
@@ -267,8 +266,7 @@ items at the known compiled A boundary without reparsing completed source.
 Nonprivate Objects expose composed top-level FW/HY/MY items as `pub(crate)` in
 executable packages or `pub` in library targets. Module visibility remains a
 separate boundary. Private Objects keep private items. No native EA declarations
-are rewritten. Runtime wrapping applies only to the first/orchestrator primary
-binary, with explicit config/runtime/process declarations.
+are rewritten.
 
 One Book produces one Cargo package. A package containing binaries has at most
 one library and exactly one Primary binary. Alternatively, a sole library target
@@ -392,26 +390,24 @@ bundle, err := service.Evaluate(completeAML, GenerationOptions{
 ```
 
 The call is shown from the Logiceme package's perspective. Omitted and
-zero-value options omit runtime support. IncludeRuntime requests it explicitly.
+zero-value options omit runtime support. IncludeRuntime remains an explicit API
+request, but its supporting resources are removed during the reset.
 Rust output is independent of Lyger's language selection.
 Input and earlier returned bundles remain unchanged after every call.
 
 Rust evaluates all books in source order, returning one project per application.
-The frontend/build coordinator supplies explicit application and library units to a Cargo workspace.
+The current CLI selects one standalone App. Raw backend targets are a separate
+source-generation contract.
 See [ARCHITECTURE.md](ARCHITECTURE.md).
 
 Each Rust package has a Cargo manifest. Executable packages receive applicable
-support artifacts, while library-only packages omit them. IncludeRuntime expects
-the first book to supply composed `l_main`, returning a future whose output is
-`runtime::Result<()>`, and inserts the supervised runtime entry. Companion books
-supply ordinary entries. The wrapper is support, not a replacement for user logic.
-Its process-runtime tests are separate from the [Lucid composition suite](testdata/lucid/README.md#current-inventory).
+support artifacts, while library-only packages omit them. No orchestrator or
+process runtime is supplied by the current distribution.
 
 The existing Rust support boundary uses App.Name, App.MainLocation and App.Deps.
 AppMeta.Deps contains a JSON-encoded ordered array of normalized TOML dependency
-rows. It is decoded in support assembly, not generic metadata parsing. IncludeRuntime
-adds the fixed reviewed Tokio/nix rows and rejects conflicts. It does not resolve
-versions or infer package requirements from use statements. Configuration keeps source order
+rows. It is decoded in support assembly, not generic metadata parsing. The
+assembler does not resolve versions or infer dependencies from use statements. Configuration keeps source order
 so duplicate keys have last-entry-wins behavior, and values use target-appropriate
 escaping. Resolution, downloads and compilation retries are build-coordinator
 work. Tests use retained locks/pins without fallback.
@@ -436,8 +432,7 @@ Never substitute expected code or formatting repairs. See the
 [minimum composed corpus](../builtins/CONTRACTS.md#verification-contract).
 The [result ledger](testdata/lucid/FAILURES.md) records revision-specific generation,
 compilation and execution evidence. Three Lucid future cases have bounded execution
-checks. The separate [frontend/runtime record](../testdata/integration/IMPLEMENTATION.md)
-covers supervised processes. Deployment scripts remain unexecuted.
+checks. Deployment scripts remain unexecuted.
 
 Native fragments are appropriate for atoms and external calls. They must not
 replace the feature under test. EA is the emergency standalone whole-file

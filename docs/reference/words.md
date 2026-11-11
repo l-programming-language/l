@@ -2,32 +2,18 @@
 
 <a id="words-az"></a>
 
-Find the implicit builtin, core and configured grammatical vocabulary by root.
-Every link opens its complete [Word Glossary](word-glossary.md) entry, including
-the source definition, forms, part of speech, description and usage examples.
+This index covers retained core and configured grammatical vocabulary. Core is loaded directly and needs no import. The [Word Glossary](word-glossary.md) records meanings, forms and source evidence.
 
-These words require no dictionary import. For imported words, browse
-[IO](../stdlib/eng/io.md), [Formatting](../stdlib/eng/format.md),
-[Runtime](../stdlib/eng/runtime.md) or [Storage](../internals/storage.md).
-The [terminology glossary](../spec/glossary.md) explains language concepts.
+The current executable boundary is one standalone App with core Print accepting Text. Configured spellings and retained definitions do not establish runtime support: lifecycle operations, capture and output inspection are unavailable. There are no bundled standard-library dictionaries.
 
 ## How to read the labels
 
-The first label is the word's **grammatical role**, such as noun, verb or article.
-The second describes implementation support for the linked meaning:
-
 | Label | Meaning |
 | --- | --- |
-| **Supported** | The documented meaning is implemented within its stated contexts and operand rules. |
-| **Partial** | Some of the documented forms or stages work, but a specific capability is missing. The entry's **Partial support** paragraph names what works and the exact gap. |
-| **Rejected** | The documented operation is unavailable. Recognizing its spelling or grammar does not make that operation executable. |
+| **Supported** | Implemented within the stated context and operand rules. |
+| **Partial** | A stated subset is implemented; the entry identifies the missing capability. |
+| **Rejected** | The operation is unavailable, even if grammar recognizes its spelling. |
 
-Requiring an App, an exact descriptor target or Number operands is an intentional
-usage rule, not by itself a reason to mark a word partial. These labels describe
-reviewed implementation coverage. [Test execution and other evidence](../contributing/evidence.md#verification-stage)
-are recorded separately.
-
-**Authoring** identifies advanced word-definition or native integration context.
-It is an audience label, independent of implementation support.
+**Authoring** identifies compiler/native integration context rather than ordinary App behavior. [Evidence labels](../contributing/evidence.md) separately describe what was inspected or tested.
 
 <!-- word-index:builtins -->

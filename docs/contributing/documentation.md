@@ -28,11 +28,10 @@ Keep code examples in fenced blocks and AML escaped as code. Never turn native f
 
 ## Maintain word entries
 
-[Native Words](../reference/words.md) and the library indexes link to the same
+[Native Words](../reference/words.md) links to the
 canonical entries in the [Word Glossary](../reference/word-glossary.md). Keep
 complete word definitions there. Thematic guides own concepts and walkthroughs.
-Each library index needs its real import form, required context and alphabetical
-navigation. Internal dictionary registration does not make implementation words
+The current registry contains no bundled libraries. A future authorized library needs its real import form, context and navigation. Internal dictionary registration does not make implementation words
 application API. Label their native authoring context explicitly.
 
 Review current definitions, lexical member lookup, configured vocabulary and
@@ -63,9 +62,7 @@ matching metadata proves good morphology. A metadata-only relabel cannot turn
 a noun definition into an action or descriptor; an authorized source migration
 must precede the corresponding factual update.
 
-Aliases describe existing bindings to that same meaning. The library indexes
-link those names to the canonical entry, including cross-dictionary bindings such
-as Runtime.Format. Documentation must not introduce aliases or duplicate meanings.
+Aliases describe existing bindings to that same meaning. Indexes link those names to the canonical entry. Documentation must not introduce aliases or duplicate meanings.
 
 Each `definitions` item has a `source` already listed in the record's reviewed
 sources and one-based inclusive `lines: [start, end]`. Place
@@ -89,11 +86,11 @@ Place one marker immediately after the owning heading and any supported explicit
 ```markdown
 ### Print
 
-<!-- word:stdlib-export:eng:io:IO.Print -->
+<!-- word:builtin:Print -->
 
-Render a supported value and write its bytes to standard output followed by one LF newline.
+Accept Text and write it to standard output followed by one newline.
 
-<!-- word-definition:stdlib-export:eng:io:IO.Print -->
+<!-- word-definition:builtin:Print -->
 
 **Usage:** Explain the actual import, operand roles, result and required App context.
 
@@ -106,7 +103,7 @@ Render a supported value and write its bytes to standard output followed by one 
 **Compose with:** Link to related canonical entries and explain their different purposes.
 ```
 
-The template's instructions are authoring scaffolding, not publishable entry prose. Tailor the actual entry: a grammatical word describes its relationship and supported context rather than a fabricated callable signature. A descriptor identifies its exact target and order-sensitive effects. A noun explains what it denotes or constructs. Keep recognized-only or partial forms findable with their limits visible. Link shared lifecycle, formatting and contract explanations rather than repeating them in every entry.
+The template's instructions are authoring scaffolding, not publishable entry prose. Tailor the actual entry: a grammatical word describes its relationship and supported context rather than a fabricated callable signature. A descriptor identifies its exact target and order-sensitive effects. A noun explains what it denotes or constructs. Keep recognized-only or partial forms findable with their limits visible. Link shared construction and contract explanations rather than repeating them in every entry.
 
 Each supported meaning needs a meaningful usage example, potentially a clearly linked shared example that actually demonstrates it. Show the caller and its enclosing setup. A source-definition excerpt alone is not a use. Keep complete, invalid and fragment classifications accurate. Avoid a copy of the basic program under unrelated words. Examples of unsupported syntax must say what is unsupported and must not appear as runnable instructions.
 
@@ -117,10 +114,9 @@ Use these literal directives for navigation:
 ```markdown
 <!-- word-index -->
 <!-- word-index:builtins -->
-<!-- word-index:eng:io -->
 ```
 
-The first creates the global alphabetical view, the second builtin navigation, and the third selects an existing registry lexicon/key. Other registered libraries use the same form. Only nonempty letter groups get navigation. Generated lists are excluded from full-text search so the actual entries provide ownership, forms, targets and explanations. Fenced and inline directive examples stay literal.
+The first creates the global alphabetical view, the second builtin navigation, and the first includes the complete retained catalog. Only nonempty letter groups get navigation. Generated lists are excluded from full-text search so the actual entries provide ownership, forms, targets and explanations. Fenced and inline directive examples stay literal.
 
 When changing a word, update its canonical entry, reviewed associations and meaningful examples together. Check source dependencies before refreshing hashes or mechanical references. The full production inventory stays mandatory during migration: test a pilot with a coherent fixture inventory, not an allow-missing switch or temporary public exclusion.
 
@@ -146,7 +142,7 @@ Use new documentation-only `.l` fragments only when the maintained example is em
 
 ## Update coverage and snapshots
 
-The coverage manifest connects inventory entries to meaningful documentation anchors and source/test evidence. Mechanical extraction is suitable for JSON grammar rules, vocabulary records, root dictionary-registry entries and known source-derived CLI help. Public visibility, overload behavior, type semantics and operational support require reviewed mappings to frontend behavior and witnesses. Include foundational and runtime entries in coverage while preserving their internal classification. The combined catalog must label their implementation audience without presenting their helpers as public application vocabulary.
+The coverage manifest connects inventory entries to meaningful documentation anchors and source/test evidence. Mechanical extraction is suitable for JSON grammar rules, vocabulary records, root dictionary-registry entries and known source-derived CLI help. Public visibility, overload behavior, type semantics and operational support require reviewed mappings to frontend behavior and witnesses. Classify only retained meanings. Do not preserve entries for deleted dictionaries or imply that their helpers remain application vocabulary.
 
 After relevant source changes, run `npm run references:check` from `website/`. A mismatch must lead to review of the affected prose and mappings. Use `npm run references:generate` to refresh mechanical snapshots only after that review. Changing a fingerprint alone cannot establish semantic correctness.
 
@@ -154,7 +150,7 @@ Checks must reject new unclassified inventory, stale dependencies, nonexistent e
 
 ## Keep verification layers separate
 
-The default website workflow is Node-only. It checks authored content, projections, references, static output and browser behavior. It does not execute L snippets. `npm run examples:verify -- --compiler /absolute/path/to/l` is separately opt-in and requires an already available compiler plus the native toolchain needed by its builds. It is subject to the repository's validation policy and is not a substitute for full acceptance.
+The default website workflow is Node-only. It checks authored content, projections, references, static output and browser behavior. It does not execute L snippets. `npm run examples:verify -- --compiler /absolute/path/to/l` is separately opt-in and requires an already available compiler plus the native toolchain needed by its builds. It is subject to the repository's validation policy and is not a substitute for the temporary hello-world gate.
 
 A manual example run must report the exact source fingerprint, host, compiler identity, command, expected/actual bytes and checked stage. A failed or unrun stage stays failed or unrun. Existing witness paths use the status `existing-witness-not-run` until an actual run supplies new evidence.
 

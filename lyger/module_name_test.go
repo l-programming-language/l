@@ -77,7 +77,7 @@ func TestFrontendEncodedSiblingClassIdentity(t *testing.T) {
 	if err != nil || !bytes.Equal(again[0].BackendAML, beforeAML) {
 		t.Fatalf("repeated projection changed source identity: %v", err)
 	}
-	buildActualBundle(t, bundle, units[0].ID, false, "")
+	buildActualBundle(t, bundle, units[0].ID, false)
 }
 
 func TestWorkspaceEncodedServiceAliasIdentity(t *testing.T) {

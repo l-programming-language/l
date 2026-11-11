@@ -210,20 +210,8 @@ export async function preparePage({ root, page, pages, identity, examples, sourc
         add(node, rendered); continue;
       }
       if (/^<!--\s*stdlib-catalog\s*-->$/.test(node.value.trim())) { add(node, stdlibCatalog(dictionaries)); continue; }
-      const illustration = node.value.trim().match(/^<!--\s*illustration:(source-to-native|dictionaries)\s*-->$/);
-      if (illustration) {
-        const name = illustration[1];
-        const content = name === 'source-to-native'
-          ? '<img class="dark:sl-block light:sl-hidden" src="/assets/l/illustrations/hero-source-to-native-dark.svg" alt="Source passes through a compiler to an App process and an additional App-constructed Service library" width="1000" height="680" loading="lazy" /><img class="dark:sl-hidden light:sl-block" src="/assets/l/illustrations/hero-source-to-native-light.svg" alt="Source passes through a compiler to an App process and an additional App-constructed Service library" width="1000" height="680" loading="lazy" />'
-          : '<img src="/assets/l/illustrations/dictionaries.svg" alt="Vocabulary dictionaries group names that a program can explicitly import" loading="lazy" />';
-        add(node, `<figure class="l-section-art">${content}</figure>`);
-        continue;
-      }
-      const diagram = node.value.trim().match(/^<!--\s*diagram:(compiler-pipeline|runtime-lifecycle|process-model)\s*-->$/);
-      if (diagram) {
-        const labels = { 'compiler-pipeline': 'L source through Lyger, AML, Logiceme Rust bundles and Cargo native compilation', 'runtime-lifecycle': 'Build checks readiness, Run launches, Stop requests termination, and Await joins final output', 'process-model': 'Orchestrator-owned App processes, App-constructed Service libraries, and structural standalone Services' };
-        const name = diagram[1];
-        add(node, `<figure class="l-diagram"><img class="dark:sl-block light:sl-hidden" src="/assets/l/diagrams/${name}-dark.svg" alt="${labels[name]}" loading="lazy" /><img class="dark:sl-hidden light:sl-block" src="/assets/l/diagrams/${name}-light.svg" alt="${labels[name]}" loading="lazy" /><figcaption><a href="/assets/l/diagrams/${name}-light.svg">Open full-size diagram</a>. The surrounding prose explains the boundaries.</figcaption></figure>`);
+      if (/^<!--\s*illustration:dictionaries\s*-->$/.test(node.value.trim())) {
+        add(node, '<figure class="l-section-art"><img src="/assets/l/illustrations/dictionaries.svg" alt="Vocabulary dictionaries group names that a program can explicitly import" loading="lazy" /></figure>');
         continue;
       }
       const match = node.value.trim().match(/^<!--\s*example:([A-Za-z0-9_-]+)\s*-->$/);

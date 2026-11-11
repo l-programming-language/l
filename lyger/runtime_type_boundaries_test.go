@@ -38,11 +38,6 @@ func TestRuntimeReadPreservesRequestedIdentity(t *testing.T) {
 	}
 }
 
-func TestRuntimeHandleReadsNative(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: distributionIOImport + "\n" + identityFunction + runtimeAppReadSource + runtimeFunctionReadSource})
-	captureNativeResult(t, c, "child\nvalue")
-}
-
 func TestUndeclaredRuntimeTypeHasNoImplicitImplementation(t *testing.T) {
 	for name, source := range map[string]string{
 		"construction": "Define \"value\" as a New Instance.\n",

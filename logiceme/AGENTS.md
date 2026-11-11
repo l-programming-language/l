@@ -71,13 +71,12 @@ their bytes, interfaces and hash expectations unchanged. Do not substitute a
 different matrix to make the current tests pass.
 The [result ledger](testdata/lucid/FAILURES.md) records exact generation,
 expected/actual native compilation and acceptance separately; it does not establish
-correctness of every compiler branch. Runtime behavior is checked
-separately by supervised native regressions and the [implementation record](../testdata/integration/IMPLEMENTATION.md).
-Retain shared backend controls and the required downstream test identities;
-their native observers check the Rust frontend/CLI obligations.
+correctness of every compiler branch. Core Print execution is checked by the temporary hello-world gate.
+Retain independent backend composition controls without requiring the removed
+library implementation or its private observer interfaces.
 
-Do not change protected input bytes, expected-value helpers, locks or canonical
-resources outside an explicit finite amendment. Generated install/start/stop
+Preserve frozen logeme bytes and hash expectations. Remove obsolete library
+fixtures when authorized; do not weaken useful independent compiler assertions. Generated install/start/stop
 scripts are artifacts, never local validation commands. Keep process supervision
 and raw stdout/continuation semantics in dedicated support, not glyphs.
 
@@ -87,4 +86,4 @@ govern local and hosted checks. Report proposed, implemented, generated, compile
 and runtime-verified separately, including unrun stages. Focused checks do not
 establish full validation; documentation checks establish no native result.
 
-Current completion is the temporary hello-world gate in root instructions. Former runtime/full-suite obligations above are reconstruction context, not a requirement to preserve removed libraries or their tests. Only logeme templates remain protected during this reset.
+Current completion is the temporary hello-world gate in root instructions. Only logeme templates remain protected during this reset.

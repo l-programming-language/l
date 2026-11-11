@@ -1,6 +1,6 @@
 # Errors, diagnostics, and compatibility
 
-Compiler diagnostics, native build failures, runtime lifecycle misuse, and application output are distinct channels and stages.
+Compiler diagnostics, native build failures, and standalone application output are distinct channels and stages.
 
 ## Failure stages
 
@@ -13,8 +13,7 @@ Compiler diagnostics, native build failures, runtime lifecycle misuse, and appli
 | Typed lowering | Unsupported recognized feature, unavailable capture, definite-assignment failure |
 | Source generation | Invalid AML framing, unsupported glyph composition, wrong child roles or metadata |
 | Native build/publication | Missing pinned toolchain/dependency, Cargo failure, unsafe source bundle, invalid artifact identity, filesystem failure |
-| Generated runtime | Lifecycle misuse, launch/signal/capture/cleanup failure, failed output writer |
-| Child application | Nonzero status, native panic, stderr output, application-specific failure |
+| Standalone application | Process status, output or native failure observed by its caller |
 
 Errors retain original causes where the maintained interface supports them. A failed prerequisite does not prove later stages passed or failed.
 
@@ -22,7 +21,7 @@ Errors retain original causes where the maintained interface supports them. A fa
 
 The Go `lerrors` package classifies InvalidInput, InvalidConfiguration, Syntax, UnresolvedReference, AmbiguousReference, DuplicateDeclaration, TypeMismatch, Cycle, Unsupported, IO, Tool, Internal, and Unknown. Numeric category values are not a serialization contract. Unknown is an error category, not success or a wildcard.
 
-These are compiler/API inspection categories for Go callers. L does not thereby gain `try`, `catch`, thrown exceptions, or an imported standard-library error module. Native process Error is a separate runtime member.
+These are compiler/API inspection categories for Go callers. L does not thereby gain `try`, `catch`, thrown exceptions, or an imported standard-library error module. Runtime Error inspection is unavailable.
 
 Grammar alternatives can aggregate candidate causes while preserving sorted diagnostics. A source numeric overflow may remain provisional until lexical resolution is exhausted. Direct definition Number binding has its own Syntax boundary. Ordinary numeric input overflow and nonfinite native lowering have different classified boundaries. Do not collapse these into one invented source exception.
 
@@ -36,7 +35,7 @@ Incidental UUIDs may be normalized for a diagnostic view. They must not be norma
 
 The compiler CLI returns 0 for help and successful builds, 2 for invalid invocation or unsupported host, and 1 for initialization, compilation, generation, native build, publication, or output-write failure. Compiler diagnostics go to stderr. Successful build stdout contains the published executable path and newline.
 
-Generated programs have their own runtime statuses. Normal fallthrough/bare Exit succeeds if cleanup succeeds. Explicit failure or fatal misuse returns 1, and supported SIGINT/SIGTERM termination uses 130/143. A child application's nonzero result is not automatically the orchestrator's exit status. See [execution](execution.md).
+The standalone App has its own process status and streams. Building it does not establish execution success. Runtime lifecycle, capture and cleanup policies are absent; see [execution](execution.md).
 
 ## Unsupported versus unresolved
 
@@ -46,31 +45,11 @@ See the [type reference](values.md) and [control-flow limits](control-flow.md) f
 
 ### Rejected operands: a type error and a missing name
 
-These complete fixtures demonstrate expected compiler rejections.
-
-<!-- example:invalid-await-text -->
-
-The backtick literal is Text. Await requires a process target, so this is a TypeMismatch at compilation, before any application can be launched. The [fixture contract](../../testdata/phase1/n01-await-text/case.json) expects a diagnostic containing `await` and `app` and no new published executable.
-
-<!-- example:invalid-await-unresolved -->
-
-Here the operand is a name with no declaration. The [separate negative contract](../../testdata/phase1/n02-await-unresolved/case.json) expects unresolved-reference evidence containing `missing` and `unresolved`. Supplying a declared Text instead would change the failure to the type boundary above. The two diagnoses are not interchangeable.
-
-The [While illustration](control-flow.md#iteration-and-collection-operations) currently fails during grammar processing. Independently, [instruction lowering](../../lyger/instructions.go) has no While operation and rejects unsupported conditional kinds. A configured vocabulary word alone does not establish successful parsing or execution.
+A resolved operand with the wrong type and an unresolved name are different semantic failures. Preserve the selected word, typed input and original source attribution in either diagnostic. Text-only Print does not gain implicit formatting to accept another type.
 
 ### Runtime failure is a separate stage
 
-**Intentional runtime misuse, with complete source shown as a negative illustration.** This retained fixture builds an App but never launches it:
-
-<!-- example:runtime-build-without-run -->
-
-Build does not create an invocation. Await therefore fails at generated-runtime execution. The [N07 contract](../../testdata/phase1/n07-build-is-not-run/case.json) expects empty stdout, status 1, and diagnostic text containing `Await` and `invocation`. Compilation succeeds; the generated program fails when it reaches Await.
-
-**Explicit program failure.**
-
-<!-- example:paragraph-error-exit -->
-
-First's child succeeds and its continuation shows `First\n`. The equality condition then requests an error Exit with `paragraph stopped`. The [paragraph witness](../../cmd/l/paragraph_integration_test.go) expects stdout `First\n`, stderr `paragraph stopped\n`, and status 1. The failure comes from the program's explicit Exit, not from a compiler diagnostic or an IO.Print exception. Neither the later paragraph tail nor Second's Execute operand runs.
+The current executable has no L process runtime. Runtime-dependent source effects reject during compilation instead of building a program that later performs lifecycle checks. Observe actual standalone execution separately from compilation; never relabel a failed or unrun stage as passing.
 
 ## Compatibility and releases
 
@@ -80,4 +59,4 @@ Native fragments remain target-specific. Generated Go, Deferred and three-part l
 
 ## Sources and witnesses
 
-The maintained [error model](../error-model.md) owns category definitions and Go inspection behavior. Other primary sources are [diagnostics](../../lyger/diagnostics.go), [error kinds](../../lyger/error_kinds_test.go), [native causes](../../lyger/error_causes_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), [CLI/runtime contract](../cli-build.md), and [validation policy](../development-harness.md). The [integration ledger](../../testdata/integration/IMPLEMENTATION.md) records historical outcomes. It is not a result for this checkout.
+The maintained [error model](../error-model.md) owns category definitions and Go inspection behavior. Other primary sources are [diagnostics](../../lyger/diagnostics.go), [error kinds](../../lyger/error_kinds_test.go), [native causes](../../lyger/error_causes_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), [CLI/runtime contract](../cli-build.md), and [validation policy](../development-harness.md). Historical outcomes are not results for this checkout.

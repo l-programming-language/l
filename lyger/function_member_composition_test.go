@@ -7,13 +7,12 @@ import (
 	"testing"
 	"testing/fstest"
 
-	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 	"github.com/l-programming-language/l/lerrors"
 	Logiceme "github.com/l-programming-language/l/logiceme"
 )
 
 func TestComposedFunctionMembers(t *testing.T) {
-	for _, variant := range []string{"selected", "changed", "missing return component", "missing invoke component", "recursive value binding", "unused invocation argument"} {
+	for _, variant := range []string{"selected", "changed", "missing return component", "missing invoke component", "unused invocation argument"} {
 		t.Run(variant, func(t *testing.T) {
 			files := dictionaryIndexFilesystem(t)
 			const core = "builtins/eng/core.l"
@@ -37,11 +36,6 @@ func TestComposedFunctionMembers(t *testing.T) {
 			if variant == "unused invocation argument" {
 				source = strings.Replace(source, ", Inputs: ~&[<@Arguments|Atoms@>]&~", "", 1)
 			}
-			if variant == "recursive value binding" {
-				const storage = "builtins/eng/storage/bindings.l"
-				data := strings.Replace(string(files[storage].Data), "MOB{|Key: ~<@Name|Label@>~|}^(<@Value@>)", "OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}", 1)
-				files[storage] = &fstest.MapFile{Data: []byte(data)}
-			}
 			files[core] = &fstest.MapFile{Data: []byte(source)}
 			c := NewLygerService(Options{Resources: files}).NewCompilation([]byte("Create \"Words\" as a Dictionary.\n\n    Publicly create Words's \"Echo\" as a Generic `echo` Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n    Publicly create Words's \"Supply\" as a Generic `supply` Function with No Inputs and Outputs of `f64`.\nReturn a New Words's Echo of 3.\n"), "members.l")
 			c.Make()
@@ -55,12 +49,6 @@ func TestComposedFunctionMembers(t *testing.T) {
 				t.Fatal(c.Error)
 			}
 			aml, err := c.ComposeLibrary("Words", "members")
-			if variant == "recursive value binding" {
-				if !errors.Is(err, lerrors.Cycle) {
-					t.Fatalf("non-consuming value binder: %v", err)
-				}
-				return
-			}
 			if variant == "unused invocation argument" {
 				if !errors.Is(err, lerrors.InvalidInput) || !strings.Contains(err.Error(), "unused argument Arguments") {
 					t.Fatalf("unused invocation argument: %v", err)
@@ -84,26 +72,6 @@ func TestComposedFunctionMembers(t *testing.T) {
 			}
 			if !bytes.Equal(files[core].Data, []byte(source)) {
 				t.Fatal("composition mutated selected definitions")
-			}
-			if variant == "selected" {
-				deriveTestRuntime(t, files)
-				ordinary := "Define \"Prefix\" as `capture`.\n\n" + functionSource("Read", "", "Text", "Return Prefix.") + "Read as \"Result\".\nShow Result.\n"
-				result, unit, bundle, err := builtinProcessGenerate(files, ordinary)
-				if err != nil {
-					t.Fatal(err)
-				}
-				captured := false
-				for _, function := range result.Compilation.Semantics.Functions {
-					captured = captured || len(function.Captures) > 0
-				}
-				if !captured || !bytes.Contains(unit.BackendAML, []byte("composed_return")) || !bytes.Contains(unit.BackendAML, []byte("composed_invoke")) {
-					t.Fatal("ordinary captured Function lost its composed contracts")
-				}
-				binary := buildActualBundle(t, bundle, "entry", true, "")
-				stdout, stderr, err := nativetest.RuntimeExecution.Run(t, binary, "", nil)
-				if err != nil || len(stderr) != 0 || string(stdout) != "capture" {
-					t.Fatalf("composed captures stdout=%q stderr=%q: %v", stdout, stderr, err)
-				}
 			}
 		})
 	}

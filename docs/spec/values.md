@@ -1,77 +1,55 @@
 # Primitive Types
 
-| Type | Meaning | Current use |
-| --- | --- | --- |
-| [Text](#text) | A sequence of bytes, including whitespace. | Write a backtick-delimited literal, such as `` `hello` ``, then store, compare, or print it. |
-| [Number](#number) | A finite binary64 number, such as `7` or `-12.5`. | Store, compare, or print it. Integer spellings use the same number type. |
-| [Truth](#truth) | A Boolean value: `true` or `false`. | Store, compare, print, or use it as a condition. |
-| [Thing](#thing) | A value retaining its concrete runtime type. | Hold different value categories at an explicitly broad boundary. |
-| [Byte / Bytes](#byte-and-bytes) | An owned sequence of bytes. | Construct from Text and read numbered bytes. |
-| [Pointer](#pointer) | A managed reference to a typed value. | Copy handles to share a target with checked reads and writes. |
-| [Null](#null-and-internal-states) | An explicit absence value. | Initialize a value with `Null`, distinct from an unassigned slot. |
-
-Primitive types describe data, while [lexical types](lexical-types.md) describe words. [Collections](collections-and-categories.md) and [Functions](applicational-types.md#functions-properties-and-operations) use the same ownership rules.
+The compiler distinguishes primitive value categories from lexical roles and executable support. The current standalone App uses Text with core Print. Other retained type tags do not imply a bundled runtime or formatting library.
 
 ## Declarations, assignment, and reading values
 
-A declaration names a value: `Define "count" as 7.` Runtime assignments take effect in source order, and every continuing path must assign a value before reading it. Declaring a type does not promise an implicit initial value.
-
-The public-values program gives Text, Number, and Truth explicit initial values, then displays them with Show:
-
-<!-- example:public-values -->
-
-Assignment, Function arguments/results and captures snapshot ordinary values, recursively through collections. Embedded Pointers retain their shared target. App handles retain process identity. Stored Output keeps its invocation's bytes after reruns. See [capture environments](names-and-scope.md#runtime-storage-and-definite-assignment).
+Double-quoted labels declare names; backticks delimit Text. The [basic program](../guide/first-program.md) binds `message` to Text and supplies that binding to Print. Preserve source identity and typed operands rather than treating every token as a string.
 
 ## Text
 
-[Text in the Word Glossary](../reference/word-glossary.md#word-type-text).
+[Text](../reference/word-glossary.md#word-type-text) preserves its bytes, including whitespace. A literal backslash followed by `n` is not a newline escape. Core Print accepts Text and adds one newline. There is no captured Output interface.
 
 ## Number
 
-[Number in the Word Glossary](../reference/word-glossary.md#word-type-number).
+[Number](../reference/word-glossary.md#word-type-number) uses finite binary64. Large integers and fractions can round. Native definition operands use checked encoding with an explicit `f64` representation; malformed and nonfinite inputs retain their error boundary. Number is not accepted by Text-only Print.
 
 ## Truth
 
-[Truth in the Word Glossary](../reference/word-glossary.md#word-type-truth).
+[Truth](../reference/word-glossary.md#word-type-truth) represents boolean values. It is distinct from Number and Text. Its recognition does not provide a runtime conditional executor.
 
 ## Thing
 
-[Thing in the Word Glossary](../reference/word-glossary.md#word-type-thing).
+[Thing](../reference/word-glossary.md#word-type-thing) is a retained general value category. It does not permit Print to accept arbitrary values or supply the removed formatting policy.
 
 ## Byte and Bytes
 
 ### Byte
 
-[Byte in the Word Glossary](../reference/word-glossary.md#word-type-byte).
+[Byte](../reference/word-glossary.md#word-type-byte) is a configured type meaning; it is distinct from a textual character.
 
 ### Bytes
 
-[Bytes in the Word Glossary](../reference/word-glossary.md#word-type-bytes).
+[Bytes](../reference/word-glossary.md#word-type-bytes) is a retained internal representation. There is no bundled Storage/IO byte API.
 
 ## Pointer
 
-[Pointer in the Word Glossary](../reference/word-glossary.md#word-type-pointer).
+[Pointer](../reference/word-glossary.md#word-type-pointer) remains a distinct compiler category. Its presence does not establish an executable sharing or lifetime-management API in the reset.
 
 ## Null and internal states
 
 ### Null
 
-[Null in the Word Glossary](../reference/word-glossary.md#word-type-null).
+[Null](../reference/word-glossary.md#word-type-null) is distinct from unresolved compiler state and from a native null pointer. Unknown/None states must not become successful ordinary values.
 
 ## Error
 
-[Error in the Word Glossary](../reference/word-glossary.md#word-type-error).
+Runtime Error inspection is unavailable. Compiler failures use the separate [error model](../error-model.md).
 
 ## Conversion and aliasing boundaries
 
-Matching Text, Number, and Truth values can be compared, but ordering is Number-only. No implicit cross-scalar coercion is promised. Definition slots separately check their required argument kinds.
-
-The repeated-activation demo contrasts an App alias with a Text snapshot:
-
-<!-- example:values-output-snapshot -->
-
-`Worker` and `Repeat` refer to the same App. After the first join, `snapshot` holds that invocation's Output. Running the App again does not update `snapshot`: `Show snapshot` reads the stored scalar, while `Show Repeat's Output` reads the later invocation. Both invocations happen to print the same message. This excerpt depends on the demo's earlier declarations.
+Keep canonical identity, value representation, borrow/move behavior and conversion policy explicit. Do not add implicit formatting, cloning or type coercion to compensate for a removed library.
 
 ## Sources and witnesses
 
-Primary sources: [value tags](../../lyger/value_kinds.go), [primitive storage and loading](../../lyger/types.go), [type spellings](../../lyger/utilities.go), [native encoding](../../lyger/literal_atoms.go), [definition encoding](../../lyger/definition_bindings.go), and [typed orchestration](../../lyger/orchestration_plan.go). Existing witnesses: [Number encoding](../../lyger/definition_number_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), [raw Text](../../lyger/raw_text_test.go), [Text encoding](../../lyger/definition_text_encoding_test.go), [IO numeric formatting](../../lyger/io_numeric_test.go), [stored-value invariants](../../lyger/stored_values_test.go), and [scalar conditions](../../lyger/orchestrator_test.go). Example labels distinguish complete programs from fragments. Website validation does not execute L.
+See [value kinds](../../lyger/value_kinds.go), [stored values](../../lyger/types.go), [native encoding](../../lyger/literal_atoms.go) and [definition bindings](../../lyger/definition_bindings.go). Retained tests supply assertions, not evidence of a fresh run.

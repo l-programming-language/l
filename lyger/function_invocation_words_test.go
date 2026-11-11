@@ -149,10 +149,3 @@ func TestFunctionEmptyCallbackKeepsBoundDefinition(t *testing.T) {
 		functionSource("Apply", "\"Callback\" as Function", "", "Callback.") + "Apply Done.\n"
 	requireFunctionGenerated(t, source)
 }
-
-func TestFunctionMemberAndComposedWordsNative(t *testing.T) {
-	const source = "Create \"User\" as a Dictionary.\nDefine \"Store\" as `store`.\n\n" +
-		"    Publicly create User's \"Walk|-s|-ed|-ing|-er\" as a New Function with Inputs of \"Location\" as Text and No Outputs.\nUse Return as \"Finish\".\nShow Location.\nFinish.\nShow `unreachable`.\n\n" +
-		"The User walks to the Store.\nUse User's Walk as \"Walk\".\nCreate \"Travel|-s|-ed|-ing|-er\" for Walking any Text.\nTravel `park` and then Show `after`.\nIf false, Walk `wrong`, else Walk `home`.\n"
-	runtimeBundleResult(t, runtimeValuesBundle(t, source), "storeparkafterhome", "")
-}

@@ -8,7 +8,7 @@ import (
 func TestFunctionParameterCannotEscapeIntoAppBody(t *testing.T) {
 	for _, parameterType := range []string{"Text", "Identity"} {
 		t.Run(parameterType, func(t *testing.T) {
-			source := distributionIOImport + "\n" + identityFunction + "    Publicly create \"Owner\" as a New Function with Inputs of \"Argument\" as " + parameterType + " and No Outputs.\nCreate \"Child\" as a New Basic App.\nThe App Prints Argument.\nReturn.\n"
+			source := distributionCorePrefix + "\n" + identityFunction + "    Publicly create \"Owner\" as a New Function with Inputs of \"Argument\" as " + parameterType + " and No Outputs.\nCreate \"Child\" as a New Basic App.\nThe App Prints Argument.\nReturn.\n"
 			c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
 			if c.Error == nil || !strings.Contains(c.Error.Error(), "runtime value Argument cannot be captured by an App body") {
 				t.Fatalf("dynamic Function parameter escaped child process: %v", c.Error)

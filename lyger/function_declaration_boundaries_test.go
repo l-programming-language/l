@@ -5,16 +5,6 @@ import (
 	"testing"
 )
 
-func TestFunctionDeclarationBoundariesNative(t *testing.T) {
-	source := "    If false, Publicly create \"Unused\" as a New Function with No Inputs and No Outputs and then Show `skipped|`.\nReturn.\n\n" +
-		strings.Replace(identityFunction, "and Outputs of Text.", "and Outputs of Text and then Show `header|`.", 1) +
-		"Define \"FirstCopy\" as Identity.\n\"SecondCopy\" is FirstCopy.\nSecondCopy `copy|` as \"Copied\".\nShow Copied.\n\n" +
-		functionSource("Apply", "\"Callback\" as Identity", "Text", "Define \"Saved\" as Callback.\nSaved `parameter|` as \"Result\".\nReturn Result.") + "Apply Identity as \"Applied\".\nShow Applied.\n\n" +
-		functionSource("Select", "", "Identity", "Return Identity.") + "Select as \"Returned\".\nDefine \"Saved\" as Returned.\nSaved `result` as \"Selected\".\nShow Selected.\n"
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: source + "\n" + functionHeaderCaptureSource})
-	captureNativeResult(t, c, "header|copy|parameter|resultsnapshotshareddone")
-}
-
 func TestFunctionCopyRetainsSignature(t *testing.T) {
 	for _, declaration := range []string{
 		"Define \"Saved\" as Identity.",
@@ -47,13 +37,14 @@ func TestFunctionModuleHeaderHasNoInitializationEffects(t *testing.T) {
 	}
 	for _, suffix := range []string{"", " and then Show `effect`", "conditional"} {
 		files := dictionaryIndexFilesystem(t)
+		installTestDictionary(t, files, "catalog", "Catalog", "Create \"Catalog\" as a Dictionary.\n")
 		header := "Publicly create"
 		tail := suffix
 		if suffix == "conditional" {
 			header, tail = "If false, Publicly create", ""
 		}
-		files["stdlib/eng/io/dictionary.l"].Data = []byte("Create \"IO\" as a Dictionary.\n\n    " + header + " IO's \"Identity\" as a New Function with Inputs of \"Value\" as Text and Outputs of Text" + tail + ".\nReturn Value.\n")
-		_, err := NewLygerService(Options{Resources: files}).Compile([]byte("Use IO's Identity from `io` as \"Identity\".\nIdentity `value` as \"Result\".\nShow Result.\n"), "main.l")
+		files["stdlib/eng/catalog/dictionary.l"].Data = []byte("Create \"Catalog\" as a Dictionary.\n\n    " + header + " Catalog's \"Identity\" as a New Function with Inputs of \"Value\" as Text and Outputs of Text" + tail + ".\nReturn Value.\n")
+		_, err := NewLygerService(Options{Resources: files}).Compile([]byte("Use Catalog's Identity from `catalog` as \"Identity\".\nIdentity `value` as \"Result\".\nShow Result.\n"), "main.l")
 		if err == nil || !strings.Contains(err.Error(), "initialization effects") {
 			t.Fatalf("module Function header executed initialization (%q): %v", suffix, err)
 		}

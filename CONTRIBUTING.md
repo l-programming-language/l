@@ -19,8 +19,8 @@ Read the applicable scoped instructions before changing
 
 L, Lyger, and Logiceme are Go implementations. Lyger resolves source semantics
 and emits AML; Logiceme composes Rust source bundles from AML and canonical
-logeme resources. Apps run in separate OS processes. Preserve those boundaries
-when choosing where a fix belongs.
+logeme resources. The current executable is one standalone App with core Print. Preserve these
+boundaries when choosing where a fix belongs.
 
 ## Work on a branch
 

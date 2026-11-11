@@ -1,5 +1,7 @@
 # Installation options
 
+These retained installer procedures concern published releases. For the current core-only reset, [build from this checkout](installation.md); an older release may embed libraries and runtime behavior that have been removed.
+
 Start with [Install L](installation.md) for the recommended versioned installer. This page covers platform requirements, custom locations, unattended installation, upgrades, and building the compiler from source.
 
 ## Supported platforms
@@ -100,6 +102,6 @@ The tag selects released compiler source; use another release tag when needed. [
 
 L invokes `cargo +1.98.1` through rustup. Release setup installs the minimal pinned toolchain, fetches locked dependencies, and verifies offline resolution without changing the lockfile. On a fresh rustup installation, Rust 1.98.1 becomes the default toolchain.
 
-For binary installations, rerun the versioned installer or extracted archive's setup script with `--with-toolchain`. For source installations, run `CGO_ENABLED=1 scripts/l-ci bootstrap` from the matching checkout. This also prepares contributor tools and validation caches and can take several minutes. See the [development policy](../development-harness.md#validation-authorization).
+For binary installations, rerun the versioned installer or extracted archive's setup script with `--with-toolchain`. For current-checkout source builds, follow the [development policy](../development-harness.md#validation-authorization) and report missing prerequisites as setup failures.
 
 Installing Rust alone does not populate L's dependency cache. Native compilation uses frozen, offline Cargo resolution. Preserve the retained locks rather than removing `--frozen`. See [troubleshooting](troubleshooting.md#cargo-and-publication) if a build still fails after setup.

@@ -1,23 +1,19 @@
 # L documentation
 
-L is a human-readable language with applications as values. It builds native programs for macOS and Linux.
+The current checkout supports one standalone App with core Print. Print accepts Text and writes it followed by one newline. The standard libraries and runtime are absent while they are rebuilt in L.
 
-Start with [installation](cli/installation.md), then [build your first program](guide/first-program.md) and follow the [guide](guide/index.md).
-
-## Choose a starting point
+Start with [building the compiler](cli/installation.md) and [your first program](guide/first-program.md).
 
 | Your task | Start here |
 | --- | --- |
-| Look up commands and build options | [CLI reference](cli/index.md) |
-| Read the implemented language contract | [Language specification](spec/index.md) |
-| Browse implicit vocabulary | [Native Words](reference/words.md) |
-| Look up a word's definition, forms and usage | [Word Glossary](reference/word-glossary.md) |
-| Import a library dictionary | [Standard library](stdlib/index.md) |
-| Understand the compiler and logemes | [Internals](internals/index.md) |
-| Improve documentation or compiler development | [Contributing](contributing/index.md) |
-| Understand version identity and release limits | [Release information](releases/index.md) |
+| Build a standalone App | [CLI reference](cli/index.md) |
+| Understand source syntax and ownership | [Language specification](spec/index.md) |
+| Browse retained vocabulary | [Native Words](reference/words.md) and [Word Glossary](reference/word-glossary.md) |
+| Understand compiler and logeme boundaries | [Internals](internals/index.md) |
+| Contribute and validate changes | [Contributing](contributing/index.md) |
+| Understand source and release identity | [Release information](releases/index.md) |
 
 <a id="read-evidence-with-the-claim"></a>
 <a id="maintained-technical-guides"></a>
 
-See [example and evidence labels](contributing/evidence.md) for verification details and the [compatibility policy](releases/index.md#versioning-and-compatibility) before upgrading.
+The [temporary hello-world gate](development-harness.md) defines current completion evidence. Grammar entries, retained compiler APIs and frozen native templates do not imply that their former runtime or library vocabulary is available.

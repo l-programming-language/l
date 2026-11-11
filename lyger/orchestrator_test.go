@@ -2,16 +2,9 @@ package Lyger
 
 import (
 	"bytes"
-	"context"
-	"crypto/sha256"
-	Logiceme "github.com/l-programming-language/l/logiceme"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"strconv"
+
 	"strings"
 	"testing"
-	"time"
 )
 
 func TestOrchestratorFlowRequiresAssignmentAndDefersOutputReadiness(t *testing.T) {
@@ -178,145 +171,7 @@ func TestOrchestratorUnitUsesTypedIRWithoutChangingApplication(t *testing.T) {
 	}
 }
 
-func TestOrchestratorGlyphsGenerateBuildableSource(t *testing.T) {
-	result := executableTestResult(t, memberResolutionFixture(t))
-	buildOrchestratorForTest(t, result)
-}
-
 type orchestratorTestBuild struct {
 	instrumentation string
 	race            bool
-}
-
-func buildOrchestratorForTest(t *testing.T, result *CompilationResult, options ...orchestratorTestBuild) string {
-	t.Helper()
-	if len(options) > 1 {
-		t.Fatal("at most one observer option")
-	}
-	option := orchestratorTestBuild{}
-	if len(options) == 1 {
-		option = options[0]
-	}
-	unit, err := result.OrchestratorUnit("main", executableTestCompanions(result))
-	if err != nil {
-		t.Fatal(err)
-	}
-	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate(unit.BackendAML, Logiceme.GenerationOptions{IncludeRuntime: true})
-	recordBundle(t, bundle)
-	if err != nil {
-		t.Fatalf("actual Rust orchestration generation failed; build/runtime blocked: %v", err)
-	}
-	return buildActualBundle(t, bundle, "main", true, option.instrumentation)
-}
-
-func TestOrchestratorScalarConditionsExecuteWithExactText(t *testing.T) {
-	result := executableTestResult(t, memberResolutionFixture(t))
-	text := func(value string) *instructionValue {
-		return &instructionValue{Kind: operandLiteral, Type: valueText, Literal: &primitive{Type: valueText, Text: strconv.Quote(value)}}
-	}
-	number := func(value float64) *instructionValue {
-		return &instructionValue{Kind: operandLiteral, Type: valueNumber, Literal: &primitive{Type: valueNumber, Number: value}}
-	}
-	truth := func(value bool) *instructionValue {
-		return &instructionValue{Kind: operandLiteral, Type: valueTruth, Literal: &primitive{Type: valueTruth, Truth: value}}
-	}
-	show := func(value *instructionValue) *instruction { return &instruction{Kind: instructionShow, Value: value} }
-	var instructions []*instruction
-	for index, condition := range []*instructionCondition{
-		{Operator: "truth", Left: truth(true)},
-		{Operator: "equals", Left: text("same"), Right: text("same")},
-		{Operator: "is", Left: number(2), Right: number(2)},
-		{Operator: "isnt", Left: truth(true), Right: truth(false)},
-		{Operator: "less", Left: number(1), Right: number(2)},
-		{Operator: "greater", Left: number(2), Right: number(1)},
-		{Operator: "less_equal", Left: number(2), Right: number(2)},
-		{Operator: "greater_equal", Left: number(2), Right: number(1)},
-	} {
-		instructions = append(instructions, &instruction{Kind: instructionIf, Condition: condition, Then: []*instruction{show(text(string(rune('a' + index))))}, Else: []*instruction{show(text("WRONG"))}})
-	}
-	instructions = append(instructions,
-		&instruction{Kind: instructionIf, Condition: &instructionCondition{Operator: "truth", Left: truth(true), Negated: true}, Then: []*instruction{show(text("WRONG"))}, Else: []*instruction{show(text("i"))}},
-		&instruction{Kind: instructionIf, Condition: &instructionCondition{Operator: "truth", Left: truth(true)}, Then: []*instruction{{Kind: instructionIf, Condition: &instructionCondition{Operator: "truth", Left: truth(true)}, Then: []*instruction{show(text("j"))}}}},
-		show(number(3.5)), show(truth(true)), show(truth(false)),
-	)
-	wantText := ";\nraw \"quote\" \\ path ~, ^ * | <DEF> `雪`\n"
-	instructions = append(instructions, show(text(wantText)))
-	result.Compilation.Semantics.Instructions = instructions
-	binary := buildOrchestratorForTest(t, result)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	command := exec.CommandContext(ctx, binary)
-	var stdout, stderr bytes.Buffer
-	command.Stdout, command.Stderr = &stdout, &stderr
-	if err := command.Run(); err != nil {
-		t.Fatalf("run scalar orchestration: %v\n%s", err, stderr.Bytes())
-	}
-	if stdout.String() != "abcdefghij3.5truefalse"+wantText || stderr.Len() != 0 {
-		generated, readErr := os.ReadFile(filepath.Join(filepath.Dir(binary), "src/main.rs"))
-		if readErr != nil {
-			t.Fatalf("read generated orchestration: %v", readErr)
-		}
-		t.Fatalf("scalar execution changed values or control flow:\nstdout=%q\nstderr=%q\n%s", stdout.String(), stderr.String(), generated)
-	}
-}
-
-func TestOrchestratorAssignmentRetainsValueAfterAnotherRun(t *testing.T) {
-	helper := buildNativeHelper(t)
-	child, err := os.ReadFile(helper)
-	if err != nil {
-		t.Fatal(err)
-	}
-	buildOwner := t.Name()
-	t.Cleanup(func() {
-		got, err := os.ReadFile(helper)
-		if err != nil || !bytes.Equal(got, child) {
-			t.Errorf("shared native helper changed after assignment profiles: %v", err)
-		}
-	})
-	for _, tc := range []struct{ name, declaration string }{
-		{"active", "Define \"y\" as HelloWorldApp's Output."},
-		{"passive", "\"y\" is HelloWorldApp's Output."},
-	} {
-		t.Run(tc.name, func(t *testing.T) {
-			t.Logf("native helper build: %s; SHA256 %x; orchestrator builds remain independent", buildOwner, sha256.Sum256(child))
-			assertOrchestratorAssignmentRetainsValueAfterAnotherRun(t, tc.declaration, child)
-		})
-	}
-}
-
-func assertOrchestratorAssignmentRetainsValueAfterAnotherRun(t *testing.T, declaration string, child []byte) {
-	t.Helper()
-	source := memberResolutionFixture(t)
-	cut := strings.Index(source.main, "If it has an Error")
-	if cut < 0 {
-		t.Fatal("source fixture has no outer conditional")
-	}
-	source.main = source.main[:cut] + declaration + "\nRun HelloWorldApp.\nAwait HelloWorldApp.\nShow y.\nShow HelloWorldApp's Output.\n"
-	result := executableTestResult(t, source)
-	binary := buildOrchestratorForTest(t, result)
-	dir := filepath.Dir(binary)
-	companion := filepath.Join(dir, filepath.FromSlash(executableTestCompanions(result)[0].RelativeExecutable))
-	if err := os.MkdirAll(filepath.Dir(companion), 0700); err != nil {
-		t.Fatal(err)
-	}
-
-	if err := os.WriteFile(companion, child, 0700); err != nil {
-		t.Fatal(err)
-	}
-	if got, err := os.ReadFile(companion); err != nil || !bytes.Equal(got, child) {
-		t.Fatalf("runtime companion differs from parent Cargo artifact: %v", err)
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
-	defer cancel()
-
-	var stdout, stderr bytes.Buffer
-	run := exec.CommandContext(ctx, binary)
-	run.Dir = t.TempDir()
-	run.Stdout, run.Stderr = &stdout, &stderr
-	if err := run.Run(); err != nil {
-		t.Fatalf("run source orchestration: %v\n%s", err, stderr.Bytes())
-	}
-	if stdout.String() != "first\nsecond\n" || stderr.Len() != 0 {
-		t.Fatalf("assignment followed later Output or replayed child stdout: %q / %q", stdout.String(), stderr.String())
-	}
 }

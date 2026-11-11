@@ -1,52 +1,35 @@
-# Install L
+# Build L from this checkout
 
-L is available for Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64). The released installer prepares L and its Rust build dependencies without Go or a compiler source checkout.
-
-## Install a released binary
-
-Install L 0.0.1 in a Bash or Zsh terminal:
-
-```sh
-curl --fail --location --proto '=https' --tlsv1.2 \
-  https://github.com/l-programming-language/l/releases/download/v0.0.1/install-release.sh \
-  --output install-release.sh &&
-bash ./install-release.sh --version 0.0.1 --with-toolchain &&
-export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH" &&
-l --version
-```
-
-The installer verifies the release archive and installs `l` into `~/.local/bin`. `--with-toolchain` permits installation of missing Rust tools without another prompt. The PATH export activates this terminal; `l --version` should print `0.0.1`. Setup does not use `sudo`, install system packages, or edit shell startup files.
-
-To review the script before running it, use [download and inspect](installation-options.md#download-and-inspect).
+Use the current checkout's compiler for the core-only standalone App/Print path. Previously released binaries can embed removed dictionaries and runtime behavior.
 
 ## Prerequisites
 
-You need internet access and your system's [native build tools](installation-options.md#native-build-tools). If setup reports a missing C compiler or linker, follow those platform instructions and rerun the command.
+Use native macOS or Linux with a C compiler/linker and the pinned Go and Rust tools recorded in [.ci-tools.json](../../.ci-tools.json). Native App builds use frozen, offline Cargo resolution, so retained dependencies must already be available. See [native build tools](installation-options.md#native-build-tools) for host setup.
 
-<a id="activate-and-check-l"></a>
+## Build the compiler
 
-## Keep L on PATH
-
-Add this export to your chosen Bash or Zsh startup file for new terminals:
+From the repository root:
 
 ```sh
-export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH"
+scripts/l-go build -mod=readonly -o /tmp/l ./cmd/l
+/tmp/l --version
+/tmp/l build demo/basic/main.l
+./demo/basic/main
 ```
 
-See [shell setup](installation-options.md#shell-setup) for custom locations and other shells. If macOS blocks the binary, see [macOS approval](installation-options.md#macos-approval).
+The last command prints `Hello World!` followed by one newline. The compiler embeds the current English resources and does not need a project resource copy.
 
-## First native build
-
-Next, [build your first program](../guide/first-program.md). The walkthrough takes you from a source file to a running program and confirms that native compilation works. Running the built program requires neither L nor Go/Rust tools.
-
-## More installation options
-
-See [installation options](installation-options.md) for version selection, custom locations, unattended setup, upgrades, and removal.
-
+<a id="activate-and-check-l"></a>
 <a id="source-build-installation"></a>
 
-To compile the L compiler yourself, follow [source-build installation](installation-options.md#source-build-installation).
+## Use your compiler
+
+Invoke the built compiler by its path or place it in a directory on your PATH. The [first-program guide](../guide/first-program.md) uses `l` to refer to that current compiler. Building an App and running it are separate actions.
 
 <a id="rust-dependency-preparation"></a>
 
-For missing Rust tools or cached dependencies, see [dependency preparation](installation-options.md#rust-dependency-preparation).
+## Tools and validation
+
+A missing tool or offline dependency is a setup failure. Preserve pins and locks; do not remove frozen/offline resolution or restore old library resources to make a build succeed. Follow [development and acceptance](../development-harness.md) for the temporary hello-world gate.
+
+[Installation options](installation-options.md) describe retained release tooling. A historical release is not a substitute for this checkout when checking the reset.

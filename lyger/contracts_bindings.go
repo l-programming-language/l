@@ -36,7 +36,6 @@ type contractRecorder struct {
 	statements               map[*token]*lStatement
 	lookupReasons            map[*token]string
 	descriptors              []contractDescriptorUse
-	sourceConstructions      []contractSourceConstruction
 	definitions              map[*record]contracts.DefinitionKey
 	declarationTokens        map[*record]*token
 	occurrences              map[sourceOccurrenceID]contracts.BindingOccurrenceID
@@ -46,8 +45,6 @@ type contractRecorder struct {
 	environments             map[*lexicalScope]contracts.BindingEnvironmentKey
 	configurationFingerprint string
 	lowering                 []contracts.LoweringStep
-	nativeAnalysis           *contractNativeAnalysis
-	nativeEmissions          map[*instruction][]contractNativeEmission
 	identityReady            bool
 }
 
@@ -179,13 +176,6 @@ func (r *contractRecorder) rebaseConstruction(from, to *constructionNode) {
 	for i := range r.descriptors {
 		if r.descriptors[i].Target == from {
 			r.descriptors[i].Target = to
-		}
-	}
-	for i := range r.sourceConstructions {
-		if r.sourceConstructions[i].Target == from {
-			// The source operation happened on this fresh contribution before
-			// its merge. Its local snapshots are not snapshots of the receiver.
-			r.sourceConstructions[i].Detached = true
 		}
 	}
 }

@@ -3,8 +3,8 @@
 The eighteen frozen Rust segments support selection, iteration, callable
 signatures, empty records/traits, keyed matching and local lifetime/generic lists
 through bounded Rust compiler preparation. L, Lyger and Logiceme are implemented
-in Go. Generated Apps and orchestrators use Rust. Raw Evaluate calls return Rust
-source bundles with optional runtime support.
+in Go. The current CLI generates one standalone Rust App. Raw Evaluate calls return
+Rust source bundles; removed runtime support is unavailable.
 
 The templates retain `Meta`, `Funcs`, `Props`, `Ops` and the existing `Conjoinments`
 categories. Qualified cases can supply fragments completed by their parent.
@@ -19,8 +19,7 @@ freezes the current asset bytes. The
 [Lucid suite guide](../logiceme/testdata/lucid/README.md) owns the current
 case inventory and validation commands. Its future cases also execute generated
 programs. The [dated ledger](../logiceme/testdata/lucid/FAILURES.md) records results
-for its stated revision. The [frontend/runtime record](../testdata/integration/IMPLEMENTATION.md)
-tracks process supervision. Deployment scripts remain unexecuted.
+for its stated revision. Deployment scripts remain unexecuted.
 
 Calculation, Description and Iteration retain their frozen composition wrappers.
 Declaration renders the file header. Evaluation forwards BI's
@@ -31,44 +30,19 @@ two local generic/lifetime inputs through their approved cases. The
 exercise the outer action selectors and singular child forwarding. Source-library
 composition does not widen frozen assets, their interfaces or hash expectations.
 
-## L source library counterparts
+## L source counterparts
 
-[Prelude](eng/prelude.l) includes [core](eng/core.l), which supplies implicit source vocabulary. Its [word reference](../docs/reference/builtins/definitions.md)
-owns forms, operands and behavior. [Storage](../docs/internals/storage.md) supplies
-explicitly importable implementation compositions, and [IO](../docs/stdlib/eng/io.md)
-supplies public printing and byte output. Their selection, traversal, error and
-wrapper policies remain in L over small native leaves. Source-library changes
-do not widen the frozen logeme interfaces. Prelude privately imports the one
-Storage dictionary. Root [dictionaries.json](../dictionaries.json) selects
-foundational, runtime and standard-library dictionaries. Indexing a dictionary
-does not publish its private helpers or make its words implicit.
+[Core](eng/core.l) loads directly and supplies the implicit vocabulary, including
+Print. The root [dictionary registry](../dictionaries.json) is empty. Storage,
+IO, Formatting and Runtime have been removed for reconstruction in L; their
+former words and generated/native support are not available.
 
-Native source Function signatures use existing Func/Props metadata. The frontend
-`Type` slot binds a native type atom or selected source type declaration. `Atoms`
-binds ordered scalar/reference arguments. `Label` declares a result identifier.
-Nested constructions bind that result once before their consumer. Assignment
-targets remain references. These frontend roles add no AML fields or logeme
-interfaces. Native and ordinary Function bodies share instruction lowering.
-
-Runtime policy is authored in [L source](../stdlib/eng/runtime/dictionary.l). Run
-`scripts/l-go run -mod=readonly ./tools/composition` after changing its dependencies, then
-`scripts/l-go run -mod=readonly ./tools/composition -check` to verify the derived AML,
-fingerprints and selection index. The [CLI contract](../docs/cli-build.md#source-generation-and-native-builds)
-defines runtime selection and provider behavior. Logiceme consumes complete AML,
-not L source or private frontend plans.
-
-## Typed builtin process implementations
-
-`operations/rust/process-*.def` supplies Build, Run, Stop, Await and
-finish-continuation compositions to Lyger's private implementation catalog.
-These definitions use the existing logemes and native runtime calls. The
-frontend selects by semantic operation and canonical App
-target, then binds compiler-typed receiver, invocation and continuation values.
-These slots are internal compiler inputs. They add no public definition argument
-kind, Func field, segment interface or keyword overload. Each compilation loads
-and validates the complete catalog from its selected resource filesystem.
-
-Main and Basic remain source-defined construction descriptors. Only Apps accept native process operations and implicit process Output/Error. Standalone Service declarations create no package. Standalone body effects reject. App construction retains its primary Service and additional Service libraries. Start/Execute remain App-specific source compositions. This adds no in-process Service task, Class lifecycle, runtime argument transport or segment template.
+Native source definitions bind typed operands through existing AML fields.
+Source-level recognition alone does not establish executable support. The
+[current build boundary](../docs/cli-build.md) is a standalone App with core
+Print. Existing process-operation `.def` resources remain compiler inputs but
+cannot execute without a future L-owned Runtime. Their presence does not widen
+that boundary or authorize a hardcoded substitute.
 
 ## Verified compositions
 
@@ -611,7 +585,7 @@ follow-up work. This reference does not authorize repairs or interface changes.
 | Output-field provenance | Exact `Meta.Func.Outputs~` preserves supplied native types, including `Void`, for flat/record FW and BW. Empty-output behavior is preserved. Indexed Funcs Key and Outputs~ have the bounded MY contract above; other indexed fields are not broadened. |
 | MY trait signatures | Receiverless Funcs records and optional outputs are covered above. Empty traits have the bounded empty-composition contract; supplied Receiver metadata is rejected. Trait-level parameter lists use the local-input contract above. Composed methods, per-method parameters and implementations remain outside these contracts. |
 | Generics, enums and patterns | Local String parameters/arguments are supported only on FW/HY/MY/Y/named KY as described above. Const-generic, where-clause, per-method and implementation interfaces remain separate work. OG/DOG do not establish general compositional patterns or enums. |
-| Header/module/runtime coordination | A retains its package comment and Headers/use loop. The source assembler emits graph-owned safety/module declarations separately at the known A boundary, and runtime support wraps composed `l_main`. Configuration initializes before user effects. Explicit library-only targets omit executable support. Separate frontend/runtime regressions cover these boundaries. |
+| Header/module/runtime coordination | A retains its package comment and Headers/use loop. The source assembler emits graph-owned safety/module declarations separately at the known A boundary, and configuration initializes before user effects. Explicit library-only targets omit executable support. Runtime resources are absent during the reset. |
 | Ownership and mutability | The frontend typed plan determines storage and required mutation from resolved L instructions, preserves paragraph activations and value snapshots, and rejects unassigned reads. It introduces no glyph fields, hidden L-value initialization or general native ownership/lifetime inference. The standalone Lucid mutation witnesses still supply native text explicitly. |
 | Iteration and keyed GI | X has the bounded four-category contract above. Keyed GI preserves native patterns and explicit fallback carriers as described above. Iterator adaptation and native pattern legality stay caller-owned/rustc-checked. These standalone branch/loop witnesses remain compile-only. |
 
@@ -640,7 +614,7 @@ binary and at most one library. An independent path-dependent binary checks
 public interfaces and shared nominal types in the library regression. This is
 separate from the [Lucid inventory](../logiceme/testdata/lucid/README.md#current-inventory).
 
-Raw AML library targets and explicit native consumers retain this library-only contract. App-constructed Service libraries preserve their current paths, public interfaces and dependency identities. Standalone L Services create no workspace targets. App publication retains its version-1 inventory. See [CLI semantics](../docs/cli-build.md).
+Raw AML library targets and explicit native consumers retain this library-only contract. These backend targets do not imply current CLI support for L Service workspaces. See [CLI semantics](../docs/cli-build.md).
 
 ## Support assets and verification
 
@@ -652,26 +626,17 @@ Support resources have responsibilities separate from the eighteen segment templ
 | [install/cargo.lu](templates/install/cargo.lu) | Cargo manifest. |
 | [operate/start.lu](templates/operate/start.lu) | Native build and launch script. |
 | [operate/stop.lu](templates/operate/stop.lu) | Explicit-PID stop script. |
-| [main.rs](../stdlib/runtime/rust/main.rs) | Native runtime entry and shutdown delegation. |
-| [host.rs](../stdlib/runtime/rust/host.rs) | Host process, async and trait adapters. |
-| [support.aml](../stdlib/runtime/generated/support.aml), [support.json](../stdlib/runtime/generated/support.json) | Derived runtime composition, source fingerprints and selection index. |
-| [process_unix.rs](../stdlib/runtime/rust/process_unix.rs) | Unix process support. |
-| [process_other.rs](../stdlib/runtime/rust/process_other.rs) | Unsupported-platform reporting. |
 
 The six core nonruntime bundles verify the common manifest, config and start/stop
-artifact bytes. They do not execute those artifacts, exercise process supervision,
-or establish L/Lyger Rust output parity by themselves. The CLI builds native
-Rust workspace members. Separate supervised runtime and source-parity tests
-cover process launch, streams, continuation ownership and cleanup. See the
-[implementation evidence](../testdata/integration/IMPLEMENTATION.md) for
-observed outcomes.
+artifact bytes. They do not execute deployment artifacts or establish process
+supervision. Core Print execution is checked by the temporary hello-world gate.
 
 The [suite guide](../logiceme/testdata/lucid/README.md#run-and-retain-evidence)
 owns commands, pins, locks and artifact reporting. Compile generated files without
 repair or substitution. Preserve the [validation budgets](../docs/development-harness.md#validation-budgets).
 
 Preserve shared interpreter regressions and L/Lyger integration checks.
-The [acceptance guide](../docs/development-harness.md) owns the full repository
+The [acceptance guide](../docs/development-harness.md) owns the current temporary
 gate. The dated ledger records its last verified result. Do not infer a new gate
 result from documentation edits, broaden or replace the suite incidentally, or
 update template hashes to accommodate production changes.

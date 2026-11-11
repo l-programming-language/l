@@ -25,7 +25,7 @@ func TestCLIReservedCompanionNames(t *testing.T) {
 	cli := phase1.CLI(t)
 	// Compose flat, single-Service structural and multi-Service Apps in one
 	// program. Later declarations occupy the first two companion fallbacks.
-	source := "Use IO's Print from `io` as \"Print\".\n\n" +
+	source := "\n\n" +
 		"\"Left\" is a New Adjective describing any Service, Object, or Function.\n" +
 		"It describes a Generic `left` Function of any Process with No Inputs and No Outputs.\n" +
 		"It describes a Generic `left` Object with a New Objective Left Function using any Process.\n" +

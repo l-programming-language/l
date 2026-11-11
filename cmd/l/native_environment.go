@@ -408,11 +408,11 @@ func resolveNativeEvidenceOutput(path string, inputs []string, output, companion
 		if err != nil {
 			return "", err
 		}
-		if sameContractPath(path, canonical) {
+		if sameNativeEvidencePath(path, canonical) {
 			return "", lerrors.InvalidInput.Errorf("native evidence output must not replace source input %s", input)
 		}
 	}
-	if sameContractPath(path, output) {
+	if sameNativeEvidencePath(path, output) {
 		return "", lerrors.InvalidInput.Errorf("native evidence output must not replace the executable")
 	}
 	within, err := buildPathContains(companion, path)
@@ -430,59 +430,12 @@ func resolveNativeEvidenceOutput(path string, inputs []string, output, companion
 	return path, nil
 }
 
-// validateNativeEnvironmentConfiguration rechecks only the current sanitized
-// environment and conventional Cargo config files. Historical command strings
-// and tool executable paths are never executed or reread by offline checking.
-func validateNativeEnvironmentConfiguration(value contracts.NativeEnvironment) (contracts.Status, string, error) {
-	if value.Method == "test-only" {
-		return contracts.Established, "explicit test-only environment fixture", nil
+// Both paths have already been canonicalized. SameFile also catches hard links.
+func sameNativeEvidencePath(left, right string) bool {
+	if left == right {
+		return true
 	}
-	for key := range value.Configuration {
-		if name, environment := strings.CutPrefix(key, "environment:"); environment && !nativeConfigurationEnvironmentKey(name) {
-			return contracts.Unresolved, "", fmt.Errorf("native environment contains an unsupported configuration key %q", key)
-		}
-	}
-	expected := make(map[string]string)
-	directories := make(map[string]bool)
-	for _, execution := range value.Executions {
-		if execution.Kind != "environment" && execution.Kind != "build" {
-			continue
-		}
-		if !filepath.IsAbs(execution.WorkingDirectory) {
-			return contracts.Unresolved, "", fmt.Errorf("native environment has a nonabsolute observation directory")
-		}
-		directories[execution.WorkingDirectory] = true
-	}
-	if len(directories) == 0 {
-		return contracts.Unresolved, "", fmt.Errorf("native environment has no recorded observation directory")
-	}
-	for directory := range directories {
-		if err := nativeConfiguration(expected, directory, cargoBuildEnvironment()); err != nil {
-			return contracts.Unresolved, "", err
-		}
-	}
-	// A different Cargo home changes both the environment identity and its
-	// config-file set. Report that as stale applicability before comparing paths.
-	for key, actual := range expected {
-		if !strings.HasPrefix(key, "cargo-config:") && value.Configuration[key] != actual {
-			return contracts.Unresolved, "native environment configuration changed or is absent: " + key, nil
-		}
-	}
-	for key := range value.Configuration {
-		if strings.HasPrefix(key, "environment:") && expected[key] == "" {
-			return contracts.Unresolved, "native environment variable is no longer selected: " + key, nil
-		}
-		if (key == "workspace-inputs" || key == "companion-generation") && value.Method == "build" {
-			continue
-		}
-		if _, allowed := expected[key]; !allowed {
-			return contracts.Unresolved, "", fmt.Errorf("native environment contains an unsupported configuration key %q", key)
-		}
-	}
-	for key, actual := range expected {
-		if value.Configuration[key] != actual {
-			return contracts.Unresolved, "native environment Cargo configuration changed or is absent: " + key, nil
-		}
-	}
-	return contracts.Established, "recorded relevant Cargo configuration matches; historical tools were not executed or attested live", nil
+	a, errA := os.Stat(left)
+	b, errB := os.Stat(right)
+	return errA == nil && errB == nil && os.SameFile(a, b)
 }

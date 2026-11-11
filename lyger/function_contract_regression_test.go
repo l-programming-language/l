@@ -57,26 +57,6 @@ var functionContractReads = map[string]string{
 	"result":  functionSource("Select", "", "Thing", "Define \"boxed\" as a New Thing of Other.\nReturn boxed.") + "Select as \"saved\".\nDefine \"Selected\" as a New Identity from saved.\n",
 }
 
-func TestFunctionConstructorContractRuntimeReads(t *testing.T) {
-	prefix := functionContractSource(t)
-	for name, source := range functionContractReads {
-		t.Run(name, func(t *testing.T) {
-			runtimeBundleResult(t, runtimeValuesBundle(t, prefix+source+"Selected `bad` as \"Result\".\n"), "", "runtime value type mismatch")
-		})
-	}
-}
-
-func TestFunctionConstructorAliasesPreserveComposition(t *testing.T) {
-	source := functionContractSource(t) + "Use Other as \"Signature\".\n\n" +
-		functionSource("Apply", "\"Callback\" as Signature", "Signature", "Callback `first` as \"Result\".\nShow Result.\nReturn Callback.") +
-		"Apply Other as \"Saved\".\nSaved `second` as \"Result\".\nShow Result.\n"
-	generated, err := functionGenerated(t, source)
-	if err != nil || strings.Count(generated, "/* selected Routine */") != 2 {
-		t.Fatalf("same canonical contract lost its invocation composition: %v", err)
-	}
-	runtimeBundleResult(t, runtimeValuesBundle(t, source), "firstsecond", "")
-}
-
 func TestFunctionReturnRejectsDifferentConstructorContract(t *testing.T) {
 	prefix := functionContractSource(t)
 	index := strings.LastIndex(prefix, "Return Value.")

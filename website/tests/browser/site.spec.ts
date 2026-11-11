@@ -2,13 +2,6 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { sourceURL } from '../../scripts/provenance.mjs';
-
-// The large glossary makes a DOM snapshot on each traced action
-// dominate navigation time. Keep failure traces, screenshots, sources and action/
-// network evidence; automatic failure screenshots and error context retain diagnostics.
-test.use({ trace: { mode: 'retain-on-failure', snapshots: false, screenshots: true, sources: true } });
 
 type Word = {
   id: string; name: string; doc: string; inflections?: string[];
@@ -36,31 +29,21 @@ const wordAnchor = (id: string) => `[id=${JSON.stringify(wordRecord(id).doc.spli
 const wordLink = (id: string) => `a[href=${JSON.stringify(wordURL(id))}]`;
 const glossaryRoute = pageRoute('docs/reference/word-glossary.md');
 const nativeWordsRoute = pageRoute('docs/reference/words.md');
-const sendID = 'stdlib-export:eng:io:IO.Send';
-const linedID = 'stdlib-export:eng:io:IO.Lined';
+const printID = 'builtin:print';
 const returnID = 'builtin:function.return';
-const optionSelectID = 'authoring:Storage.Option.Select';
 
 const pages = [
   ['home', '/'],
   ['docs', '/docs/'],
   ['guide', '/docs/guide/first-program/'],
-  ['apps-services', '/docs/guide/apps-and-services/'],
-  ['lifecycle', '/docs/guide/lifecycle/'],
   ['internals', '/docs/internals/'],
   ['definitions', '/docs/guide/definitions/'],
-  ['builtins', '/docs/reference/builtins/definitions/'],
-  ['builtin-lifecycle', '/docs/reference/builtins/lifecycle/'],
   ['words', '/docs/words/'],
   ['word-glossary', glossaryRoute],
-  ['storage', '/docs/internals/storage/'],
   ['primitives', '/docs/spec/values/'],
   ['grammar', '/docs/spec/grammar/'],
   ['logemes', '/docs/reference/logemes/alphabet/'],
   ['cli', '/docs/cli/build/'],
-  ['stdlib', '/docs/stdlib/eng/io/'],
-  ['formatting', '/docs/stdlib/eng/format/'],
-  ['runtime', '/docs/stdlib/eng/runtime/'],
 ] as const;
 
 for (const width of [390, 768, 1440]) for (const theme of ['light', 'dark']) {
@@ -90,7 +73,7 @@ for (const width of [390, 768, 1440]) for (const theme of ['light', 'dark']) {
       await fs.writeFile(`reports/axe-${name}-${width}-${theme}.json`, JSON.stringify(axe, null, 2));
       expect(axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.map((n) => n.target) })), route).toEqual([]);
       await page.screenshot({ path: `reports/screenshots/${name}-${width}-${theme}.png`, fullPage: name !== 'word-glossary' });
-      if (name === 'word-glossary') for (const [sample, id] of [['main', 'builtin:main'], ['send', sendID], ['lined', linedID]]) {
+      if (name === 'word-glossary') for (const [sample, id] of [['main', 'builtin:main'], ['print', printID]]) {
         await page.locator(wordAnchor(id)).scrollIntoViewIfNeeded();
         await page.screenshot({ path: `reports/screenshots/word-glossary-${sample}-${width}-${theme}.png`, fullPage: false });
       }
@@ -106,7 +89,7 @@ test('built Pagefind searches, no-results behavior and keyboard interaction', as
   await expect(dialog).toBeVisible();
   const input = dialog.getByRole('textbox', { name: 'Search', exact: true });
   await expect(input).toBeFocused();
-  for (const query of ['Number', 'Await', 'IO.Print', 'logeme', 'Require', 'Lined']) {
+  for (const query of ['Text', 'Print', 'logeme']) {
     await input.fill(query);
     await expect(dialog.locator('.pagefind-ui__result-link').first()).toBeVisible();
     await expect(dialog.locator('.pagefind-ui__message')).not.toContainText('No results');
@@ -123,22 +106,9 @@ test('built Pagefind searches, no-results behavior and keyboard interaction', as
 });
 
 const wordSearches = [
-  { query: 'Send', destinations: [{ url: wordURL(sendID), context: /\bIO\b/ }] },
-  { query: 'IO.Send', destinations: [{ url: wordURL(sendID), context: /\bIO\b/ }] },
-  { query: 'Sent', destinations: [{ url: wordURL(sendID), context: /\bSent\b/ }] },
-  { query: 'Sender', destinations: [{ url: wordURL(sendID), context: /\bSender\b/ }] },
-  { query: 'Lined', destinations: [{ url: wordURL(linedID), context: /\bLined\b/ }] },
-  { query: 'Output', destinations: [
-    { url: wordURL('builtin:output'), context: /builtin|finalized|\bApp\b/i },
-    { url: wordURL('stdlib-export:eng:io:IO.Output'), context: /\bIO\b/ },
-  ] },
-  { query: 'Select', destinations: [
-    { url: wordURL(optionSelectID), context: /Option\.Select/ },
-    { url: wordURL('authoring:Storage.Result.Select'), context: /Result\.Select/ },
-  ] },
-  { query: 'Text', destinations: [{ url: wordURL('type:text'), context: /\bText\b/ }] },
-  { query: 'From', destinations: [{ url: wordURL('grammar-word:from'), context: /\bFrom\b/i }] },
-  { query: 'While', destinations: [{ url: wordURL('grammar-word:while'), context: /\bWhile\b/i }] },
+  { query: 'Print', destinations: [{ url: wordURL(printID), context: /Print/ }] },
+  { query: 'Text', destinations: [{ url: wordURL('type:text'), context: /Text/ }] },
+  { query: 'While', destinations: [{ url: wordURL('grammar-word:while'), context: /While/i }] },
 ] as const;
 
 for (const { query, destinations } of wordSearches) {
@@ -167,8 +137,8 @@ for (const { query, destinations } of wordSearches) {
       expect(canonical.length, `${query}: missing ${expected.url}; complete built results are attached`).toBeGreaterThan(0);
       expect(canonical.map((match) => match.context).join(' '), `${query}: readable meaning context`).toMatch(expected.context);
     }
-    if (['Send', 'IO.Send', 'Sent', 'Sender'].includes(query)) {
-      expect(matches.filter((match) => match.url.startsWith('/docs/words/')), 'navigation must not compete with canonical word entries').toEqual([]);
+    if (query === 'Print') {
+      expect(matches.filter((match) => /#words-/.test(match.url)), 'generated word navigation must stay outside the search index').toEqual([]);
     }
 
     await page.keyboard.press('Control+k');
@@ -197,7 +167,7 @@ for (const { query, destinations } of wordSearches) {
     await page.waitForLoadState('domcontentloaded');
     const anchor = destinations[0].url.slice(destinations[0].url.indexOf('#'));
     await expect(page.locator(anchor)).toBeVisible();
-    const role = query === 'Text' ? /noun/i : query === 'From' ? /preposition/i : query === 'While' ? /rejected|unsupported/i : null;
+    const role = query === 'Text' ? /noun/i : query === 'While' ? /rejected|unsupported/i : null;
     if (role) {
       const section = await page.locator(anchor).evaluate((heading) => {
         const headings = [...document.querySelectorAll('main :is(h1,h2,h3,h4,h5,h6)')];
@@ -212,39 +182,6 @@ for (const { query, destinations } of wordSearches) {
   });
 }
 
-test('library overview reaches each dictionary reference without JavaScript', async ({ browser }) => {
-  const root = fileURLToPath(new URL('../../../', import.meta.url));
-  const registry = JSON.parse(await fs.readFile(new URL('../../../dictionaries.json', import.meta.url), 'utf8')).languages.eng;
-  const identity = JSON.parse(await fs.readFile('dist/version.json', 'utf8'));
-  const context = await browser.newContext({ javaScriptEnabled: false });
-  const page = await context.newPage();
-  await page.goto('http://127.0.0.1:4321/docs/stdlib/');
-  await expect(page.locator('main table')).toHaveCount(1);
-  const group = page.locator('#starlight__sidebar summary').filter({ hasText: 'Standard library' }).locator('..');
-  await expect(group).toHaveAttribute('open', '');
-  await expect(group.getByRole('link')).toHaveText(['Overview', 'IO', 'Formatting', 'Runtime', 'Storage']);
-  for (const [name, route, key] of [
-    ['IO', '/docs/stdlib/eng/io/', 'io'],
-    ['Formatting', '/docs/stdlib/eng/format/', 'format'],
-    ['Runtime', '/docs/stdlib/eng/runtime/', 'runtime'],
-    ['Storage', '/docs/internals/storage/', 'storage'],
-  ]) {
-    await page.goto('http://127.0.0.1:4321/docs/stdlib/');
-    await page.locator(`main table a[href="${route}"]`).click();
-    await expect(page).toHaveURL(`http://127.0.0.1:4321${route}`);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(name);
-    const source = registry[key].entry;
-    const committed = sourceURL(root, source, identity);
-    if (committed) {
-      await expect(page.locator(`main a[href=${JSON.stringify(committed)}]`).first()).toBeAttached();
-    } else {
-      await expect(page.locator('main code').filter({ hasText: new RegExp(`^${source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) }).first()).toBeAttached();
-      await expect(page.locator(`main a[href$=${JSON.stringify(source)}]`)).toHaveCount(0);
-    }
-  }
-  await context.close();
-});
-
 test('word dictionary browsing works without JavaScript', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
@@ -257,20 +194,10 @@ test('word dictionary browsing works without JavaScript', async ({ browser }) =>
   await expect(page.locator(fragment!)).toBeVisible();
   const nativeDestinations = await page.locator('.l-word-index li > a').evaluateAll((links) => links.map((link) => link.getAttribute('href')).sort());
   expect(nativeDestinations).toEqual(semantics.entries.filter((entry) => entry.word && !entry.dictionary).map((entry) => wordURL(entry.id)).sort());
-  for (const id of [sendID, linedID, optionSelectID]) await expect(page.locator(`.l-word-index ${wordLink(id)}`)).toHaveCount(0);
   await page.locator(`.l-word-index ${wordLink(returnID)}`).click();
   await expect(page).toHaveURL(`http://127.0.0.1:4321${wordURL(returnID)}`);
-  await expect(page.locator(wordAnchor(returnID))).toBeVisible();
-  for (const [source, id] of [['docs/stdlib/eng/io.md', sendID], ['docs/stdlib/eng/io.md', linedID], ['docs/internals/storage.md', optionSelectID]]) {
-    await page.goto(`http://127.0.0.1:4321${pageRoute(source)}`);
-    const link = page.locator(`.l-word-index ${wordLink(id)}`);
-    if (id === optionSelectID) await expect(link.locator('..')).toContainText('authoring');
-    await link.click();
-    await expect(page).toHaveURL(`http://127.0.0.1:4321${wordURL(id)}`);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Word Glossary');
-    await expect(page.locator(wordAnchor(id))).toBeVisible();
-    if (id === linedID) await expect(page.locator('main')).toContainText('IO.Sender');
-  }
+  await expect(page.locator(wordAnchor(returnID))).toHaveCount(1);
+  await expect(page.getByRole('heading', { name: "Function's Return", exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
   await context.close();
 });
@@ -278,91 +205,26 @@ test('word dictionary browsing works without JavaScript', async ({ browser }) =>
 test('word navigation and source disclosures support keyboard focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(nativeWordsRoute);
-  const returnSelector = wordLink(returnID);
-  const returnLink = page.locator('.l-word-index').locator(returnSelector);
-  await expect(returnLink).toBeVisible();
-  expect(wordRecord(returnID).word?.audience ?? 'application').toBe('application');
-  await expect(returnLink.locator('..')).not.toContainText('authoring');
-  await expect(page.getByRole('navigation', { name: 'Advanced word authoring', exact: true }).locator(returnSelector)).toHaveCount(0);
-  await expect(page.locator(`.l-word-index ${wordLink('builtin:retain')}`).locator('..')).toContainText('authoring');
-  await returnLink.click();
-  await expect(page).toHaveURL(`http://127.0.0.1:4321${wordURL(returnID)}`);
-  await page.waitForLoadState('domcontentloaded');
-  await expect(page.locator(wordAnchor(returnID))).toBeVisible();
-  await page.goto('/docs/reference/builtins/#source-defined-facilities');
-  await expect(page.locator('#source-defined-facilities')).toHaveCount(1);
-  await page.locator('#source-defined-facilities').locator('xpath=following::a[1]').click();
-  await page.waitForURL((url) => url.pathname === glossaryRoute, { waitUntil: 'domcontentloaded' });
-  await expect(page.getByRole('heading', { name: 'Builtin vocabulary', exact: true })).toBeVisible();
-  await page.goto(nativeWordsRoute);
-  await expect(page.locator(`main .l-word-index ${returnSelector}`)).toBeVisible();
-  const alphabet = page.locator('.l-word-index a[href^="#"]').first();
-  await alphabet.focus();
-  await page.keyboard.press('Enter');
-  const fragment = await alphabet.getAttribute('href');
-  await expect(page.locator(fragment!)).toBeVisible();
-  await page.goto(pageRoute('docs/stdlib/eng/io.md'));
-  const send = page.locator(`.l-word-index ${wordLink(sendID)}`);
-  await send.focus();
-  await expect(send).toBeFocused();
-  expect(await send.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe('none');
+  const print = page.locator(`.l-word-index ${wordLink(printID)}`);
+  await print.focus();
+  await expect(print).toBeFocused();
+  expect(await print.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe('none');
   await page.keyboard.press('Enter');
   await page.waitForURL((url) => url.pathname === glossaryRoute, { waitUntil: 'domcontentloaded' });
-  await expect(page.locator(wordAnchor(sendID))).toBeVisible();
-  const facts = page.locator(wordAnchor(sendID)).locator('xpath=following::div[contains(concat(" ", normalize-space(@class), " "), " l-word-facts ")][1]');
-  await expect(facts.locator('ol > li')).toHaveCount(new Set([wordRecord(sendID).name.split('.').at(-1), ...(wordRecord(sendID).inflections ?? [])]).size);
-  await expect(facts.locator('ol')).toContainText('Sender (noun, actor)');
+  await expect(page.locator(wordAnchor(printID))).toBeVisible();
+  const facts = page.locator(wordAnchor(printID)).locator('xpath=following::div[contains(concat(" ", normalize-space(@class), " "), " l-word-facts ")][1]');
+  await expect(facts.locator('ol > li')).toHaveCount(wordRecord(printID).inflections!.length);
+  await expect(facts.locator('ol')).toContainText('Printer (noun, actor)');
   const disclosure = facts.locator('details');
-  const summary = disclosure.locator('summary');
-  await summary.focus();
+  await disclosure.locator('summary').focus();
   await page.keyboard.press('Enter');
   await expect(disclosure).toHaveAttribute('open', '');
   await expect(disclosure.locator('a').first()).toBeVisible();
   await page.keyboard.press('Enter');
   await expect(disclosure).not.toHaveAttribute('open', '');
-  await page.goto(wordURL('authoring:Storage.Program.Select'));
-  const example = page.locator(wordAnchor('authoring:Storage.Program.Select')).locator('xpath=following::details[normalize-space(summary)="Usage example"][1]');
-  await example.locator('summary').first().focus();
-  await page.keyboard.press('Enter');
-  const code = example.locator('pre').first();
-  await expect(code).toBeVisible();
-  await code.focus();
-  await expect(code).toBeFocused();
-  await expect(code).toHaveAttribute('aria-label', /\.l/);
-  await expect(code.locator('code > *')).toHaveCount(0);
-  await page.keyboard.press('ArrowRight');
-  await expect.poll(() => code.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
-  await page.screenshot({ path: 'reports/screenshots/fragment-keyboard-390.png' });
 });
 
-test('previous word routes and anchors retain access to their canonical glossary meanings', async ({ page }) => {
-  for (const [legacy, id] of [
-    ['/docs/stdlib/eng/io/#send', sendID],
-    ['/docs/stdlib/eng/io/#lined', linedID],
-    ['/docs/stdlib/eng/io/#output', 'stdlib-export:eng:io:IO.Output'],
-    ['/docs/reference/builtins/lifecycle/#output', 'builtin:output'],
-    ['/docs/reference/builtins/definitions/#functionreturn', returnID],
-    ['/docs/internals/storage/#optionselect', optionSelectID],
-    ['/docs/internals/storage/#resultselect', 'authoring:Storage.Result.Select'],
-    ['/docs/spec/values/#text', 'type:text'],
-    ['/docs/spec/grammar/#from', 'grammar-word:from'],
-    ['/docs/spec/control-flow/#while', 'grammar-word:while'],
-  ]) {
-    const response = await page.goto(legacy);
-    expect(response?.status(), legacy).toBe(200);
-    const anchor = page.locator(legacy.slice(legacy.indexOf('#')));
-    await expect(anchor).toHaveCount(1);
-    const onward = anchor.locator(`xpath=following::a[starts-with(@href, "${glossaryRoute}")][1]`);
-    await expect(onward).toBeVisible();
-    await onward.click();
-    await page.waitForURL((url) => url.pathname === glossaryRoute, { waitUntil: 'domcontentloaded' });
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Word Glossary');
-    await expect(page.locator(wordAnchor(id))).toBeVisible();
-  }
-});
-
-for (const id of ['builtin:main', sendID, linedID]) {
+for (const id of ['builtin:main', printID]) {
   test(`glossary source definition preserves exact selected bytes: ${id}`, async ({ page }) => {
     const word = wordRecord(id);
     const references = word.word?.definitions;
@@ -412,9 +274,9 @@ test('theme persistence, correct logos, copy controls and local cross-links', as
   expect(darkLogo).not.toBe(lightLogo);
   const copy = page.locator('.expressive-code .copy button').first();
   await copy.click();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('Use IO');
-  await page.locator('main a[href="/docs/cli/"]').first().click();
-  await expect(page).toHaveURL('http://127.0.0.1:4321/docs/cli/');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('The App Prints message.');
+  await page.locator(`main a[href="${pageRoute('docs/cli-build.md')}"]`).first().click();
+  await expect(page).toHaveURL(`http://127.0.0.1:4321${pageRoute('docs/cli-build.md')}`);
 });
 
 test('release installation command copies intact and the retained bootstrap is served unchanged', async ({ page, context, request }) => {
@@ -449,14 +311,6 @@ test('mobile navigation and visible keyboard focus', async ({ page }) => {
   await expect(page.locator('#starlight__sidebar')).toBeVisible();
   await page.locator('#starlight__sidebar a[href="/docs/spec/grammar/"]').click();
   await expect(page).toHaveURL(/\/docs\/spec\/grammar\/$/);
-  await page.goto('/docs/reference/builtins/definitions/#storage-source-compositions');
-  await expect(page.locator('#storage-source-compositions')).toHaveCount(1);
-  await page.locator('#storage-source-compositions').locator('xpath=following::a[1]').click();
-  await page.locator('main a[href="/docs/internals/storage/"]').first().click();
-  await expect(page).toHaveURL(/\/docs\/internals\/storage\/$/);
-  await page.locator(`.l-word-index ${wordLink(optionSelectID)}`).click();
-  await page.locator('main').getByRole('link', { name: 'Function.Return', exact: true }).first().click();
-  await expect(page.locator(wordAnchor(returnID))).toBeVisible();
   await page.goto('/docs/reference/logemes/alphabet/');
   const table = page.locator('main table').first();
   await table.focus();
@@ -464,29 +318,21 @@ test('mobile navigation and visible keyboard focus', async ({ page }) => {
   await expect.poll(() => table.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
 });
 
-test('rendered source preserves L, shell, JSON, Rust and literal AML', async ({ page }) => {
+test('rendered source preserves L, shell, Rust and literal AML', async ({ page }) => {
   const sourceBlocks = (language: string) => page.locator(`pre[data-language="${language}"], pre:has(> code.language-${language})`).evaluateAll((pres) => pres.map((pre) => {
     // Complete examples have Expressive Code lines; fragments retain one text node.
     const lines = [...pre.querySelectorAll('.ec-line .code')];
     return (lines.length ? lines.map((line) => line.textContent?.replace(/\n$/, '')).join('\n') : pre.querySelector('code')?.textContent ?? '').trimEnd();
   }));
   for (const [route, fixture, start, end] of [
-    ['/docs/guide/apps-and-services/', '../cmd/l/test/runnable_service/canonical-io.l', 0, undefined],
-    ['/docs/guide/apps-and-services/', '../lyger/test/workspace/services.l', 1, 12],
-    ['/docs/spec/definitions/', '../cmd/l/test/runnable_service/probe.l', 0, 3],
-    ['/docs/guide/definitions/', '../docs/examples/composed-functions.l', 0, undefined],
-    ['/docs/guide/native-definitions/', '../builtins/eng/storage/control.l', 23, 25],
-    ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 16, 19],
-    ['/docs/guide/native-definitions/', '../stdlib/eng/io/dictionary.l', 20, 24],
+    ['/docs/spec/definitions/', '../builtins/eng/core.l', 2, 5],
     ['/docs/guide/first-program/', '../demo/basic/main.l', 0, undefined],
   ] as const) {
     await page.goto(route);
     const source = (await fs.readFile(fixture, 'utf8')).split('\n').slice(start, end).join('\n').trimEnd();
     expect(await sourceBlocks('l')).toContain(source);
   }
-  await expect(page.locator('pre[data-language="sh"]').first()).toContainText(/^l build main\.l/);
-  await page.goto('/docs/stdlib/');
-  expect(JSON.parse((await sourceBlocks('json'))[0])).toEqual(JSON.parse(await fs.readFile('../dictionaries.json', 'utf8')));
+  await expect(page.locator('pre[data-language="sh"]').first()).toContainText(/^l build demo\/basic\/main\.l/);
   await page.goto('/docs/reference/logemes/rust-contract/');
   await expect(page.locator('pre[data-language="rust"]')).toContainText("'outer: loop {");
   await page.goto('/docs/internals/aml-protocol/');
@@ -520,7 +366,7 @@ test('static 404 and truthful build provenance', async ({ request }) => {
   expect(missingHTML).toMatch(/href="\/"/);
   expect((await request.get('/docs/')).status()).toBe(200);
   expect((await request.get('/')).status()).toBe(200);
-  const nested = await request.get('/docs/stdlib/eng/io/'); expect(nested.status()).toBe(200);
+  const nested = await request.get('/docs/reference/logemes/alphabet/'); expect(nested.status()).toBe(200);
   const version = await (await request.get('/version.json')).json();
   const expected = JSON.parse(await fs.readFile('dist/version.json', 'utf8'));
   expect(version).toEqual(expected);

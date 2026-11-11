@@ -126,8 +126,7 @@ Rust files do not currently receive crate safety attributes or module declaratio
 from A.
 
 The source assembler now emits safety attributes and explicit module items from
-the source graph at the compiled A boundary. Runtime support wraps composed
-`l_main`. Configuration initialization precedes user effects. Keep these operations
+the source graph at the compiled A boundary. Configuration initialization precedes user effects. Keep these operations
 out of source rewriting, namespace flattening and segment templates. An App book
 is not an implicit Rust module. Imports, modules and Cargo dependencies remain
 separate data. Sole-library targets emit no executable support, export nonprivate
@@ -207,8 +206,8 @@ Only template Default cases must stand alone. Qualified Definition fragments are
 completed by their enclosing compositions, and definitions/native leaves retain
 their own punctuation. Existing category/record interfaces retain these bounded
 contracts. The suite checks exact
-generation and native compilation. Separate [runtime tests](../testdata/integration/IMPLEMENTATION.md)
-exercise actual Rust processes. Their outcomes do not broaden the logeme interfaces.
+generation and native compilation. The temporary hello-world gate executes core
+Print; its result does not broaden the logeme interfaces.
 
 ## Verification contract
 

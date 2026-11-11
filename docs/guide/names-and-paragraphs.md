@@ -1,33 +1,17 @@
 # Names and paragraphs
 
-A name belongs to a lexical scope. Paragraphs can introduce local names and organize behavior. They are not automatically concurrent tasks.
+Names belong to lexical scopes. Four spaces before a paragraph's first code line open a local scope; a physical blank line outside comments or literals ends it. The following lines need not remain indented. Paragraphs do not create concurrent tasks.
 
-## Read the physical boundaries
+Public/Publicly publish the selected declaration into its source unit's root. An imported dictionary retains its own root and cannot inherit caller-local declarations. Visibility does not change a declaration's canonical identity.
 
-Four spaces before a paragraph's first code line open a local scope. Following lines need not stay indented. A physical blank line outside comments or literals closes it. Preserve these boundaries when copying examples.
+## Pronouns and members
 
-<!-- example:local-shadowing -->
+Pronouns refer to the last subject defined in their original paragraph. In the [basic program](first-program.md), `The App` refers to Hello. A new paragraph has no inherited subject.
 
-The initial message is `outer`. Each indented paragraph owns its own message, and the first also owns count and enabled. The final Show refers to the outer message. Expected stdout is `inner7truesecondouter`, without a newline.
+Use grammatical possessives for members, such as `Function's Return`, or import a member under an explicit local alias. Dot-qualified names are not valid authored L. Member lookup stays with the selected owner; a missing member does not fall back to another owner's namespace.
 
-Unmarked declarations remain in their scope. Public/Publicly publish only the selected declaration into the enclosing program scope. Inside an indexed dictionary, publication stays within that dictionary's own source unit. Public changes visibility only and preserves the declaration's identity.
+## Source ownership
 
-## Pronouns refer to subjects
+Keep physical source files, lexical scopes, source-order instructions and native file ownership distinct. An import retains the original source spans and its expansion occurrence. A definition retains its definition-site bindings, while each use has its own arguments and diagnostics.
 
-Pronouns bind the last subject defined in their source paragraph, not the last printed value or completed App. In the basic program, The App refers to the App just constructed. In `Building any App and then Running it`, it refers to the action's App argument.
-
-Use explicit names when several subjects appear: the [multiple-subjects example](../../demo/paragraphs/multiple-subjects.l) joins in reverse order using `First's Output` and `Second's Output`. These possessives select members without redeclaring their owners. Native Output/Error needs an actual App. A static type namespace alone has no invocation.
-
-## A continuation has an activation
-
-<!-- example:paragraph-fallthrough -->
-
-Here `The App Prints firstText` runs inside First. The following Define and Show form its **continuation**: orchestrator actions deferred until the invocation's first Await joins it. The Second paragraph works the same way.
-
-`Execute First and Second` starts and awaits First, runs First's continuation, then does the same for Second. Finally Show writes `done`, giving expected stdout of `First\nSecond\ndone`. Repeated Await returns the finalized result without repeating the continuation. A new invocation gets fresh continuation storage. An ordinary paragraph executes when reached.
-
-## Assignment must be established
-
-A value must be assigned on every continuing path before use. Assignment in one conditional branch does not establish it on another. An Exit branch no longer continues. Output readiness is checked at runtime even when names and types resolve.
-
-See [scope ownership](../architecture.md#source-meaning-and-output-views), [paragraph examples](../../demo/paragraphs/README.md), and the [specification](../spec/index.md). Next, [define new vocabulary](definitions.md).
+See [names and scope](../spec/names-and-scope.md) and [source preparation](../spec/lexical-structure.md). Runtime continuations and capture are unavailable in the current executable boundary.

@@ -1,49 +1,33 @@
 # Write native-backed definitions
 
-Compose behavior in L and use native leaves for individual target operations. A leaf can perform one call, operator, constructor, borrow/projection or bounded pattern/binding. Keep branching, iteration, sequencing and error policy in the words that compose those leaves.
+Compose policy in L and keep each native leaf to one bounded call, operator, projection, constructor, pattern or return. Branching, sequencing, iteration, error policy and resource selection belong in source compositions.
 
 ## Start from the existing foundation
 
-The implicit [core](../../builtins/eng/core.l) supplies Process, Function, Objective, Main and Basic. [IO](../stdlib/eng/io.md) adds reusable byte operations through an explicit import. This excerpt shows how its Send Function separates byte projection from writing:
+[Core](../../builtins/eng/core.l) supplies Process, Function, Return, Main, Basic and Print. Print composes a Process using its private Log action, whose native body performs one `println!` call. Print accepts Text and appends one newline. That leaf supplies output, not a runtime.
 
-<!-- example:source-send -->
-
-Borrowed names the byte view produced from Payload. Deliverer performs one `write_all` call with Writer and Borrowed. Return passes its IO Result to the caller. Send adds no newline, lock or panic policy. Its native signature borrows the writer exclusively and the payload through a shared reference. Rust checks those ownership requirements.
-
-This dictionary fragment requires its helpers and a native caller. `Storage.Routine` accepts explicit native generic parameters: `W` and `P` are supplied type atoms, not inferred by Generic. See the [definition contract](../spec/definitions.md#process-function-and-return).
+Before adding a leaf, identify the missing target operation, the typed inputs and result, and the policy that remains in L. Inspect any native callee: a single call to a new helper can conceal an entire algorithm.
 
 ## Keep branch data inside its Process
 
-Storage.Require composes optional selection in a Function with native types:
-
-<!-- example:source-require -->
-
-Option.Select receives Value and two Process bodies. The present branch binds Payload as `T`. Only the absent branch constructs Failure from Message. Returning completes Require. This fragment needs its dictionary declarations and a [native caller](../reference/word-glossary.md#context-storage--native-callers).
-
-Name intermediate results the next operation needs. Declare each Process input's type and ownership, using `_` to request native inference. Inputs and locals stay in that body, with distinct bindings on repeated or nested use. See [Process](../reference/word-glossary.md#word-builtin-process) for scope and [Return](../reference/word-glossary.md#word-builtin-function-return) for caller selection and lexical delegation.
+A Process supplies a composition body. Typed inputs and intermediate labels belong to that body and must remain distinct through repeated and nested use. Preserve once-only operand evaluation and definition-site binding. A Process is not a callable output or a capture runtime.
 
 ## Compose a wrapper
 
-<!-- example:source-lined -->
-
-Lined describes IO's Sender through the private Terminate Function. In its rule, `any IO's Sender` denotes the retained base invocation, and `any Thing` forwards its writer. The base result becomes Receipt. Result.Select runs the newline send only after payload success. Failure returns through the other Process. The wrapper keeps the same writer rather than acquiring another handle.
-
-Callers import the public Send/Lined words. Terminate remains an implementation dependency. `New IO.Lined IO's Sender` evaluates the original operands once and preserves their ownership. A wrapper may use those references, but it cannot silently clone a consumed payload. The [IO contract](../reference/word-glossary.md#context-io--explicit-byte-output) owns exact newline, partial-write and failure behavior.
-
-Keep each policy at the level that owns it. IO.Print composes rendering, writer/guard acquisition, Lined sending and an explicit fail-fast result check. A reusable Send leaves those choices to its caller.
+A wrapper must retain its canonical base, original operands and result identity. State moves, borrows, evaluation order and failure behavior. Do not silently clone a consumed value or communicate through fixed generated names. The former IO and Storage wrappers are absent and are not current examples.
 
 ## Typed slots cross an encoding boundary
 
-Native definitions use one complete backtick-delimited `<DEF>…<DEF>` frame. [Typed slots](../spec/definitions.md#typed-slots) bind checked values, names, types or compositions into approved AML fields. A Label names a result, a Type supplies a native type atom, and `<@Process@>` carries an instantiated body. These roles are not interchangeable text substitutions.
+Native definitions use a complete backtick-delimited `<DEF>…<DEF>` frame. [Typed slots](../spec/definitions.md#typed-slots) carry checked values, names, types and selected compositions through existing AML fields. A Label, a native Type and a Process body are different roles.
 
-Text receives protected native quoting and Number uses finite binary64 encoding. Preserve source bytes and explicit move/borrow behavior. The retained [ProbeIO fixture](../../cmd/l/test/runnable_service/probe.l) and its [caller](../../cmd/l/test/runnable_service/basic.l) witness framing and dictionary binding. The fixture's combined stdout/write/unwrap expression is not the decomposition pattern used above.
+Text is encoded safely for native use, and Number uses finite binary64 encoding. Keep source bytes, source provenance and explicit ownership. Native syntax does not become authored L syntax.
 
 ## Read a complete backend witness
 
-The [declaration/evaluation witness](../../logiceme/testdata/lucid/declaration-evaluation.aml.txt) shows the backend interface, and [alphabet and composition](../reference/logemes/alphabet.md) explains its glyphs. Generation, native compilation and execution are separate checks. A compiled library fragment still needs its caller.
+The [declaration/evaluation witness](../../logiceme/testdata/lucid/declaration-evaluation.aml.txt) illustrates the backend interface. [Alphabet and composition](../reference/logemes/alphabet.md) explains the glyphs. Generation, native compilation and execution are distinct observations; a retained witness does not establish a fresh test result.
 
 ## Stay inside the approved surface
 
-Use existing syllables and interfaces. The eighteen Rust segments are frozen. Lifetime/generic inputs are glyph-local native interiors, not Func/Prop/Op fields or inherited defaults. Do not hide algorithms, executable Function bodies or closures in Statement, EA or opaque native helpers. Functions construct, invoke and return through selected definitions. Rust rejects Deferred metadata. Scheduling supplies no automatic deferred cleanup.
+The eighteen Rust segments and four logeme templates are frozen. Preserve their bytes and interfaces. Lifetime/generic inputs are glyph-local native inputs, not new Func/Prop/Op fields or inherited defaults. Deferred metadata rejects.
 
-The [builtin](../../builtins/CONTRACTS.md), [Rust](../../builtins/README.md) and [AML](../../logiceme/AML.md) contracts define the available native surface.
+Do not hide executable algorithms or Function bodies in Statement, EA, opaque closures or native helpers. The [builtin](../../builtins/CONTRACTS.md), [Rust](../../builtins/README.md) and [AML](../../logiceme/AML.md) contracts define the retained surface. Runtime reconstruction is separate work in L.

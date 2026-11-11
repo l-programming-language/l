@@ -2,8 +2,8 @@
 
 | Lexical type | Role in a sentence | Examples |
 | --- | --- | --- |
-| Nouns | Name values, categories, members, or references. | `Text`, `App`, `Output`, a declared name, `it` |
-| Verbs | Express actions and relationships. | `Create`, `Show`, `Run`, `Execute`, imported `Print` |
+| Nouns | Name values, categories, members, or references. | `Text`, `App`, a declared name, `it` |
+| Verbs | Express actions and relationships. | `Create`, `Define`, core `Print` |
 | Adjectives | Qualify nouns or describe how to construct them. | `Public`, `New`, `Generic`, `Basic`, `Main` |
 | Adverbs | Modify an action, declaration, comparison, or sequence. | `Publicly`, `Not`, `Less`, `Greater`, `Then` |
 | Articles | Mark a reference, declaration, argument, or absence. | `the`, `a`/`an`, `any`, `no` |
@@ -18,11 +18,11 @@ Pronouns such as `it` are nouns, not another value type. The configured vocabula
 | Source | How the word becomes available |
 | --- | --- |
 | Language roots | The embedded English lexicon supplies words such as Create, App, New, and As, with their grammatical roles and inflections. |
-| Builtin definitions | The [core constructions and callables](../reference/word-glossary.md) and [Start/Execute actions](../reference/word-glossary.md#context-builtin-lifecycle--start-and-execute) are available without `Use`. |
+| Builtin definitions | The [core constructions and callables](../reference/word-glossary.md) are available without `Use`. |
 | User-defined words | A program defines words by composing existing actions, construction rules, or logeme sequences. They follow the declaring scope. |
-| Imported dictionary words | A `Use` statement introduces an exported word, such as IO.Print. Bundling the standard library does not make its exports implicit. |
+| Imported dictionary words | A `Use` statement introduces an explicitly selected export. The root registry currently contains no bundled dictionaries. |
 
-A word's origin does not determine its part of speech. Execute is a builtin verb written using other verbs, and a user can compose a verb the same way. Generic definitions extend vocabulary through these supported mechanisms. They do not introduce unrestricted English interpretation or generic type parameters.
+A word's origin does not determine its part of speech. Core Print is a verb composed in L. Start and Execute remain declared but their lifecycle effects are unavailable. Generic definitions extend vocabulary through these supported mechanisms. They do not introduce unrestricted English interpretation or generic type parameters.
 
 ## Attributes, Definitions, and lexical categories
 
@@ -54,8 +54,4 @@ The first sentence declares Main as an Adjective targeting Service, Object, or F
 
 ## Define and use a word
 
-The [Launch example](../guide/definitions.md#compose-a-source-action) defines a verb from Build, Run, and Await. `Launch First` calls that sequence for an App. Its pipe-delimited label declares related spellings, as explained under [word forms](../guide/values.md#read-pipe-delimited-word-forms).
-
-A [native-backed definition](../guide/native-definitions.md#start-from-the-existing-foundation) instead uses logeme sequences inside `<DEF>` framing. Typed slots bind the caller's arguments. Both approaches define vocabulary that participates in L grammar. The native body additionally obeys its target's contracts.
-
-The [English vocabulary](../../lexicon/eng/vocabulary.json), [builtin core](../../builtins/eng/core.l), and [lexical representation](../../lyger/lexical_types.go) provide the corresponding source definitions.
+The [authoring guide](../guide/definitions.md#compose-a-source-action) explains typed source actions and [word forms](lexical-structure.md#vocabulary-and-inflection). Choose a meaning and grammatical role before declaration syntax. Current executable support remains one standalone App with core Print.

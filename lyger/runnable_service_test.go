@@ -123,12 +123,12 @@ func TestStandaloneServiceBodiesAreUnsupported(t *testing.T) {
 		name, source, target, location string
 		imports                        map[string]string
 	}{
-		{"definite", distributionIOImport + "Create \"Worker\" as a New Main Service.\nThe Service Prints `body`.\n", "Worker", "main.l:3:", nil},
-		{"ordinary", distributionIOImport + "Create \"Worker\" as a New Service.\nWorker Prints `body`.\n", "Worker", "main.l:3:", nil},
-		{"pronoun", distributionIOImport + "Create \"Worker\" as a New Main Service.\nIt Prints `body`.\n", "Worker", "main.l:3:", nil},
-		{"service-named-App", distributionIOImport + "Create \"App\" as a New Main Service.\nApp Prints `body`.\n", "App", "main.l:3:", nil},
-		{"alias-named-App", distributionIOImport + "Create \"Worker\" as a New Main Service.\nUse Worker as \"App\".\nApp Prints `body`.\n", "Worker", "main.l:4:", nil},
-		{"imported", "Use `nested/worker.l`.\n", "Worker", "worker.l:3:", map[string]string{"nested/worker.l": "Use `words.l`.\nCreate \"Worker\" as a New Main Service.\nThe Service Paints `body`.\n", "nested/words.l": "Use IO's Print from `io` as \"Paint\".\n"}},
+		{"definite", distributionCorePrefix + "Create \"Worker\" as a New Main Service.\nThe Service Prints `body`.\n", "Worker", "main.l:3:", nil},
+		{"ordinary", distributionCorePrefix + "Create \"Worker\" as a New Service.\nWorker Prints `body`.\n", "Worker", "main.l:3:", nil},
+		{"pronoun", distributionCorePrefix + "Create \"Worker\" as a New Main Service.\nIt Prints `body`.\n", "Worker", "main.l:3:", nil},
+		{"service-named-App", distributionCorePrefix + "Create \"App\" as a New Main Service.\nApp Prints `body`.\n", "App", "main.l:3:", nil},
+		{"alias-named-App", distributionCorePrefix + "Create \"Worker\" as a New Main Service.\nUse Worker as \"App\".\nApp Prints `body`.\n", "Worker", "main.l:4:", nil},
+		{"imported", "Use `nested/worker.l`.\n", "Worker", "worker.l:3:", map[string]string{"nested/worker.l": "Use `words.l`.\nCreate \"Worker\" as a New Main Service.\nThe Service Paints `body`.\n", "nested/words.l": "Use Print as \"Paint\".\n"}},
 		{"native-body-fixture", runnableServiceFixture(t, "native-body.l"), "Worker", "main.l:3:", nil},
 		{"alias-body-fixture", runnableServiceFixture(t, "native-body-alias.l"), "Worker", "main.l:5:", nil},
 	} {
@@ -140,7 +140,7 @@ func TestStandaloneServiceBodiesAreUnsupported(t *testing.T) {
 		})
 	}
 	for _, subject := range []string{"Service", "Alias"} {
-		source := distributionIOImport + "Create \"Service\" as a New Basic App.\n"
+		source := distributionCorePrefix + "Create \"Service\" as a New Basic App.\n"
 		if subject == "Alias" {
 			source += "Use Service as \"Alias\".\n"
 		}

@@ -70,12 +70,6 @@ runs:
           echo '.harness/cache/go-build'
           echo '.harness/cache/golangci-lint'
           echo '.harness/cache/rust-parity'
-          echo '.harness/cache/rust-runtime-parity'
-          echo '.harness/cache/rust-runtime-parity-inputs'
-          echo '.harness/cache/rust-empty-error-runtime'
-          echo '.harness/cache/rust-empty-error-runtime-inputs'
-          echo '.harness/cache/rust-empty-error-frontend'
-          echo '.harness/cache/rust-empty-error-frontend-inputs'
           echo "$L_CI_NATIVE_CACHE"
           echo ".harness/cache/lucid-rust-$L_CI_RUST_VERSION"
           echo 'L_CACHE_PATHS'

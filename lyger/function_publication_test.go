@@ -37,11 +37,6 @@ func TestFunctionPublicValuesRemainDefinitelyAssigned(t *testing.T) {
 	}
 }
 
-func TestFunctionBodyPublicationNative(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: functionPublicationSource})
-	captureNativeResult(t, c, "first|second|firstsecond")
-}
-
 const functionMapSource = "Define \"callbacks\" as a New Map of Identity.\nPut Identity in callbacks as `key`.\nDefine \"callback\" as a New Identity from callbacks at `key`.\ncallback `mapped` as \"Result\".\nShow Result.\n"
 
 func TestFunctionSignatureMap(t *testing.T) {
@@ -51,9 +46,4 @@ func TestFunctionSignatureMap(t *testing.T) {
 func functionMapExtractionSource() string {
 	source := identityFunction + strings.Replace(functionMapSource, "Define \"callback\"", "Define \"boxed\" as a New Thing of callbacks.\nDefine \"copied\" as a New Map of Identity from boxed.\nDefine \"callback\"", 1)
 	return strings.Replace(source, "from callbacks at", "from copied at", 1)
-}
-
-func TestFunctionSignatureMapNative(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: functionMapExtractionSource()})
-	captureNativeResult(t, c, "mapped")
 }

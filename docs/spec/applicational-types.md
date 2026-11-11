@@ -1,81 +1,65 @@
 # Applicational Types
 
-| Type | What it represents | Current use in L |
-| --- | --- | --- |
-| [App](../reference/word-glossary.md#word-type-app) | An application with source, identity and process state. | Construct, build, run, stop and await a separate process. Read its Output or Error. |
-| [Service](../reference/word-glossary.md#word-type-service) | A unit of code composed into an App. | Main supplies the entry structure. Additional App-constructed Services become libraries. A standalone Service is structural. |
-| [Class](#classes-and-objects) | A group of source modules, Objects and nested Classes. | Organize generated code without an independent process or runtime scope. |
-| [Object](#classes-and-objects) | A source-file unit containing definitions. | Own generated file content without an automatic runtime lifetime. |
-| [Function](#functions-properties-and-operations) | A callable with typed inputs, results and retained captures. | Invoke its descriptive verb with fresh parameters and locals. |
-| [Attribute](#attributes-and-definitions) | A composed part of an Object. | Internal construction representation with no general source field-construction API. |
-| [Definition](#attributes-and-definitions) | The implementation attached to a constructed element. | Internal representation used by source and logeme-backed definitions, with no general standalone constructor. |
-| [Property](#functions-properties-and-operations) | Field or parameter information. | Internal/native representation. Reading a member does not construct a Property. |
-| [Operation](#functions-properties-and-operations) | A structured native operation. | Internal/native representation. Source actions are defined as words. |
+These categories describe source and generated-code organization. The supported executable is one standalone App with a core Print body.
 
-Only Apps own process lifecycle. Internal categories do not imply source constructors. [Lexical Types](lexical-types.md) explains the words that express these structures.
+| Category | Meaning |
+| --- | --- |
+| App | Application source selected for standalone native compilation |
+| Service | Source structure; core Main supplies the App's entry composition |
+| Class | Group of generated modules |
+| Object | Source-file owner |
+| Function | Typed callable composition |
+| Attribute, Definition | Compiler construction and implementation records |
+| Property, Operation | Native representation records |
+
+Internal categories do not automatically supply source constructors or a runtime.
 
 ## Apps
 
-[App in the Word Glossary](../reference/word-glossary.md#word-type-app).
+[App](../reference/word-glossary.md#word-type-app) is the standalone compilation target.
 
 ### Create and execute an App
 
-[Create and execute an App in the Word Glossary](../reference/word-glossary.md#word-type-app--create-and-execute-an-app).
+Follow the [first program](../guide/first-program.md). Build it with `l build`, then invoke the resulting executable. Do not add source-level lifecycle actions.
 
 ## Services
 
-[Service in the Word Glossary](../reference/word-glossary.md#word-type-service).
+[Service](../reference/word-glossary.md#word-type-service) participates in source organization. The current CLI rejects additional Service libraries; a retained Service declaration does not create a process.
 
 ## Classes and Objects
 
 ### Class
 
-[Class in the Word Glossary](../reference/word-glossary.md#word-type-class).
+[Class](../reference/word-glossary.md#word-type-class) groups source modules without introducing a running lifetime.
 
 ### Object
 
-[Object in the Word Glossary](../reference/word-glossary.md#word-type-object).
+[Object](../reference/word-glossary.md#word-type-object) owns file content and its metadata.
 
 ### Compose an Object inside nested Classes
 
-<!-- example:recursive-classes -->
-
-Read descriptors inside out: Leaf supplies the Main Object, Middle and Outer enclose it, Grouped adds the Service, and Tree adds the App. Applying Tree produces App `Recursive` containing Service `main` with nested Classes `outer`, `middle` and `leaf`, in that order. The innermost Class contains Object `main`, which owns the entry Function. Construction alone performs no lifecycle action.
+Preserve canonical ownership through construction and native projection. Classes cannot inject defaults into file-owned Object metadata. The current tutorial does not claim arbitrary nested compositions are covered by the temporary gate.
 
 ## Attributes and Definitions
 
 ### Attribute
 
-[Attribute in the Word Glossary](../reference/word-glossary.md#word-type-attribute).
+[Attribute](../reference/word-glossary.md#word-type-attribute) is a retained construction category.
 
 ### Definition
 
-[Definition in the Word Glossary](../reference/word-glossary.md#word-type-definition).
+[Definition](../reference/word-glossary.md#word-type-definition) records a selected implementation. Its identity is distinct from its word's grammatical role.
 
 ## Functions, Properties, and Operations
 
-[Function](../reference/word-glossary.md#word-builtin-function) is the canonical word entry for the selected callable constructor. This section explains its value and capture behavior. Property/Operation and the configured Func/Prop/Op spellings describe native representation. Their presence does not add public application constructors.
+Core [Function](../reference/word-glossary.md#word-builtin-function) supplies callable metadata and a Process body. Preserve ordered typed inputs/results, canonical invocation identity and once-only evaluation. Return belongs to its selected Function and is distinct from whole-program Exit.
 
-A Function declaration also defines its invocation verb. Its encapsulated paragraph supplies the body:
-
-<!-- example:composed-function-definition -->
-
-Four leading spaces begin the private body, and a blank line ends it. Public exposes Identity, not Value. The [complete Function example](../guide/definitions.md#give-a-result-bearing-operation-a-function) calls it through Relay and names the caller's result explicitly. A label may declare related [word forms](lexical-structure.md#vocabulary-and-inflection).
-
-Invocations check ordered types and have fresh locals. Function signatures include canonical constructor identity. Incompatible constructors reject, including boxed values. Copies and aliases retain signatures and captures. Every continuing result-bearing path must Return through its bound member. Exit terminates the program.
-
-The header retains surrounding conditions and coordinated effects. Captures must be assigned when it executes. Ordinary values snapshot and explicit Pointers share targets. An invocation assigns its explicit results, without inferring assignment from side effects. A Function may Await an App and its continuation. Dictionary/Class units have no executable initialization phase.
-
-Source declarations and Object construction use the same selected Function/logeme definitions. Ordinary signatures do not infer native lifetime or generic parameters. Native-backed constructors can accept explicit atoms within the [definition contract](definitions.md#composition-and-source-ownership). This introduces no overloads, variadic Function signatures or inference across opaque native bodies.
+Native Func/Prop/Op records follow the [logeme contracts](../../builtins/README.md). They do not supply source-level capture, process transport or automatic lifetime inference.
 
 ### Construct a Function in an Object
 
-<!-- example:function-object-descriptor -->
-
-`first` has No Inputs and No Outputs, and `any Process` receives its body. `Objective First` supplies the Object, which the [complete fixture](../../lyger/test/classes/interleaved.l) composes into a Class and App.
-
-`Worker's Output` selects an App member after Await. It does not create a Property record. Native `Func`, `Prop` and `Op` metadata have separate [logeme contracts](../../builtins/README.md). To name a sequence of source actions, [define a verb such as Launch](lexical-types.md#define-and-use-a-word). This does not construct an internal Operation.
+Core Main composes a Function inside an Object inside a Service, while Basic composes the App. Its Function has no inputs or outputs and receives the selected Process body. See [core](../../builtins/eng/core.l) and [definitions](definitions.md).
 
 ## Sources and witnesses
 
-See [application structures](../../lyger/application_types.go), [type recognition](../../lyger/utilities.go), [construction](../../lyger/construction.go), [builtins](../../builtins/eng/core.l), [workspace projection](../../lyger/workspace_units.go), [recursive-Class tests](../../lyger/recursive_classes_test.go), and [Service coverage](../../testdata/service-execution/coverage.md).
+See [application structures](../../lyger/application_types.go), [construction](../../lyger/construction.go), [workspace projection](../../lyger/workspace_units.go) and the [temporary hello-world gate](../development-harness.md).

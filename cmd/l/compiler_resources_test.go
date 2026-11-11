@@ -16,7 +16,7 @@ import (
 
 func TestCompilerResourceSelection(t *testing.T) {
 	main := filepath.Join(t.TempDir(), "main.l")
-	if err := os.WriteFile(main, []byte("Show `selected`.\n"), 0600); err != nil {
+	if err := os.WriteFile(main, []byte("Create \"Worker\" as a New Basic App.\nThe App Prints `selected`.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 	initialize := func(t *testing.T, options compilerInitOptions) *compiler {
@@ -77,9 +77,6 @@ func TestCompilerResourceSelection(t *testing.T) {
 		}
 		index.Languages["selected"] = index.Languages["eng"]
 		delete(index.Languages, "eng")
-		storage := index.Languages["selected"]["storage"]
-		storage.Entry = "builtins/selected/storage/dictionary.l"
-		index.Languages["selected"]["storage"] = storage
 		data, err = json.Marshal(index)
 		if err != nil {
 			t.Fatal(err)
@@ -87,7 +84,7 @@ func TestCompilerResourceSelection(t *testing.T) {
 		if err := os.WriteFile(indexPath, data, 0600); err != nil {
 			t.Fatal(err)
 		}
-		if err := os.WriteFile(main, []byte("Use IO's Print from `io` as \"Print\".\nShow `selected`.\n"), 0600); err != nil {
+		if err := os.WriteFile(main, []byte("Create \"Worker\" as a New Basic App.\nThe App Prints `selected`.\n"), 0600); err != nil {
 			t.Fatal(err)
 		}
 		command, err := parseCommand([]string{"build", "--language=selected", "--assets", assets, main})

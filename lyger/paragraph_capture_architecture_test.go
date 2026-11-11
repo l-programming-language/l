@@ -131,7 +131,7 @@ func TestParagraphCaptureImportedRuntimeRequiresActiveStorage(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			source := paragraphSource(t)
-			source.main = "Use IO's Print from `io` as \"Print\".\n" +
+			source.main = "\n" +
 				"\"message\" is `worker text`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints message.\n" +
 				"\n    Run Worker.\nUse `local-words.l`.\n"
 			source.library = "Define \"privateText\" as Worker's Output.\n" + paragraphCaptureDefinition + "\n"

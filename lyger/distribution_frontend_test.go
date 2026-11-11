@@ -18,7 +18,7 @@ import (
 	Logiceme "github.com/l-programming-language/l/logiceme"
 )
 
-const distributionIOImport = "Use IO's Print from `io` as \"Print\".\n"
+const distributionCorePrefix = "\n"
 const distributionApp = "\"message\" is `Hello World!`.\nCreate \"Hello\" as a New Basic App.\nThe App Prints message.\nExecute Hello.\nShow Hello's Output.\n"
 
 // These cases deliberately request normal resources. No adjacent bootstrap or
@@ -180,100 +180,9 @@ func TestDistributionBuiltins(t *testing.T) {
 	})
 }
 
-func TestDistributionIO(t *testing.T) {
-	t.Run("IO02-explicit-import-and-private-helpers", func(t *testing.T) {
-		r := requireDistributionFrontend(t, distributionIOImport+distributionApp, nil)
-		for _, name := range []string{"IO", "IO.Print", "Write", "Discard", "Text.Render"} {
-			if r.Compilation.Memory[name] != nil {
-				t.Errorf("selected import leaked %s", name)
-			}
-		}
-		t.Run("Print-needs-import", func(t *testing.T) {
-			distributionNegative(t, distributionApp, "Prints", lerrors.UnresolvedReference)
-		})
-		for _, word := range []string{"Write", "Discard"} {
-			t.Run(word+"-is-private", func(t *testing.T) {
-				distributionNegative(t, distributionIOImport+distributionApp+"Show "+word+".\n", word, lerrors.UnresolvedReference)
-			})
-		}
-	})
-	t.Run("IO04-alias-forms-and-canonical-body", func(t *testing.T) {
-		base := requireDistributionFrontend(t, distributionIOImport+distributionApp, nil)
-		for _, name := range []string{"Display", "Render"} {
-			t.Run(name, func(t *testing.T) {
-				source := "Use IO's Print from `io` as \"" + name + "\".\n" + strings.Replace(distributionApp, "Prints", name+"s", 1)
-				r := requireDistributionFrontend(t, source, nil)
-				alias := r.Compilation.Memory[name]
-				canonical := distributionCanonical(t, r.Compilation, alias)
-				if canonical.ID != "IO.Print" {
-					t.Fatalf("canonical target = %s", canonical.ID)
-				}
-				for _, suffix := range []string{"", "s", "ed", "ing", "er"} {
-					binding, err := resolveTokenBinding([]byte(name+suffix), map[string]*record{name: alias})
-					if err != nil || binding == nil || distributionCanonical(t, r.Compilation, binding.Record) != canonical {
-						t.Errorf("alias form %s%s: %v", name, suffix, err)
-					}
-				}
-				if !bytes.Equal(base.BackendAML, r.BackendAML) {
-					t.Fatal("renaming selected Print changed the child program")
-				}
-			})
-		}
-	})
-	t.Run("IO05-caller-cannot-replace-private-Write", func(t *testing.T) {
-		const caller = "Define \"Write|-s|----ote|--ing|-r\" to `<DEF>BOD^E{|Statement: ~::std::print!(\"{}\", \"caller-wrong|\");~|}<DEF>`.\n"
-		r := requireDistributionFrontend(t, caller+distributionIOImport+distributionApp, nil)
-		c := r.Compilation
-		body, err := c.lowerAppBody(c.Semantics.Apps[0])
-		if err != nil {
-			t.Fatal(err)
-		}
-		dependencies, err := definitionClosure(body...)
-		if err != nil {
-			t.Fatal(err)
-		}
-		callerWrite := c.Memory["Write"]
-		var privateWrite *record
-		for _, dependency := range dependencies {
-			if dependency.definition == callerWrite {
-				t.Fatal("caller replaced a selected dictionary dependency")
-			}
-			declaration := c.Semantics.Declarations[dependency.definition]
-			if dependency.Symbol == "Write" && declaration != nil && declaration.source.Unit.Dictionary == "IO" {
-				privateWrite = dependency.definition
-			}
-		}
-		if callerWrite == nil || privateWrite == nil || privateWrite == callerWrite || privateWrite.storageScope == callerWrite.storageScope {
-			t.Fatal("IO helper and caller share mutable bindings/scope")
-		}
-	})
-	t.Run("IO06-ordinary-source-and-backend", func(t *testing.T) {
-		r := requireDistributionFrontend(t, distributionIOImport+distributionApp, nil)
-		print := distributionCanonical(t, r.Compilation, r.Compilation.Memory["Print"])
-		declaration := r.Compilation.Semantics.Declarations[print]
-		if declaration == nil || !strings.Contains(string(declaration.source.Raw), "Create IO's") || print.Value.Lexeme == nil || len(print.Value.Lexeme.Actions) == 0 {
-			t.Fatal("Print lost ordinary source definition/action representation")
-		}
-		units, err := r.ApplicationUnits()
-		if err != nil || len(units) != 1 {
-			t.Fatalf("child units = %d, %v", len(units), err)
-		}
-		bundle, err := Logiceme.NewLogicemeService(nil).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{IncludeRuntime: false})
-		recordBundle(t, bundle)
-		if err != nil {
-			t.Fatalf("real backend prerequisite failed; runtime not exercised: %v", err)
-		}
-		wrapper := "Use IO's Print from `io` as \"ImportedPrint\".\nCreate \"LocalWords\" as a Dictionary.\nUse ImportedPrint as LocalWords's \"Paint\".\n"
-		local := requireDistributionFrontend(t, "Use LocalWords's Paint from `words.l` as \"Print\".\n"+distributionApp, map[string]string{"words.l": wrapper})
-		if !bytes.Equal(local.BackendAML, r.BackendAML) {
-			t.Fatal("ordinary local reexport changed source-defined IO behavior")
-		}
-	})
-}
-
 func TestDistributionScopes(t *testing.T) {
 	t.Run("DI08-unit-roots-are-not-activation-frames", func(t *testing.T) {
-		r := requireDistributionFrontend(t, distributionIOImport+"\"global\" is `root|`.\n\n    Create \"Worker\" as a New Public Basic App.\nThe App Prints global.\nDefine \"privateResult\" as Worker's Output.\nShow privateResult.\n\nRun Worker.\nAwait Worker.\nShow global.\n", nil)
+		r := requireDistributionFrontend(t, distributionCorePrefix+"\"global\" is `root|`.\n\n    Create \"Worker\" as a New Public Basic App.\nThe App Prints global.\nDefine \"privateResult\" as Worker's Output.\nShow privateResult.\n\nRun Worker.\nAwait Worker.\nShow global.\n", nil)
 		c := r.Compilation
 		if c.Memory["global"] == nil || c.Memory["global"].storageScope != c.Scope.Root || c.Memory["Worker"] == nil || c.Memory["privateResult"] != nil {
 			t.Fatal("builtin parent changed program-global or paragraph-private ownership")
@@ -287,7 +196,7 @@ func TestDistributionScopes(t *testing.T) {
 	})
 	t.Run("DI11-independent-parallel-compilations", func(t *testing.T) {
 
-		requireDistributionFrontend(t, distributionIOImport+distributionApp, nil)
+		requireDistributionFrontend(t, distributionCorePrefix+distributionApp, nil)
 		const count = 8
 		var wg sync.WaitGroup
 		results := make([]*CompilationResult, count)
@@ -300,7 +209,7 @@ func TestDistributionScopes(t *testing.T) {
 			wg.Add(1)
 			go func(i int) {
 				defer wg.Done()
-				results[i], errs[i] = NewLygerService(Options{}).Compile([]byte(distributionIOImport+distributionApp), filepath.Join(dirs[i], "main.l"))
+				results[i], errs[i] = NewLygerService(Options{}).Compile([]byte(distributionCorePrefix+distributionApp), filepath.Join(dirs[i], "main.l"))
 			}(i)
 		}
 		wg.Wait()
@@ -327,7 +236,7 @@ func TestDistributionScopes(t *testing.T) {
 		}
 	})
 	t.Run("DI12-source-action-argument-possessive", func(t *testing.T) {
-		const prefix = distributionIOImport + "Create \"Tools\" as a Dictionary.\nCreate Tools's \"Collect|-s|-ed|-ing|-or\" for Awaiting any App and then Showing it's Output.\nUse Tools's Collect as \"Collect\".\n\"first\" is `worker`.\n\"second\" is `other`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints first.\nCreate \"Other\" as a New Basic App.\nThe App Prints second.\nRun Worker and Other.\nAwait Other.\n"
+		const prefix = distributionCorePrefix + "Create \"Tools\" as a Dictionary.\nCreate Tools's \"Collect|-s|-ed|-ing|-or\" for Awaiting any App and then Showing it's Output.\nUse Tools's Collect as \"Collect\".\n\"first\" is `worker`.\n\"second\" is `other`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints first.\nCreate \"Other\" as a New Basic App.\nThe App Prints second.\nRun Worker and Other.\nAwait Other.\n"
 		for _, alias := range []bool{false, true} {
 			t.Run(fmt.Sprint(alias), func(t *testing.T) {
 				call := "Collect Worker.\n"
@@ -352,7 +261,7 @@ func TestDistributionScopes(t *testing.T) {
 func TestDistributionSourceProvenance(t *testing.T) {
 	t.Run("MG05-exact-main-and-physical-projection", func(t *testing.T) {
 		const library = "\"value\" is `snow 雪, \\\"quote\\\"`.\r\nShow value.\r\n"
-		const source = "Use IO's Print from `io` as \"Print\".\r\n\r\n    Use `nested/words.l`.\r\n\r\n    Use `nested/words.l`.\r\n"
+		const source = "Use Print as \"Print\".\r\n\r\n    Use `nested/words.l`.\r\n\r\n    Use `nested/words.l`.\r\n"
 		r := requireDistributionFrontend(t, source, map[string]string{"nested/words.l": library})
 		c := r.Compilation
 		if !bytes.Equal(c.MainBytes, []byte(source)) {
@@ -369,7 +278,7 @@ func TestDistributionSourceProvenance(t *testing.T) {
 		if string(physical[1].Raw) != strings.SplitAfter(library, "\r\n")[0] || physical[1].Span.Start.Line != 1 || physical[2].Span.Start.Line != 2 {
 			t.Fatal("local literal bytes/line spans changed")
 		}
-		want := "Use IO's Print as \"Print\".\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value.\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value."
+		want := "\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value.\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value."
 		if got := string(renderExpandedSource(physical, c.TextCache)); got != want {
 			t.Fatalf("physical expanded projection = %q; want %q", got, want)
 		}
@@ -407,7 +316,7 @@ func TestDistributionServices(t *testing.T) {
 			t.Fatal(err)
 		}
 		project := t.TempDir()
-		input := []byte("Use IO's Print from `io` as \"Print\".\nCreate \"Hello\" as a New Basic App.\nThe App Prints `Hello World!`.\nExecute Hello.\nShow Hello's Output.\n")
+		input := []byte("\nCreate \"Hello\" as a New Basic App.\nThe App Prints `Hello World!`.\nExecute Hello.\nShow Hello's Output.\n")
 		main := filepath.Join(project, "main.l")
 		if err := os.WriteFile(main, input, 0600); err != nil {
 			t.Fatal(err)

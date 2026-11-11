@@ -16,7 +16,7 @@ import (
 	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 	"github.com/l-programming-language/l/lerrors"
-	Logiceme "github.com/l-programming-language/l/logiceme"
+
 	Lyger "github.com/l-programming-language/l/lyger"
 )
 
@@ -34,7 +34,7 @@ func TestDistributionBundleParity(t *testing.T) {
 		if err := os.WriteFile(main, source, 0600); err != nil {
 			t.Fatal(err)
 		}
-		generate := func(options compilerInitOptions) (*generatedProgram, Logiceme.Executable) {
+		generate := func(options compilerInitOptions) *generatedProgram {
 			c := newCompiler(&cliData{jobType: "build", mainPath: main, osType: "ubuntu"})
 			c.initialize(options)
 			g := c.process()
@@ -46,25 +46,12 @@ func TestDistributionBundleParity(t *testing.T) {
 			}
 			assertFrontendResources(t, g.Compilation.Compilation)
 			buildReturnedBundle(t, g.Sources)
-			var apps []Lyger.AppArtifact
-			for i, id := range g.ApplicationIDs {
-				apps = append(apps, Lyger.AppArtifact{ID: id, RelativeExecutable: fmt.Sprintf("program.apps/app-%d", i)})
-			}
-			unit, err := g.Compilation.OrchestratorUnit("Program", apps)
-			if err != nil {
-				t.Fatal(err)
-			}
-			runtime, err := c.log.Evaluate(unit.BackendAML, Logiceme.GenerationOptions{IncludeRuntime: true})
-			nativetest.RecordBundle(t, "explicit-runtime", runtime)
-			if err != nil {
-				t.Fatalf("selected runtime generation prerequisite: %v", err)
-			}
-			return g, runtime
+			return g
 		}
-		embedded, embeddedRuntime := generate(compilerInitOptions{})
+		embedded := generate(compilerInitOptions{})
 		assets := distributiontest.CompleteOverride(t)
-		override, overrideRuntime := generate(compilerInitOptions{AssetRoot: assets})
-		if !bytes.Equal(embedded.Compilation.AML, override.Compilation.AML) || !bytes.Equal(embedded.Compilation.BackendAML, override.Compilation.BackendAML) || !reflect.DeepEqual(embedded.ApplicationIDs, override.ApplicationIDs) || !reflect.DeepEqual(embedded.Sources, override.Sources) || !reflect.DeepEqual(embeddedRuntime, overrideRuntime) {
+		override := generate(compilerInitOptions{AssetRoot: assets})
+		if !bytes.Equal(embedded.Compilation.AML, override.Compilation.AML) || !bytes.Equal(embedded.Compilation.BackendAML, override.Compilation.BackendAML) || !reflect.DeepEqual(embedded.ApplicationIDs, override.ApplicationIDs) || !reflect.DeepEqual(embedded.Sources, override.Sources) {
 			t.Fatal("embedded and complete override resources produced different AML/source bundles")
 		}
 	})
@@ -328,7 +315,7 @@ func TestDistributionDictionarySemantics(t *testing.T) {
 		requireDistributionSource(t, assets, distributionGreeting, nil)
 	})
 	t.Run("DI10", func(t *testing.T) {
-		for _, effect := range []string{"Show `side effect`.\n", "Exit.\n", "Create \"Worker\" as a New Basic App.\n", "Create \"Worker\" as a New Basic App.\nRun Worker.\n", "Use IO's Print from `io` as \"Print\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints `attached`.\n"} {
+		for _, effect := range []string{"Show `side effect`.\n", "Exit.\n", "Create \"Worker\" as a New Basic App.\n", "Create \"Worker\" as a New Basic App.\nRun Worker.\n", "\nCreate \"Worker\" as a New Basic App.\nThe App Prints `attached`.\n"} {
 			t.Run(strings.TrimSpace(effect), func(t *testing.T) {
 				assets := distributiontest.CompleteOverride(t)
 				entry := addDistributionDictionary(t, assets, "tools", "Tools", distributionTools)

@@ -117,8 +117,7 @@ generation, source-file utilities and the CLI/build coordinator. Help retains
 remain 0 for help/success, 2 for invalid invocation/unsupported host and 1 for
 initialization, compilation, generation or build failure.
 
-The independent harness and generated process runtime do not depend on
-`lerrors`. The [execution contract](cli-build.md) independently governs App launch, Await, raw streams and process cleanup.
+The independent harness does not depend on `lerrors`. The current distribution has no process runtime; the [build contract](cli-build.md) limits execution to a standalone App.
 
 Unchecked regex/metadata/math indexing and UUID paths, suppressed recursive-parser errors,
 and non-error-returning convenience loaders retain their existing behavior.

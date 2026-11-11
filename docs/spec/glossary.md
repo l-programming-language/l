@@ -17,7 +17,6 @@ These terms describe L and its implementation. They should not be replaced autom
 | Object | An operand or related entity in a grammatical action |
 | Paragraph | Physical source grouping separated by blank lines outside literals/comments |
 | Lexical scope | An environment owning name bindings, distinct from physical layout and activation |
-| Activation | A particular runtime execution context with its own planned local storage |
 | Descriptor | A source adjective definition constraining nominal targets and supplying construction/wrapper rules |
 | Alias | A binding edge preserving canonical identity of another declaration |
 | Source unit | A builtin, program, or dictionary ownership boundary |
@@ -38,13 +37,8 @@ For these terms in actual L, read the [annotated basic program](grammar.md#read-
 | Basic | Builtin descriptor composing an App around a Main Service |
 | Process | Source-defined composition of supplied operation/body syllables |
 | Function | Source-defined callable composition, distinct from native Func metadata |
-| Orchestrator | Generated entry executable controlling target processes and outer source instructions |
-| Invocation | One accepted launch attempt and its immutable final result/continuation ownership |
-| Continuation | Paragraph-associated effects activated once by the first Await of an invocation |
-| Output | Finalized raw captured stdout of the selected invocation |
-| Error | Selected process operation/invocation failure, separate from compiler lerrors |
 
-The [App example](applicational-types.md#create-and-execute-an-app) puts Basic, Execute, and Output in context. Compare it with the [explicit App lifecycle example](../guide/apps-and-services.md#run-an-app) and [execution chapter](execution.md): standalone Service declarations create no package or process, and awaiting a launched target owns its finalized result and continuation.
+The [App example](applicational-types.md#create-and-execute-an-app) constructs Basic and prints Text directly. Runtime orchestration, invocation capture and continuations are unavailable; see [execution](execution.md).
 
 ## Compiler and backend
 
@@ -68,8 +62,8 @@ The [App example](applicational-types.md#create-and-execute-an-app) puts Basic, 
 | Conjoinment | Typed child-role input to a native composition |
 | Generation | Producing source/artifacts. This alone does not establish native compilation |
 | Native compilation | Building generated sources. This alone does not establish runtime behavior |
-| Runtime witness | Actual supervised execution with observed output/lifecycle behavior |
-| Acceptance | The repository's unfiltered gate and protected-input checks for one revision/host |
+| Runtime witness | Actual supervised execution with observed behavior on recorded inputs |
+| Acceptance | The temporary hello-world gate and frozen-logeme checks for one revision/host |
 
 ## Logical alphabet
 

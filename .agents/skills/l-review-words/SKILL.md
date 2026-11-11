@@ -31,7 +31,7 @@ Cover the dimensions affected by the change without imposing a boilerplate repor
 
 Check changed public meanings against their [canonical entries](../../../docs/contributing/documentation.md#maintain-word-entries), reviewed associations and meaningful examples; flag stale roles, targets, support claims or missing coverage without promoting private helpers.
 
-The [Storage semantics](../../../docs/internals/storage.md) distinguish Require's conditional error construction from eager message arguments, Accept's old-error destruction, continuation-dependent traversal, byte preservation and different retention laws. The [IO contract](../../../docs/stdlib/eng/io.md#explicit-byte-output) distinguishes returned failure from rollback: payload or newline failure can leave partial output. Release alone establishes no flush, durability, cancellation or App completion. Apply the relevant distinction rather than inferring behavior from a word's English name.
+Distinguish conditional work from eager arguments, error replacement from propagation, and returned failure from rollback. Partial output may remain after failure. Release alone establishes no flush, durability, cancellation or completion. Establish each obligation from current source and requirements; removed library definitions are not the specification.
 
 ## Inspect native boundaries and evidence
 
@@ -39,11 +39,11 @@ Follow the [native guide](../../../docs/guide/native-definitions.md). Accept jus
 
 Check that claimed reusable interfaces have meaningful independent composition evidence and accurate target/ownership rejection. Do not demand invented public consumers for every private continuation. Route compiler diagnosis to [frontend tracing](../l-frontend-trace/SKILL.md) or [logeme handoff](../l-logeme-handoff/SKILL.md); neither a parser pass nor native compilation establishes all runtime semantics.
 
-Use the current compiler/assets and [contract reports](../../../docs/contracts.md). Separate structural assurance, declarations/inferred facts, implementation evidence, environment observations, trusted assumptions and unknowns. Structural certificates and successful compilation do not establish runtime no-allocation, no-blocking, panic or callback guarantees. Include implicit argument/capture/destruction work and outcome-specific behavior in the requested scope.
+Use the current compiler/assets and actual source, test and [native build evidence](../../../docs/cli-build.md#optional-native-build-evidence). Separate source inspection, implementation observations, assumptions and unknowns. Successful compilation does not establish runtime no-allocation, no-blocking, panic or callback guarantees. Include implicit argument/capture/destruction work and outcome-specific behavior in the requested scope.
 
-For [PreservesOnFailure](../../../docs/contracts.md#scoped-checks-and-failure-footprints), identify the actual published resource location, observation and failure outcomes. An error return is not evidence that the resource stayed unchanged or that retry is safe. Missing/stale evidence leaves a required guarantee unresolved; do not manufacture trust, suppress unknowns, narrow scope or substitute a different meaning to make enforcement pass.
+For failure-preservation claims, identify the actual resource, observed state and failure outcomes. An error return is not evidence that the resource stayed unchanged or that retry is safe. Missing or stale evidence leaves a required guarantee unresolved; do not manufacture trust, suppress unknowns, narrow scope or substitute a different meaning.
 
-Offline inspection, checking, explanation and dictionary verification must not replay recorded commands, query native tools, fetch dependencies or silently capture evidence. Separately explicit builds/tests/capture retain their own authorization and evidence. Preserve protected inputs and expectations during diagnosis; current [acceptance policy](../l-acceptance/SKILL.md) owns validation requirements rather than this skill adding a universal native gate to reviews.
+Do not replay recorded commands, query native tools or fetch dependencies merely to inspect historical evidence. Explicit builds and tests retain their own authorization and evidence. Preserve protected inputs and expectations during diagnosis; current [acceptance policy](../l-acceptance/SKILL.md) owns validation requirements rather than this skill adding a universal native gate to reviews.
 
 ## Report concrete findings
 

@@ -1,23 +1,46 @@
 # CLI and compiler coordination
 
-The CLI validates sources, coordinates Cargo workspaces, builds Rust and publishes artifacts. Lyger resolves L semantics into AML; Logiceme renders native source from canonical compositions. The CLI must not lower Functions, infer ownership or repair returned Rust. L, Lyger and Logiceme remain Go implementations. Follow [architecture](../../docs/architecture.md), [CLI/runtime semantics](../../docs/cli-build.md) and [acceptance](../../docs/development-harness.md).
+Read root [instructions](../../AGENTS.md), [architecture](../../docs/architecture.md),
+[build semantics](../../docs/cli-build.md) and the
+[development guide](../../docs/development-harness.md).
 
-`TestCompilerInitialize` in `compiler_test.go` compares the complete compiler struct. `TestCompilerCompile` separately checks raw source, the returned observable AML, unchanged initialized state, the returned expanded view and the originating-user-source projection. `helpers.go` contains expected constructors and INITTEST/COMPTEST despite not being named `_test.go`. Source observers preserve literal bytes without requiring a particular native helper implementation. Preserve field count/order for positional literals, the required empty CLI Compilation, and nil-versus-empty distinctions. The returned working result owns the real graph; never discard it or substitute fixture constants to satisfy the tested view.
+The CLI validates sources, builds native Rust and publishes local build artifacts.
+Lyger resolves source meaning into AML; Logiceme renders native source from
+canonical compositions. The CLI must not lower Functions, repair returned Rust
+or implement a replacement runtime.
 
-Preserve the three-field `cliData` and nine-field `compiler`; frontend metadata records Rust output. Use a fresh argument parser and separate runtime-only options; the compiler stores `Lyger.Options` by value. Raw source, expanded source, cached/stamped source and backend markup are different representations. The full expanded view is `compiledBytes`/`result.ExpandedSource`; COMPTEST now equals INITTEST and fixes the originating-user-source projection, including comments. Expansion preserves descriptor targets, typed parameters and source order without changing Function into Definition or substituting Noun.Process.
+## Current build boundary
 
-`compile()` and `process()` remain source-only; the executable coordinator consumes their result once. Publish complete immutable companion generations before replacing the adjacent orchestrator. Keep previous generations, reject unrelated outputs/symlinked companion directories and preserve a working executable on failure. Native tool commands are offline, bounded and supervised. Runtime Apps use separate OS processes without an arbitrary duration limit; Await and inline continuations preserve ordered effects.
+`compile()` and `process()` remain source-only. The executable coordinator
+consumes their result once, validates a sole standalone App, and builds its real
+source bundle through pinned Cargo with runtime inclusion disabled. Core Print
+is the supported body. Reject runtime-dependent outer effects, continuations and
+multiple Apps; never discard them or synthesize a runner. Runtime will be rebuilt
+in L later.
 
-Tests run with `cmd/l` as CWD, use package-local source fixtures and embedded resources. `--language` defaults to `eng`; explicit `--assets` chooses one complete bundle without a configuration file. Do not materialize bootstrap/configuration mirrors or rewrite source control flow in helpers. Controlled Apps and orchestrators may execute in tests, never generated deployment scripts. Preserve diagnostics' source/phase/native causes and keep them out of application stdout. Root guidance and the [current integrity policy](../../docs/development-harness.md#current-integrity-and-amendments) govern protected inputs and amendments.
+Retain Cargo artifact provenance, offline bounded subprocess supervision and
+atomic publication. Match build artifacts to their manifest/target identity,
+retain immutable generation metadata and preserve a working executable on
+failure. Cache locks protect source/artifact identity through private snapshots.
+Keep compiler diagnostics separate from application stdout. Generated deployment
+scripts are artifacts, never local validation commands.
 
-The [Rust suite](../../testdata/integration/README.md) keeps Go test runners here and stored Rust fixtures under `test`. Generated Go source bundles and Go build fallbacks are unsupported. Default-routing tests must call `process()`; installed-CLI tests require Cargo artifact provenance before runtime assertions. Do not bypass either boundary by calling only Logiceme or using a replacement executable.
+## Compiler observations
 
-The workspace has one orchestrator binary, ordered App binaries and App-constructed Service libraries. Standalone Service declarations add no package or executable. Preserve version-1 manifests and the App artifact inventory. Start and Execute retain their `any App` builtin signatures. Match Cargo artifact messages to actual manifest and target identities before publication. Build with the pinned Rust toolchain and retained frozen/offline resolution. Cache reuse must preserve current source/artifact identity under concurrent builds; hold the native cache lock until artifacts have private snapshots. Never substitute a cached expected executable. Preserve the [approved budgets](../../docs/development-harness.md#validation-budgets) and runtime watchdogs; further changes require explicit scope. Native runtime execution is covered only by supervised parity tests; deployment scripts remain unexecuted.
+`TestCompilerInitialize` compares the complete compiler struct.
+`TestCompilerCompile` checks raw source, observable AML, unchanged initialized
+state, expanded view and originating-user-source projection. `helpers.go` owns
+the expected constructors and INITTEST/COMPTEST. Preserve the three-field cliData,
+nine-field compiler, positional field order and nil-versus-empty distinctions.
+The working result owns the semantic graph; do not substitute fixture constants
+or discard it to satisfy an expected view.
 
-During the core-only reset, there is no runtime library or orchestrator. `process()` validates a sole standalone App and generates it through the existing frontend/backend pipeline. Build the returned App bundle directly with the existing pinned Cargo supervision and atomic artifact publication. Reject runtime-dependent top-level effects and multiple Apps; do not silently discard them or synthesize a runner. The root registry is empty and core loads directly. Runtime will be reconstructed in L later.
-Offline contract inspection must never generate, compile or probe tools to repair
-missing or stale distribution resources.
+Tests run with cmd/l as CWD and use package-local fixtures. `--assets` selects
+one complete provider without changing CWD; default resources are embedded.
+Do not restore configuration mirrors, bootstrap fallback or deleted libraries.
+Historical build-evidence records do not authorize command replay or tool probes.
 
-Follow root [acceptance instructions](../../AGENTS.md#temporary-acceptance) and the [validation policy](../../docs/development-harness.md#validation-authorization). Task-authorized validation proceeds without repeated permission requests. Focused checks aid diagnosis and do not establish full validation; report unrun stages.
-
-The previous companion/runtime descriptions above are historical design context. Current completion uses only the temporary hello-world gate. Only frozen logeme assets are protected; original fixtures and expectations may be changed for the authorized reset.
+Run the root temporary hello-world gate with its existing pins, watchdogs and
+concurrency. Only frozen logeme assets and their expectations remain protected.
+Report generation, compilation and native execution separately. Publication
+remains disabled.

@@ -8,8 +8,8 @@ a later checkout or authorize changes to frozen inputs.
 
 ## Latest recorded verification — October 15, 2026
 
-The [macOS ARM64 validation](../../../testdata/service-execution/validation-2026-10-15.md)
-passed bootstrap, lint, canonical acceptance and tagged native compilation.
+The historical macOS ARM64 run passed bootstrap, lint, canonical acceptance and
+tagged native compilation.
 Tested source identity:
 `38096646d1a9cc5a68ea92ba2ea34d4997b526332e1cf0b1085a53911d8b44f5`.
 
@@ -23,10 +23,8 @@ The unchanged Lucid inventory remains 54 complete applications with 270 exact
 artifacts and 192 malformed inputs. Each native phase requires 42 successful
 builds and 12 specific intentional compiler errors. These are compile-only
 contracts: returned source is compiled unchanged, and these cases do not execute
-applications or deployment scripts. Supervised frontend/runtime tests are a
-separate part of ordinary acceptance; see the
-[implementation ledger](../../../testdata/integration/IMPLEMENTATION.md) for
-run artifacts and their execution scope.
+applications or deployment scripts. The former frontend/runtime suite was separate evidence and has been retired
+with the removed source libraries. It is not part of the current hello-world gate.
 
 This documentation update did not rerun language validation. Follow the
 [validation policy](../../../docs/development-harness.md#validation-authorization)

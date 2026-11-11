@@ -6,7 +6,7 @@ import (
 )
 
 func TestStructureSpanRetainsLegacyFirstMatch(t *testing.T) {
-	base := string(compositionResources(t, "7")["stdlib/runtime/generated/support.aml"].Data)
+	base := string(libraryFixture(t))
 	for _, test := range []struct {
 		name, input, message string
 	}{

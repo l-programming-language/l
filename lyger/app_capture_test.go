@@ -16,7 +16,7 @@ func TestAppBodyRejectsRuntimeCaptures(t *testing.T) {
 					name, aliases = "copy", "Use message as \"first\".\nUse first as \"copy\".\n"
 				}
 				t.Run(literal+"/"+condition+"/"+name, func(t *testing.T) {
-					source := distributionIOImport + "If " + condition + ", define \"message\" as " + literal + ".\n" + aliases +
+					source := distributionCorePrefix + "If " + condition + ", define \"message\" as " + literal + ".\n" + aliases +
 						"Create \"Worker\" as a New Basic App.\nThe App Prints " + name + ".\nExecute Worker.\n"
 					distributionNegative(t, source, "runtime value message cannot be captured by an App body", lerrors.Unsupported)
 				})
@@ -25,12 +25,12 @@ func TestAppBodyRejectsRuntimeCaptures(t *testing.T) {
 	}
 	// IO.Print itself composes Process and its private typed Print definitions. An
 	// alias must retain that composition and the original value's identity.
-	distributionNegative(t, distributionIOImport+"Use Print as \"Display\".\nIf false, define \"message\" as `payload`.\nCreate \"Worker\" as a New Basic App.\nThe App Displays message.\n", "runtime value message cannot be captured by an App body", lerrors.Unsupported)
+	distributionNegative(t, distributionCorePrefix+"Use Print as \"Display\".\nIf false, define \"message\" as `payload`.\nCreate \"Worker\" as a New Basic App.\nThe App Displays message.\n", "runtime value message cannot be captured by an App body", lerrors.Unsupported)
 }
 
 func TestAppBodyRetainsStaticCaptures(t *testing.T) {
 	for _, declaration := range []string{"\"message\" is `static payload`.\n", "Define \"message\" as `static payload`.\n"} {
-		source := distributionIOImport + declaration + "Use message as \"copy\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints copy.\nExecute Worker.\n"
+		source := distributionCorePrefix + declaration + "Use message as \"copy\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints copy.\nExecute Worker.\n"
 		result := requireDistributionFrontend(t, source, nil)
 		if !strings.Contains(string(result.BackendAML), "static payload") {
 			t.Fatal("static App capture lost its explicit source value")
