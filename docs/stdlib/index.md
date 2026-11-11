@@ -1,12 +1,12 @@
 # Standard library
 
-L's standard library supplies vocabulary dictionaries that you import explicitly. They are embedded in the compiler, so no separate library installation is needed. Builtins are available without an import.
+L's standard library supplies bundled dictionaries. Import their vocabulary explicitly. The compiler also links the selected Runtime implementation automatically for execution support. The default libraries are embedded in the compiler, so no separate installation is needed. Builtins are available without an import.
 
 ## Current catalog
 
 <a id="foundation-and-runtime-dictionaries"></a>
 
-All bundled dictionaries are listed below. IO provides application vocabulary. Formatting, Runtime and Storage provide implementation and word-authoring facilities. Each reference explains its imports, interfaces, examples and limits.
+All bundled dictionaries are listed below. IO provides application vocabulary. Formatting and Runtime are standard libraries with native authoring interfaces, while Storage supplies builtin foundations. Each reference explains its imports, interfaces, examples and limits.
 
 <!-- stdlib-catalog -->
 

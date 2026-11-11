@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "sha256": "b197656078935d99e5e67eccca04ab30c3921366f0eae6e4214d801f7c718e2a",
+  "sha256": "45b63fc6c82a6587be7782b443e4791b488c04aaec01c8c8036defa824bc2cae",
   "sources": {
     "builtins/eng/core.l": "393ad91fa39376fcf0981e5e57559e654291f4f2d47b1de66af94b10e5d1efbe",
     "builtins/eng/prelude.l": "629dea3c07781aebbdf5a9712debf1004212bf1725c985e0a829fc8e31696bba",
@@ -13,18 +13,18 @@
     "builtins/eng/storage/program.l": "5665b43aa601d0f9e9e2ddf8e76cd78f35f35ac38a9024af97037b1290df6f5e",
     "builtins/eng/storage/traversal.l": "398e2c70ab9b34b76bfc1ec4c874456cf4f6eed0f93f707663348b0fa9ae709b",
     "builtins/eng/storage/values.l": "16ab03b422073e4130f15af440243926368778149ccef29208a0a551290dbf23",
-    "dictionaries.json": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
-    "runtime/eng/app.l": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
-    "runtime/eng/capture.l": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
-    "runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
-    "runtime/eng/errors.l": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
-    "runtime/eng/foundations.l": "be6ea8dc5ee711036855bb2cf1c9c5c8c5e807cb94f14f0f4cc64809fb0856da",
-    "runtime/eng/process.l": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
-    "runtime/eng/shutdown.l": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
-    "runtime/eng/start.l": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
-    "runtime/eng/supervision.l": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
+    "dictionaries.json": "26c9368e234a01329dc42c4e9ccee94ae1e0a3f88f7479b6c5f5ac8d3bc1f7ea",
     "stdlib/eng/format/dictionary.l": "c592f377626e4b858572b88e35ebd4ffa3224451d0f6a1a32e23fea324560143",
-    "stdlib/eng/format/foundations.l": "807497d2e677e35c7b9f28ba621ef076d2facb7e02e5f4438a5518fa684a7009"
+    "stdlib/eng/format/foundations.l": "807497d2e677e35c7b9f28ba621ef076d2facb7e02e5f4438a5518fa684a7009",
+    "stdlib/eng/runtime/app.l": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
+    "stdlib/eng/runtime/capture.l": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
+    "stdlib/eng/runtime/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
+    "stdlib/eng/runtime/errors.l": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
+    "stdlib/eng/runtime/foundations.l": "be6ea8dc5ee711036855bb2cf1c9c5c8c5e807cb94f14f0f4cc64809fb0856da",
+    "stdlib/eng/runtime/process.l": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
+    "stdlib/eng/runtime/shutdown.l": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
+    "stdlib/eng/runtime/start.l": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
+    "stdlib/eng/runtime/supervision.l": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7"
   },
   "selection": {
     "": [

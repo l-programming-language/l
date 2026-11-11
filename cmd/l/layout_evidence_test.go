@@ -41,7 +41,7 @@ func TestLayoutNativeEvidenceRejectsChangedAssets(t *testing.T) {
 		}
 	}
 	assertApplicability(contracts.Established)
-	host := filepath.Join(assets, "runtime", "rust", "host.rs")
+	host := filepath.Join(assets, "stdlib", "runtime", "rust", "host.rs")
 	native := readContractFile(t, host)
 	writeContractFile(t, host, append(append([]byte(nil), native...), []byte("\n// changed selected native input\n")...))
 	assertApplicability(contracts.Unresolved)

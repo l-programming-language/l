@@ -22,7 +22,7 @@ not authorize ignoring source paths or bypassing Cargo graph/source invalidation
 Root `dictionaries.json` is the only registry. The selected prelude privately
 loads foundational support; builtin App behavior requires no user Storage or
 Runtime import. Distribution and publication protection must include the new
-`runtime/{eng,rust,generated}` resources and foundational Storage includes.
+`stdlib/eng/runtime/`, `stdlib/runtime/{rust,generated}` resources and foundational Storage includes.
 Offline contract inspection must never generate, compile or probe tools to repair
 missing or stale distribution resources.
 

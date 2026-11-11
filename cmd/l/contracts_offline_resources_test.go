@@ -36,9 +36,9 @@ func assertOfflineRuntimeResources(t *testing.T) {
 		name    string
 		missing bool
 	}{
-		{"runtime/generated/support.json", true},
-		{"runtime/rust/host.rs", true},
-		{"runtime/generated/support.aml", false},
+		{"stdlib/runtime/generated/support.json", true},
+		{"stdlib/runtime/rust/host.rs", true},
+		{"stdlib/runtime/generated/support.aml", false},
 		{"builtins/eng/storage/dictionary.l", false},
 	} {
 		path := filepath.Join(assets, filepath.FromSlash(mutation.name))

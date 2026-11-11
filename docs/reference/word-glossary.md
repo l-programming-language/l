@@ -5324,7 +5324,7 @@ Name the runtime adapter namespace whose aliases select canonical startup and na
 <details class="l-word-usage" data-pagefind-ignore>
 <summary>Usage example</summary>
 
-This source-authoring fragment comes from `runtime/eng/dictionary.l` and retains that dictionary's surrounding imports and native binding context.
+This source-authoring fragment comes from `stdlib/eng/runtime/dictionary.l` and retains that dictionary's surrounding imports and native binding context.
 
 <!-- example:glossary-runtime-eng-dictionary-18-18 -->
 
@@ -11859,7 +11859,7 @@ For example:
 
 This imports the public member from the registered IO dictionary and binds a local alias. It does not search for a neighboring `io` directory or `io.l`, nor does it expose private rendering and writing helpers. Importing the dictionary itself retains a namespace instead of flattening all members into the program.
 
-The registry validates duplicate JSON keys, supported source roots, safe resource paths, format, actual entry files, and consistent dictionary identity. It selects foundational dictionaries under `builtins/<language>/`, runtime source under `runtime/<language>/`, and standard libraries under `stdlib/<language>/`. There is one selected registry and no legacy registry lookup. An unknown key is an unresolved dictionary. An unsupported provider-style name reports its bounded unsupported-provider diagnostic. There is no package download or unrestricted remote dependency resolver hidden in Use.
+The registry validates duplicate JSON keys, supported source roots, safe resource paths, format, actual entry files, and consistent dictionary identity. It selects foundational dictionaries under `builtins/<language>/` and standard libraries, including Runtime, under `stdlib/<language>/`. There is one selected registry and no legacy registry lookup. An unknown key is an unresolved dictionary. An unsupported provider-style name reports its bounded unsupported-provider diagnostic. There is no package download or unrestricted remote dependency resolver hidden in Use.
 
 Each indexed dictionary owns a private lexical root inheriting builtins. Its public export must resolve to the registered Dictionary. Imported member aliases resolve in that dictionary's environment. Helper definitions do not capture caller-added members. Repeated dictionary dependencies reuse canonical dictionary identity while preserving import-site attribution.
 
@@ -12696,7 +12696,7 @@ Its Functions require the native types, async context and host facilities of the
 
 The groups below describe native support interfaces. Explicitly importing Runtime makes its qualified dictionary members addressable, including Runtime.Host. That namespace supplies aliases for startup and native traits; each alias retains its target’s native signature and requirements. Compiler selection of native export roots is separate from lexical visibility. Unqualified imported bindings and paragraph locals retain their private scopes.
 
-Runtime privately imports required Storage words and the canonical Formatting implementation. Authored L policy lives under `runtime/eng/`, native entry, host and OS inputs live under `runtime/rust/`, and derived AML and provenance live under `runtime/generated/`. See [support assembly](../cli-build.md#source-generation-and-native-builds) for selection and freshness rules.
+Runtime privately imports required Storage words and the canonical Formatting implementation. Its [standard-library reference](../stdlib/eng/runtime.md#select-a-replacement) describes replacement through a complete provider and the required native contract. Authored L policy lives under `stdlib/eng/runtime/`, native entry, host and OS inputs live under `stdlib/runtime/rust/`, and derived AML and provenance live under `stdlib/runtime/generated/`. See [support assembly](../cli-build.md#source-generation-and-native-builds) for selection and freshness rules.
 
 ### App
 
@@ -12791,7 +12791,7 @@ For termination, see the [Stop/Await example](../guide/lifecycle.md). The host w
 
 <a id="context-runtime--sources-and-witnesses"></a>
 
-The [Runtime dictionary](../../runtime/eng/dictionary.l) assembles [errors](../../runtime/eng/errors.l), [process state](../../runtime/eng/process.l), [App operations](../../runtime/eng/app.l), [startup](../../runtime/eng/start.l), [shutdown](../../runtime/eng/shutdown.l), [supervision](../../runtime/eng/supervision.l) and [capture](../../runtime/eng/capture.l).
+The [Runtime dictionary](../../stdlib/eng/runtime/dictionary.l) assembles [errors](../../stdlib/eng/runtime/errors.l), [process state](../../stdlib/eng/runtime/process.l), [App operations](../../stdlib/eng/runtime/app.l), [startup](../../stdlib/eng/runtime/start.l), [shutdown](../../stdlib/eng/runtime/shutdown.l), [supervision](../../stdlib/eng/runtime/supervision.l) and [capture](../../stdlib/eng/runtime/capture.l).
 
 [Selection tests](../../lyger/runtime_library_test.go) and [host support selection tests](../../lyger/runtime_selection_resources_test.go) check compiler-owned dependencies. [Composition tests](../../logiceme/runtime_composition_test.go) reject missing/stale resources, and [native layout tests](../../logiceme/native_runtime_layout_test.go) check selected input paths. [Runtime parity](../../logiceme/runtime_parity_test.go) and [error-cause tests](../../logiceme/runtime_error_causes_test.go) observe native behavior. The maintained [integration suite](../../testdata/integration/README.md) covers lifecycle, capture, faults and shutdown on the executing host. It supplies no automatic cross-platform proof.
 

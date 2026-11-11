@@ -19,14 +19,14 @@ import (
 func compositionResources(t *testing.T, value string) fstest.MapFS {
 	t.Helper()
 	files := distributiontest.Files(t)
-	const source = "runtime/eng/errors.l"
+	const source = "stdlib/eng/runtime/errors.l"
 	files[source].Data = bytes.ReplaceAll(files[source].Data, []byte("source execution stopped"), []byte("selected cancellation: "+value))
 	aml, manifest, err := Lyger.ComposeRuntimeResources(files)
 	if err != nil {
 		t.Fatal(err)
 	}
-	files["runtime/generated/support.aml"].Data = aml
-	files["runtime/generated/support.json"].Data = marshalTestJSON(t, manifest)
+	files["stdlib/runtime/generated/support.aml"].Data = aml
+	files["stdlib/runtime/generated/support.json"].Data = marshalTestJSON(t, manifest)
 	return files
 }
 
@@ -52,7 +52,7 @@ func TestRuntimeCompositionUsesSelectedResources(t *testing.T) {
 }
 
 func TestRuntimeCompositionRejectsStaleInputs(t *testing.T) {
-	for _, name := range []string{"stdlib/eng/format/dictionary.l", "runtime/generated/support.aml"} {
+	for _, name := range []string{"stdlib/eng/format/dictionary.l", "stdlib/runtime/generated/support.aml"} {
 		t.Run(name, func(t *testing.T) {
 			files := compositionResources(t, "first cancellation")
 			files[name].Data = append(files[name].Data, '\n')
@@ -65,7 +65,7 @@ func TestRuntimeCompositionRejectsStaleInputs(t *testing.T) {
 		})
 	}
 	files := compositionResources(t, "first cancellation")
-	delete(files, "runtime/generated/support.aml")
+	delete(files, "stdlib/runtime/generated/support.aml")
 	if _, err := loadSupportTemplates(files, true); !errors.Is(err, fs.ErrNotExist) {
 		t.Fatalf("missing selected composition = %v", err)
 	}
@@ -80,12 +80,12 @@ func TestRuntimeCompositionRequiresLibraryTarget(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	files["runtime/generated/support.aml"].Data = bytes.Replace(files["runtime/generated/support.aml"].Data, []byte(`"Kind":"lib"`), []byte(`"Kind":"bin"`), 1)
-	manifest.SHA256, err = manifest.Fingerprint(files["runtime/generated/support.aml"].Data)
+	files["stdlib/runtime/generated/support.aml"].Data = bytes.Replace(files["stdlib/runtime/generated/support.aml"].Data, []byte(`"Kind":"lib"`), []byte(`"Kind":"bin"`), 1)
+	manifest.SHA256, err = manifest.Fingerprint(files["stdlib/runtime/generated/support.aml"].Data)
 	if err != nil {
 		t.Fatal(err)
 	}
-	files["runtime/generated/support.json"].Data = marshalTestJSON(t, manifest)
+	files["stdlib/runtime/generated/support.json"].Data = marshalTestJSON(t, manifest)
 	if _, err := loadSupportTemplates(files, true); !errors.Is(err, lerrors.InvalidConfiguration) || !strings.Contains(err.Error(), "library target") {
 		t.Fatalf("binary composition = %v", err)
 	}
@@ -120,7 +120,7 @@ func TestRuntimeCompositionRejectsRehashedOrMissingSource(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				const source = "runtime/eng/errors.l"
+				const source = "stdlib/eng/runtime/errors.l"
 				want := "stale"
 				switch mutation {
 				case "omit":
@@ -134,7 +134,7 @@ func TestRuntimeCompositionRejectsRehashedOrMissingSource(t *testing.T) {
 					files[source].Data = bytes.ReplaceAll(files[source].Data, []byte("source execution stopped"), []byte("changed cancellation message"))
 					manifest.Sources[source] = fmt.Sprintf("%x", sha256.Sum256(files[source].Data))
 				}
-				files["runtime/generated/support.json"].Data = marshalTestJSON(t, manifest)
+				files["stdlib/runtime/generated/support.json"].Data = marshalTestJSON(t, manifest)
 				if err := assemble(); !errors.Is(err, lerrors.InvalidConfiguration) || !strings.Contains(err.Error(), want) {
 					t.Fatalf("invalid provider retained generated runtime: %v", err)
 				}

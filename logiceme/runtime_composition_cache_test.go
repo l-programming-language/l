@@ -13,7 +13,7 @@ import (
 
 func TestRuntimeCompositionCacheRereadsSelectedResources(t *testing.T) {
 	for _, name := range []string{
-		"runtime/generated/support.json", "runtime/generated/support.aml",
+		"stdlib/runtime/generated/support.json", "stdlib/runtime/generated/support.aml",
 		"dictionaries.json",
 		"stdlib/eng/format/dictionary.l", "builtins/segments/vowels/calculation.lu",
 		"builtins/templates/install/cargo.lu",
@@ -62,7 +62,7 @@ func TestRuntimeCompositionCacheTracksSelectedContent(t *testing.T) {
 	}
 	files[cargo].Data = before
 	replacement := compositionResources(t, "9")
-	for _, name := range []string{"runtime/generated/support.json", "runtime/generated/support.aml", "runtime/eng/errors.l"} {
+	for _, name := range []string{"stdlib/runtime/generated/support.json", "stdlib/runtime/generated/support.aml", "stdlib/eng/runtime/errors.l"} {
 		files[name] = replacement[name]
 	}
 	if !bytes.Contains(composedRuntime(t, files), []byte("selected cancellation: 9")) {

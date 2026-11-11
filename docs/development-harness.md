@@ -459,11 +459,12 @@ before and after, then resume that allowance. Never grant a fresh runtime budget
 
 ## Compiler defaults
 
-Released binaries embed English resources. Users need no overrides. These options support compiler development:
+Released binaries embed English resources. Ordinary builds need no overrides.
+These options support compiler development and [Runtime replacement](stdlib/eng/runtime.md#select-a-replacement):
 
-| Override | Default | Developer use |
+| Override | Default | Use |
 | --- | --- | --- |
-| `--assets ROOT` | Embedded resources | Replace the entire resource filesystem with root `dictionaries.json` and complete `lexicon`, `builtins`, `runtime` and `stdlib` resources, including native Rust inputs, generated runtime support and backend templates. |
+| `--assets ROOT` | Embedded resources | Replace the entire resource filesystem with root `dictionaries.json` and complete `lexicon`, `builtins` and `stdlib` resources, including native Rust inputs, generated runtime support and backend templates. |
 | `--language LANGUAGE` | `eng` | Select matching source resources within that bundle. Other source languages remain out of scope until after `v1.0.0`. |
 
 From the repository root, exercise its English resource files with an installed compiler:
@@ -474,7 +475,7 @@ l build --assets . --language eng demo/basic/main.l
 
 Both options precede the source filename. Relative asset paths use invocation CWD without changing it. Empty values reject. Invalid or unavailable languages fail initialization. Overrides have no embedded fallback or settings file. Keep the bundle's templates and dependencies compatible with the compiler. Bare imports use its `dictionaries.json`. Dictionary helpers resolve inside that provider, never unrelated host files.
 
-Runtime support fingerprints the root registry as well as its actual source inputs. Changing a mapping, including adding a dictionary to a developer bundle, requires explicit regeneration with `scripts/l-go run -mod=readonly ./tools/composition` from the resource source checkout before staging the complete bundle. Check freshness with the same command plus `-check`. Offline `inspect`, `check` and `explain` report missing or stale resources. They never invoke generation, compilers, toolchain probes or network recovery to repair them.
+Runtime support fingerprints the root registry as well as its actual source inputs. Changing a mapping, including adding a dictionary to a developer bundle, requires explicit regeneration with `scripts/l-go run -mod=readonly ./tools/composition -assets /absolute/provider` from the matching compiler checkout. Check freshness with the same command plus `-check`. Offline `inspect`, `check` and `explain` report missing or stale resources. They never invoke generation, compilers, toolchain probes or network recovery to repair them.
 
 Lyger accepts typed language, resource and provenance options. Logiceme accepts the same filesystem and constructs 18 glyphs from private defaults. Generated Rust configuration contracts, absent `configuration/` and `configurations/` directories, all eleven distribution probes, literal preservation, resource diagnostics, isolation and CWD-independent compilation remain required. See [complete CLI help](_generated/cli-help.md).
 

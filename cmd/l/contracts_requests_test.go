@@ -155,8 +155,8 @@ func composeScopedTestProvider(t *testing.T, root string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	writeContractFile(t, filepath.Join(root, "runtime", "generated", "support.aml"), aml)
-	writeContractFile(t, filepath.Join(root, "runtime", "generated", "support.json"), metadata)
+	writeContractFile(t, filepath.Join(root, "stdlib", "runtime", "generated", "support.aml"), aml)
+	writeContractFile(t, filepath.Join(root, "stdlib", "runtime", "generated", "support.json"), metadata)
 }
 
 func TestScopedNativeCLIApprovalAndRemoval(t *testing.T) {

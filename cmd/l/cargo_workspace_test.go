@@ -178,7 +178,7 @@ func TestCLICompilesRuntimeAsWorkspaceLibrary(t *testing.T) {
 		t.Fatalf("runtime library root = %q, %v", actual, err)
 	}
 	for name, asset := range map[string]string{"runtime/host.rs": "host", "process_unix.rs": "process_unix", "process_other.rs": "process_other"} {
-		want, err := os.ReadFile(filepath.Join(root, "runtime/rust", asset+".rs"))
+		want, err := os.ReadFile(filepath.Join(root, "stdlib/runtime/rust", asset+".rs"))
 		if err != nil {
 			t.Fatal(err)
 		}

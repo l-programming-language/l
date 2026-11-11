@@ -64,7 +64,7 @@ func TestWorkspaceRuntimeBridge(t *testing.T) {
 	if !bytes.Contains(main, []byte(`runtime.show(b"source-owned\xff").await?; Ok(())`)) || bytes.Count(main, []byte("\nfn l_main(")) != 1 {
 		t.Fatal("bridge changed or duplicated source-owned body")
 	}
-	wrapper, err := fs.ReadFile(config, "runtime/rust/main.rs")
+	wrapper, err := fs.ReadFile(config, "stdlib/runtime/rust/main.rs")
 	if err != nil {
 		t.Fatal(err)
 	}

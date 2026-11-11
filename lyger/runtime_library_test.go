@@ -52,7 +52,7 @@ func TestRuntimeLibrarySelectsDeclaredDependencies(t *testing.T) {
 	if selected, err := opaque.RuntimeLibrary("support", imports); err != nil || selected != nil {
 		t.Fatalf("opaque authored native leaf must retain full support: %v", err)
 	}
-	for _, name := range []string{"builtins/eng/storage/dictionary.l", "builtins/eng/storage/control.l", "builtins/operations/rust/process-run.def", "runtime/rust/host.rs"} {
+	for _, name := range []string{"builtins/eng/storage/dictionary.l", "builtins/eng/storage/control.l", "builtins/operations/rust/process-run.def", "stdlib/runtime/rust/host.rs"} {
 		files := dictionaryIndexFilesystem(t)
 		files[name].Data = append(bytes.Clone(files[name].Data), '\n')
 		changed, err := NewLygerService(Options{Resources: files}).Compile([]byte("Show `changed`.\n"), "changed.l")

@@ -50,7 +50,7 @@ func IsEmbedded(files fs.FS) bool {
 // Mutable providers are reread on every call; neither errors nor parsed state
 // are cached by this resource reader.
 func LoadRuntimeComposition(files fs.FS) (RuntimeComposition, []byte, error) {
-	const manifestPath = "runtime/generated/support.json"
+	const manifestPath = "stdlib/runtime/generated/support.json"
 	var manifest RuntimeComposition
 	if files == nil {
 		return manifest, nil, lerrors.InvalidConfiguration.Errorf("asset filesystem is required for %s", manifestPath)
@@ -86,7 +86,7 @@ func LoadRuntimeComposition(files fs.FS) (RuntimeComposition, []byte, error) {
 			return manifest, nil, err
 		}
 	}
-	const amlPath = "runtime/generated/support.aml"
+	const amlPath = "stdlib/runtime/generated/support.aml"
 	aml, err := fs.ReadFile(files, amlPath)
 	if err != nil {
 		return manifest, nil, fmt.Errorf("load composed runtime input %s: %w", amlPath, lerrors.IO.Wrap(err, ""))

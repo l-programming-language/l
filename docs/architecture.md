@@ -27,8 +27,8 @@ Apps run as separate OS processes while the orchestrator preserves ordered sourc
 | `lyger` | Source preparation, vocabulary, grammar, bindings, types, ownership/activation analysis and AML composition |
 | `logiceme` | AML interpretation, glyph/template evaluation, callable declaration rendering, support assembly and linking |
 | `builtins/eng` | Source bootstrap, implicit core definitions and foundational Storage compositions |
-| `stdlib/eng` | Explicit IO and Formatting dictionaries with their private helpers |
-| `runtime/eng`, `runtime/rust` and `runtime/generated` | L-authored runtime policy, native host/platform inputs and derived AML/provenance |
+| `stdlib/eng` | IO, Formatting and the default Runtime dictionary with their private helpers |
+| `stdlib/runtime/rust` and `stdlib/runtime/generated` | Runtime's native host/platform inputs and derived AML/provenance |
 | `builtins/operations/rust` | Typed builtin process-operation compositions selected by the frontend |
 | `builtins/segments` and `builtins/templates` | Frozen Rust syntax and retained Cargo/configuration/start/stop templates. The maintained Lucid suite defines verified scope |
 
@@ -53,7 +53,7 @@ An absence of production callers alone does not make a tested contract disposabl
 The root distribution package embeds canonical resource files and
 exposes them through `fs.FS`. Lyger and logeme use one selected filesystem.
 Embedded resources are the default. An explicit complete directory
-override is useful for development. Resource files stay in their native JSON, L
+override selects a complete distribution, including its Runtime implementation. Resource files stay in their native JSON, L
 and template formats, and generated programs do not depend on them at runtime.
 
 `builtins/<configured-language>/prelude.l` supplies the implicit builtin unit
@@ -61,12 +61,17 @@ and includes `core.l` in that same unit.
 The [core reference](reference/words.md) describes its implicit vocabulary.
 Prelude privately imports [Storage](internals/storage.md). That implementation namespace
 requires an explicit import at a source use. The [dictionary index](../dictionaries.json)
-also selects [IO](stdlib/eng/io.md) and private support dictionaries. Adding an
+also selects [IO](stdlib/eng/io.md), [Formatting](stdlib/eng/format.md) and Runtime. Adding an
 indexed dictionary does not make its words implicit.
 
-Runtime lifecycle, errors and captures are composed in [L source](../runtime/eng).
-Its [generated support](../runtime/generated) is rendered with the same frozen
-logemes. [Native inputs](../runtime/rust) retain executor, host, OS and async access.
+The default Runtime standard library composes lifecycle, errors and captures in
+[L source](../stdlib/eng/runtime). One complete provider can replace its policy
+through the existing registry while preserving the
+[compiler/runtime contract](stdlib/eng/runtime.md#compiler-runtime-contract).
+Required runtime linkage needs no source import and does not make Runtime's
+words implicit. Ordinary imports and user homonyms cannot change that selection.
+Its [generated support](../stdlib/runtime/generated) is rendered with the same frozen
+logemes. [Native inputs](../stdlib/runtime/rust) retain executor, host, OS and async access.
 Formatting has one implementation under `stdlib/<language>/format/`, shared by
 IO and Runtime without source-loading process supervision. Storage's same-unit
 includes retain one canonical dictionary and lexical ownership. A native

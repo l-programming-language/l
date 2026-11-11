@@ -119,11 +119,11 @@ func TestRuntimeWordCleanBreakReleasesReplacedInvocationBeforeSpawn(t *testing.T
 	for _, delayed := range []bool{false, true} {
 		t.Run(map[bool]string{false: "selected", true: "delayed-release-control"}[delayed], func(t *testing.T) {
 			files := dictionaryIndexFilesystem(t)
-			process := files["runtime/eng/process.l"]
+			process := files["stdlib/eng/runtime/process.l"]
 			process.Data = bytes.ReplaceAll(process.Data, []byte("Key: ~tokio::spawn~"), []byte("Key: ~crate::runtime::host::observe_spawn~"))
 			if delayed {
 				// A provider-only negative control changes source order, never Rust.
-				app := files["runtime/eng/app.l"]
+				app := files["stdlib/eng/runtime/app.l"]
 				const release = "Storage.Release Previous.\n"
 				const tail = "Return a New Nothing.\n"
 				if bytes.Count(app.Data, []byte(release)) != 1 || !bytes.HasSuffix(app.Data, []byte(tail)) {
@@ -132,7 +132,7 @@ func TestRuntimeWordCleanBreakReleasesReplacedInvocationBeforeSpawn(t *testing.T
 				app.Data = bytes.Replace(app.Data, []byte(release), nil, 1)
 				app.Data = append(bytes.TrimSuffix(app.Data, []byte(tail)), []byte(release+tail)...)
 			}
-			files["runtime/rust/host.rs"].Data = append(files["runtime/rust/host.rs"].Data, []byte(replacedInvocationObserver)...)
+			files["stdlib/runtime/rust/host.rs"].Data = append(files["stdlib/runtime/rust/host.rs"].Data, []byte(replacedInvocationObserver)...)
 			deriveTestRuntime(t, files)
 			c := NewLygerService(Options{Resources: files}).NewCompilation([]byte("Create \"Checks\" as a Dictionary.\n"), "runtime-insertion-release.l")
 			c.Make()

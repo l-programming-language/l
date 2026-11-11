@@ -21,7 +21,7 @@ func loadSupportAssets(resources fs.FS, includeRuntime bool) (map[string][]byte,
 		asset := path.Join("builtins/templates", name)
 		native := strings.HasPrefix(name, "runtime/")
 		if native {
-			asset = path.Join("runtime/rust", path.Base(name))
+			asset = path.Join("stdlib/runtime/rust", path.Base(name))
 		}
 		content, err := readAsset(resources, asset)
 		if err != nil {

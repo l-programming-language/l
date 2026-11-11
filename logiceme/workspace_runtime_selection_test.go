@@ -7,10 +7,10 @@ import (
 
 func TestWorkspaceUsesExplicitRuntimeLibrary(t *testing.T) {
 	files := compositionResources(t, "7")
-	library := bytes.Replace(files["runtime/generated/support.aml"].Data, []byte(`<BOOK "runtime">`), []byte(`<BOOK "chosen_runtime">`), 1)
+	library := bytes.Replace(files["stdlib/runtime/generated/support.aml"].Data, []byte(`<BOOK "runtime">`), []byte(`<BOOK "chosen_runtime">`), 1)
 	library = bytes.Replace(library, []byte(`"Name":"runtime"`), []byte(`"Name":"chosen_runtime"`), 1)
-	delete(files, "runtime/generated/support.aml")
-	delete(files, "runtime/generated/support.json")
+	delete(files, "stdlib/runtime/generated/support.aml")
+	delete(files, "stdlib/runtime/generated/support.json")
 	_, support, err := NewLogicemeService(files).EvaluateWorkspaceEntry(workspaceRuntimeInput(), WorkspaceRuntime{Package: "chosen_runtime", RelativeDirectory: "../runtime"}, library)
 	if err != nil {
 		t.Fatal(err)

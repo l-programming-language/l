@@ -8,7 +8,8 @@ this file adds the asset-specific boundaries.
 ## Source and asset ownership
 
 Follow the root layout and source-ownership rules: one registry/prelude, one
-Storage dictionary, separate authored/native/generated Runtime, and explicit
+Storage dictionary, a replaceable Runtime standard library with separate
+authored/native/generated resources, and explicit
 Formatting without supervision imports. Use the selected `fs.FS` and explicit
 [embedding list](../distribution.go); definitions and source compositions own
 behavior, with no Statement/EA algorithm escape or separate frontend implementation.

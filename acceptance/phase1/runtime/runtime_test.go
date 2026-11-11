@@ -66,7 +66,7 @@ func runtimeProject(t testing.TB) (string, []runtimeCase, map[string][]byte) {
 	}
 	files["driver/ownership.rs"] = ownership
 	files["companion/ownership.rs"] = bytes.Clone(ownership)
-	for source, target := range map[string]string{"runtime/generated/support.aml": "runtime.aml", "runtime/rust/host.rs": "driver/runtime/host.rs", "runtime/rust/process_unix.rs": "driver/process.rs"} {
+	for source, target := range map[string]string{"stdlib/runtime/generated/support.aml": "runtime.aml", "stdlib/runtime/rust/host.rs": "driver/runtime/host.rs", "stdlib/runtime/rust/process_unix.rs": "driver/process.rs"} {
 		b, e := fs.ReadFile(distribution.Files(), source)
 		if e != nil {
 			t.Fatal(e)

@@ -21,7 +21,7 @@ func TestReleaseInventory(t *testing.T) {
 			t.Errorf("non-release resource %q", path)
 		}
 	}
-	for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "dictionaries.json", "stdlib/eng/io/dictionary.l", "builtins/eng/storage/dictionary.l", "runtime/eng/foundations.l", "runtime/generated/support.aml", "runtime/generated/support.json", "runtime/rust/host.rs", "runtime/rust/process_unix.rs", "runtime/rust/process_other.rs"} {
+	for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "dictionaries.json", "stdlib/eng/io/dictionary.l", "builtins/eng/storage/dictionary.l", "stdlib/eng/runtime/foundations.l", "stdlib/runtime/generated/support.aml", "stdlib/runtime/generated/support.json", "stdlib/runtime/rust/host.rs", "stdlib/runtime/rust/process_unix.rs", "stdlib/runtime/rust/process_other.rs"} {
 		if !seen[path] {
 			t.Errorf("missing required release path %s", path)
 		}

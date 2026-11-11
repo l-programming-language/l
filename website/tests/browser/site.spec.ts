@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { sourceURL } from '../../scripts/provenance.mjs';
 
 // The large glossary makes a DOM snapshot on each traced action
 // dominate navigation time. Keep failure traces, screenshots, sources and action/
@@ -211,6 +213,9 @@ for (const { query, destinations } of wordSearches) {
 }
 
 test('library overview reaches each dictionary reference without JavaScript', async ({ browser }) => {
+  const root = fileURLToPath(new URL('../../../', import.meta.url));
+  const registry = JSON.parse(await fs.readFile(new URL('../../../dictionaries.json', import.meta.url), 'utf8')).languages.eng;
+  const identity = JSON.parse(await fs.readFile('dist/version.json', 'utf8'));
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4321/docs/stdlib/');
@@ -218,17 +223,24 @@ test('library overview reaches each dictionary reference without JavaScript', as
   const group = page.locator('#starlight__sidebar summary').filter({ hasText: 'Standard library' }).locator('..');
   await expect(group).toHaveAttribute('open', '');
   await expect(group.getByRole('link')).toHaveText(['Overview', 'IO', 'Formatting', 'Runtime', 'Storage']);
-  for (const [name, route] of [
-    ['IO', '/docs/stdlib/eng/io/'],
-    ['Formatting', '/docs/stdlib/eng/format/'],
-    ['Runtime', '/docs/stdlib/eng/runtime/'],
-    ['Storage', '/docs/internals/storage/'],
+  for (const [name, route, key] of [
+    ['IO', '/docs/stdlib/eng/io/', 'io'],
+    ['Formatting', '/docs/stdlib/eng/format/', 'format'],
+    ['Runtime', '/docs/stdlib/eng/runtime/', 'runtime'],
+    ['Storage', '/docs/internals/storage/', 'storage'],
   ]) {
     await page.goto('http://127.0.0.1:4321/docs/stdlib/');
     await page.locator(`main table a[href="${route}"]`).click();
     await expect(page).toHaveURL(`http://127.0.0.1:4321${route}`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(name);
-    await expect(page.locator('main a[href*="dictionary.l"]').first()).toBeAttached();
+    const source = registry[key].entry;
+    const committed = sourceURL(root, source, identity);
+    if (committed) {
+      await expect(page.locator(`main a[href=${JSON.stringify(committed)}]`).first()).toBeAttached();
+    } else {
+      await expect(page.locator('main code').filter({ hasText: new RegExp(`^${source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) }).first()).toBeAttached();
+      await expect(page.locator(`main a[href$=${JSON.stringify(source)}]`)).toHaveCount(0);
+    }
   }
   await context.close();
 });

@@ -2,7 +2,7 @@
   "inputs": {
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lexicon/eng/vocabulary.json": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c",
-    "dictionaries.json": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
+    "dictionaries.json": "26c9368e234a01329dc42c4e9ccee94ae1e0a3f88f7479b6c5f5ac8d3bc1f7ea",
     "cmd/l/command.go": "fc6e07ba875c7c41e62aec111a2efe12220c5aa19199c061ed3352513d551761",
     "cmd/l/contracts.go": "ed780c22db290ee5518c26a51e1258f327769e16ed87e864f0473f634b7fab81",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
@@ -379,7 +379,7 @@
           "dictionary": "Formatting"
         },
         "runtime": {
-          "entry": "runtime/eng/dictionary.l",
+          "entry": "stdlib/eng/runtime/dictionary.l",
           "dictionary": "Runtime"
         },
         "storage": {
@@ -23449,7 +23449,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/dictionary.l",
+            "source": "stdlib/eng/runtime/dictionary.l",
             "lines": [
               1,
               1
@@ -23502,7 +23502,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               23,
               23
@@ -23555,7 +23555,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               29,
               29
@@ -23588,7 +23588,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               24,
               24
@@ -23641,7 +23641,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               41,
               47
@@ -23674,7 +23674,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               175,
               175
@@ -23727,7 +23727,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               274,
               274
@@ -23760,7 +23760,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               7,
               7
@@ -23813,7 +23813,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               187,
               212
@@ -23846,7 +23846,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               34,
               34
@@ -23879,7 +23879,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               249,
               249
@@ -23932,7 +23932,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               58,
               71
@@ -23965,7 +23965,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               40,
               40
@@ -24018,7 +24018,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               77,
               87
@@ -24051,7 +24051,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               214,
               214
@@ -24104,7 +24104,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               225,
               226
@@ -24157,7 +24157,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               220,
               220
@@ -24190,7 +24190,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               36,
               36
@@ -24223,7 +24223,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               223,
               223
@@ -24256,7 +24256,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               105,
               105
@@ -24309,7 +24309,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               47,
               53
@@ -24362,7 +24362,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               55,
               56
@@ -24395,7 +24395,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               45,
               45
@@ -24448,7 +24448,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               73,
               75
@@ -24501,7 +24501,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               102,
               112
@@ -24534,7 +24534,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               43,
               43
@@ -24567,7 +24567,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               2,
               2
@@ -24620,7 +24620,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               228,
               247
@@ -24673,7 +24673,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               26,
               38
@@ -24706,7 +24706,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               215,
               215
@@ -24739,7 +24739,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               41,
               41
@@ -24772,7 +24772,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               106,
               106
@@ -24825,7 +24825,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               17,
               21
@@ -24858,7 +24858,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               33,
               33
@@ -24891,7 +24891,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               1,
               1
@@ -24924,7 +24924,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               216,
               216
@@ -24957,7 +24957,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               44,
               44
@@ -24990,7 +24990,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               251,
               251
@@ -25023,7 +25023,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               250,
               250
@@ -25071,7 +25071,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               89,
               95
@@ -25124,7 +25124,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               109,
               118
@@ -25177,7 +25177,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               124,
               136
@@ -25230,7 +25230,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               272,
               290
@@ -25283,7 +25283,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               97,
               100
@@ -25316,7 +25316,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               42,
               42
@@ -25364,7 +25364,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               60,
               64
@@ -25397,7 +25397,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               37,
               37
@@ -25450,7 +25450,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               221,
               221
@@ -25483,7 +25483,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               8,
               8
@@ -25516,7 +25516,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               35,
               35
@@ -25569,7 +25569,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               138,
               152
@@ -25602,7 +25602,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               173,
               173
@@ -25655,7 +25655,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               292,
               301
@@ -25708,7 +25708,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               154,
               171
@@ -25761,7 +25761,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               55,
               58
@@ -25814,7 +25814,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               31,
               31
@@ -25867,7 +25867,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               238,
               253
@@ -25920,7 +25920,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               248,
               254
@@ -25953,7 +25953,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               170,
               171
@@ -26012,7 +26012,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/start.l",
+            "source": "stdlib/eng/runtime/start.l",
             "lines": [
               25,
               30
@@ -26045,7 +26045,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               231,
               231
@@ -26098,7 +26098,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               285,
               293
@@ -26151,7 +26151,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               272,
               272
@@ -26184,7 +26184,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               1,
               1
@@ -26237,7 +26237,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               18,
               21
@@ -26290,7 +26290,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               60,
               70
@@ -26323,7 +26323,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               6,
               6
@@ -26356,7 +26356,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               8,
               8
@@ -26389,7 +26389,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               13,
               13
@@ -26422,7 +26422,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               5,
               5
@@ -26455,7 +26455,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               2,
               2
@@ -26488,7 +26488,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               16,
               16
@@ -26521,7 +26521,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               7,
               7
@@ -26554,7 +26554,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               14,
               14
@@ -26607,7 +26607,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               35,
               36
@@ -26660,7 +26660,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               23,
               26
@@ -26713,7 +26713,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               9,
               9
@@ -26766,7 +26766,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               97,
               100
@@ -26819,7 +26819,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               102,
               106
@@ -26872,7 +26872,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               55,
               58
@@ -26905,7 +26905,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               15,
               15
@@ -26953,7 +26953,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               93,
               95
@@ -26986,7 +26986,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               3,
               4
@@ -27045,7 +27045,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               38,
               48
@@ -27098,7 +27098,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               28,
               29
@@ -27151,7 +27151,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               31,
               33
@@ -27204,7 +27204,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               72,
               91
@@ -27257,7 +27257,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/capture.l",
+            "source": "stdlib/eng/runtime/capture.l",
             "lines": [
               10,
               10
@@ -27310,7 +27310,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               199,
               199
@@ -27363,7 +27363,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               156,
               156
@@ -27396,7 +27396,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               173,
               173
@@ -27449,7 +27449,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               49,
               53
@@ -27482,7 +27482,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               114,
               114
@@ -27535,7 +27535,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               115,
               115
@@ -27588,7 +27588,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               92,
               105
@@ -27641,7 +27641,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               123,
               133
@@ -27674,7 +27674,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               20,
               20
@@ -27707,7 +27707,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               268,
               268
@@ -27740,7 +27740,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               21,
               21
@@ -27793,7 +27793,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               139,
               148
@@ -27826,7 +27826,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               15,
               15
@@ -27879,7 +27879,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               77,
               78
@@ -27935,7 +27935,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               178,
               185
@@ -27968,7 +27968,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               155,
               155
@@ -28021,7 +28021,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               202,
               204
@@ -28054,7 +28054,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               226,
               226
@@ -28107,7 +28107,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               168,
               178
@@ -28140,7 +28140,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               3,
               3
@@ -28173,7 +28173,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               176,
               176
@@ -28206,7 +28206,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               39,
               39
@@ -28259,7 +28259,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               233,
               233
@@ -28292,7 +28292,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               335,
               335
@@ -28325,7 +28325,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               3,
               3
@@ -28378,7 +28378,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               81,
               84
@@ -28411,7 +28411,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               12,
               12
@@ -28464,7 +28464,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               91,
               109
@@ -28517,7 +28517,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               49,
               60
@@ -28550,7 +28550,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               10,
               10
@@ -28603,7 +28603,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               124,
               128
@@ -28636,7 +28636,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               18,
               19
@@ -28695,7 +28695,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               133,
               134
@@ -28728,7 +28728,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               13,
               13
@@ -28781,7 +28781,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               86,
               89
@@ -28814,7 +28814,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               70,
               70
@@ -28867,7 +28867,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               157,
               158
@@ -28903,7 +28903,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               4,
               4
@@ -28936,7 +28936,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               5,
               5
@@ -28969,7 +28969,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               11,
               11
@@ -29022,7 +29022,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               121,
               122
@@ -29055,7 +29055,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               71,
               71
@@ -29108,7 +29108,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               62,
               63
@@ -29164,7 +29164,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               28,
               33
@@ -29197,7 +29197,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               6,
               6
@@ -29250,7 +29250,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               139,
               142
@@ -29303,7 +29303,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               130,
               131
@@ -29336,7 +29336,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               72,
               72
@@ -29389,7 +29389,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               35,
               40
@@ -29445,7 +29445,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               136,
               137
@@ -29478,7 +29478,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               20,
               20
@@ -29511,7 +29511,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               8,
               8
@@ -29564,7 +29564,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               144,
               152
@@ -29597,7 +29597,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               22,
               22
@@ -29630,7 +29630,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               73,
               73
@@ -29663,7 +29663,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               25,
               25
@@ -29711,7 +29711,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               154,
               155
@@ -29764,7 +29764,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               75,
               79
@@ -29817,7 +29817,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               111,
               119
@@ -29870,7 +29870,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               21,
               21
@@ -29903,7 +29903,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               68,
               68
@@ -29936,7 +29936,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               23,
               23
@@ -29969,7 +29969,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               7,
               7
@@ -30022,7 +30022,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               42,
               47
@@ -30078,7 +30078,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               15,
               16
@@ -30131,7 +30131,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               26,
               26
@@ -30164,7 +30164,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               196,
               196
@@ -30197,7 +30197,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               32,
               32
@@ -30250,7 +30250,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               200,
               200
@@ -30303,7 +30303,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               34,
               37
@@ -30336,7 +30336,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               27,
               27
@@ -30369,7 +30369,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               334,
               334
@@ -30402,7 +30402,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               31,
               31
@@ -30435,7 +30435,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               71,
               71
@@ -30468,7 +30468,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               26,
               26
@@ -30521,7 +30521,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               180,
               197
@@ -30574,7 +30574,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               25,
               25
@@ -30627,7 +30627,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               225,
               235
@@ -30660,7 +30660,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               265,
               265
@@ -30713,7 +30713,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               158,
               158
@@ -30746,7 +30746,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               3,
               3
@@ -30779,7 +30779,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               32,
               32
@@ -30812,7 +30812,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/dictionary.l",
+            "source": "stdlib/eng/runtime/dictionary.l",
             "lines": [
               14,
               14
@@ -30845,7 +30845,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/dictionary.l",
+            "source": "stdlib/eng/runtime/dictionary.l",
             "lines": [
               18,
               18
@@ -30878,7 +30878,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/dictionary.l",
+            "source": "stdlib/eng/runtime/dictionary.l",
             "lines": [
               23,
               23
@@ -30911,7 +30911,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/dictionary.l",
+            "source": "stdlib/eng/runtime/dictionary.l",
             "lines": [
               25,
               25
@@ -30944,7 +30944,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               107,
               107
@@ -30977,7 +30977,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               201,
               201
@@ -31030,7 +31030,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               217,
               219
@@ -31063,7 +31063,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               4,
               4
@@ -31096,7 +31096,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               3,
               3
@@ -31129,7 +31129,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               203,
               203
@@ -31162,7 +31162,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               6,
               6
@@ -31195,7 +31195,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               4,
               4
@@ -31228,7 +31228,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               5,
               5
@@ -31261,7 +31261,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               8,
               8
@@ -31294,7 +31294,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               7,
               7
@@ -31347,7 +31347,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               336,
               336
@@ -31400,7 +31400,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/start.l",
+            "source": "stdlib/eng/runtime/start.l",
             "lines": [
               32,
               40
@@ -31433,7 +31433,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               10,
               10
@@ -31466,7 +31466,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               67,
               67
@@ -31519,7 +31519,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               178,
               193
@@ -31552,7 +31552,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               104,
               104
@@ -31585,7 +31585,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               68,
               68
@@ -31638,7 +31638,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               295,
               298
@@ -31671,7 +31671,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               361,
               361
@@ -31724,7 +31724,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               86,
               102
@@ -31757,7 +31757,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               256,
               256
@@ -31810,7 +31810,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               166,
               168
@@ -31843,7 +31843,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               176,
               176
@@ -31876,7 +31876,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               258,
               258
@@ -31909,7 +31909,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               261,
               261
@@ -31942,7 +31942,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               262,
               262
@@ -31975,7 +31975,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               159,
               159
@@ -32028,7 +32028,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               323,
               324
@@ -32081,7 +32081,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               120,
               133
@@ -32114,7 +32114,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               255,
               255
@@ -32147,7 +32147,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               12,
               12
@@ -32180,7 +32180,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               175,
               175
@@ -32233,7 +32233,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               266,
               270
@@ -32286,7 +32286,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               338,
               347
@@ -32319,7 +32319,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               259,
               259
@@ -32372,7 +32372,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               252,
               252
@@ -32405,7 +32405,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               70,
               70
@@ -32438,7 +32438,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               263,
               263
@@ -32491,7 +32491,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               118,
               122
@@ -32544,7 +32544,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               80,
               84
@@ -32577,7 +32577,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               66,
               66
@@ -32610,7 +32610,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               69,
               69
@@ -32643,7 +32643,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               257,
               257
@@ -32676,7 +32676,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               253,
               253
@@ -32709,7 +32709,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               362,
               362
@@ -32762,7 +32762,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               365,
               377
@@ -32810,7 +32810,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               150,
               152
@@ -32863,7 +32863,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               349,
               359
@@ -32916,7 +32916,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               262,
               264
@@ -32949,7 +32949,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               331,
               331
@@ -32982,7 +32982,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               260,
               260
@@ -33015,7 +33015,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               333,
               333
@@ -33068,7 +33068,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               256,
               270
@@ -33121,7 +33121,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               300,
               321
@@ -33154,7 +33154,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               148,
               148
@@ -33187,7 +33187,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               11,
               11
@@ -33220,7 +33220,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               174,
               174
@@ -33273,7 +33273,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               95,
               122
@@ -33326,7 +33326,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               326,
               328
@@ -33379,7 +33379,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               24,
               24
@@ -33412,7 +33412,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               266,
               266
@@ -33465,7 +33465,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               47,
               53
@@ -33518,7 +33518,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               288,
               293
@@ -33571,7 +33571,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               113,
               121
@@ -33624,7 +33624,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               208,
               215
@@ -33657,7 +33657,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               202,
               202
@@ -33690,7 +33690,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               271,
               271
@@ -33723,7 +33723,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               269,
               269
@@ -33756,7 +33756,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               273,
               273
@@ -33789,7 +33789,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               30,
               30
@@ -33822,7 +33822,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               225,
               225
@@ -33875,7 +33875,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               279,
               286
@@ -33928,7 +33928,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               19,
               19
@@ -33964,7 +33964,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               264,
               264
@@ -34017,7 +34017,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               222,
               223
@@ -34070,7 +34070,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/start.l",
+            "source": "stdlib/eng/runtime/start.l",
             "lines": [
               42,
               46
@@ -34106,7 +34106,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               174,
               174
@@ -34139,7 +34139,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               14,
               15
@@ -34178,7 +34178,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               198,
               198
@@ -34211,7 +34211,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               199,
               199
@@ -34264,7 +34264,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               23,
               24
@@ -34317,7 +34317,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               6,
               6
@@ -34350,7 +34350,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               12,
               12
@@ -34383,7 +34383,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               11,
               11
@@ -34416,7 +34416,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               4,
               4
@@ -34469,7 +34469,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               205,
               206
@@ -34522,7 +34522,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               9,
               9
@@ -34575,7 +34575,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               8,
               8
@@ -34608,7 +34608,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               10,
               10
@@ -34641,7 +34641,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               5,
               5
@@ -34674,7 +34674,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               7,
               7
@@ -34780,7 +34780,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               28,
               28
@@ -34833,7 +34833,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               242,
               246
@@ -34886,7 +34886,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               116,
               116
@@ -34934,7 +34934,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               135,
               137
@@ -34987,7 +34987,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               272,
               283
@@ -35040,7 +35040,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               230,
               230
@@ -35073,7 +35073,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               23,
               23
@@ -35126,7 +35126,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               39,
               45
@@ -35179,7 +35179,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               73,
               75
@@ -35232,7 +35232,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               150,
               155
@@ -35285,7 +35285,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               157,
               157
@@ -35338,7 +35338,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               38,
               38
@@ -35371,7 +35371,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               330,
               330
@@ -35424,7 +35424,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               74,
               86
@@ -35477,7 +35477,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               107,
               110
@@ -35530,7 +35530,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               157,
               166
@@ -35563,7 +35563,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/errors.l",
+            "source": "stdlib/eng/runtime/errors.l",
             "lines": [
               2,
               2
@@ -35616,7 +35616,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               200,
               200
@@ -35669,7 +35669,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               276,
               277
@@ -35722,7 +35722,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               206,
               223
@@ -35758,7 +35758,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               27,
               27
@@ -35811,7 +35811,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               267,
               267
@@ -35864,7 +35864,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               55,
               72
@@ -35897,7 +35897,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               232,
               232
@@ -35930,7 +35930,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               195,
               195
@@ -35983,7 +35983,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               235,
               236
@@ -36036,7 +36036,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/start.l",
+            "source": "stdlib/eng/runtime/start.l",
             "lines": [
               1,
               4
@@ -36089,7 +36089,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/start.l",
+            "source": "stdlib/eng/runtime/start.l",
             "lines": [
               6,
               23
@@ -36122,7 +36122,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               9,
               9
@@ -36155,7 +36155,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               139,
               139
@@ -36208,7 +36208,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               141,
               146
@@ -36244,7 +36244,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               254,
               254
@@ -36277,7 +36277,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               136,
               136
@@ -36310,7 +36310,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               137,
               137
@@ -36343,7 +36343,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               135,
               135
@@ -36396,7 +36396,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               256,
               260
@@ -36429,7 +36429,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               138,
               138
@@ -36482,7 +36482,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               229,
               229
@@ -36515,7 +36515,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               5,
               5
@@ -36548,7 +36548,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               15,
               15
@@ -36581,7 +36581,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               11,
               11
@@ -36614,7 +36614,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               14,
               14
@@ -36647,7 +36647,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               13,
               13
@@ -36680,7 +36680,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               12,
               12
@@ -36713,7 +36713,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               10,
               10
@@ -36746,7 +36746,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               9,
               9
@@ -36779,7 +36779,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               228,
               228
@@ -36812,7 +36812,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               227,
               227
@@ -36845,7 +36845,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               25,
               25
@@ -36898,7 +36898,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               332,
               332
@@ -36951,7 +36951,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               154,
               154
@@ -36984,7 +36984,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               1,
               1
@@ -37037,7 +37037,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               38,
               50
@@ -37090,7 +37090,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               3,
               3
@@ -37123,7 +37123,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               59,
               59
@@ -37176,7 +37176,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               71,
               87
@@ -37229,7 +37229,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               89,
               93
@@ -37262,7 +37262,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               58,
               58
@@ -37315,7 +37315,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               6,
               6
@@ -37348,7 +37348,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               55,
               55
@@ -37401,7 +37401,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               8,
               9
@@ -37434,7 +37434,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               56,
               56
@@ -37487,7 +37487,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               63,
               69
@@ -37520,7 +37520,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               54,
               54
@@ -37573,7 +37573,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               16,
               27
@@ -37621,7 +37621,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               4,
               4
@@ -37674,7 +37674,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               29,
               36
@@ -37727,7 +37727,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               61,
               61
@@ -37780,7 +37780,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               5,
               5
@@ -37813,7 +37813,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               53,
               53
@@ -37846,7 +37846,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               52,
               52
@@ -37879,7 +37879,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               57,
               57
@@ -37932,7 +37932,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               11,
               14
@@ -37985,7 +37985,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/supervision.l",
+            "source": "stdlib/eng/runtime/supervision.l",
             "lines": [
               2,
               2
@@ -38038,7 +38038,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               22,
               22
@@ -38071,7 +38071,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               6,
               6
@@ -38104,7 +38104,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               18,
               18
@@ -38157,7 +38157,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               88,
               90
@@ -38193,7 +38193,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               17,
               17
@@ -38246,7 +38246,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               30,
               30
@@ -38279,7 +38279,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               16,
               16
@@ -38312,7 +38312,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               13,
               13
@@ -38365,7 +38365,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               237,
               240
@@ -38398,7 +38398,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/app.l",
+            "source": "stdlib/eng/runtime/app.l",
             "lines": [
               14,
               14
@@ -38431,7 +38431,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               270,
               270
@@ -38484,7 +38484,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               161,
               164
@@ -38517,7 +38517,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               172,
               172
@@ -38550,7 +38550,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/process.l",
+            "source": "stdlib/eng/runtime/process.l",
             "lines": [
               29,
               29
@@ -38603,7 +38603,7 @@
         },
         "definitions": [
           {
-            "source": "runtime/eng/shutdown.l",
+            "source": "stdlib/eng/runtime/shutdown.l",
             "lines": [
               26,
               26
@@ -43125,17 +43125,17 @@
     {
       "sources": [
         "dictionaries.json",
-        "runtime/eng/dictionary.l",
+        "stdlib/eng/runtime/dictionary.l",
         "logiceme/runtime_composition.go",
         "logiceme/logiceme_service.go",
-        "runtime/eng/foundations.l",
-        "runtime/eng/errors.l",
-        "runtime/eng/process.l",
-        "runtime/eng/shutdown.l",
-        "runtime/eng/app.l",
-        "runtime/eng/start.l",
-        "runtime/eng/supervision.l",
-        "runtime/eng/capture.l"
+        "stdlib/eng/runtime/foundations.l",
+        "stdlib/eng/runtime/errors.l",
+        "stdlib/eng/runtime/process.l",
+        "stdlib/eng/runtime/shutdown.l",
+        "stdlib/eng/runtime/app.l",
+        "stdlib/eng/runtime/start.l",
+        "stdlib/eng/runtime/supervision.l",
+        "stdlib/eng/runtime/capture.l"
       ],
       "witnesses": [
         "lyger/private_dictionary_test.go",
@@ -43963,7 +43963,7 @@
     {
       "sources": [
         "dictionaries.json",
-        "runtime/eng/dictionary.l"
+        "stdlib/eng/runtime/dictionary.l"
       ],
       "witnesses": [
         "lyger/word_glossary_test.go"
@@ -43977,8 +43977,8 @@
     {
       "sources": [
         "dictionaries.json",
-        "runtime/eng/dictionary.l",
-        "runtime/eng/shutdown.l"
+        "stdlib/eng/runtime/dictionary.l",
+        "stdlib/eng/runtime/shutdown.l"
       ],
       "witnesses": [
         "lyger/word_glossary_test.go"
@@ -43992,8 +43992,8 @@
     {
       "sources": [
         "dictionaries.json",
-        "runtime/eng/dictionary.l",
-        "runtime/eng/process.l"
+        "stdlib/eng/runtime/dictionary.l",
+        "stdlib/eng/runtime/process.l"
       ],
       "witnesses": [
         "lyger/word_glossary_test.go"
@@ -44007,8 +44007,8 @@
     {
       "sources": [
         "dictionaries.json",
-        "runtime/eng/dictionary.l",
-        "runtime/eng/app.l"
+        "stdlib/eng/runtime/dictionary.l",
+        "stdlib/eng/runtime/app.l"
       ],
       "witnesses": [
         "lyger/word_glossary_test.go"
@@ -44022,8 +44022,8 @@
     {
       "sources": [
         "dictionaries.json",
-        "runtime/eng/dictionary.l",
-        "runtime/eng/start.l"
+        "stdlib/eng/runtime/dictionary.l",
+        "stdlib/eng/runtime/start.l"
       ],
       "witnesses": [
         "lyger/word_glossary_test.go"
@@ -44037,8 +44037,8 @@
     {
       "sources": [
         "dictionaries.json",
-        "runtime/eng/dictionary.l",
-        "runtime/eng/capture.l"
+        "stdlib/eng/runtime/dictionary.l",
+        "stdlib/eng/runtime/capture.l"
       ],
       "witnesses": [
         "lyger/word_glossary_test.go"
@@ -44052,8 +44052,8 @@
     {
       "sources": [
         "dictionaries.json",
-        "runtime/eng/dictionary.l",
-        "runtime/eng/errors.l"
+        "stdlib/eng/runtime/dictionary.l",
+        "stdlib/eng/runtime/errors.l"
       ],
       "witnesses": [
         "lyger/word_glossary_test.go"
@@ -44067,8 +44067,8 @@
     {
       "sources": [
         "dictionaries.json",
-        "runtime/eng/dictionary.l",
-        "runtime/eng/supervision.l"
+        "stdlib/eng/runtime/dictionary.l",
+        "stdlib/eng/runtime/supervision.l"
       ],
       "witnesses": [
         "lyger/word_glossary_test.go"
@@ -44808,7 +44808,7 @@
     "lyger/source_descriptors.go": "04fbd8ab93d664bda6de12d482acba06ca5b450530ef573ca25c863411d1cee5",
     "lyger/builtin_bindings.go": "216dcec61809a54492705cd9c546dcb9f7039ba985e6e11a26845ceca5da48f8",
     "lyger/grammar_types.go": "dc1ee8cdae92a731dde3aa43ed252babf9c4cd77c39fe65bdbce4f8721eed00d",
-    "docs/cli-build.md": "0bb167db3a0ca5276390afc1deeb6eb692975bb883a6f99d9270bfe5210d8b05",
+    "docs/cli-build.md": "d9ea6be9bd4f23f627963487916e07b32ff81bd08c257316f26bf4bdd42a54d0",
     "builtins/eng/prelude.l": "629dea3c07781aebbdf5a9712debf1004212bf1725c985e0a829fc8e31696bba",
     "lyger/builtin_operations.go": "c05bed44bfd03a5ede642e0fc785056eb743959039dede7305da625cc90d42c9",
     "lyger/execution_composition.go": "f061956e4b3efde48086828fe38b30fa2c6c493b8d237828da89fd3cc0da376a",
@@ -44823,13 +44823,13 @@
     "lyger/registration.go": "e55d5e4e001d863ab082b8415e4a84c7d573b493a6bfe8fb0df015fcec738898",
     "lyger/builder.go": "3156d47c598437a3be4ba1aa8717551e9b689a15609babc317706376fec8d27a",
     "lyger/dictionary_index.go": "e05610d60740cc4f89703b8167bf5c10ce0b6ca3470685dd4879b582ca539f7e",
-    "internal/sourcepaths/sourcepaths.go": "57d39aacf36251725151e67821f956f2a6c87171b0dc0e936dafe5310c698301",
+    "internal/sourcepaths/sourcepaths.go": "b744611165cb39fdff2cf8ed97a9dc12b6e1f687f9ccfd6969732ebcd8c0b00f",
     "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
     "lyger/publication.go": "9da8cdfa67fd9225890e374fcefa455263a1dc80aeaa42568e0b45668a331a54",
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
     "lyger/ir_kinds.go": "d552e2cd21079344f25317d13aec439bb665d269678a879169ac065b45058a79",
     "lyger/runtime_value_words.go": "820e42f8b6a8ef2ddf18b756bb54528ff36b18764108db4d3abce4714812670c",
-    "dictionaries.json": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
+    "dictionaries.json": "26c9368e234a01329dc42c4e9ccee94ae1e0a3f88f7479b6c5f5ac8d3bc1f7ea",
     "lyger/lexical_scope.go": "9de4a95cbc9d4923f880330ac178717152008d8c604e50d7a7c744bebf26fa96",
     "stdlib/eng/io/dictionary.l": "f0a2a2498116921be3ed65e7c45327bb06a8ca2020f1cdf7157eec7236ac8ead",
     "lyger/lexicon.go": "e6c61d41351f3116573742fbe107f87de188c9b36e0b6fc0cb14a8b74e60c2c7",
@@ -44839,22 +44839,22 @@
     "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
     "builtins/eng/storage/program.l": "5665b43aa601d0f9e9e2ddf8e76cd78f35f35ac38a9024af97037b1290df6f5e",
     "builtins/eng/storage/bindings.l": "06894b833306f9d76df6893bd70ef98b158d3b6cc612bb4f50aa1da0a6c9f1b4",
-    "runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
+    "stdlib/eng/runtime/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
     "logiceme/runtime_composition.go": "24f443bd4fba2d87f7031c1acf3e39d02657c6fe4fb368449ac6a193ffe9b0b7",
     "logiceme/logiceme_service.go": "415866d9fc5a7d12b76aed7c42b87554d9d93d06a1b14835bb8f848299b46776",
-    "runtime/eng/foundations.l": "be6ea8dc5ee711036855bb2cf1c9c5c8c5e807cb94f14f0f4cc64809fb0856da",
-    "runtime/eng/errors.l": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
-    "runtime/eng/process.l": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
-    "runtime/eng/shutdown.l": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
-    "runtime/eng/app.l": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
-    "runtime/eng/start.l": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
-    "runtime/eng/supervision.l": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
-    "runtime/eng/capture.l": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
+    "stdlib/eng/runtime/foundations.l": "be6ea8dc5ee711036855bb2cf1c9c5c8c5e807cb94f14f0f4cc64809fb0856da",
+    "stdlib/eng/runtime/errors.l": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
+    "stdlib/eng/runtime/process.l": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
+    "stdlib/eng/runtime/shutdown.l": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
+    "stdlib/eng/runtime/app.l": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
+    "stdlib/eng/runtime/start.l": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
+    "stdlib/eng/runtime/supervision.l": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
+    "stdlib/eng/runtime/capture.l": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
     "stdlib/eng/format/dictionary.l": "c592f377626e4b858572b88e35ebd4ffa3224451d0f6a1a32e23fea324560143",
     "stdlib/eng/format/foundations.l": "807497d2e677e35c7b9f28ba621ef076d2facb7e02e5f4438a5518fa684a7009",
     "lyger/orchestration_flow.go": "6032f883849d874e98f4c82f39e82da341f67401a8188e7371404b8e0bf8cbbf",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
-    "builtins/README.md": "0a06ae17702f4e1e368abfc39be1ea645b5be050bad594d2bf3eb116dab5a288",
+    "builtins/README.md": "1a10c39ddf89204504740da3c5e4413958e9906e6ff65f5ec41338fa355a4b99",
     "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",
     "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
     "builtins/segments/vowels/calculation.lu": "18fa1ec1c7e13df95c5581646418aaa457f7779dac06fc44015ae20f1d4ebf86",

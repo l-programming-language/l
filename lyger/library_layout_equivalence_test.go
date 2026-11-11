@@ -40,7 +40,7 @@ func TestLibraryFoundationSourceLayout(t *testing.T) {
 		if strings.HasPrefix(statement.Origin.Name, "builtins/eng/storage/") && statement.Unit != storage {
 			t.Fatalf("Storage include %s created a different lexical owner", statement.Origin.Name)
 		}
-		if strings.HasPrefix(statement.Origin.Name, "runtime/") {
+		if strings.HasPrefix(statement.Origin.Name, "stdlib/eng/runtime/") {
 			t.Fatalf("Formatting source-loaded process policy %s", statement.Origin.Name)
 		}
 	}

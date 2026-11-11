@@ -428,7 +428,7 @@
     },
     {
       "path": "testdata/distribution/api/probe_test.go.txt",
-      "sha256": "4ad61fcf8a568d692c03ba9cbf9dd68fed9f0bd118de93e42876dbbef29fe676"
+      "sha256": "17ede9ef047ec6570e8224c1caafba7baa84b22a7b189c01cc46e339f0997f8f"
     },
     {
       "path": "testdata/distribution/observers/Build-only.l",
@@ -1416,7 +1416,7 @@
     },
     {
       "path": "cmd/l/runnable_service_stop_test.go",
-      "sha256": "91ce3dd00ea1e6d373d50ebe03f59a25b963d4a1a3579d9d5afaecb5133d2f98"
+      "sha256": "ba97851c72b413abd6db544b7f2b452c0c3374ff4c27580279000f9c0133d7d9"
     },
     {
       "path": "cmd/l/test/runnable_service/stop_pipe.l",

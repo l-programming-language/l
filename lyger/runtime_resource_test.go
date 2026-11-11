@@ -21,8 +21,8 @@ func deriveTestRuntime(t *testing.T, resources fstest.MapFS) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	resources["runtime/generated/support.aml"] = &fstest.MapFile{Data: aml}
-	resources["runtime/generated/support.json"] = &fstest.MapFile{Data: manifest}
+	resources["stdlib/runtime/generated/support.aml"] = &fstest.MapFile{Data: aml}
+	resources["stdlib/runtime/generated/support.json"] = &fstest.MapFile{Data: manifest}
 }
 
 type changingCompositionRegistry struct {
@@ -61,13 +61,18 @@ func TestRuntimeResourceCompositionUsesCoherentRegistry(t *testing.T) {
 	})
 	t.Run("retargeted", func(t *testing.T) {
 		files := dictionaryIndexFilesystem(t)
-		const old = "runtime/eng/dictionary.l"
-		const selected = "runtime/eng/selected.l"
+		const old = "stdlib/eng/runtime/dictionary.l"
+		const selected = "stdlib/eng/runtime/selected.l"
 		files[selected] = &fstest.MapFile{Data: bytes.Clone(files[old].Data)}
+		delete(files, old)
 		files["dictionaries.json"].Data = bytes.ReplaceAll(files["dictionaries.json"].Data, []byte(old), []byte(selected))
 		_, metadata, err := ComposeRuntimeResources(files)
 		if err != nil || metadata.Sources[selected] == "" || metadata.Sources[old] != "" {
 			t.Fatalf("composition ignored selected Runtime entry: %v, sources=%v", err, metadata.Sources)
+		}
+		files[selected].Data = bytes.Replace(files[selected].Data, []byte(`Create "Runtime" as a Dictionary.`), []byte(`Create "Different" as a Dictionary.`), 1)
+		if _, _, err := ComposeRuntimeResources(files); err == nil {
+			t.Fatal("selected entry with the wrong Runtime identity was accepted")
 		}
 	})
 }

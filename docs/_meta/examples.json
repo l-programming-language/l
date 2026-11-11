@@ -287,7 +287,7 @@
       "source": "dictionaries.json",
       "classification": "fragment",
       "description": "Exact structured registry for source lexicons and dictionary entries. This is resource configuration, not L source.",
-      "sha256": "6c390b0dd9563e414327789fd957ae7280dc73cbedf4cbb0ade228e54653be11",
+      "sha256": "26c9368e234a01329dc42c4e9ccee94ae1e0a3f88f7479b6c5f5ac8d3bc1f7ea",
       "validation": "static-inspection",
       "witnesses": [
         "lyger/dictionary_index_test.go"
@@ -2067,9 +2067,9 @@
     },
     {
       "id": "glossary-runtime-eng-dictionary-18-18",
-      "source": "runtime/eng/dictionary.l",
+      "source": "stdlib/eng/runtime/dictionary.l",
       "classification": "fragment",
-      "description": "Excerpt from runtime/eng/dictionary.l. Surrounding imports, native type definitions, and preceding local bindings remain required.",
+      "description": "Excerpt from stdlib/eng/runtime/dictionary.l. Surrounding imports, native type definitions, and preceding local bindings remain required.",
       "sha256": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
       "validation": "static-inspection",
       "witnesses": [],
@@ -2655,7 +2655,7 @@
     },
     {
       "id": "glossary-runtime-eng-app-58-58",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "This L Function header uses the native Result<()> alias defined by Runtime.Result. The type name is inside the native type atom, so it is not a separate lexical L word reference.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -2697,7 +2697,7 @@
     },
     {
       "id": "glossary-storage-expect-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Clean. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -2711,7 +2711,7 @@
     },
     {
       "id": "glossary-storage-extract-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Receive. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -2739,7 +2739,7 @@
     },
     {
       "id": "glossary-storage-unwrap-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Kill. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -2753,9 +2753,9 @@
     },
     {
       "id": "glossary-storage-pin-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
-      "description": "Excerpt from runtime/eng/process.l. Surrounding imports, native types and preceding local bindings remain required.",
+      "description": "Excerpt from stdlib/eng/runtime/process.l. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
       "validation": "static-inspection",
       "witnesses": [],
@@ -2767,7 +2767,7 @@
     },
     {
       "id": "glossary-runtime-path-name-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -2781,7 +2781,7 @@
     },
     {
       "id": "glossary-runtime-state-processes-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -2795,7 +2795,7 @@
     },
     {
       "id": "glossary-runtime-supervision-wait-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -2809,7 +2809,7 @@
     },
     {
       "id": "glossary-runtime-abort-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Quell. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -2823,7 +2823,7 @@
     },
     {
       "id": "glossary-storage-absent-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Adapt. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -2851,7 +2851,7 @@
     },
     {
       "id": "glossary-runtime-error-accumulate-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Collect. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -2865,7 +2865,7 @@
     },
     {
       "id": "glossary-runtime-acquire-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -2879,7 +2879,7 @@
     },
     {
       "id": "glossary-runtime-app-acquire-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Run. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -2893,7 +2893,7 @@
     },
     {
       "id": "glossary-runtime-capture-adapt-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Read. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -2907,7 +2907,7 @@
     },
     {
       "id": "glossary-runtime-error-address-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Identify. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -2935,7 +2935,7 @@
     },
     {
       "id": "glossary-runtime-admission-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Choose. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -2949,7 +2949,7 @@
     },
     {
       "id": "glossary-runtime-app-admission-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Describe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -2963,7 +2963,7 @@
     },
     {
       "id": "glossary-runtime-invocation-admission-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Claim. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -2977,7 +2977,7 @@
     },
     {
       "id": "glossary-runtime-admit-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Check. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -2991,7 +2991,7 @@
     },
     {
       "id": "glossary-runtime-path-admit-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3005,7 +3005,7 @@
     },
     {
       "id": "glossary-runtime-advance-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Count. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3019,7 +3019,7 @@
     },
     {
       "id": "glossary-runtime-capture-advance-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Start. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -3047,7 +3047,7 @@
     },
     {
       "id": "glossary-runtime-invocation-allocate-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Acquire. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3075,7 +3075,7 @@
     },
     {
       "id": "glossary-runtime-amend-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Revise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -3089,9 +3089,9 @@
     },
     {
       "id": "glossary-storage-annotation-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
-      "description": "Excerpt from runtime/eng/process.l. Surrounding imports, native types and preceding local bindings remain required.",
+      "description": "Excerpt from stdlib/eng/runtime/process.l. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
       "validation": "static-inspection",
       "witnesses": [],
@@ -3103,7 +3103,7 @@
     },
     {
       "id": "glossary-runtime-app-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Launch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3117,7 +3117,7 @@
     },
     {
       "id": "glossary-runtime-invocation-app-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -3159,7 +3159,7 @@
     },
     {
       "id": "glossary-runtime-error-append-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Render. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -3201,7 +3201,7 @@
     },
     {
       "id": "glossary-runtime-ascend-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Signals.Watch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -3215,7 +3215,7 @@
     },
     {
       "id": "glossary-runtime-assemble-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Install. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -3229,7 +3229,7 @@
     },
     {
       "id": "glossary-runtime-assess-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Reap. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -3243,7 +3243,7 @@
     },
     {
       "id": "glossary-runtime-asynchronous-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Assemble. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -3257,7 +3257,7 @@
     },
     {
       "id": "glossary-runtime-attach-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Install. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -3271,7 +3271,7 @@
     },
     {
       "id": "glossary-runtime-error-attach-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Decorate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -3299,7 +3299,7 @@
     },
     {
       "id": "glossary-runtime-authority-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Acquire. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3313,7 +3313,7 @@
     },
     {
       "id": "glossary-runtime-invocation-available-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Claim. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -3327,7 +3327,7 @@
     },
     {
       "id": "glossary-runtime-supervision-await-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -3341,7 +3341,7 @@
     },
     {
       "id": "glossary-storage-await-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Delay. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -3369,7 +3369,7 @@
     },
     {
       "id": "glossary-runtime-app-before-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Run. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3383,7 +3383,7 @@
     },
     {
       "id": "glossary-runtime-begin-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Clean. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -3397,7 +3397,7 @@
     },
     {
       "id": "glossary-storage-binding-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Cancel. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -3425,7 +3425,7 @@
     },
     {
       "id": "glossary-runtime-bound-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Signal. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -3439,7 +3439,7 @@
     },
     {
       "id": "glossary-runtime-invocation-bound-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -3453,7 +3453,7 @@
     },
     {
       "id": "glossary-runtime-capture-box-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Start. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -3467,7 +3467,7 @@
     },
     {
       "id": "glossary-runtime-capture-buffer-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Start. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -3495,7 +3495,7 @@
     },
     {
       "id": "glossary-storage-vector-buffer-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Render. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -3509,7 +3509,7 @@
     },
     {
       "id": "glossary-runtime-app-busy-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Build. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3523,7 +3523,7 @@
     },
     {
       "id": "glossary-runtime-capture-bytes-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Share. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -3537,7 +3537,7 @@
     },
     {
       "id": "glossary-runtime-error-bytes-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Read. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -3551,7 +3551,7 @@
     },
     {
       "id": "glossary-storage-bytes-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Attach. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -3579,7 +3579,7 @@
     },
     {
       "id": "glossary-runtime-app-capture-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Read. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3593,7 +3593,7 @@
     },
     {
       "id": "glossary-runtime-invocation-capture-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Publish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -3607,7 +3607,7 @@
     },
     {
       "id": "glossary-runtime-catch-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Run. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -3621,7 +3621,7 @@
     },
     {
       "id": "glossary-runtime-error-caused-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Explain. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -3635,7 +3635,7 @@
     },
     {
       "id": "glossary-runtime-change-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Advance. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -3649,7 +3649,7 @@
     },
     {
       "id": "glossary-runtime-capture-channel-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Adapt. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -3663,7 +3663,7 @@
     },
     {
       "id": "glossary-runtime-channel-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Allocate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -3677,7 +3677,7 @@
     },
     {
       "id": "glossary-runtime-check-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Stop. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3691,7 +3691,7 @@
     },
     {
       "id": "glossary-runtime-error-check-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Resolve. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -3761,7 +3761,7 @@
     },
     {
       "id": "glossary-runtime-checkpoint-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Stop. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3775,7 +3775,7 @@
     },
     {
       "id": "glossary-runtime-error-children-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Inspect. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -3803,7 +3803,7 @@
     },
     {
       "id": "glossary-storage-choice-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Report. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -3817,7 +3817,7 @@
     },
     {
       "id": "glossary-runtime-choose-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Request. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -3831,7 +3831,7 @@
     },
     {
       "id": "glossary-runtime-clean-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -3845,7 +3845,7 @@
     },
     {
       "id": "glossary-runtime-invocation-cleaned-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Signal. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -3873,7 +3873,7 @@
     },
     {
       "id": "glossary-runtime-cloned-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Gather. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -3887,7 +3887,7 @@
     },
     {
       "id": "glossary-runtime-supervision-close-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Await. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -3901,7 +3901,7 @@
     },
     {
       "id": "glossary-runtime-code-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Normalize. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -3915,7 +3915,7 @@
     },
     {
       "id": "glossary-runtime-error-collect-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Append. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -3943,7 +3943,7 @@
     },
     {
       "id": "glossary-runtime-error-collection-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Collect. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -3957,7 +3957,7 @@
     },
     {
       "id": "glossary-runtime-app-command-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Launch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -3985,7 +3985,7 @@
     },
     {
       "id": "glossary-runtime-invocation-complete-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Reap. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -3999,7 +3999,7 @@
     },
     {
       "id": "glossary-runtime-supervision-complete-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -4013,7 +4013,7 @@
     },
     {
       "id": "glossary-runtime-conclude-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -4027,7 +4027,7 @@
     },
     {
       "id": "glossary-runtime-app-configure-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Launch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4041,7 +4041,7 @@
     },
     {
       "id": "glossary-runtime-app-content-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Appoint. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4055,7 +4055,7 @@
     },
     {
       "id": "glossary-runtime-capture-content-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Start. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -4069,7 +4069,7 @@
     },
     {
       "id": "glossary-runtime-inner-content-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Assemble. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4083,7 +4083,7 @@
     },
     {
       "id": "glossary-runtime-invocation-content-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Allocate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4097,7 +4097,7 @@
     },
     {
       "id": "glossary-runtime-snapshot-content-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Snapshot.Reject. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4111,7 +4111,7 @@
     },
     {
       "id": "glossary-runtime-terminal-content-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Conclude. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -4195,7 +4195,7 @@
     },
     {
       "id": "glossary-runtime-app-context-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Launch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4209,7 +4209,7 @@
     },
     {
       "id": "glossary-runtime-context-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Explain. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -4223,7 +4223,7 @@
     },
     {
       "id": "glossary-runtime-path-context-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4279,7 +4279,7 @@
     },
     {
       "id": "glossary-runtime-copy-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Begin. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -4293,7 +4293,7 @@
     },
     {
       "id": "glossary-runtime-error-copy-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Refuse. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -4349,7 +4349,7 @@
     },
     {
       "id": "glossary-runtime-count-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Acquire. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4363,7 +4363,7 @@
     },
     {
       "id": "glossary-runtime-app-current-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Resolve. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4377,7 +4377,7 @@
     },
     {
       "id": "glossary-runtime-current-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Observe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4391,7 +4391,7 @@
     },
     {
       "id": "glossary-runtime-error-data-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Wrap. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -4419,7 +4419,7 @@
     },
     {
       "id": "glossary-runtime-error-datum-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Copy. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -4433,7 +4433,7 @@
     },
     {
       "id": "glossary-runtime-invocation-deadline-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Signal. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4447,7 +4447,7 @@
     },
     {
       "id": "glossary-runtime-decide-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Run. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -4475,7 +4475,7 @@
     },
     {
       "id": "glossary-runtime-supervision-decorate-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Complete. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -4489,7 +4489,7 @@
     },
     {
       "id": "glossary-runtime-invocation-delay-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Signal. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4503,7 +4503,7 @@
     },
     {
       "id": "glossary-runtime-dependencies-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Open. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -4517,7 +4517,7 @@
     },
     {
       "id": "glossary-runtime-invocation-dependencies-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Observe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4531,7 +4531,7 @@
     },
     {
       "id": "glossary-storage-dereference-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Limit. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4545,7 +4545,7 @@
     },
     {
       "id": "glossary-runtime-app-describe-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Explain. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4559,7 +4559,7 @@
     },
     {
       "id": "glossary-runtime-error-describe-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Own. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4587,7 +4587,7 @@
     },
     {
       "id": "glossary-runtime-capture-description-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Join. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -4601,7 +4601,7 @@
     },
     {
       "id": "glossary-runtime-path-description-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4615,7 +4615,7 @@
     },
     {
       "id": "glossary-runtime-supervision-description-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Inspect. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -4643,7 +4643,7 @@
     },
     {
       "id": "glossary-runtime-error-destination-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Accumulate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -4657,7 +4657,7 @@
     },
     {
       "id": "glossary-runtime-diagnose-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -4671,7 +4671,7 @@
     },
     {
       "id": "glossary-runtime-directory-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4685,7 +4685,7 @@
     },
     {
       "id": "glossary-runtime-supervision-discard-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Release. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -4713,7 +4713,7 @@
     },
     {
       "id": "glossary-runtime-invocation-done-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Publish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4727,7 +4727,7 @@
     },
     {
       "id": "glossary-runtime-duration-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Acquire. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4741,7 +4741,7 @@
     },
     {
       "id": "glossary-storage-editable-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Render. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -4783,7 +4783,7 @@
     },
     {
       "id": "glossary-storage-empty-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Join. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -4825,7 +4825,7 @@
     },
     {
       "id": "glossary-runtime-checkpoint-enter-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Observe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -4839,7 +4839,7 @@
     },
     {
       "id": "glossary-runtime-enter-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Signals.Watch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -4867,7 +4867,7 @@
     },
     {
       "id": "glossary-runtime-entry-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Record. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4951,7 +4951,7 @@
     },
     {
       "id": "glossary-storage-equality-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Admit. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -4965,7 +4965,7 @@
     },
     {
       "id": "glossary-runtime-capture-error-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Share. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -4979,7 +4979,7 @@
     },
     {
       "id": "glossary-runtime-error-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Leave. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -4993,7 +4993,7 @@
     },
     {
       "id": "glossary-runtime-snapshot-error-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Snapshot.Copy. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5007,7 +5007,7 @@
     },
     {
       "id": "glossary-runtime-terminal-error-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -5035,7 +5035,7 @@
     },
     {
       "id": "glossary-runtime-state-errors-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Assess. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -5063,7 +5063,7 @@
     },
     {
       "id": "glossary-runtime-executable-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5077,7 +5077,7 @@
     },
     {
       "id": "glossary-runtime-exit-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Leave. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -5105,7 +5105,7 @@
     },
     {
       "id": "glossary-runtime-app-command-explain-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Launch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5119,7 +5119,7 @@
     },
     {
       "id": "glossary-runtime-app-explain-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Read. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5133,7 +5133,7 @@
     },
     {
       "id": "glossary-runtime-capture-explain-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Receive. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -5147,7 +5147,7 @@
     },
     {
       "id": "glossary-runtime-error-explain-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Command.Explain. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5161,7 +5161,7 @@
     },
     {
       "id": "glossary-runtime-explain-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Terminate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5175,7 +5175,7 @@
     },
     {
       "id": "glossary-runtime-path-explain-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5189,7 +5189,7 @@
     },
     {
       "id": "glossary-runtime-signals-explain-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Install. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -5203,7 +5203,7 @@
     },
     {
       "id": "glossary-runtime-supervision-explain-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Terminate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -5217,7 +5217,7 @@
     },
     {
       "id": "glossary-runtime-capture-fail-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Explain. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -5231,7 +5231,7 @@
     },
     {
       "id": "glossary-runtime-failure-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Reject. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5259,7 +5259,7 @@
     },
     {
       "id": "glossary-runtime-failures-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Record. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5273,7 +5273,7 @@
     },
     {
       "id": "glossary-runtime-fatal-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Refuse. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -5287,7 +5287,7 @@
     },
     {
       "id": "glossary-runtime-app-fault-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Select. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5301,7 +5301,7 @@
     },
     {
       "id": "glossary-runtime-fault-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Signals.Watch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -5315,7 +5315,7 @@
     },
     {
       "id": "glossary-runtime-snapshot-fault-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Snapshot.Copy. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5329,7 +5329,7 @@
     },
     {
       "id": "glossary-runtime-app-fetch-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Capture. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5343,7 +5343,7 @@
     },
     {
       "id": "glossary-runtime-capture-fill-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Advance. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -5357,7 +5357,7 @@
     },
     {
       "id": "glossary-runtime-state-finalize-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Conclude. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -5371,7 +5371,7 @@
     },
     {
       "id": "glossary-runtime-finalized-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Admit. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5399,7 +5399,7 @@
     },
     {
       "id": "glossary-runtime-finish-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Run. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -5413,7 +5413,7 @@
     },
     {
       "id": "glossary-storage-tuple-first-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Kill. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5427,7 +5427,7 @@
     },
     {
       "id": "glossary-runtime-flush-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Show. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -5441,7 +5441,7 @@
     },
     {
       "id": "glossary-runtime-capture-follow-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -5455,7 +5455,7 @@
     },
     {
       "id": "glossary-runtime-error-form-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Describe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -5525,7 +5525,7 @@
     },
     {
       "id": "glossary-runtime-invocation-gate-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Identify. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5539,7 +5539,7 @@
     },
     {
       "id": "glossary-runtime-gather-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Begin. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -5567,7 +5567,7 @@
     },
     {
       "id": "glossary-runtime-group-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Signal. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5581,7 +5581,7 @@
     },
     {
       "id": "glossary-runtime-invocation-group-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Allocate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5595,7 +5595,7 @@
     },
     {
       "id": "glossary-runtime-halt-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Await. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -5609,7 +5609,7 @@
     },
     {
       "id": "glossary-runtime-handle-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Copy. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5651,7 +5651,7 @@
     },
     {
       "id": "glossary-runtime-identical-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Resolve. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5665,7 +5665,7 @@
     },
     {
       "id": "glossary-runtime-error-identify-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Append. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -5679,7 +5679,7 @@
     },
     {
       "id": "glossary-runtime-invocation-identify-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5707,7 +5707,7 @@
     },
     {
       "id": "glossary-runtime-error-identities-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Accumulate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -5721,7 +5721,7 @@
     },
     {
       "id": "glossary-runtime-supervision-identity-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -5735,7 +5735,7 @@
     },
     {
       "id": "glossary-runtime-error-import-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Launch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5763,7 +5763,7 @@
     },
     {
       "id": "glossary-runtime-initial-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Initialize. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5777,7 +5777,7 @@
     },
     {
       "id": "glossary-runtime-initialize-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Assemble. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5791,7 +5791,7 @@
     },
     {
       "id": "glossary-runtime-inner-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Gather. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -5805,7 +5805,7 @@
     },
     {
       "id": "glossary-runtime-insert-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Record. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5833,7 +5833,7 @@
     },
     {
       "id": "glossary-runtime-error-inspect-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Remember. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -5847,7 +5847,7 @@
     },
     {
       "id": "glossary-runtime-path-inspect-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5861,7 +5861,7 @@
     },
     {
       "id": "glossary-runtime-supervision-inspect-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Complete. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -5889,7 +5889,7 @@
     },
     {
       "id": "glossary-runtime-install-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Open. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -5903,7 +5903,7 @@
     },
     {
       "id": "glossary-runtime-error-interface-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Explain. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -5917,7 +5917,7 @@
     },
     {
       "id": "glossary-runtime-signals-interpret-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Signals.Watch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -5931,7 +5931,7 @@
     },
     {
       "id": "glossary-runtime-app-invocation-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Fetch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -5945,7 +5945,7 @@
     },
     {
       "id": "glossary-runtime-invocation-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Publish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -5987,7 +5987,7 @@
     },
     {
       "id": "glossary-runtime-error-iterator-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Trace. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -6001,7 +6001,7 @@
     },
     {
       "id": "glossary-runtime-capture-join-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -6015,7 +6015,7 @@
     },
     {
       "id": "glossary-runtime-error-join-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Diagnose. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -6029,7 +6029,7 @@
     },
     {
       "id": "glossary-runtime-path-join-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6071,7 +6071,7 @@
     },
     {
       "id": "glossary-runtime-invocation-kill-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Settle. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -6085,7 +6085,7 @@
     },
     {
       "id": "glossary-runtime-kill-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Signal. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6099,7 +6099,7 @@
     },
     {
       "id": "glossary-runtime-app-label-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Describe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6113,7 +6113,7 @@
     },
     {
       "id": "glossary-runtime-app-launch-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Run. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6155,7 +6155,7 @@
     },
     {
       "id": "glossary-storage-length-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Attach. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -6211,7 +6211,7 @@
     },
     {
       "id": "glossary-runtime-listen-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Clean. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -6225,7 +6225,7 @@
     },
     {
       "id": "glossary-runtime-app-locate-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Build. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6239,7 +6239,7 @@
     },
     {
       "id": "glossary-runtime-locate-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Assemble. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6267,9 +6267,9 @@
     },
     {
       "id": "glossary-storage-loop-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
-      "description": "Excerpt from runtime/eng/process.l. Surrounding imports, native types and preceding local bindings remain required.",
+      "description": "Excerpt from stdlib/eng/runtime/process.l. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
       "validation": "static-inspection",
       "witnesses": [],
@@ -6281,7 +6281,7 @@
     },
     {
       "id": "glossary-runtime-map-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Initialize. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6295,7 +6295,7 @@
     },
     {
       "id": "glossary-runtime-invocation-mark-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Claim. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6323,7 +6323,7 @@
     },
     {
       "id": "glossary-runtime-minimum-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Limit. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6337,7 +6337,7 @@
     },
     {
       "id": "glossary-runtime-missing-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Normalize. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6351,7 +6351,7 @@
     },
     {
       "id": "glossary-storage-mutable-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Render. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -6365,7 +6365,7 @@
     },
     {
       "id": "glossary-runtime-mutex-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Assemble. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6379,7 +6379,7 @@
     },
     {
       "id": "glossary-runtime-error-native-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Trace. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -6393,7 +6393,7 @@
     },
     {
       "id": "glossary-runtime-normalize-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Signal. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6407,7 +6407,7 @@
     },
     {
       "id": "glossary-storage-nothing-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Observe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6421,7 +6421,7 @@
     },
     {
       "id": "glossary-runtime-inner-notification-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Reap. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -6435,7 +6435,7 @@
     },
     {
       "id": "glossary-runtime-invocation-notification-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Bound. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6449,7 +6449,7 @@
     },
     {
       "id": "glossary-runtime-notify-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Gather. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -6463,7 +6463,7 @@
     },
     {
       "id": "glossary-runtime-now-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -6505,7 +6505,7 @@
     },
     {
       "id": "glossary-runtime-capture-observe-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Advance. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -6519,7 +6519,7 @@
     },
     {
       "id": "glossary-runtime-observe-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Listen. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -6533,7 +6533,7 @@
     },
     {
       "id": "glossary-runtime-app-operation-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Build. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6547,7 +6547,7 @@
     },
     {
       "id": "glossary-runtime-ordinal-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Count. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6561,7 +6561,7 @@
     },
     {
       "id": "glossary-runtime-output-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Open. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -6575,7 +6575,7 @@
     },
     {
       "id": "glossary-runtime-snapshot-output-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Snapshot.Copy. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6589,7 +6589,7 @@
     },
     {
       "id": "glossary-runtime-supervision-output-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -6603,7 +6603,7 @@
     },
     {
       "id": "glossary-runtime-app-outstanding-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Acquire. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6617,7 +6617,7 @@
     },
     {
       "id": "glossary-runtime-app-own-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Read. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6631,7 +6631,7 @@
     },
     {
       "id": "glossary-runtime-invocation-own-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Claim. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6687,7 +6687,7 @@
     },
     {
       "id": "glossary-runtime-app-parent-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Own. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6701,7 +6701,7 @@
     },
     {
       "id": "glossary-runtime-invocation-parent-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Own. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6715,7 +6715,7 @@
     },
     {
       "id": "glossary-runtime-parent-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6729,7 +6729,7 @@
     },
     {
       "id": "glossary-runtime-path-parts-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6743,7 +6743,7 @@
     },
     {
       "id": "glossary-runtime-app-path-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Locate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6757,7 +6757,7 @@
     },
     {
       "id": "glossary-runtime-path-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Path.Admit. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6785,7 +6785,7 @@
     },
     {
       "id": "glossary-runtime-invocation-phase-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Claim. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6799,7 +6799,7 @@
     },
     {
       "id": "glossary-runtime-invocation-pid-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Signal. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -6813,7 +6813,7 @@
     },
     {
       "id": "glossary-runtime-app-pipe-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Launch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6855,7 +6855,7 @@
     },
     {
       "id": "glossary-runtime-supervision-poll-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Await. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -6883,7 +6883,7 @@
     },
     {
       "id": "glossary-runtime-app-preference-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Select. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6911,7 +6911,7 @@
     },
     {
       "id": "glossary-runtime-error-presence-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Accumulate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -6925,7 +6925,7 @@
     },
     {
       "id": "glossary-storage-presence-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Terminate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -6939,7 +6939,7 @@
     },
     {
       "id": "glossary-storage-present-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Capture. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6967,7 +6967,7 @@
     },
     {
       "id": "glossary-runtime-invocation-process-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Identify. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -6995,7 +6995,7 @@
     },
     {
       "id": "glossary-runtime-app-progress-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Run. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7051,7 +7051,7 @@
     },
     {
       "id": "glossary-runtime-invocation-publish-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Complete. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -7065,7 +7065,7 @@
     },
     {
       "id": "glossary-runtime-error-punctuation-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Attach. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -7079,7 +7079,7 @@
     },
     {
       "id": "glossary-runtime-push-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Settle. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7093,7 +7093,7 @@
     },
     {
       "id": "glossary-runtime-quell-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7107,7 +7107,7 @@
     },
     {
       "id": "glossary-runtime-race-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Poll. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -7163,7 +7163,7 @@
     },
     {
       "id": "glossary-runtime-capture-read-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Follow. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -7177,7 +7177,7 @@
     },
     {
       "id": "glossary-runtime-error-read-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Append. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -7191,7 +7191,7 @@
     },
     {
       "id": "glossary-runtime-invocation-read-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Capture. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7205,7 +7205,7 @@
     },
     {
       "id": "glossary-runtime-read-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7219,7 +7219,7 @@
     },
     {
       "id": "glossary-runtime-supervision-read-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Release. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -7261,7 +7261,7 @@
     },
     {
       "id": "glossary-runtime-capture-readable-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Adapt. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -7275,7 +7275,7 @@
     },
     {
       "id": "glossary-runtime-reap-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Begin. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7289,7 +7289,7 @@
     },
     {
       "id": "glossary-runtime-capture-receive-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Advance. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -7303,7 +7303,7 @@
     },
     {
       "id": "glossary-runtime-receive-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Poll. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -7317,7 +7317,7 @@
     },
     {
       "id": "glossary-runtime-invocation-record-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Settle. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7331,7 +7331,7 @@
     },
     {
       "id": "glossary-runtime-terminal-record-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Refuse. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7373,7 +7373,7 @@
     },
     {
       "id": "glossary-runtime-reference-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Wait. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7415,7 +7415,7 @@
     },
     {
       "id": "glossary-runtime-refuse-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Fail. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7429,7 +7429,7 @@
     },
     {
       "id": "glossary-runtime-capture-reject-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Start. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -7443,7 +7443,7 @@
     },
     {
       "id": "glossary-runtime-invocation-reject-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Run. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7457,7 +7457,7 @@
     },
     {
       "id": "glossary-runtime-reject-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Normalize. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -7471,7 +7471,7 @@
     },
     {
       "id": "glossary-runtime-snapshot-reject-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Reject. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7499,7 +7499,7 @@
     },
     {
       "id": "glossary-storage-rejection-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Normalize. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -7513,7 +7513,7 @@
     },
     {
       "id": "glossary-runtime-app-release-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -7527,7 +7527,7 @@
     },
     {
       "id": "glossary-storage-release-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Describe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7541,7 +7541,7 @@
     },
     {
       "id": "glossary-runtime-error-remember-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Append. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -7555,7 +7555,7 @@
     },
     {
       "id": "glossary-runtime-remember-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7569,7 +7569,7 @@
     },
     {
       "id": "glossary-runtime-state-remember-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Remember. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7597,7 +7597,7 @@
     },
     {
       "id": "glossary-runtime-supervision-remove-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Complete. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -7625,7 +7625,7 @@
     },
     {
       "id": "glossary-runtime-error-render-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Attach. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -7653,7 +7653,7 @@
     },
     {
       "id": "glossary-runtime-replace-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Identify. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7681,7 +7681,7 @@
     },
     {
       "id": "glossary-runtime-reply-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Kill. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -7695,7 +7695,7 @@
     },
     {
       "id": "glossary-runtime-request-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Refuse. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7709,7 +7709,7 @@
     },
     {
       "id": "glossary-runtime-invocation-requests-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Kill. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -7723,7 +7723,7 @@
     },
     {
       "id": "glossary-runtime-app-resolve-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Wait. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7737,7 +7737,7 @@
     },
     {
       "id": "glossary-runtime-resolve-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Finish. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7765,7 +7765,7 @@
     },
     {
       "id": "glossary-runtime-resume-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Run. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7821,7 +7821,7 @@
     },
     {
       "id": "glossary-runtime-revise-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Bound. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -7863,7 +7863,7 @@
     },
     {
       "id": "glossary-runtime-error-search-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Trace. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -7905,7 +7905,7 @@
     },
     {
       "id": "glossary-storage-tuple-second-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Kill. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -7919,7 +7919,7 @@
     },
     {
       "id": "glossary-runtime-app-select-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Inspect. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7947,7 +7947,7 @@
     },
     {
       "id": "glossary-runtime-selected-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Decide. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -7961,7 +7961,7 @@
     },
     {
       "id": "glossary-runtime-app-selection-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Build. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7975,7 +7975,7 @@
     },
     {
       "id": "glossary-runtime-invocation-sequence-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -7989,7 +7989,7 @@
     },
     {
       "id": "glossary-runtime-error-set-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Render. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -8003,7 +8003,7 @@
     },
     {
       "id": "glossary-runtime-invocation-settle-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Reap. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8017,7 +8017,7 @@
     },
     {
       "id": "glossary-runtime-capture-share-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Join. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -8031,7 +8031,7 @@
     },
     {
       "id": "glossary-runtime-invocation-signal-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Terminate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8045,7 +8045,7 @@
     },
     {
       "id": "glossary-runtime-signal-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Signals.Watch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -8059,7 +8059,7 @@
     },
     {
       "id": "glossary-runtime-inner-signals-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Unsubscribe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8073,7 +8073,7 @@
     },
     {
       "id": "glossary-runtime-signals-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Install. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -8115,7 +8115,7 @@
     },
     {
       "id": "glossary-runtime-invocation-snapshot-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Read. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8129,7 +8129,7 @@
     },
     {
       "id": "glossary-runtime-snapshot-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Snapshot.Reject. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -8143,7 +8143,7 @@
     },
     {
       "id": "glossary-runtime-app-source-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Set. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8157,7 +8157,7 @@
     },
     {
       "id": "glossary-runtime-error-source-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Trace. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -8171,7 +8171,7 @@
     },
     {
       "id": "glossary-runtime-app-start-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Launch. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -8185,7 +8185,7 @@
     },
     {
       "id": "glossary-runtime-capture-start-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Read. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -8199,7 +8199,7 @@
     },
     {
       "id": "glossary-runtime-app-state-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Appoint. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8213,7 +8213,7 @@
     },
     {
       "id": "glossary-runtime-invocation-state-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Allocate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8227,7 +8227,7 @@
     },
     {
       "id": "glossary-runtime-state-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Read. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8241,7 +8241,7 @@
     },
     {
       "id": "glossary-runtime-error-status-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Check. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -8255,7 +8255,7 @@
     },
     {
       "id": "glossary-runtime-snapshot-status-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Snapshot.Copy. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8269,7 +8269,7 @@
     },
     {
       "id": "glossary-runtime-inner-stderr-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Report. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8283,7 +8283,7 @@
     },
     {
       "id": "glossary-runtime-supervision-stderr-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -8297,7 +8297,7 @@
     },
     {
       "id": "glossary-runtime-inner-stdout-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Show. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8311,7 +8311,7 @@
     },
     {
       "id": "glossary-runtime-stdout-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Open. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -8325,7 +8325,7 @@
     },
     {
       "id": "glossary-runtime-supervision-stdout-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -8339,7 +8339,7 @@
     },
     {
       "id": "glossary-runtime-state-stop-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Gather. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8353,7 +8353,7 @@
     },
     {
       "id": "glossary-runtime-stopping-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Admit. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8367,7 +8367,7 @@
     },
     {
       "id": "glossary-runtime-app-store-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Acquire. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -8381,7 +8381,7 @@
     },
     {
       "id": "glossary-runtime-submit-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Kill. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8395,7 +8395,7 @@
     },
     {
       "id": "glossary-runtime-subscribe-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Follow. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -8409,7 +8409,7 @@
     },
     {
       "id": "glossary-runtime-supervision-success-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Inspect. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -8423,7 +8423,7 @@
     },
     {
       "id": "glossary-storage-success-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Claim. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8451,7 +8451,7 @@
     },
     {
       "id": "glossary-runtime-invocation-supervise-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Supervise. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -8465,7 +8465,7 @@
     },
     {
       "id": "glossary-runtime-supervision-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Inspect. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -8479,7 +8479,7 @@
     },
     {
       "id": "glossary-runtime-take-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Unsubscribe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8507,7 +8507,7 @@
     },
     {
       "id": "glossary-runtime-state-terminal-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Choose. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8521,7 +8521,7 @@
     },
     {
       "id": "glossary-runtime-terminal-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Terminal.Copy. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8535,7 +8535,7 @@
     },
     {
       "id": "glossary-runtime-invocation-terminate-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Settle. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8549,7 +8549,7 @@
     },
     {
       "id": "glossary-runtime-supervision-terminate-caller",
-      "source": "runtime/eng/supervision.l",
+      "source": "stdlib/eng/runtime/supervision.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Supervision.Poll. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "b4f7607a4e928ea7d30927120b8cbebeb3ccb495c2eca978a388d89c0fb33cc7",
@@ -8563,7 +8563,7 @@
     },
     {
       "id": "glossary-runtime-text-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Describe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -8619,7 +8619,7 @@
     },
     {
       "id": "glossary-runtime-unsubscribe-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Quell. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",
@@ -8633,7 +8633,7 @@
     },
     {
       "id": "glossary-runtime-vacancy-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Describe. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -8647,7 +8647,7 @@
     },
     {
       "id": "glossary-runtime-valid-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Normalize. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8703,7 +8703,7 @@
     },
     {
       "id": "glossary-storage-vector-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Attach. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -8745,7 +8745,7 @@
     },
     {
       "id": "glossary-runtime-wait-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Wait. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -8759,7 +8759,7 @@
     },
     {
       "id": "glossary-runtime-signals-watch-caller",
-      "source": "runtime/eng/start.l",
+      "source": "stdlib/eng/runtime/start.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Install. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "399424576b54a3476175201956ee39858eaa1dcd4a67f7f280e15d5e9dbd27bf",
@@ -8773,7 +8773,7 @@
     },
     {
       "id": "glossary-runtime-watch-caller",
-      "source": "runtime/eng/process.l",
+      "source": "stdlib/eng/runtime/process.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Invocation.Allocate. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "017b1a364c57c1307e8d059809f76367319f4531b8a0dde481c008bc4a060c32",
@@ -8787,7 +8787,7 @@
     },
     {
       "id": "glossary-runtime-weak-caller",
-      "source": "runtime/eng/app.l",
+      "source": "stdlib/eng/runtime/app.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.App.Acquire. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "147d1f70c054bcaf92bd3eeb8dc98c7892d8f0656572ec32213cbe016163193d",
@@ -8801,7 +8801,7 @@
     },
     {
       "id": "glossary-runtime-error-wrap-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Explain. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -8815,7 +8815,7 @@
     },
     {
       "id": "glossary-runtime-capture-write-caller",
-      "source": "runtime/eng/capture.l",
+      "source": "stdlib/eng/runtime/capture.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Capture.Receive. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "54a3501854c66476727b0987fdba82bc67683dc4e1c3e6422c7682133f4c567c",
@@ -8829,7 +8829,7 @@
     },
     {
       "id": "glossary-runtime-error-write-caller",
-      "source": "runtime/eng/errors.l",
+      "source": "stdlib/eng/runtime/errors.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Error.Display. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "6b5781471223127ac6de0a8fd81433df80cba52f3f53261f7ca2a4c5de394482",
@@ -8843,7 +8843,7 @@
     },
     {
       "id": "glossary-runtime-write-caller",
-      "source": "runtime/eng/shutdown.l",
+      "source": "stdlib/eng/runtime/shutdown.l",
       "classification": "fragment",
       "description": "Excerpt from Runtime.Show. Surrounding imports, native types and preceding local bindings remain required.",
       "sha256": "07ca8cb102b7b8ff10899ff912b453069ac2ef3bc98a78e043aaf9459c90042c",

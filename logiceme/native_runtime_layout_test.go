@@ -24,7 +24,7 @@ func TestNativeRuntimeResourceLayout(t *testing.T) {
 		"process_other": "27b43fd571a52a2283ffe40517e0b4cb7ec6a1c315bb91f3a2b5aa5fb4290c98",
 	} {
 		t.Run(name, func(t *testing.T) {
-			path := "runtime/rust/" + name + ".rs"
+			path := "stdlib/runtime/rust/" + name + ".rs"
 			content, err := fs.ReadFile(resources, path)
 			if err != nil {
 				t.Fatalf("required native resource %s: %v", path, err)
@@ -43,7 +43,7 @@ func TestNativeRuntimeSelectedProviderIsolation(t *testing.T) {
 	for _, name := range []string{"main", "host", "process_unix", "process_other"} {
 		t.Run(name, func(t *testing.T) {
 			files := compositionResources(t, "7")
-			path := "runtime/rust/" + name + ".rs"
+			path := "stdlib/runtime/rust/" + name + ".rs"
 			original, err := fs.ReadFile(files, path)
 			if err != nil {
 				t.Fatal(err)
@@ -53,6 +53,7 @@ func TestNativeRuntimeSelectedProviderIsolation(t *testing.T) {
 			}
 			// A usable obsolete asset must not repair a missing selected input.
 			files["builtins/templates/runtime/"+name+".lu"] = &fstest.MapFile{Data: bytes.Clone(original)}
+			files["runtime/rust/"+name+".rs"] = &fstest.MapFile{Data: bytes.Clone(original)}
 			delete(files, path)
 			if _, err := loadSupportTemplates(files, true); !errors.Is(err, fs.ErrNotExist) || !strings.Contains(err.Error(), path) {
 				t.Fatalf("missing selected native resource used fallback or lost cause: %v", err)

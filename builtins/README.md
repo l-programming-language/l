@@ -50,7 +50,7 @@ Nested constructions bind that result once before their consumer. Assignment
 targets remain references. These frontend roles add no AML fields or logeme
 interfaces. Native and ordinary Function bodies share instruction lowering.
 
-Runtime policy is authored in [L source](../runtime/eng/dictionary.l). Run
+Runtime policy is authored in [L source](../stdlib/eng/runtime/dictionary.l). Run
 `scripts/l-go run -mod=readonly ./tools/composition` after changing its dependencies, then
 `scripts/l-go run -mod=readonly ./tools/composition -check` to verify the derived AML,
 fingerprints and selection index. The [CLI contract](../docs/cli-build.md#source-generation-and-native-builds)
@@ -652,11 +652,11 @@ Support resources have responsibilities separate from the eighteen segment templ
 | [install/cargo.lu](templates/install/cargo.lu) | Cargo manifest. |
 | [operate/start.lu](templates/operate/start.lu) | Native build and launch script. |
 | [operate/stop.lu](templates/operate/stop.lu) | Explicit-PID stop script. |
-| [main.rs](../runtime/rust/main.rs) | Native runtime entry and shutdown delegation. |
-| [host.rs](../runtime/rust/host.rs) | Host process, async and trait adapters. |
-| [support.aml](../runtime/generated/support.aml), [support.json](../runtime/generated/support.json) | Derived runtime composition, source fingerprints and selection index. |
-| [process_unix.rs](../runtime/rust/process_unix.rs) | Unix process support. |
-| [process_other.rs](../runtime/rust/process_other.rs) | Unsupported-platform reporting. |
+| [main.rs](../stdlib/runtime/rust/main.rs) | Native runtime entry and shutdown delegation. |
+| [host.rs](../stdlib/runtime/rust/host.rs) | Host process, async and trait adapters. |
+| [support.aml](../stdlib/runtime/generated/support.aml), [support.json](../stdlib/runtime/generated/support.json) | Derived runtime composition, source fingerprints and selection index. |
+| [process_unix.rs](../stdlib/runtime/rust/process_unix.rs) | Unix process support. |
+| [process_other.rs](../stdlib/runtime/rust/process_other.rs) | Unsupported-platform reporting. |
 
 The six core nonruntime bundles verify the common manifest, config and start/stop
 artifact bytes. They do not execute those artifacts, exercise process supervision,

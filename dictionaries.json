@@ -4,7 +4,7 @@
     "eng": {
       "io": {"entry": "stdlib/eng/io/dictionary.l", "dictionary": "IO"},
       "format": {"entry": "stdlib/eng/format/dictionary.l", "dictionary": "Formatting"},
-      "runtime": {"entry": "runtime/eng/dictionary.l", "dictionary": "Runtime"},
+      "runtime": {"entry": "stdlib/eng/runtime/dictionary.l", "dictionary": "Runtime"},
       "storage": {"entry": "builtins/eng/storage/dictionary.l", "dictionary": "Storage"}
     }
   }

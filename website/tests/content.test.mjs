@@ -385,7 +385,7 @@ test('catalog includes implementation references without claiming public exports
   for (const [key, dictionary, entry] of [
     ['support', 'Support', 'stdlib/eng/support.l'],
     ['storage', 'Storage', 'builtins/eng/storage/dictionary.l'],
-    ['runtime', 'Runtime', 'runtime/eng/dictionary.l'],
+    ['runtime', 'Runtime', 'stdlib/eng/runtime/dictionary.l'],
     ['format', 'Formatting', 'stdlib/eng/format/dictionary.l'],
   ]) {
     const index = { format: 1, languages: { test: { [key]: { entry, dictionary } } } };

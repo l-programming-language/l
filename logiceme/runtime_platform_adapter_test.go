@@ -45,7 +45,7 @@ fn main() {
 		}
 		files[name] = content
 	}
-	adapter, err := fs.ReadFile(distribution.Files(), "runtime/rust/process_other.rs")
+	adapter, err := fs.ReadFile(distribution.Files(), "stdlib/runtime/rust/process_other.rs")
 	if err != nil {
 		t.Fatal(err)
 	}

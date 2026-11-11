@@ -93,9 +93,12 @@ The CLI accepts Rust source bundles only. Whole bundles are checked for matching
 
 The lifecycle runtime is a library at `support/runtime`, linked into the
 orchestrator under an allocated package name that avoids workspace collisions.
-Its policy comes from authored [L words](../runtime/eng/dictionary.l).
-Resource generation produces [support.aml](../runtime/generated/support.aml) and
-[support.json](../runtime/generated/support.json), containing fingerprints of the
+Its default policy comes from the [Runtime standard library](stdlib/eng/runtime.md).
+One complete asset provider selects its implementation through the `runtime`
+registry key. Replacements retain the current native contract and lifecycle
+guarantees; source imports do not select another runtime for an App.
+Resource generation produces [support.aml](../stdlib/runtime/generated/support.aml) and
+[support.json](../stdlib/runtime/generated/support.json), containing fingerprints of the
 root registry and actual source inputs, plus a dependency-selection index. The
 manifest's `sha256` binds that entire inventory and index to the AML bytes.
 Rehashing or omitting a source entry alone cannot make stale support current.
@@ -106,7 +109,8 @@ The immutable embedded distribution retains its validated selection path.
 Library callers can request the same check with `Lyger.CheckRuntimeResources`.
 The raw AML backend does not parse L. Offline inspection validates recorded
 integrity without recomposition or repair. Changed assets require explicit
-regeneration. The derived index adds no AML fields or logeme interfaces.
+regeneration through the [runtime authoring workflow](stdlib/eng/runtime.md#select-a-replacement).
+The derived index adds no AML fields or logeme interfaces.
 
 With unmodified embedded definitions, the CLI selects runtime declarations from
 that index using the orchestrator's imports, retaining shared type and host
@@ -114,7 +118,7 @@ requirements. When selection is unavailable, for example with explicit resource
 providers, user-authored native definitions or unrecognized runtime imports, it
 uses the selected provider's full composition. Missing or stale resources reject without
 falling back to embedded files. Logiceme renders complete framed AML in either
-case. The native entry and host/process inputs live under `runtime/rust/`. Their
+case. The native entry and host/process inputs live under `stdlib/runtime/rust/`. Their
 relocation does not change generated native filenames or module topology.
 
 The runtime builds with the workspace and needs no separately installed launcher.

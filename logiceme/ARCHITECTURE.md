@@ -189,7 +189,7 @@ library targets; native EA contents remain opaque. See the
 
 Validate normalized final paths, duplicates and reserved support collisions.
 Do not infer cross-App modules. Keep source bundles atomic on failure. Runtime
-policy is composed from L source into `runtime/generated/`; `runtime/rust/`
+policy is composed from L source into `stdlib/runtime/generated/`; `stdlib/runtime/rust/`
 retains native executor and host/platform inputs. Non-runtime support templates
 own configuration and packaging. Segment templates do not contain runtime policy.
 

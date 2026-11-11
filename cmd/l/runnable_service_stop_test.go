@@ -20,6 +20,11 @@ import (
 )
 
 func TestRunnableServiceStopWithoutJoining(t *testing.T) {
+	runnableStopWithoutJoining(t, runnableBuildProject)
+}
+
+func runnableStopWithoutJoining(t *testing.T, build func(*testing.T, string, []string) runnableBuildResult) {
+	t.Helper()
 	project, err := filepath.EvalSymlinks(t.TempDir())
 	if err != nil {
 		t.Fatal(err)
@@ -33,7 +38,7 @@ func TestRunnableServiceStopWithoutJoining(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(project, "main.l"), []byte(source), 0600); err != nil {
 		t.Fatal(err)
 	}
-	built := runnableBuildProject(t, project, []string{"Worker", "Gate"})
+	built := build(t, project, []string{"Worker", "Gate"})
 	executable, err := os.Executable()
 	if err != nil {
 		t.Fatal(err)

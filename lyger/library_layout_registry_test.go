@@ -13,11 +13,13 @@ func TestLibraryLayoutRegistrySourceRoots(t *testing.T) {
 		valid bool
 	}{
 		{"builtins/eng/storage/extra.l", true},
-		{"runtime/eng/extra.l", true},
+		{"stdlib/eng/runtime/extra.l", true},
+		{"runtime/eng/extra.l", false},
+		{"stdlib/runtime/extra.l", false},
 		{"stdlib/eng/extra.l", true},
 		{"fixture/extra.l", false},
-		{"runtime/rust/extra.l", false},
-		{"runtime/generated/extra.l", false},
+		{"stdlib/runtime/rust/extra.l", false},
+		{"stdlib/runtime/generated/extra.l", false},
 		{"builtins/templates/extra.l", false},
 		{"builtins/segments/extra.l", false},
 	} {

@@ -59,11 +59,21 @@ func LoadFixture(t testing.TB, id string) Fixture {
 
 func buildProgram(t testing.TB, project string, env []string) (string, []byte, []byte, error) {
 	t.Helper()
+	return buildProgramAssets(t, project, env, "")
+}
+
+func buildProgramAssets(t testing.TB, project string, env []string, assets string) (string, []byte, []byte, error) {
+	t.Helper()
 	cli := CLI(t) // Build the Go-implemented compiler before denying child Go builds.
 	probe := buildProbe(t, project)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	out, diag, err := controlledBuildCommand(ctx, cli, project, probe.Env(append(os.Environ(), env...)), "build", "main.l")
+	args := []string{"build"}
+	if assets != "" {
+		args = append(args, "--assets", assets)
+	}
+	args = append(args, "main.l")
+	out, diag, err := controlledBuildCommand(ctx, cli, project, probe.Env(append(os.Environ(), env...)), args...)
 	saveBuildEvidence(t, project, out, diag, err)
 	canonical, resolveErr := filepath.EvalSymlinks(project)
 	if resolveErr != nil && err == nil {
@@ -101,7 +111,12 @@ func controlledBuildCommand(ctx context.Context, executable, directory string, e
 
 func RequireBuild(t testing.TB, project string) string {
 	t.Helper()
-	binary, out, diag, err := buildProgram(t, project, nil)
+	return requireBuildAssets(t, project, "")
+}
+
+func requireBuildAssets(t testing.TB, project, assets string) string {
+	t.Helper()
+	binary, out, diag, err := buildProgramAssets(t, project, nil, assets)
 	if err != nil {
 		t.Fatalf("compile/build prerequisite; runtime not exercised: %v\nstdout=%q\nstderr=%s", err, out, diag)
 	}
@@ -113,17 +128,25 @@ func RequireBuild(t testing.TB, project string) string {
 
 func RunFixture(t *testing.T, id string) {
 	t.Helper()
+	RunFixtureAssets(t, id, "")
+}
+
+// RunFixtureAssets retains the fixture, controller, assertions and watchdogs
+// while selecting one complete compiler resource provider for its native build.
+// An empty path uses the embedded distribution, as RunFixture always has.
+func RunFixtureAssets(t *testing.T, id, assets string) {
+	t.Helper()
 	f := LoadFixture(t, id)
 	project := Materialize(t, f)
 	if f.ExpectedCompileError != nil {
-		runCompileNegative(t, f, project)
+		runCompileNegative(t, f, project, assets)
 		return
 	}
 	if id == "F20" {
 		// The source and native tool inputs are identical for both signals.
 		// Retain one real CLI/Cargo build under this root, then install its exact
 		// executable bytes into a fresh directory for every runtime profile.
-		binary := RequireBuild(t, project)
+		binary := requireBuildAssets(t, project, assets)
 		install := retainSignalProgram(t, binary)
 		probe := buildProbe(t, project)
 		for _, signal := range []struct {
@@ -139,7 +162,7 @@ func RunFixture(t *testing.T, id string) {
 		}
 		return
 	}
-	binary := RequireBuild(t, project)
+	binary := requireBuildAssets(t, project, assets)
 	if id == "F07" {
 		apps := companions(t, binary)
 		if len(apps) != 1 {
@@ -224,8 +247,8 @@ func retainSignalProgram(t *testing.T, binary string) func(*testing.T) string {
 	}
 }
 
-func runCompileNegative(t *testing.T, f Fixture, project string) {
-	binary, out, diag, err := buildProgram(t, project, nil)
+func runCompileNegative(t *testing.T, f Fixture, project, assets string) {
+	binary, out, diag, err := buildProgramAssets(t, project, nil, assets)
 	if err == nil {
 		t.Fatal("negative source was accepted")
 	}

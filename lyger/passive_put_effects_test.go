@@ -63,7 +63,7 @@ func TestPassivePutOperandEffectsNative(t *testing.T) {
 					originalSize = 0
 				}
 				observer := fmt.Sprintf(passivePutObserver, fail, expected, kind, kind, kind, originalSize, drop)
-				files["runtime/rust/host.rs"].Data = append(files["runtime/rust/host.rs"].Data, []byte(observer)...)
+				files["stdlib/runtime/rust/host.rs"].Data = append(files["stdlib/runtime/rust/host.rs"].Data, []byte(observer)...)
 				deriveTestRuntime(t, files)
 				source := "Define \"Payload\" as `payload`.\nDefine \"Items\" as " + initial + ".\nPayload is Put in Items" + key + " and then Show `continued`.\nShow Items.\nCreate \"Witness\" as a New Basic App.\n"
 				result, err := NewLygerService(Options{Resources: files}).Compile([]byte(source), "passive-effects.l")

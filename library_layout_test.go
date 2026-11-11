@@ -19,17 +19,17 @@ import (
 func TestLibraryLayoutResources(t *testing.T) {
 	for _, name := range []string{
 		"dictionaries.json", "builtins/eng/prelude.l", "builtins/eng/core.l",
-		"builtins/eng/storage/dictionary.l", "runtime/eng/dictionary.l",
-		"runtime/generated/support.aml", "runtime/generated/support.json",
-		"runtime/rust/main.rs", "runtime/rust/host.rs",
-		"runtime/rust/process_unix.rs", "runtime/rust/process_other.rs",
+		"builtins/eng/storage/dictionary.l", "stdlib/eng/runtime/dictionary.l",
+		"stdlib/runtime/generated/support.aml", "stdlib/runtime/generated/support.json",
+		"stdlib/runtime/rust/main.rs", "stdlib/runtime/rust/host.rs",
+		"stdlib/runtime/rust/process_unix.rs", "stdlib/runtime/rust/process_other.rs",
 		"stdlib/eng/format/dictionary.l", "stdlib/eng/io/dictionary.l",
 	} {
 		if _, err := fs.ReadFile(distribution.Files(), name); err != nil {
 			t.Errorf("required canonical resource %s: %v", name, err)
 		}
 	}
-	for _, name := range []string{"stdlib/index.json", "stdlib/eng/storage", "builtins/runtime", "builtins/templates/runtime"} {
+	for _, name := range []string{"stdlib/index.json", "stdlib/eng/storage", "builtins/runtime", "builtins/templates/runtime", "runtime"} {
 		if _, err := fs.Stat(distribution.Files(), name); !errors.Is(err, fs.ErrNotExist) {
 			t.Errorf("retired resource %s remains available: %v", name, err)
 		}
@@ -103,7 +103,7 @@ func TestLibraryLayoutRegistryRetargetInvalidatesSupport(t *testing.T) {
 // LAY-007, 025, 027: a manifest cannot name arbitrary provider files or retain
 // the former canonical runtime root. The complete manifest is the control.
 func TestLibraryLayoutManifestPathPolicy(t *testing.T) {
-	for _, name := range []string{"../source.l", "/source.l", "runtime/generated/extra.l", "runtime/rust/extra.l", "builtins/runtime/eng/extra.l", "fixture/extra.l", "other.json", "runtime/eng/bad\\file.l"} {
+	for _, name := range []string{"../source.l", "/source.l", "stdlib/runtime/generated/extra.l", "stdlib/runtime/rust/extra.l", "builtins/runtime/eng/extra.l", "runtime/eng/extra.l", "fixture/extra.l", "other.json", "stdlib/eng/runtime/bad\\file.l"} {
 		t.Run(name, func(t *testing.T) {
 			files := distributiontest.Files(t)
 			manifest, _, err := distribution.LoadRuntimeComposition(files)
@@ -116,7 +116,7 @@ func TestLibraryLayoutManifestPathPolicy(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			files["runtime/generated/support.json"] = &fstest.MapFile{Data: raw}
+			files["stdlib/runtime/generated/support.json"] = &fstest.MapFile{Data: raw}
 			if _, _, err := distribution.LoadRuntimeComposition(files); err == nil || !strings.Contains(err.Error(), "source path") {
 				t.Fatalf("invalid manifest path accepted: %v", err)
 			}

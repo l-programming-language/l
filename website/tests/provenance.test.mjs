@@ -111,7 +111,7 @@ test('the root embedded distribution implementation is a release-relevant input'
 });
 
 test('the dictionary registry and all runtime layers participate in source identity', async (t) => {
-  for (const name of ['dictionaries.json', 'runtime/eng/dictionary.l', 'runtime/rust/host.rs', 'runtime/generated/support.aml', 'runtime/generated/support.json']) {
+  for (const name of ['dictionaries.json', 'stdlib/eng/runtime/dictionary.l', 'stdlib/runtime/rust/host.rs', 'stdlib/runtime/generated/support.aml', 'stdlib/runtime/generated/support.json']) {
     await t.test(name, async (t) => {
       const root = await fixture(t, { [name]: 'before\n', 'docs/guide.md': '# Guide\n', 'website/package.json': '{}\n' });
       const site = path.join(root, 'website');

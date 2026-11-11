@@ -124,7 +124,7 @@ func TestDistributionAPI(t *testing.T) {
 				t.Errorf("nonrelease resource %q", path)
 			}
 		}
-		for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/prelude.l", "builtins/eng/core.l", "dictionaries.json", "stdlib/eng/io/dictionary.l", "builtins/eng/storage/dictionary.l", "builtins/eng/storage/bindings.l", "builtins/eng/storage/values.l", "builtins/eng/storage/control.l", "builtins/eng/storage/display.l", "builtins/eng/storage/collections.l", "builtins/eng/storage/program.l", "builtins/eng/storage/traversal.l", "builtins/eng/storage/execution.l", "stdlib/eng/format/dictionary.l", "stdlib/eng/format/foundations.l", "runtime/generated/support.aml", "runtime/generated/support.json", "runtime/rust/host.rs", "runtime/rust/process_unix.rs", "runtime/rust/process_other.rs"} {
+		for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/prelude.l", "builtins/eng/core.l", "dictionaries.json", "stdlib/eng/io/dictionary.l", "builtins/eng/storage/dictionary.l", "builtins/eng/storage/bindings.l", "builtins/eng/storage/values.l", "builtins/eng/storage/control.l", "builtins/eng/storage/display.l", "builtins/eng/storage/collections.l", "builtins/eng/storage/program.l", "builtins/eng/storage/traversal.l", "builtins/eng/storage/execution.l", "stdlib/eng/format/dictionary.l", "stdlib/eng/format/foundations.l", "stdlib/runtime/generated/support.aml", "stdlib/runtime/generated/support.json", "stdlib/runtime/rust/host.rs", "stdlib/runtime/rust/process_unix.rs", "stdlib/runtime/rust/process_other.rs"} {
 			if !seen[path] {
 				t.Error(fmt.Sprintf("missing required Rust release resource %s", path))
 			}
@@ -181,7 +181,7 @@ func TestDistributionAPI(t *testing.T) {
 		ioSource := append([]byte(nil), filesystem[ioPath].Data...)
 		ioSource = append(ioSource, []byte("\r\nDefine IO's \"FixtureText\" as `first\r\n雪 \\`literal\\`\r\n\r\nlast`.\r\n")...)
 		filesystem[ioPath] = &fstest.MapFile{Data: ioSource}
-		runtimePath := "runtime/rust/host.rs"
+		runtimePath := "stdlib/runtime/rust/host.rs"
 		runtimeBytes := append(append([]byte(nil), filesystem[runtimePath].Data...), []byte("\r\n// exact template 雪 `literal`\r\n\r\n// no final newline")...)
 		filesystem[runtimePath] = &fstest.MapFile{Data: runtimeBytes}
 		input := []byte("Use IO's Print from `io` as \"Print\".\r\nUse IO's FixtureText from `io` as \"message\".\r\nCreate \"Hello\" as a New Basic App.\r\nThe App Prints message.\r\nExecute Hello.")
@@ -332,7 +332,7 @@ func TestDistributionAPI(t *testing.T) {
 		}
 		var paths []string
 		for path := range original {
-			if strings.HasPrefix(path, "builtins/segments/") || strings.HasPrefix(path, "builtins/templates/") || strings.HasPrefix(path, "runtime/") || strings.HasPrefix(path, "stdlib/eng/format/") {
+			if strings.HasPrefix(path, "builtins/segments/") || strings.HasPrefix(path, "builtins/templates/") || (strings.HasPrefix(path, "stdlib/eng/runtime/") || strings.HasPrefix(path, "stdlib/runtime/")) || strings.HasPrefix(path, "stdlib/eng/format/") {
 				paths = append(paths, path)
 			}
 		}
@@ -341,7 +341,7 @@ func TestDistributionAPI(t *testing.T) {
 			t.Run(path, func(t *testing.T) {
 				filesystem := snapshot(t)
 				delete(filesystem, path)
-				if strings.HasPrefix(path, "runtime/") || strings.HasPrefix(path, "stdlib/eng/format/") {
+				if (strings.HasPrefix(path, "stdlib/eng/runtime/") || strings.HasPrefix(path, "stdlib/runtime/")) || strings.HasPrefix(path, "stdlib/eng/format/") {
 					if _, err := Logiceme.NewLogicemeService(filesystem).Evaluate(document(), Logiceme.GenerationOptions{}); err != nil {
 						t.Fatalf("non-runtime generation read an optional runtime asset: %v", err)
 					}
@@ -356,7 +356,7 @@ func TestDistributionAPI(t *testing.T) {
 	t.Run("MG10", func(t *testing.T) {
 		root := os.DirFS(os.Getenv("L_DISTRIBUTION_ROOT"))
 		for _, name := range []string{"host.rs", "process_unix.rs", "process_other.rs"} {
-			path := "runtime/rust/" + name
+			path := "stdlib/runtime/rust/" + name
 			if !bytes.Equal(read(t, root, path), read(t, distribution.Files(), path)) {
 				t.Errorf("runtime template substitution: %s", path)
 			}

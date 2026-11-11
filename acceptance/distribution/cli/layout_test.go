@@ -26,8 +26,8 @@ func regenerateProvider(t *testing.T, root string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	write(t, filepath.Join(root, "runtime/generated/support.aml"), string(aml))
-	write(t, filepath.Join(root, "runtime/generated/support.json"), string(raw))
+	write(t, filepath.Join(root, "stdlib/runtime/generated/support.aml"), string(aml))
+	write(t, filepath.Join(root, "stdlib/runtime/generated/support.json"), string(raw))
 }
 
 // LAY-041–043: installed CLI, away-from-checkout native positive control, then
@@ -44,8 +44,12 @@ func TestLibraryLayoutInstalledProviderIsolation(t *testing.T) {
 		{"dictionaries.json", "stdlib/index.json"},
 		{"builtins/eng/prelude.l", "builtin.l"},
 		{"builtins/eng/storage/dictionary.l", "stdlib/eng/storage/dictionary.l"},
-		{"runtime/generated/support.aml", "builtins/runtime/support.aml"},
-		{"runtime/rust/host.rs", "builtins/templates/runtime/host.lu"},
+		{"stdlib/eng/runtime/dictionary.l", "runtime/eng/dictionary.l"},
+		{"stdlib/runtime/generated/support.aml", "runtime/generated/support.aml"},
+		{"stdlib/runtime/generated/support.json", "runtime/generated/support.json"},
+		{"stdlib/runtime/rust/host.rs", "runtime/rust/host.rs"},
+		{"stdlib/runtime/generated/support.aml", "builtins/runtime/support.aml"},
+		{"stdlib/runtime/rust/host.rs", "builtins/templates/runtime/host.lu"},
 	} {
 		t.Run(tc.current, func(t *testing.T) {
 			selected := filepath.Join(assets, filepath.FromSlash(tc.current))

@@ -24,7 +24,7 @@ Options accept single or double hyphens and either a separate value or `=value`.
 | `--native-evidence-output PATH` | Disabled | Record explicit native-environment observations, actual Cargo results and artifact identities in a separate JSON document. See [build evidence](../cli-build.md#optional-native-build-evidence). |
 | `--` | None | Stop flag parsing before the optional filename. |
 
-Relative source and output paths use the invocation directory without changing it. Compiler contributors can use [developer resource overrides](../development-harness.md#compiler-defaults). Ordinary builds need neither override.
+Relative source and output paths use the invocation directory without changing it. [Resource overrides](../development-harness.md#compiler-defaults) support compiler development and [Runtime replacement](../stdlib/eng/runtime.md#select-a-replacement). Ordinary builds need neither override.
 
 ## Target OS
 

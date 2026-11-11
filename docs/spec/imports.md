@@ -4,7 +4,7 @@ Builtins are implicit, while optional library vocabulary is imported explicitly.
 
 ## Implicit builtins
 
-Released compilers load the embedded English `builtins/eng/prelude.l`. It includes `core.l` in one builtin unit and privately imports the foundational Storage dictionary. Core retains its definitions without loading support itself. The builtin unit supplies an inherited lexical environment to the program and each imported dictionary. Bootstrap support is not an implicit public export. App behavior requires no explicit Storage or Runtime import. No project bootstrap or lexicon copy is needed. The [resource overrides](../development-harness.md#compiler-defaults) are for compiler development.
+Released compilers load the embedded English `builtins/eng/prelude.l`. It includes `core.l` in one builtin unit and privately imports the foundational Storage dictionary. Core retains its definitions without loading support itself. The builtin unit supplies an inherited lexical environment to the program and each imported dictionary. Bootstrap support is not an implicit public export. App behavior requires no explicit Storage or Runtime import. No project bootstrap or lexicon copy is needed. [Resource overrides](../development-harness.md#compiler-defaults) select a complete distribution, including its Runtime implementation.
 
 ## Indexed dictionaries
 

@@ -40,7 +40,7 @@ func TestBuildRejectsResealedRuntime(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				const source = "runtime/eng/errors.l"
+				const source = "stdlib/eng/runtime/errors.l"
 				path := filepath.Join(assets, filepath.FromSlash(source))
 				if missing {
 					if err := os.Remove(path); err != nil {
@@ -60,7 +60,7 @@ func TestBuildRejectsResealedRuntime(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				writeContractFile(t, filepath.Join(assets, "runtime/generated/support.json"), metadata)
+				writeContractFile(t, filepath.Join(assets, "stdlib/runtime/generated/support.json"), metadata)
 				if _, _, err := distribution.LoadRuntimeComposition(os.DirFS(assets)); err != nil {
 					t.Fatalf("resealed envelope must be a valid integrity control: %v", err)
 				}
@@ -86,8 +86,8 @@ func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 	}{
 		{"dictionary index", "dictionaries.json", false, false},
 		{"grammar", "lexicon/eng/grammar.json", false, false},
-		{"runtime host adapter", "runtime/rust/host.rs", false, false},
-		{"nested directory", "runtime/rust/host.rs", true, false},
+		{"runtime host adapter", "stdlib/runtime/rust/host.rs", false, false},
+		{"nested directory", "stdlib/runtime/rust/host.rs", true, false},
 		{"hard link", "dictionaries.json", false, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -145,5 +145,19 @@ func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 				t.Fatalf("linked resource changed: %v", err)
 			}
 		})
+	}
+}
+
+func TestAssetDestinationsIgnoreRetiredRuntimeRoot(t *testing.T) {
+	assets := distributiontest.CompleteOverride(t)
+	output := filepath.Join(t.TempDir(), "program")
+	if err := validateAssetDestinations(assets, output); err != nil {
+		t.Fatalf("complete provider control: %v", err)
+	}
+	if err := os.Symlink(filepath.Join(t.TempDir(), "missing"), filepath.Join(assets, "runtime")); err != nil {
+		t.Fatal(err)
+	}
+	if err := validateAssetDestinations(assets, output); err != nil {
+		t.Fatalf("retired root affected the selected provider: %v", err)
 	}
 }
