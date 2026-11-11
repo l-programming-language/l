@@ -12,10 +12,9 @@ func TestQualifiedMemberSourceShadowing(t *testing.T) {
 		name, local, spelling string
 		memberLine            int
 	}{
-		{"declared member", "    Create \"Tools\" as a Dictionary.\nCreate Tools's \"Value\" as a Dictionary.\nUse Tools.Value as \"Copy\".\n", "Tools.Value", 5},
-		{"forward member", "    Create \"Tools\" as a Dictionary.\nUse Tools.Value as \"Copy\".\nCreate Tools's \"Value\" as a Dictionary.\n", "Tools.Value", 6},
-		{"forward owner", "    Use Tools.Value as \"Copy\".\nCreate \"Tools\" as a Dictionary.\nCreate Tools's \"Value\" as a Dictionary.\n", "Tools.Value", 6},
-		{"possessive forward control", "    Create \"Tools\" as a Dictionary.\nUse Tools's Value as \"Copy\".\nCreate Tools's \"Value\" as a Dictionary.\n", "Value", 6},
+		{"declared member", "    Create \"Tools\" as a Dictionary.\nCreate Tools's \"Value\" as a Dictionary.\nUse Tools's Value as \"Copy\".\n", "Value", 5},
+		{"forward member", "    Create \"Tools\" as a Dictionary.\nUse Tools's Value as \"Copy\".\nCreate Tools's \"Value\" as a Dictionary.\n", "Value", 6},
+		{"forward owner", "    Use Tools's Value as \"Copy\".\nCreate \"Tools\" as a Dictionary.\nCreate Tools's \"Value\" as a Dictionary.\n", "Value", 6},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			source := outer + tc.local
@@ -51,7 +50,7 @@ func TestQualifiedMemberSourceShadowing(t *testing.T) {
 }
 
 func TestQualifiedMemberSourceMissingLocalMember(t *testing.T) {
-	for _, spelling := range []string{"Tools.Value", "Tools's Value"} {
+	for _, spelling := range []string{"Tools's Value"} {
 		t.Run(spelling, func(t *testing.T) {
 			source := "Create \"Tools\" as a Dictionary.\nCreate Tools's \"Value\" as a Dictionary.\n\n" +
 				"    Create \"Tools\" as a Dictionary.\nUse " + spelling + " as \"Copy\".\n"
@@ -70,8 +69,8 @@ func TestQualifiedMemberSourceMissingLocalMember(t *testing.T) {
 
 func TestQualifiedMemberSourceAliasOwners(t *testing.T) {
 	for _, tc := range []struct{ name, aliases, spelling string }{
-		{"owner alias", "Use Tools as \"Alias\".\n", "Alias.Value"},
-		{"owner alias chain", "Use Tools as \"Alias\".\nUse Alias as \"Second\".\n", "Second.Value"},
+		{"owner alias", "Use Tools as \"Alias\".\n", "Alias's Value"},
+		{"owner alias chain", "Use Tools as \"Alias\".\nUse Alias as \"Second\".\n", "Second's Value"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			source := "    Create \"Tools\" as a Dictionary.\nCreate Tools's \"Value\" as a Dictionary.\n" + tc.aliases +
@@ -86,7 +85,7 @@ func TestQualifiedMemberSourceAliasOwners(t *testing.T) {
 			if err != nil || canonical != member.record || alias.Value.Iterative.Dictionary != member.record.Value.Iterative.Dictionary {
 				t.Fatalf("aliased owner lost canonical member identity: %v", err)
 			}
-			paragraphBindingUses(t, c, tc.spelling, []*record{member.record})
+			paragraphBindingUses(t, c, "Value", []*record{member.record})
 			if c.Semantics.Declarations[canonical] != member.statement || member.statement.source.Span.Start.Line != 2 || len(c.Memory) != 0 {
 				t.Fatal("owner alias changed provenance or published private bindings")
 			}

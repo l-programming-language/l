@@ -18,8 +18,7 @@ entries and unused template routes do not establish additional support.
 freezes the current asset bytes. The
 [Lucid suite guide](../logiceme/testdata/lucid/README.md) owns the current
 case inventory and validation commands. Its future cases also execute generated
-programs. The [dated ledger](../logiceme/testdata/lucid/FAILURES.md) records results
-for its stated revision. Deployment scripts remain unexecuted.
+programs. Deployment scripts remain unexecuted.
 
 Calculation, Description and Iteration retain their frozen composition wrappers.
 Declaration renders the file header. Evaluation forwards BI's
@@ -50,9 +49,8 @@ The [Lucid suite guide](../logiceme/testdata/lucid/README.md) owns the complete-
 case inventory, exact-bundle assertions, native diagnostics and execution scope.
 Its [core compositions](../logiceme/testdata/lucid/README.md#core-compositions)
 and [Declaration adapters](../logiceme/testdata/lucid/README.md#declaration-adapters)
-record the baseline obligations; later families exercise the bounded contracts
-below. The [dated ledger](../logiceme/testdata/lucid/FAILURES.md) records generation,
-compilation, execution and acceptance separately.
+record the baseline cases; later families exercise the bounded contracts below.
+The inventory reports no validation run.
 
 ## Segment pairs
 
@@ -429,7 +427,6 @@ chooses whether to bind or discard the send Result. Reservation/permit-based
 lossless sending is outside this contract. See
 [Tokio send cancellation](https://docs.rs/tokio/latest/tokio/sync/mpsc/struct.Sender.html#method.send).
 Verification of these selection witnesses remains generation/compilation only.
-The [ledger](../logiceme/testdata/lucid/FAILURES.md) records observed results.
 
 ## Iteration and Definition contract
 
@@ -518,7 +515,6 @@ and asynchronous shutdown. Releasing a resource does not establish a successful
 flush, completed transaction or completed shutdown.
 
 RAII does not imply deferred-call argument evaluation or function-exit ordering. The logemes synthesize no guard or Drop implementation.
-Explicit process supervision and shutdown remain dedicated support responsibilities.
 [`std::process::exit`](https://doc.rust-lang.org/std/process/fn.exit.html) does not
 run stack destructors. The scheduling witnesses remain compile-only and establish
 neither destructor timing nor shutdown behavior. The suite's separate
@@ -567,8 +563,6 @@ patterns without invented wildcard/equality repairs.
 Rust iteration uses the existing Void sentinel for absent named forwarded singular
 children, and conjunctions require all supplied clauses to be true. Empty plural
 collections and explicit keyless records retain their behavior.
-The [ledger](../logiceme/testdata/lucid/FAILURES.md) records observed results for
-the maintained corpus.
 
 A template case, a parser/validation entry, successful generation and a compiled
 application are separate levels of support. The remaining mismatches below are
@@ -586,7 +580,7 @@ follow-up work. This reference does not authorize repairs or interface changes.
 | MY trait signatures | Receiverless Funcs records and optional outputs are covered above. Empty traits have the bounded empty-composition contract; supplied Receiver metadata is rejected. Trait-level parameter lists use the local-input contract above. Composed methods, per-method parameters and implementations remain outside these contracts. |
 | Generics, enums and patterns | Local String parameters/arguments are supported only on FW/HY/MY/Y/named KY as described above. Const-generic, where-clause, per-method and implementation interfaces remain separate work. OG/DOG do not establish general compositional patterns or enums. |
 | Header/module/runtime coordination | A retains its package comment and Headers/use loop. The source assembler emits graph-owned safety/module declarations separately at the known A boundary, and configuration initializes before user effects. Explicit library-only targets omit executable support. Runtime resources are absent during the reset. |
-| Ownership and mutability | The frontend typed plan determines storage and required mutation from resolved L instructions, preserves paragraph activations and value snapshots, and rejects unassigned reads. It introduces no glyph fields, hidden L-value initialization or general native ownership/lifetime inference. The standalone Lucid mutation witnesses still supply native text explicitly. |
+| Ownership and mutability | The standalone Lucid mutation witnesses supply native text explicitly. No general source ownership/lifetime inference or runtime snapshot behavior follows from these template contracts. |
 | Iteration and keyed GI | X has the bounded four-category contract above. Keyed GI preserves native patterns and explicit fallback carriers as described above. Iterator adaptation and native pattern legality stay caller-owned/rustc-checked. These standalone branch/loop witnesses remain compile-only. |
 
 The compiler separates Inputs/Headers initialization from executable case
@@ -608,7 +602,7 @@ Classes remain source/module groups without runtime scopes.
 
 A sole `Kind: "lib"`, `Primary: false` target is a library-only Cargo package. It
 returns declared sources and Cargo.toml, with no config/runtime/start/stop files.
-IncludeRuntime and executable SETTINGS reject on that package. A library cannot
+Executable SETTINGS reject on that package. A library cannot
 be Primary. Mixed binary/library packages still require exactly one Primary
 binary and at most one library. An independent path-dependent binary checks
 public interfaces and shared nominal types in the library regression. This is
@@ -637,6 +631,5 @@ repair or substitution. Preserve the [validation budgets](../docs/development-ha
 
 Preserve shared interpreter regressions and L/Lyger integration checks.
 The [acceptance guide](../docs/development-harness.md) owns the current temporary
-gate. The dated ledger records its last verified result. Do not infer a new gate
-result from documentation edits, broaden or replace the suite incidentally, or
+gate. Do not infer a new gate result from documentation edits, broaden or replace the suite incidentally, or
 update template hashes to accommodate production changes.

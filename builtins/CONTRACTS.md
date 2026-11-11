@@ -1,29 +1,25 @@
 # Logeme implementation contracts
 
-This document separates current assembly/verification contracts from design
-constraints for future target work. It does not certify every template route or
-authorize changing frozen assets.
+This document describes current assembly and verification contracts. It does not
+certify every template route or authorize changing frozen assets.
 Use [LOGEMES.md](LOGEMES.md) for semantics, [the backend architecture](../logiceme/ARCHITECTURE.md)
 for ownership boundaries, and [AML.md](../logiceme/AML.md) for input structure.
 
 ## Authority and change scope
 
-Follow the current user-approved scope. Future design constraints below are not
-standing authorization to replace templates, add inputs or change callers. The
+Follow the current user-approved scope. These contracts do not authorize
+replacing templates, adding inputs or changing callers. The
 18 Rust segments remain frozen. Keep `segments/`, `templates/`, their interfaces
 and frozen hash expectations unchanged. Consult the [current Rust reference](README.md).
-Existing behavioral inputs,
-oracles, and resources remain protected by the
-[repository acceptance contract](../harness/contract.json). Correcting production
-behavior and amending an oracle are separate actions. Follow the root instructions
-for a finite approved amendment. Never update expected bytes merely to match a bug.
+Other fixtures and tests may change within authorized reset work. Keep useful
+independent behavioral assertions; never update expected bytes merely to match a bug.
 
 Proposed syllables are not operational until parsing, template cases, forwarding,
 validation, documentation, and end-to-end tests agree. Preserve established
 pairings until an explicit change addresses their callers. Do not grant every
 letter permutation meaning or silently reuse an occupied spelling.
 
-## Logical ownership for future changes
+## Logical ownership
 
 1. **Declaration does not define.** The current Rust declaration primitive emits
    typed `let` without an initializer or automatic mutability. `Default::default()`,
@@ -60,8 +56,8 @@ declared child slots. Vowel cases select/forward compositions. Consonant cases
 render their focused primitive. Keep the nine logical pairs and existing names
 `Meta`, `Conjoinments`, `Funcs`, `Props`, and `Ops`.
 
-- Source L owns branches, loops, callbacks, error policy, resource selection and
-  sequencing. Native leaves perform one call, operator, constructor,
+- Source L owns library algorithms, callback policy, error policy and resource
+  selection. Lyger lowers grammar and control flow through frozen AML. Native leaves perform one call, operator, constructor,
   borrow/projection or bounded pattern/binding. Do not hide algorithms in native
   helpers, closures, Statement or EA. Reuse source compositions and preserve typed
   input/intermediate binding identity, scope and provenance.
@@ -90,21 +86,14 @@ owns the glyph-local String interfaces and their placement, absence and provenan
 rules. Preserve native interiors and explicit forwarding without record-field
 extensions, inherited defaults, argument inference or propagation to child glyphs.
 
-L's types, aliases, and value/snapshot semantics do not change with the target.
+L's types, aliases and value ownership do not change with the target.
 Map them to Rust or accept deliberately supplied native types in developer
 definitions. Prepare target-specific parameter, result, receiver, literal, and
 iterator formatting before the tiny renderer needs it.
 
-The frontend Rust plan uses existing paragraph activation identities, typed
-operations, effects and control-flow assignment facts to choose storage and
-mutation. Runtime-dependent publication uses explicit presence bookkeeping,
-not initialization of an L value. An unassigned read must still fail. These
-checks do not replace general native ownership/escape analysis. Missing lifetime
-metadata is not blanket permission to clone.
-Move, borrow, clone, and shared storage choices must preserve L semantics.
-Publishing a value cannot manufacture a longer lifetime. Paragraph exit does
-not implicitly stop or join an App. Sections remain a design option, not
-implemented scope syntax promised by these documents.
+Preserve typed bindings, once-only evaluation and source provenance. Missing
+lifetime metadata is not permission to clone, invent a value or widen its lifetime.
+Native ownership and lifetime constraints remain subject to Rust validation.
 
 ## Source-unit declaration and headers
 
@@ -220,8 +209,6 @@ The [Rust suite](../logiceme/testdata/lucid/README.md) owns the current case
 inventory, composed baseline and explicitly scoped extensions. The 18 Rust
 segment definitions, interfaces and hash expectations remain frozen. Add source
 regressions within task scope without replacing the maintained corpus.
-The [dated results](../logiceme/testdata/lucid/FAILURES.md) record observed
-outcomes and evidence, not a blanket parity claim.
 
 The [Rust reference](README.md#verified-compositions) maps the baseline cases to
 the exact composed features they exercise. Preserve those obligations. Native
@@ -249,18 +236,15 @@ order, scopes, and all support files before making that classification.
 The [acceptance guide](../docs/development-harness.md) owns commands and deadlines.
 Follow its [validation policy](../docs/development-harness.md#validation-authorization):
 task-authorized checks proceed without repeated permission requests.
-Run `scripts/l-check` before claiming full validation. It includes linting,
-unfiltered acceptance and the complete tagged native-compilation stage described
-by the [Rust suite](../logiceme/testdata/lucid/README.md). Do not execute
-generated Rust applications as an incidental test step. Supervised runtime
-regressions intentionally execute bounded native programs. Deployment scripts
-remain artifacts.
-Focused tests, documentation checks, and dated ledgers are not acceptance.
+`scripts/l-check` runs the temporary hello-world gate. The complete Lucid
+generation and native-compilation suites are separate checks. Record exactly
+which stages ran; documentation consistency establishes no native result.
+Generated deployment scripts remain artifacts.
 
 ## Dependency and runtime boundaries
 
-Compiler-side target preparation and dedicated support templates own manifests,
-configuration and lifecycle support. Segment templates do not resolve versions,
+Compiler-side target preparation and dedicated support templates own manifests
+and configuration. Segment templates do not resolve versions,
 retry compilation, or supervise processes. The CLI coordinator uses pinned
 Rust/Cargo and dependency resolution with frozen builds, and validates workspace
 package/path identities before compilation and publication. No automatic version
@@ -273,12 +257,9 @@ behavior, RAII guards or cleanup callbacks.
 The [Rust execution contract](README.md#execution-without-deferred) owns the
 detailed boundary. Removing unsupported markers does not complete other forms.
 
-Apps execute in separate OS processes. App-constructed Service libraries retain
-their source/dependency roles. Standalone Service declarations create no process.
-Tokio tasks do not replace App process lifetimes. Preserve canonical target and invocation identities,
-launch acknowledgment, nonjoining
-Stop, finalized byte-exact outputs, saved snapshots across reruns, once-only
-continuations, and explicit cleanup. See the [runtime contract](../docs/cli-build.md).
+The current distribution supplies no lifecycle, capture or process-supervision
+runtime. The [build contract](../docs/cli-build.md) supports one standalone App
+with core Print; scheduling templates do not widen that boundary.
 
 ## Review checklist
 
@@ -287,6 +268,4 @@ role, target preparation needed, and complete-AML witness. Reject unrelated
 letter allocation, hidden initializers/mutability/ownership changes, discarded
 children, excessive primitive bodies, and golden updates without semantic review.
 Mark proposed, implemented, compiled, and behaviorally verified claims separately.
-This document does not authorize protected-resource amendments or template
-changes. Clearly label future design requirements and current evidence so they
-cannot be mistaken for implemented Rust capabilities.
+This document does not authorize template changes or restoring deleted libraries.

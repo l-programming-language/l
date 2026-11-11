@@ -158,7 +158,7 @@ func TestCoordinatedRegistrationInvalidDescriptorIsAtomic(t *testing.T) {
 }
 
 func TestCoordinatedRegistrationAliasOutputAndShowInstructions(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphGlobals + "Create \"Worker\" as a New Basic App.\nThe App Prints x1.\n" +
 		"Run Worker.\nUse Worker as \"Primary\" and define \"snapshot\" as Worker's Output.\nShow snapshot.\n"
 	compilation := executableTestResult(t, source).Compilation
@@ -181,10 +181,6 @@ func TestCoordinatedRegistrationAliasOutputAndShowInstructions(t *testing.T) {
 	}
 	if !reflect.DeepEqual(kinds, []string{"run", "assign", "show"}) {
 		t.Fatalf("alias registration swallowed or duplicated an executable sibling: %v", kinds)
-	}
-	result := &CompilationResult{Compilation: compilation}
-	if _, err := result.OrchestratorUnit("main", executableTestCompanions(result)); err != nil {
-		t.Fatal(err)
 	}
 }
 
@@ -407,7 +403,7 @@ func TestCoordinatedRegistrationImportedRetriesKeepOccurrenceIdentity(t *testing
 }
 
 func TestCoordinatedRegistrationTrailingDescriptorConstructs(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphGlobals +
 		"\"count\" is 1 and \"Style\" is a New Adjective describing any App.\n" +
 		"It describes a Generic App with a New Main Service using any Process.\n" +
@@ -430,20 +426,7 @@ func TestCoordinatedRegistrationTrailingDescriptorConstructs(t *testing.T) {
 	if err != nil || len(body) != 1 {
 		t.Fatalf("source descriptor lost its selected body: %+v, %v", body, err)
 	}
-	dependencies, err := definitionClosure(body...)
-	if err != nil {
-		t.Fatal(err)
-	}
-	selected := map[string]bool{"Text.Render": false, "Write": false}
-	for _, dependency := range dependencies {
-		declaration := compilation.Semantics.Declarations[dependency.definition]
-		if _, required := selected[dependency.Symbol]; required && declaration != nil && declaration.source.Unit.Dictionary == "IO" {
-			selected[dependency.Symbol] = true
-		}
-	}
-	for name, retained := range selected {
-		if !retained {
-			t.Errorf("App body did not retain the selected IO definition %s", name)
-		}
+	if !strings.Contains(body[0].Expression, `::std::println!("{}", "Hello World!");`) {
+		t.Fatal("App body lost its bound core Print text")
 	}
 }

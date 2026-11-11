@@ -57,7 +57,7 @@ func TestLucidKeyedEvaluatePrimitives(t *testing.T) {
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			defer executionRegistryPanicAsFailure(t)
-			ss, err := loadSegmentalSystem(runtimeGenerationResources(t))
+			ss, err := loadSegmentalSystem(backendTestResources(t))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -126,7 +126,7 @@ func TestLucidKeyedEvaluationPreparation(t *testing.T) {
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			defer executionRegistryPanicAsFailure(t)
-			ss, err := loadSegmentalSystem(runtimeGenerationResources(t))
+			ss, err := loadSegmentalSystem(backendTestResources(t))
 			if err != nil {
 				t.Fatal(err)
 			}

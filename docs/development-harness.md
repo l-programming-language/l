@@ -56,7 +56,7 @@ Options precede the source filename. Relative paths use invocation CWD without c
 l build --assets . --language eng demo/basic/main.l
 ```
 
-Use a compiler built from this checkout. An installed historical compiler can embed removed vocabulary and is not authority for current support. Offline contract inspection must not regenerate resources, invoke native tools or fetch dependencies to repair missing evidence.
+Use a compiler built from this checkout. An installed historical compiler can embed removed vocabulary and is not authority for current support.
 
 ## Investigating failures
 

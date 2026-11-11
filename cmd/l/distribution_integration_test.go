@@ -89,17 +89,6 @@ func distributionSource(t testing.TB, assets, source string, files map[string]st
 	if c.err != nil {
 		return nil, c.err
 	}
-	units, err := r.ApplicationUnits()
-	if err != nil {
-		return nil, err
-	}
-	var companions []Lyger.AppArtifact
-	for i, unit := range units {
-		companions = append(companions, Lyger.AppArtifact{ID: unit.ID, RelativeExecutable: fmt.Sprintf("app-%d", i)})
-	}
-	if _, err := r.OrchestratorUnit("Distribution", companions); err != nil {
-		return nil, err
-	}
 	return r, nil
 }
 

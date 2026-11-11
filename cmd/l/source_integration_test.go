@@ -34,8 +34,6 @@ func TestDemoGeneratesBuildableSource(t *testing.T) {
 			sourcePath := filepath.Join(root, "demo/basic/main.l")
 			if tc.name != "demo" {
 				source = bytes.ReplaceAll(source, []byte(`"Hello"`), []byte(strconv.Quote(tc.app)))
-				source = bytes.ReplaceAll(source, []byte("Execute Hello."), []byte("Execute "+tc.app+"."))
-				source = bytes.ReplaceAll(source, []byte("Show Hello's"), []byte("Show "+tc.app+"'s"))
 				source = bytes.Replace(source, []byte("`Hello World!`"), []byte("`"+tc.text+"`"), 1)
 			}
 			if tc.name == "renamed vocabulary" {

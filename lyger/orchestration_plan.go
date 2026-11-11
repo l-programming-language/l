@@ -1,8 +1,6 @@
 package Lyger
 
 import (
-	"fmt"
-
 	"github.com/l-programming-language/l/lerrors"
 )
 
@@ -187,7 +185,7 @@ func (p *orchestrationPlanner) storage(rec *record, kind valueType) (*orchestrat
 			return slot, nil, nil
 		}
 	}
-	if _, ok := runtimeTypeName(kind); !ok {
+	if !runtimeValueKind(kind) {
 		return nil, nil, lerrors.Unsupported.Errorf("unsupported runtime symbol %s of type %s", rec.ID, kind)
 	}
 	owner, slots := p.plan.Root, p.shared
@@ -409,5 +407,3 @@ func orchestrationValueEffects(value *orchestrationValue) orchestrationEffects {
 	}
 	return effects
 }
-
-func (slot *orchestrationStorage) name() string { return fmt.Sprintf("lValue%d", slot.ID) }

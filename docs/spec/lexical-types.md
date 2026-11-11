@@ -54,4 +54,4 @@ The first sentence declares Main as an Adjective targeting Service, Object, or F
 
 ## Define and use a word
 
-The [authoring guide](../guide/definitions.md#compose-a-source-action) explains typed source actions and [word forms](lexical-structure.md#vocabulary-and-inflection). Choose a meaning and grammatical role before declaration syntax. Current executable support remains one standalone App with core Print.
+The [authoring guide](../guide/definitions.md#compose-a-source-action) explains typed source actions and [word forms](lexical-structure.md#vocabulary-and-inflection). Choose a meaning and grammatical role before declaration syntax. The current CLI supports one standalone App with core Print.

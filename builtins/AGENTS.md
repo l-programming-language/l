@@ -43,8 +43,7 @@ replace the composition being tested.
 
 Use complete AML through Evaluate and compare exact artifact bytes, ordered paths
 and dependencies. The [Rust suite](../logiceme/testdata/lucid/README.md) owns the
-inventory and separate native-compilation stage; its [ledger](../logiceme/testdata/lucid/FAILURES.md)
-is historical evidence. Preserve independent expectations, shared interpreter tests,
+inventory and separate native-compilation stage. Preserve independent expectations, shared interpreter tests,
 pins, locks, deadlines and exposing regressions. Follow root acceptance instructions
 for the temporary hello-world gate; compilation and documentation checks do not establish execution.
 

@@ -46,7 +46,7 @@ func TestLucidKeyedValidation(t *testing.T) {
 			input := lucidRead(t, "keyed-invalid/"+c.name+".aml.txt")
 			before := bytes.Clone(input)
 			lucidWrite(t, filepath.Join(dir, "input.aml.txt"), input)
-			bundle, err := NewLogicemeService(runtimeGenerationResources(t)).Evaluate(input, GenerationOptions{IncludeRuntime: false})
+			bundle, err := NewLogicemeService(backendTestResources(t)).Evaluate(input)
 			if !bytes.Equal(input, before) {
 				lucidIssue(t, r, "production validation: mutated input")
 			}

@@ -189,7 +189,7 @@ func TestScopePlansActualExpandedFixture(t *testing.T) {
 	for _, binding := range plan.Pronouns {
 		counts[binding.SubjectID]++
 	}
-	if len(plan.Ordered) != len(built.SourceStatements) || counts["execute::argument:5"] != 1 || counts["main"] != 3 || counts["helloworldapp"] != 3 {
+	if len(plan.Ordered) != len(built.SourceStatements) || counts["execute::argument:5"] != 1 || counts["main"] != 3 || counts["start::argument:5"] != 1 || len(counts) != 3 {
 		t.Fatalf("expanded fixture scope counts = %v across %d statements", counts, len(plan.Ordered))
 	}
 }

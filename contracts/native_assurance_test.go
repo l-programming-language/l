@@ -10,7 +10,7 @@ func nativeAssuranceFixture() (NativeUse, DeclaredContract, NativeEnvironment) {
 		{Outcome: Normal, Effects: &DeclaredEffectRow{UnknownTail: &unknown}, AbsentEffects: []EffectKind{"block"}},
 		{Outcome: ReturnedFailure, Effects: &DeclaredEffectRow{UnknownTail: &unknown}, AbsentEffects: []EffectKind{"block"}},
 	}}
-	environment := SealNativeEnvironment(NativeEnvironment{SchemaVersion: SchemaVersion, Kind: "native_environment", Producer: AnalyzerVersion, Version: "1", Method: "test-only", Host: "test-only", Target: "test-only-target", Compiler: "test-only-compiler", PanicPolicy: "test-only-unwind", Runtime: "test-only-runtime", Allocator: "test-only-allocator", Inputs: map[string]string{"source": "source-v1"}, Dependencies: map[string]string{"runtime": "runtime-v1"}, Limitations: []string{"Synthetic evidence; no production approval or native execution"}})
+	environment := SealNativeEnvironment(NativeEnvironment{SchemaVersion: SchemaVersion, Kind: "native_environment", Producer: AnalyzerVersion, Version: "1", Method: "test-only", Host: "test-only", Target: "test-only-target", Compiler: "test-only-compiler", PanicPolicy: "test-only-unwind", Allocator: "test-only-allocator", Inputs: map[string]string{"source": "source-v1"}, Dependencies: map[string]string{"runtime": "runtime-v1"}, Limitations: []string{"Synthetic evidence; no production approval or native execution"}})
 	return use, declaration, environment
 }
 

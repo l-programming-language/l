@@ -11,7 +11,7 @@ documentation, maintenance, and dependency changes.
 ## Get oriented
 
 Read [AGENTS.md](AGENTS.md), the [architecture](docs/architecture.md),
-[CLI/runtime contract](docs/cli-build.md), and
+[build contract](docs/cli-build.md), and
 [development and acceptance guide](docs/development-harness.md).
 Read the applicable scoped instructions before changing
 [the CLI](cmd/l/AGENTS.md), [Lyger](lyger/AGENTS.md),
@@ -64,7 +64,7 @@ policy and resource sequencing remain L algorithms. Preserve typed binding
 provenance and canonical descriptor targets. A requested clean break removes
 retired words after migrating callers, without compatibility aliases or adapters
 unless explicitly required. Keep exact source generation, independent
-expected/generated native compilation, runtime verification, and full acceptance
+expected/generated native compilation, runtime verification, and temporary-gate
 evidence separate.
 
 ## Update documentation with behavior

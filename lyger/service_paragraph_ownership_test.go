@@ -39,7 +39,7 @@ func TestStructuralServiceParagraphOwnership(t *testing.T) {
 		} {
 			t.Run(descriptor+tc.name, func(t *testing.T) {
 				source := strings.ReplaceAll(tc.source, "New Service", "New "+descriptor+"Service")
-				result := runnableServiceRequire(t, source, nil)
+				result := requireSourceCompilation(t, source, nil)
 				plan, err := result.WorkspacePlan()
 				if err != nil || len(plan.Packages()) != tc.apps || len(result.Compilation.Program.Apps) != tc.apps {
 					t.Fatalf("structural Service changed App package inventory: %v", err)

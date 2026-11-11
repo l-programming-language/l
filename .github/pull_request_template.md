@@ -7,14 +7,14 @@ Closes #<issue-number>
 ## Change
 
 <!-- Describe the problem and the resulting behavior. Include a before/after
-example when useful, and explain any compatibility or migration impact. -->
+example when useful, and explain migration impact. Do not preserve retired words
+through compatibility aliases. -->
 
 ## Validation
 
 <!-- List commands, results, host/revision, and evidence links. Identify checks
-not run and why. Expensive local validation is paused unless explicitly
-requested; automatic PR checks remain enabled. Keep generation, native
-compilation, runtime, and full acceptance results distinct. -->
+not run and why. Follow the current root gate and distinguish generation, native
+compilation and runtime evidence. -->
 
 ## Checklist
 
@@ -22,8 +22,8 @@ compilation, runtime, and full acceptance results distinct. -->
 - [ ] Linked an existing GitHub Issue above.
 - [ ] Added or updated tests for changed behavior, or identified an existing regression that covers it; explained when no new test is needed.
 - [ ] Updated associated documentation and doc-site content, routes, examples, and reviewed references where affected, or explained why no update is needed.
-- [ ] Reviewed logeme template changes with special care: identified affected segments, interfaces, and support assets; linked explicit scope approval for any frozen/protected amendment; recorded relevant exact-generation, native-compilation, and runtime evidence or unrun stages. Mark as not applicable below if none changed.
-- [ ] Preserved protected inputs, assertions, literal expected bytes, locks, and tool pins except for an explicitly approved, finite amendment linked here.
+- [ ] Preserved frozen logeme assets, interfaces, hash expectations, tool pins and dependency locks.
+- [ ] Removed obsolete vocabulary requirements without weakening retained behavioral observations.
 - [ ] Reported validation accurately, including unrun checks and any remaining lint/security findings.
 - [ ] Read the contribution guide and applicable scoped instructions.
 

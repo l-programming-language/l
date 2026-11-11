@@ -130,7 +130,7 @@ Register the canonical source in `docs/_meta/examples.json`, then put an inclusi
 
 The manifest uses `schemaVersion: 1` and an `examples` array. Each entry has an `id`, repository-relative `source`, classification, description, SHA-256, validation state and witness paths. Complete examples use `runnable`, `compile-only` or `invalid`. Partial definitions and backend illustrations use `fragment`. Set `lang` when the source is AML, Rust or another language rather than L.
 
-Expected streams are Base64-encoded exact bytes, accompanied by expected exit status where known. A newline is a byte in the expected result, not a formatting convention. Intentionally invalid inputs require the expected diagnostic boundary. Distinguish compiler-negative fixtures from valid programs that intentionally terminate with an application error `Exit`. Programs requiring a test controller are not standalone runnable examples. The optional verifier must explicitly support that setup before running them.
+Expected streams are Base64-encoded exact bytes, accompanied by expected exit status where known. A newline is a byte in the expected result, not a formatting convention. Intentionally invalid inputs require the expected diagnostic boundary. Classify examples against the current standalone App boundary; removed runtime words and test controllers are not supported example prerequisites.
 
 Never copy canonical source into a second manually edited code fence. The inclusion mechanism reads the canonical bytes during preparation, chooses a safe fence, and retains source attribution. Invalid display bytes must be identified explicitly. Silently decoding them with replacement characters is not faithful inclusion.
 

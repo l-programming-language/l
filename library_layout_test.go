@@ -11,6 +11,7 @@ import (
 
 	distribution "github.com/l-programming-language/l"
 	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
+	Logiceme "github.com/l-programming-language/l/logiceme"
 	Lyger "github.com/l-programming-language/l/lyger"
 )
 
@@ -20,7 +21,7 @@ func TestCoreResourceLayout(t *testing.T) {
 			t.Errorf("required resource %s: %v", name, err)
 		}
 	}
-	for _, name := range []string{"builtins/eng/prelude.l", "builtins/eng/storage", "stdlib", "builtins/runtime", "builtins/templates/runtime", "runtime"} {
+	for _, name := range []string{"builtins/eng/prelude.l", "builtins/eng/storage", "builtins/operations", "stdlib", "builtins/runtime", "builtins/templates/runtime", "runtime"} {
 		if _, err := fs.Stat(distribution.Files(), name); !errors.Is(err, fs.ErrNotExist) {
 			t.Errorf("retired resource %s remains available: %v", name, err)
 		}
@@ -39,6 +40,27 @@ func TestCoreResourceLayout(t *testing.T) {
 		if len(entries) != 0 {
 			t.Errorf("bundled dictionaries remain for %s: %v", language, entries)
 		}
+	}
+}
+
+func TestCoreCompilerWithoutProcessOperationAssets(t *testing.T) {
+	files := distributiontest.Files(t)
+	for name := range files {
+		if strings.HasPrefix(name, "builtins/operations/") {
+			delete(files, name)
+		}
+	}
+	result, err := Lyger.NewLygerService(Lyger.Options{Resources: files}).Compile([]byte("Create \"Worker\" as a New Basic App.\nThe App Prints `independent`.\n"), filepath.Join(t.TempDir(), "main.l"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	units, err := result.ApplicationUnits()
+	if err != nil || len(units) != 1 {
+		t.Fatalf("standalone units = %v, %v", units, err)
+	}
+	bundle, err := Logiceme.NewLogicemeService(files).Evaluate(units[0].BackendAML)
+	if err != nil || len(bundle.ByteArrays) != 1 || len(bundle.ByteArrays[0]) == 0 {
+		t.Fatalf("standalone source generation = %v", err)
 	}
 }
 

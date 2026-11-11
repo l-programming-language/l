@@ -18,7 +18,7 @@ The [trait-signature witness](../../../logiceme/testdata/lucid/trait-signature-o
 
 ## V and C: scheduling
 
-V schedules native Key invocation text, and MV schedules one Instantiation child through `tokio::spawn`. Both require an existing suitable future. The [direct](../../../logiceme/testdata/lucid/schedule-direct.aml.txt) and [composed](../../../logiceme/testdata/lucid/schedule-composed.aml.txt) witnesses are compile-only. App processes retain their own lifecycle.
+V schedules native Key invocation text, and MV schedules one Instantiation child through `tokio::spawn`. Both require an existing suitable future. The [direct](../../../logiceme/testdata/lucid/schedule-direct.aml.txt) and [composed](../../../logiceme/testdata/lucid/schedule-composed.aml.txt) witnesses are compile-only.
 
 CV constructs an unscheduled future from one W body: local Capture is Infer by default or Move. DV awaits one local Key or composed E/KY/CV/DV operand inside an asynchronous body. CO assigns its value, while COB declares and initializes it. Rust checks borrowing, mutability and result types. See the [complete future contract](../../../builtins/README.md#future-construction-awaiting-and-value-bindings) and [composed executable witness](../../../logiceme/testdata/lucid/future-composed.aml.txt).
 

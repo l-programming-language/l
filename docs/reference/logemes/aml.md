@@ -26,12 +26,10 @@ Lyger's observable AML and its canonical backend AML describe the same graph but
 
 ```go
 service := Logiceme.NewLogicemeService(nil)
-bundle, err := service.Evaluate(aml, Logiceme.GenerationOptions{
-    IncludeRuntime: false,
-})
+bundle, err := service.Evaluate(aml)
 ```
 
-This Go API example assumes `aml` is complete framed input and the Logiceme import is in scope. Nil resources selects embedded assets. A nonnil filesystem is a complete replacement. Evaluate accepts at most one GenerationOptions value, containing only IncludeRuntime. It has no target-language option: Rust is the sole generated language, and source lexicon selection belongs to Lyger.
+This Go API example assumes `aml` is complete framed input and the Logiceme import is in scope. Nil resources selects embedded assets. A nonnil filesystem is a complete replacement. Rust is the sole generated language. Source lexicon selection belongs to Lyger.
 
 Executable is an in-memory source bundle: ordered ByteArrays align with MapArrays paths by application, with DependencyArrays and EnvDepArrays. It is not a running program. Errors return a zero-value bundle rather than partial output. Reusing a service must preserve previous bundle bytes and isolate metadata/provider state.
 

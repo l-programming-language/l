@@ -129,7 +129,7 @@ func (p *orchestrationPlanner) instruction(current *instruction, flow orchestrat
 		}
 		if current.Kind == instructionShow {
 			kind := result.Value.Type
-			if _, ok := runtimeTypeName(kind); !ok || kind == valueApp || kind == valueError {
+			if !runtimeValueKind(kind) || kind == valueApp || kind == valueError {
 				return nil, flow, lerrors.TypeMismatch.Errorf("Show requires a scalar value, got %s", kind)
 			}
 		} else {

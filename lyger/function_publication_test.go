@@ -20,7 +20,7 @@ func TestFunctionBodyPublication(t *testing.T) {
 			t.Fatalf("%s lost its declaring-unit publication", name)
 		}
 	}
-	requireFunctionGenerated(t, functionPublicationSource)
+	requireFunctionPlan(t, functionPublicationSource)
 }
 
 func TestFunctionPublicValuesRemainDefinitelyAssigned(t *testing.T) {
@@ -30,7 +30,7 @@ func TestFunctionPublicValuesRemainDefinitelyAssigned(t *testing.T) {
 		functionPublicationSource + "Show Message.\n",
 		functionPublicationSource + "Report `outside`.\n",
 	} {
-		_, err := functionGenerated(t, source)
+		_, err := compileFunctionPlan(t, source)
 		if err == nil || !strings.Contains(err.Error(), "not definitely") {
 			t.Fatalf("unproven public initialization accepted: %v", err)
 		}
@@ -40,7 +40,7 @@ func TestFunctionPublicValuesRemainDefinitelyAssigned(t *testing.T) {
 const functionMapSource = "Define \"callbacks\" as a New Map of Identity.\nPut Identity in callbacks as `key`.\nDefine \"callback\" as a New Identity from callbacks at `key`.\ncallback `mapped` as \"Result\".\nShow Result.\n"
 
 func TestFunctionSignatureMap(t *testing.T) {
-	requireFunctionGenerated(t, identityFunction+functionMapSource)
+	requireFunctionPlan(t, identityFunction+functionMapSource)
 }
 
 func functionMapExtractionSource() string {

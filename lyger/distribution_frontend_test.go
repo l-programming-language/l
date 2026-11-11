@@ -19,7 +19,7 @@ import (
 )
 
 const distributionCorePrefix = "\n"
-const distributionApp = "\"message\" is `Hello World!`.\nCreate \"Hello\" as a New Basic App.\nThe App Prints message.\nExecute Hello.\nShow Hello's Output.\n"
+const distributionApp = "Use Print as \"SharedPrint\".\n\"message\" is `Hello World!`.\nCreate \"Hello\" as a New Basic App.\nThe App Prints message.\nExecute Hello.\nShow Hello's Output.\n"
 
 // These cases deliberately request normal resources. No adjacent bootstrap or
 // replacement definition is supplied when the default distribution is absent.
@@ -97,7 +97,7 @@ func TestDistributionBuiltins(t *testing.T) {
 		}{{"Start", []string{"build", "run"}}, {"Execute", []string{"build", "run", "await"}}} {
 			t.Run(tc.verb, func(t *testing.T) {
 				r := requireDistributionFrontend(t, "Create \"Worker\" as a New Basic App.\n"+tc.verb+" Worker.\n", nil)
-				phase1Lifecycle(t, r, tc.want)
+				requireLifecycleInstructions(t, r, tc.want)
 				calls := r.Compilation.Semantics.Instructions
 				if len(calls) != 1 || calls[0].Kind != instructionCall || calls[0].Definition == nil || !calls[0].Synchronous {
 					t.Fatalf("%s lost its source action definition/ordered expansion: %+v", tc.verb, calls)
@@ -106,14 +106,14 @@ func TestDistributionBuiltins(t *testing.T) {
 		}
 	})
 	t.Run("BI03-no-primitive-spelling-dispatch", func(t *testing.T) {
-		g := phase1Grammar(t)
+		g := configuredGrammar(t)
 		for _, word := range []string{"start", "execute", "print"} {
 			if lex, _, err := g.lex.lookup([]byte(word)); !errors.Is(err, lerrors.UnresolvedReference) || (lex != nil && lex.Root != "") {
 				t.Errorf("source word %s is in primitive vocabulary: %+v, %v", word, lex, err)
 			}
 		}
 		r := requireDistributionFrontend(t, "Create \"Launch|-es|-ed|-ing\" for Building any App and then Running it.\nCreate \"Collect|-s|-ed|-ing\" for Launching any App and then Awaiting it.\nUse Collect as \"Gather\".\nCreate \"Worker\" as a New Basic App.\nGather Worker.\n", nil)
-		phase1Lifecycle(t, r, []string{"build", "run", "await"})
+		requireLifecycleInstructions(t, r, []string{"build", "run", "await"})
 	})
 	t.Run("BI04-alias-morphology-and-construction", func(t *testing.T) {
 		r := requireDistributionFrontend(t, "Use Start as \"Kick\".\nUse Execute as \"Operate\".\nUse Basic as \"Plain\".\nUse Function's Return as \"Yield\".\nCreate \"Worker\" as a New Plain App.\n", nil)
@@ -153,7 +153,7 @@ func TestDistributionBuiltins(t *testing.T) {
 	})
 	t.Run("BI05-no-effects-or-pronoun-subject", func(t *testing.T) {
 		r := requireDistributionFrontend(t, "Show `only-user-effect|`.\n", nil)
-		if got := phase1Kinds(r.Compilation.Semantics.Instructions); !reflect.DeepEqual(got, []string{"show"}) || len(r.Compilation.Semantics.Continuations) != 0 {
+		if got := flattenedInstructionKinds(r.Compilation.Semantics.Instructions); !reflect.DeepEqual(got, []string{"show"}) || len(r.Compilation.Semantics.Continuations) != 0 {
 			t.Fatalf("implicit initialization added runtime effects/continuations: %v", got)
 		}
 		distributionNegative(t, "Show it.\n", "no preceding subject", lerrors.UnresolvedReference)
@@ -171,12 +171,12 @@ func TestDistributionBuiltins(t *testing.T) {
 		if local == nil || local == original || r.Compilation.Memory["Execute"] != nil {
 			t.Fatal("local shadow altered or published the builtin")
 		}
-		phase1Lifecycle(t, r, []string{"build", "run", "await"})
-		if !reflect.DeepEqual(phase1Kinds(r.Compilation.Semantics.Instructions), []string{"show", "build", "run", "await"}) {
+		requireLifecycleInstructions(t, r, []string{"build", "run", "await"})
+		if !reflect.DeepEqual(flattenedInstructionKinds(r.Compilation.Semantics.Instructions), []string{"show", "build", "run", "await"}) {
 			t.Fatal("local source word did not own its call")
 		}
 		again := requireDistributionFrontend(t, "Create \"Worker\" as a New Basic App.\nExecute Worker.\n", nil)
-		phase1Lifecycle(t, again, []string{"build", "run", "await"})
+		requireLifecycleInstructions(t, again, []string{"build", "run", "await"})
 	})
 }
 
@@ -189,9 +189,6 @@ func TestDistributionScopes(t *testing.T) {
 		}
 		if len(c.Semantics.Continuations) != 1 {
 			t.Fatalf("continuations = %d; want only Worker", len(c.Semantics.Continuations))
-		}
-		if _, err := r.OrchestratorUnit("entry", executableTestCompanions(r)); err != nil {
-			t.Fatalf("unit-root/definite-assignment lowering failed: %v", err)
 		}
 	})
 	t.Run("DI11-independent-parallel-compilations", func(t *testing.T) {
@@ -218,7 +215,7 @@ func TestDistributionScopes(t *testing.T) {
 			if errs[i] != nil || r == nil {
 				t.Fatalf("parallel compilation %d: %v", i, errs[i])
 			}
-			current := distributionCanonical(t, r.Compilation, r.Compilation.Memory["Print"])
+			current := distributionCanonical(t, r.Compilation, r.Compilation.Memory["SharedPrint"])
 			for _, previous := range canonical {
 				if current == previous || current.Value.Lexeme == previous.Value.Lexeme {
 					t.Fatal("parallel compilations shared dictionary definitions")
@@ -244,7 +241,7 @@ func TestDistributionScopes(t *testing.T) {
 					call = "Use Collect as \"Gather\".\nGather Worker.\n"
 				}
 				r := requireDistributionFrontend(t, prefix+call, nil)
-				flat := phase1Flat(r.Compilation.Semantics.Instructions)
+				flat := flattenedInstructions(r.Compilation.Semantics.Instructions)
 				if len(flat) < 2 {
 					t.Fatal("source action lost ordered effects")
 				}
@@ -261,7 +258,7 @@ func TestDistributionScopes(t *testing.T) {
 func TestDistributionSourceProvenance(t *testing.T) {
 	t.Run("MG05-exact-main-and-physical-projection", func(t *testing.T) {
 		const library = "\"value\" is `snow 雪, \\\"quote\\\"`.\r\nShow value.\r\n"
-		const source = "Use Print as \"Print\".\r\n\r\n    Use `nested/words.l`.\r\n\r\n    Use `nested/words.l`.\r\n"
+		const source = "Use Print as \"Display\".\r\n\r\n    Use `nested/words.l`.\r\n\r\n    Use `nested/words.l`.\r\n"
 		r := requireDistributionFrontend(t, source, map[string]string{"nested/words.l": library})
 		c := r.Compilation
 		if !bytes.Equal(c.MainBytes, []byte(source)) {
@@ -278,11 +275,11 @@ func TestDistributionSourceProvenance(t *testing.T) {
 		if string(physical[1].Raw) != strings.SplitAfter(library, "\r\n")[0] || physical[1].Span.Start.Line != 1 || physical[2].Span.Start.Line != 2 {
 			t.Fatal("local literal bytes/line spans changed")
 		}
-		want := "\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value.\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value."
+		want := "Use Print as \"Display\".\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value.\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value."
 		if got := string(renderExpandedSource(physical, c.TextCache)); got != want {
 			t.Fatalf("physical expanded projection = %q; want %q", got, want)
 		}
-		var implicit, dictionary bool
+		var implicit, corePrint bool
 		for _, statement := range c.SourceStatements {
 			if testPathWithin(root, statement.Span.Path) {
 				continue
@@ -291,10 +288,10 @@ func TestDistributionSourceProvenance(t *testing.T) {
 				t.Errorf("embedded source became a host path: %s", statement.Span.Path)
 			}
 			implicit = implicit || strings.Contains(string(statement.Raw), "Create \"Start|")
-			dictionary = dictionary || strings.Contains(string(statement.Raw), "Create IO's")
+			corePrint = corePrint || strings.Contains(string(statement.Raw), "Publicly create \"Print|")
 		}
-		if !implicit || !dictionary {
-			t.Fatal("complete diagnostic source lost builtin or dictionary unit")
+		if !implicit || !corePrint {
+			t.Fatal("complete diagnostic source lost core declarations")
 		}
 		wantPaths := []string{c.MainPath, filepath.Join(root, "nested/words.l"), filepath.Join(root, "nested/words.l")}
 		if !reflect.DeepEqual(c.SourcePaths, wantPaths) {

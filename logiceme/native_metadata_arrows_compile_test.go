@@ -15,7 +15,7 @@ func TestNativeMetadataArrowsCompile(t *testing.T) {
 		t.Run(phase, func(t *testing.T) {
 			bundle := nativeMetadataArrowsExpected(t)
 			if phase == "Generated" {
-				bundle = nativeMetadataArrowsGenerate(t, NewLogicemeService(runtimeGenerationResources(t)), nativeMetadataArrowsAML)
+				bundle = nativeMetadataArrowsGenerate(t, NewLogicemeService(backendTestResources(t)), nativeMetadataArrowsAML)
 				nativeMetadataArrowsCompare(t, bundle, nativeMetadataArrowsExpected(t))
 			}
 			nativetest.RecordBundle(t, phase, bundle)

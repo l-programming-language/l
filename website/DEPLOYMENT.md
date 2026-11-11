@@ -14,12 +14,11 @@ or Admin access. Each job checks out the dispatch's captured full SHA. The
 requested version must equal root `VERSION`; the source tag is `vVERSION` at
 that SHA. Merges and tag pushes do not publish anything.
 
-The native publisher runs preparation and canonical `scripts/l-check` on
-`darwin-arm64`, `linux-arm64`, and `linux-amd64`. It retains fresh
-lint, acceptance, and tagged-native reports for every target. Full gates keep
-the existing pins, both unfiltered test phases, watchdogs and concurrency. A
-manual dry run prepares validation and packages without enabling publication.
-Do not dispatch it merely to inspect this implementation: the
+The retained release protocol expects lint, acceptance and tagged-native reports
+on `darwin-arm64`, `linux-arm64` and `linux-amd64`. The current `scripts/l-check`
+runs only the temporary hello-world gate and cannot supply that proof. These
+disabled workflows are not the reset's validation path. Do not dispatch them
+merely to inspect their implementation: the
 [validation policy](../docs/development-harness.md#validation-authorization)
 keeps hosted dispatch authorization separate from local checks.
 
@@ -194,6 +193,9 @@ artifact ID and `mode: docs-correction`. The distinct docs commit and unchanged
 language fingerprints determine the snapshot; the language release is untouched.
 
 ## Deliberate activation after review
+
+Activation needs a separately reviewed release gate. The temporary hello-world
+gate does not satisfy the retained native release protocol.
 
 1. Verify `l-programming-language/l` is public and immutable releases are enabled.
    Check immutability in Settings before each dispatch: the automatic workflow

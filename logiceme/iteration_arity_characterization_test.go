@@ -23,7 +23,7 @@ func TestIterationArityPublicBoundary(t *testing.T) {
 	const singleSource = sourcePrefix + "\n\n\n\n" + "for value in items {\n    \n}\n" + "\n\n\n" + sourceSuffix
 	const pairSource = sourcePrefix + "\n\n\n\n\n\n" + "for (_, value) in items {\n    \n}\n" + "\n\n\n\n" + sourceSuffix
 	const arityCause = "Rust X: RangeArity requires 0, 1 or 2; CX requires 0 or 1"
-	service := NewLogicemeService(runtimeGenerationResources(t))
+	service := NewLogicemeService(backendTestResources(t))
 	for _, test := range []struct {
 		name, arity, children, source, cause string
 		key                                  bool

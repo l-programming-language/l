@@ -11,12 +11,11 @@ func TestContractsBackendPreflight(t *testing.T) {
 	service := NewLogicemeService(nil)
 	{
 		input := libraryFixture(t)
-		options := GenerationOptions{}
-		ordinary, err := service.Evaluate(input, options)
+		ordinary, err := service.Evaluate(input)
 		if err != nil {
 			t.Fatal(err)
 		}
-		prepared, err := service.PrepareContractGeneration(input, options)
+		prepared, err := service.PrepareContractGeneration(input)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -54,18 +53,18 @@ func TestContractsBackendDependenciesInvalidateAssurance(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	templates, err := loadSupportTemplates(service.resources, false)
+	templates, err := loadSupportTemplates(service.resources)
 	if err != nil {
 		t.Fatal(err)
 	}
 	input := libraryFixture(t)
-	first, err := prepareContractGeneration(input, system, templates, GenerationOptions{}, nil, true)
+	first, err := prepareContractGeneration(input, system, templates, true)
 	if err != nil {
 		t.Fatal(err)
 	}
 	// A temporary in-memory body change leaves the frozen resource untouched.
 	system.Declaration.Content = append(append([]byte(nil), system.Declaration.Content...), '\n')
-	second, err := prepareContractGeneration(input, system, templates, GenerationOptions{}, nil, true)
+	second, err := prepareContractGeneration(input, system, templates, true)
 	if err != nil {
 		t.Fatal(err)
 	}

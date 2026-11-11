@@ -13,7 +13,7 @@ or implement a replacement runtime.
 
 `compile()` and `process()` remain source-only. The executable coordinator
 consumes their result once, validates a sole standalone App, and builds its real
-source bundle through pinned Cargo with runtime inclusion disabled. Core Print
+source bundle through pinned Cargo. Core Print
 is the supported body. Reject runtime-dependent outer effects, continuations and
 multiple Apps; never discard them or synthesize a runner. Runtime will be rebuilt
 in L later.

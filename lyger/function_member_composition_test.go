@@ -66,7 +66,7 @@ func TestComposedFunctionMembers(t *testing.T) {
 				if variant == "changed" {
 					marker = strings.Replace(marker, "composed_", "changed_", 1)
 				}
-				if !bytes.Contains(aml, []byte(marker)) || !strings.Contains(builtinProcessRust(bundle), marker) {
+				if !bytes.Contains(aml, []byte(marker)) || !strings.Contains(generatedRustSource(bundle), marker) {
 					t.Fatalf("selected member %s missing", marker)
 				}
 			}

@@ -20,5 +20,5 @@ func TestFunctionCapturesSourceActionEnvironment(t *testing.T) {
 	if call.Actions[0].Value.Storage.Capture == nil || call.Actions[1].Value.Storage != function.Inputs[0] {
 		t.Fatal("action environment and Function parameter ownership were conflated")
 	}
-	requireFunctionGenerated(t, captureFunctionInteropSource)
+	requireFunctionPlan(t, captureFunctionInteropSource)
 }

@@ -121,7 +121,7 @@ func TestFunctionReturnAliasesKeepSelectedDefinition(t *testing.T) {
 					t.Fatalf("aliased return changed selected definition: %v", err)
 				}
 			}
-			requireFunctionGenerated(t, source)
+			requireFunctionPlan(t, source)
 		})
 	}
 }
@@ -130,8 +130,7 @@ func TestFunctionImportedReturnAlias(t *testing.T) {
 	main := "Use Finish from `local-words.l` as \"Complete\".\n\n" +
 		functionSource("Identity", "\"Value\" as Text", "Text", "Complete Value.") + "Identity `done` as \"Result\".\nShow Result.\n"
 	c := executableTestResult(t, memberResolutionSource{main: main, library: "Use Function's Return as \"Finish\".\n"}).Compilation
-	result := &CompilationResult{Compilation: c}
-	if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
+	if _, err := planOrchestration(c.Semantics); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -141,11 +140,11 @@ func TestFunctionConstructorAliasKeepsCallbackContract(t *testing.T) {
 		"    Publicly create \"Identity\" as a New Callable with Inputs of \"Value\" as Text and Outputs of Text.\nReturn Value.\n\n" +
 		"    Publicly create \"Apply\" as a New Callable with Inputs of \"Callback\" as Identity and Outputs of Text.\nCallback `done` as \"Result\".\nReturn Result.\n\n" +
 		"Apply Identity as \"Selected\".\nShow Selected.\n"
-	requireFunctionGenerated(t, source)
+	requireFunctionPlan(t, source)
 }
 
 func TestFunctionEmptyCallbackKeepsBoundDefinition(t *testing.T) {
 	var source = functionSource("Done", "", "", "Show `done`.") +
 		functionSource("Apply", "\"Callback\" as Function", "", "Callback.") + "Apply Done.\n"
-	requireFunctionGenerated(t, source)
+	requireFunctionPlan(t, source)
 }

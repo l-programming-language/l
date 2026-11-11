@@ -10,7 +10,7 @@ Malformed compositions must return classified errors without changing inputs, re
 
 ## What the evidence does not say
 
-Generation, compilation, and execution establish different facts. Compile-only selection and scheduling cases do not establish runtime fairness, cancellation, cleanup, or lifetime inference. Generated start/stop scripts remain unexecuted. See the [backend ledger](../../../logiceme/testdata/lucid/FAILURES.md) for results tied to specific revisions and hosts.
+Generation, compilation, and execution establish different facts. Compile-only selection and scheduling cases do not establish runtime fairness, cancellation, cleanup, or lifetime inference. Generated start/stop scripts remain unexecuted.
 
 ## Integration limits
 

@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
-	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -17,6 +15,7 @@ import (
 	"testing/fstest"
 
 	distribution "github.com/l-programming-language/l"
+	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 	"github.com/l-programming-language/l/lerrors"
 	Logiceme "github.com/l-programming-language/l/logiceme"
 	Lyger "github.com/l-programming-language/l/lyger"
@@ -65,7 +64,7 @@ func TestDistributionAPI(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		input := []byte("Use IO's Print from `io` as \"Print\".\nCreate \"Hello\" as a New Basic App.\nThe App Prints `Hello World!`.\nExecute Hello.\nShow Hello's Output.\n")
+		input := []byte("Create \"Hello\" as a New Basic App.\nThe App Prints `Hello World!`.\n")
 		project := t.TempDir()
 		main := filepath.Join(project, "main.l")
 		if err := os.WriteFile(main, input, 0600); err != nil {
@@ -79,7 +78,7 @@ func TestDistributionAPI(t *testing.T) {
 		if err != nil || len(units) != 1 {
 			t.Fatalf("units=%v %v", units, err)
 		}
-		bundle, err := Logiceme.NewLogicemeService(nil).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{})
+		bundle, err := Logiceme.NewLogicemeService(nil).Evaluate(units[0].BackendAML)
 		if err != nil || len(bundle.ByteArrays) != 1 || len(bundle.ByteArrays[0]) == 0 {
 			t.Fatalf("same-resource Rust backend=%v", err)
 		}
@@ -89,7 +88,7 @@ func TestDistributionAPI(t *testing.T) {
 		}
 	})
 	t.Run("FS13", func(t *testing.T) {
-		bundle, err := Logiceme.NewLogicemeService(nil).Evaluate(document(), Logiceme.GenerationOptions{})
+		bundle, err := Logiceme.NewLogicemeService(nil).Evaluate(document())
 		if err != nil || len(bundle.ByteArrays) != 1 || len(bundle.ByteArrays[0]) == 0 {
 			t.Fatalf("embedded Rust backend=%v", err)
 		}
@@ -124,9 +123,9 @@ func TestDistributionAPI(t *testing.T) {
 				t.Errorf("nonrelease resource %q", path)
 			}
 		}
-		for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/prelude.l", "builtins/eng/core.l", "dictionaries.json", "stdlib/eng/io/dictionary.l", "builtins/eng/storage/dictionary.l", "builtins/eng/storage/bindings.l", "builtins/eng/storage/values.l", "builtins/eng/storage/control.l", "builtins/eng/storage/display.l", "builtins/eng/storage/collections.l", "builtins/eng/storage/program.l", "builtins/eng/storage/traversal.l", "builtins/eng/storage/execution.l", "stdlib/eng/format/dictionary.l", "stdlib/eng/format/foundations.l", "stdlib/runtime/generated/support.aml", "stdlib/runtime/generated/support.json", "stdlib/runtime/rust/host.rs", "stdlib/runtime/rust/process_unix.rs", "stdlib/runtime/rust/process_other.rs"} {
+		for _, path := range []string{"lexicon/eng/grammar.json", "lexicon/eng/vocabulary.json", "builtins/eng/core.l", "dictionaries.json"} {
 			if !seen[path] {
-				t.Error(fmt.Sprintf("missing required Rust release resource %s", path))
+				t.Errorf("missing required release resource %s", path)
 			}
 		}
 	})
@@ -177,15 +176,12 @@ func TestDistributionAPI(t *testing.T) {
 		// not just a MapFS read-back. The exported value has significant CRLF,
 		// blank lines, escaped backticks, Unicode and no terminal newline.
 		want := "first\r\n雪 `literal`\r\n\r\nlast"
-		ioPath := "stdlib/eng/io/dictionary.l"
-		ioSource := append([]byte(nil), filesystem[ioPath].Data...)
-		ioSource = append(ioSource, []byte("\r\nDefine IO's \"FixtureText\" as `first\r\n雪 \\`literal\\`\r\n\r\nlast`.\r\n")...)
-		filesystem[ioPath] = &fstest.MapFile{Data: ioSource}
-		runtimePath := "stdlib/runtime/rust/host.rs"
-		runtimeBytes := append(append([]byte(nil), filesystem[runtimePath].Data...), []byte("\r\n// exact template 雪 `literal`\r\n\r\n// no final newline")...)
-		filesystem[runtimePath] = &fstest.MapFile{Data: runtimeBytes}
-		input := []byte("Use IO's Print from `io` as \"Print\".\r\nUse IO's FixtureText from `io` as \"message\".\r\nCreate \"Hello\" as a New Basic App.\r\nThe App Prints message.\r\nExecute Hello.")
-		requireLibraries(t, filesystem, input)
+		const dictionaryPath = "stdlib/eng/fixture/dictionary.l"
+		filesystem["dictionaries.json"] = &fstest.MapFile{Data: []byte(`{"format":1,"languages":{"eng":{"fixture":{"entry":"stdlib/eng/fixture/dictionary.l","dictionary":"Fixture"}}}}`)}
+		filesystem[dictionaryPath] = &fstest.MapFile{Data: []byte("Create \"Fixture\" as a Dictionary.\r\nDefine Fixture's \"Message\" as `first\r\n雪 \\`literal\\`\r\n\r\nlast`.\r\n")}
+		input := []byte("Use Fixture's Message from `fixture` as \"message\".\r\nCreate \"Hello\" as a New Basic App.\r\nThe App Prints message.")
+		requireDictionary(t, filesystem, input)
+
 		result, err := Lyger.NewLygerService(Lyger.Options{Resources: filesystem}).Compile(input, filepath.Join(t.TempDir(), "main.l"))
 		if err != nil {
 			t.Fatalf("selected-source byte preservation prerequisite: %v", err)
@@ -197,19 +193,13 @@ func TestDistributionAPI(t *testing.T) {
 		if err != nil || len(units) != 1 {
 			t.Fatalf("source units: %v", err)
 		}
-		bundle, err := Logiceme.NewLogicemeService(filesystem).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{IncludeRuntime: true})
+		bundle, err := Logiceme.NewLogicemeService(filesystem).Evaluate(units[0].BackendAML)
 		if err != nil || len(bundle.ByteArrays) != 1 {
 			t.Fatalf("source byte generation: %v", err)
 		}
-		foundLiteral, foundRuntime := false, false
+		foundLiteral := false
 		for i, name := range bundle.MapArrays[0] {
 			data := bundle.ByteArrays[0][i]
-			if strings.HasSuffix(name, "/host.rs") {
-				foundRuntime = true
-				if !bytes.Equal(data, runtimeBytes) {
-					t.Fatal("runtime template bytes normalized")
-				}
-			}
 			if !strings.HasSuffix(name, "/main.rs") {
 				continue
 			}
@@ -217,8 +207,7 @@ func TestDistributionAPI(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			// Preserve the exact literal without requiring the retired inline
-			// Print implementation or its native dispatch spelling.
+			// The selected source literal must occur exactly once in native output.
 			if bytes.Count(data, quoted) != 1 {
 				t.Errorf("native literal changed or duplicated: want %q in %s", quoted, data)
 			} else {
@@ -226,7 +215,7 @@ func TestDistributionAPI(t *testing.T) {
 			}
 
 		}
-		if !foundLiteral || !foundRuntime {
+		if !foundLiteral {
 			t.Fatal("byte preservation evidence missing from actual generated bundle")
 		}
 	})
@@ -235,7 +224,7 @@ func TestDistributionAPI(t *testing.T) {
 		service := Lyger.NewLygerService(options)
 		options.Language = "mutated"
 		options.Resources = fstest.MapFS{}
-		if _, err := service.Compile([]byte("Show `isolated|`."), filepath.Join(t.TempDir(), "main.l")); err != nil {
+		if _, err := service.Compile([]byte("Create \"Hello\" as a New Basic App.\nThe App Prints `isolated|`."), filepath.Join(t.TempDir(), "main.l")); err != nil {
 			t.Fatalf("caller options mutation reached service: %v", err)
 		}
 		expected, err := Logiceme.NewLogicemeService(nil).Evaluate(document())
@@ -264,7 +253,7 @@ func TestDistributionAPI(t *testing.T) {
 	})
 	t.Run("FS09", func(t *testing.T) {
 		filesystem := snapshot(t)
-		input := []byte("Show `control|`.\n")
+		input := []byte("Create \"Hello\" as a New Basic App.\nThe App Prints `control|`.\n")
 		main := filepath.Join(t.TempDir(), "main.l")
 		if _, err := Lyger.NewLygerService(Lyger.Options{Resources: filesystem}).Compile(input, main); err != nil {
 			t.Fatalf("valid grammar prerequisite; intended assertion not exercised: %v", err)
@@ -304,11 +293,13 @@ func TestDistributionAPI(t *testing.T) {
 		filesystem[grammarPath] = &fstest.MapFile{Data: append(append([]byte(nil), filesystem[grammarPath].Data...), []byte("\r\n\t\r\n")...)}
 		vocabularyPath := "lexicon/eng/vocabulary.json"
 		vocabulary := string(filesystem[vocabularyPath].Data)
-		if !strings.Contains(vocabulary, `"root": "show"`) {
+		if !strings.Contains(vocabulary, `"root": "from"`) {
 			t.Fatal("selected-vocabulary fixture target absent")
 		}
-		filesystem[vocabularyPath] = &fstest.MapFile{Data: []byte(strings.Replace(vocabulary, `"root": "show"`, `"root": "displayselected"`, 1))}
-		source := []byte("Displayselected `environment|`.\n")
+		filesystem[vocabularyPath] = &fstest.MapFile{Data: []byte(strings.Replace(vocabulary, `"root": "from"`, `"root": "fromselected"`, 1))}
+		filesystem["dictionaries.json"] = &fstest.MapFile{Data: []byte(`{"format":1,"languages":{"eng":{"fixture":{"entry":"stdlib/eng/fixture/dictionary.l","dictionary":"Fixture"}}}}`)}
+		filesystem["stdlib/eng/fixture/dictionary.l"] = &fstest.MapFile{Data: []byte("Create \"Fixture\" as a Dictionary.\nDefine Fixture's \"Message\" as `environment|`.\n")}
+		source := []byte("Use Fixture's Message fromselected `fixture` as \"message\".\nCreate \"Hello\" as a New Basic App.\nThe App Prints message.\n")
 		if _, err := Lyger.NewLygerService(Lyger.Options{Resources: filesystem}).Compile(source, filepath.Join(t.TempDir(), "main.l")); err != nil {
 			t.Fatalf("selected vocabulary was not used: %v", err)
 		}
@@ -319,20 +310,15 @@ func TestDistributionAPI(t *testing.T) {
 	t.Run("FS14", func(t *testing.T) {
 		original := snapshot(t)
 		t.Run("Cargo positive control", func(t *testing.T) {
-			bundle, err := Logiceme.NewLogicemeService(original).Evaluate(document(), Logiceme.GenerationOptions{})
+			bundle, err := Logiceme.NewLogicemeService(original).Evaluate(document())
 			if err != nil {
 				t.Fatal(err)
 			}
 			buildBundle(t, bundle)
 		})
-		for _, withRuntime := range []bool{false, true} {
-			if _, err := Logiceme.NewLogicemeService(original).Evaluate(document(), Logiceme.GenerationOptions{IncludeRuntime: withRuntime}); err != nil {
-				t.Fatalf("valid selected-FS prerequisite: %v", err)
-			}
-		}
 		var paths []string
 		for path := range original {
-			if strings.HasPrefix(path, "builtins/segments/") || strings.HasPrefix(path, "builtins/templates/") || (strings.HasPrefix(path, "stdlib/eng/runtime/") || strings.HasPrefix(path, "stdlib/runtime/")) || strings.HasPrefix(path, "stdlib/eng/format/") {
+			if strings.HasPrefix(path, "builtins/segments/") || strings.HasPrefix(path, "builtins/templates/") {
 				paths = append(paths, path)
 			}
 		}
@@ -341,25 +327,11 @@ func TestDistributionAPI(t *testing.T) {
 			t.Run(path, func(t *testing.T) {
 				filesystem := snapshot(t)
 				delete(filesystem, path)
-				if (strings.HasPrefix(path, "stdlib/eng/runtime/") || strings.HasPrefix(path, "stdlib/runtime/")) || strings.HasPrefix(path, "stdlib/eng/format/") {
-					if _, err := Logiceme.NewLogicemeService(filesystem).Evaluate(document(), Logiceme.GenerationOptions{}); err != nil {
-						t.Fatalf("non-runtime generation read an optional runtime asset: %v", err)
-					}
-				}
-				_, err := Logiceme.NewLogicemeService(filesystem).Evaluate(document(), Logiceme.GenerationOptions{IncludeRuntime: true})
+				_, err := Logiceme.NewLogicemeService(filesystem).Evaluate(document())
 				if !errors.Is(err, fs.ErrNotExist) || !strings.Contains(err.Error(), path) {
 					t.Fatalf("selected asset fell back or lost cause for %s: %v", path, err)
 				}
 			})
-		}
-	})
-	t.Run("MG10", func(t *testing.T) {
-		root := os.DirFS(os.Getenv("L_DISTRIBUTION_ROOT"))
-		for _, name := range []string{"host.rs", "process_unix.rs", "process_other.rs"} {
-			path := "stdlib/runtime/rust/" + name
-			if !bytes.Equal(read(t, root, path), read(t, distribution.Files(), path)) {
-				t.Errorf("runtime template substitution: %s", path)
-			}
 		}
 	})
 }
@@ -377,19 +349,19 @@ func (f *tracedFS) Open(name string) (fs.File, error) {
 	f.mu.Unlock()
 	return f.FS.Open(name)
 }
-func requireLibraries(t *testing.T, filesystem fs.FS, source []byte) {
+func requireDictionary(t *testing.T, filesystem fs.FS, source []byte) {
 	t.Helper()
 	traced := &tracedFS{FS: filesystem, reads: map[string]bool{}}
 	result, err := Lyger.NewLygerService(Lyger.Options{Resources: traced}).Compile(source, filepath.Join(t.TempDir(), "main.l"))
 	if err != nil {
-		t.Fatalf("Rust selected-library positive control: %v", err)
+		t.Fatalf("selected-dictionary positive control: %v", err)
 	}
 	if result == nil {
-		t.Fatal("Rust selected-library positive control returned no compilation")
+		t.Fatal("selected-dictionary positive control returned no compilation")
 	}
-	for _, name := range []string{"builtins/eng/core.l", "stdlib/eng/io/dictionary.l"} {
+	for _, name := range []string{"builtins/eng/core.l", "stdlib/eng/fixture/dictionary.l"} {
 		if !traced.reads[name] {
-			t.Errorf("production frontend did not select Rust source %s; negative/runtime assertion not reached", name)
+			t.Errorf("production frontend did not select dictionary resource %s", name)
 		}
 	}
 	if t.Failed() {

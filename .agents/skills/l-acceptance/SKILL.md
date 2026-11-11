@@ -1,6 +1,6 @@
 ---
 name: l-acceptance
-description: Run and interpret the repository acceptance gate and verify current protected inputs, expected bytes and original test outcomes. Use for baseline checks, progress verification and completion claims.
+description: Run and interpret the current repository gate, frozen logeme checks and exact expected output. Use for baseline checks, progress verification and completion claims.
 ---
 
 # Check acceptance

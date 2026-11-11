@@ -59,4 +59,4 @@ Native fragments remain target-specific. Generated Go, Deferred and three-part l
 
 ## Sources and witnesses
 
-The maintained [error model](../error-model.md) owns category definitions and Go inspection behavior. Other primary sources are [diagnostics](../../lyger/diagnostics.go), [error kinds](../../lyger/error_kinds_test.go), [native causes](../../lyger/error_causes_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), [CLI/runtime contract](../cli-build.md), and [validation policy](../development-harness.md). Historical outcomes are not results for this checkout.
+The maintained [error model](../error-model.md) owns category definitions and Go inspection behavior. Other primary sources are [diagnostics](../../lyger/diagnostics.go), [error kinds](../../lyger/error_kinds_test.go), [native causes](../../lyger/error_causes_test.go), [numeric resolution](../../lyger/numeric_resolution_test.go), [build contract](../cli-build.md), and [validation policy](../development-harness.md). Historical outcomes are not results for this checkout.

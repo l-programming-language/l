@@ -22,8 +22,7 @@ type ModuleDescriptor struct {
 }
 type preparedSourceTarget struct {
 	TargetDescriptor
-	Path    string
-	Literal bool
+	Path string
 }
 
 type sourceHeader struct {

@@ -3,12 +3,12 @@
   "reviewPolicy": "Manually reviewed command/option surface from the current parser. A changed parser hash requires review of its behavior and documentation before this manifest is edited. references:generate never updates this approval hash. Aliases and flag-parser spelling variants are grouped with the corresponding option.",
   "sourceHashes": {
     "VERSION": "e6635045e1d2478ec4ca712d8c0e1dfcef8bb7b5b1e8e3bb560d37fe399a9e72",
-    "cmd/l/build.go": "219dbe3a42e915af680e6f79289c0d2944f3341f63ecd27066207629807ca91a",
+    "cmd/l/build.go": "cca93b36e3a516ec21166a43defb357468c612e3a11ff9d92521682332ca65b8",
     "cmd/l/cargo.go": "accf87ab91696319cbd4ff00fa71ba47ddfd2b4a83b3bf5b6e07bb9b415238b7",
     "cmd/l/command.go": "d70edf802da74675287e18111e85feafd5174f3ab2629d2750f01d76e0241d49",
-    "cmd/l/compiler.go": "684b3f9d947653a23cb5d8a315270bcbcb91f7215afe71cb6e5dadd9e218f059",
-    "cmd/l/native_environment.go": "b08fb32dc0e3d30120f58a208156531d4c43430fd14372310ed6d493b7e12762",
-    "contracts/environment.go": "7b8a68eba1d93526c425a66cc8d7c06b73b0733e856724c03921a14d7fae295f",
+    "cmd/l/compiler.go": "ce02d2cc551cdf3022c5e54d15c0d0d13d30082441e1ef4812e89a5bad274bec",
+    "cmd/l/native_environment.go": "4e0db92d028e08a92d34426b8a93f87f2c3f9327164df2b473bed17df0eb7cc7",
+    "contracts/environment.go": "da61116f879a643aa1451ced0df3123e6b05346b8e1daf40c0610e5ba7a6df88",
     "lyger/contracts_bindings.go": "ed7e02e2fd843330f95f2160b5304278bb8d57c5419f0986b4f3d2f47189e0c1",
     "lyger/contracts_lowering.go": "10374a51338aa83c74a138e5efd660bcc637db60aa1df8bfc408c64527628cff",
     "version.go": "34f1fdb048e75894fbf7acc14863ec97b125f9a6769c2b73fa91e178e4120ef5"

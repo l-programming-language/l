@@ -23,7 +23,7 @@ func Canonical(name string) bool {
 		case "runtime", "segments", "templates", "operations":
 			return false
 		}
-		return len(parts) == 3 && (parts[2] == "core.l" || parts[2] == "prelude.l") || len(parts) >= 4 && parts[2] == "storage"
+		return len(parts) == 3 && parts[2] == "core.l"
 	case "stdlib":
 		return parts[1] != "runtime"
 	}

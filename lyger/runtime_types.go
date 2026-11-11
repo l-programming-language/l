@@ -67,18 +67,16 @@ func (a runtimeTypeRef) accepts(b runtimeTypeRef) bool {
 	return a.Kind == valueThing || a.equal(b)
 }
 
-// Native spellings are type atoms consumed by selected declarations. They
-// contain no construction, conversion, or executable behavior.
-var runtimeStorageTypes = map[valueType]string{
-	valueText: "Vec<u8>", valueNumber: "f64", valueTruth: "bool",
-	valueBytes: "Vec<u8>", valueNull: "()", valueThing: "LValue",
-	valueList: "LList", valueMap: "LMap", valuePointer: "LPointer",
-	valueError: "runtime::Error", valueApp: "std::sync::Arc<runtime::App>", valueFunction: "",
-}
-
-func runtimeTypeName(kind valueType) (string, bool) {
-	name, ok := runtimeStorageTypes[kind]
-	return name, ok
+// These are semantic value categories. Their analysis does not prescribe a
+// native representation or require a runtime implementation.
+func runtimeValueKind(kind valueType) bool {
+	switch kind {
+	case valueText, valueNumber, valueTruth, valueBytes, valueNull, valueThing,
+		valueList, valueMap, valuePointer, valueError, valueApp, valueFunction:
+		return true
+	default:
+		return false
+	}
 }
 
 func recordRuntimeType(rec *record) (runtimeTypeRef, error) {
@@ -126,7 +124,7 @@ func sourceTypeFromObject(object *objectGram) (runtimeTypeRef, error) {
 	if !ok {
 		return runtimeTypeRef{}, lerrors.TypeMismatch.Errorf("unknown runtime type %s", object.noun.rawBytes)
 	}
-	if _, ok = runtimeTypeName(kind); !ok {
+	if !runtimeValueKind(kind) {
 		return runtimeTypeRef{}, lerrors.TypeMismatch.Errorf("%s is a source structure, not a runtime type", name)
 	}
 	result := runtimeTypeRef{Kind: kind}

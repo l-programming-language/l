@@ -13,8 +13,8 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
   support assets; Lyger may supply resolved native type/name/value atoms through
   approved AML fields, without executable bodies or closures. It must not depend on Lyger types, Go-only plan pointers
   or source-language parsing. Keep scanning, composition, interpretation and linking distinct.
-- Rust is the only generated language. Evaluate accepts at most one options value,
-  containing only IncludeRuntime; no output-target selector remains.
+- Rust is the only generated language. Evaluate accepts complete framed AML;
+  no runtime-injection or output-target option remains.
   Natural-language selection belongs to Lyger. Process all books without
   contaminating reused services or prior bundles.
 - `NewLogicemeService(fs.FS)` selects a complete provider; nil uses embedded
@@ -47,12 +47,12 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
 - Rust A renders a package comment and collected file-owned imports. The source
   assembler adds graph-owned safety/module items separately at the compiled A
   boundary and composes configuration initialization before user effects. Sole
-  library targets return sources/Cargo only, reject executable settings/runtime
+  library targets return sources/Cargo only, reject executable settings
   and export nonprivate composed items. Keep all of this out of frozen A; see
   [topology and libraries](../builtins/README.md#frontend-topology-and-library-packages).
   Preserve EA's standalone literal-file boundary without using it to replace
   the composition under test.
-- During the core-only reset the CLI compiles one App bundle with runtime inclusion disabled. Native/generated Runtime resources are removed. Do not restore a native runtime, emit a replacement orchestrator, or repair missing source libraries in the backend. Runtime-dependent APIs are outside the current supported build boundary.
+- During the core-only reset the CLI compiles one App bundle. Native/generated Runtime resources and their assembly APIs are removed. Do not restore a native runtime, emit a replacement orchestrator, or repair missing source libraries in the backend.
 
 ## Workflow and verification
 
@@ -69,16 +69,13 @@ and scoped extensions. Follow the
 and separate compilation. The 18 Rust segments are frozen by that suite; keep
 their bytes, interfaces and hash expectations unchanged. Do not substitute a
 different matrix to make the current tests pass.
-The [result ledger](testdata/lucid/FAILURES.md) records exact generation,
-expected/actual native compilation and acceptance separately; it does not establish
-correctness of every compiler branch. Core Print execution is checked by the temporary hello-world gate.
+Core Print execution is checked by the temporary hello-world gate.
 Retain independent backend composition controls without requiring the removed
 library implementation or its private observer interfaces.
 
 Preserve frozen logeme bytes and hash expectations. Remove obsolete library
-fixtures when authorized; do not weaken useful independent compiler assertions. Generated install/start/stop
-scripts are artifacts, never local validation commands. Keep process supervision
-and raw stdout/continuation semantics in dedicated support, not glyphs.
+fixtures when authorized; retain useful independent compiler assertions. Generated
+install/start/stop scripts are artifacts, never local validation commands.
 
 Root [acceptance instructions](../AGENTS.md#current-reset-boundary) and the
 [validation policy](../docs/development-harness.md#validation-authorization)

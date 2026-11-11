@@ -175,37 +175,6 @@ An unnamed callable with a body still has an implementation. A bodyless signatur
 describes an interface requirement. Do not allocate different logical owners
 solely because one target uses different delimiters or item placement.
 
-## Future structural composition
-
-These are design constraints for any future composed structural interface, not
-an implementation schedule or instructions to replace Rust's current native generic
-lists, pattern text or record interfaces. Review any proposed interface separately.
-An available selector is not justification for allocating a new form.
-
-| Role | Required separation |
-| --- | --- |
-| Generic parameters | Declaration group, individual declaration, optional type, optional default definition |
-| Constraints | Subject/type description and requirements; compiler checking alone does not make a constraint a branch evaluation |
-| Generic paths | Type/value-path application, arguments, and invocation; generic syntax is not asynchrony |
-| Sum types | Type declaration/definition, named variants, and structural payload descriptions |
-| Patterns | Neutral structural description, used by a conditional evaluation or irrefutable binding |
-| Calculation grouping | Grouping of E-family expressions, distinct from selection |
-
-Preserve unit, empty positional, and empty named payload shapes. A pattern must
-not choose a branch, clone an operand, or introduce binding modifiers by itself.
-Lifetime parameters are declared. Their uses belong to types. Lifetime relations
-are described constraints. Ownership and escape analysis belong to compiler
-preparation, informed by L scopes and operation effects, not syntax templates.
-The current frontend typed plan uses existing paragraph activations, assignment
-facts and value provenance to select Rust storage/mutability. It preserves aliases
-and snapshots without adding sections or new Meta fields. That bounded lowering
-is distinct from general native lifetime/ownership inference.
-
-The frozen assets and compiler preparation do not form a complete interface for
-these structural features. Changes to maintained bounded Rust compositions need
-an explicit scope and independent test expectations. Dedicated const-generic, independent `where`, per-method generic
-and implementation interfaces remain separate work.
-
 ## Technical provenance
 
 The maintainer-supplied *High-Level Programing Language Source Code Assembler

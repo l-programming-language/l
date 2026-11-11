@@ -16,7 +16,7 @@ A Function provides an explicit typed callable boundary and Return. A source act
 
 Choose a meaning before declaration syntax. Distinguish an action, its actor constructor, an exact-target modifier, a predicate and a noun denoting a value, resource, field, layout or native pattern. Inspect what callers receive and what changes. [Registration rules](../spec/definitions.md#declaration-roles-and-identity) explain the chosen form; they do not prove that the design is useful.
 
-Prefer one possessive in a declaration, such as `Dictionary's Word`. Dot-qualified names are not valid authored L. Each deeper ownership level needs a semantic reason, such as a nominal target, representation-owned field or owner-specific policy. This convention does not flatten useful member access or justify exposing private helpers.
+Prefer one possessive in a declaration, such as `Dictionary's Word`. Dot-qualified names are not valid authored L; dotted catalog identities are documentation notation. Deeper declarations need a semantic owner, such as a nominal target or representation-owned field. Nested member access does not require equally deep declarations or public helpers.
 
 Use single-word roots and keep helpers private unless callers need their interfaces. A reusable mechanism should have an appropriate source owner. One caller does not by itself make a helper unnecessary, and a useful L composition need not be split into one word per step.
 

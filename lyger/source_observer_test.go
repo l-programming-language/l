@@ -1,6 +1,7 @@
 package Lyger
 
 import (
+	"strings"
 	"testing"
 
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
@@ -24,21 +25,14 @@ func observeBundleMain(t *testing.T, b Logiceme.Executable) *observedSourceFile 
 	return &observedSourceFile{nativetest.ObserveRustMain(t, b.ByteArrays, b.MapArrays)}
 }
 
-func observedMethodName(name string) string {
-	aliases := map[string]string{"Await": "app_wait", "Build": "app_build", "Run": "app_run", "Stop": "app_stop", "Output": "app_output", "Error": "app_error", "Show": "runtime_show", "Fail": "runtime_fail", "ClaimContinuation": "invocation_claim", "FinishContinuation": "invocation_finish", "Finish": "runtime_finish", "Shutdown": "runtime_shutdown", "SetSource": "app_set_source"}
-	if value, ok := aliases[name]; ok {
-		return value
-	}
-	return name
-}
-func phase1Calls(f *observedSourceFile, name string) int {
-	count := 0
-	for _, fn := range f.Functions() {
-		for _, call := range nativetest.RustCalls(fn.Body) {
-			if call.Name == observedMethodName(name) {
-				count++
+func generatedRustSource(bundle Logiceme.Executable) string {
+	var result strings.Builder
+	for i, paths := range bundle.MapArrays {
+		for j, path := range paths {
+			if strings.HasSuffix(path, ".rs") {
+				result.Write(bundle.ByteArrays[i][j])
 			}
 		}
 	}
-	return count
+	return result.String()
 }

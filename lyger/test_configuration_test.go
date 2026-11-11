@@ -1,6 +1,7 @@
 package Lyger
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"strings"
@@ -121,4 +122,34 @@ func assertFrontendResources(t *testing.T, c *Compilation) {
 			t.Errorf("Rust application metadata: %s AppLang=%q", app.ID, app.Meta["AppLang"])
 		}
 	}
+}
+
+func compileTestSource(t *testing.T, source string, imports map[string]string, cfg Options) (*CompilationResult, error) {
+	t.Helper()
+	root := t.TempDir()
+	for name, text := range imports {
+		writeSourceFile(t, root, name, text)
+	}
+	main := writeSourceFile(t, root, "main.l", source)
+	input := []byte(source)
+	result, err := NewLygerService(cfg).Compile(input, main)
+	if !bytes.Equal(input, []byte(source)) {
+		t.Fatal("frontend changed the supplied L source")
+	}
+	if result != nil {
+		assertFrontendResources(t, result.Compilation)
+	}
+	return result, err
+}
+
+func requireSourceCompilation(t *testing.T, source string, imports map[string]string) *CompilationResult {
+	t.Helper()
+	result, err := compileTestSource(t, source, imports, canonicalTestOptions())
+	if err != nil {
+		t.Fatalf("frontend contract prerequisite failed; source generation and native execution not exercised: %v", err)
+	}
+	if result == nil || result.Compilation == nil || result.Compilation.Semantics == nil || result.Compilation.Program == nil {
+		t.Fatal("frontend did not return a complete semantic program")
+	}
+	return result
 }

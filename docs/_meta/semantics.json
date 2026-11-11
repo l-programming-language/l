@@ -9,18 +9,18 @@
     "lexicon/eng/vocabulary.json": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c",
     "lyger/binding.go": "1c82c4334e2bca7481c8a4fd0253f66bf70c5cb82c6c6bdccb908ce73d7a9578",
     "lyger/definition_bindings.go": "7729518ee61aad720085adb17bb201bfdcecaffd068625fda7b9dfd57e9586b8",
-    "lyger/function_composition.go": "2330be73b9c34b9fd83475b06d41fe5d2595ac6bf8a4bc7961b03da26ac4a23e",
-    "lyger/function_definitions.go": "1888437b6c54abf864ee600cb576e7a2bf905204777e044d86382da8ff8595dd",
+    "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
+    "lyger/function_definitions.go": "0ea998503ec2a3c1a107217d52629a1e4b9d2a02f32a24db6a95f4abea0919dd",
     "lyger/lowering.go": "e39ec42ec18f531633efe629e147a37edeb3ff638c526ab4e795b3b0ac85efcb",
-    "lyger/runtime_types.go": "4334d0bc85798b5afac5fa32ba1dd33dc1b95e887a707e5e6f3995a635e363fc",
+    "lyger/runtime_types.go": "68e235a0c65f596b91f5e2a6326b260f5722d772547f914d011a917384dd7bb0",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
     "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
-    "lyger/storage_words.go": "8d3867cc1aa5b546a1c204aca2c0272c9e4fef97b688b5cc06ce4c4f4b61ba79",
     "lyger/token_forms.go": "41bc8a6d505fdea4f6c351f73060f0fd422745a5b5c083c8354fe7ade4013d6a",
     "lyger/types.go": "08db7741ed9a099f34f4bd84a0af3e22f4f62e44e396ca5adca8dc20b35386ba",
     "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
-    "lyger/word_values.go": "1b03045f3baa261c7410ab5e70cca35aff72ff3835ea6f2d018fdd0f72c3c0b3"
+    "lyger/native_bindings.go": "8d84fb1a479c721cdf04803d3e96ff0b371f17c286c8edf8f82a749c189ce9db",
+    "lyger/native_composition.go": "ddaefeb909467b13b7c5d61e32c4a04e20e2a7a04c5c2e2a6dc110160c82e579"
   },
   "entries": [
     {
@@ -61,7 +61,7 @@
         "Text",
         "Texts"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:number",
@@ -101,7 +101,7 @@
         "Number",
         "Numbers"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:truth",
@@ -141,7 +141,7 @@
         "Truth",
         "Truths"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:thing",
@@ -154,7 +154,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -221,7 +221,7 @@
         "Byte",
         "Bytes"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:bytes",
@@ -234,7 +234,7 @@
         "lyger/utilities.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -269,7 +269,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -309,7 +309,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -349,7 +349,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -416,7 +416,7 @@
         "Dictionary",
         "Dictionaries"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:app",
@@ -456,7 +456,7 @@
         "App",
         "Apps"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:service",
@@ -469,7 +469,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -536,7 +536,7 @@
         "Class",
         "Classes"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:object",
@@ -576,7 +576,7 @@
         "Object",
         "Objects"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:attribute",
@@ -616,7 +616,7 @@
         "Attribute",
         "Attributes"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:definition",
@@ -656,7 +656,7 @@
         "Definition",
         "Definitions"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:function",
@@ -671,16 +671,16 @@
         "lyger/source_functions.go",
         "lyger/function_composition.go",
         "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "lyger/storage_words.go",
         "lyger/binding.go",
         "lyger/scope.go",
         "lyger/function_definitions.go",
         "lyger/lowering.go",
-        "lyger/token_forms.go"
+        "lyger/token_forms.go",
+        "lyger/native_bindings.go",
+        "lyger/native_composition.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "wordRef": "builtin:function"
     },
@@ -700,7 +700,7 @@
       ],
       "witnesses": [],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:operation",
@@ -718,7 +718,7 @@
       ],
       "witnesses": [],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:noun",
@@ -753,7 +753,7 @@
       "inflections": [
         "Noun"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:verb",
@@ -788,7 +788,7 @@
       "inflections": [
         "Verb"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:adjective",
@@ -802,7 +802,7 @@
       ],
       "witnesses": [],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "word": {
         "partOfSpeech": "noun",
         "definitions": [
@@ -858,7 +858,7 @@
       "inflections": [
         "Adverb"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "value-tag:Thing",
@@ -871,7 +871,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -885,7 +885,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -899,7 +899,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -913,7 +913,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -927,7 +927,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -941,7 +941,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -955,7 +955,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -969,7 +969,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -983,7 +983,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -997,7 +997,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1011,7 +1011,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1025,7 +1025,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1039,7 +1039,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1053,7 +1053,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1067,7 +1067,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1081,7 +1081,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1095,7 +1095,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1109,7 +1109,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1123,7 +1123,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1137,7 +1137,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1151,7 +1151,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1165,7 +1165,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1179,7 +1179,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -1235,7 +1235,7 @@
         "Starting",
         "Starter"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:execute",
@@ -1290,7 +1290,7 @@
         "Executing",
         "Executor"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:build",
@@ -1303,7 +1303,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -1358,7 +1358,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -1413,7 +1413,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -1468,7 +1468,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -1560,7 +1560,7 @@
         "Showing",
         "Shower"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:exit",
@@ -1615,7 +1615,7 @@
         "Exiting",
         "Exiter"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:output",
@@ -1628,7 +1628,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -1668,7 +1668,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -1709,7 +1709,7 @@
       ],
       "witnesses": [],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "word": {
         "partOfSpeech": "noun",
         "audience": "authoring",
@@ -1760,7 +1760,7 @@
       ],
       "witnesses": [],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "word": {
         "partOfSpeech": "noun",
         "formRoles": {
@@ -1810,7 +1810,7 @@
       ],
       "witnesses": [],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "word": {
         "partOfSpeech": "verb",
         "formRoles": {
@@ -1864,7 +1864,7 @@
         "builtins/eng/core.l"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -1949,7 +1949,7 @@
       "inflections": [
         "Objective"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:main",
@@ -1962,7 +1962,7 @@
         "builtins/eng/core.l"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "adjective",
@@ -2039,7 +2039,7 @@
       "inflections": [
         "Basic"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:create",
@@ -2094,7 +2094,7 @@
         "Creating",
         "Creator"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:define",
@@ -2149,7 +2149,7 @@
         "Defining",
         "Definer"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:describe",
@@ -2204,7 +2204,7 @@
         "Describing",
         "Describer"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:use",
@@ -2259,7 +2259,7 @@
         "Using",
         "User"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:public",
@@ -2294,7 +2294,7 @@
       "inflections": [
         "Public"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:publicly",
@@ -2329,7 +2329,7 @@
       "inflections": [
         "Publicly"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:new",
@@ -2364,7 +2364,7 @@
       "inflections": [
         "New"
       ],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text."
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:generic",
@@ -2378,7 +2378,7 @@
       ],
       "witnesses": [],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "word": {
         "partOfSpeech": "adjective",
         "definitions": [
@@ -2413,7 +2413,7 @@
       ],
       "witnesses": [],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "word": {
         "partOfSpeech": "noun",
         "definitions": [
@@ -2452,7 +2452,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2503,7 +2503,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2558,7 +2558,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2613,7 +2613,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2668,7 +2668,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2723,7 +2723,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2778,7 +2778,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -2792,7 +2792,7 @@
         "lyger/utilities.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -2827,7 +2827,7 @@
         "lyger/value_kinds.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
@@ -2841,7 +2841,7 @@
         "lyger/runtime_types.go"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -2850,7 +2850,7 @@
             "source": "lyger/runtime_types.go",
             "lines": [
               70,
-              78
+              80
             ]
           }
         ],
@@ -2881,7 +2881,7 @@
         "builtins/eng/core.l"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2937,7 +2937,7 @@
         "builtins/eng/core.l"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2993,7 +2993,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "It",
@@ -3033,7 +3033,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "That",
@@ -3073,7 +3073,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "This",
@@ -3113,7 +3113,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Is",
@@ -3153,7 +3153,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Have",
@@ -3208,7 +3208,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Equal",
@@ -3263,7 +3263,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Not"
@@ -3298,7 +3298,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Less"
@@ -3333,7 +3333,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Greater"
@@ -3368,7 +3368,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Then"
@@ -3403,7 +3403,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "As"
@@ -3438,7 +3438,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Of"
@@ -3473,7 +3473,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "At"
@@ -3508,7 +3508,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "With"
@@ -3543,7 +3543,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "In"
@@ -3578,7 +3578,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Out"
@@ -3613,7 +3613,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "By"
@@ -3648,7 +3648,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "From"
@@ -3683,7 +3683,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "To"
@@ -3718,7 +3718,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Than"
@@ -3753,7 +3753,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "For"
@@ -3788,7 +3788,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Any"
@@ -3823,7 +3823,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "No"
@@ -3858,7 +3858,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "A",
@@ -3898,7 +3898,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "The"
@@ -3933,7 +3933,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "And"
@@ -3968,7 +3968,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Or"
@@ -4003,7 +4003,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "If"
@@ -4038,7 +4038,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Else"
@@ -4073,7 +4073,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Otherwise"
@@ -4108,7 +4108,7 @@
         "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Current reset: configured or source-declared meaning only; executable support is limited to one standalone App with core Print and Text.",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "While"

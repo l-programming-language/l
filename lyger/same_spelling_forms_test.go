@@ -241,7 +241,7 @@ func TestSameSpellingFormsSpeculationIsPure(t *testing.T) {
 func TestSameSpellingFunctionAssignmentPriority(t *testing.T) {
 	source := functionSource("Read|-s|-|-ing|-er", "\"Value\" as Text", "Text", "Return Value.")
 	for _, declaration := range []string{"\"Saved\" is Read.", "Use Read as \"Alias\".\n\"Saved\" is Alias."} {
-		requireFunctionGenerated(t, source+declaration+"\nSaved `copy` as \"Result\".\nShow Result.\n")
+		requireFunctionPlan(t, source+declaration+"\nSaved `copy` as \"Result\".\nShow Result.\n")
 	}
 }
 
@@ -318,7 +318,7 @@ func TestPassivePutRejectsUnsupportedAndIncompatibleOperands(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			result, err := distributionFrontend(t, tc.source+"Create \"Witness\" as a New Basic App.\n", nil)
 			if err == nil {
-				_, err = result.OrchestratorUnit("entry", executableTestCompanions(result))
+				_, err = planOrchestration(result.Compilation.Semantics)
 			}
 			if err == nil || !strings.Contains(err.Error(), tc.diagnostic) {
 				t.Fatalf("expected %q, got %v", tc.diagnostic, err)
@@ -355,7 +355,7 @@ func TestConstructionRequiresNominalRole(t *testing.T) {
 		"alias actor":   leaf + "Use Fold as \"Alias\".\nCreate \"Selected\" as a New Aliaser of 7.\n",
 		"noun alias":    "Define \"Folded\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nUse Folded as \"Alias\".\nCreate \"Selected\" as a New Alias.\n",
 		"descriptor":    leaf + "Define \"Folded\" as a New Adjective describing any Folder.\nIt describes any Folder as `<DEF><@Folder@><DEF>`.\nCreate \"Selected\" as a New Folded Folder of 7.\n",
-		"foreign noun":  leaf + "Create \"Other\" as a Dictionary.\nDefine Other's \"Folded\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nCreate \"Selected\" as a New Other.Folded.\n",
+		"foreign noun":  leaf + "Create \"Other\" as a Dictionary.\nDefine Other's \"Folded\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nCreate \"Selected\" as a New Other's Folded.\n",
 		"Function type": identityFunction + runtimeFunctionReadSource,
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -467,7 +467,7 @@ func TestSameSpellingNativeFunctionRequiresDeclaredPassive(t *testing.T) {
 }
 
 func TestConstructorRoleActorAliasAndDescriptor(t *testing.T) {
-	const words = "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\nCreate \"Catalog\" as a Dictionary.\nUse Folder as Catalog's \"Parcel\".\nUse Catalog.Parcel as \"Copy\".\nUse Fold as \"Relay\".\nUse Folded as \"Spared\".\n" +
+	const words = "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\nCreate \"Catalog\" as a Dictionary.\nUse Folder as Catalog's \"Parcel\".\nUse Catalog's Parcel as \"Copy\".\nUse Fold as \"Relay\".\nUse Folded as \"Spared\".\n" +
 		"Define \"Tracked\" as a New Adjective describing any Folder.\nIt describes any Folder as `<DEF><@Folder@><DEF>`.\n"
 	c := paragraphPublicationSource(t, words+"Create \"Selected\" as a New Copy of 7.\nCreate \"Wrapped\" as a New Tracked Relay of 7.\nCreate \"Passivealias\" as a New Tracked Spared of 7.\n")
 	if c.Error != nil {

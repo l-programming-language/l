@@ -52,17 +52,3 @@ func TestFailureFootprints(t *testing.T) {
 		}
 	})
 }
-
-func TestCleanupFailurePolicy(t *testing.T) {
-	cleanup := []CleanupFailure{{ID: "second", Message: "second cleanup failure", LaunchOrder: 2}, {ID: "first", Message: "first cleanup failure", LaunchOrder: 1}, {ID: "first", Message: "duplicate observer", LaunchOrder: 1}}
-	report := RuntimeCleanupReport("primary failure", 1, cleanup)
-	if report.Primary != "primary failure" || report.ExitStatus != 1 || len(report.Secondary) != 2 || report.Secondary[0].ID != "first" || report.Coverage != Known {
-		t.Fatalf("cleanup handling changed: %+v", report)
-	}
-	if got := RuntimeCleanupReport("", 0, cleanup); got.ExitStatus != 1 {
-		t.Fatalf("cleanup failure preserved success: %+v", got)
-	}
-	if got := RuntimeCleanupReport("accepted signal", 143, cleanup); got.ExitStatus != 143 {
-		t.Fatalf("cleanup replaced accepted terminal status: %+v", got)
-	}
-}

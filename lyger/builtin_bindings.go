@@ -217,11 +217,7 @@ func (c *Compilation) instantiateConstruction(node *constructionNode, header def
 			result.source = c.operandSource(node.Source.noun)
 		}
 		if header.implicitName == nil {
-			var descriptors []string
-			if instance.result == nil {
-				descriptors = []string{"Storage.Produced"}
-			}
-			instance, err = c.instantiateDescribedBuiltin("Storage.Binding", descriptors, map[string]DefinitionArgument{"Name": result, "Value": {Kind: definitionArgDefinition.String(), Definition: &instance}})
+			instance, err = bindDefinitionResult(result, DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &instance})
 			if err != nil {
 				return DefinitionInstance{}, err
 			}
@@ -410,7 +406,7 @@ func (c *Compilation) callableTemplate(rec *record, active map[*record]bool) (*D
 }
 
 // Value-taking metadata receives a named result, never a nested executable
-// composition. The selected Binding definition owns the operation and storage.
+// composition. Compiler AML binding preserves its once-only evaluation.
 func (c *Compilation) atomArgument(argument DefinitionArgument) (DefinitionArgument, error) {
 	if argument.atoms != nil {
 		atoms := append([]DefinitionArgument(nil), (*argument.atoms)...)
@@ -435,7 +431,7 @@ func (c *Compilation) atomArgument(argument DefinitionArgument) (DefinitionArgum
 	c.definitionValues[argument.Definition] = true
 	defer delete(c.definitionValues, argument.Definition)
 	name := c.definitionLabel()
-	bound, err := c.instantiateDescribedBuiltin("Storage.Binding", []string{"Storage.Produced"}, map[string]DefinitionArgument{"Name": definitionReferenceArgument(name), "Value": argument})
+	bound, err := bindDefinitionResult(definitionReferenceArgument(name), argument)
 	if err != nil {
 		return DefinitionArgument{}, err
 	}
@@ -463,5 +459,14 @@ func (c *Compilation) instantiateTemplate(template *DefinitionTemplate, argument
 			bindings[slot.Name] = argument
 		}
 	}
-	return template.Instantiate(bindings)
+	instance, err := template.Instantiate(bindings)
+	if err == nil && instance.result == nil && template.hasDeclarationName() && len(template.Slots) > 0 {
+		// A selected declaration's first Key slot names its result even when
+		// forwarded through a named source action. Keep the bound identity;
+		// never recover a name from rendered AML.
+		if name := bindings[template.Slots[0].Name]; name.reference != "" {
+			instance.result = &name
+		}
+	}
+	return instance, err
 }

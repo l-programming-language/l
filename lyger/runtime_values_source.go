@@ -29,7 +29,7 @@ func runtimeObjectKind(object *objectGram) (valueType, bool, error) {
 		return valueInvalid, false, nil
 	}
 	explicit := initialized || kind == valueNull || kind == valueList || kind == valueMap
-	_, runtime := runtimeTypeName(kind)
+	runtime := runtimeValueKind(kind)
 	return kind, explicit && runtime && kind != valueApp && kind != valueFunction, nil
 }
 

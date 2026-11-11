@@ -21,8 +21,8 @@ func TestMemberSourceGeneratesBuildableSource(t *testing.T) {
 	root := distributiontest.RepoRoot(t)
 	config := Lyger.Options{Language: Lyger.DefaultLanguage, AssetRoot: root, Resources: os.DirFS(root)}
 	for _, tc := range []struct {
-		name, app, text, owner, aliases, runtimeMembers string
-		encodedText                                     string
+		name, app, text, owner, aliases string
+		encodedText                     string
 	}{
 		{
 			name: "adjacent literal spans", app: "FragmentApp", text: "first``second",
@@ -39,10 +39,6 @@ func TestMemberSourceGeneratesBuildableSource(t *testing.T) {
 		{
 			name: "aliased scoped members", app: "ForecastApp", text: "through copied member 雪",
 			owner: "it's", aliases: "Use Archive as \"CopyArchive\".\nUse CopyArchive's Render as \"Display\".\n",
-			runtimeMembers: "Execute ForecastApp.\n" +
-				"If it has an Error, exit with ForecastApp's Error, else define \"response\" as ForecastApp's Output.\n" +
-				"If message isnt response, exit with an error of `unexpected output`.\n" +
-				"Otherwise, show response and then exit.\n",
 		},
 		{
 			name: "encoded backend delimiters", app: "EncodingApp",
@@ -55,7 +51,7 @@ func TestMemberSourceGeneratesBuildableSource(t *testing.T) {
 			directory := t.TempDir()
 			library := "Use Print as \"Emit\".\nCreate \"Archive\" as a Dictionary.\nUse Emit as " + tc.owner + " \"Render\".\n"
 			body := tc.aliases + "\"message\" is `" + tc.text + "`.\n" +
-				"Create \"" + tc.app + "\" as a New Basic App.\nThe App Displays message.\n" + tc.runtimeMembers
+				"Create \"" + tc.app + "\" as a New Basic App.\nThe App Displays message.\n"
 			source := []byte("Use `library.l`.\n" + body)
 			path := filepath.Join(directory, "story.l")
 			for name, content := range map[string][]byte{"library.l": []byte(library), "story.l": source} {

@@ -193,7 +193,7 @@ validated, including duplicate and reserved-support collisions.
 `AppMeta.AppGenDir` is separate from object placement: it does not relocate the
 objects assembled from Services/Objects. Flat Rust support looks for
 `main.rs` beneath AppGenDir, defaulting to `/src` when it is missing or empty,
-and puts configuration/runtime source support beside it. Keep this value aligned
+and puts configuration source support beside it. Keep this value aligned
 with the entry object's resolved path. To use the minimal outline's `/main.rs`,
 set AppGenDir to `/`. An empty value selects `/src/main.rs` for Rust. Cargo's
 binary path is then rendered relative to the manifest. A `root` Type cannot
@@ -270,8 +270,8 @@ are rewritten.
 
 One Book produces one Cargo package. A package containing binaries has at most
 one library and exactly one Primary binary. Alternatively, a sole library target
-with `Primary: false` returns only declared sources and Cargo.toml. IncludeRuntime
-and supplied executable SETTINGS reject. Explicit targets disable automatic bin, lib,
+with `Primary: false` returns only declared sources and Cargo.toml.
+Supplied executable SETTINGS reject. Explicit targets disable automatic bin, lib,
 example, test and benchmark discovery. Additional binaries are source artifacts,
 not new L App identities. Flat inputs keep one binary at AppGenDir/main.rs.
 EA remains an opaque whole-file exception and supplies its own literal header.
@@ -370,29 +370,25 @@ attributes/module assembly described above. Do not substitute a
 whole-file EA for the feature under composition.
 
 An explicit source/module graph determines which file declares a module. An App
-book is a separate project, not a module of the orchestrator. File-level inner
+book is a separate project. File-level inner
 attributes and item-level outer attributes have different attachment rules.
-The source assembler supplies config/runtime/process declarations independently
-of A. Plain composed entries with SETTINGS receive initialization before user
-effects. The runtime entry initializes configuration before creating Tokio.
-Compile-only tests and supervised runtime tests provide different evidence.
+The source assembler supplies configuration declarations independently of A.
+Plain composed entries with SETTINGS receive initialization before user effects.
 
 Native source suffixes are fixed. Outline/Object metadata controls paths.
 Validate final paths, duplicate outputs and reserved support collisions. Do not
 derive filenames from native fragment text or from unrelated later Type fields.
 
-## Evaluation options and application bundles
+<a id="evaluation-options-and-application-bundles"></a>
+
+## Evaluation and application bundles
 
 ```go
-bundle, err := service.Evaluate(completeAML, GenerationOptions{
-    IncludeRuntime: false,
-})
+bundle, err := service.Evaluate(completeAML)
 ```
 
-The call is shown from the Logiceme package's perspective. Omitted and
-zero-value options omit runtime support. IncludeRuntime remains an explicit API
-request, but its supporting resources are removed during the reset.
-Rust output is independent of Lyger's language selection.
+Rust output is independent of Lyger's language selection. The backend has no
+runtime-injection option.
 Input and earlier returned bundles remain unchanged after every call.
 
 Rust evaluates all books in source order, returning one project per application.
@@ -430,9 +426,8 @@ inventories, dependency metadata, exact bytes and no unexpected Go files for a
 Rust target. Compile the actual returned project when that stage is required.
 Never substitute expected code or formatting repairs. See the
 [minimum composed corpus](../builtins/CONTRACTS.md#verification-contract).
-The [result ledger](testdata/lucid/FAILURES.md) records revision-specific generation,
-compilation and execution evidence. Three Lucid future cases have bounded execution
-checks. Deployment scripts remain unexecuted.
+Three Lucid future cases have bounded execution checks. Deployment scripts remain
+unexecuted.
 
 Native fragments are appropriate for atoms and external calls. They must not
 replace the feature under test. EA is the emergency standalone whole-file

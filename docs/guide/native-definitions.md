@@ -1,6 +1,6 @@
 # Write native-backed definitions
 
-Compose policy in L and keep each native leaf to one bounded call, operator, projection, constructor, pattern or return. Branching, sequencing, iteration, error policy and resource selection belong in source compositions.
+Compose library algorithms in L and keep each native leaf to one bounded call, operator, projection, constructor, pattern or return. Lyger lowers grammatical control flow and bindings through frozen AML interfaces. These compiler instructions do not require library implementations.
 
 ## Start from the existing foundation
 

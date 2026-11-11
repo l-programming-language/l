@@ -33,22 +33,12 @@ async function retainedFile(root, path) {
   return { name, bytes: await regular(path) };
 }
 
-// Generate only a local seed package. External package records remain byte-for-byte
-// copies of the compiler's lock fragment; the production dependency rows own versions.
-export function dependencySeed(runtimeSource, retainedLock) {
-  const start = runtimeSource.indexOf('func runtimeDependencies(');
-  assert(start >= 0, 'Missing production runtime dependency contract');
-  const body = runtimeSource.slice(start).split('\n\tresult :=')[0];
-  const rows = [...body.matchAll(/`((?:tokio|nix) = \{[^`]+\})`/g)].map((match) => match[1]);
-  assert(rows.length === 2 && new Set(rows.map((row) => row.split(' ')[0])).size === 2, 'Ambiguous runtime dependency contract');
-  for (const row of rows) {
-    const [, name, version] = row.match(/^(tokio|nix) = \{ version = "=([0-9.]+)"/) || [];
-    assert(name && retainedLock.includes(`name = "${name}"\nversion = "${version}"\nsource = `), `Runtime dependency is absent from retained lock: ${row}`);
-  }
-  assert(retainedLock.startsWith('[[package]]\n') && !retainedLock.includes('name = "l-release-dependencies"'), 'Unexpected compiler lock fragment');
+// Standalone core builds need no external crates. Keep the setup package local
+// and locked so the installer can verify the pinned Cargo toolchain offline.
+export function dependencySeed() {
   return {
-    manifest: '[package]\nname = "l-release-dependencies"\nversion = "0.0.0"\nedition = "2024"\npublish = false\n\n[dependencies]\n' + rows.join('\n') + '\n',
-    lock: '# Release-local root; external records are retained by L.\nversion = 4\n\n[[package]]\nname = "l-release-dependencies"\nversion = "0.0.0"\ndependencies = [\n "nix",\n "tokio",\n]\n\n' + retainedLock,
+    manifest: '[package]\nname = "l-release-dependencies"\nversion = "0.0.0"\nedition = "2024"\npublish = false\n\n[dependencies]\n',
+    lock: 'version = 4\n\n[[package]]\nname = "l-release-dependencies"\nversion = "0.0.0"\n',
   };
 }
 
@@ -153,7 +143,7 @@ export async function pack({ root, target, binary, output, runs, since, signing 
     await copyFile(join(root, 'scripts/setup-release.sh'), join(stage, 'setup-release.sh'));
     await chmod(join(stage, 'setup-release.sh'), 0o755);
     await writeFile(join(stage, 'toolchain-version'), pins.rust + '\n');
-    const seed = dependencySeed(await readFile(join(root, 'logiceme/bundle_support.go'), 'utf8'), await readFile(join(root, 'cmd/l/cargo_dependencies.lock'), 'utf8'));
+    const seed = dependencySeed();
     await writeFile(join(stage, 'dependencies/Cargo.toml'), seed.manifest);
     await writeFile(join(stage, 'dependencies/Cargo.lock'), seed.lock);
     await writeFile(join(stage, 'dependencies/src/main.rs'), 'fn main() {}\n');

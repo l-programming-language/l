@@ -150,7 +150,7 @@ test('a page cannot emit conflicting word indices', async (t) => {
 
 test('malformed or inline word indices do not silently disappear', async (t) => {
   const root = await fixture(t, { 'docs/start.md': '# Words\n' });
-  for (const directive of ['<!-- word-index:eng:IO -->', '<!-- word-index:eng/io -->', 'Text <!-- word-index --> after.']) {
+  for (const directive of ['<!-- word-index:eng:Fixture -->', '<!-- word-index:eng/fixture -->', 'Text <!-- word-index --> after.']) {
     await assert.rejects(project(root, '# Words\n\n' + directive + '\n'), /Invalid word-index directive/);
   }
 });
@@ -207,12 +207,12 @@ test('word-definition projection rejects unowned directives and preserves litera
 });
 
 test('authoring dictionaries require the same real owner and source as public library records', () => {
-  const index = { format: 1, languages: { eng: { storage: { entry: 'builtins/eng/storage/dictionary.l', dictionary: 'Storage' } } } };
-  const namespace = { id: 'storage', kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'storage' }, visibility: 'namespace', support: 'internal', doc: 'docs/storage.md#details', sources: ['builtins/eng/storage/dictionary.l'] };
-  const author = { id: 'option', kind: 'authoring-word', dictionary: namespace.dictionary, sources: namespace.sources };
-  assert.deepEqual(validateStdlib(index, [page('docs/storage.md', '/docs/internals/storage/')], [namespace, author]).map((row) => [row.key, row.internal, row.exports]), [['storage', true, []]]);
+  const index = { format: 1, languages: { eng: { workshop: { entry: 'fixtures/workshop/dictionary.l', dictionary: 'Workshop' } } } };
+  const namespace = { id: 'workshop', kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'workshop' }, visibility: 'namespace', support: 'internal', doc: 'docs/workshop.md#details', sources: ['fixtures/workshop/dictionary.l'] };
+  const author = { id: 'author', kind: 'authoring-word', dictionary: namespace.dictionary, sources: namespace.sources };
+  assert.deepEqual(validateStdlib(index, [page('docs/workshop.md', '/docs/internals/workshop/')], [namespace, author]).map((row) => [row.key, row.internal, row.exports]), [['workshop', true, []]]);
   assert.throws(() => validateStdlib(index, [], [namespace, { ...author, dictionary: { lexicon: 'eng', key: 'missing' } }]), /dictionary owner/);
-  assert.throws(() => validateStdlib(index, [], [namespace, { ...author, sources: ['builtins/eng/storage/control.l'] }]), /dictionary source/);
+  assert.throws(() => validateStdlib(index, [], [namespace, { ...author, sources: ['fixtures/workshop/other.l'] }]), /dictionary source/);
   assert.throws(() => validateStdlib(index, [], [namespace, { ...author, dictionary: undefined }]), /dictionary owner/);
 });
 
@@ -298,11 +298,11 @@ test('canonical excerpts retain selected line bytes, escape literal content and 
 });
 
 test('excerpt freshness hashes the complete canonical file before selecting lines', async (t) => {
-  const code = 'outside excerpt\nShow `inside`.\n';
+  const code = '*** outside excerpt ***\n"value" is `inside`.\n';
   const input = '# Excerpt\n\n<!-- example:part -->\n';
   const root = await fixture(t, { 'docs/start.md': input, 'example.l': code });
   const example = { id: 'part', source: 'example.l', sha256: sha256(code), classification: 'fragment', lines: { start: 2, end: 2 } };
-  await assert.rejects(project(root, input, { examples: [{ ...example, sha256: sha256('Show `inside`.\n') }] }), /Stale example hash/);
+  await assert.rejects(project(root, input, { examples: [{ ...example, sha256: sha256('"value" is `inside`.\n') }] }), /Stale example hash/);
   await fs.writeFile(path.join(root, 'example.l'), code.replace('outside excerpt', 'changed outside excerpt'));
   await assert.rejects(project(root, input, { examples: [example] }), /Stale example hash/);
 });
@@ -339,7 +339,7 @@ test('invalid UTF-8 inclusion is explicitly escaped instead of silently replaced
 
 test('inclusions reject stale hashes and unknown IDs', async (t) => {
   const text = '# Example\n\n<!-- example:x -->\n';
-  const root = await fixture(t, { 'docs/start.md': text, 'example.l': 'Show `x`.\n' });
+  const root = await fixture(t, { 'docs/start.md': text, 'example.l': '"value" is `x`.\n' });
   await assert.rejects(project(root, text), /Unknown example x/);
   await assert.rejects(project(root, text, { examples: [{ id: 'x', source: 'example.l', sha256: '0'.repeat(64) }] }), /Stale example hash/);
 });
@@ -365,11 +365,11 @@ test('frontmatter source ownership is canonical and generated references have no
 
 test('a second indexed dictionary requires both a dedicated page and reviewed public exports', () => {
   const index = { format: 1, languages: { eng: {
-    io: { entry: 'stdlib/eng/io/dictionary.l', dictionary: 'IO' },
+    fixture: { entry: 'fixtures/fixture/dictionary.l', dictionary: 'Fixture' },
     extra: { entry: 'stdlib/eng/extra/dictionary.l', dictionary: 'Extra' },
   } } };
-  const pages = [page('docs/stdlib/io.md', '/docs/stdlib/eng/io/')];
-  const entries = [{ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'io' }, visibility: 'public', name: 'IO.Print', sources: ['stdlib/eng/io/dictionary.l'] }];
+  const pages = [page('docs/dictionaries/fixture.md', '/docs/stdlib/eng/fixture/')];
+  const entries = [{ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'fixture' }, visibility: 'public', name: 'Fixture.Draw', sources: ['fixtures/fixture/dictionary.l'] }];
   assert.throws(() => validateStdlib(index, pages, entries), /Unclassified indexed dictionary eng\/extra/);
   pages.push(page('docs/stdlib/extra.md', '/docs/stdlib/eng/extra/'));
   assert.throws(() => validateStdlib(index, pages, entries), /Missing reviewed export inventory for eng\/extra/);
@@ -377,7 +377,7 @@ test('a second indexed dictionary requires both a dedicated page and reviewed pu
   entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'extra' }, visibility: 'private', name: 'Extra.Hidden', sources: ['stdlib/eng/extra/dictionary.l'] });
   entries.push({ kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'extra' }, visibility: 'namespace', name: 'Extra', sources: ['stdlib/eng/extra/dictionary.l'] });
   assert.deepEqual(validateStdlib(index, pages, entries).map((row) => [row.key, row.exports]), [
-    ['extra', ['Extra.Value']], ['io', ['IO.Print']],
+    ['extra', ['Extra.Value']], ['fixture', ['Fixture.Draw']],
   ]);
 });
 
@@ -399,16 +399,16 @@ test('catalog includes implementation references without claiming public exports
 
 test('export ownership is distinct from reviewed source dependencies', () => {
   const index = { format: 1, languages: { eng: {
-    io: { entry: 'stdlib/eng/io/dictionary.l', dictionary: 'IO' },
+    fixture: { entry: 'fixtures/fixture/dictionary.l', dictionary: 'Fixture' },
     support: { entry: 'stdlib/eng/support.l', dictionary: 'Support' },
   } } };
-  const pages = [page('docs/stdlib/io.md', '/docs/stdlib/eng/io/'), page('docs/support.md', '/docs/internals/support/')];
-  const owner = { lexicon: 'eng', key: 'io' };
+  const pages = [page('docs/dictionaries/fixture.md', '/docs/stdlib/eng/fixture/'), page('docs/support.md', '/docs/internals/support/')];
+  const owner = { lexicon: 'eng', key: 'fixture' };
   const entries = [
-    { kind: 'stdlib-export', dictionary: owner, visibility: 'public', support: 'supported', name: 'IO.Lined', sources: ['stdlib/eng/io/dictionary.l', 'stdlib/eng/support.l'] },
+    { kind: 'stdlib-export', dictionary: owner, visibility: 'public', support: 'supported', name: 'Fixture.Bold', sources: ['fixtures/fixture/dictionary.l', 'stdlib/eng/support.l'] },
     { kind: 'stdlib-export', dictionary: { lexicon: 'eng', key: 'support' }, visibility: 'namespace', support: 'internal', doc: 'docs/support.md', sources: ['stdlib/eng/support.l'] },
   ];
-  assert.deepEqual(validateStdlib(index, pages, entries).filter((row) => !row.internal).map((row) => [row.key, row.exports]), [['io', ['IO.Lined']]]);
+  assert.deepEqual(validateStdlib(index, pages, entries).filter((row) => !row.internal).map((row) => [row.key, row.exports]), [['fixture', ['Fixture.Bold']]]);
   for (const dictionary of [undefined, { lexicon: 'eng', key: 'unknown' }]) {
     assert.throws(() => validateStdlib(index, pages, [{ ...entries[0], dictionary }]), /Invalid reviewed dictionary owner/);
   }
@@ -538,9 +538,9 @@ test('pages omitted from the sidebar retain their routes, fragments and source l
   assert.match(content, /Canonical source:[\s\S]*docs\/reference.md/);
 });
 
-test('catalog rendering handles additional languages and libraries without IO-specific code', () => {
+test('catalog rendering handles additional languages and libraries without dictionary-specific code', () => {
   const rendered = stdlibCatalog([
-    { language: 'eng', key: 'io', dictionary: 'IO', exports: ['IO.Print'], route: '/docs/stdlib/eng/io/', description: 'Byte output.' },
+    { language: 'eng', key: 'fixture', dictionary: 'Fixture', exports: ['Fixture.Draw'], route: '/docs/stdlib/eng/fixture/', description: 'Test-owned shapes.' },
     { language: 'eng', key: 'vectors', dictionary: 'Vectors', exports: ['Vectors.Length', 'Vectors.Dot'], route: '/docs/stdlib/eng/vectors/', description: 'Vector arithmetic.' },
     { language: 'test', key: 'sample', dictionary: 'Sample', exports: [], internal: true, route: '/docs/internals/sample/', description: 'Internal A | B support.' },
   ]);
@@ -551,7 +551,7 @@ test('catalog rendering handles additional languages and libraries without IO-sp
 });
 
 test('example verification replaces prior success even when the current run fails', async (t) => {
-  const source = 'Show `checked`.\n';
+  const source = 'Create "Fixture" as a New Basic App.\nThe App Prints `checked`.\n';
   for (const scenario of [
     { name: 'invalid invocation', stage: 'configuration', message: /provide --compiler/ },
     { name: 'invalid manifest', stage: 'configuration', message: /JSON/ },

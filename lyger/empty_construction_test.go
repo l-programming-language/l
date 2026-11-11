@@ -56,7 +56,7 @@ func TestEmptyApplicationUsesSourceSequence(t *testing.T) {
 			if err != nil || len(units) != 1 {
 				t.Fatalf("empty App units: %v", err)
 			}
-			bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{IncludeRuntime: false})
+			bundle, err := Logiceme.NewLogicemeService(canonicalTestOptions().Resources).Evaluate(units[0].BackendAML)
 			recordBundle(t, bundle)
 			if err != nil {
 				t.Fatal(err)

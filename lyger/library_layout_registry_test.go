@@ -12,8 +12,11 @@ func TestLibraryLayoutRegistrySourceRoots(t *testing.T) {
 		path  string
 		valid bool
 	}{
-		{"builtins/eng/storage/extra.l", true},
-		{"stdlib/eng/runtime/extra.l", true},
+		{"builtins/eng/core.l", true},
+		{"builtins/fra/core.l", true},
+		{"builtins/eng/prelude.l", false},
+		{"builtins/eng/storage/extra.l", false},
+		{"stdlib/eng/fixture/extra.l", true},
 		{"runtime/eng/extra.l", false},
 		{"stdlib/runtime/extra.l", false},
 		{"stdlib/eng/extra.l", true},

@@ -121,7 +121,7 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 	for i := range ids {
 		destinations[i] = filepath.Join(generationDir, fmt.Sprintf("app-%03d", i))
 	}
-	workspace, err := generated.workspace(c.log, stem, generation, inventory)
+	workspace, err := generated.workspace()
 	if err != nil {
 		return "", err
 	}
@@ -146,7 +146,7 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 	}
 	entry := filepath.Join(stage, "entry")
 	setup(nil)
-	buildErr := compileCargoWorkspace(ctx, nil, workspace.entry, nil, nil, filepath.Join(stage, "workspace"), nil, entry)
+	buildErr := compileCargoWorkspace(ctx, nil, workspace.entry, nil, filepath.Join(stage, "workspace"), nil, entry)
 	if buildErr != nil {
 		buildErr = fmt.Errorf("build Rust workspace: %w", buildErr)
 	}

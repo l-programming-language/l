@@ -147,16 +147,8 @@ func (c *Compilation) composeInstructions(instructions []*instruction, active, d
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	emitter := &orchestrationEmitter{compilation: c, definitionActive: active, definitionDynamic: dynamic}
-	operations, err := emitter.instructions(body)
-	if err != nil {
-		return DefinitionInstance{}, err
-	}
-	composition := DefinitionInstance{Expression: strings.Join(operations, "*"), Dependencies: emitter.dependencies, Bindings: emitter.definitionBindings, sequence: make([]DefinitionInstance, len(operations))}
-	for index, operation := range operations {
-		composition.sequence[index] = DefinitionInstance{Expression: operation}
-	}
-	return composition, nil
+	composer := &nativeInstructionComposer{compilation: c, active: active, dynamic: dynamic}
+	return composer.instructions(body)
 }
 
 func (c *Compilation) definitionScope() func() {

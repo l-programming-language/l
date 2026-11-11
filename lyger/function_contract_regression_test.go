@@ -42,7 +42,7 @@ func TestFunctionConstructorContractRejectsStaticSubstitution(t *testing.T) {
 		"Pointer":  "Define \"saved\" as a New Pointer of Identity.\nPut Other in saved.\n",
 	} {
 		t.Run(name, func(t *testing.T) {
-			if _, err := functionGenerated(t, prefix+source); !errors.Is(err, lerrors.TypeMismatch) {
+			if _, err := compileFunctionPlan(t, prefix+source); !errors.Is(err, lerrors.TypeMismatch) {
 				t.Fatalf("different Function constructor contract accepted: %v", err)
 			}
 		})
@@ -62,7 +62,7 @@ func TestFunctionReturnRejectsDifferentConstructorContract(t *testing.T) {
 	index := strings.LastIndex(prefix, "Return Value.")
 	source := prefix[:index] + "Publicly create \"Finish|-es|-ed|-ing\" for Returning any Text.\n" + prefix[index:] +
 		"    Publicly create \"Relay\" as a New Function with Inputs of \"Value\" as Text and Outputs of Text.\nFinish Value.\n"
-	if _, err := functionGenerated(t, source); !errors.Is(err, lerrors.TypeMismatch) || !strings.Contains(err.Error(), "Return belongs to a different Function constructor contract") {
+	if _, err := compileFunctionPlan(t, source); !errors.Is(err, lerrors.TypeMismatch) || !strings.Contains(err.Error(), "Return belongs to a different Function constructor contract") {
 		t.Fatalf("word expansion substituted its caller's Return definition: %v", err)
 	}
 }

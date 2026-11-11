@@ -75,7 +75,7 @@ func paragraphBindingUses(t *testing.T, compilation *Compilation, spelling strin
 const paragraphAnnounce = "Define \"Announce|-s|-d|-ing|-r\" to `<DEF>BOD^E{|Statement: ~::std::println!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n"
 
 func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphWitness
 	for _, body := range []string{
 		`BOD^E{|Statement: ~::std::print!("{}", <@Output|Thing@>);~|}`,
@@ -125,7 +125,7 @@ func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {
 }
 
 func TestParagraphBindingPrivateAppsKeepRunTargetsAndBodies(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphWitness
 	for _, text := range []string{"first private body", "second private body"} {
 		source.main += "\n    \"message\" is `" + text + "`.\n" +
@@ -321,7 +321,7 @@ func TestParagraphBindingRequiresTokenScope(t *testing.T) {
 }
 
 func TestParagraphBindingDelayedInflectionShadowsOuter(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphWitness + paragraphAnnounce +
 		"Create \"Launch|-es|-ed|-ing\" for Processing a New Announcer.\n" +
 		"\n    \"scopeMarker\" is `private`.\n" +
@@ -347,7 +347,7 @@ func TestParagraphBindingDelayedInflectionShadowsOuter(t *testing.T) {
 }
 
 func TestParagraphBindingSiblingDictionaryMembersKeepOwners(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphWitness + paragraphAnnounce
 	for index, text := range []string{"x1", "x2"} {
 		source.main += fmt.Sprintf("\n    Create \"Tools\" as a Dictionary.\n"+

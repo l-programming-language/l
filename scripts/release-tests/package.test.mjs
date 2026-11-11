@@ -18,16 +18,14 @@ async function temporary(t) {
   return dir;
 }
 
-test('release dependency seed preserves canonical external lock bytes', async () => {
-  const runtime = await readFile(new URL('../../logiceme/bundle_support.go', import.meta.url), 'utf8');
-  const lock = await readFile(new URL('../../cmd/l/cargo_dependencies.lock', import.meta.url), 'utf8');
-  const seed = dependencySeed(runtime, lock);
-  assert.ok(seed.lock.endsWith(lock));
-  assert.match(seed.manifest, /tokio = \{ version = "=1\.53\.1"/);
-  assert.match(seed.manifest, /nix = \{ version = "=0\.31\.3"/);
-  assert.doesNotMatch(seed.manifest, /path =|git =|test|observer|helper/);
-  assert.throws(() => dependencySeed(runtime.replace('=1.53.1', '=9.0.0'), lock), /absent/);
-  assert.throws(() => dependencySeed('', lock), /Missing/);
+test('release setup package has no external dependencies for standalone core builds', () => {
+  const seed = dependencySeed();
+  assert.match(seed.manifest, /name = "l-release-dependencies"/);
+  assert.match(seed.manifest, /publish = false/);
+  assert.match(seed.manifest, /\[dependencies\]\s*$/);
+  assert.match(seed.lock, /^version = 4\n/);
+  assert.deepEqual([...seed.lock.matchAll(/^name = "([^"]+)"$/gm)].map((match) => match[1]), ['l-release-dependencies']);
+  assert.doesNotMatch(seed.lock, /source =|checksum =|dependencies =/);
 });
 
 test('packaging rejects wrong hosts, revisions, stale or incomplete canonical evidence', () => {

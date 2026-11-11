@@ -1,8 +1,7 @@
 # Rust Lucid suite and current verification scope
 
 This maintained Rust end-to-end suite uses frozen templates and independent
-expected bundles. [The result ledger](FAILURES.md) records verification for a
-specific source identity and host.
+expected bundles. Its inventory describes assertions, not a validation result.
 
 ## Current inventory
 
@@ -24,9 +23,8 @@ check executes assertions in the three positive [future cases](#futures).
 All other listed applications are compile-only. Deployment scripts remain
 unexecuted. Compilation establishes neither runtime behavior nor ownership-inference parity.
 
-This guide owns the current inventory and commands. The [dated ledger](FAILURES.md)
-owns observed generation, native compilation and acceptance results. The sections
-below describe each family's composition, rejection and isolation obligations.
+This guide owns the current inventory and commands. The sections below describe
+each family's composition, rejection and isolation assertions.
 
 ## Frozen templates and retained shared tests
 
@@ -35,8 +33,8 @@ paths and SHA-256 hashes of the 18 Rust segment files. The freeze check compares
 the selected resource files against those hashes. There is no automatic update
 mode. The [Rust reference](../../../builtins/README.md) defines the supported
 forms, excluded Deferred interface and integration limits. Keep frozen assets,
-interfaces and hash expectations unchanged. Independent fixture/oracle amendments
-require explicit finite authorization.
+interfaces and hash expectations unchanged. Other fixtures may change within
+authorized reset work; preserve useful independent assertions.
 
 Shared parser, interpreter, conjoinment, source-fragment, communication-operand
 and native `Void` provenance regressions remain. Shared low-level interpreter
@@ -66,9 +64,7 @@ or validation of asynchronous execution contexts.
 The public call is:
 
 ```go
-bundle, err := service.Evaluate(input, GenerationOptions{
-    IncludeRuntime: false,
-})
+bundle, err := service.Evaluate(input)
 ```
 
 The generation runner checks input immutability, one returned application,
@@ -245,20 +241,19 @@ Retain each fixture's initial lockfile and frozen dependency resolution. Missing
 tooling, dependencies or expired deadlines are failures. Generated start/stop
 scripts remain artifacts. Compilation alone does not establish execution behavior.
 
-For requested full repository validation, run `scripts/l-check`. It includes
-linting, unfiltered acceptance and the configured native-compilation stage.
-Report any separately requested future-execution results explicitly. Preserve
-assertions and budgets. Do not substitute focused checks for the gate.
+`scripts/l-check` runs the temporary hello-world gate. It does not run this
+complete Lucid generation/native matrix. Report separately requested checks,
+including future execution, with their exact scope.
 
 Record generation errors/panics, actual bundles and expected references, byte
-differences, Expected/Generated Cargo results, and blocked phases in the
-[dated ledger](FAILURES.md). Classify causes as production generation/validation,
+differences, Expected/Generated Cargo results, and blocked phases in the run's
+artifact directory. Classify causes as production generation/validation,
 support assembly, fixture/harness, infrastructure, or a reviewed expectation-only
 mismatch. Compilation success alone cannot justify the last classification:
 review literal contents, operation order, scopes and every support artifact.
 Use an existing exposing regression when available and repair the responsible
-production layer. Independent expectation amendments require concrete approval,
-never an automatic update from actual output. Keep frozen hashes unchanged.
+production layer. Never update expectations automatically from actual output.
+Keep frozen hashes unchanged.
 Documentation updates establish no new behavioral result; consult the
 [integration limits](../../../builtins/README.md#current-integration-limits)
 before extending a support claim.
@@ -497,9 +492,3 @@ See the [input contract](../../../builtins/README.md#lifetime-and-generic-inputs
 for native String framing, glyph-local scope and declaration/application placement.
 Trait-level inputs do not add method-specific lists. Dedicated const-generic,
 independent where-clause and generic implementation interfaces remain separate work.
-
-## Recording evidence
-
-Follow [Run and retain evidence](#run-and-retain-evidence) for commands, failure
-classification and reporting. [FAILURES.md](FAILURES.md) records the latest dated
-results for their tested revision and host.

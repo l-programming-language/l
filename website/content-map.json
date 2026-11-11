@@ -188,7 +188,7 @@
       "source": "docs/spec/names-and-scope.md",
       "route": "/docs/spec/names-and-scope/",
       "title": "Names, scope, and evaluation state",
-      "description": "Binding, visibility, definite assignment and captured values.",
+      "description": "Binding, visibility, canonical identity and definite assignment.",
       "section": "Language reference",
       "order": 6,
       "role": "normative",
@@ -237,7 +237,7 @@
     {
       "source": "docs/spec/execution.md",
       "route": "/docs/spec/execution/",
-      "title": "Execution and lifecycle",
+      "title": "Execution",
       "description": "Standalone App execution and explicitly unavailable runtime effects.",
       "section": "Language reference",
       "order": 11,

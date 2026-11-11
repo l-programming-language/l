@@ -74,7 +74,7 @@ func TestParagraphCaptureStaticDefinitionSurvivesCallerShadow(t *testing.T) {
 	for _, imported := range []bool{false, true} {
 		for _, aliased := range []bool{false, true} {
 			t.Run(fmt.Sprintf("imported=%t/alias=%t", imported, aliased), func(t *testing.T) {
-				source := paragraphSource(t)
+				source := memberResolutionSource{}
 				definition := "    Define \"privateText\" as `definition text`.\n" + paragraphCaptureDefinition + "\n"
 				source.main = definition
 				definitionFile := "main.l"
@@ -130,7 +130,7 @@ func TestParagraphCaptureImportedRuntimeRequiresActiveStorage(t *testing.T) {
 		{"alias escapes", "Use Report as \"Relay\".\n", "Relay", true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			source := paragraphSource(t)
+			source := memberResolutionSource{}
 			source.main = "\n" +
 				"\"message\" is `worker text`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints message.\n" +
 				"\n    Run Worker.\nUse `local-words.l`.\n"
@@ -160,9 +160,6 @@ func TestParagraphCaptureImportedRuntimeRequiresActiveStorage(t *testing.T) {
 			}
 			if invocationPlan == nil || invocationPlan.CaptureSource == nil || invocationPlan.Actions[0].Value.Storage.Capture == nil {
 				t.Fatal("call did not use its retained environment after active or escaped binding")
-			}
-			if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
-				t.Fatal(err)
 			}
 		})
 	}

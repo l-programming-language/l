@@ -141,10 +141,9 @@ func TestDefinitionNumberPrimitiveParity(t *testing.T) {
 		})
 	}
 	for _, number := range []float64{math.NaN(), math.Inf(1), math.Inf(-1)} {
-		e := &orchestrationEmitter{}
-		bound, err := e.literalValue(&primitive{Type: valueNumber, Number: number})
-		if bound != (emittedExpression{}) || len(e.pending) != 0 || !errors.Is(err, lerrors.Unsupported) || errors.Is(err, lerrors.Syntax) || err.Error() != "non-finite Number is not supported" {
-			t.Fatalf("nonfinite primitive Number changed its failure: %#v/%v/%v", bound, e.pending, err)
+		bound, err := nativeLiteralArgument(&primitive{Type: valueNumber, Number: number})
+		if !reflect.DeepEqual(bound, DefinitionArgument{}) || !errors.Is(err, lerrors.Unsupported) || errors.Is(err, lerrors.Syntax) || err.Error() != "non-finite Number is not supported" {
+			t.Fatalf("nonfinite primitive Number changed its failure: %#v/%v/%v", bound, nil, err)
 		}
 	}
 }
@@ -164,7 +163,7 @@ func TestDefinitionNumberNativeBits(t *testing.T) {
 	body = append(body, `BOD^E{|Statement: ~let native: i64 = 3_i64; assert_eq!(native, 3_i64);~|}`)
 	document := []byte(`<PROGRAM><STRUCTURE><BOOK "Worker"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`" + `</S|><|S|>` + "`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(" + strings.Join(body, "*") + ")`" + `</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`)
 	before := bytes.Clone(document)
-	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate(document, Logiceme.GenerationOptions{})
+	bundle, err := Logiceme.NewLogicemeService(canonicalTestOptions().Resources).Evaluate(document)
 	recordBundle(t, bundle)
 	if err != nil {
 		t.Fatal(err)
@@ -183,7 +182,7 @@ func TestDefinitionNumberSourceAction(t *testing.T) {
 		"Create \"Worker\" as a New Basic App.\n" +
 		"The App Inspects 3.\nThe App Inspects -0.\nThe App Inspects 9007199254740993.\n")
 	before := bytes.Clone(source)
-	result, err := NewLygerService(phase1Options(t)).Compile(source, "number-action.l")
+	result, err := NewLygerService(canonicalTestOptions()).Compile(source, "number-action.l")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -191,7 +190,7 @@ func TestDefinitionNumberSourceAction(t *testing.T) {
 	if err != nil || len(units) != 1 {
 		t.Fatalf("Number action application units: %v", err)
 	}
-	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{})
+	bundle, err := Logiceme.NewLogicemeService(canonicalTestOptions().Resources).Evaluate(units[0].BackendAML)
 	recordBundle(t, bundle)
 	if err != nil {
 		t.Fatal(err)
@@ -206,7 +205,7 @@ func TestDefinitionNumberSourceAction(t *testing.T) {
 
 func runNumberBundle(t *testing.T, bundle Logiceme.Executable) []byte {
 	t.Helper()
-	binary := buildActualBundle(t, bundle, "Worker", false)
+	binary := buildActualBundle(t, bundle, "Worker")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	command := exec.CommandContext(ctx, binary)

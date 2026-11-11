@@ -229,8 +229,8 @@ func (c *Compilation) processInputArguments(object *objectGram) []DefinitionArgu
 }
 
 // The surrounding pattern or iteration introduces the hygienic input name.
-// Rebind that same name inside this Process through the selected annotation
-// leaf, so native checking enforces its authored type and ownership without
+// Rebind that same name through frozen AML declaration/assignment, so native
+// checking enforces its authored type and ownership without
 // evaluating or moving an inactive branch's payload outside that branch.
 func (c *Compilation) annotateProcessInputs(body DefinitionInstance, inputs []DefinitionArgument) (DefinitionInstance, error) {
 	var annotations []DefinitionInstance
@@ -238,8 +238,8 @@ func (c *Compilation) annotateProcessInputs(body DefinitionInstance, inputs []De
 		if input.processType == nil || input.processType.typeAtom == "_" {
 			continue
 		}
-		annotation, err := c.instantiateBuiltin("Storage.Annotation", map[string]DefinitionArgument{
-			"Name": input, "Type": *input.processType, "Value": input,
+		annotation, err := composeNativeAML("OB{|Key: ~<@Temporary|Label@>~, Value: ~<@Value@>~|}*BO{|Key: ~<@Name|Label@>~, Type: ~<@Type|Type@>~|}*O{|Key: ~<@Name|Label@>~, Value: ~<@Temporary|Label@>~|}", input.source, map[string]DefinitionArgument{
+			"Temporary": definitionReferenceArgument(c.definitionLabel()), "Name": input, "Type": *input.processType, "Value": input,
 		})
 		if err != nil {
 			return DefinitionInstance{}, err

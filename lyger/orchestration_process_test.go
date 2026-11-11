@@ -67,10 +67,6 @@ func TestFunctionAwaitUsesProgramRootsAndPreservesCallerSnapshot(t *testing.T) {
 	if returned.Capture == nil || returned == write {
 		t.Fatal("caller did not resume its independent captured snapshot")
 	}
-	result := &CompilationResult{Compilation: compilation}
-	if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
-		t.Fatal(err)
-	}
 }
 
 func TestFunctionInvocationDoesNotInventGlobalAssignmentFacts(t *testing.T) {

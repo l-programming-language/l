@@ -3,9 +3,7 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -14,9 +12,7 @@ import (
 	"testing"
 	"time"
 
-	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
-	"github.com/l-programming-language/l/internal/testsupport/phase1"
 	"github.com/l-programming-language/l/lerrors"
 )
 
@@ -38,7 +34,7 @@ func TestCargoWorkspaceRejectsCollidingBinaryTargets(t *testing.T) {
 	}{
 		{"same App targets", "entry", "worker", "worker", []string{"First", "Second"}, []string{"worker", "worker"}},
 		{"case equivalent App targets", "entry", "Worker", "worker", []string{"First", "Second"}, []string{"Worker", "worker"}},
-		{"orchestrator target", "ENTRY", "entry", "other", []string{"entry_package", "First"}, []string{"ENTRY", "entry"}},
+		{"entry target", "ENTRY", "entry", "other", []string{"entry_package", "First"}, []string{"ENTRY", "entry"}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			directory := t.TempDir()
@@ -49,7 +45,7 @@ func TestCargoWorkspaceRejectsCollidingBinaryTargets(t *testing.T) {
 			output := filepath.Join(directory, "entry")
 			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 			defer cancel()
-			err := compileCargoWorkspace(ctx, apps, entry, nil, nil, workspace, destinations, output)
+			err := compileCargoWorkspace(ctx, apps, entry, nil, workspace, destinations, output)
 			if !errors.Is(err, lerrors.InvalidInput) {
 				t.Errorf("colliding binary targets require InvalidInput, got %v", err)
 			} else {
@@ -92,7 +88,7 @@ func TestCargoWorkspaceAllowsDistinctBinaryTargets(t *testing.T) {
 	outputs := []string{filepath.Join(directory, "first"), filepath.Join(directory, "second")}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	if err := compileCargoWorkspace(ctx, apps, entry, libraries, nil, filepath.Join(directory, "workspace"), outputs, filepath.Join(directory, "entry")); err != nil {
+	if err := compileCargoWorkspace(ctx, apps, entry, libraries, filepath.Join(directory, "workspace"), outputs, filepath.Join(directory, "entry")); err != nil {
 		t.Fatal(err)
 	}
 	for index, want := range []string{"upper\n", "lower\n"} {
@@ -101,78 +97,5 @@ func TestCargoWorkspaceAllowsDistinctBinaryTargets(t *testing.T) {
 		if err != nil || string(stdout) != want || len(stderr) != 0 {
 			t.Errorf("binary %d: stdout=%q stderr=%q error=%v; want %q", index, stdout, stderr, err, want)
 		}
-	}
-}
-
-func TestCLICaseEquivalentCompanionNames(t *testing.T) {
-	parallelIndependentBuildRoot(t)
-	const source = "\n\n" +
-		"Create \"Worker\" as a New Basic App.\nThe App Prints `upper`.\nExecute it.\nShow it's Output.\n\n" +
-		"Create \"worker\" as a New Basic App.\nThe App Prints `lower`.\nExecute it.\nShow it's Output.\n"
-	project := t.TempDir()
-	copyBuildProject(t, distributiontest.RepoRoot(t), project, "names.l", source)
-	project, err := filepath.EvalSymlinks(project)
-	if err != nil {
-		t.Fatal(err)
-	}
-	recorder := nativetest.CLIProbe(t)
-	stdout, stderr, err := runBuildCommand(t, phase1.CLI(t), project, recorder.Env(nil), "build", "names.l")
-	entry := filepath.Join(project, "names")
-	if err != nil || string(stdout) != entry+"\n" || len(stderr) != 0 {
-		t.Fatalf("build: stdout=%q stderr=%q error=%v", stdout, stderr, err)
-	}
-	recorder.AssertPublished(t, entry)
-	stdout, stderr, err = runRuntimeCommand(t, entry, t.TempDir(), nil)
-	if err != nil || string(stdout) != "upper\nlower\n" || len(stderr) != 0 {
-		t.Errorf("case-equivalent Apps: stdout=%q stderr=%q error=%v; want upper then lower", stdout, stderr, err)
-	}
-	metadataFiles, err := filepath.Glob(filepath.Join(recorder.Directory, "cargo.*.metadata.json"))
-	if err != nil || len(metadataFiles) != 1 {
-		t.Fatalf("Cargo metadata files = %v, %v", metadataFiles, err)
-	}
-	data, err := os.ReadFile(metadataFiles[0])
-	if err != nil {
-		t.Fatal(err)
-	}
-	var metadata struct {
-		Packages []struct {
-			Name         string
-			ManifestPath string `json:"manifest_path"`
-			Targets      []struct {
-				Name string
-				Kind []string
-			}
-		}
-	}
-	if err := json.Unmarshal(data, &metadata); err != nil {
-		t.Fatal(err)
-	}
-	wantTargets := map[string]string{"orchestrator": "names", "apps/app-000": "Worker", "apps/app-001": "l_app"}
-	for _, member := range metadata.Packages {
-		for path, want := range wantTargets {
-			if !strings.HasSuffix(filepath.ToSlash(member.ManifestPath), "/"+path+"/Cargo.toml") {
-				continue
-			}
-			if member.Name != want || len(member.Targets) != 1 || member.Targets[0].Name != want || len(member.Targets[0].Kind) != 1 || member.Targets[0].Kind[0] != "bin" {
-				t.Errorf("%s Cargo identity = %+v; want package and binary %q", path, member, want)
-			}
-			delete(wantTargets, path)
-		}
-	}
-	if len(wantTargets) != 0 {
-		t.Errorf("missing Cargo targets: %v", wantTargets)
-	}
-	var generation generationManifest
-	nativetest.ReadPublishedGeneration(t, entry, &generation)
-	if len(generation.Apps) != 2 {
-		t.Fatalf("published companions = %+v; want Worker and worker", generation.Apps)
-	}
-	for index, want := range []string{"Worker", "worker"} {
-		if app := generation.Apps[index]; app.ID != want || app.Executable != fmt.Sprintf("app-%03d", index) {
-			t.Errorf("companion %d changed canonical identity: %+v; want %q", index, app, want)
-		}
-	}
-	if data, err := os.ReadFile(filepath.Join(project, "names.l")); err != nil || !bytes.Equal(data, []byte(source)) {
-		t.Errorf("source changed during build: %v", err)
 	}
 }

@@ -37,13 +37,13 @@ func TestCargoWorkspaceBuildsLibraryAndBinaries(t *testing.T) {
 	workspace := filepath.Join(directory, "workspace")
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	if err := compileCargoWorkspace(ctx, []*sourceBundle{app}, entry, []*sourceBundle{service}, nil, workspace, []string{filepath.Join(directory, "app")}, filepath.Join(directory, "entry")); err != nil {
+	if err := compileCargoWorkspace(ctx, []*sourceBundle{app}, entry, []*sourceBundle{service}, workspace, []string{filepath.Join(directory, "app")}, filepath.Join(directory, "entry")); err != nil {
 		t.Fatal(err)
 	}
 	for _, member := range []struct {
 		prefix string
 		bundle *sourceBundle
-	}{{"apps/app-000", app}, {"orchestrator", entry}, {"services/service-000", service}} {
+	}{{"apps/app-000", app}, {"entry", entry}, {"services/service-000", service}} {
 		for _, file := range member.bundle.files {
 			got, err := os.ReadFile(filepath.Join(workspace, member.prefix, file.name))
 			if err != nil || !bytes.Equal(got, file.content) {
@@ -56,12 +56,5 @@ func TestCargoWorkspaceBuildsLibraryAndBinaries(t *testing.T) {
 		if err != nil || !info.Mode().IsRegular() || info.Mode().Perm()&0111 == 0 {
 			t.Fatalf("missing Cargo artifact %s: %v", name, err)
 		}
-	}
-}
-
-func TestRuntimePackageAvoidsNativeNamesAndAliases(t *testing.T) {
-	packages := []*sourceBundle{{packagePlan: &cargoPackage{name: "l-runtime-support", dependencies: []cargoDependency{{name: "l_runtime_support_1"}}}}}
-	if got := runtimePackageName("l_runtime_support_2", packages); got != "l_runtime_support_3" {
-		t.Fatalf("runtime package collides with native crate or alias: %q", got)
 	}
 }

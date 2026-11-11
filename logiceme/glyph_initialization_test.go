@@ -9,7 +9,7 @@ import (
 )
 
 func TestInitializeGlyphPublicSuccess(t *testing.T) {
-	system, err := loadSegmentalSystem(runtimeGenerationResources(t))
+	system, err := loadSegmentalSystem(backendTestResources(t))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -48,7 +48,7 @@ func TestInitializeGlyphPublicFailureRetainsDiagnostics(t *testing.T) {
 		{"missing segment", "E", "segment E (Calculation) is not configured", lerrors.InvalidConfiguration, true, 0},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			system, err := loadSegmentalSystem(runtimeGenerationResources(t))
+			system, err := loadSegmentalSystem(backendTestResources(t))
 			if err != nil {
 				t.Fatal(err)
 			}

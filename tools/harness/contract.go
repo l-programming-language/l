@@ -220,8 +220,7 @@ func inspectIntegrityWithDocuments(root string, c contract, originalContractHash
 	return r
 }
 
-// Only logeme assets are frozen during the source-library reset. Other fixture
-// sources may be restored or replaced without becoming integrity prerequisites.
+// Only logeme assets belong to the frozen inventory during the source-library reset.
 func inspectTemplateMembership(root string, files []fileContract) error {
 	roots := []string{"builtins/segments", "builtins/templates"}
 	expected := make(map[string]bool)

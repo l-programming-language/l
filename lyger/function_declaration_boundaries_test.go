@@ -13,19 +13,19 @@ func TestFunctionCopyRetainsSignature(t *testing.T) {
 		"Use Identity as \"Alias\".\nDefine \"Saved\" as Alias.",
 	} {
 		t.Run(declaration, func(t *testing.T) {
-			requireFunctionGenerated(t, identityFunction+declaration+"\nSaved `copy` as \"Result\".\nShow Result.\n")
+			requireFunctionPlan(t, identityFunction+declaration+"\nSaved `copy` as \"Result\".\nShow Result.\n")
 		})
 	}
 	var apply = functionSource("Apply", "\"Callback\" as Identity", "Text", "Define \"Saved\" as Callback.\nSaved `parameter` as \"Result\".\nReturn Result.") + "Apply Identity as \"Result\".\nShow Result.\n"
-	requireFunctionGenerated(t, identityFunction+apply)
+	requireFunctionPlan(t, identityFunction+apply)
 	var selectCopy = functionSource("Select", "", "Identity", "Return Identity.") + "Select as \"Returned\".\nDefine \"Saved\" as Returned.\nSaved `result` as \"Result\".\nShow Result.\n"
-	requireFunctionGenerated(t, identityFunction+selectCopy)
+	requireFunctionPlan(t, identityFunction+selectCopy)
 	for _, use := range []string{"Saved 7 as \"Result\".", "Saved `copy`."} {
-		if _, err := functionGenerated(t, identityFunction+"Define \"Saved\" as Identity.\n"+use+"\n"); err == nil {
+		if _, err := compileFunctionPlan(t, identityFunction+"Define \"Saved\" as Identity.\n"+use+"\n"); err == nil {
 			t.Fatalf("copied Function accepted incompatible call: %s", use)
 		}
 	}
-	if _, err := functionGenerated(t, identityFunction+"If false, Define \"Saved\" as Identity.\nSaved `skipped` as \"Result\".\n"); err == nil || !strings.Contains(err.Error(), "not definitely assigned") {
+	if _, err := compileFunctionPlan(t, identityFunction+"If false, Define \"Saved\" as Identity.\nSaved `skipped` as \"Result\".\n"); err == nil || !strings.Contains(err.Error(), "not definitely assigned") {
 		t.Fatalf("copied signature invented runtime initialization: %v", err)
 	}
 }
@@ -60,8 +60,8 @@ func TestFunctionHeaderCapturesOnlyOuterValues(t *testing.T) {
 			t.Fatalf("header captures included parameters/body locals or lost header siblings: %#v", function.Captures)
 		}
 	}
-	requireFunctionGenerated(t, functionHeaderCaptureSource)
-	if _, err := functionGenerated(t, functionSource("Read", "", "List of Text and then Define \"Items\" as a New List of `late`", "Return Items.")); err == nil || !strings.Contains(err.Error(), "not definitely assigned") {
+	requireFunctionPlan(t, functionHeaderCaptureSource)
+	if _, err := compileFunctionPlan(t, functionSource("Read", "", "List of Text and then Define \"Items\" as a New List of `late`", "Return Items.")); err == nil || !strings.Contains(err.Error(), "not definitely assigned") {
 		t.Fatalf("header capture read a value initialized after its binding: %v", err)
 	}
 }

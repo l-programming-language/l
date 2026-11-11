@@ -145,6 +145,7 @@ func TestStaticFunctionConditionalDeclaration(t *testing.T) {
 	if !strings.Contains(definition.Expression, "Value: ~value~") || !strings.Contains(definition.Expression, "return result;") {
 		t.Fatal(definition.Expression)
 	}
+	testNativeDefinitionLibrary(t, c, "Choose", "conditional", `#[path="src/conditional.rs"]mod generated;fn main(){assert_eq!(generated::choose(true,7.0),7.0);assert_eq!(generated::choose(false,8.0),8.0);}`)
 }
 
 func TestSourceSequenceComposesWithoutNesting(t *testing.T) {

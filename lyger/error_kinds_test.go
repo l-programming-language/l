@@ -63,7 +63,7 @@ func TestFrontendErrorKindsAtOrigins(t *testing.T) {
 		requireFrontendErrorKind(t, err, lerrors.Unsupported, "unsupported condition operator contains")
 	})
 	t.Run("internal invariant", func(t *testing.T) {
-		_, err := (&orchestrationEmitter{}).literalValue(nil)
+		_, err := nativeLiteralArgument(nil)
 		requireFrontendErrorKind(t, err, lerrors.Internal, "literal has no primitive value")
 	})
 }

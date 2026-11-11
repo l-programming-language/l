@@ -34,7 +34,7 @@ func TestProfileDescriptorEnforcement(t *testing.T) {
 			check(Unresolved)
 		})
 	}
-	for _, name := range []string{"OwnedLifecycle", "PreservesOnFailure", "unknown"} {
+	for _, name := range []string{"PreservesOnFailure", "unknown"} {
 		if AllEstablished(CheckProfile(DerivedSummary{Paths: []PathSummary{{Outcome: Normal}}}, Profile{Name: name})) {
 			t.Fatalf("%s bypassed its dedicated checker", name)
 		}

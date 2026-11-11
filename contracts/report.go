@@ -86,7 +86,6 @@ type Report struct {
 	Targets              []TargetRef                    `json:"targets"`
 	Declarations         []DeclaredContract             `json:"declarations,omitempty"`
 	Summary              DerivedSummary                 `json:"summary"`
-	Lifecycle            []AppProtocolState             `json:"lifecycle,omitempty"`
 	Lowering             LoweringInventory              `json:"lowering"`
 	Obligations          []Obligation                   `json:"obligations"`
 	Profiles             []ProfileResult                `json:"profiles,omitempty"`

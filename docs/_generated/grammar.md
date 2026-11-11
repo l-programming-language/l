@@ -1276,4 +1276,4 @@ This mechanical reference preserves the configured English recognizers. It does 
 
 | Note | Reviewed explanation |
 | --- | --- |
-| <a id="grammar-note-1"></a>1 | Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text. |
+| <a id="grammar-note-1"></a>1 | Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution. |

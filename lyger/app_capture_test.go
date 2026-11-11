@@ -23,8 +23,8 @@ func TestAppBodyRejectsRuntimeCaptures(t *testing.T) {
 			}
 		}
 	}
-	// IO.Print itself composes Process and its private typed Print definitions. An
-	// alias must retain that composition and the original value's identity.
+	// Core Print composes Process with its private Logger. An alias must
+	// retain that composition and the original value's identity.
 	distributionNegative(t, distributionCorePrefix+"Use Print as \"Display\".\nIf false, define \"message\" as `payload`.\nCreate \"Worker\" as a New Basic App.\nThe App Displays message.\n", "runtime value message cannot be captured by an App body", lerrors.Unsupported)
 }
 
@@ -34,9 +34,6 @@ func TestAppBodyRetainsStaticCaptures(t *testing.T) {
 		result := requireDistributionFrontend(t, source, nil)
 		if !strings.Contains(string(result.BackendAML), "static payload") {
 			t.Fatal("static App capture lost its explicit source value")
-		}
-		if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
-			t.Fatal(err)
 		}
 	}
 }

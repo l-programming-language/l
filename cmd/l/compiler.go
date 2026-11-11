@@ -155,7 +155,7 @@ func generatePackages(backend *Logiceme.LogicemeService, result *Lyger.Compilati
 		generated, err = backend.Evaluate(unit.BackendAML)
 	} else {
 		var prepared *Logiceme.ContractGeneration
-		if prepared, err = backend.PrepareContractGeneration(unit.BackendAML, Logiceme.GenerationOptions{}); err == nil {
+		if prepared, err = backend.PrepareContractGeneration(unit.BackendAML); err == nil {
 			generated, err = prepared.Render()
 			mergeLowering(inventory, "unit:"+unit.ID, prepared.Inventory())
 		}
@@ -177,8 +177,6 @@ type generatedProgram struct {
 	Compilation    *Lyger.CompilationResult
 	Sources        Logiceme.Executable
 	ApplicationIDs []string
-	LibrarySources Logiceme.Executable
-	LibraryIDs     []string
 }
 
 func mergeLowering(out *contracts.LoweringInventory, namespace string, in contracts.LoweringInventory) {
@@ -200,17 +198,16 @@ type nativeWorkspace struct {
 	entry *sourceBundle
 }
 
-// workspace publishes the existing composed App as the native entry. Runtime
-// supervision and its additional package are outside the standalone boundary.
-func (p *generatedProgram) workspace(_ *Logiceme.LogicemeService, _, _ string, _ *contracts.LoweringInventory) (w nativeWorkspace, err error) {
+// workspace selects the existing composed App as the native entry.
+func (p *generatedProgram) workspace() (w nativeWorkspace, err error) {
 	if p == nil || p.Compilation == nil {
 		return w, lerrors.InvalidInput.Errorf("standalone workspace requires a completed compilation")
 	}
 	if err := p.Compilation.ValidateStandaloneApp(); err != nil {
 		return w, err
 	}
-	if len(p.ApplicationIDs) != 1 || len(p.LibraryIDs) != 0 || len(p.LibrarySources.ByteArrays) != 0 {
-		return w, lerrors.Unsupported.Errorf("standalone workspace requires exactly one App and no additional libraries")
+	if len(p.ApplicationIDs) != 1 {
+		return w, lerrors.Unsupported.Errorf("standalone workspace requires exactly one App")
 	}
 	w.entry, err = workspaceBundle(p.Sources)
 	return w, err

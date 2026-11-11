@@ -6,23 +6,22 @@
     "lyger/binding.go": "1c82c4334e2bca7481c8a4fd0253f66bf70c5cb82c6c6bdccb908ce73d7a9578",
     "lyger/construction.go": "4f33cb90d73e2770b51f6fb16646aeca08e7bcf83c3941cab5fb2c9e8a15e43b",
     "lyger/constructor_grammar.go": "cbd8d830bb3a8d0625e60d237afe5749155229b058a82ad6cac2eab44f8386f8",
-    "lyger/function_composition.go": "2330be73b9c34b9fd83475b06d41fe5d2595ac6bf8a4bc7961b03da26ac4a23e",
-    "lyger/function_definitions.go": "1888437b6c54abf864ee600cb576e7a2bf905204777e044d86382da8ff8595dd",
+    "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
+    "lyger/function_definitions.go": "0ea998503ec2a3c1a107217d52629a1e4b9d2a02f32a24db6a95f4abea0919dd",
     "lyger/grammar_extraction.go": "00d22753eb6da432d5e460ac984f0202e40e16238e0a6ad2256fdc892632c453",
     "lyger/grammar_match.go": "f451e7aff7aefae4a4cd63293a60eff4ff04df38c8a563c0139f4468044f55ca",
     "lyger/grammar_terms.go": "873b16a7d99eb137069d1a96ee9efb91b4eb3e272c140636e6c8e02e173d678d",
     "lyger/instructions.go": "c2fa788245436f92036891370e9dc180a0646772d0efa96ec3cec8e3459f7c34",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
     "lyger/lowering.go": "e39ec42ec18f531633efe629e147a37edeb3ff638c526ab4e795b3b0ac85efcb",
-    "lyger/process_inputs.go": "8d694eebf5de74b5585f10a04c24146426918036ebec3906d97cf4602721dfce",
-    "lyger/runtime_values_source.go": "46a2db2854dca407019d7f0a578dce89394ae3fd835996831785f05317d8bc21",
+    "lyger/process_inputs.go": "1f4d64f923f872dd74adb949dc591a384a43b09e8fa2dfde960e88bd76e429cb",
+    "lyger/runtime_values_source.go": "2b4c234b780146e05a80f5dbf90156d6f98fe2934935ebf76f2647430136a60b",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
     "lyger/semantic_resolution.go": "9e340190c53baaf3e73cdbfd7887d2bdf8c0619f2980dd59cff2a2132ab144c6",
     "lyger/source_body.go": "81da3955864cfb1526647733fd5acc2900fd0d29a662fa1b69425d67f865cbb0",
     "lyger/source_descriptors.go": "04fbd8ab93d664bda6de12d482acba06ca5b450530ef573ca25c863411d1cee5",
     "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
     "lyger/types.go": "08db7741ed9a099f34f4bd84a0af3e22f4f62e44e396ca5adca8dc20b35386ba",
-    "lyger/word_values.go": "1b03045f3baa261c7410ab5e70cca35aff72ff3835ea6f2d018fdd0f72c3c0b3",
     "lyger/token_forms.go": "41bc8a6d505fdea4f6c351f73060f0fd422745a5b5c083c8354fe7ade4013d6a"
   },
   "entries": {
@@ -30,7 +29,7 @@
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -54,7 +53,7 @@
           "doc": "docs/spec/values.md#null-and-internal-states",
           "topic": "Null",
           "support": "partial",
-          "notes": "Explicit Null initializes an absence value. Show renders null. It is distinct from an unassigned slot and internal None/Unknown states."
+          "notes": "Recognizes Null as absence, distinct from an unassigned slot and internal None/Unknown states. No runtime rendering is supplied."
         },
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
@@ -64,7 +63,7 @@
         "list": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "List",
-          "notes": "Typed owned Lists construct, append, replace and read indexed values. Heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API."
+          "notes": "Recognizes List constructors and typed element operands. Compiler analysis checks complete element types; recognition supplies no executable collection implementation."
         },
         "dict": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
@@ -83,7 +82,7 @@
       "doc": "docs/spec/names-and-scope.md#declarations-and-definitions",
       "topic": "Subjects and declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
@@ -93,7 +92,7 @@
         "list": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "List declarations",
-          "notes": "A named List requires an explicit runtime constructor for initialization. Typed elements and checked operations follow the List contract."
+          "notes": "A named List retains its declaration identity and element type. Executable initialization requires an implementation."
         },
         "dict": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
@@ -162,7 +161,7 @@
       "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
       "topic": "Values and operands",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "text": {
           "doc": "docs/spec/values.md#text",
@@ -186,7 +185,7 @@
           "doc": "docs/spec/values.md#null-and-internal-states",
           "topic": "Null",
           "support": "partial",
-          "notes": "Explicit Null initializes an absence value. Show renders null. It is distinct from an unassigned slot and internal None/Unknown states."
+          "notes": "Recognizes Null as absence, distinct from an unassigned slot and internal None/Unknown states. No runtime rendering is supplied."
         },
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
@@ -196,7 +195,7 @@
         "list": {
           "doc": "docs/spec/collections-and-categories.md#lists",
           "topic": "List",
-          "notes": "Typed owned Lists construct, append, replace and read indexed values. Heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API."
+          "notes": "Recognizes List constructors and typed element operands. Compiler analysis checks complete element types; recognition supplies no executable collection implementation."
         },
         "dict": {
           "doc": "docs/spec/collections-and-categories.md#dictionaries",
@@ -251,13 +250,13 @@
       "doc": "docs/spec/grammar.md#phrases",
       "topic": "Phrase association",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "phrase.directive": {
       "doc": "docs/spec/definitions.md#typed-slots",
       "topic": "Construction and typed arguments",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "definitive": {
           "doc": "docs/spec/definitions.md#source-actions",
@@ -271,7 +270,7 @@
       "doc": "docs/spec/definitions.md#typed-slots",
       "topic": "Construction and typed arguments",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
@@ -331,19 +330,19 @@
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed runtime access",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "phrase.objective": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed runtime access",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "phrase.inflective": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed runtime access",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "list": {
           "topic": "Collection association",
@@ -364,19 +363,19 @@
       "doc": "docs/spec/grammar.md#phrases",
       "topic": "Phrase association",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "phrase.indicative": {
       "doc": "docs/spec/grammar.md#phrases",
       "topic": "Phrase association",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "phrase.utilization": {
       "doc": "docs/spec/definitions.md#framing-and-escaping",
       "topic": "Definition framing",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "definitive": {
           "doc": "docs/spec/definitions.md#source-actions",
@@ -394,19 +393,19 @@
       "doc": "docs/spec/imports.md#explicit-source-file-imports",
       "topic": "Imports and dependencies",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.assign.passive": {
       "doc": "docs/spec/control-flow.md#assignment",
       "topic": "Assignment",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.generic.imperative": {
       "doc": "docs/spec/definitions.md#source-actions",
       "topic": "Source actions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "subjective": {
           "topic": "Bound source-action arguments",
@@ -428,7 +427,7 @@
       "doc": "docs/spec/definitions.md#source-actions",
       "topic": "Source actions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "callable": {
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
@@ -442,13 +441,13 @@
       "doc": "docs/spec/definitions.md#source-actions",
       "topic": "Source actions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.generic.applicative": {
       "doc": "docs/spec/definitions.md#source-actions",
       "topic": "Source actions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "subjective": {
           "topic": "Bound source-action arguments",
@@ -470,13 +469,13 @@
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "callable": {
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Functions",
           "support": "partial",
-          "notes": "Create a typed ordinary Function at an encapsulated paragraph boundary. Each declaration activation owns its capture environment."
+          "notes": "Registers a typed Function and invocation family at a paragraph boundary. Capture analysis retains lexical owners."
         }
       }
     },
@@ -484,385 +483,385 @@
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.declarative.passive": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.declarative.applicative": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.definitive.imperative": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.definitive.active": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.definitive.passive": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.definitive.applicative": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.descriptive.imperative": {
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "topic": "Descriptors",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.descriptive.active": {
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "topic": "Descriptors",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.descriptive.passive": {
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "topic": "Descriptors",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.descriptive.applicative": {
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
       "topic": "Descriptors",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.expansive.imperative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.expansive.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.expansive.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.expansive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.locative.imperative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.locative.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.locative.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.locative.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Typed updates",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.receptive.imperative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.receptive.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.receptive.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.receptive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.reductive.imperative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.reductive.active": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.reductive.passive": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.reductive.applicative": {
       "doc": "docs/spec/collections-and-categories.md#lists",
       "topic": "Collections",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.associative.imperative": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.associative.active": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.associative.passive": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.associative.applicative": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.generative.imperative": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Build",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.generative.active": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Build",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.generative.passive": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Build",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.generative.applicative": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Build",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.executive.imperative": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Run",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.executive.active": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Run",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.executive.passive": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Run",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.executive.applicative": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Run",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.suspensive.imperative": {
       "doc": "docs/spec/execution.md#continuations-and-activation",
       "topic": "Await",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.suspensive.active": {
       "doc": "docs/spec/execution.md#continuations-and-activation",
       "topic": "Await",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.suspensive.passive": {
       "doc": "docs/spec/execution.md#continuations-and-activation",
       "topic": "Await",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.suspensive.applicative": {
       "doc": "docs/spec/execution.md#continuations-and-activation",
       "topic": "Await",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.interruptive.imperative": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Stop",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.interruptive.active": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Stop",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.interruptive.passive": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Stop",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.interruptive.applicative": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
       "topic": "Stop",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.inflective.imperative": {
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "topic": "Import and export vocabulary",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.inflective.active": {
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "topic": "Import and export vocabulary",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.inflective.passive": {
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "topic": "Import and export vocabulary",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.inflective.applicative": {
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "topic": "Import and export vocabulary",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.deflective.imperative": {
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "topic": "Import and export vocabulary",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.deflective.active": {
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "topic": "Import and export vocabulary",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.deflective.passive": {
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "topic": "Import and export vocabulary",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.deflective.applicative": {
       "doc": "docs/spec/imports.md#indexed-dictionaries",
       "topic": "Import and export vocabulary",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.observative.imperative": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.observative.active": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.observative.passive": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.observative.applicative": {
       "doc": "docs/spec/control-flow.md#show-and-output",
       "topic": "Show",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.terminative.imperative": {
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.terminative.active": {
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.terminative.passive": {
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "clause.terminative.applicative": {
       "doc": "docs/spec/control-flow.md#exit-and-return",
       "topic": "Exit",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "condition": {
       "doc": "docs/spec/control-flow.md#comparisons",
       "topic": "Conditions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "truth": {
           "doc": "docs/spec/values.md#truth",
@@ -908,85 +907,85 @@
       "doc": "docs/spec/control-flow.md#comparisons",
       "topic": "Conditions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "conditional.else": {
       "doc": "docs/spec/control-flow.md#comparisons",
       "topic": "Conditions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "conditional.while": {
       "doc": "docs/spec/control-flow.md#iteration-and-collection-operations",
       "topic": "Iteration rejection",
       "support": "rejected",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "conditional.other": {
       "doc": "docs/spec/control-flow.md#comparisons",
       "topic": "Conditions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "predicate.imperative": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "predicate.active": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "predicate.passive": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "predicate.applicative": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "predicate.conditional": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "statement.objective.imperative": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "statement.objective.conditional": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "statement.subjective.active": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "statement.subjective.passive": {
       "doc": "docs/spec/grammar.md#predicates-and-statements",
       "topic": "Predicates and statements",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "phrase.signature": {
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "Typed Functions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text.",
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
       "cases": {
         "inputs_only": {
           "doc": "docs/reference/word-glossary.md#process",
@@ -1000,13 +999,13 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "Typed Functions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     },
     "phrase.results": {
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "Typed Functions",
       "support": "partial",
-      "notes": "Configured recognizer retained. Recognition does not establish executable support; the current boundary is one standalone App with core Print and Text."
+      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
     }
   }
 }

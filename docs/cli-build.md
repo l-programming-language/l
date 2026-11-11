@@ -27,7 +27,7 @@ Keep unsupported effects explicit: the compiler must reject them rather than sil
 l build --native-evidence-output build-environment.json main.l
 ```
 
-This option records tool/environment observations, the actual Cargo build and artifact identity in a separate version-2 JSON document. Choose a destination outside inputs, custom assets and build outputs. Evidence is written before executable publication; failure to write it preserves the previous published output.
+This option records tool/environment observations, the actual Cargo build and artifact identity in a separate JSON document with schema `2.0`, analyzer `l-contracts-2.0/1` and build-record version `2`. Earlier schemas and removed fields reject. Choose a destination outside inputs, custom assets and build outputs. Evidence is written before executable publication; failure to write it preserves the previous published output.
 
 The record identifies selected source and build inputs, tool executables, the native host, Cargo invocation, output artifact hashes and companion generation. The entry and generation copy contain the same compiled artifact. A failed Cargo invocation remains recorded as a failure, and a successful compilation remains recorded if later publication fails.
 

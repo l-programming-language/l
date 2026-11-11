@@ -111,7 +111,7 @@ test('the root embedded distribution implementation is a release-relevant input'
 });
 
 test('the dictionary registry and retained compiler resources participate in source identity', async (t) => {
-  for (const name of ['dictionaries.json', 'builtins/eng/core.l', 'builtins/operations/rust/process-run.def', 'builtins/segments/vowels/declaration.lu', 'builtins/templates/install/cargo.lu']) {
+  for (const name of ['dictionaries.json', 'builtins/eng/core.l', 'builtins/segments/vowels/declaration.lu', 'builtins/templates/install/cargo.lu']) {
     await t.test(name, async (t) => {
       const root = await fixture(t, { [name]: 'before\n', 'docs/guide.md': '# Guide\n', 'website/package.json': '{}\n' });
       const site = path.join(root, 'website');

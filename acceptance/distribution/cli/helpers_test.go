@@ -10,10 +10,9 @@ import (
 	"testing"
 
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
-	"github.com/l-programming-language/l/internal/testsupport/phase1"
 )
 
-func TestMain(m *testing.M) { phase1.Main(m) }
+func TestMain(m *testing.M) { nativetest.Main(m) }
 
 func write(t testing.TB, path, source string) {
 	t.Helper()
@@ -62,7 +61,7 @@ func outcome(t testing.TB, binary, cwd string, env []string, status int, stdout,
 func standalone(t testing.TB) string {
 	t.Helper()
 	path := filepath.Join(t.TempDir(), "compiler")
-	phase1.CopyFile(t, phase1.CLI(t), path, 0700)
+	nativetest.CopyCLI(t, path)
 	entries, err := os.ReadDir(filepath.Dir(path))
 	if err != nil || len(entries) != 1 {
 		t.Fatalf("standalone setup=%v: %v", entries, err)

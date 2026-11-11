@@ -22,7 +22,7 @@ func TestMetadataStrictness(t *testing.T) {
 	}
 	t.Run("BASE-004", func(t *testing.T) {
 		for name, invalid := range map[string][]byte{
-			"version":                bytes.Replace(data, []byte(`"schema_version": "1.1"`), []byte(`"schema_version": "99"`), 1),
+			"version":                replaceDocumentField(t, data, "schema_version", "99"),
 			"misspelled-guarantee":   bytes.Replace(data, []byte(`"name": "Fixture",`), []byte(`"name": "Fixture", "guarantes": [],`), 1),
 			"case-insensitive-field": bytes.Replace(data, []byte(`"name": "Fixture"`), []byte(`"NaMe": "Fixture"`), 1),
 			"self-established":       bytes.Replace(data, []byte(`"name": "Fixture",`), []byte(`"name": "Fixture", "status": "established",`), 1),

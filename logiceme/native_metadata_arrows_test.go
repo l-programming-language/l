@@ -143,7 +143,7 @@ func TestNativeMetadataArrowsGeneration(t *testing.T) {
 			name = "embedded"
 		}
 		t.Run(name, func(t *testing.T) {
-			config := runtimeGenerationResources(t)
+			config := backendTestResources(t)
 			if embedded {
 				config = nil
 			}

@@ -5,15 +5,16 @@ import { parseDocument } from '../scripts/content.mjs';
 import { deriveWords, wordFacts, wordIndex } from '../scripts/words.mjs';
 
 const page = { source: 'docs/words.md', route: '/docs/test/' };
+// Synthetic metadata fixtures below are independent of the bundled core catalog.
 const entry = (id, name, anchor, extra = {}) => ({ id, name, kind: 'builtin', support: 'supported', doc: `${page.source}#${anchor}`, word: { partOfSpeech: 'verb' }, evidence: 'static-inspection', sources: ['source.l'], ...extra });
 const derive = (entries, source, extra = {}) => deriveWords({ entries, pages: [page], documents: new Map([[page.source, parseDocument(source)]]), ...extra });
 
 test('nested senses keep their own definitions and literal directives never register', () => {
-  const source = '# Reference\n\n## Option.Select\n\n<!-- word:option -->\n\nSelect `Some` or [None][none] exactly once.\n\n### Result.Select\n\n<!-- word:result -->\n\nSelect the Result branch.\n\n**Example**\n\n```md\n<!-- word:option -->\n```\n\n`<!-- word:result -->`\n\n[none]: #optionselect\n';
-  const words = derive([entry('option', 'Storage.Option.Select', 'optionselect'), entry('result', 'Storage.Result.Select', 'resultselect')], source);
-  assert.deepEqual(words.map((word) => word.gloss), ['Select Some or None exactly once.', 'Select the Result branch.']);
+  const source = '# Reference\n\n## Panel.Trace\n\n<!-- word:panel -->\n\nTrace `first` or [second][none] exactly once.\n\n### Shape.Trace\n\n<!-- word:shape -->\n\nTrace the shape outline.\n\n**Example**\n\n```md\n<!-- word:panel -->\n```\n\n`<!-- word:shape -->`\n\n[none]: #paneltrace\n';
+  const words = derive([entry('panel', 'Workshop.Panel.Trace', 'paneltrace'), entry('shape', 'Workshop.Shape.Trace', 'shapetrace')], source);
+  assert.deepEqual(words.map((word) => word.gloss), ['Trace first or second exactly once.', 'Trace the shape outline.']);
   assert.notEqual(words[0].link, words[1].link);
-  assert.equal(words[0].root, 'Select');
+  assert.equal(words[0].root, 'Trace');
   assert.ok(words[0].section.end >= words[1].section.end);
 });
 
@@ -50,12 +51,12 @@ test('canonical associations are direct and internal tags cannot become applicat
 });
 
 test('an application dictionary namespace is a documented noun without publishing implementation namespaces', () => {
-  const namespace = entry('io', 'IO', 'io', { kind: 'stdlib-export', visibility: 'namespace', dictionary: { lexicon: 'eng', key: 'io' }, word: { partOfSpeech: 'noun' } });
-  const source = '# Words\n\n## IO\n\n<!-- word:io -->\n\nName the explicitly imported output dictionary.\n';
+  const namespace = entry('fixture', 'Fixture', 'fixture', { kind: 'stdlib-export', visibility: 'namespace', dictionary: { lexicon: 'eng', key: 'fixture' }, word: { partOfSpeech: 'noun' } });
+  const source = '# Words\n\n## Fixture\n\n<!-- word:fixture -->\n\nName the test-owned dictionary.\n';
   const words = derive([namespace], source);
   assert.equal(words[0].audience, 'application');
-  assert.match(wordIndex(words, 'eng:io', [{ language: 'eng', key: 'io', dictionary: 'IO' }]), /IO.*noun/);
-  assert.doesNotMatch(wordIndex(words, 'builtins'), /IO/);
+  assert.match(wordIndex(words, 'eng:fixture', [{ language: 'eng', key: 'fixture', dictionary: 'Fixture' }]), /Fixture.*noun/);
+  assert.doesNotMatch(wordIndex(words, 'builtins'), /Fixture/);
   assert.throws(() => derive([{ ...namespace, word: undefined }], source), /Missing word coverage/);
   assert.throws(() => derive([{ ...namespace, support: 'internal' }], source), /cannot be promoted/);
 });
@@ -74,25 +75,25 @@ test('associated reviews cannot give the same canonical meaning conflicting supp
 
 test('irregular and actor forms retain qualified modifier targets', () => {
   const words = derive([
-    entry('send', 'IO.Send', 'send', { inflections: ['Send', 'Sends', 'Sent', 'Sending', 'Sender'], word: { partOfSpeech: 'verb', formRoles: { Sender: { partOfSpeech: 'noun', role: 'actor' } } } }),
-    entry('lined', 'IO.Lined', 'lined', { word: { partOfSpeech: 'adjective', targets: [{ entry: 'send', form: 'Sender' }] } }),
-  ], '# IO\n\n## Send\n\n<!-- word:send -->\n\nSend exact bytes.\n\n## Lined\n\n<!-- word:lined -->\n\nAppend LF after successful payload.\n');
-  const send = words.find((word) => word.id === 'send'), lined = words.find((word) => word.id === 'lined');
-  assert.match(wordFacts(send, words, String), /Sender<\/code> \(noun, actor\)/);
-  assert.match(wordFacts(lined, words, String), /href="\/docs\/test\/#send".*IO.Send · Sender/);
-  assert.doesNotMatch(wordFacts(send, words, String), /Sended/);
+    entry('draw', 'Fixture.Draw', 'draw', { inflections: ['Draw', 'Draws', 'Drawn', 'Drawing', 'Drawer'], word: { partOfSpeech: 'verb', formRoles: { Drawer: { partOfSpeech: 'noun', role: 'actor' } } } }),
+    entry('bold', 'Fixture.Bold', 'bold', { word: { partOfSpeech: 'adjective', targets: [{ entry: 'draw', form: 'Drawer' }] } }),
+  ], '# Fixture\n\n## Draw\n\n<!-- word:draw -->\n\nDraw a test shape.\n\n## Bold\n\n<!-- word:bold -->\n\nSelect a bold test style.\n');
+  const draw = words.find((word) => word.id === 'draw'), bold = words.find((word) => word.id === 'bold');
+  assert.match(wordFacts(draw, words, String), /Drawer<\/code> \(noun, actor\)/);
+  assert.match(wordFacts(bold, words, String), /href="\/docs\/test\/#draw".*Fixture.Draw · Drawer/);
+  assert.doesNotMatch(wordFacts(draw, words, String), /Drawed/);
 });
 
 test('every declared form has an explicit part of speech in its numbered list', () => {
   const words = derive([
-    entry('send', 'IO.Send', 'send', { inflections: ['Send', 'Sends', 'Sent', 'Sending', 'Sender'], word: { partOfSpeech: 'verb', formRoles: { Sender: { partOfSpeech: 'noun', role: 'actor' } } } }),
+    entry('draw', 'Fixture.Draw', 'draw', { inflections: ['Draw', 'Draws', 'Drawn', 'Drawing', 'Drawer'], word: { partOfSpeech: 'verb', formRoles: { Drawer: { partOfSpeech: 'noun', role: 'actor' } } } }),
     entry('function', 'Function', 'function', { inflections: ['Function', 'Functions', 'Functioning'], word: { partOfSpeech: 'noun', formRoles: { Functioning: { partOfSpeech: 'verb', role: 'applicative (noun active form)' } } } }),
-    entry('lined', 'IO.Lined', 'lined', { word: { partOfSpeech: 'adjective', targets: [{ entry: 'send', form: 'Sender' }] } }),
-  ], '# Words\n\n## Send\n\n<!-- word:send -->\n\nSend exact bytes.\n\n## Function\n\n<!-- word:function -->\n\nDefine a callable word.\n\n## Lined\n\n<!-- word:lined -->\n\nAppend LF after successful payload.\n');
+    entry('bold', 'Fixture.Bold', 'bold', { word: { partOfSpeech: 'adjective', targets: [{ entry: 'draw', form: 'Drawer' }] } }),
+  ], '# Words\n\n## Draw\n\n<!-- word:draw -->\n\nDraw a test shape.\n\n## Function\n\n<!-- word:function -->\n\nDefine a callable word.\n\n## Bold\n\n<!-- word:bold -->\n\nSelect a bold test style.\n');
   const expected = {
-    send: ['<code>Send</code> (verb)', '<code>Sends</code> (verb)', '<code>Sent</code> (verb)', '<code>Sending</code> (verb)', '<code>Sender</code> (noun, actor)'],
+    draw: ['<code>Draw</code> (verb)', '<code>Draws</code> (verb)', '<code>Drawn</code> (verb)', '<code>Drawing</code> (verb)', '<code>Drawer</code> (noun, actor)'],
     function: ['<code>Function</code> (noun)', '<code>Functions</code> (noun)', '<code>Functioning</code> (verb, applicative (noun active form))'],
-    lined: ['<code>Lined</code> (adjective)'],
+    bold: ['<code>Bold</code> (adjective)'],
   };
   for (const word of words) {
     const facts = wordFacts(word, words, (source) => `<a href="/${source}">${source}</a>`);
@@ -102,7 +103,7 @@ test('every declared form has an explicit part of speech in its numbered list', 
     assert.match(facts, /Source and review evidence/);
     assert.match(facts, /static-inspection/);
     assert.match(facts, /<a href="\/source\.l">source\.l<\/a>/);
-    if (word.id === 'lined') assert.match(facts, /href="\/docs\/test\/#send".*IO.Send · Sender/);
+    if (word.id === 'bold') assert.match(facts, /href="\/docs\/test\/#draw".*Fixture.Draw · Drawer/);
   }
 });
 
@@ -138,7 +139,7 @@ test('one derived collection renders generic library and global navigation with 
   const entries = [
     entry('z', 'Z.Output', 'z', { dictionary: library }),
     entry('a', 'Output', 'a'),
-    entry('b', 'Storage.Option.Select', 'b', { kind: 'authoring-word', dictionary: { lexicon: 'eng', key: 'storage' }, word: { partOfSpeech: 'verb', audience: 'authoring' } }),
+    entry('b', 'Workshop.Panel.Trace', 'b', { kind: 'authoring-word', dictionary: { lexicon: 'eng', key: 'workshop' }, word: { partOfSpeech: 'verb', audience: 'authoring' } }),
   ];
   const source = '# Words\n\n## Z\n\n<!-- word:z -->\n\nAn output.\n\n## A\n\n<!-- word:a -->\n\nThe other output.\n\n## B\n\n<!-- word:b -->\n\nA selection.\n';
   const words = derive(entries, source);
@@ -150,36 +151,36 @@ test('one derived collection renders generic library and global navigation with 
   assert.doesNotMatch(global, /href="#words-0-a"/);
   const local = wordIndex(words, 'fra:math', [{ language: 'fra', key: 'math' }]);
   assert.match(local, /Z.Output/);
-  assert.doesNotMatch(local, /other output|Option.Select/);
+  assert.doesNotMatch(local, /other output|Panel.Trace/);
   assert.throws(() => wordIndex(words, 'fra:unknown', []), /Unknown word-index library/);
   assert.throws(() => wordIndex(words, 'fra:math', [{ language: 'fra', key: 'math', internal: true }]), /Unknown word-index library/);
-  assert.doesNotMatch(wordIndex(words, 'builtins'), /Z.Output|Option.Select/);
+  assert.doesNotMatch(wordIndex(words, 'builtins'), /Z.Output|Panel.Trace/);
 });
 
 test('internal dictionary indexes include only reviewed authoring words and preserve their audience', () => {
-  const dictionary = { lexicon: 'eng', key: 'storage' };
+  const dictionary = { lexicon: 'eng', key: 'workshop' };
   const entries = [
-    entry('select', 'Storage.Option.Select', 'select', { kind: 'authoring-word', dictionary, word: { partOfSpeech: 'verb', audience: 'authoring' } }),
-    entry('foreign', 'Foreign.Require', 'foreign', { kind: 'authoring-word', dictionary: { lexicon: 'fra', key: 'storage' }, word: { partOfSpeech: 'verb', audience: 'authoring' } }),
-    entry('application', 'Storage.Application', 'application', { dictionary }),
-    entry('private', 'Storage.Private', 'private', { kind: 'stdlib-export', dictionary, visibility: 'private', word: undefined }),
-    entry('internal', 'Storage.Internal', 'internal', { kind: 'value-tag', dictionary, support: 'internal', word: undefined }),
+    entry('trace', 'Workshop.Panel.Trace', 'trace', { kind: 'authoring-word', dictionary, word: { partOfSpeech: 'verb', audience: 'authoring' } }),
+    entry('foreign', 'Foreign.Trace', 'foreign', { kind: 'authoring-word', dictionary: { lexicon: 'fra', key: 'workshop' }, word: { partOfSpeech: 'verb', audience: 'authoring' } }),
+    entry('application', 'Workshop.Application', 'application', { dictionary }),
+    entry('private', 'Workshop.Private', 'private', { kind: 'stdlib-export', dictionary, visibility: 'private', word: undefined }),
+    entry('internal', 'Workshop.Internal', 'internal', { kind: 'value-tag', dictionary, support: 'internal', word: undefined }),
   ];
-  const source = '# Words\n\n## Select\n\n<!-- word:select -->\n\nSelect the matching branch.\n\n## Foreign\n\n<!-- word:foreign -->\n\nRequire another dictionary.\n\n## Application\n\n<!-- word:application -->\n\nAn application meaning.\n';
+  const source = '# Words\n\n## Trace\n\n<!-- word:trace -->\n\nTrace a test panel.\n\n## Foreign\n\n<!-- word:foreign -->\n\nTrace a foreign test panel.\n\n## Application\n\n<!-- word:application -->\n\nAn application meaning.\n';
   const words = derive(entries, source);
-  const registries = [{ language: 'eng', key: 'storage', internal: true }];
-  const local = wordIndex(words, 'eng:storage', registries);
-  assert.match(local, /Storage\.Option\.Select.*\(verb, supported, authoring\)/);
+  const registries = [{ language: 'eng', key: 'workshop', internal: true }];
+  const local = wordIndex(words, 'eng:workshop', registries);
+  assert.match(local, /Workshop\.Panel\.Trace.*\(verb, supported, authoring\)/);
   assert.doesNotMatch(local, /Foreign|Application|Private|Internal/);
   const global = wordIndex(words);
   const application = global.slice(0, global.indexOf('<nav', global.indexOf('</nav>')));
-  assert.doesNotMatch(application, /Storage\.Option\.Select|Foreign\.Require/);
-  assert.match(global, /Advanced word authoring[\s\S]*Storage\.Option\.Select/);
-  assert.doesNotMatch(wordIndex(words, 'builtins'), /Storage\.|Foreign\./);
-  assert.equal(words.find((word) => word.id === 'select').audience, 'authoring');
-  assert.match(wordFacts(words.find((word) => word.id === 'select'), words, String), /Explicit dictionary: eng\/storage, advanced word authoring/);
-  assert.throws(() => wordIndex(words.filter((word) => word.kind !== 'authoring-word'), 'eng:storage', registries), /Unknown word-index library/);
-  assert.throws(() => wordIndex([], 'eng:storage', registries), /Unknown word-index library/);
+  assert.doesNotMatch(application, /Workshop\.Panel\.Trace|Foreign\.Trace/);
+  assert.match(global, /Advanced word authoring[\s\S]*Workshop\.Panel\.Trace/);
+  assert.doesNotMatch(wordIndex(words, 'builtins'), /Workshop\.|Foreign\./);
+  assert.equal(words.find((word) => word.id === 'trace').audience, 'authoring');
+  assert.match(wordFacts(words.find((word) => word.id === 'trace'), words, String), /Explicit dictionary: eng\/workshop, advanced word authoring/);
+  assert.throws(() => wordIndex(words.filter((word) => word.kind !== 'authoring-word'), 'eng:workshop', registries), /Unknown word-index library/);
+  assert.throws(() => wordIndex([], 'eng:workshop', registries), /Unknown word-index library/);
   assert.throws(() => derive([{ ...entries[0], word: { partOfSpeech: 'verb', audience: 'application' } }], source), /cannot be promoted/);
   assert.throws(() => derive([{ ...entries[3], word: { partOfSpeech: 'verb', audience: 'authoring' } }], source), /cannot be promoted/);
   assert.throws(() => derive([{ ...entries[0], word: undefined }], source), /Missing word coverage/);
@@ -187,43 +188,43 @@ test('internal dictionary indexes include only reviewed authoring words and pres
 
 test('library aliases link to canonical meanings without changing native or global membership', () => {
   const words = derive([
-    entry('format', 'Formatting.Format', 'format', { dictionary: { lexicon: 'eng', key: 'format' }, inflections: ['Format', 'Formats'], word: { partOfSpeech: 'verb', aliases: ['Runtime.Format'] } }),
-    entry('return', 'Function.Return', 'return', { inflections: ['Return', 'Returns'], word: { partOfSpeech: 'verb', aliases: ['Storage.Routine.Return'] } }),
-    entry('zebra', 'Runtime.Zebra', 'zebra', { kind: 'authoring-word', dictionary: { lexicon: 'eng', key: 'runtime' }, word: { partOfSpeech: 'noun', audience: 'authoring' } }),
-  ], '# Words\n\n## Format\n\n<!-- word:format -->\n\nFormat a value.\n\n## Return\n\n<!-- word:return -->\n\nReturn from the selected Function.\n\n## Zebra\n\n<!-- word:zebra -->\n\nA runtime meaning.\n');
+    entry('paint', 'Canvas.Paint', 'paint', { dictionary: { lexicon: 'eng', key: 'paint' }, inflections: ['Paint', 'Paints'], word: { partOfSpeech: 'verb', aliases: ['Tools.Paint'] } }),
+    entry('apply', 'Callable.Apply', 'apply', { inflections: ['Apply', 'Applies'], word: { partOfSpeech: 'verb', aliases: ['Workshop.Brush.Apply'] } }),
+    entry('zebra', 'Tools.Zebra', 'zebra', { kind: 'authoring-word', dictionary: { lexicon: 'eng', key: 'tools' }, word: { partOfSpeech: 'noun', audience: 'authoring' } }),
+  ], '# Words\n\n## Paint\n\n<!-- word:paint -->\n\nPaint a test shape.\n\n## Apply\n\n<!-- word:apply -->\n\nApply a test operation.\n\n## Zebra\n\n<!-- word:zebra -->\n\nA test-owned meaning.\n');
   const before = structuredClone(words);
   const registries = [
-    { language: 'eng', key: 'format', dictionary: 'Formatting' },
-    { language: 'eng', key: 'runtime', dictionary: 'Runtime', internal: true },
-    { language: 'eng', key: 'storage', dictionary: 'Storage', internal: true },
-    { language: 'eng', key: 'runtime-extra', dictionary: 'RuntimeExtra', internal: true },
+    { language: 'eng', key: 'paint', dictionary: 'Canvas' },
+    { language: 'eng', key: 'tools', dictionary: 'Tools', internal: true },
+    { language: 'eng', key: 'workshop', dictionary: 'Workshop', internal: true },
+    { language: 'eng', key: 'tools-extra', dictionary: 'ToolsExtra', internal: true },
   ];
-  const formatting = wordIndex(words, 'eng:format', registries);
-  const runtime = wordIndex(words, 'eng:runtime', registries);
-  const storage = wordIndex(words, 'eng:storage', registries);
-  assert.match(formatting, /href="\/docs\/test\/#format"[^\n]*Formatting\.Format[^\n]*\(verb, supported\)<\/span>: Format a value/);
-  assert.match(runtime, /href="\/docs\/test\/#format"[^\n]*Runtime\.Format[^\n]*\(verb, supported, authoring\)<\/span>: Format a value/);
-  assert.match(storage, /href="\/docs\/test\/#return"[^\n]*Storage\.Routine\.Return[^\n]*\(verb, supported, authoring\)<\/span>: Return from the selected Function/);
-  assert.ok(runtime.indexOf('Runtime.Format') < runtime.indexOf('Runtime.Zebra'));
-  assert.doesNotMatch(runtime, /Formatting\.Format|Storage\.Routine\.Return/);
-  assert.throws(() => wordIndex(words, 'eng:runtime-extra', registries), /Unknown word-index library/);
+  const canvas = wordIndex(words, 'eng:paint', registries);
+  const tools = wordIndex(words, 'eng:tools', registries);
+  const workshop = wordIndex(words, 'eng:workshop', registries);
+  assert.match(canvas, /href="\/docs\/test\/#paint"[^\n]*Canvas\.Paint[^\n]*\(verb, supported\)<\/span>: Paint a test shape/);
+  assert.match(tools, /href="\/docs\/test\/#paint"[^\n]*Tools\.Paint[^\n]*\(verb, supported, authoring\)<\/span>: Paint a test shape/);
+  assert.match(workshop, /href="\/docs\/test\/#apply"[^\n]*Workshop\.Brush\.Apply[^\n]*\(verb, supported, authoring\)<\/span>: Apply a test operation/);
+  assert.ok(tools.indexOf('Tools.Paint') < tools.indexOf('Tools.Zebra'));
+  assert.doesNotMatch(tools, /Canvas\.Paint|Workshop\.Brush\.Apply/);
+  assert.throws(() => wordIndex(words, 'eng:tools-extra', registries), /Unknown word-index library/);
   for (const selection of ['', 'builtins']) {
     const index = wordIndex(words, selection);
-    assert.doesNotMatch(index, /Runtime\.Format|Storage\.Routine\.Return/);
-    assert.equal([...index.matchAll(/href="\/docs\/test\/#return"/g)].length, 1);
-    assert.match(index, /Function\.Return[^\n]*\(verb, supported\)/);
+    assert.doesNotMatch(index, /Tools\.Paint|Workshop\.Brush\.Apply/);
+    assert.equal([...index.matchAll(/href="\/docs\/test\/#apply"/g)].length, 1);
+    assert.match(index, /Callable\.Apply[^\n]*\(verb, supported\)/);
   }
   const native = wordIndex(words, 'builtins');
-  assert.doesNotMatch(native, /Formatting\.Format|Runtime\.Zebra/);
-  const canonical = words.find((word) => word.id === 'format');
-  assert.match(wordFacts(canonical, words, String), /Aliases: <code>Runtime\.Format<\/code>/);
+  assert.doesNotMatch(native, /Canvas\.Paint|Tools\.Zebra/);
+  const canonical = words.find((word) => word.id === 'paint');
+  assert.match(wordFacts(canonical, words, String), /Aliases: <code>Tools\.Paint<\/code>/);
   assert.deepEqual(words, before, 'index rows must not mutate canonical inventory, audience or forms');
 });
 
 test('reviewed aliases require distinct nonempty qualified names', () => {
   const source = '# Words\n\n## Meaning\n\n<!-- word:x -->\n\nA meaning.\n';
-  for (const aliases of [[], {}, [''], [' '], ['Name'], ['Runtime.'], ['.Name'], ['Runtime..Name'], ['Runtime.Name '], ['Runtime.Name', 'Runtime.Name'], ['Runtime.Name', 'runtime.name'], ['Function.Return']]) {
-    assert.throws(() => derive([entry('x', 'Function.Return', 'meaning', { word: { partOfSpeech: 'verb', aliases } })], source), /Invalid word aliases/);
+  for (const aliases of [[], {}, [''], [' '], ['Name'], ['Tools.'], ['.Name'], ['Tools..Name'], ['Tools.Name '], ['Tools.Name', 'Tools.Name'], ['Tools.Name', 'tools.name'], ['Callable.Apply']]) {
+    assert.throws(() => derive([entry('x', 'Callable.Apply', 'meaning', { word: { partOfSpeech: 'verb', aliases } })], source), /Invalid word aliases/);
   }
 });
 

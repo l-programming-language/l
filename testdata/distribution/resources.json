@@ -1,10 +1,5 @@
 [
   "builtins/eng/core.l",
-  "builtins/operations/rust/process-await.def",
-  "builtins/operations/rust/process-build.def",
-  "builtins/operations/rust/process-finish-continuation.def",
-  "builtins/operations/rust/process-run.def",
-  "builtins/operations/rust/process-stop.def",
   "builtins/segments/consonants/calculate.lu",
   "builtins/segments/consonants/declare.lu",
   "builtins/segments/consonants/define.lu",

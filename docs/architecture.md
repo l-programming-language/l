@@ -23,13 +23,13 @@ source + one selected resource provider
 | `builtins/eng/core.l` | Retained source constructions and Text Print |
 | `builtins/segments/` and `builtins/templates/` | Frozen native syntax and configuration templates |
 
-Do not replace source algorithms with an interpreter or generated Go/Rust helpers. Core Print's private native leaf performs one output call. Sequencing, selection, iteration, error policy and resource choice belong in L.
+Do not replace library algorithms with an interpreter or generated Go/Rust helpers. Core Print's private native leaf performs one output call. Lyger lowers grammatical instructions, including conditionals and bindings, through frozen AML interfaces. Authored words retain their selected definitions and composition.
 
 ## Production boundaries and retained APIs
 
 Compiler APIs and internal type tags can describe more than the current executable supports. They do not establish that deleted dictionaries, orchestration, capture or process lifecycle are available. Unsupported effects reject explicitly.
 
-The [build contract](cli-build.md) defines the current executable boundary. The [temporary hello-world gate](development-harness.md) defines current completion evidence; broader retained suites are historical regression material.
+The [build contract](cli-build.md) defines the current executable boundary. The [temporary hello-world gate](development-harness.md) defines current completion evidence. Broader compiler suites provide separate regression evidence and are not covered by that gate.
 
 ## Embedded builtins and explicit dictionaries
 

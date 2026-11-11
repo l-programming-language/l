@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestZeroApplicationProgramKeepsOrchestrator(t *testing.T) {
+func TestZeroApplicationProgramRetainsEmptyViews(t *testing.T) {
 	source := memberResolutionFixture(t)
 	source.main = "\"message\" is `scalar only`.\nShow message.\n"
 	result := executableTestResult(t, source)
@@ -21,16 +21,7 @@ func TestZeroApplicationProgramKeepsOrchestrator(t *testing.T) {
 	if !bytes.Equal(result.AML, want) || !bytes.Equal(result.BackendAML, want) {
 		t.Fatalf("empty application views = %q / %q", result.AML, result.BackendAML)
 	}
-	orchestrator, err := result.OrchestratorUnit("main", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if bytes.Count(orchestrator.BackendAML, []byte("<BOOK ")) != 1 || !bytes.Contains(orchestrator.BackendAML, []byte("scalar only")) {
-		t.Fatalf("missing real scalar orchestrator: %q", orchestrator.BackendAML)
-	}
-	if !bytes.Equal(result.AML, want) || result.Compilation.Program != program {
-		t.Fatal("orchestrator generation mutated the source program")
-	}
+
 }
 
 func TestZeroApplicationGraphStillRejectsInconsistency(t *testing.T) {

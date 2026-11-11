@@ -39,7 +39,6 @@ type Compilation struct {
 	Semantics              *semanticProgram
 	Scope                  *scopePlan
 	ExpandedBytes          []byte
-	builtinProcesses       *builtinProcessCatalog
 	nativeDeclarations     map[*record]bool
 }
 
@@ -89,8 +88,6 @@ func (c *Compilation) init(options Options) {
 	}
 	c.Gram = gram
 	c.Gram.constructorSignature = c.constructorGrammarSignature
-	c.builtinProcesses, err = loadBuiltinProcesses(gram.resources)
-	c.checkError(err)
 }
 
 // preProcess caches text data in MainBytes and strips out comments and cleans MainBytes.

@@ -17,7 +17,7 @@ import (
 	"time"
 
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
-	"github.com/l-programming-language/l/internal/testsupport/phase1"
+	processtest "github.com/l-programming-language/l/internal/testsupport/process"
 	"github.com/l-programming-language/l/lerrors"
 )
 
@@ -26,8 +26,8 @@ func TestCargoToolHelper(t *testing.T) {
 	if mode == "" {
 		return
 	}
-	if os.Getenv(phase1.RuntimeRegistryEnv) != "" {
-		lifetime, _, err := phase1.RegisterRuntimeHelper("controlled Cargo: " + mode)
+	if os.Getenv(processtest.RegistryEnv) != "" {
+		lifetime, _, err := processtest.RegisterHelper("controlled Cargo: " + mode)
 		if err != nil {
 			panic(err)
 		}
@@ -237,7 +237,7 @@ func TestCargoBuildToolFailuresAndIsolation(t *testing.T) {
 			}
 			sources := filepath.Join(dir, "sources")
 			started := time.Now()
-			err = compileCargoWorkspace(ctx, nil, bundle, nil, nil, sources, nil, output)
+			err = compileCargoWorkspace(ctx, nil, bundle, nil, sources, nil, output)
 			<-cancelled
 			if strings.Contains(mode, "descendant") || mode == "cancel" {
 				if time.Since(started) > 8*time.Second {
@@ -376,7 +376,7 @@ func runIsolatedCargoCase(t *testing.T, marker, seed string) {
 	command.Env = append(os.Environ(), marker+"="+t.Name(), "L_TEST_CARGO_ISOLATED_SEED="+seed)
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
-	result := phase1.RunRuntimeDriver(ctx, command)
+	result := processtest.Run(ctx, command)
 	if err := result.Failure(); err != nil {
 		t.Fatalf("isolated tool assertions: %v\nstdout:\n%s\nstderr:\n%s", err, result.Stdout, result.Stderr)
 	}
@@ -410,7 +410,7 @@ func emitCargoArtifact() {
 			manifest = words[index+1]
 		}
 	}
-	manifest = filepath.Join(filepath.Dir(manifest), "orchestrator", "Cargo.toml")
+	manifest = filepath.Join(filepath.Dir(manifest), "entry", "Cargo.toml")
 	message, err := json.Marshal(map[string]any{"reason": "compiler-artifact", "package_id": "path+file:///controlled#cli_parity@0.0.0", "manifest_path": manifest, "target": map[string]any{"name": "cli_parity", "kind": []string{"bin"}}, "executable": os.Getenv("L_TEST_CARGO_OUTPUT")})
 	if err != nil {
 		panic(err)

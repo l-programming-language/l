@@ -177,7 +177,7 @@ func TestLiteralFramingCompilePreservesOrdinaryText(t *testing.T) {
 			if x.Type.String() != "Primitive" || x.Primitive == nil || x.Primitive.Type.String() != "Text" || x.Primitive.Text != literal {
 				t.Errorf("ordinary text was reinterpreted: %#v", x)
 			}
-			if !strings.Contains(string(result.AML), "Inputs: ~&["+strconv.Quote(message)+"]&~") {
+			if !strings.Contains(string(result.AML), `Statement: ~::std::println!("{}", `+strconv.Quote(message)+`);~`) {
 				t.Errorf("generated statement lost ordinary literal %q", message)
 			}
 		})

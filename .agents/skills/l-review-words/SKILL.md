@@ -15,7 +15,7 @@ State the inspected scope and omissions. Follow relevant public words, qualified
 
 Use the [word design convention](../../../docs/guide/definitions.md#organize-words-by-meaning-and-grammatical-role) and [registration semantics](../../../docs/spec/definitions.md#declaration-roles-and-identity). For each candidate concern, establish its declaring form, registered family, use-site role, owner, inputs/results and real callers. Distinguish an action, actor construction, modifier, predicate, value and native pattern. A noun label may accurately transcribe a questionable source design; changing the label alone does not repair it.
 
-Count declaration ownership through equivalent possessive, dotted and mixed qualification, and assess the semantic reason for each deeper level under the guide's convention. Separate declaration design from ordinary member access. Report an unjustified depth as a design concern, not a grammar error or demonstrated runtime failure.
+Assess the semantic reason for deeper declaration ownership under the guide's convention. Authored L uses grammatical possessives, not dotted canonical names. Separate declaration design from ordinary member access; unjustified depth is a design concern, not proof of a runtime defect.
 
 Investigate the guide's operation, actor and stage-noun warning signs, including private helpers, while checking its valid controls. Expand every declared form with the actual suffix rules and check intended spelling, role and canonical caller identity. Passing source/metadata consistency can preserve bad morphology; use the registration rules to distinguish passive forms from descriptors.
 
@@ -35,7 +35,7 @@ Distinguish conditional work from eager arguments, error replacement from propag
 
 ## Inspect native boundaries and evidence
 
-Follow the [native guide](../../../docs/guide/native-definitions.md). Accept justified bounded calls, operators, constructors, borrows/projections, patterns and returns. A `Statement` occurrence is not itself a defect, and a native library's internal loop does not require a new L implementation. Inspect new helpers and closures behind calls: a short leaf can hide branching, iteration, resource choice or failure policy that belongs in L. Reject spelling-specific compiler handling and hidden executable bodies, not legitimate typed native atoms.
+Follow the [native guide](../../../docs/guide/native-definitions.md). Accept justified bounded calls, operators, constructors, borrows/projections, patterns and returns. A `Statement` occurrence is not itself a defect, and a native library's internal loop does not require a new L implementation. Inspect new helpers and closures behind calls for concealed library algorithms. Preserve compiler-owned grammar, binding and control-flow lowering through frozen AML interfaces. Reject spelling-specific compiler handling and hidden executable bodies, not legitimate typed native atoms.
 
 Check that claimed reusable interfaces have meaningful independent composition evidence and accurate target/ownership rejection. Do not demand invented public consumers for every private continuation. Route compiler diagnosis to [frontend tracing](../l-frontend-trace/SKILL.md) or [logeme handoff](../l-logeme-handoff/SKILL.md); neither a parser pass nor native compilation establishes all runtime semantics.
 

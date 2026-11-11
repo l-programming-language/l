@@ -37,7 +37,7 @@ func TestValueBindingUsesSelectedResultLabel(t *testing.T) {
 		"Define \"Parcel\" as a New Marked Carrier.\n"+
 		"Define \"Routed\" as a New Adjective describing any Carrier.\nIt describes any Carrier as a New Parcel.\n"+
 		"Define \"Vacant\" as `<DEF>OB{|Key: ~<@Receipt|Label@>~, Value: ~()~|}<DEF>`.\nDefine \"EmptyParcel\" as a New Vacant.\n"+
-		"Define \"Stages\" as a New Process of a New Carrier and a New Vacant.\n")...)}
+		"")...)}
 	const source = "Define \"Acquire\" as `<DEF>MOB{|Key: ~<@Acquired|Label@>~|}^KY{|Key: ~crate::acquire~|}<DEF>`.\n\n" +
 		"    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `f64`.\nReturn a New Routed Carrier of a New Acquire.\n"
 	c := NewLygerService(Options{Language: "eng", Resources: files}).NewCompilation([]byte(source), "result-label.l")
@@ -58,28 +58,56 @@ func TestValueBindingUsesSelectedResultLabel(t *testing.T) {
 		{name: "zero operands", word: "EmptyParcel"},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			emitter := orchestrationEmitter{compilation: c}
+			defer c.definitionScope()()
 			for _, input := range []string{"first_operand", "second_operand"} {
-				arguments, value := map[string]DefinitionArgument{}, "()"
+				value := "()"
 				if test.operand != "" {
-					arguments[test.operand], value = definitionReferenceArgument(input), input
+					value = input
 				}
-				result, err := emitter.describedValueBinding(test.word, test.descriptors, arguments)
+				rec, err := c.builtinRecord(test.word)
 				if err != nil {
 					t.Fatal(err)
 				}
-				if len(emitter.pending) == 0 || strings.Count(emitter.pending[len(emitter.pending)-1], "Key: ~"+result+"~, Value: ~"+value+"~") != 1 {
-					t.Fatalf("selected constructor lost explicit result or operand: %v", emitter.pending)
+				node, err := c.definitionConstruction(rec, test.descriptors...)
+				if err != nil {
+					t.Fatal(err)
 				}
-				instance, err := c.instantiateDescribedBuiltin(test.word, test.descriptors, arguments)
-				if err != nil || instance.Span.Path != core {
-					t.Fatalf("selected constructor lost definition-site provenance: %s, %v", instance.Span.Path, err)
+				var values []DefinitionArgument
+				if test.operand != "" {
+					values = []DefinitionArgument{definitionReferenceArgument(input)}
+				}
+				bound, _, err := c.instantiateStaticConstruction(node, values, make(map[*record]bool), nil)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if bound.result == nil || strings.Count(bound.Expression, "Key: ~"+bound.result.reference+"~, Value: ~"+value+"~") != 1 {
+					t.Fatalf("selected constructor lost explicit result or operand: %+v", bound)
+				}
+				if bound.Span.Path != core {
+					t.Fatalf("selected constructor lost definition-site provenance: %s", bound.Span.Path)
 				}
 			}
 		})
 	}
-	emitter := orchestrationEmitter{compilation: c}
-	if _, err := emitter.valueBinding("Stages", nil); err == nil || !strings.Contains(err.Error(), "requires an explicit result binding") {
+	defer c.definitionScope()()
+	var steps []DefinitionInstance
+	for index := 0; index < 2; index++ {
+		rec, err := c.builtinRecord("EmptyParcel")
+		if err != nil {
+			t.Fatal(err)
+		}
+		node, err := c.definitionConstruction(rec)
+		if err != nil {
+			t.Fatal(err)
+		}
+		instance, _, err := c.instantiateStaticConstruction(node, nil, make(map[*record]bool), nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		steps = append(steps, instance)
+	}
+	stages := composeDefinitionSequence(steps)
+	if _, err := c.atomArgument(DefinitionArgument{Kind: "Definition", Definition: &stages}); err == nil || !strings.Contains(err.Error(), "requires an explicit result binding") {
 		t.Fatalf("multi-stage construction acquired an implicit result: %v", err)
 	}
 	testNativeDefinitionLibrary(t, c, "Exercise", "forwarded_result", `static CALLS:std::sync::atomic::AtomicUsize=std::sync::atomic::AtomicUsize::new(0);pub fn acquire()->f64{CALLS.fetch_add(1,std::sync::atomic::Ordering::SeqCst);7.0}#[path="src/forwarded_result.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),7.0);assert_eq!(CALLS.load(std::sync::atomic::Ordering::SeqCst),1);}`)

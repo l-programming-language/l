@@ -9,71 +9,26 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/l-programming-language/l/internal/cargonames"
 	"github.com/l-programming-language/l/lerrors"
 )
-
-func orchestratorPackageName(stem string, applications []*sourceBundle) string {
-	used := map[string]bool{}
-	for _, application := range applications {
-		if application.packagePlan != nil {
-			used[strings.ToLower(application.packagePlan.name)] = true
-			if application.packagePlan.binary != "" {
-				used[strings.ToLower(application.packagePlan.binary)] = true
-			}
-		}
-	}
-	valid := stem != ""
-	for index, char := range stem {
-		valid = valid && (char == '_' || char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z' || index > 0 && (char >= '0' && char <= '9' || char == '-'))
-	}
-	if valid && !cargonames.IsReservedBinary(stem) && !used[strings.ToLower(stem)] {
-		return stem
-	}
-	name := "l_entry"
-	for index := 1; used[strings.ToLower(name)]; index++ {
-		name = fmt.Sprintf("l_entry_%d", index)
-	}
-	return name
-}
-
-func runtimePackageName(entry string, packages []*sourceBundle) string {
-	native := func(name string) string { return strings.ToLower(strings.ReplaceAll(name, "-", "_")) }
-	used := map[string]bool{native(entry): true}
-	for _, bundle := range packages {
-		if bundle == nil || bundle.packagePlan == nil {
-			continue
-		}
-		used[native(bundle.packagePlan.name)] = true
-		used[native(bundle.packagePlan.library)] = true
-		for _, dependency := range bundle.packagePlan.dependencies {
-			used[native(dependency.name)] = true
-		}
-	}
-	name := "l_runtime_support"
-	for suffix := 1; used[native(name)]; suffix++ {
-		name = fmt.Sprintf("l_runtime_support_%d", suffix)
-	}
-	return name
-}
 
 // Each package retains its complete source namespace. A package can expose a
 // library alongside its binary; shared Services can be separate library-only
 // members. Publication destinations never depend on Cargo target-directory
 // naming: they are populated from successful compiler-artifact messages.
-func compileCargoWorkspace(ctx context.Context, applications []*sourceBundle, orchestrator *sourceBundle, libraries []*sourceBundle, support *sourceBundle, directory string, destinations []string, entry string) error {
+func compileCargoWorkspace(ctx context.Context, applications []*sourceBundle, entryBundle *sourceBundle, libraries []*sourceBundle, directory string, destinations []string, entry string) error {
 	if len(applications) != len(destinations) {
 		return lerrors.Internal.Errorf("Rust workspace application dimensions do not match")
 	}
-	if orchestrator == nil || orchestrator.packagePlan == nil || orchestrator.packagePlan.binary == "" {
-		return lerrors.Internal.Errorf("Rust workspace has no orchestrator binary")
+	if entryBundle == nil || entryBundle.packagePlan == nil || entryBundle.packagePlan.binary == "" {
+		return lerrors.Internal.Errorf("Rust workspace has no entry binary")
 	}
 	type member struct {
 		path   string
 		bundle *sourceBundle
 		output string
 	}
-	members := []member{{"orchestrator", orchestrator, entry}}
+	members := []member{{"entry", entryBundle, entry}}
 	for index, bundle := range applications {
 		if bundle == nil || bundle.packagePlan == nil || bundle.packagePlan.binary == "" {
 			return lerrors.Internal.Errorf("Rust App %d has no binary target", index)
@@ -85,12 +40,6 @@ func compileCargoWorkspace(ctx context.Context, applications []*sourceBundle, or
 			return lerrors.Internal.Errorf("Rust Service %d requires a library-only package", index)
 		}
 		members = append(members, member{fmt.Sprintf("services/service-%03d", index), bundle, ""})
-	}
-	if support != nil {
-		if support.packagePlan == nil || support.packagePlan.library == "" || support.packagePlan.binary != "" {
-			return lerrors.Internal.Errorf("Rust runtime requires a library-only package")
-		}
-		members = append(members, member{"support/runtime", support, ""})
 	}
 	var manifest strings.Builder
 	manifest.WriteString("[workspace]\nresolver = \"3\"\nmembers = [\n")

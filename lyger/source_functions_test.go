@@ -3,21 +3,17 @@ package Lyger
 import (
 	"fmt"
 
-	Logiceme "github.com/l-programming-language/l/logiceme"
-	"io/fs"
-
 	"strings"
 	"testing"
 )
 
-func functionGenerated(t *testing.T, source string) (string, error) {
+func compileFunctionPlan(t *testing.T, source string) (*orchestrationPlan, error) {
 	t.Helper()
 	c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
 	if c.Error != nil {
-		return "", c.Error
+		return nil, c.Error
 	}
-	_, bundle, err := orchestratorTestBundle(canonicalTestOptions().Resources, &CompilationResult{Compilation: c})
-	return builtinProcessRust(bundle), err
+	return planOrchestration(c.Semantics)
 }
 
 var identityFunction = functionSource("Identity", "\"Value\" as Text", "Text", "Return Value.")
@@ -43,7 +39,7 @@ func TestOrdinaryFunctionSourceCases(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			_, err := functionGenerated(t, test.source)
+			_, err := compileFunctionPlan(t, test.source)
 			if test.want == "" {
 				if err != nil {
 					t.Fatal(err)
@@ -102,20 +98,11 @@ func functionSource(name, inputs, outputs, body string) string {
 	return fmt.Sprintf("    Publicly create %q as a New Function with %s and %s.\n%s\n\n", name, inputs, outputs, body)
 }
 
-func requireFunctionGenerated(t *testing.T, source string) string {
+func requireFunctionPlan(t *testing.T, source string) *orchestrationPlan {
 	t.Helper()
-	generated, err := functionGenerated(t, source)
+	plan, err := compileFunctionPlan(t, source)
 	if err != nil {
 		t.Fatal(err)
 	}
-	return generated
-}
-
-func orchestratorTestBundle(resources fs.FS, result *CompilationResult) (BuildUnit, Logiceme.Executable, error) {
-	unit, err := result.OrchestratorUnit("entry", executableTestCompanions(result))
-	if err != nil {
-		return unit, Logiceme.Executable{}, err
-	}
-	bundle, err := Logiceme.NewLogicemeService(resources).Evaluate(unit.BackendAML, Logiceme.GenerationOptions{IncludeRuntime: true})
-	return unit, bundle, err
+	return plan
 }

@@ -8,49 +8,6 @@ import (
 	"testing/fstest"
 )
 
-func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
-	source := "Define \"Callerreturn\" to `<DEF>BOD^E{|Statement: ~return /* caller */ <@Statement@>;~|}<DEF>`.\n" +
-		"Define \"Calleereturn\" to `<DEF>BOD^E{|Statement: ~return /* callee */ <@Statement@>;~|}<DEF>`.\n" +
-		"Define \"Invocation\" to `<DEF>KY{|Key: ~(/* selected invocation */ <@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.\n\n" +
-		"    Publicly create \"Done\" as a New Function with No Inputs and No Outputs.\nReturn.\n"
-	c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
-	var definition *sourceFunction
-	for _, function := range c.Semantics.Functions {
-		definition = function
-	}
-	if definition == nil {
-		t.Fatal("missing Function")
-	}
-	caller, callee := *definition, *definition
-	selected := func(name string) *record {
-		rec, err := c.exportedRecord(name)
-		if err != nil {
-			t.Fatal(err)
-		}
-		return rec
-	}
-	caller.Return = selected("Callerreturn")
-	callee.Return = selected("Calleereturn")
-	callee.Invoke = selected("Invocation")
-
-	emitter := orchestrationEmitter{compilation: c,
-		plan: &orchestrationPlan{Identities: map[*record]uint64{callee.Definition: 1}}, functionDepth: 1, functionWords: &caller,
-		functionContracts: map[*record]*sourceFunction{callee.Definition: &callee},
-	}
-	statements, err := emitter.functionInstruction(&orchestrationInstruction{
-		Source: &instruction{Kind: instructionInvoke},
-		Target: &orchestrationValue{Type: valueFunction, RuntimeType: callee.signature(), Storage: &orchestrationStorage{}},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	aml := strings.Join(statements, "*")
-	if !strings.Contains(aml, "/* selected invocation */") || !strings.Contains(aml, "/* caller */") || strings.Contains(aml, "/* callee */") {
-		t.Fatalf("invocation or enclosing return lost its selected definition: %s", aml)
-	}
-}
-
-// Main construction must consume the selected Function definition even when
 // the standalone App needs no Runtime composition.
 func TestCanonicalFunctionDefinitionsOwnEmission(t *testing.T) {
 	const core = "builtins/eng/core.l"
@@ -75,7 +32,7 @@ func TestCanonicalFunctionDefinitionsOwnEmission(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Contains(units[0].BackendAML, []byte(marker)) || !strings.Contains(builtinProcessRust(bundle), marker) {
+	if !bytes.Contains(units[0].BackendAML, []byte(marker)) || !strings.Contains(generatedRustSource(bundle), marker) {
 		t.Fatal("selected Function definition did not control App AML and Rust")
 	}
 	if !bytes.Equal(files[core].Data, selected) {

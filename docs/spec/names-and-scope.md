@@ -40,21 +40,17 @@ A source action can bind a pronoun to its typed argument. Imported occurrences r
 
 ## Possessives and member lookup
 
-Use grammatical possessives or explicitly scoped aliases. Dot-qualified authored names are invalid. Lookup first checks a complete visible binding, then commits to its canonical owner and member tables. A missing member cannot fall through to an unrelated owner.
+Use grammatical possessives or explicitly scoped aliases. Dot-qualified authored names are invalid; dotted internal identities are not source syntax. Lookup first checks a complete visible binding, then commits to its canonical owner and member tables. A missing member cannot fall through to an unrelated owner. Nested access does not justify deep declaration ownership; prefer one possessive when declaring a word.
 
 ## Aliases and canonical identity
 
 An alias retains its target's identity, members, signature and descriptor applicability. Same-spelled private declarations are different meanings. Qualified members require an explicit alias for unqualified use; private dictionary dependencies do not become caller exports.
 
-## Runtime storage and definite assignment
+## Evaluation and definite assignment
 
 Preserve once-only argument evaluation and definition-site bindings through source expansion. A checked value must be assigned on every continuing path to its read; the compiler must not manufacture a default or clone ownership away.
 
 These compiler invariants do not provide a runtime capture implementation. Runtime-dependent effects and captures remain outside the standalone boundary.
-
-## Output snapshots
-
-Runtime capture, Output snapshots and App continuations are unavailable. Print writes directly from the standalone process. See [execution](execution.md).
 
 ## Diagnostics
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
 
 	"os"
 	"os/exec"
@@ -158,6 +159,42 @@ func TestNativeEnvironmentCaptureFailureAndTarget(t *testing.T) {
 			}
 			if mode == "failure" && (len(environment.Executions) != 1 || environment.Executions[0].Status != "failed") {
 				t.Fatalf("failed tool query was hidden: %+v", environment.Executions)
+			}
+		})
+	}
+}
+
+func TestNativeEnvironmentExactSourceDependencies(t *testing.T) {
+	fixture := newNativeObservationFixture(t)
+	environment := fixture.capture(t, "")
+	if !maps.Equal(environment.Inputs, fixture.report.Inputs) || !maps.Equal(environment.Dependencies, fixture.report.Lowering.Fingerprints) {
+		t.Fatalf("capture lost selected source or implementation identities: %+v", environment)
+	}
+	for _, mutation := range []string{"unchanged", "changed-source", "missing-source", "extra-source", "changed-dependency", "missing-dependency", "extra-dependency"} {
+		t.Run(mutation, func(t *testing.T) {
+			inputs, dependencies := maps.Clone(fixture.report.Inputs), maps.Clone(fixture.report.Lowering.Fingerprints)
+			want := contracts.Unresolved
+			switch mutation {
+			case "unchanged":
+				want = contracts.Established
+			case "changed-source":
+				inputs["source:entry"] = "changed"
+			case "missing-source":
+				delete(inputs, "source:entry")
+			case "extra-source":
+				inputs["source:extra"] = "extra"
+			case "changed-dependency":
+				dependencies["helper"] = "changed"
+			case "missing-dependency":
+				delete(dependencies, "helper")
+			case "extra-dependency":
+				dependencies["extra"] = "extra"
+			}
+			if got, reason := contracts.EnvironmentApplicability(environment, inputs, dependencies); got != want {
+				t.Fatalf("want %s, got %s: %s", want, got, reason)
+			}
+			if len(fixture.calls) != 6 {
+				t.Fatal("offline applicability replayed tool observations")
 			}
 		})
 	}

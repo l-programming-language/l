@@ -10,7 +10,7 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-// The external records are generated once from the pinned runtime manifest.
+// The external records retain the pinned dependency graph for supported crates.
 // Local workspace records are assembled from the validated package plans.
 //
 //go:embed cargo_dependencies.lock

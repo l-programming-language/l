@@ -10,14 +10,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/l-programming-language/l/internal/testsupport/phase1"
+	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 )
 
 func TestNativeEvidenceRecordsActualBuildWithoutRunningApp(t *testing.T) {
 	source := nativeEvidenceSource(t)
 	project := filepath.Dir(source)
 	output := filepath.Join(project, "native-evidence.json")
-	stdout, stderr, err := runBuildCommand(t, phase1.CLI(t), project, nil, "build", "--native-evidence-output", output, source)
+	stdout, stderr, err := runBuildCommand(t, nativetest.InstalledCLI(t), project, nil, "build", "--native-evidence-output", output, source)
 	if err != nil {
 		t.Fatalf("evidence-producing native build failed: %v\n%s\n%s", err, stdout, stderr)
 	}
@@ -56,7 +56,7 @@ func TestNativeEvidenceRecordsActualBuildWithoutRunningApp(t *testing.T) {
 
 	old := nativeBytesHash(readNativeEvidenceFile(t, binary))
 	missing := filepath.Join(project, "absent", "record.json")
-	_, stderr, err = runBuildCommand(t, phase1.CLI(t), project, nil, "build", "--native-evidence-output", missing, source)
+	_, stderr, err = runBuildCommand(t, nativetest.InstalledCLI(t), project, nil, "build", "--native-evidence-output", missing, source)
 	entries, readErr := os.ReadDir(filepath.Join(binary+".apps", "generations"))
 	if err == nil || !strings.Contains(string(stderr), "write requested native evidence") || readErr != nil || len(entries) != 1 || entries[0].Name() != generation || nativeBytesHash(readNativeEvidenceFile(t, binary)) != old || readBuildEnvironment(t, output).Fingerprint != environment.Fingerprint {
 		t.Fatalf("late evidence failure disturbed an installed generation: %v %s", err, stderr)
@@ -101,7 +101,7 @@ exit 0`
 			source := writeNativeEvidenceFile(t, filepath.Join(project, "entry.l"), []byte("Create \"Worker\" as a New Basic App.\nThe App Prints `hello`.\n"))
 			record := filepath.Join(project, "native-evidence.json")
 			env := []string{"PATH=" + tools + string(os.PathListSeparator) + os.Getenv("PATH"), "REAL_CARGO=" + cargo, "TEST_GENERATIONS=" + filepath.Join(output+".apps", "generations")}
-			stdout, stderr, buildErr := runBuildCommand(t, phase1.CLI(t), project, env, "build", "--native-evidence-output", record, source)
+			stdout, stderr, buildErr := runBuildCommand(t, nativetest.InstalledCLI(t), project, env, "build", "--native-evidence-output", record, source)
 			old := readNativeEvidenceFile(t, output)
 			if buildErr == nil || len(stdout) != 0 || string(old) != "old" {
 				t.Fatalf("failed build replaced previous publication: %v %s", buildErr, stderr)

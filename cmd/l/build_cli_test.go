@@ -10,13 +10,12 @@ import (
 
 	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
-	"github.com/l-programming-language/l/internal/testsupport/phase1"
 )
 
 func TestBuildCLI(t *testing.T) {
 	const source = "Create \"Hello\" as a New Basic App.\nThe App Prints `literal <DEF> 世界`.\n"
 	cli := filepath.Join(t.TempDir(), "compiler installation", "bin", "l")
-	phase1.CopyFile(t, phase1.CLI(t), cli, 0700)
+	nativetest.CopyCLI(t, cli)
 	for _, tc := range []struct {
 		name, filename          string
 		defaultSource, override bool

@@ -49,7 +49,7 @@
           "type": "string"
         },
         "schema_version": {
-          "const": "1.1"
+          "const": "2.0"
         },
         "version": {
           "type": "string"
@@ -228,7 +228,7 @@
       "type": "object"
     }
   },
-  "$id": "l-contracts/1.1/contract_check_requests",
+  "$id": "l-contracts/2.0/contract_check_requests",
   "$ref": "#/$defs/CheckRequests",
   "$schema": "https://json-schema.org/draft/2020-12/schema"
 }

@@ -30,7 +30,7 @@ func TestRuntimeReadPreservesRequestedIdentity(t *testing.T) {
 		{"Function", identityFunction + otherFunction + "Define \"callbacks\" as a New List of Identity.\nDefine \"selected\" as a New Other from callbacks at 0.\n"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			_, err := functionGenerated(t, tc.source)
+			_, err := compileFunctionPlan(t, tc.source)
 			if !errors.Is(err, lerrors.TypeMismatch) || !strings.Contains(err.Error(), "read type does not match") {
 				t.Fatalf("requested type must be checked against stored identity/signature: %v", err)
 			}
@@ -49,12 +49,12 @@ func TestUndeclaredRuntimeTypeHasNoImplicitImplementation(t *testing.T) {
 		"Pointer":      "Define \"value\" as a New Pointer of Instance.\n",
 	} {
 		t.Run(name, func(t *testing.T) {
-			if _, err := functionGenerated(t, source); err == nil {
+			if _, err := compileFunctionPlan(t, source); err == nil {
 				t.Fatal("undeclared runtime type acquired an implicit implementation")
 			}
 		})
 	}
-	if _, err := functionGenerated(t, "Define \"Instance\" as 7.\nShow Instance.\n"); err != nil {
+	if _, err := compileFunctionPlan(t, "Define \"Instance\" as 7.\nShow Instance.\n"); err != nil {
 		t.Fatalf("ordinary declaration must not be blocked by a reserved-name blacklist: %v", err)
 	}
 }

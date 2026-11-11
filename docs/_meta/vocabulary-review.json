@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "sourceHashes": {
     "lexicon/eng/vocabulary.json": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c",
-    "lyger/function_composition.go": "2330be73b9c34b9fd83475b06d41fe5d2595ac6bf8a4bc7961b03da26ac4a23e",
+    "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
     "lyger/instructions.go": "c2fa788245436f92036891370e9dc180a0646772d0efa96ec3cec8e3459f7c34",
-    "lyger/process_inputs.go": "8d694eebf5de74b5585f10a04c24146426918036ebec3906d97cf4602721dfce",
-    "lyger/runtime_values_source.go": "46a2db2854dca407019d7f0a578dce89394ae3fd835996831785f05317d8bc21",
+    "lyger/process_inputs.go": "1f4d64f923f872dd74adb949dc591a384a43b09e8fa2dfde960e88bd76e429cb",
+    "lyger/runtime_values_source.go": "2b4c234b780146e05a80f5dbf90156d6f98fe2934935ebf76f2647430136a60b",
     "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
     "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
     "lyger/token_forms.go": "41bc8a6d505fdea4f6c351f73060f0fd422745a5b5c083c8354fe7ade4013d6a",
