@@ -18,6 +18,8 @@ Follow only necessary boundaries:
 
 For a role-sensitive failure, trace the declaring grammar case, registered family/POS, inflection role, selected caller grammar and canonical target/binding before AML. Preserve the [distinction from Function/value storage](../../../docs/spec/definitions.md#declaration-roles-and-identity), including aliases and same-spelled modifiers. Route naming, ownership-depth and factoring judgments to [word review](../l-review-words/SKILL.md) or [authoring](../l-author-word/SKILL.md); a questionable source design is not permission for an English-spelling compiler exception.
 
+For name or family rejection, use the [authored-name/alias contract](../../../docs/spec/names-and-scope.md#possessives-and-member-lookup) and [complete-family contract](../../../docs/spec/definitions.md#inflection-declarations). Inspect raw forms, expanded forms, declared role and canonical alias origin before publication. Follow import occurrences and alias chains; private/core source and stored Function values must not bypass the applicable rule. Keep Text, comments, numeric/path bytes, native code, AML, template slots and internal identities outside authored-name validation. Configured JSON grammar remains unchanged.
+
 Use existing tests or diagnostic overlays without editing frozen assets or substituting diagnostics for the temporary gate. Normalize UUIDs/map order only in diagnostic views; retain raw bytes and instruction order. When authorized, repair shared behavior while preserving source-defined vocabulary. Do not restore mirrors, bootstrap fallback, source-rewrite helpers or demo special cases.
 
 Return failing stage/source location, decisive transition, affected implementation and test evidence. Use the acceptance skill for completion.

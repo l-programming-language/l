@@ -920,7 +920,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#declarations-and-definitions",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 9
     },
     {
       "id": "grammar:subject:type",
@@ -930,7 +930,7 @@
       "sequence": "\"ID\" | PHRASE.DECLARATIVE.TYPE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 9
+      "note": 10
     },
     {
       "id": "grammar:subject:list",
@@ -940,7 +940,7 @@
       "sequence": "\"ID\" | PHRASE.DECLARATIVE.LIST",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 10
+      "note": 11
     },
     {
       "id": "grammar:subject:dict",
@@ -950,7 +950,7 @@
       "sequence": "\"ID\" | PHRASE.DECLARATIVE.DICT",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 11
+      "note": 12
     },
     {
       "id": "grammar:subject:declarative",
@@ -960,7 +960,7 @@
       "sequence": "\"ID\" | PHRASE.DECLARATIVE.DEFINITIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 12
+      "note": 13
     },
     {
       "id": "grammar:subject:definitional",
@@ -970,7 +970,7 @@
       "sequence": "\"ID\" | PHRASE.DECLARATIVE.DEFINITIONAL",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 13
+      "note": 14
     },
     {
       "id": "grammar:subject:value",
@@ -980,7 +980,7 @@
       "sequence": "\"ID\" | PHRASE.DECLARATIVE.VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 14
+      "note": 15
     },
     {
       "id": "grammar:subject:declaration",
@@ -990,7 +990,7 @@
       "sequence": "\"ID\" | PHRASE.GENERIC*",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 15
+      "note": 16
     },
     {
       "id": "grammar:subject:definitive",
@@ -1000,7 +1000,7 @@
       "sequence": "ID",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 16
+      "note": 17
     },
     {
       "id": "grammar:subject:reference",
@@ -1010,7 +1010,7 @@
       "sequence": "#~#",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 17
+      "note": 18
     },
     {
       "id": "grammar:subject:definition",
@@ -1020,7 +1020,7 @@
       "sequence": "ID | PHRASE.GENERIC",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 18
+      "note": 19
     },
     {
       "id": "grammar:subject:directive",
@@ -1030,7 +1030,7 @@
       "sequence": "\"ID\" | PHRASE.DIRECTIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 19
+      "note": 20
     },
     {
       "id": "grammar:subject:utilization",
@@ -1040,7 +1040,7 @@
       "sequence": "\"ID\" | PHRASE.UTILIZATION",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 20
+      "note": 21
     },
     {
       "id": "grammar:subject:callable",
@@ -1050,7 +1050,7 @@
       "sequence": "\"ID\" | PHRASE.DECLARATIVE.CALLABLE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 21
+      "note": 22
     },
     {
       "id": "grammar:subject:signature",
@@ -1060,7 +1060,7 @@
       "sequence": "\"ID\" | PHRASE.DECLARATIVE.SIGNATURE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 22
+      "note": 23
     },
     {
       "id": "grammar:object",
@@ -1079,7 +1079,7 @@
       "sequence": "VALUE.TEXT | ID | PHRASE* | CLAUSE*",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 23
+      "note": 24
     },
     {
       "id": "grammar:object:named_type",
@@ -1089,7 +1089,7 @@
       "sequence": "VALUE.TEXT | #~# | PHRASE* | CLAUSE*",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 24
+      "note": 25
     },
     {
       "id": "grammar:object:declarative",
@@ -1099,7 +1099,7 @@
       "sequence": "\"ID\" | PHRASE*",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 25
+      "note": 26
     },
     {
       "id": "grammar:object:definitive",
@@ -1119,7 +1119,7 @@
       "sequence": "ID | PHRASE.DEPENDENCY | CLAUSE*",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 26
+      "note": 27
     },
     {
       "id": "grammar:object:text",
@@ -1199,7 +1199,7 @@
       "sequence": "ID",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 27
+      "note": 28
     },
     {
       "id": "grammar:object:type_argument",
@@ -1209,7 +1209,7 @@
       "sequence": "#~#",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 27
+      "note": 28
     },
     {
       "id": "grammar:object:callable",
@@ -1219,7 +1219,7 @@
       "sequence": "ID | PHRASE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 28
+      "note": 29
     },
     {
       "id": "grammar:phrase.generic",
@@ -1247,7 +1247,7 @@
       "sequence": "[CLAUSE.APPLICATIVE]",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 29
+      "note": 30
     },
     {
       "id": "grammar:phrase.declarative",
@@ -1276,7 +1276,7 @@
       "sequence": "OBJECT.LIST",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 30
+      "note": 31
     },
     {
       "id": "grammar:phrase.declarative:dict",
@@ -1296,7 +1296,7 @@
       "sequence": "OBJECT.DECLARATIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 31
+      "note": 32
     },
     {
       "id": "grammar:phrase.declarative:definitive",
@@ -1306,7 +1306,7 @@
       "sequence": "OBJECT.DEFINITIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 32
+      "note": 33
     },
     {
       "id": "grammar:phrase.declarative:definitional",
@@ -1316,7 +1316,7 @@
       "sequence": "OBJECT.TEXT",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 33
+      "note": 34
     },
     {
       "id": "grammar:phrase.declarative:value",
@@ -1326,7 +1326,7 @@
       "sequence": "OBJECT",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 32
+      "note": 33
     },
     {
       "id": "grammar:phrase.declarative:alias",
@@ -1336,7 +1336,7 @@
       "sequence": "SUBJECT.DECLARATION",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 34
+      "note": 35
     },
     {
       "id": "grammar:phrase.declarative:callable",
@@ -1346,7 +1346,7 @@
       "sequence": "OBJECT.CALLABLE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 35
+      "note": 36
     },
     {
       "id": "grammar:phrase.declarative:signature",
@@ -1356,7 +1356,7 @@
       "sequence": "OBJECT",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 36
+      "note": 23
     },
     {
       "id": "grammar:phrase.locative",
@@ -1489,7 +1489,7 @@
       "semanticDoc": "docs/spec/imports.md#explicit-source-file-imports",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 41
     },
     {
       "id": "grammar:clause.assign.passive",
@@ -1498,7 +1498,7 @@
       "semanticDoc": "docs/spec/control-flow.md#assignment",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 42
     },
     {
       "id": "grammar:clause.generic.imperative",
@@ -1517,7 +1517,7 @@
       "sequence": "[VALUE]* | [PHRASE.ARGUMENTS]* | PHRASE.RESULTS*",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 41
+      "note": 43
     },
     {
       "id": "grammar:clause.generic.imperative:subjective",
@@ -1527,7 +1527,7 @@
       "sequence": "SUBJECT",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 42
+      "note": 44
     },
     {
       "id": "grammar:clause.generic.imperative:objective",
@@ -1537,7 +1537,7 @@
       "sequence": "[OBJECT]",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 42
+      "note": 44
     },
     {
       "id": "grammar:clause.generic.active",
@@ -1556,7 +1556,7 @@
       "sequence": "[VALUE]* | [PHRASE.ARGUMENTS]* | PHRASE.RESULTS*",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 41
+      "note": 43
     },
     {
       "id": "grammar:clause.generic.active:objective",
@@ -1594,7 +1594,7 @@
       "sequence": "[VALUE]* | [PHRASE.ARGUMENTS]* | PHRASE.RESULTS*",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 41
+      "note": 43
     },
     {
       "id": "grammar:clause.generic.applicative:subjective",
@@ -1604,7 +1604,7 @@
       "sequence": "SUBJECT",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 42
+      "note": 44
     },
     {
       "id": "grammar:clause.generic.applicative:objective",
@@ -1614,7 +1614,7 @@
       "sequence": "[OBJECT]",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 42
+      "note": 44
     },
     {
       "id": "grammar:clause.declarative.imperative",
@@ -1623,7 +1623,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.imperative:noun",
@@ -1633,7 +1633,7 @@
       "sequence": "SUBJECT.DECLARATIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.imperative:verb",
@@ -1643,7 +1643,7 @@
       "sequence": "SUBJECT.DIRECTIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.imperative:type",
@@ -1653,7 +1653,7 @@
       "sequence": "SUBJECT.TYPE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.imperative:list",
@@ -1663,7 +1663,7 @@
       "sequence": "SUBJECT.LIST",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.imperative:dict",
@@ -1673,7 +1673,7 @@
       "sequence": "SUBJECT.DICT",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.imperative:callable",
@@ -1683,7 +1683,7 @@
       "sequence": "SUBJECT.CALLABLE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 43
+      "note": 46
     },
     {
       "id": "grammar:clause.declarative.active",
@@ -1692,7 +1692,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.active:noun",
@@ -1702,7 +1702,7 @@
       "sequence": "SUBJECT.DECLARATIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.active:verb",
@@ -1712,7 +1712,7 @@
       "sequence": "SUBJECT.DIRECTIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.active:type",
@@ -1722,7 +1722,7 @@
       "sequence": "SUBJECT.TYPE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.active:list",
@@ -1732,7 +1732,7 @@
       "sequence": "SUBJECT.LIST",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.active:dict",
@@ -1742,7 +1742,7 @@
       "sequence": "SUBJECT.DICT",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.passive",
@@ -1751,7 +1751,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.passive:noun",
@@ -1761,7 +1761,7 @@
       "sequence": "PHRASE.DECLARATIVE.DEFINITIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.passive:verb",
@@ -1771,7 +1771,7 @@
       "sequence": "PHRASE.DIRECTIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.applicative",
@@ -1780,7 +1780,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.applicative:noun",
@@ -1790,7 +1790,7 @@
       "sequence": "SUBJECT.DECLARATIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.applicative:verb",
@@ -1800,7 +1800,7 @@
       "sequence": "SUBJECT.DIRECTIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.applicative:type",
@@ -1810,7 +1810,7 @@
       "sequence": "SUBJECT.TYPE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.applicative:list",
@@ -1820,7 +1820,7 @@
       "sequence": "SUBJECT.LIST",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.declarative.applicative:dict",
@@ -1830,7 +1830,7 @@
       "sequence": "SUBJECT.DICT",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 45
     },
     {
       "id": "grammar:clause.definitive.imperative",
@@ -1839,7 +1839,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.imperative:noun",
@@ -1849,7 +1849,7 @@
       "sequence": "SUBJECT.DEFINITIONAL",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.imperative:value",
@@ -1859,7 +1859,7 @@
       "sequence": "SUBJECT.VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.imperative:verb",
@@ -1869,7 +1869,7 @@
       "sequence": "SUBJECT.UTILIZATION",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.imperative:interface",
@@ -1879,7 +1879,7 @@
       "sequence": "SUBJECT.DECLARATIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.active",
@@ -1888,7 +1888,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.active:noun",
@@ -1898,7 +1898,7 @@
       "sequence": "SUBJECT.DEFINITIONAL",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.active:verb",
@@ -1908,7 +1908,7 @@
       "sequence": "SUBJECT.UTILIZATION",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.passive",
@@ -1917,7 +1917,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.passive:noun",
@@ -1927,7 +1927,7 @@
       "sequence": "PHRASE.DECLARATIVE.DEFINITIONAL",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.passive:verb",
@@ -1937,7 +1937,7 @@
       "sequence": "PHRASE.UTILIZATION",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.applicative",
@@ -1946,7 +1946,7 @@
       "semanticDoc": "docs/spec/definitions.md#create-define-and-describe",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.applicative:noun",
@@ -1956,7 +1956,7 @@
       "sequence": "SUBJECT.DEFINITIONAL",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.definitive.applicative:verb",
@@ -1966,7 +1966,7 @@
       "sequence": "SUBJECT.UTILIZATION",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 47
     },
     {
       "id": "grammar:clause.descriptive.imperative",
@@ -2755,7 +2755,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 48
     },
     {
       "id": "grammar:clause.associative.imperative:alias",
@@ -2765,7 +2765,7 @@
       "sequence": "PHRASE.DECLARATIVE.ALIAS",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 48
     },
     {
       "id": "grammar:clause.associative.active",
@@ -2774,7 +2774,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 48
     },
     {
       "id": "grammar:clause.associative.active:alias",
@@ -2784,7 +2784,7 @@
       "sequence": "PHRASE.DECLARATIVE.ALIAS",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 48
     },
     {
       "id": "grammar:clause.associative.passive",
@@ -2793,7 +2793,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 48
     },
     {
       "id": "grammar:clause.associative.passive:definitive",
@@ -2803,7 +2803,7 @@
       "sequence": "PHRASE.DECLARATIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 48
     },
     {
       "id": "grammar:clause.associative.passive:associative",
@@ -2813,7 +2813,7 @@
       "sequence": "PHRASE.INDICATIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 48
     },
     {
       "id": "grammar:clause.associative.applicative",
@@ -2822,7 +2822,7 @@
       "semanticDoc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 48
     },
     {
       "id": "grammar:clause.associative.applicative:alias",
@@ -2832,7 +2832,7 @@
       "sequence": "PHRASE.DECLARATIVE.ALIAS",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 48
     },
     {
       "id": "grammar:clause.generative.imperative",
@@ -3219,7 +3219,7 @@
       "sequence": "ADVERB.NULLIFICATION* | VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 44
+      "note": 49
     },
     {
       "id": "grammar:condition:has",
@@ -3229,7 +3229,7 @@
       "sequence": "VALUE | VERB.APPROPRIATIVE.ACTIVE | ARTICLE.NONE* | VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 45
+      "note": 50
     },
     {
       "id": "grammar:condition:equals",
@@ -3239,7 +3239,7 @@
       "sequence": "VALUE | VERB.COMPARATIVE.ACTIVE | ARTICLE.NONE* | VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 46
+      "note": 51
     },
     {
       "id": "grammar:condition:is",
@@ -3249,7 +3249,7 @@
       "sequence": "VALUE | VERB.PASSIVE | ARTICLE.NONE* | VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 46
+      "note": 51
     },
     {
       "id": "grammar:condition:isnt",
@@ -3259,7 +3259,7 @@
       "sequence": "VALUE | VERB.PASSIVE.NULL | VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 46
+      "note": 51
     },
     {
       "id": "grammar:condition:less",
@@ -3269,7 +3269,7 @@
       "sequence": "VALUE | ARTICLE.NONE* | ADVERB.COMPARISON.SUBTRACTION | PREPOSITION.CONJOINMENT.COMPARATIVE | VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 46
+      "note": 51
     },
     {
       "id": "grammar:condition:greater",
@@ -3279,7 +3279,7 @@
       "sequence": "VALUE | ARTICLE.NONE* | ADVERB.COMPARISON.MULTIPLICATION | PREPOSITION.CONJOINMENT.COMPARATIVE | VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 46
+      "note": 51
     },
     {
       "id": "grammar:condition:less_equal",
@@ -3289,7 +3289,7 @@
       "sequence": "VALUE | ARTICLE.NONE* | ADVERB.COMPARISON.SUBTRACTION | PREPOSITION.CONJOINMENT.COMPARATIVE | VERB.COMPARATIVE | PREPOSITION.CONJOINMENT.SUBJECTIVE | VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 46
+      "note": 51
     },
     {
       "id": "grammar:condition:greater_equal",
@@ -3299,7 +3299,7 @@
       "sequence": "VALUE | ARTICLE.NONE* | ADVERB.COMPARISON.MULTIPLICATION | PREPOSITION.CONJOINMENT.COMPARATIVE | VERB.COMPARATIVE | PREPOSITION.CONJOINMENT.SUBJECTIVE | VALUE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 46
+      "note": 51
     },
     {
       "id": "grammar:conditional.if",
@@ -4715,7 +4715,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 52
     },
     {
       "id": "grammar:phrase.signature:both",
@@ -4725,7 +4725,7 @@
       "sequence": "NOUN.FUNCTIONAL.INFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [SUBJECT.SIGNATURE] | CONJUNCTION.MUTUAL | NOUN.FUNCTIONAL.DEFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [OBJECT]",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 52
     },
     {
       "id": "grammar:phrase.signature:inputs",
@@ -4735,7 +4735,7 @@
       "sequence": "NOUN.FUNCTIONAL.INFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [SUBJECT.SIGNATURE] | CONJUNCTION.MUTUAL | ARTICLE.NONE | NOUN.FUNCTIONAL.DEFLECTIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 52
     },
     {
       "id": "grammar:phrase.signature:inputs_only",
@@ -4745,7 +4745,7 @@
       "sequence": "NOUN.FUNCTIONAL.INFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [SUBJECT.SIGNATURE]",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 47
+      "note": 53
     },
     {
       "id": "grammar:phrase.signature:outputs",
@@ -4755,7 +4755,7 @@
       "sequence": "ARTICLE.NONE | NOUN.FUNCTIONAL.INFLECTIVE | CONJUNCTION.MUTUAL | NOUN.FUNCTIONAL.DEFLECTIVE | PREPOSITION.DEFINEMENT.DEFINITIVE | [OBJECT]",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 52
     },
     {
       "id": "grammar:phrase.signature:empty",
@@ -4765,7 +4765,7 @@
       "sequence": "ARTICLE.NONE | NOUN.FUNCTIONAL.INFLECTIVE | CONJUNCTION.MUTUAL | ARTICLE.NONE | NOUN.FUNCTIONAL.DEFLECTIVE",
       "classification": 1,
       "evidenceSet": 0,
-      "note": 0
+      "note": 52
     },
     {
       "id": "grammar:phrase.arguments",
@@ -4783,7 +4783,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 0,
       "evidenceSet": 0,
-      "note": 0
+      "note": 54
     },
     {
       "id": "vocabulary:nouns.it",
@@ -4793,7 +4793,7 @@
       "wordRef": "grammar-word:it",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.that",
@@ -4803,7 +4803,7 @@
       "wordRef": "grammar-word:that",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.this",
@@ -4813,7 +4813,7 @@
       "wordRef": "grammar-word:this",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.input",
@@ -4823,7 +4823,7 @@
       "wordRef": "builtin:input",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.output",
@@ -4833,7 +4833,7 @@
       "wordRef": "builtin:output",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.error",
@@ -4843,7 +4843,7 @@
       "wordRef": "builtin:error",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.list",
@@ -4853,7 +4853,7 @@
       "wordRef": "type:list",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.dictionary",
@@ -4863,7 +4863,7 @@
       "wordRef": "type:dictionary",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.null",
@@ -4873,7 +4873,7 @@
       "wordRef": "type:null",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.thing",
@@ -4883,7 +4883,7 @@
       "wordRef": "type:thing",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.text",
@@ -4893,7 +4893,7 @@
       "wordRef": "type:text",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.number",
@@ -4903,7 +4903,7 @@
       "wordRef": "type:number",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.byte",
@@ -4913,7 +4913,7 @@
       "wordRef": "type:byte",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.truth",
@@ -4923,7 +4923,7 @@
       "wordRef": "type:truth",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.pointer",
@@ -4933,7 +4933,7 @@
       "wordRef": "type:pointer",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.op",
@@ -4942,7 +4942,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 49
+      "note": 56
     },
     {
       "id": "vocabulary:nouns.prop",
@@ -4951,7 +4951,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 49
+      "note": 56
     },
     {
       "id": "vocabulary:nouns.func",
@@ -4960,7 +4960,7 @@
       "semanticDoc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 5,
       "evidenceSet": 1,
-      "note": 49
+      "note": 56
     },
     {
       "id": "vocabulary:nouns.definition",
@@ -4970,7 +4970,7 @@
       "wordRef": "type:definition",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.attribute",
@@ -4980,7 +4980,7 @@
       "wordRef": "type:attribute",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.object",
@@ -4990,7 +4990,7 @@
       "wordRef": "type:object",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.class",
@@ -5000,7 +5000,7 @@
       "wordRef": "type:class",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.service",
@@ -5010,7 +5010,7 @@
       "wordRef": "type:service",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:nouns.app",
@@ -5020,7 +5020,7 @@
       "wordRef": "type:app",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.passive",
@@ -5030,7 +5030,7 @@
       "wordRef": "grammar-word:is",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 57
     },
     {
       "id": "vocabulary:verbs.associative",
@@ -5040,7 +5040,7 @@
       "wordRef": "builtin:use",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 58
     },
     {
       "id": "vocabulary:verbs.declarative",
@@ -5050,7 +5050,7 @@
       "wordRef": "builtin:create",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 59
     },
     {
       "id": "vocabulary:verbs.definitive",
@@ -5060,7 +5060,7 @@
       "wordRef": "builtin:define",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 60
     },
     {
       "id": "vocabulary:verbs.descriptive",
@@ -5070,7 +5070,7 @@
       "wordRef": "builtin:describe",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.expansive",
@@ -5080,7 +5080,7 @@
       "wordRef": "builtin:put",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.locative",
@@ -5090,7 +5090,7 @@
       "wordRef": "builtin:place",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.receptive",
@@ -5100,7 +5100,7 @@
       "wordRef": "builtin:get",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.reductive",
@@ -5110,7 +5110,7 @@
       "wordRef": "builtin:take",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.generative",
@@ -5120,7 +5120,7 @@
       "wordRef": "builtin:build",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.executive",
@@ -5130,7 +5130,7 @@
       "wordRef": "builtin:run",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.suspensive",
@@ -5140,7 +5140,7 @@
       "wordRef": "builtin:await",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.interruptive",
@@ -5150,7 +5150,7 @@
       "wordRef": "builtin:stop",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.inflective",
@@ -5160,7 +5160,7 @@
       "wordRef": "builtin:import",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.deflective",
@@ -5170,7 +5170,7 @@
       "wordRef": "builtin:export",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.observative",
@@ -5180,7 +5180,7 @@
       "wordRef": "builtin:show",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.terminative",
@@ -5190,7 +5190,7 @@
       "wordRef": "builtin:exit",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.appropriative",
@@ -5200,7 +5200,7 @@
       "wordRef": "grammar-word:have",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:verbs.comparative",
@@ -5210,7 +5210,7 @@
       "wordRef": "grammar-word:equal",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:adjectives.visibility.public",
@@ -5220,7 +5220,7 @@
       "wordRef": "builtin:public",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:adjectives.initialization",
@@ -5230,7 +5230,7 @@
       "wordRef": "builtin:new",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:adjectives.abstraction",
@@ -5240,7 +5240,7 @@
       "wordRef": "builtin:generic",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:adverbs.visibility.public",
@@ -5250,7 +5250,7 @@
       "wordRef": "builtin:publicly",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:adverbs.nullification",
@@ -5260,7 +5260,7 @@
       "wordRef": "grammar-word:not",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:adverbs.comparison.subtraction",
@@ -5270,7 +5270,7 @@
       "wordRef": "grammar-word:less",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:adverbs.comparison.multiplication",
@@ -5280,7 +5280,7 @@
       "wordRef": "grammar-word:greater",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:adverbs.progression",
@@ -5290,7 +5290,7 @@
       "wordRef": "grammar-word:then",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:prepositions.definement.declarative",
@@ -5300,7 +5300,7 @@
       "wordRef": "grammar-word:as",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 61
     },
     {
       "id": "vocabulary:prepositions.definement.definitive",
@@ -5310,7 +5310,7 @@
       "wordRef": "grammar-word:of",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:prepositions.definement.locative",
@@ -5320,7 +5320,7 @@
       "wordRef": "grammar-word:at",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:prepositions.consignment.associative",
@@ -5330,7 +5330,7 @@
       "wordRef": "grammar-word:with",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:prepositions.consignment.inflective",
@@ -5340,7 +5340,7 @@
       "wordRef": "grammar-word:in",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:prepositions.consignment.deflective",
@@ -5350,7 +5350,7 @@
       "wordRef": "grammar-word:out",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:prepositions.consignment.indicative",
@@ -5360,7 +5360,7 @@
       "wordRef": "grammar-word:by",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:prepositions.conjoinment.objective",
@@ -5370,7 +5370,7 @@
       "wordRef": "grammar-word:from",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 62
     },
     {
       "id": "vocabulary:prepositions.conjoinment.subjective",
@@ -5380,7 +5380,7 @@
       "wordRef": "grammar-word:to",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 63
     },
     {
       "id": "vocabulary:prepositions.conjoinment.comparative",
@@ -5390,7 +5390,7 @@
       "wordRef": "grammar-word:than",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:prepositions.conjoinment.directive",
@@ -5400,7 +5400,7 @@
       "wordRef": "grammar-word:for",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 64
     },
     {
       "id": "vocabulary:articles.variable",
@@ -5410,7 +5410,7 @@
       "wordRef": "grammar-word:any",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:articles.none",
@@ -5420,7 +5420,7 @@
       "wordRef": "grammar-word:no",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:articles.indefinite",
@@ -5430,7 +5430,7 @@
       "wordRef": "grammar-word:a",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:articles.definite",
@@ -5440,7 +5440,7 @@
       "wordRef": "grammar-word:the",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:conjunctions.mutual",
@@ -5450,7 +5450,7 @@
       "wordRef": "grammar-word:and",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:conjunctions.exclusive",
@@ -5460,7 +5460,7 @@
       "wordRef": "grammar-word:or",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:evaluations.conditional",
@@ -5470,7 +5470,7 @@
       "wordRef": "grammar-word:if",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:evaluations.exceptional",
@@ -5480,7 +5480,7 @@
       "wordRef": "grammar-word:else",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:evaluations.alternative",
@@ -5490,7 +5490,7 @@
       "wordRef": "grammar-word:otherwise",
       "classification": 3,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "vocabulary:evaluations.iterative",
@@ -5500,7 +5500,7 @@
       "wordRef": "grammar-word:while",
       "classification": 4,
       "evidenceSet": 1,
-      "note": 48
+      "note": 55
     },
     {
       "id": "cli:build",
@@ -5508,7 +5508,7 @@
       "doc": "docs/cli/build.md#command-syntax",
       "classification": 6,
       "evidenceSet": 2,
-      "note": 50
+      "note": 65
     },
     {
       "id": "cli:--assets",
@@ -5516,7 +5516,7 @@
       "doc": "docs/development-harness.md#compiler-defaults",
       "classification": 6,
       "evidenceSet": 2,
-      "note": 51
+      "note": 66
     },
     {
       "id": "cli:--output-dir",
@@ -5524,7 +5524,7 @@
       "doc": "docs/cli/build.md#options",
       "classification": 6,
       "evidenceSet": 2,
-      "note": 52
+      "note": 67
     },
     {
       "id": "cli:--language",
@@ -5532,7 +5532,7 @@
       "doc": "docs/development-harness.md#compiler-defaults",
       "classification": 6,
       "evidenceSet": 2,
-      "note": 53
+      "note": 68
     },
     {
       "id": "cli:--version",
@@ -5540,7 +5540,7 @@
       "doc": "docs/cli/build.md#version",
       "classification": 6,
       "evidenceSet": 3,
-      "note": 54
+      "note": 69
     },
     {
       "id": "cli:--help",
@@ -5548,7 +5548,7 @@
       "doc": "docs/cli/build.md#help",
       "classification": 6,
       "evidenceSet": 2,
-      "note": 55
+      "note": 70
     },
     {
       "id": "cli:-h",
@@ -5556,7 +5556,7 @@
       "doc": "docs/cli/build.md#help",
       "classification": 6,
       "evidenceSet": 2,
-      "note": 56
+      "note": 71
     },
     {
       "id": "cli:-help",
@@ -5564,7 +5564,7 @@
       "doc": "docs/cli/build.md#help",
       "classification": 6,
       "evidenceSet": 2,
-      "note": 56
+      "note": 71
     },
     {
       "id": "cli:--",
@@ -5572,7 +5572,7 @@
       "doc": "docs/cli/build.md#command-syntax",
       "classification": 6,
       "evidenceSet": 2,
-      "note": 57
+      "note": 72
     },
     {
       "id": "cli:-os",
@@ -5580,7 +5580,7 @@
       "doc": "docs/cli/build.md#target-os",
       "classification": 7,
       "evidenceSet": 2,
-      "note": 58
+      "note": 73
     },
     {
       "id": "cli:--native-evidence-output",
@@ -5588,7 +5588,7 @@
       "doc": "docs/cli/build.md#options",
       "classification": 6,
       "evidenceSet": 4,
-      "note": 59
+      "note": 74
     },
     {
       "id": "lucid:future-composed",
@@ -7438,7 +7438,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:number",
@@ -7472,7 +7472,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:truth",
@@ -7506,7 +7506,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:thing",
@@ -7540,7 +7540,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:byte",
@@ -7574,7 +7574,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:bytes",
@@ -7603,7 +7603,7 @@
       ],
       "classification": 11,
       "evidenceSet": 257,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:pointer",
@@ -7637,7 +7637,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:null",
@@ -7671,7 +7671,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:list",
@@ -7705,7 +7705,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:dictionary",
@@ -7739,7 +7739,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:app",
@@ -7773,7 +7773,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:service",
@@ -7807,7 +7807,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:class",
@@ -7841,7 +7841,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:object",
@@ -7875,7 +7875,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:attribute",
@@ -7909,7 +7909,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:definition",
@@ -7943,7 +7943,7 @@
       ],
       "classification": 11,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:function",
@@ -7952,7 +7952,7 @@
       "wordRef": "builtin:function",
       "classification": 11,
       "evidenceSet": 258,
-      "note": 60
+      "note": 76
     },
     {
       "id": "type:property",
@@ -7960,7 +7960,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 12,
       "evidenceSet": 259,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:operation",
@@ -7968,7 +7968,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 12,
       "evidenceSet": 259,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:noun",
@@ -7996,8 +7996,8 @@
         "Noun"
       ],
       "classification": 11,
-      "evidenceSet": 257,
-      "note": 60
+      "evidenceSet": 260,
+      "note": 77
     },
     {
       "id": "type:verb",
@@ -8025,8 +8025,8 @@
         "Verb"
       ],
       "classification": 11,
-      "evidenceSet": 257,
-      "note": 60
+      "evidenceSet": 261,
+      "note": 78
     },
     {
       "id": "type:adjective",
@@ -8055,7 +8055,7 @@
       ],
       "classification": 11,
       "evidenceSet": 257,
-      "note": 60
+      "note": 75
     },
     {
       "id": "type:adverb",
@@ -8084,191 +8084,191 @@
       ],
       "classification": 11,
       "evidenceSet": 257,
-      "note": 60
+      "note": 75
     },
     {
       "id": "value-tag:Thing",
       "name": "Thing",
       "doc": "docs/spec/values.md#thing",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Text",
       "name": "Text",
       "doc": "docs/spec/values.md#text",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Number",
       "name": "Number",
       "doc": "docs/spec/values.md#number",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Truth",
       "name": "Truth",
       "doc": "docs/spec/values.md#truth",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Bytes",
       "name": "Bytes",
       "doc": "docs/spec/values.md#byte-and-bytes",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Pointer",
       "name": "Pointer",
       "doc": "docs/spec/values.md#pointer",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Lexeme",
       "name": "Lexeme",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:App",
       "name": "App",
       "doc": "docs/spec/applicational-types.md#apps",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Service",
       "name": "Service",
       "doc": "docs/spec/applicational-types.md#services",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Class",
       "name": "Class",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Object",
       "name": "Object",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Attribute",
       "name": "Attribute",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Definition",
       "name": "Definition",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Function",
       "name": "Function",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Property",
       "name": "Property",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Operation",
       "name": "Operation",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:List",
       "name": "List",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Dictionary",
       "name": "Dictionary",
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Error",
       "name": "Error",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:ID",
       "name": "ID",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:None",
       "name": "None",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Unknown",
       "name": "Unknown",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "value-tag:Null",
       "name": "Null",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "builtin:start",
@@ -8316,8 +8316,8 @@
         "Starter"
       ],
       "classification": 14,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "builtin:execute",
@@ -8365,8 +8365,8 @@
         "Executor"
       ],
       "classification": 14,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "builtin:build",
@@ -8415,7 +8415,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:run",
@@ -8464,7 +8464,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:stop",
@@ -8513,7 +8513,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:await",
@@ -8557,7 +8557,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:show",
@@ -8606,7 +8606,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:exit",
@@ -8655,7 +8655,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:output",
@@ -8689,7 +8689,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:error",
@@ -8723,7 +8723,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:process",
@@ -8767,8 +8767,8 @@
         "Processing"
       ],
       "classification": 15,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "builtin:function",
@@ -8811,8 +8811,8 @@
         "Functioning"
       ],
       "classification": 15,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 264,
+      "note": 79
     },
     {
       "id": "builtin:function.return",
@@ -8860,8 +8860,8 @@
         "Returner"
       ],
       "classification": 15,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "builtin:retain",
@@ -8910,8 +8910,8 @@
         "Retainer"
       ],
       "classification": 15,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "builtin:objective",
@@ -8946,8 +8946,8 @@
         "Objective"
       ],
       "classification": 15,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "builtin:main",
@@ -8989,8 +8989,8 @@
         "Main"
       ],
       "classification": 15,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "builtin:basic",
@@ -9024,8 +9024,8 @@
         "Basic"
       ],
       "classification": 15,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "builtin:create",
@@ -9073,8 +9073,8 @@
         "Creator"
       ],
       "classification": 15,
-      "evidenceSet": 256,
-      "note": 60
+      "evidenceSet": 265,
+      "note": 80
     },
     {
       "id": "builtin:define",
@@ -9122,8 +9122,8 @@
         "Definer"
       ],
       "classification": 15,
-      "evidenceSet": 256,
-      "note": 60
+      "evidenceSet": 266,
+      "note": 81
     },
     {
       "id": "builtin:describe",
@@ -9172,7 +9172,7 @@
       ],
       "classification": 15,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:use",
@@ -9220,8 +9220,8 @@
         "User"
       ],
       "classification": 15,
-      "evidenceSet": 256,
-      "note": 60
+      "evidenceSet": 267,
+      "note": 48
     },
     {
       "id": "builtin:public",
@@ -9250,7 +9250,7 @@
       ],
       "classification": 15,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:publicly",
@@ -9279,7 +9279,7 @@
       ],
       "classification": 15,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:new",
@@ -9308,7 +9308,7 @@
       ],
       "classification": 15,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:generic",
@@ -9337,7 +9337,7 @@
       ],
       "classification": 15,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:input",
@@ -9371,7 +9371,7 @@
       ],
       "classification": 15,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:put",
@@ -9416,7 +9416,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:place",
@@ -9465,7 +9465,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:get",
@@ -9514,7 +9514,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:take",
@@ -9563,7 +9563,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:import",
@@ -9612,7 +9612,7 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:export",
@@ -9661,15 +9661,15 @@
       ],
       "classification": 14,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "value-tag:invalid-zero",
       "name": "Invalid zero sentinel",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "type:map",
@@ -9698,15 +9698,15 @@
       ],
       "classification": 11,
       "evidenceSet": 257,
-      "note": 60
+      "note": 75
     },
     {
       "id": "value-tag:Map",
       "name": "Map",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "classification": 13,
-      "evidenceSet": 260,
-      "note": 60
+      "evidenceSet": 262,
+      "note": 75
     },
     {
       "id": "type:error",
@@ -9739,8 +9739,8 @@
         "Errors"
       ],
       "classification": 11,
-      "evidenceSet": 262,
-      "note": 60
+      "evidenceSet": 268,
+      "note": 75
     },
     {
       "id": "builtin:function.invoke",
@@ -9789,8 +9789,8 @@
         "Invoker"
       ],
       "classification": 15,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "builtin:delegate",
@@ -9839,8 +9839,8 @@
         "Delegator"
       ],
       "classification": 15,
-      "evidenceSet": 261,
-      "note": 60
+      "evidenceSet": 263,
+      "note": 75
     },
     {
       "id": "grammar-word:it",
@@ -9874,7 +9874,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:that",
@@ -9908,7 +9908,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:this",
@@ -9942,7 +9942,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:is",
@@ -9975,8 +9975,8 @@
         }
       },
       "classification": 16,
-      "evidenceSet": 256,
-      "note": 60
+      "evidenceSet": 269,
+      "note": 82
     },
     {
       "id": "grammar-word:have",
@@ -10025,7 +10025,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:equal",
@@ -10074,7 +10074,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:not",
@@ -10103,7 +10103,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:less",
@@ -10132,7 +10132,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:greater",
@@ -10161,7 +10161,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:then",
@@ -10190,7 +10190,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:as",
@@ -10219,7 +10219,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:of",
@@ -10248,7 +10248,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:at",
@@ -10277,7 +10277,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:with",
@@ -10306,7 +10306,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:in",
@@ -10335,7 +10335,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:out",
@@ -10364,7 +10364,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:by",
@@ -10393,7 +10393,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:from",
@@ -10422,7 +10422,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:to",
@@ -10451,7 +10451,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:than",
@@ -10480,7 +10480,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:for",
@@ -10509,7 +10509,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:any",
@@ -10538,7 +10538,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:no",
@@ -10567,7 +10567,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:a",
@@ -10601,7 +10601,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:the",
@@ -10630,7 +10630,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:and",
@@ -10659,7 +10659,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:or",
@@ -10688,7 +10688,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:if",
@@ -10717,7 +10717,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:else",
@@ -10746,7 +10746,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:otherwise",
@@ -10775,7 +10775,7 @@
       },
       "classification": 16,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "grammar-word:while",
@@ -10804,7 +10804,7 @@
       },
       "classification": 17,
       "evidenceSet": 256,
-      "note": 60
+      "note": 75
     },
     {
       "id": "builtin:print",
@@ -10852,252 +10852,252 @@
         "Printer"
       ],
       "classification": 18,
-      "evidenceSet": 263
+      "evidenceSet": 270
     },
     {
       "id": "logeme.segment.B",
       "name": "B / declare",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 19,
-      "evidenceSet": 264
+      "evidenceSet": 271
     },
     {
       "id": "logeme.segment.A",
       "name": "A / declaration",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 19,
-      "evidenceSet": 265
+      "evidenceSet": 272
     },
     {
       "id": "logeme.segment.D",
       "name": "D / calculate",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 19,
-      "evidenceSet": 266
+      "evidenceSet": 273
     },
     {
       "id": "logeme.segment.E",
       "name": "E / calculation",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 19,
-      "evidenceSet": 267
+      "evidenceSet": 274
     },
     {
       "id": "logeme.segment.G",
       "name": "G / evaluate",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 19,
-      "evidenceSet": 268
+      "evidenceSet": 275
     },
     {
       "id": "logeme.segment.I",
       "name": "I / evaluation",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 19,
-      "evidenceSet": 269
+      "evidenceSet": 276
     },
     {
       "id": "logeme.segment.F",
       "name": "F / define",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 19,
-      "evidenceSet": 270
+      "evidenceSet": 277
     },
     {
       "id": "logeme.segment.O",
       "name": "O / definition",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 19,
-      "evidenceSet": 271
+      "evidenceSet": 278
     },
     {
       "id": "logeme.segment.H",
       "name": "H / describe",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 19,
-      "evidenceSet": 272
+      "evidenceSet": 279
     },
     {
       "id": "logeme.segment.U",
       "name": "U / description",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 19,
-      "evidenceSet": 273
+      "evidenceSet": 280
     },
     {
       "id": "logeme.segment.K",
       "name": "K / operate",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 19,
-      "evidenceSet": 274
+      "evidenceSet": 281
     },
     {
       "id": "logeme.segment.W",
       "name": "W / operation",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 19,
-      "evidenceSet": 275
+      "evidenceSet": 282
     },
     {
       "id": "logeme.segment.P",
       "name": "P / iterate",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 19,
-      "evidenceSet": 276
+      "evidenceSet": 283
     },
     {
       "id": "logeme.segment.X",
       "name": "X / iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 19,
-      "evidenceSet": 277
+      "evidenceSet": 284
     },
     {
       "id": "logeme.segment.M",
       "name": "M / instantiate",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 19,
-      "evidenceSet": 278
+      "evidenceSet": 285
     },
     {
       "id": "logeme.segment.Y",
       "name": "Y / instantiation",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 19,
-      "evidenceSet": 279
+      "evidenceSet": 286
     },
     {
       "id": "logeme.segment.C",
       "name": "C / execute",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 19,
-      "evidenceSet": 280
+      "evidenceSet": 287
     },
     {
       "id": "logeme.segment.V",
       "name": "V / execution",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 19,
-      "evidenceSet": 281
+      "evidenceSet": 288
     },
     {
       "id": "logeme.family.declaration-adapters",
       "name": "A/BA/DA/KA/HA/GA/MA/PA",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 20,
-      "evidenceSet": 282
+      "evidenceSet": 289
     },
     {
       "id": "logeme.family.definition-adapters",
       "name": "O/OB/FO/FOB/KO/KOB/DO/DOB/GO/GOB/MO/MOB/CO/COB/BO/BOD/BOK/BOH/BOG/BOM/BOP/BOC",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 20,
-      "evidenceSet": 283
+      "evidenceSet": 290
     },
     {
       "id": "logeme.family.literal-file",
       "name": "EA complete literal file",
       "doc": "docs/reference/logemes/declarations.md#ea-complete-literal-file",
       "classification": 20,
-      "evidenceSet": 284
+      "evidenceSet": 291
     },
     {
       "id": "logeme.family.communication",
       "name": "CE communication calculations",
       "doc": "docs/reference/logemes/calculations.md#communication-calculations",
       "classification": 19,
-      "evidenceSet": 285
+      "evidenceSet": 292
     },
     {
       "id": "logeme.family.description",
       "name": "U/MU description and updates",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 19,
-      "evidenceSet": 286
+      "evidenceSet": 293
     },
     {
       "id": "logeme.family.selection",
       "name": "I/GE/GI ordered selection",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 20,
-      "evidenceSet": 287
+      "evidenceSet": 294
     },
     {
       "id": "logeme.family.readiness",
       "name": "CI/BI/OC/DOC readiness selection",
       "doc": "docs/reference/logemes/selection.md#ci-and-bi-bounded-readiness-selection",
       "classification": 19,
-      "evidenceSet": 288
+      "evidenceSet": 295
     },
     {
       "id": "logeme.family.callables",
       "name": "W/FW/BW/KY/KO/KOB callables",
       "doc": "docs/reference/logemes/callables.md#invocation-through-ky",
       "classification": 19,
-      "evidenceSet": 289
+      "evidenceSet": 296
     },
     {
       "id": "logeme.family.iteration",
       "name": "X/I/OG/DOG/PO four-category iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 20,
-      "evidenceSet": 290
+      "evidenceSet": 297
     },
     {
       "id": "logeme.family.unsupported-loops",
       "name": "Three-part loops",
       "doc": "docs/reference/logemes/iteration.md#unsupported-forms-and-native-failures",
       "classification": 21,
-      "evidenceSet": 291
+      "evidenceSet": 298
     },
     {
       "id": "logeme.family.instantiation",
       "name": "Y/HY empty and populated records",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 20,
-      "evidenceSet": 292
+      "evidenceSet": 299
     },
     {
       "id": "logeme.family.traits",
       "name": "MY required signatures",
       "doc": "docs/reference/logemes/instantiation.md#required-trait-signatures",
       "classification": 19,
-      "evidenceSet": 293
+      "evidenceSet": 300
     },
     {
       "id": "logeme.family.generics",
       "name": "Local FW/HY/MY/Y/named KY parameters",
       "doc": "docs/reference/logemes/metadata.md#lifetimes-and-generictypes",
       "classification": 19,
-      "evidenceSet": 294
+      "evidenceSet": 301
     },
     {
       "id": "logeme.family.scheduling",
       "name": "V/MV scheduling",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 19,
-      "evidenceSet": 295
+      "evidenceSet": 302
     },
     {
       "id": "logeme.family.deferred",
       "name": "Deferred metadata",
       "doc": "docs/reference/logemes/instantiation.md#deferred-is-rejected",
       "classification": 21,
-      "evidenceSet": 291
+      "evidenceSet": 298
     },
     {
       "id": "logeme.family.futures",
       "name": "CV/DV/CO/COB future composition",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 22,
-      "evidenceSet": 296,
-      "note": 61
+      "evidenceSet": 303,
+      "note": 83
     }
   ],
   "schemaVersion": 3,
   "notes": [
     "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
-    "References preserve canonical declaration/member identity. A reference must resolve in its owning scope. The value category independently determines permitted use.",
+    "Authored references use possessives or scoped aliases; dotted authored names reject. Resolution preserves canonical declaration/member identity and lexical ownership. The concrete value category determines permitted use.",
     "Recognizes a Text token. Ordinary source Text and typed scalar/native-byte emission are implemented. Preserve literal bytes and distinguish framing escapes from general string escapes.",
     "Recognizes a binary64 Number token, not a %-delimited source literal. Range, finite-value and native encoding boundaries remain stage-specific.",
     "Recognizes a Truth token loaded from lowercase true/false. This pattern does not introduce ?-delimited source literals or implicit truthiness.",
@@ -11105,47 +11105,62 @@
     "Matches the native type token category. Construction and usable values depend on the explicit source type whitelist, descriptor binding and selected category.",
     "Recognizes List constructors and typed element operands. Compiler analysis checks complete element types; recognition supplies no executable collection implementation.",
     "Recognizes Dictionary type/storage structure. Namespace members and imports are demonstrated. Arbitrary runtime map operations are not thereby supported.",
+    "Quoted declaration labels obey authored-name validation. The selected role determines whether a complete noun/verb family or an ordinary value label is required. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
     "A quoted declaration plus typed declarative phrase. Native whitelist and construction rules determine the represented category.",
     "A named List retains its declaration identity and element type. Executable initialization requires an implementation.",
     "A quoted Dictionary declaration provides owned namespace/storage. Generic runtime map operations remain outside the established surface.",
     "A quoted name and definitive declarative phrase participate in typed registration/construction.",
-    "A quoted name with a definitional Text phrase must satisfy paired framing and typed definition parsing.",
-    "A quoted name and value phrase retain the concrete value category and assignment/definite-assignment boundaries.",
-    "A quoted name may carry an optional phrase. Registration ownership and context determine whether that site is a usable declaration.",
+    "A complete framed native definition in an as/value position declares a noun family and requires all four forms. Framing and typed definition parsing remain separate checks.",
+    "Ordinary value labels retain concrete value categories and assignment/definite-assignment boundaries. A single-name Function binding stores data without creating an invocation family.",
+    "A quoted label may carry an optional phrase. Name validation and the resolved lexical/value role determine its required family and publication.",
     "A resolved identifier preserves its selected owner and canonical declaration. It is not a fresh declaration.",
     "A #~# type token selects a native category rather than a quoted source identifier. Its supported role depends on the enclosing grammar.",
     "A resolved definition and generic phrase preserve source ownership, bound parameters and permitted composition.",
-    "A quoted action label followed by a for/directive body records ordered source actions and typed any-parameters.",
-    "A quoted label with a to/utilization phrase defines native text or a supported action relation. It is not an import provider phrase.",
-    "An encapsulated paragraph begins with the ordinary Function declaration and owns its body. Public visibility exposes the Function, not its parameters.",
-    "A quoted parameter name is paired with a complete runtime type or an existing callable signature.",
+    "A source action label supplies all five verb forms before its for/directive body records ordered actions and typed any-parameters.",
+    "A to/utilization native definition declares a complete five-form verb family. Its native Text retains separate framing and byte rules; it is not an import-provider phrase.",
+    "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. An encapsulated paragraph owns the body; Public exposes the Function, not its parameters.",
+    "A parameter label is paired with a complete runtime type or existing callable signature. Ordinary parameter names stay single labels; invoking a Function parameter under its own name requires an explicit five-form verb family.",
     "A Text name precedes a resolved nominal definition and optional relations. Naming alone does not establish a constructor for every internal value tag.",
     "A Text name precedes a recognized native type and optional relations. The explicit native type and descriptor contracts determine supported construction.",
-    "A quoted identifier occurs as an owned declaration/reference role. It is not a Text literal or a universal executable scalar value.",
-    "A named reference carries a dependency phrase. Supported Use import scanning and source-provider ownership remain authoritative. Arbitrary grammar placement does not imply import execution.",
+    "A quoted label retains its declaration/reference role and rejects dotted authored names. Ordinary result labels are distinct from lexical families; introducing a new Function invocation name requires its explicit verb family.",
+    "A dependency-qualified reference obeys source-provider ownership. Import names and aliases reject dots before expansion; dotted literal paths retain their bytes. Grammar recognition alone does not imply import execution.",
     "An atomic operand leaves its destination phrase for the enclosing update clause. Its resolved runtime type still governs use.",
     "A checked callable construction can carry explicit constructor operands before its signature, or a structured Process input signature and directive body. Canonical targets determine the native constructor and scoped binding roles.",
     "The for phrase contains ordered applicative clauses. Source actions retain their generic argument and recursion checks. Structured Process inputs and locals bind within that body while retaining enclosing Function references. This adds no general loop syntax.",
     "Recognizes List construction arguments. The List contract defines typed elements, checked updates, indexed reads and bounds errors. This recognizer adds no general source loop syntax.",
     "The phrase owns a declaration object whose scope and publication are resolved semantically.",
     "The as phrase supplies a bound value. Concrete type and runtime assignment requirements remain enforced.",
-    "The body is a typed Text object with explicit framing/escaping at the definition boundary.",
-    "A declarative alias phrase must resolve its target and preserve canonical ownership. It does not copy an application or widen visibility.",
-    "Declares an ordinary Function with its signature.",
-    "Pairs a named parameter with a complete runtime type or existing Function signature.",
+    "A typed, completely framed definition Text selects a noun family in this value position. Family validation does not alter native/template bytes or replace typed argument checks.",
+    "A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Canonical ownership, signature and visibility remain unchanged.",
+    "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family.",
     "Configured in/collection relation. The retained grammar does not establish general executable insertion, indexing, or dictionary mutation.",
     "Consumes the destination and its complete Number/Text key phrase. An at keyword without a key is not an update.",
     "The to phrase contains an imperative clause. Enclosing definition semantics determine how it is used, distinct from dependency imports.",
     "The to phrase contains a Text object. Native definition framing and typed argument encoding, not an import path, determine its meaning.",
-    "A Function declaration defines an ordinary invocation verb. Its sentence binds ordered typed arguments and explicit result names. Member ownership selects the declaration.",
+    "Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. Import expansion remains confined to the selected provider and original source owner. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Value assignment takes precedence when the complete statement matches. A single-name Function copy remains data; framed lexical definitions still require complete noun families. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "The selected Function binding must declare its own complete invocation verb family. Typed arguments and result labels retain their order and canonical owner. Single-name Function storage does not create an implicit invocation spelling.",
     "The source-defined action signature and canonical binding determine the subject/object arguments and their order. Native definition slot kinds are a separate interface.",
-    "Registers a typed Function and invocation family at a paragraph boundary. Capture analysis retains lexical owners.",
+    "Create retains its configured clause form; registration classifies the introduced word or value and validates authored names and any required complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Registers a typed Function with an explicit complete five-form invocation family at a paragraph boundary. Capture analysis retains lexical owners.",
+    "Define retains its configured clause form; lexical noun/verb definitions require complete families while ordinary values remain bindings. Framed definition bytes keep their native/template boundary. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
     "A bare condition requires one Truth operand. Optional negation belongs to this condition, with no scalar truthiness or joined-condition contract.",
     "Has is bounded to the selected App Error member and must retain matching target ownership.",
     "The exact configured phrase maps to a typed scalar operator. Equality requires matching scalar types. Order requires Number. Native operator witnesses do not independently verify every source phrase.",
+    "Typed signatures preserve parameter identity and scope. Ordinary labels remain single names; a Function parameter invoked by its own name needs an explicit five-form verb family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
     "Input-only Process signatures bind pattern or iteration values within their directive body. Provisional labels cannot shadow enclosing inputs before their owner is resolved. Native selection/pair, mixed-nesting and scope-escape/output rejection witnesses constrain support. No general closure or Process output signature is added.",
+    "Typed result labels preserve result order and storage. A Function result may be stored under a single name, but invoking that result under a new name requires an explicit five-form verb family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
     "Configured spelling and grammatical handlers are retained. The linked entry describes the core-only reset boundary; this inventory does not assert runtime execution.",
     "Configured native representation spelling, not a public application constructor or alias for the source Function, Property or Operation category. Its configuration handler is not executable API evidence.",
+    "Configured Is spellings and handlers are unchanged. Ordinary Function-value assignment does not declare a new invocation family; a framed native definition in a value position requires a complete noun family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Configured Use spellings and handlers are unchanged. A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Configured Create spellings and handlers are unchanged. Authored source actions and named Functions require complete verb families; native noun declarations require complete noun families. Ordinary value and non-callable application labels remain single names. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Configured Define spellings and handlers are unchanged. Authored noun families require root/plural/descriptive/active and verb families require root/active/passive/applicative/objective, with at least one expanded derived form different from the root case-insensitively. Missing, empty, malformed, surplus or all-identical families reject. Ordinary values remain labels, and native/template bytes retain their separate syntax. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Configured As retains its value, construction, signature and alias relations. The selected declaration role determines family requirements; as does not universally register a noun. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Configured From retains its selected import-provider and value relations. Dotted literal paths remain paths; authored names and aliases reject dots. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Configured To retains its utilization relation. Authored native verb definitions require complete five-form families while their framed native bodies retain their bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Configured For retains its source-action/body relation. A newly declared source action supplies all five verb forms; typed parameters retain their ordinary binding roles. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
     "Build one standalone App directly from its source bundle. Accepts one optional source, defaulting to main.l. Runtime orchestration is rejected.",
     "Complete replacement filesystem. FlagSet also accepts single-hyphen and equals-value spellings.",
     "Publish executable and companion output together, relative to the caller CWD.",
@@ -11157,6 +11172,13 @@
     "The -os option is currently rejected.",
     "Version 2 evidence records selected compilation inputs, tool observations, the actual Cargo invocation, artifact digests and companion generation. Evidence is written before executable publication. Failed Cargo invocations and later publication failures remain distinguishable; the App is not run and native behavior is not certified.",
     "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+    "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "An authored noun family requires root, plural, descriptive and active forms. Missing, empty, malformed, surplus or all-identical expanded families reject. Ordinary value, parameter and result labels and non-callable applicational names may remain single labels. Configured JSON vocabulary retains its existing forms. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "An authored verb family requires root, active, passive, applicative and objective forms, including source actions and named Functions. At least one expanded derived form differs from its root case-insensitively; individual forms may share spellings. Configured JSON vocabulary keeps its existing forms. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Core Function is a complete authored noun family providing the selected typed callable construction. Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Create selects declaration roles before family validation. Source actions and named Function invocations require complete verb families; lexical noun constructions require complete noun families. Ordinary values and non-callable applicational names remain labels. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Define distinguishes ordinary value bindings from lexical definitions. Framed native definitions select noun or verb roles from their declaration form and require complete families; Function data copies do not implicitly declare invocation verbs. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "An ordinary value assignment retains its value category; a complete framed definition on its right declares a noun family. A stored Function value under one label does not acquire a new invocation family. Shared form spellings retain canonical identity and are selected by grammatical context. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
     "CV constructs one unscheduled future. Local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing. This adds no async-FW modifier or Function dispatcher."
   ],
   "evidenceSets": [
@@ -13633,9 +13655,19 @@
         "lyger/lowering.go",
         "lyger/token_forms.go",
         "lyger/native_bindings.go",
-        "lyger/native_composition.go"
+        "lyger/native_composition.go",
+        "lyger/word_families.go",
+        "lyger/lexical_types.go",
+        "lyger/grammar_extraction.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go"
       ],
-      "witnesses": [],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/function_invocation_words_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/morphology_family_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "checkedStages": [
         "static-declaration-inspection"
@@ -13651,6 +13683,46 @@
         "lyger/definition_bindings.go"
       ],
       "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "checkedStages": [
+        "static-declaration-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lyger/utilities.go",
+        "lyger/lexical_types.go",
+        "lyger/grammar_extraction.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go",
+        "lyger/token_forms.go"
+      ],
+      "witnesses": [
+        "lyger/morphology_family_test.go",
+        "lyger/authored_family_registration_test.go"
+      ],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "checkedStages": [
+        "static-declaration-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lyger/utilities.go",
+        "lyger/lexical_types.go",
+        "lyger/source_functions.go",
+        "lyger/word_families.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go",
+        "lyger/token_forms.go"
+      ],
+      "witnesses": [
+        "lyger/morphology_family_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/authored_family_registration_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "checkedStages": [
         "static-declaration-inspection"
@@ -13681,9 +13753,116 @@
     },
     {
       "sources": [
+        "builtins/eng/core.l",
+        "lyger/source_functions.go",
+        "lyger/binding.go",
+        "lyger/word_families.go",
+        "lyger/lexical_types.go",
+        "lyger/grammar_extraction.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go",
+        "lyger/token_forms.go"
+      ],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/function_invocation_words_test.go",
+        "lyger/morphology_family_test.go"
+      ],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "checkedStages": [
+        "static-declaration-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lyger/grammar_extraction.go",
+        "lyger/source_functions.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/grammar.go",
+        "lyger/authored_names.go"
+      ],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/authored_names_test.go",
+        "lyger/morphology_family_test.go"
+      ],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "checkedStages": [
+        "static-declaration-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lyger/grammar_extraction.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/grammar.go",
+        "lyger/authored_names.go"
+      ],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/authored_names_test.go",
+        "lyger/named_operand_composition_test.go"
+      ],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "checkedStages": [
+        "static-declaration-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lyger/builder.go",
+        "lyger/semantics.go",
+        "lyger/binding.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/authored_names.go"
+      ],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/authored_names_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/dictionary_case_test.go"
+      ],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "checkedStages": [
+        "static-declaration-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
         "lyger/runtime_types.go"
       ],
       "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "checkedStages": [
+        "static-declaration-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lyger/grammar_extraction.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/binding.go",
+        "lyger/token_forms.go",
+        "lyger/grammar_types.go"
+      ],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/morphology_family_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "checkedStages": [
         "static-declaration-inspection"
@@ -14344,18 +14523,26 @@
     "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
     "builtins/eng/core.l": "7f4128a219466116c6371d9e79ba6332c8cbfcd977edd98165c63ec1e86ccd8b",
     "lyger/definition_bindings.go": "7729518ee61aad720085adb17bb201bfdcecaffd068625fda7b9dfd57e9586b8",
-    "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
+    "lyger/source_functions.go": "458bb1d18d5b0b70f8a5b9f56c3b88ef20362a6da950d0ab5535e158d75fbaf0",
     "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
     "lyger/runtime_types.go": "68e235a0c65f596b91f5e2a6326b260f5722d772547f914d011a917384dd7bb0",
-    "lyger/binding.go": "1c82c4334e2bca7481c8a4fd0253f66bf70c5cb82c6c6bdccb908ce73d7a9578",
+    "lyger/binding.go": "dfb94a1506efdc53cf3d538c2f49858ff949bba143d13a7f7c4d8e5a7cefc1b1",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
     "lyger/function_definitions.go": "0ea998503ec2a3c1a107217d52629a1e4b9d2a02f32a24db6a95f4abea0919dd",
     "lyger/lowering.go": "e39ec42ec18f531633efe629e147a37edeb3ff638c526ab4e795b3b0ac85efcb",
-    "lyger/token_forms.go": "41bc8a6d505fdea4f6c351f73060f0fd422745a5b5c083c8354fe7ade4013d6a",
+    "lyger/token_forms.go": "3fa8b7a24cc5795c9f3211e0aa7faaf5a5549bce15ede04d06aa8f28b6b8fd70",
     "lyger/native_bindings.go": "8d84fb1a479c721cdf04803d3e96ff0b371f17c286c8edf8f82a749c189ce9db",
     "lyger/native_composition.go": "ddaefeb909467b13b7c5d61e32c4a04e20e2a7a04c5c2e2a6dc110160c82e579",
-    "lyger/types.go": "08db7741ed9a099f34f4bd84a0af3e22f4f62e44e396ca5adca8dc20b35386ba",
+    "lyger/word_families.go": "a19d20f58d321bbf6558a1f39cfdcfeadc21c2d1bcb3c9754a543d6708c34903",
+    "lyger/lexical_types.go": "c6e39587d924129f245eea3777a94b1b73fa5283d6df722885835522711ce816",
+    "lyger/grammar_extraction.go": "d4cc3cf17bd85d4176f95630c18be786e8bae9eb782ab39adac2ccc9474c9dc9",
+    "lyger/authored_names.go": "6c3cfe106e9d35380e1ab900c2076f7822702b551459f6318a20da32acaa7494",
+    "lyger/grammar_types.go": "b55308b02eba49180c371124cd368884e79e8fd5da978317d907e805b658cc41",
+    "lyger/types.go": "667c8e349b66253dd4f8297ff1980d981b86f275d1a0dba247b616fda9b0dd75",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
+    "lyger/grammar.go": "41c3384acff211f2d9e31f3437e6db23b25c9df3d64d4685c6b001dffb27b1da",
+    "lyger/builder.go": "62964b71f110d8ca51c725d708eedd150945d43b5233b96089f0ab6adda56738",
+    "lyger/semantics.go": "f22bf9d76bacaa5c8217021eb8c8fa3c5b0728b6193d703d646a697671d78abe",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
     "builtins/README.md": "7562ff675896a6734f3d835c85e195fffc546925bec98007a796bd43642039d1",
     "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",

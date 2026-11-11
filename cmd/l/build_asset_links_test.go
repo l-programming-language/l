@@ -14,15 +14,15 @@ import (
 
 func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 	for _, tc := range []struct {
-		name, resource string
-		directoryLink  bool
-		hardLink       bool
+		name, resource, diagnostic string
+		directoryLink              bool
+		hardLink                   bool
 	}{
-		{"dictionary index", "dictionaries.json", false, false},
-		{"grammar", "lexicon/eng/grammar.json", false, false},
-		{"core", "builtins/eng/core.l", false, false},
-		{"nested directory", "builtins/eng/core.l", true, false},
-		{"hard link", "dictionaries.json", false, true},
+		{"dictionary index", "dictionaries.json", "compiler assets", false, false},
+		{"grammar", "lexicon/eng/grammar.json", "compiler assets", false, false},
+		{"core", "builtins/eng/core.l", "source input", false, false},
+		{"nested directory", "builtins/eng/core.l", "source input", true, false},
+		{"hard link", "dictionaries.json", "compiler assets", false, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			assets := distributiontest.CompleteOverride(t)
@@ -71,7 +71,9 @@ func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 			}
 			c, options := pathTestCompiler(t, assets, main, outside)
 			_, err = buildExecutable(context.Background(), c, options)
-			if err == nil || !strings.Contains(err.Error(), "compiler assets") {
+			// Core is also consumed source, so source-input protection rejects
+			// its destination before the remaining compiler-resource checks.
+			if err == nil || !strings.Contains(err.Error(), tc.diagnostic) {
 				t.Fatalf("linked compiler resource destination accepted or wrong prerequisite failed: %v", err)
 			}
 			after, err := os.ReadFile(output)

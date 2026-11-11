@@ -260,10 +260,10 @@ func TestDistributionDictionarySemantics(t *testing.T) {
 	t.Run("DI06", func(t *testing.T) {
 		assets := distributiontest.CompleteOverride(t)
 		addDistributionDictionary(t, assets, "tools", "Tools", distributionTools)
-		requireDistributionSource(t, assets, "Use Tools's Display from `tools` as \"Paint\".\nUse Tools's Display from `tools` as \"Paint\".\nPaint `same`.\n", nil)
+		requireDistributionSource(t, assets, "Use Tools's Display from `tools` as \"Paint|-s|-ed|-ing|-er\".\nUse Tools's Display from `tools` as \"Paint|-s|-ed|-ing|-er\".\nPaint `same`.\n", nil)
 		for _, conflicting := range []string{"Paint", "Paints"} {
 			t.Run(conflicting, func(t *testing.T) {
-				source := "Use Tools's Display from `tools` as \"Paint\".\nUse Tools's Greeting from `tools` as \"" + conflicting + "\".\nShow `unused`.\n"
+				source := "Use Tools's Display from `tools` as \"Paint|-s|-ed|-ing|-er\".\nUse Tools's Greeting from `tools` as \"" + conflicting + "\".\nShow `unused`.\n"
 				_, err := distributionSource(t, assets, source, nil)
 				if err == nil || !strings.Contains(strings.ToLower(err.Error()), "paint") || !strings.Contains(err.Error(), ":1:") || !strings.Contains(err.Error(), ":2:") {
 					t.Fatalf("conflicting inflection must report both sites: %v", err)

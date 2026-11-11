@@ -2,14 +2,22 @@
   "schemaVersion": 1,
   "sourceHashes": {
     "lexicon/eng/vocabulary.json": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c",
+    "lyger/authored_names.go": "6c3cfe106e9d35380e1ab900c2076f7822702b551459f6318a20da32acaa7494",
+    "lyger/builder.go": "62964b71f110d8ca51c725d708eedd150945d43b5233b96089f0ab6adda56738",
     "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
+    "lyger/grammar.go": "41c3384acff211f2d9e31f3437e6db23b25c9df3d64d4685c6b001dffb27b1da",
+    "lyger/grammar_extraction.go": "d4cc3cf17bd85d4176f95630c18be786e8bae9eb782ab39adac2ccc9474c9dc9",
+    "lyger/grammar_types.go": "b55308b02eba49180c371124cd368884e79e8fd5da978317d907e805b658cc41",
     "lyger/instructions.go": "c2fa788245436f92036891370e9dc180a0646772d0efa96ec3cec8e3459f7c34",
+    "lyger/lexical_types.go": "c6e39587d924129f245eea3777a94b1b73fa5283d6df722885835522711ce816",
+    "lyger/lexicon.go": "30d93c45948715c38e87d179f56dba44581c2429960698245eb8f847b6525794",
     "lyger/process_inputs.go": "1f4d64f923f872dd74adb949dc591a384a43b09e8fa2dfde960e88bd76e429cb",
     "lyger/runtime_values_source.go": "2b4c234b780146e05a80f5dbf90156d6f98fe2934935ebf76f2647430136a60b",
-    "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
+    "lyger/semantics.go": "f22bf9d76bacaa5c8217021eb8c8fa3c5b0728b6193d703d646a697671d78abe",
+    "lyger/source_functions.go": "458bb1d18d5b0b70f8a5b9f56c3b88ef20362a6da950d0ab5535e158d75fbaf0",
+    "lyger/token_forms.go": "3fa8b7a24cc5795c9f3211e0aa7faaf5a5549bce15ede04d06aa8f28b6b8fd70",
     "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
-    "lyger/token_forms.go": "41bc8a6d505fdea4f6c351f73060f0fd422745a5b5c083c8354fe7ade4013d6a",
-    "lyger/lexical_types.go": "24c704911ef642f4546f570ff4f8786243eb6a112b7b2e6446cae18d6f4ba060"
+    "lyger/word_families.go": "a19d20f58d321bbf6558a1f39cfdcfeadc21c2d1bcb3c9754a543d6708c34903"
   },
   "entries": {
     "nouns.it": {
@@ -181,28 +189,28 @@
       "doc": "docs/reference/word-glossary.md#is",
       "topic": "Assignment",
       "support": "partial",
-      "notes": "Configured spelling and grammatical handlers are retained. The linked entry describes the core-only reset boundary; this inventory does not assert runtime execution.",
+      "notes": "Configured Is spellings and handlers are unchanged. Ordinary Function-value assignment does not declare a new invocation family; a framed native definition in a value position requires a complete noun family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "wordRef": "grammar-word:is"
     },
     "verbs.associative": {
       "doc": "docs/reference/word-glossary.md#use",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Configured spelling and grammatical handlers are retained. The linked entry describes the core-only reset boundary; this inventory does not assert runtime execution.",
+      "notes": "Configured Use spellings and handlers are unchanged. A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "wordRef": "builtin:use"
     },
     "verbs.declarative": {
       "doc": "docs/reference/word-glossary.md#create",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "Configured spelling and grammatical handlers are retained. The linked entry describes the core-only reset boundary; this inventory does not assert runtime execution.",
+      "notes": "Configured Create spellings and handlers are unchanged. Authored source actions and named Functions require complete verb families; native noun declarations require complete noun families. Ordinary value and non-callable application labels remain single names. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "wordRef": "builtin:create"
     },
     "verbs.definitive": {
       "doc": "docs/reference/word-glossary.md#define",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Configured spelling and grammatical handlers are retained. The linked entry describes the core-only reset boundary; this inventory does not assert runtime execution.",
+      "notes": "Configured Define spellings and handlers are unchanged. Authored noun families require root/plural/descriptive/active and verb families require root/active/passive/applicative/objective, with at least one expanded derived form different from the root case-insensitively. Missing, empty, malformed, surplus or all-identical families reject. Ordinary values remain labels, and native/template bytes retain their separate syntax. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "wordRef": "builtin:define"
     },
     "verbs.descriptive": {
@@ -370,7 +378,7 @@
       "doc": "docs/reference/word-glossary.md#as",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "Configured spelling and grammatical handlers are retained. The linked entry describes the core-only reset boundary; this inventory does not assert runtime execution.",
+      "notes": "Configured As retains its value, construction, signature and alias relations. The selected declaration role determines family requirements; as does not universally register a noun. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "wordRef": "grammar-word:as"
     },
     "prepositions.definement.definitive": {
@@ -419,14 +427,14 @@
       "doc": "docs/reference/word-glossary.md#from",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "Configured spelling and grammatical handlers are retained. The linked entry describes the core-only reset boundary; this inventory does not assert runtime execution.",
+      "notes": "Configured From retains its selected import-provider and value relations. Dotted literal paths remain paths; authored names and aliases reject dots. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "wordRef": "grammar-word:from"
     },
     "prepositions.conjoinment.subjective": {
       "doc": "docs/reference/word-glossary.md#to",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "Configured spelling and grammatical handlers are retained. The linked entry describes the core-only reset boundary; this inventory does not assert runtime execution.",
+      "notes": "Configured To retains its utilization relation. Authored native verb definitions require complete five-form families while their framed native bodies retain their bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "wordRef": "grammar-word:to"
     },
     "prepositions.conjoinment.comparative": {
@@ -440,7 +448,7 @@
       "doc": "docs/reference/word-glossary.md#for",
       "topic": "Prepositions",
       "support": "partial",
-      "notes": "Configured spelling and grammatical handlers are retained. The linked entry describes the core-only reset boundary; this inventory does not assert runtime execution.",
+      "notes": "Configured For retains its source-action/body relation. A newly declared source action supplies all five verb forms; typed parameters retain their ordinary binding roles. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "wordRef": "grammar-word:for"
     },
     "articles.variable": {

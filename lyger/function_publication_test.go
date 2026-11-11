@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var functionPublicationSource = functionSource("Publish", "\"Value\" as Text", "Text", "Publicly define \"Message\" as Value.\nPublicly create \"Report|-s|-ed|-ing\" for Showing Message and then Showing any Text.\nReport `|`.\nReturn Message.") + "Publish `first` as \"First\".\nPublish `second` as \"Second\".\nShow First and Second.\n"
+var functionPublicationSource = functionSource("Publish|-es|-ed|-ing|-er", "\"Value\" as Text", "Text", "Publicly define \"Message\" as Value.\nPublicly create \"Report|-s|-ed|-ing|-er\" for Showing Message and then Showing any Text.\nReport `|`.\nReturn Message.") + "Publish `first` as \"First\".\nPublish `second` as \"Second\".\nShow First and Second.\n"
 
 func TestFunctionBodyPublication(t *testing.T) {
 	c := executableTestResult(t, memberResolutionSource{main: functionPublicationSource}).Compilation
@@ -37,13 +37,13 @@ func TestFunctionPublicValuesRemainDefinitelyAssigned(t *testing.T) {
 	}
 }
 
-const functionMapSource = "Define \"callbacks\" as a New Map of Identity.\nPut Identity in callbacks as `key`.\nDefine \"callback\" as a New Identity from callbacks at `key`.\ncallback `mapped` as \"Result\".\nShow Result.\n"
+const functionMapSource = "Define \"callbacks\" as a New Map of Echo.\nPut Echo in callbacks as `key`.\nDefine \"replay|-s|-ed|-ing|-er\" as a New Echo from callbacks at `key`.\nreplay `mapped` as \"Result\".\nShow Result.\n"
 
 func TestFunctionSignatureMap(t *testing.T) {
 	requireFunctionPlan(t, identityFunction+functionMapSource)
 }
 
 func functionMapExtractionSource() string {
-	source := identityFunction + strings.Replace(functionMapSource, "Define \"callback\"", "Define \"boxed\" as a New Thing of callbacks.\nDefine \"copied\" as a New Map of Identity from boxed.\nDefine \"callback\"", 1)
+	source := identityFunction + strings.Replace(functionMapSource, "Define \"replay|-s|-ed|-ing|-er\"", "Define \"boxed\" as a New Thing of callbacks.\nDefine \"copied\" as a New Map of Echo from boxed.\nDefine \"replay|-s|-ed|-ing|-er\"", 1)
 	return strings.Replace(source, "from callbacks at", "from copied at", 1)
 }

@@ -65,8 +65,14 @@ func TestParagraphPublicDeclarationsRetainCanonicalIdentity(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			source := memberResolutionSource{}
+			first, second := "PublishedAlias", "PublishedAgain"
+			firstLabel, secondLabel := first, second
+			if tc.kind == valueLexeme {
+				first, second = "Relay", "Forward"
+				firstLabel, secondLabel = "Relay|-s|-ed|-ing|-er", "Forward|-s|-ed|-ing|-er"
+			}
 			source.main = paragraphWitness + "\n    " + tc.declaration + "\n" + tc.body + "\"UnpublishedSibling\" is `private`.\n" +
-				"\nUse " + tc.name + " as \"PublishedAlias\".\nUse PublishedAlias as \"PublishedAgain\".\n"
+				"\nUse " + tc.name + " as \"" + firstLabel + "\".\nUse " + first + " as \"" + secondLabel + "\".\n"
 			compilation := executableTestResult(t, source).Compilation
 			if compilation.Memory["UnpublishedSibling"] != nil {
 				t.Fatal("Public applied to the whole paragraph instead of its declaration")
@@ -82,7 +88,7 @@ func TestParagraphPublicDeclarationsRetainCanonicalIdentity(t *testing.T) {
 			if compilation.Semantics.Declarations[original] != statement || statement.source.Span.Start.Line != strings.Count(paragraphWitness, "\n")+2 {
 				t.Fatal("publication replaced defining-paragraph provenance")
 			}
-			for _, name := range []string{"PublishedAlias", "PublishedAgain"} {
+			for _, name := range []string{first, second} {
 				alias := compilation.Memory[name]
 				canonical, err := canonicalRecord(alias, compilation.Semantics.Aliases)
 				if err != nil || alias == nil || canonical != original {
@@ -108,7 +114,7 @@ func TestParagraphPublicDeclarationsRetainCanonicalIdentity(t *testing.T) {
 func TestParagraphPublicDictionaryKeepsMemberNamespace(t *testing.T) {
 	source := memberResolutionSource{}
 	source.main = paragraphWitness + paragraphAnnounce + "\n    Create \"Shared\" as a Public Dictionary.\n" +
-		"Create Shared's \"Speak|-s|-ed|-ing|-er\" for Processing a New Announcer.\n" +
+		"Create Shared's \"Speak|-s|----oke|-ing|-er\" for Processing a New Announcer.\n" +
 		"\nUse Shared as \"SharedAlias\".\nUse SharedAlias's Speak as \"Speak\".\n" +
 		"Create \"Reader\" as a New Basic App.\nThe App Speaks x2.\n"
 	compilation := executableTestResult(t, source).Compilation
@@ -125,16 +131,16 @@ func TestParagraphPublicDictionaryKeepsMemberNamespace(t *testing.T) {
 }
 
 func TestParagraphPrivateValuesCannotEscape(t *testing.T) {
-	for _, tc := range []struct{ name, declaration, body string }{
-		{"SecretText", "\"SecretText\" is `private`.", ""},
-		{"SecretDictionary", "Create \"SecretDictionary\" as a Dictionary.", ""},
-		{"SecretApp", "Create \"SecretApp\" as a New Basic App.", "The App Prints x2.\n"},
-		{"SecretAction", "Create \"SecretAction\" for Showing any Text.", ""},
+	for _, tc := range []struct{ name, declaration, body, localAlias, escapedAlias string }{
+		{"SecretText", "\"SecretText\" is `private`.", "", "LocalAlias", "Escaped"},
+		{"SecretDictionary", "Create \"SecretDictionary\" as a Dictionary.", "", "LocalAlias", "Escaped"},
+		{"SecretApp", "Create \"SecretApp\" as a New Basic App.", "The App Prints x2.\n", "LocalAlias", "Escaped"},
+		{"SecretAction", "Create \"SecretAction|-s|-ed|-ing|-er\" for Showing any Text.", "", "Relay|-s|-ed|-ing|-er", "Forward|-s|-ed|-ing|-er"},
 	} {
 		for _, sibling := range []bool{false, true} {
 			t.Run(fmt.Sprintf("%s/sibling=%t", tc.name, sibling), func(t *testing.T) {
 				source := memberResolutionSource{}
-				source.main = paragraphWitness + "\n    " + tc.declaration + "\n" + tc.body + "Use " + tc.name + " as \"LocalAlias\".\n"
+				source.main = paragraphWitness + "\n    " + tc.declaration + "\n" + tc.body + "Use " + tc.name + " as \"" + tc.localAlias + "\".\n"
 				control := compileMemberResolutionSource(t, source)
 				if control.Error != nil {
 					t.Fatalf("private declaration and in-scope alias control: %v", control.Error)
@@ -143,7 +149,7 @@ func TestParagraphPrivateValuesCannotEscape(t *testing.T) {
 				if sibling {
 					tail += "    \"Neighbour\" is `next`.\n"
 				}
-				source.main += tail + "Use " + tc.name + " as \"Escaped\".\n"
+				source.main += tail + "Use " + tc.name + " as \"" + tc.escapedAlias + "\".\n"
 				compilation := compileMemberResolutionSource(t, source)
 				line := strings.Count(strings.TrimSuffix(source.main, "\n"), "\n") + 1
 				if compilation.Error == nil || !strings.Contains(compilation.Error.Error(), fmt.Sprintf("main.l:%d:", line)) || !strings.Contains(compilation.Error.Error(), tc.name) {

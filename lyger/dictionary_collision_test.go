@@ -10,7 +10,7 @@ import (
 )
 
 func TestDictionaryImportLocalCollisions(t *testing.T) {
-	const imported = "Use Catalog's Emit from `catalog` as \"Paint\".\n"
+	const imported = "Use Catalog's Emit from `catalog` as \"Paint|-s|-ed|-ing|-er\".\n"
 	files := dictionaryIndexFilesystem(t)
 	installTestDictionary(t, files, "catalog", "Catalog", "Create \"Catalog\" as a Dictionary.\nCreate Catalog's \"Emit|-s|-ted|-ting|-ter\" for Printing any Text.\n")
 	service := NewLygerService(Options{Resources: files})

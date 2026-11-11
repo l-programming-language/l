@@ -17,7 +17,6 @@ type sourceFunction struct {
 	aliases      map[*record]*record
 	Definition   *record
 	Return       *record
-	Word         *lexeme
 	Record       *record
 	Header       *lStatement
 	Scope        *lexicalScope
@@ -71,7 +70,15 @@ func runtimeRecord(tok *token, typ runtimeTypeRef, statement *lStatement) (*reco
 	}
 	value := initEntry(typ.Kind.String(), category)
 	value.Runtime = &runtimeReference{Source: statement}
-	return &record{ID: strings.Trim(string(tok.rawBytes), `"`), Type: strings.ToLower(category.String()) + "." + strings.ToLower(typ.Kind.String()), Value: value, runtimeType: &typ}, nil
+	label, err := parseDeclarationLabel(string(tok.rawBytes))
+	if err != nil {
+		return nil, err
+	}
+	rec := &record{ID: label.Root, Type: strings.ToLower(category.String()) + "." + strings.ToLower(typ.Kind.String()), Value: value, runtimeType: &typ}
+	if err := rec.declareInvocation(string(tok.rawBytes)); err != nil {
+		return nil, err
+	}
+	return rec, nil
 }
 
 func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrationSite, prepared *statementRegistration) (bool, error) {
@@ -166,14 +173,14 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		return true, lerrors.Syntax.Errorf("a paragraph has only one Function body")
 	}
 	word := newLexeme("verb")
-	if err := word.reLabel(string(target.rawBytes)); err != nil {
+	if err := word.declareFamily(string(target.rawBytes)); err != nil {
 		return true, err
 	}
 	definition, err := canonicalRecord(object.noun.binding.Record, c.Semantics.Aliases)
 	if err != nil {
 		return true, err
 	}
-	function := &sourceFunction{Native: native, aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition, Word: word}
+	function := &sourceFunction{Native: native, aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition}
 	for _, name := range []string{"Return", "Invoke"} {
 		binding, _, err := c.resolver().lookupMember(definition, []byte(name))
 		if err != nil {
@@ -221,7 +228,7 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 	value := initEntry("Function", storageApplicative)
 	value.Applicative.Function.Source = function
 	value.Runtime = &runtimeReference{Source: statement}
-	rec := &record{ID: strings.SplitN(strings.Trim(string(target.rawBytes), `"`), "|", 2)[0], Type: "applicative.function", Value: value}
+	rec := &record{ID: strings.SplitN(strings.Trim(string(target.rawBytes), `"`), "|", 2)[0], Type: "applicative.function", Value: value, word: word}
 	function.Record = rec
 	prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: target, Record: rec})
 	seen := make(map[string]bool)
@@ -302,6 +309,9 @@ func (b *instructionBuilder) functionOperation(clause *clauseGram, ctx instructi
 			return nil, err
 		}
 	} else {
+		if clause.verb.binding == nil || !clause.verb.binding.Record.hasInvocationFamily() {
+			return nil, lerrors.Syntax.Errorf("Function invocation requires this binding's complete verb family")
+		}
 		target, err := b.tokenValue(clause.verb, ctx)
 		if err != nil {
 			return nil, err

@@ -98,7 +98,7 @@ func TestStandaloneServiceBodiesAreUnsupported(t *testing.T) {
 		{"pronoun", distributionCorePrefix + "Create \"Worker\" as a New Main Service.\nIt Prints `body`.\n", "Worker", "main.l:3:", nil},
 		{"service-named-App", distributionCorePrefix + "Create \"App\" as a New Main Service.\nApp Prints `body`.\n", "App", "main.l:3:", nil},
 		{"alias-named-App", distributionCorePrefix + "Create \"Worker\" as a New Main Service.\nUse Worker as \"App\".\nApp Prints `body`.\n", "Worker", "main.l:4:", nil},
-		{"imported", "Use `nested/worker.l`.\n", "Worker", "worker.l:3:", map[string]string{"nested/worker.l": "Use `words.l`.\nCreate \"Worker\" as a New Main Service.\nThe Service Paints `body`.\n", "nested/words.l": "Use Print as \"Paint\".\n"}},
+		{"imported", "Use `nested/worker.l`.\n", "Worker", "worker.l:3:", map[string]string{"nested/worker.l": "Use `words.l`.\nCreate \"Worker\" as a New Main Service.\nThe Service Paints `body`.\n", "nested/words.l": "Use Print as \"Paint|-s|-ed|-ing|-er\".\n"}},
 		{"native-body-fixture", runnableServiceFixture(t, "native-body.l"), "Worker", "main.l:3:", nil},
 		{"alias-body-fixture", runnableServiceFixture(t, "native-body-alias.l"), "Worker", "main.l:5:", nil},
 	} {
@@ -128,7 +128,7 @@ func TestServiceLifecycleAndImplicitMembersReject(t *testing.T) {
 			"Build Worker.", "Run Worker.", "Stop Worker.", "Await Worker.",
 			"Worker is Built.", "Worker is Run.", "Worker is Stopped.", "Worker is Awaited.",
 			"Use Worker as \"Alias\".\nRun Alias.",
-			"Create \"Launch|-es|-ed|-ing\" for Running any Service.\nLaunch Worker.",
+			"Create \"Launch|-es|-ed|-ing|-er\" for Running any Service.\nLaunch Worker.",
 			"Create \"Host\" as a New Basic App.\nRun Host and Worker.",
 			"Start Worker.", "Execute Worker.",
 		} {
@@ -178,8 +178,8 @@ func TestServiceUnsupportedTargetsAndOwners(t *testing.T) {
 }
 
 func TestServiceSourceActionAliasAndParameter(t *testing.T) {
-	const definition = "Create \"Run|-s|-ned|-ning\" for Showing any Text.\n"
-	result := requireSourceCompilation(t, definition+"Use Run as \"LocalRun\".\nLocalRun `source-action-only`.\n", nil)
+	const definition = "Create \"Run|-s|---an|-ning|-ner\" for Showing any Text.\n"
+	result := requireSourceCompilation(t, definition+"Use Run as \"LocalRun|-s|---an|-ning|-ner\".\nLocalRun `source-action-only`.\n", nil)
 	flat := flattenedInstructions(result.Compilation.Semantics.Instructions)
 	if len(flat) != 1 || flat[0].Kind != instructionShow || flat[0].Value == nil || flat[0].Value.Literal == nil || flat[0].Value.Literal.Text != "`source-action-only`" {
 		t.Fatalf("source-defined Run was redispatched as a native lifecycle operation: %v", flattenedInstructionKinds(result.Compilation.Semantics.Instructions))
@@ -199,7 +199,7 @@ func TestServiceOrdinaryMembersAndActionsRemainLexical(t *testing.T) {
 			t.Fatalf("ordinary %s was treated as an implicit process member: %#v", member, instructions)
 		}
 	}
-	for _, action := range []string{"Build|-s|-t|-ing", "Run|-s|-ned|-ning", "Stop|-s|-ped|-ping", "Await|-s|-ed|-ing"} {
+	for _, action := range []string{"Build|-s|--t|-ing|-er", "Run|-s|---an|-ning|-ner", "Stop|-s|-ped|-ping|-per", "Await|-s|-ed|-ing|-er"} {
 		name := strings.Split(action, "|")[0]
 		source := "Create \"" + action + "\" for Showing any Text.\n" + name + " `ordinary action`.\n"
 		result := requireSourceCompilation(t, source, nil)
@@ -433,7 +433,7 @@ func TestRetainedAppTypedCapture(t *testing.T) {
 		{"escaped-static-capture", "`definition text`", true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			source := "    Create \"Worker\" as a New Public Basic App.\nDefine \"privateText\" as " + tc.value + ".\nPublicly create \"Report|-s|-ed|-ing\" for Showing privateText and then Showing any Text.\n"
+			source := "    Create \"Worker\" as a New Public Basic App.\nDefine \"privateText\" as " + tc.value + ".\nPublicly create \"Report|-s|-ed|-ing|-er\" for Showing privateText and then Showing any Text.\n"
 			if !tc.escape {
 				source += "Report `inside`.\n"
 			}

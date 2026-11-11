@@ -13,7 +13,7 @@ func TestParagraphDescriptorTargetDeclarationIdentity(t *testing.T) {
 		t.Run(target, func(t *testing.T) {
 			source := memberResolutionSource{}
 			source.main = paragraphDescriptorWidget +
-				"Use Widget as \"Handle\".\n" +
+				"Use Widget as \"Handle|-s|-like|--ing\".\n" +
 				"\"Restricted\" is a New Adjective describing any Widget.\n" +
 				"It describes a Generic `main` " + target + " of any Process with No Inputs and No Outputs.\n"
 			compilation := executableTestResult(t, source).Compilation
@@ -38,7 +38,7 @@ func TestParagraphDescriptorNominalConstructionIdentity(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			source := memberResolutionSource{}
 			source.main = paragraphGlobals + paragraphDescriptorWidget +
-				"Use Widget as \"Handle\".\n" +
+				"Use Widget as \"Handle|-s|-like|--ing\".\n" +
 				"\"Wrapped\" describes any Widget as `<DEF>[[\"A\", \"<@Widget@>\"]]<DEF>`.\n" +
 				"\"Entry\" describes a Generic `main` Widget of any Process with No Inputs and No Outputs.\n" + tc.local +
 				"\"Shell\" describes a Generic `main` Object with a New Wrapped Entry " + tc.nominal + " using any Process.\n" +

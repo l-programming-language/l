@@ -280,9 +280,9 @@ func TestConfiguredDictionaryImportBindings(t *testing.T) {
 			root := t.TempDir()
 			cfg := configuredImportAssets(t, root, [3]string{"Adopt", "via", "named"})
 			installTestDictionary(t, cfg.Resources.(fstest.MapFS), "catalog", "Catalog", "Create \"Catalog\" named a Dictionary.\nCreate Catalog's \"Emit|-s|-ted|-ting|-ter\" for Printing any Text.\n")
-			source := "Adopt Catalog's Emit via `catalog` named \"Display\".\n"
+			source := "Adopt Catalog's Emit via `catalog` named \"Display|-s|-ed|-ing|-er\".\n"
 			if namespace {
-				source = "Adopt Catalog via `catalog`.\nAdopt Catalog's Emit named \"Display\".\n"
+				source = "Adopt Catalog via `catalog`.\nAdopt Catalog's Emit named \"Display|-s|-ed|-ing|-er\".\n"
 			}
 			source += "Create \"Hello\" named a New Basic App.\nThe App Displays `dialect`.\n"
 			main := writeSourceFile(t, root, "main.l", source)

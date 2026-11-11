@@ -178,7 +178,7 @@ func TestDefinitionNumberNativeBits(t *testing.T) {
 
 func TestDefinitionNumberSourceAction(t *testing.T) {
 	source := []byte("Define \"Check|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~{ let value: f64 = <@Value|Number@>; ::std::println!(\"{:016x}\", value.to_bits()); }~|}<DEF>`.\n" +
-		"Create \"Inspect|-s|-ed|-ing\" for Processing a New Checker.\n" +
+		"Create \"Inspect|-s|-ed|-ing|-or\" for Processing a New Checker.\n" +
 		"Create \"Worker\" as a New Basic App.\n" +
 		"The App Inspects 3.\nThe App Inspects -0.\nThe App Inspects 9007199254740993.\n")
 	before := bytes.Clone(source)

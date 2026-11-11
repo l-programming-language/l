@@ -6,11 +6,13 @@ Give each word a coherent meaning and explicit inputs, results and effects. This
 
 `Create ... for ...` declares a source action with typed arguments. Core Print composes a Process using its private Log action. Definition-site references keep their bindings, while each use supplies its own arguments and source provenance.
 
-Pipe-delimited labels declare the family's actual forms. `"Print|-s|-ed|-ing|-er"` gives Print, Prints, Printed, Printing and Printer. See [inflection rules](../spec/lexical-structure.md#vocabulary-and-inflection).
+Pipe-delimited labels declare the family's actual forms. Nouns require four forms and verbs require five, including source actions and named Function invocations. `"Print|-s|-ed|-ing|-er"` gives Print, Prints, Printed, Printing and Printer. Expand every suffix and ensure at least one derived form differs from the root case-insensitively. Missing, empty, malformed, surplus or all-identical families reject. See the [complete-family contract](../spec/definitions.md#inflection-declarations) and [inflection rules](../spec/lexical-structure.md#vocabulary-and-inflection).
 
 ## Give a result-bearing operation a Function
 
 A Function provides an explicit typed callable boundary and Return. A source action expands a composition, while a Process supplies a body to another composition. Choose the form according to the meaning and dataflow. Do not imply capture or runtime support merely because a callable record exists.
+
+Declare the five forms when naming a Function invocation. Storing or forwarding an existing Function value under a single value label does not create a new invocation name. Ordinary values, parameter and result labels, and non-callable App names keep single labels.
 
 ## Organize words by meaning and grammatical role
 
@@ -20,9 +22,9 @@ Prefer one possessive in a declaration, such as `Dictionary's Word`. Dot-qualifi
 
 Use single-word roots and keep helpers private unless callers need their interfaces. A reusable mechanism should have an appropriate source owner. One caller does not by itself make a helper unnecessary, and a useful L composition need not be split into one word per step.
 
-A verb's actor form keeps the same canonical family. Expand every declared suffix with the actual inflection rules, then check spelling, role and caller identity. Do not declare a duplicate actor noun or relabel metadata to disguise an incorrect source role. Supply only forms whose grammar and meaning are supported.
+A verb's actor form keeps the same canonical family. Expand every declared suffix with the actual inflection rules, then check spelling, role and caller identity. Do not declare a duplicate actor noun or relabel metadata to disguise an incorrect source role. A lexical alias can inherit forms only by removing qualification while keeping an unchanged canonical root. Renames and selected actor aliases need explicit complete families; see [aliases](../spec/names-and-scope.md#aliases-and-canonical-identity).
 
-Unexplained single-form operations, orphan actor nouns and adjective-shaped stage nouns warrant review. These are signals, not spelling-based verdicts. Concrete nouns, projections, bounded patterns and private continuations can be valid. A modifier needs a compatible base and canonical target; similar English names do not establish that relationship.
+Single-form noun or verb declarations are invalid, including private helpers. Orphan actor nouns and adjective-shaped stage nouns warrant semantic review even when their declared families are complete. Concrete nouns, projections, bounded patterns and private continuations can be valid when their roles and declarations fit. A modifier needs a compatible base and canonical target; similar English names do not establish that relationship.
 
 Before sharing or removing a mechanism, compare operands/results, target identity, mutation, moves, borrows, retention, destruction, evaluation order and failure behavior. Inspect the native callee as well as the leaf. Independent words need explicit inputs and result labels rather than fixed generated names.
 

@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-var captureFunctionInteropSource = "Define \"Items\" as a New List of `kept` and `other`.\nDefine \"Payload\" as a New Text from Items at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Payload and then Showing any Text.\nUse Report as \"Saved\".\n\n" + functionSource("Invoke", "\"Suffix\" as Text", "", "Saved Suffix.") + "Invoke `one`.\nInvoke `two`.\n"
+var captureFunctionInteropSource = "Define \"Items\" as a New List of `kept` and `other`.\nDefine \"Payload\" as a New Text from Items at 0.\nCreate \"Report|-s|-ed|-ing|-er\" for Showing Payload and then Showing any Text.\nUse Report as \"Replay|-s|-ed|-ing|-er\".\n\n" + functionSource("Invoke|-s|-d|--ing|--er", "\"Suffix\" as Text", "", "Replay Suffix.") + "Invoke `one`.\nInvoke `two`.\n"
 
 func TestFunctionCapturesSourceActionEnvironment(t *testing.T) {
 	c := executableTestResult(t, memberResolutionSource{main: captureFunctionInteropSource}).Compilation

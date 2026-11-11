@@ -157,7 +157,7 @@ func TestActionConstructionDoesNotResolveScopedReferences(t *testing.T) {
 }
 
 func TestActionDeclarationExtractionPreservesSourceUses(t *testing.T) {
-	statements, _, _ := instructionTestGrammar(t, "Create \"Stage|-s|-d|-ing\" for Building any App and then Running it.\n", nil)
+	statements, _, _ := instructionTestGrammar(t, "Create \"Stage|-s|-d|--ing|-r\" for Building any App and then Running it.\n", nil)
 	clauses := directiveClauses(statements[0])
 	if len(clauses) != 2 {
 		t.Fatalf("source action clauses = %d", len(clauses))

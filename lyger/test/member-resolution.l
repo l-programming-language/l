@@ -1,4 +1,4 @@
-Use CoreLib's Print from `local-words.l` as "CorePrint".
+Use CoreLib's Print from `local-words.l` as "CorePrint|-s|-ed|-ing|-er".
 "x" is `Hello World!`.
 *** This is a comment ***
 Create "HelloWorldApp" as a New Basic App.

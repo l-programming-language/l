@@ -2,9 +2,11 @@ package Lyger
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/fs"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -233,6 +235,81 @@ type lexicon struct {
 	Articles     map[string]lexeme `json:"articles,omitempty"`
 	Conjunctions map[string]lexeme `json:"conjunctions,omitempty"`
 	Evaluations  map[string]lexeme `json:"evaluations,omitempty"`
+}
+
+// Configured vocabulary retains its JSON prefix/postfix maps. The compiler's
+// ordered representation is separate because authored roles may share fixes.
+type configuredLexeme struct {
+	lexeme
+	Prefixes  map[string]string `json:"prefixes,omitempty"`
+	Postfixes map[string]string `json:"postfixes,omitempty"`
+}
+
+func (l *lexicon) categories() map[string]*map[string]lexeme {
+	return map[string]*map[string]lexeme{
+		"nouns": &l.Nouns, "verbs": &l.Verbs, "adjectives": &l.Adjectives, "adverbs": &l.Adverbs,
+		"prepositions": &l.Prepositions, "articles": &l.Articles, "conjunctions": &l.Conjunctions, "evaluations": &l.Evaluations,
+	}
+}
+
+func (l *lexicon) UnmarshalJSON(data []byte) error {
+	var configured map[string]map[string]configuredLexeme
+	if err := json.Unmarshal(data, &configured); err != nil {
+		return err
+	}
+	var candidate lexicon
+	for category, destination := range candidate.categories() {
+		words, found := configured[category]
+		if !found {
+			continue
+		}
+		*destination = make(map[string]lexeme, len(words))
+		for key, word := range words {
+			for _, affixes := range []struct {
+				fixes  map[string]string
+				prefix bool
+			}{{word.Postfixes, false}, {word.Prefixes, true}} {
+				fixes := make([]string, 0, len(affixes.fixes))
+				for fix := range affixes.fixes {
+					fixes = append(fixes, fix)
+				}
+				sort.Strings(fixes)
+				for _, fix := range fixes {
+					word.Forms = append(word.Forms, lexemeForm{Role: affixes.fixes[fix], Fix: fix, Prefix: affixes.prefix})
+				}
+			}
+			(*destination)[key] = word.lexeme
+		}
+	}
+	*l = candidate
+	return nil
+}
+
+func (l lexicon) MarshalJSON() ([]byte, error) {
+	configured := make(map[string]map[string]configuredLexeme)
+	for category, words := range l.categories() {
+		if len(*words) == 0 {
+			continue
+		}
+		entries := make(map[string]configuredLexeme, len(*words))
+		for key, word := range *words {
+			entry := configuredLexeme{lexeme: word, Prefixes: make(map[string]string), Postfixes: make(map[string]string)}
+			entry.Forms = nil
+			for _, form := range word.Forms {
+				fixes := entry.Postfixes
+				if form.Prefix {
+					fixes = entry.Prefixes
+				}
+				if prior, found := fixes[form.Fix]; found && prior != form.Role {
+					return nil, fmt.Errorf("configured %s %s has multiple roles for affix %q", category, key, form.Fix)
+				}
+				fixes[form.Fix] = form.Role
+			}
+			entries[key] = entry
+		}
+		configured[category] = entries
+	}
+	return json.Marshal(configured)
 }
 
 // scanLex for a matching lexical entry for an inputted POS Type

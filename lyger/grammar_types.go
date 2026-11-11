@@ -410,15 +410,17 @@ func initConditionalGrams(sType string, tokens []*token, gram *grammar) ([]*cond
 
 // valueGram holds data for the primitive noun being acted in a statement
 type valueGram struct {
-	sType      string
-	gType      string
-	cType      string // case type if case
-	rule       *grammeme
-	tokens     []*token
-	article    *token
-	adjectives []*token
-	noun       *token
-	gram       *grammar
+	sType          string
+	gType          string
+	cType          string // case type if case
+	rule           *grammeme
+	tokens         []*token
+	article        *token
+	adjectives     []*token
+	noun           *token
+	nounForm       *tokenForm
+	adjectiveForms []selectedTokenForm
+	gram           *grammar
 }
 
 // loadTyping parses sType into gType (grammar type) and cType (case type)
@@ -456,11 +458,17 @@ func (sb *valueGram) gramSwitch(term grammarTerm) error {
 func (sb *valueGram) lexSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termLexical && term.POS == posAdjective:
-		return term.associateLexicalTokens(sb.getUnassociatedTokens(), &sb.adjectives, lexicalMatchClass)
+		return associateNominalAdjectives(term, sb.getUnassociatedTokens(), &sb.adjectives, &sb.adjectiveForms)
 	case term.Kind == termLexical && term.POS == posArticle:
 		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.article, lexicalMatchClass)
 	case term.Kind == termIdentifier:
-		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.noun, lexicalMatchClass)
+		if err := term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.noun, lexicalMatchClass); err != nil {
+			return err
+		}
+		if sb.noun != nil && nominalContext(sb.article, sb.adjectives) {
+			sb.nounForm = sb.noun.nominalForm()
+		}
+		return nil
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled VALUE Lex Type: "+term.className())
 	}
@@ -498,16 +506,18 @@ func initValueGram(gType string, tokens []*token, gram *grammar) (*valueGram, er
 
 // subjectGram holds data for the noun being acted in a statement
 type subjectGram struct {
-	sType      string
-	gType      string
-	cType      string // case type if case
-	rule       *grammeme
-	tokens     []*token
-	article    *token
-	adjectives []*token
-	noun       *token
-	phrase     *phraseGram
-	gram       *grammar
+	sType          string
+	gType          string
+	cType          string // case type if case
+	rule           *grammeme
+	tokens         []*token
+	article        *token
+	adjectives     []*token
+	noun           *token
+	nounForm       *tokenForm
+	adjectiveForms []selectedTokenForm
+	phrase         *phraseGram
+	gram           *grammar
 }
 
 // loadTyping parses sType into gType (grammar type) and cType (case type)
@@ -545,7 +555,7 @@ func (sb *subjectGram) getAssociatedTokens(update bool) []*token {
 func (sb *subjectGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyPhrase:
-		phrase, err := buildConstructorPhrase(term, sb.noun, sb.adjectives, false, sb.getUnassociatedTokens(), sb.gram)
+		phrase, err := buildConstructorPhrase(term, sb.nounForm.projected(sb.noun), sb.adjectives, false, sb.getUnassociatedTokens(), sb.gram)
 		if err != nil {
 			return err
 		}
@@ -582,11 +592,17 @@ func (sb *subjectGram) lexSwitch(term grammarTerm) error {
 				}
 			}
 		}
-		return term.associateLexicalTokens(available, &sb.adjectives, lexicalMatchClass)
+		return associateNominalAdjectives(term, available, &sb.adjectives, &sb.adjectiveForms)
 	case term.Kind == termLexical && term.POS == posArticle:
 		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.article, lexicalMatchClass)
 	case term.Kind == termIdentifier:
-		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.noun, lexicalMatchClass)
+		if err := term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.noun, lexicalMatchClass); err != nil {
+			return err
+		}
+		if sb.noun != nil && nominalContext(sb.article, sb.adjectives) {
+			sb.nounForm = sb.noun.nominalForm()
+		}
+		return nil
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Subject Lex Type: "+term.className())
 	}
@@ -640,18 +656,20 @@ func initSubjectGram(gType string, tokens []*token, gram *grammar) (*subjectGram
 
 // objectGram holds data for a non-subject noun in a statement
 type objectGram struct {
-	sType      string
-	gType      string
-	cType      string
-	rule       *grammeme
-	tokens     []*token
-	article    *token
-	adjectives []*token
-	noun       *token
-	clause     *clauseGram
-	phrase     *phraseGram
-	gram       *grammar
-	name       *valueGram
+	sType          string
+	gType          string
+	cType          string
+	rule           *grammeme
+	tokens         []*token
+	article        *token
+	adjectives     []*token
+	noun           *token
+	nounForm       *tokenForm
+	adjectiveForms []selectedTokenForm
+	clause         *clauseGram
+	phrase         *phraseGram
+	gram           *grammar
+	name           *valueGram
 }
 
 // Constructor arguments, signatures and directive bodies retain their authored
@@ -702,7 +720,7 @@ func (sb *objectGram) gramSwitch(term grammarTerm) error {
 	case term.Kind == termGrammar && term.Family == familyClause:
 		return buildGrammarChild(&sb.clause, initClauseGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyPhrase:
-		phrase, err := buildConstructorPhrase(term, sb.noun, sb.adjectives, sb.name != nil, sb.getUnassociatedTokens(), sb.gram)
+		phrase, err := buildConstructorPhrase(term, sb.nounForm.projected(sb.noun), sb.adjectives, sb.name != nil, sb.getUnassociatedTokens(), sb.gram)
 		if err != nil {
 			return err
 		}
@@ -722,7 +740,7 @@ func (sb *objectGram) gramSwitch(term grammarTerm) error {
 func (sb *objectGram) lexSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termLexical && term.POS == posAdjective:
-		return term.associateLexicalTokens(sb.getUnassociatedTokens(), &sb.adjectives, lexicalMatchClass)
+		return associateNominalAdjectives(term, sb.getUnassociatedTokens(), &sb.adjectives, &sb.adjectiveForms)
 	case term.Kind == termLexical && term.POS == posArticle:
 		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.article, lexicalMatchClass)
 	case term.Kind == termIdentifier:
@@ -734,7 +752,13 @@ func (sb *objectGram) lexSwitch(term grammarTerm) error {
 				return err
 			}
 		}
-		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.noun, lexicalMatchClass)
+		if err := term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.noun, lexicalMatchClass); err != nil {
+			return err
+		}
+		if sb.noun != nil && nominalContext(sb.article, sb.adjectives) {
+			sb.nounForm = sb.noun.nominalForm()
+		}
+		return nil
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Object Lex Type: "+term.className())
 	}

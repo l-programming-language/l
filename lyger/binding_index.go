@@ -35,12 +35,9 @@ func (index *recordBindingIndex) store(key string, rec *record) {
 		if dot := strings.LastIndexByte(rec.ID, '.'); dot >= 0 {
 			prefix = strings.ToLower(rec.ID[:dot+1])
 		}
-		forms = []string{prefix + word.Root}
-		for fix := range word.Postfixes {
-			forms = append(forms, prefix+processLexFix(word.Root, fix, "postfix"))
-		}
-		for fix := range word.Prefixes {
-			forms = append(forms, prefix+processLexFix(word.Root, fix, "prefix"))
+		forms = nil
+		for _, form := range word.forms() {
+			forms = append(forms, prefix+form.Spelling)
 		}
 	}
 	for _, word := range forms {

@@ -25,7 +25,7 @@ func TestAppBodyRejectsRuntimeCaptures(t *testing.T) {
 	}
 	// Core Print composes Process with its private Logger. An alias must
 	// retain that composition and the original value's identity.
-	distributionNegative(t, distributionCorePrefix+"Use Print as \"Display\".\nIf false, define \"message\" as `payload`.\nCreate \"Worker\" as a New Basic App.\nThe App Displays message.\n", "runtime value message cannot be captured by an App body", lerrors.Unsupported)
+	distributionNegative(t, distributionCorePrefix+"Use Print as \"Display|-s|-ed|-ing|-er\".\nIf false, define \"message\" as `payload`.\nCreate \"Worker\" as a New Basic App.\nThe App Displays message.\n", "runtime value message cannot be captured by an App body", lerrors.Unsupported)
 }
 
 func TestAppBodyRetainsStaticCaptures(t *testing.T) {
@@ -72,6 +72,6 @@ func TestRuntimeRecordsFollowExpandedActionsAndAliases(t *testing.T) {
 
 func TestAppBodyRejectsConditionalComposedDefinition(t *testing.T) {
 	source := "If false, define \"Log|-s|-ged|-ging|-ger\" to `<DEF>BOD^E{|Statement: ~::std::println!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n" +
-		"Use Log as \"Emit\".\nCreate \"Speak|-s|-ed|-ing\" for Processing a New Emit.\nCreate \"Worker\" as a New Basic App.\nThe App Speaks `payload`.\n"
+		"Use Log as \"Emit|-s|-ted|-ting|-ter\".\nCreate \"Speak|-s|----oke|-ing|-er\" for Processing a New Emitter.\nCreate \"Worker\" as a New Basic App.\nThe App Speaks `payload`.\n"
 	distributionNegative(t, source, "runtime value Log cannot be captured by an App body", lerrors.Unsupported)
 }

@@ -14,14 +14,14 @@ func indexedTestWord(t *testing.T, name, label string, callable bool) *record {
 	value := &entry{Type: storageLexeme, Lexeme: word}
 	if callable {
 		value = initEntry("Function", storageApplicative)
-		value.Applicative.Function.Source = &sourceFunction{Word: word}
+		value.Applicative.Function.Source = &sourceFunction{}
 	}
-	return &record{ID: name, Value: value}
+	return &record{ID: name, Value: value, word: word}
 }
 
 func TestBindingIndexPreservesResolution(t *testing.T) {
 	write := indexedTestWord(t, "Library.Write", `"Write|-s|--ote|--iting|-r"`, false)
-	write.Value.Lexeme.Prefixes["un-"] = "negative"
+	write.Value.Lexeme.Forms = append(write.Value.Lexeme.Forms, lexemeForm{Role: "negative", Fix: "un-", Prefix: true})
 	call := indexedTestWord(t, "Apply", `"Apply|--ies|--ied|--ying|-er"`, true)
 	value := &record{ID: "Mixed", Value: initEntry("Text", storagePrimitive)}
 	records := map[string]*record{"write": write, "call": call, "value": value, "duplicate": write, "nil": nil}

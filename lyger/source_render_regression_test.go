@@ -37,7 +37,7 @@ func TestExpandedSourceDisplayDecodesEachFrameOnce(t *testing.T) {
 	framed := "`<DEF>" + `E{|Statement: ~::std::concat!(\"雪\", "\\\\n")~|}` + "<DEF>`"
 	displayed := "`" + `E{|Statement: ~::std::concat!("雪", "\\n")~|}` + "`"
 	nested := "`<DEF><DEF>keep this body<DEF><DEF>`"
-	source := []byte("\"ordinary\" is " + ordinary + ".\r\nDefine \"Quoted\" as " + framed + ".\nDefine \"Nested\" as " + nested + ".")
+	source := []byte("\"ordinary\" is " + ordinary + ".\r\nDefine \"Quoted|-s|-like|---ing\" as " + framed + ".\nDefine \"Nested|-s|-like|---ing\" as " + nested + ".")
 	prepared, err := PrepareSource("render 雪.l", source)
 	if err != nil {
 		t.Fatal(err)
@@ -47,7 +47,7 @@ func TestExpandedSourceDisplayDecodesEachFrameOnce(t *testing.T) {
 	for key, value := range prepared.TextCache {
 		cache[key] = bytes.Clone(value)
 	}
-	want := []byte("\"ordinary\" is " + ordinary + ".\nDefine \"Quoted\" as " + displayed + ".\nDefine \"Nested\" as `<DEF>keep this body<DEF>`.")
+	want := []byte("\"ordinary\" is " + ordinary + ".\nDefine \"Quoted|-s|-like|---ing\" as " + displayed + ".\nDefine \"Nested|-s|-like|---ing\" as `<DEF>keep this body<DEF>`.")
 	for attempt := 0; attempt < 3; attempt++ {
 		if got := renderExpandedSource(prepared.Statements, prepared.TextCache); !bytes.Equal(got, want) {
 			t.Fatalf("frame display changed escaping/order/EOF:\ngot  %q\nwant %q", got, want)

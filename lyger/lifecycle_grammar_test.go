@@ -82,7 +82,7 @@ func TestLifecycleGrammarConfiguration(t *testing.T) {
 		if err := validateGrammarReferences(g.grammarMap); err != nil {
 			t.Fatal(err)
 		}
-		want := lexeme{Root: "await", POS: "verb", Type: "action.suspensive", Postfixes: map[string]string{"-s": "active", "-ed": "passive", "-ing": "applicative"}, Value: "AWAIT(inputs[0])", Inputs: []string{"*.noun.app"}, Outputs: []string{"value"}}
+		want := lexeme{Root: "await", POS: "verb", Type: "action.suspensive", Forms: []lexemeForm{{Role: "passive", Fix: "-ed"}, {Role: "applicative", Fix: "-ing"}, {Role: "active", Fix: "-s"}}, Value: "AWAIT(inputs[0])", Inputs: []string{"*.noun.app"}, Outputs: []string{"value"}}
 		if !reflect.DeepEqual(g.lex.Verbs["suspensive"], want) {
 			t.Fatalf("Await config differs: %+v", g.lex.Verbs["suspensive"])
 		}
@@ -147,7 +147,7 @@ func TestLifecycleGrammarConfiguration(t *testing.T) {
 		for _, tc := range []struct{ source, role string }{
 			{"Await", "verbs.suspensive.root"}, {"Await Worker extra", "verbs.suspensive.root"}, {"Worker is awaited Worker", "verbs.passive.root"},
 			{"Awaiting Worker", "verbs.suspensive.applicative"}, {"Awaiter Worker", "verbs.suspensive.objective"},
-			{"Create \"Join\" for Awaiting any App CONDITIONAL", "verbs.declarative.root"},
+			{"Create \"Join|-s|-ed|-ing|-er\" for Awaiting any App CONDITIONAL", "verbs.declarative.root"},
 		} {
 			t.Run(tc.source, func(t *testing.T) {
 				if _, err := parseConfiguredGrammar(t, tc.source, tc.role); err == nil {

@@ -3,27 +3,90 @@ package Lyger
 import (
 	"bytes"
 	"fmt"
+	"strconv"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/l-programming-language/l/lerrors"
 )
 
 // lexeme is the base structure of any Keyword in L
 type lexeme struct {
-	ID          string            `json:"id,omitempty"`
-	Root        string            `json:"root,omitempty"`
-	POS         string            `json:"pos,omitempty"`
-	Type        string            `json:"type,omitempty"`
-	Adverbs     []*token          `json:"adverbs,omitempty"`
-	Adjectives  []*token          `json:"adjectives,omitempty"`
-	Actions     []*lexeme         `json:"actions,omitempty"` // Used in complex Lexemes such as "Execute"
-	Synchronous bool              `json:"synchronous,omitempty"`
-	Prefixes    map[string]string `json:"prefixes,omitempty"`
-	Postfixes   map[string]string `json:"postfixes,omitempty"`
-	Value       string            `json:"value,omitempty"`
-	Inputs      []string          `json:"inputs,omitempty"`
-	Arguments   []string          `json:"arguments,omitempty"` // Per-use references; Inputs remains the source signature.
-	Outputs     []string          `json:"outputs,omitempty"`
+	ID          string       `json:"id,omitempty"`
+	Root        string       `json:"root,omitempty"`
+	POS         string       `json:"pos,omitempty"`
+	Type        string       `json:"type,omitempty"`
+	Adverbs     []*token     `json:"adverbs,omitempty"`
+	Adjectives  []*token     `json:"adjectives,omitempty"`
+	Actions     []*lexeme    `json:"actions,omitempty"` // Used in complex Lexemes such as "Execute"
+	Synchronous bool         `json:"synchronous,omitempty"`
+	Forms       []lexemeForm `json:"forms,omitempty"`
+	Value       string       `json:"value,omitempty"`
+	Inputs      []string     `json:"inputs,omitempty"`
+	Arguments   []string     `json:"arguments,omitempty"` // Per-use references; Inputs remains the source signature.
+	Outputs     []string     `json:"outputs,omitempty"`
+}
+
+// A declared role owns its affix, even when another role uses the same affix.
+// Keeping declaration order makes context-free same-spelling lookup stable.
+type lexemeForm struct {
+	Role   string `json:"role"`
+	Fix    string `json:"fix"`
+	Prefix bool   `json:"prefix,omitempty"`
+}
+
+type expandedLexemeForm struct{ Role, Spelling string }
+
+func (form lexemeForm) spelling(root string) string {
+	position := "postfix"
+	if form.Prefix {
+		position = "prefix"
+	}
+	return processLexFix(root, form.Fix, position)
+}
+
+func (l *lexeme) forms() []expandedLexemeForm {
+	forms := make([]expandedLexemeForm, 1, len(l.Forms)+1)
+	forms[0] = expandedLexemeForm{Role: "root", Spelling: l.Root}
+	for _, form := range l.Forms {
+		forms = append(forms, expandedLexemeForm{Role: form.Role, Spelling: form.spelling(l.Root)})
+	}
+	return forms
+}
+
+type declarationLabel struct {
+	Root  string
+	Slots []string // Includes the root at position zero, preserving authored case.
+}
+
+func parseDeclarationLabel(raw string) (declarationLabel, error) {
+	if len(raw) < 2 || raw[0] != '"' || raw[len(raw)-1] != '"' {
+		return declarationLabel{}, lerrors.Syntax.Errorf("lexeme label not declarative: %s", raw)
+	}
+	decoded, err := strconv.Unquote(raw)
+	if err != nil {
+		return declarationLabel{}, lerrors.Syntax.Errorf("invalid declaration label %s: %v", raw, err)
+	}
+	slots := strings.Split(decoded, "|")
+	if slots[0] == "" || strings.IndexFunc(decoded, unicode.IsSpace) >= 0 || strings.ContainsAny(decoded, "\"\x00") {
+		return declarationLabel{}, lerrors.Syntax.Errorf("declaration label requires a nonempty root and no spaces: %s", raw)
+	}
+	if err := validateAuthoredName([]byte(raw)); err != nil {
+		return declarationLabel{}, err
+	}
+	return declarationLabel{Root: slots[0], Slots: slots}, nil
+}
+
+func lexicalCases(pos string) []string {
+	switch pos {
+	case "noun":
+		return []string{"root", "plural", "descriptive", "active"}
+	case "verb":
+		return []string{"root", "active", "passive", "applicative", "objective"}
+	default:
+		return nil
+	}
 }
 
 // validateInputs checks a lexeme use without changing its formal signature or
@@ -86,83 +149,94 @@ func (l *lexeme) getValueType() string {
 	return "lexeme.generic"
 }
 
-// buildLexCases inputs a split label string and lexical POS and returns the root word and PostFix/Prefix Maps
-func (l *lexeme) buildLexCases(splitLabel []string, cases []string) error {
-	var root string
-	postRoot := false
-	post := make(map[string]string)
-	pre := make(map[string]string)
-	if len(splitLabel) > len(cases) {
-		return lerrors.Syntax.Errorf("invalid number of cases on lexeme label for part of speech type")
-	}
-	for ind, caseLabel := range splitLabel {
-		caseStr := cases[ind]
-		if caseStr == "root" {
-			root = caseLabel
-			postRoot = true
-		} else {
-			if postRoot { // IF PAST THE ROOT CASE WE ARE ADDING POSTFIXES
-				if strings.HasPrefix(caseLabel, "-") { // TO BE ADDED POSTFIX MUST START WITH one or more -
-					post[caseLabel] = caseStr
-				}
-			} else { // IF BEFORE THE ROOT CASE WE ARE ADDING PREFIXES
-				if strings.HasSuffix(caseLabel, "-") { // TO BE ADDED POSTFIX MUST END WITH one or more -
-					pre[caseLabel] = caseStr
-				}
-			}
-		}
-	}
-	l.Root = strings.ToLower(root)
-	l.Postfixes = post
-	l.Prefixes = pre
-	return nil
-}
-
-// loadLabelCases inputs a cased label string and updates lexeme Prefixes, and Postfixes
-// NOUN:  "Process|-es|-ive|-ing" = ROOT|PLURAL|DESCRIPTIVE|ACTIVE
-// VERB:  "Log|-s|-ged|-ging|-ger = ROOT|ACTIVE|PASSIVE|APPLICATIVE|OBJECTIVE
-func (l *lexeme) loadLabelCases(labelString string) error {
-	nounCases := []string{"root", "plural", "descriptive", "active"}               //TODO LATER ADD PREFIXES BEFORE ROOT
-	verbCases := []string{"root", "active", "passive", "applicative", "objective"} //TODO LATER DITTO ABOVE
-	if strings.Contains(labelString, "|") {
-		sLabel := strings.Split(labelString, "|")
-		if l.POS == "noun" {
-			err := l.buildLexCases(sLabel, nounCases)
-			if err != nil {
-				return err
-			}
-			return nil
-		} else if l.POS == "verb" {
-			err := l.buildLexCases(sLabel, verbCases)
-			if err != nil {
-				return err
-			}
-			return nil
-		}
-		return lerrors.Syntax.Errorf("%s", "lexeme label error: unable to case a"+l.POS+", only nouns and verbs can be cased")
-	}
-	return lerrors.Syntax.Errorf("%s", "lexeme label is not cased: "+labelString)
-}
-
-// reLabel inputs a label string and updates lexeme label, which comprises Root, Prefixes, and Postfixes
+// reLabel accepts ordinary binding names. Supplying cases explicitly always
+// declares a complete family; declareFamily additionally rejects bare roots.
 func (l *lexeme) reLabel(labelString string) error {
-	if !strings.HasPrefix(labelString, `"`) && !strings.HasSuffix(labelString, `"`) {
-		return lerrors.Syntax.Errorf("%s", "lexeme label not declarative: "+labelString)
+	label, err := parseDeclarationLabel(labelString)
+	if err != nil {
+		return err
 	}
-	labelString = strings.Replace(labelString, `"`, ``, -1)
-	if strings.Contains(labelString, "|") {
-		// needs lex label cases processed, i.e. Execute|-s|-d|--ing|--or
-		err := l.loadLabelCases(labelString)
-		if err != nil {
+	var forms []lexemeForm
+	if len(label.Slots) > 1 {
+		cases := lexicalCases(l.POS)
+		if len(cases) == 0 {
+			return lerrors.Syntax.Errorf("only nouns and verbs can declare forms, got %s", l.POS)
+		}
+		if len(label.Slots) > len(cases) {
+			return lerrors.Syntax.Errorf("%s family %q requires %d forms (%s), got %d", l.POS, label.Root, len(cases), strings.Join(cases, "|"), len(label.Slots))
+		}
+		for index, fix := range label.Slots[1:] {
+			if strings.HasPrefix(fix, "-") {
+				forms = append(forms, lexemeForm{Role: cases[index+1], Fix: strings.ToLower(fix)})
+			}
+		}
+	}
+	candidate := *l
+	candidate.Root, candidate.Forms = strings.ToLower(label.Root), forms
+	if len(label.Slots) > 1 {
+		if err := candidate.validateFamily(); err != nil {
 			return err
 		}
-	} else {
-		// root label only, i.e. Objective
-		l.Postfixes = make(map[string]string)
-		l.Prefixes = make(map[string]string)
-		l.Root = strings.ToLower(labelString)
+	}
+	l.Root, l.Forms = candidate.Root, candidate.Forms
+	return nil
+}
+
+func (l *lexeme) declareFamily(label string) error {
+	if l.POS != "noun" && l.POS != "verb" {
+		return l.reLabel(label)
+	}
+	candidate := *l
+	if err := candidate.reLabel(label); err != nil {
+		return err
+	}
+	if err := candidate.validateFamily(); err != nil {
+		return err
+	}
+	l.Root, l.Forms = candidate.Root, candidate.Forms
+	return nil
+}
+
+// validateFamily also checks inherited canonical families without inventing a
+// new label. Form spellings may coincide, but the entire family cannot be root.
+func (l *lexeme) validateFamily() error {
+	cases := lexicalCases(l.POS)
+	if len(cases) == 0 || l.Root == "" {
+		return lerrors.Syntax.Errorf("complete noun or verb family requires a nonempty root, got %s %q", l.POS, l.Root)
+	}
+	if !validFamilySpelling(l.Root) {
+		return lerrors.Syntax.Errorf("%s family has invalid root %q", l.POS, l.Root)
+	}
+	roles := make(map[string]int, len(l.Forms))
+	distinct := false
+	for _, form := range l.Forms {
+		if (!form.Prefix && !strings.HasPrefix(form.Fix, "-")) || (form.Prefix && !strings.HasSuffix(form.Fix, "-")) || strings.Count(form.Fix, "-")-1 > len(l.Root) {
+			return lerrors.Syntax.Errorf("%s family %q has invalid %s affix %q", l.POS, l.Root, form.Role, form.Fix)
+		}
+		spelling := form.spelling(l.Root)
+		if !validFamilySpelling(spelling) {
+			return lerrors.Syntax.Errorf("%s family %q has invalid expanded %s form %q", l.POS, l.Root, form.Role, spelling)
+		}
+		roles[form.Role]++
+		distinct = distinct || !strings.EqualFold(l.Root, spelling)
+	}
+	var missing []string
+	for _, role := range cases[1:] {
+		if roles[role] != 1 {
+			missing = append(missing, role)
+		}
+	}
+	if len(l.Forms) != len(cases)-1 || len(missing) != 0 {
+		return lerrors.Syntax.Errorf("%s family %q requires %d forms (%s); missing or repeated forms: %s", l.POS, l.Root, len(cases), strings.Join(cases, "|"), strings.Join(missing, ", "))
+	}
+	if !distinct {
+		return lerrors.Syntax.Errorf("%s family %q requires at least one nonroot form differing from its root", l.POS, l.Root)
 	}
 	return nil
+}
+
+func validFamilySpelling(spelling string) bool {
+	return spelling != "" && utf8.ValidString(spelling) && !strings.ContainsAny(spelling, ".\"`|") && strings.IndexFunc(spelling, func(r rune) bool { return unicode.IsSpace(r) || unicode.IsControl(r) }) < 0
 }
 
 // checkDescriptors scans a lexeme for a particular adverb or adjective
@@ -314,13 +388,8 @@ func (l *lexeme) matchesForm(word, form string) bool {
 	if form == "root" {
 		return word == l.Root
 	}
-	for fix, role := range l.Postfixes {
-		if role == form && word == processLexFix(l.Root, fix, "postfix") {
-			return true
-		}
-	}
-	for fix, role := range l.Prefixes {
-		if role == form && word == processLexFix(l.Root, fix, "prefix") {
+	for _, candidate := range l.Forms {
+		if candidate.Role == form && word == candidate.spelling(l.Root) {
 			return true
 		}
 	}
@@ -333,16 +402,9 @@ func (l *lexeme) match(tBytes []byte) (bool, string) {
 	if l.Root == string(tBytes) {
 		return true, "root"
 	}
-	// 2) check for postfix match
-	for pKey, pType := range l.Postfixes {
-		if string(tBytes) == processLexFix(l.Root, pKey, "postfix") {
-			return true, pType
-		}
-	}
-	// 3) check for prefix match
-	for pKey, pType := range l.Prefixes {
-		if string(tBytes) == processLexFix(l.Root, pKey, "prefix") {
-			return true, pType
+	for _, form := range l.Forms {
+		if string(tBytes) == form.spelling(l.Root) {
+			return true, form.Role
 		}
 	}
 	return false, ""
@@ -356,8 +418,6 @@ func newLexeme(lType string) *lexeme {
 		Adverbs:    []*token{},
 		Adjectives: []*token{},
 		Actions:    []*lexeme{},
-		Prefixes:   make(map[string]string),
-		Postfixes:  make(map[string]string),
 		Value:      "",
 		Inputs:     []string{},
 		Outputs:    []string{},

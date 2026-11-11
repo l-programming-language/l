@@ -252,16 +252,19 @@ func (s conditionalGram) clone() conditionalGram {
 
 func (s valueGram) clone() valueGram {
 	s.adjectives = append([]*token(nil), s.adjectives...)
+	s.adjectiveForms = append([]selectedTokenForm(nil), s.adjectiveForms...)
 	return s
 }
 
 func (s subjectGram) clone() subjectGram {
 	s.adjectives = append([]*token(nil), s.adjectives...)
+	s.adjectiveForms = append([]selectedTokenForm(nil), s.adjectiveForms...)
 	return s
 }
 
 func (s objectGram) clone() objectGram {
 	s.adjectives = append([]*token(nil), s.adjectives...)
+	s.adjectiveForms = append([]selectedTokenForm(nil), s.adjectiveForms...)
 	return s
 }
 

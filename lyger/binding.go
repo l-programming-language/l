@@ -17,24 +17,13 @@ type tokenBinding struct {
 	Possessive bool
 }
 
-func copyStrings(in map[string]string) map[string]string {
-	if in == nil {
-		return nil
-	}
-	out := make(map[string]string, len(in))
-	for k, v := range in {
-		out[k] = v
-	}
-	return out
-}
-
 // cloneUse isolates mutable invocation arguments from the stored definition.
 func (l *lexeme) cloneUse() *lexeme {
 	if l == nil {
 		return nil
 	}
 	out := *l
-	out.Prefixes, out.Postfixes = copyStrings(l.Prefixes), copyStrings(l.Postfixes)
+	out.Forms = append([]lexemeForm(nil), l.Forms...)
 	out.Inputs, out.Outputs = append([]string(nil), l.Inputs...), append([]string(nil), l.Outputs...)
 	if l.Arguments != nil {
 		out.Arguments = append([]string{}, l.Arguments...)
@@ -86,16 +75,7 @@ func (r *record) bindingWord() *lexeme {
 	if r.Value.Type == storageLexeme {
 		return r.Value.Lexeme
 	}
-	if !r.isFunction() {
-		return nil
-	}
-	word := newLexeme("verb")
-	if source := r.Value.Applicative.Function.Source; source != nil && source.Word != nil {
-		word = source.Word.cloneUse()
-	}
-	name := r.ID[strings.LastIndex(r.ID, ".")+1:]
-	word.Root = strings.ToLower(name)
-	return word
+	return r.word
 }
 
 func (r *record) isFunction() bool {
@@ -107,19 +87,7 @@ func (r *record) binding(query bindingQuery) (*tokenBinding, bool) {
 		return nil, false
 	}
 	word := query.word
-	var lexical *lexeme
-	if r.Value.Type == storageLexeme {
-		lexical = r.Value.Lexeme
-	} else if r.isFunction() {
-		// Matching reads morphology only. Invocation uses still clone the
-		// selected word; a failed lookup need not clone its mutable arguments.
-		functionWord := lexeme{POS: "verb"}
-		if source := r.Value.Applicative.Function.Source; source != nil && source.Word != nil {
-			functionWord = *source.Word
-		}
-		functionWord.Root = strings.ToLower(r.ID[strings.LastIndex(r.ID, ".")+1:])
-		lexical = &functionWord
-	}
+	lexical := r.bindingWord()
 	if lexical != nil {
 		// A member is visible through its qualified name until an import creates
 		// an unqualified alias. Suffix matching must not leak dictionary members.

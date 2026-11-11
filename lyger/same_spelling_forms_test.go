@@ -69,7 +69,7 @@ func TestSameSpellingFormsPreserveIdentity(t *testing.T) {
 		{"Split", "|-s|-|-ting|-ter"}, {"Cast", "|-s|-|-ing|-er"},
 	} {
 		for _, callable := range []bool{false, true} {
-			for _, qualification := range []string{"", "Catalog.", "Catalog's ", "not Catalog's "} {
+			for _, qualification := range []string{"", "Catalog's ", "not Catalog's "} {
 				t.Run(fmt.Sprintf("%s/%s/callable=%t", family.root, qualification, callable), func(t *testing.T) {
 					id := family.root
 					if qualification != "" {
@@ -150,7 +150,6 @@ func TestSameSpellingFormsRequireDeclaredCandidate(t *testing.T) {
 		label    string
 		rejected []string
 	}{
-		{`"Read|-s||-ing|-er"`, []string{"Read", "Reads", "Reading"}},
 		{`"Read|-s|-|-ing|-er"`, []string{"Reads", "Reading"}},
 	} {
 		for _, callable := range []bool{false, true} {
@@ -174,9 +173,9 @@ func TestSameSpellingFormsRequireDeclaredCandidate(t *testing.T) {
 
 func TestSameSpellingSourceActionRequiresDeclaredPassive(t *testing.T) {
 	for _, spelling := range []string{"Read", "Reads", "Reading"} {
-		source := distributionCorePrefix + "Create \"Read|-s||-ing|-er\" for Printing any Text.\nCreate \"Worker\" as a New Basic App.\nWorker is " + spelling + " `payload`.\n"
-		if _, err := distributionFrontend(t, source, nil); !errors.Is(err, lerrors.Syntax) {
-			t.Errorf("%s without a passive declaration: %v", spelling, err)
+		source := "Create \"Read|-s||-ing|-er\" for Printing any Text.\nCreate \"Worker\" as a New Basic App.\nWorker is " + spelling + " `payload`.\n"
+		if _, err := distributionFrontend(t, source, nil); !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "verb family") || !strings.Contains(err.Error(), "main.l:1:") {
+			t.Errorf("%s reached invocation before rejecting its incomplete declaration: %v", spelling, err)
 		}
 	}
 }
@@ -240,8 +239,12 @@ func TestSameSpellingFormsSpeculationIsPure(t *testing.T) {
 
 func TestSameSpellingFunctionAssignmentPriority(t *testing.T) {
 	source := functionSource("Read|-s|-|-ing|-er", "\"Value\" as Text", "Text", "Return Value.")
-	for _, declaration := range []string{"\"Saved\" is Read.", "Use Read as \"Alias\".\n\"Saved\" is Alias."} {
-		requireFunctionPlan(t, source+declaration+"\nSaved `copy` as \"Result\".\nShow Result.\n")
+	for _, declaration := range []string{"\"Saved\" is Read.", "Use Read as \"Replay|-s|-ed|-ing|-er\".\n\"Saved\" is Replay."} {
+		c := executableTestResult(t, memberResolutionSource{main: source + declaration + "\nDefine \"Copy|--ies|--ied|-ing|--ier\" as Saved.\nCopy `copy` as \"Result\".\nShow Result.\n"}).Compilation
+		if saved := c.Memory["Saved"]; saved == nil || !saved.isFunction() || saved.hasInvocationFamily() {
+			t.Fatal("ordinary Function assignment acquired an invocation family")
+		}
+		requireOrchestrationPlan(t, c.Semantics)
 	}
 }
 
@@ -342,7 +345,7 @@ func TestConstructionRequiresNominalRole(t *testing.T) {
 	for _, declaration := range []string{leaf, "Create \"Fold|-s|-ed|-ing|-er\" for Showing any Number.\n"} {
 		for _, spelling := range []string{"Fold", "Folds", "Folded", "Folding"} {
 			for _, modifier := range []string{"New", "Generic"} {
-				source := declaration + "Create \"Selected\" as a " + modifier + " " + spelling + " of 7.\n"
+				source := declaration + "Create \"Selection|-s|----ive|----ing\" as a " + modifier + " " + spelling + " of 7.\n"
 				c := paragraphPublicationSource(t, source)
 				if !errors.Is(c.Error, lerrors.Syntax) {
 					t.Errorf("%s %s accepted an operation as a noun: %v", modifier, spelling, c.Error)
@@ -351,11 +354,11 @@ func TestConstructionRequiresNominalRole(t *testing.T) {
 		}
 	}
 	for name, source := range map[string]string{
-		"actor":         leaf + "Create \"Selected\" as a New Folder of 7.\n",
-		"alias actor":   leaf + "Use Fold as \"Alias\".\nCreate \"Selected\" as a New Aliaser of 7.\n",
-		"noun alias":    "Define \"Folded\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nUse Folded as \"Alias\".\nCreate \"Selected\" as a New Alias.\n",
-		"descriptor":    leaf + "Define \"Folded\" as a New Adjective describing any Folder.\nIt describes any Folder as `<DEF><@Folder@><DEF>`.\nCreate \"Selected\" as a New Folded Folder of 7.\n",
-		"foreign noun":  leaf + "Create \"Other\" as a Dictionary.\nDefine Other's \"Folded\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nCreate \"Selected\" as a New Other's Folded.\n",
+		"actor":         leaf + "Create \"Selection|-s|----ive|----ing\" as a New Folder of 7.\n",
+		"alias actor":   leaf + "Use Fold as \"Relay|-s|-ed|-ing|-er\".\nCreate \"Selection|-s|----ive|----ing\" as a New Relayer of 7.\n",
+		"noun alias":    "Define \"Folded|-s|-like|---ing\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nUse Folded as \"Alias|-es|-like|-ing\".\nCreate \"Selection|-s|----ive|----ing\" as a New Alias.\n",
+		"descriptor":    leaf + "Define \"Folded\" as a New Adjective describing any Folder.\nIt describes any Folder as `<DEF><@Folder@><DEF>`.\nCreate \"Selection|-s|----ive|----ing\" as a New Folded Folder of 7.\n",
+		"foreign noun":  leaf + "Create \"Other\" as a Dictionary.\nDefine Other's \"Folded|-s|-like|---ing\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\nCreate \"Selection|-s|----ive|----ing\" as a New Other's Folded.\n",
 		"Function type": identityFunction + runtimeFunctionReadSource,
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -398,7 +401,7 @@ func TestSourceActionConstructorRequiresNominalRole(t *testing.T) {
 }
 
 func TestConstructedActorValueRegistersNoun(t *testing.T) {
-	c := paragraphPublicationSource(t, "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\nDefine \"Parcel\" as a New Folder of any Thing.\n")
+	c := paragraphPublicationSource(t, "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\nDefine \"Parcel|-s|-led|-ling\" as a New Folder of any Thing.\n")
 	if c.Error != nil {
 		t.Fatal(c.Error)
 	}
@@ -413,7 +416,7 @@ func TestConstructedActorValueRegistersNoun(t *testing.T) {
 
 func TestSameSpellingFormsBuildMemoryRetry(t *testing.T) {
 	const source = "Create \"Worker\" as a New Basic App.\nCreate \"Read|-s|-|-ing|-er\" for Showing any Thing.\n" +
-		"Define \"Item\" as `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+		"Define \"Item|-s|-like|-ing\" as `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
 		"Define \"Wrapped\" as a New Adjective describing any Item.\nWorker is Read a New Wrapped Item of 7.\n" +
 		"It describes any Item as `<DEF><@Item@><DEF>`.\n"
 	c := newCompilation([]byte(source), "retry-forms.l")
@@ -460,26 +463,33 @@ func TestSameSpellingNativeFunctionRequiresDeclaredPassive(t *testing.T) {
 	for _, word := range []string{"Read", "Reads", "Reading"} {
 		source := "    Publicly create \"Read|-s||-ing|-er\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\nCreate \"Worker\" as a New Basic App.\nWorker is " + word + " 7.\n"
 		_, err := distributionFrontend(t, source, nil)
-		if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "declared passive form") {
-			t.Fatalf("%s acquired an undeclared native Function passive: %v", word, err)
+		if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "verb family") || !strings.Contains(err.Error(), "main.l:1:") {
+			t.Fatalf("%s reached invocation before rejecting its incomplete native Function declaration: %v", word, err)
+		}
+		if word != "Read" {
+			complete := strings.Replace(source, "Read|-s||-ing|-er", "Read|-s|-|-ing|-er", 1)
+			_, err = distributionFrontend(t, complete, nil)
+			if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "declared passive form") {
+				t.Fatalf("%s acquired a passive role in a complete native Function family: %v", word, err)
+			}
 		}
 	}
 }
 
 func TestConstructorRoleActorAliasAndDescriptor(t *testing.T) {
-	const words = "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\nCreate \"Catalog\" as a Dictionary.\nUse Folder as Catalog's \"Parcel\".\nUse Catalog's Parcel as \"Copy\".\nUse Fold as \"Relay\".\nUse Folded as \"Spared\".\n" +
+	const words = "Define \"Fold|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\nCreate \"Catalog\" as a Dictionary.\nUse Folder as Catalog's \"Parcel|-s|-led|-ling\".\nUse Catalog's Parcel as \"Copy|--ies|--ied|-ing\".\nUse Fold as \"Relay|-s|-ed|-ing|-er\".\nUse Folded as \"Spare|-s|-d|--ing|-r\".\n" +
 		"Define \"Tracked\" as a New Adjective describing any Folder.\nIt describes any Folder as `<DEF><@Folder@><DEF>`.\n"
-	c := paragraphPublicationSource(t, words+"Create \"Selected\" as a New Copy of 7.\nCreate \"Wrapped\" as a New Tracked Relay of 7.\nCreate \"Passivealias\" as a New Tracked Spared of 7.\n")
+	c := paragraphPublicationSource(t, words+"Create \"Selection|-s|----ive|----ing\" as a New Copy of 7.\nCreate \"Wrap|-s|-ped|-ping|-per\" as a New Tracked Relay of 7.\nCreate \"Forward|-s|-ed|-ing|-er\" as a New Tracked Spare of 7.\n")
 	if c.Error != nil {
 		t.Fatal(c.Error)
 	}
 	aliasedTarget := strings.ReplaceAll(strings.ReplaceAll(words, "any Folder", "any Copy"), "<@Folder@>", "<@Copy@>")
-	if throughAlias := paragraphPublicationSource(t, aliasedTarget+"Create \"Wrapped\" as a New Tracked Relay of 7.\n"); throughAlias.Error != nil {
+	if throughAlias := paragraphPublicationSource(t, aliasedTarget+"Create \"Wrap|-s|-ped|-ping|-per\" as a New Tracked Relay of 7.\n"); throughAlias.Error != nil {
 		t.Fatal(throughAlias.Error)
 	}
 	for _, name := range []string{"Catalog.Parcel", "Copy"} {
 		alias := c.Memory[name]
-		if alias == nil || alias.bindingWord().POS != "noun" || len(alias.bindingWord().Postfixes) != 0 || len(alias.bindingWord().Prefixes) != 0 {
+		if alias == nil || alias.bindingWord().POS != "noun" || alias.bindingWord().validateFamily() != nil {
 			t.Fatalf("actor alias %s inherited operation morphology", name)
 		}
 		canonical, err := canonicalRecord(alias, c.Semantics.Aliases)
@@ -493,7 +503,7 @@ func TestConstructorRoleActorAliasAndDescriptor(t *testing.T) {
 			t.Fatalf("root alias lost %s: %+v", form, binding)
 		}
 	}
-	passiveAlias := c.Memory["Spared"]
+	passiveAlias := c.Memory["Spare"]
 	if passiveAlias == nil || passiveAlias.bindingWord().POS != "verb" || c.Semantics.Aliases[passiveAlias] != c.Memory["Fold"] {
 		t.Fatal("passive source alias lost its renamed verb family")
 	}
@@ -504,8 +514,8 @@ func TestConstructorRoleActorAliasAndDescriptor(t *testing.T) {
 			}
 		}
 	}
-	for _, construction := range []string{"Relay", "Relayed", "Public Relay", "Tracked Relayed", "Spared", "Public Spared", "Tracked Folded", "Tracked Spareded"} {
-		bad := paragraphPublicationSource(t, words+"Create \"Invalid\" as a New "+construction+" of 7.\n")
+	for _, construction := range []string{"Relay", "Relayed", "Public Relay", "Tracked Relayed", "Spare", "Public Spare", "Tracked Folded", "Tracked Spared"} {
+		bad := paragraphPublicationSource(t, words+"Create \"Selection|-s|----ive|----ing\" as a New "+construction+" of 7.\n")
 		if !errors.Is(bad.Error, lerrors.Syntax) {
 			t.Fatalf("unrelated operation role %s accepted: %v", construction, bad.Error)
 		}

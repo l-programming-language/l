@@ -8,8 +8,8 @@ import (
 func TestParagraphActivationFirstRunExitRetainsNestedInvocation(t *testing.T) {
 	source := memberResolutionSource{}
 	source.main = paragraphGlobals +
-		"Create \"Launch|-es|-ed|-ing\" for Building any App and Running it and then Awaiting it.\n" +
-		"Create \"Dispatch|-es|-ed|-ing\" for Launching any App and then Showing `pending action`.\n" +
+		"Create \"Launch|-es|-ed|-ing|-er\" for Building any App and Running it and then Awaiting it.\n" +
+		"Create \"Dispatch|-es|-ed|-ing|-er\" for Launching any App and then Showing `pending action`.\n" +
 		"Create \"Second\" as a New Basic App.\nThe App Prints x2.\n" +
 		"\n    Create \"First\" as a New Public Basic App.\nThe App Prints x1.\nExit.\n" +
 		"\nDispatch First.\nRun Second.\nShow `pending outer`.\n"
@@ -52,7 +52,7 @@ func TestParagraphActivationFirstRunExitRetainsNestedInvocation(t *testing.T) {
 
 func TestParagraphActivationRetainsEscapingPublicRuntimeCapture(t *testing.T) {
 	source := memberResolutionSource{}
-	const declaration = "Publicly create \"Report|-s|-ed|-ing\" for Showing privateText and then Showing any Text."
+	const declaration = "Publicly create \"Report|-s|-ed|-ing|-er\" for Showing privateText and then Showing any Text."
 	const invocation = "Report `caller`."
 	makeSource := func(value string) string {
 		return paragraphGlobals + "\n    Create \"Witness\" as a New Public Basic App.\nThe App Prints x1.\n" +

@@ -19,7 +19,7 @@ func TestBuiltinPrivateDictionaryImport(t *testing.T) {
 		t.Fatal(err)
 	}
 	files["dictionaries.json"] = &fstest.MapFile{Data: raw}
-	files["stdlib/eng/internal/dictionary.l"] = &fstest.MapFile{Data: []byte("Create \"Internal\" as a Dictionary.\nDefine Internal's \"Place\" as `<DEF>OB{|Key: ~<@Name@>~, Value: ~<@Value@>~|}<DEF>`.\n")}
+	files["stdlib/eng/internal/dictionary.l"] = &fstest.MapFile{Data: []byte("Create \"Internal\" as a Dictionary.\nDefine Internal's \"Place|-s|-like|--ing\" as `<DEF>OB{|Key: ~<@Name@>~, Value: ~<@Value@>~|}<DEF>`.\n")}
 	files["builtins/eng/core.l"].Data = append(files["builtins/eng/core.l"].Data, []byte("\n    Use Internal from `internal`.\n\n")...)
 	service := NewLygerService(Options{Resources: files})
 	c := service.NewCompilation([]byte("Create \"Worker\" as a New Basic App.\n"), "private.l")

@@ -240,7 +240,7 @@ func TestQualifiedMemberMorphologyAndAmbiguity(t *testing.T) {
 		}
 		t.Run(name, func(t *testing.T) {
 			lex := newLexeme("verb")
-			if err := lex.reLabel(`"Write|-s"`); err != nil {
+			if err := lex.reLabel(`"Write|-s|--ten|--ing|-r"`); err != nil {
 				t.Fatal(err)
 			}
 			lex.Inputs = []string{"original"}

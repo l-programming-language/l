@@ -119,7 +119,7 @@ func TestScopeKeepsDescriptorRefinementsOnOriginalSubject(t *testing.T) {
 }
 
 func TestScopeSeparatesGenericActionArgumentsFromParagraphSubjects(t *testing.T) {
-	statements := scopeTestStatements(t, "actions.l", "\"prior\" is `data`.\nCreate \"Dispatch|-es|-ed|-ing\" for Building any Object and then Running it.\nShow it.\n", scopeTestGrammar(t))
+	statements := scopeTestStatements(t, "actions.l", "\"prior\" is `data`.\nCreate \"Dispatch|-es|-ed|-ing|-er\" for Building any Object and then Running it.\nShow it.\n", scopeTestGrammar(t))
 	plan, err := planSourceScopes(statements, nil, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -156,7 +156,7 @@ func TestScopeUsesFileAndParagraphIdentityAcrossImports(t *testing.T) {
 }
 
 func TestScopeQualifiesDeclaredMemberRoot(t *testing.T) {
-	statements := scopeTestStatements(t, "library.l", "Create \"Library\" as a Dictionary.\nCreate Library's \"Render|-s|-ed|-ing\" for Showing any Text.\nShow it.\n", scopeTestGrammar(t))
+	statements := scopeTestStatements(t, "library.l", "Create \"Library\" as a Dictionary.\nCreate Library's \"Render|-s|-ed|-ing|-er\" for Showing any Text.\nShow it.\n", scopeTestGrammar(t))
 	plan, err := planSourceScopes(statements, nil, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -198,7 +198,7 @@ func TestScopeRejectsMissingProvenanceAndAmbiguousActionArguments(t *testing.T) 
 	if _, err := planSourceScopes([]*lStatement{{}}, nil, nil); err == nil {
 		t.Fatal("missing original source silently acquired a paragraph")
 	}
-	statements := scopeTestStatements(t, "actions.l", "Create \"Combine\" for Building any App and Running any Service and then Running it.\n", scopeTestGrammar(t))
+	statements := scopeTestStatements(t, "actions.l", "Create \"Combine|-s|-d|--ing|-r\" for Building any App and Running any Service and then Running it.\n", scopeTestGrammar(t))
 	if _, err := planSourceScopes(statements, nil, nil); err == nil || !strings.Contains(err.Error(), "more than one preceding generic action argument") {
 		t.Fatalf("ambiguous action argument = %v", err)
 	}

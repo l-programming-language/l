@@ -191,7 +191,8 @@ func TestWordGlossarySourceInventory(t *testing.T) {
 			wantForms := map[string]string{root: pos}
 			wantCases := map[string][]string{root: {"root"}}
 			if word != nil {
-				for fix, role := range word.Postfixes {
+				for _, declared := range word.Forms {
+					role := declared.Role
 					formPOS := pos
 					formCase := role
 					if pos == "noun" && role == "active" {
@@ -203,7 +204,7 @@ func TestWordGlossarySourceInventory(t *testing.T) {
 						formPOS = "noun"
 						formCase = "actor"
 					}
-					form := processLexFix(root, fix, "postfix")
+					form := declared.spelling(root)
 					wantForms[form] = formPOS
 					wantCases[form] = append(wantCases[form], formCase)
 				}

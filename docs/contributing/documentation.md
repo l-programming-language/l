@@ -62,6 +62,8 @@ matching metadata proves good morphology. A metadata-only relabel cannot turn
 a noun definition into an action or descriptor; an authorized source migration
 must precede the corresponding factual update.
 
+Positive authored examples must obey the [complete-family contract](../spec/definitions.md#inflection-declarations) and [authored-name and alias rules](../spec/names-and-scope.md#possessives-and-member-lookup). Keep internal dotted identities, source paths, native/template bytes and ordinary value labels distinct from word declarations. Clearly identify rejection examples and their expected boundary. Review all dependent example and semantic records after source migrations before refreshing their fingerprints; regenerated hashes alone do not establish a semantic review.
+
 Aliases describe existing bindings to that same meaning. Indexes link those names to the canonical entry. Documentation must not introduce aliases or duplicate meanings.
 
 Each `definitions` item has a `source` already listed in the record's reviewed

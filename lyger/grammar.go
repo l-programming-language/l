@@ -281,6 +281,9 @@ func (l *lStatement) uncacheLiterals(textCache map[string][]byte) error {
 func (l *lStatement) tokenize() error {
 	p := newParser(l.stmtBytes)
 	for _, tokenBytes := range p.parseTokens() {
+		if err := validateAuthoredName(tokenBytes); err != nil {
+			return err
+		}
 		newT := newToken(tokenBytes, l.gram)
 		err := newT.scan()
 		if err != nil {

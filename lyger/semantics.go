@@ -146,19 +146,55 @@ func (c *Compilation) prepareAlias(site registrationSite) (extractedDeclaration,
 	}
 	value := &entry{}
 	value.bindFrom(target.Value)
-	id := strings.Trim(string(alias.rawBytes), `"`)
-	kind := target.Type
-	if value.Lexeme != nil {
-		value.Lexeme.Root = strings.ToLower(id)
-		// An explicitly selected actor aliases that nominal role, not the
-		// operation's other inflections. Root aliases keep their whole family.
-		if binding.POS == "verb" && binding.Form == "objective" {
-			value.Lexeme.POS = "noun"
-			value.Lexeme.Prefixes, value.Lexeme.Postfixes = nil, nil
-			kind = value.Lexeme.getValueType()
-		}
+	label, err := parseDeclarationLabel(string(alias.rawBytes))
+	if err != nil {
+		return extractedDeclaration{}, err
 	}
-	return extractedDeclaration{Token: alias, Record: &record{ID: id, Type: kind, Value: value, function: canonical.function}, Alias: target}, nil
+	rec := &record{ID: label.Root, Type: target.Type, Value: value, function: canonical.function}
+	if original := target.bindingWord(); original != nil {
+		word := original.cloneUse()
+		if binding.POS == "verb" && binding.Form == "objective" {
+			word.POS = "noun"
+		}
+		// Only an actual possessive reference to the unchanged canonical root
+		// removes qualification. Renamed or actor aliases cannot launder a
+		// different root or role through an intermediate complete family.
+		sourceQualified, aliasQualified := false, false
+		for i, tok := range site.clause.tokens {
+			if i > 0 {
+				_, qualified := possessiveOwner(string(site.clause.tokens[i-1].rawBytes))
+				if tok == source {
+					sourceQualified = qualified
+				} else if tok == alias {
+					aliasQualified = qualified
+				}
+			}
+		}
+		canonicalWord := canonical.bindingWord()
+		inherit := len(label.Slots) == 1 && sourceQualified && !aliasQualified && binding.Form == "root" &&
+			canonicalWord != nil && canonicalWord.POS == original.POS && canonicalWord.validateFamily() == nil &&
+			strings.EqualFold(label.Root, canonicalWord.Root) && strings.EqualFold(label.Root, original.Root) && original.validateFamily() == nil
+		if canonical.definitionArgument != nil {
+			// Typed inputs and local results use nominal records to carry native
+			// references. Renaming their data does not declare vocabulary.
+			if err := word.reLabel(string(alias.rawBytes)); err != nil {
+				return extractedDeclaration{}, err
+			}
+		} else if !inherit {
+			if err := word.declareFamily(string(alias.rawBytes)); err != nil {
+				return extractedDeclaration{}, err
+			}
+		}
+		if value.Type == storageLexeme {
+			value.Lexeme = word
+			rec.Type = word.getValueType()
+		} else {
+			rec.word = word
+		}
+	} else if err := rec.declareInvocation(string(alias.rawBytes)); err != nil {
+		return extractedDeclaration{}, err
+	}
+	return extractedDeclaration{Token: alias, Record: rec, Alias: target}, nil
 }
 
 func (c *Compilation) prepareDescriptor(stmt *lStatement, site registrationSite, prepared *statementRegistration) error {

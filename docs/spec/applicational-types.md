@@ -54,6 +54,8 @@ Preserve canonical ownership through construction and native projection. Classes
 
 Core [Function](../reference/word-glossary.md#word-builtin-function) supplies callable metadata and a Process body. Preserve ordered typed inputs/results, canonical invocation identity and once-only evaluation. Return belongs to its selected Function and is distinct from whole-program Exit.
 
+A named Function invocation requires a complete five-form verb family. A single ordinary label can store or forward a Function value without introducing a new invocation name. Non-callable applicational names, including App names, remain ordinary labels. See [declaration roles and identity](definitions.md#declaration-roles-and-identity).
+
 Native Func/Prop/Op records follow the [logeme contracts](../../builtins/README.md). They do not supply source-level capture, process transport or automatic lifetime inference.
 
 ### Construct a Function in an Object

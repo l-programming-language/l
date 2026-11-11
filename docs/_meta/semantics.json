@@ -7,20 +7,28 @@
   "sourceHashes": {
     "builtins/eng/core.l": "7f4128a219466116c6371d9e79ba6332c8cbfcd977edd98165c63ec1e86ccd8b",
     "lexicon/eng/vocabulary.json": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c",
-    "lyger/binding.go": "1c82c4334e2bca7481c8a4fd0253f66bf70c5cb82c6c6bdccb908ce73d7a9578",
+    "lyger/authored_names.go": "6c3cfe106e9d35380e1ab900c2076f7822702b551459f6318a20da32acaa7494",
+    "lyger/binding.go": "dfb94a1506efdc53cf3d538c2f49858ff949bba143d13a7f7c4d8e5a7cefc1b1",
+    "lyger/builder.go": "62964b71f110d8ca51c725d708eedd150945d43b5233b96089f0ab6adda56738",
     "lyger/definition_bindings.go": "7729518ee61aad720085adb17bb201bfdcecaffd068625fda7b9dfd57e9586b8",
     "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
     "lyger/function_definitions.go": "0ea998503ec2a3c1a107217d52629a1e4b9d2a02f32a24db6a95f4abea0919dd",
+    "lyger/grammar.go": "41c3384acff211f2d9e31f3437e6db23b25c9df3d64d4685c6b001dffb27b1da",
+    "lyger/grammar_extraction.go": "d4cc3cf17bd85d4176f95630c18be786e8bae9eb782ab39adac2ccc9474c9dc9",
+    "lyger/grammar_types.go": "b55308b02eba49180c371124cd368884e79e8fd5da978317d907e805b658cc41",
+    "lyger/lexical_types.go": "c6e39587d924129f245eea3777a94b1b73fa5283d6df722885835522711ce816",
     "lyger/lowering.go": "e39ec42ec18f531633efe629e147a37edeb3ff638c526ab4e795b3b0ac85efcb",
+    "lyger/native_bindings.go": "8d84fb1a479c721cdf04803d3e96ff0b371f17c286c8edf8f82a749c189ce9db",
+    "lyger/native_composition.go": "ddaefeb909467b13b7c5d61e32c4a04e20e2a7a04c5c2e2a6dc110160c82e579",
     "lyger/runtime_types.go": "68e235a0c65f596b91f5e2a6326b260f5722d772547f914d011a917384dd7bb0",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
-    "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
-    "lyger/token_forms.go": "41bc8a6d505fdea4f6c351f73060f0fd422745a5b5c083c8354fe7ade4013d6a",
-    "lyger/types.go": "08db7741ed9a099f34f4bd84a0af3e22f4f62e44e396ca5adca8dc20b35386ba",
+    "lyger/semantics.go": "f22bf9d76bacaa5c8217021eb8c8fa3c5b0728b6193d703d646a697671d78abe",
+    "lyger/source_functions.go": "458bb1d18d5b0b70f8a5b9f56c3b88ef20362a6da950d0ab5535e158d75fbaf0",
+    "lyger/token_forms.go": "3fa8b7a24cc5795c9f3211e0aa7faaf5a5549bce15ede04d06aa8f28b6b8fd70",
+    "lyger/types.go": "667c8e349b66253dd4f8297ff1980d981b86f275d1a0dba247b616fda9b0dd75",
     "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
-    "lyger/native_bindings.go": "8d84fb1a479c721cdf04803d3e96ff0b371f17c286c8edf8f82a749c189ce9db",
-    "lyger/native_composition.go": "ddaefeb909467b13b7c5d61e32c4a04e20e2a7a04c5c2e2a6dc110160c82e579"
+    "lyger/word_families.go": "a19d20f58d321bbf6558a1f39cfdcfeadc21c2d1bcb3c9754a543d6708c34903"
   },
   "entries": [
     {
@@ -677,10 +685,20 @@
         "lyger/lowering.go",
         "lyger/token_forms.go",
         "lyger/native_bindings.go",
-        "lyger/native_composition.go"
+        "lyger/native_composition.go",
+        "lyger/word_families.go",
+        "lyger/lexical_types.go",
+        "lyger/grammar_extraction.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go"
       ],
-      "witnesses": [],
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/function_invocation_words_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/morphology_family_test.go"
+      ],
+      "notes": "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "wordRef": "builtin:function"
     },
@@ -728,9 +746,17 @@
       "support": "partial",
       "doc": "docs/reference/word-glossary.md#noun",
       "sources": [
-        "lyger/utilities.go"
+        "lyger/utilities.go",
+        "lyger/lexical_types.go",
+        "lyger/grammar_extraction.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go",
+        "lyger/token_forms.go"
       ],
-      "witnesses": [],
+      "witnesses": [
+        "lyger/morphology_family_test.go",
+        "lyger/authored_family_registration_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -753,7 +779,7 @@
       "inflections": [
         "Noun"
       ],
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
+      "notes": "An authored noun family requires root, plural, descriptive and active forms. Missing, empty, malformed, surplus or all-identical expanded families reject. Ordinary value, parameter and result labels and non-callable applicational names may remain single labels. Configured JSON vocabulary retains its existing forms. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "type:verb",
@@ -763,9 +789,19 @@
       "support": "partial",
       "doc": "docs/reference/word-glossary.md#verb",
       "sources": [
-        "lyger/utilities.go"
+        "lyger/utilities.go",
+        "lyger/lexical_types.go",
+        "lyger/source_functions.go",
+        "lyger/word_families.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go",
+        "lyger/token_forms.go"
       ],
-      "witnesses": [],
+      "witnesses": [
+        "lyger/morphology_family_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/authored_family_registration_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "noun",
@@ -788,7 +824,7 @@
       "inflections": [
         "Verb"
       ],
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
+      "notes": "An authored verb family requires root, active, passive, applicative and objective forms, including source actions and named Functions. At least one expanded derived form differs from its root case-insensitively; individual forms may share spellings. Configured JSON vocabulary keeps its existing forms. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "type:adjective",
@@ -1756,11 +1792,23 @@
       "support": "partial",
       "doc": "docs/reference/word-glossary.md#function",
       "sources": [
-        "builtins/eng/core.l"
+        "builtins/eng/core.l",
+        "lyger/source_functions.go",
+        "lyger/binding.go",
+        "lyger/word_families.go",
+        "lyger/lexical_types.go",
+        "lyger/grammar_extraction.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go",
+        "lyger/token_forms.go"
       ],
-      "witnesses": [],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/function_invocation_words_test.go",
+        "lyger/morphology_family_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "notes": "Core Function is a complete authored noun family providing the selected typed callable construction. Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "word": {
         "partOfSpeech": "noun",
         "formRoles": {
@@ -2049,9 +2097,19 @@
       "support": "partial",
       "doc": "docs/reference/word-glossary.md#create",
       "sources": [
-        "lexicon/eng/vocabulary.json"
+        "lexicon/eng/vocabulary.json",
+        "lyger/grammar_extraction.go",
+        "lyger/source_functions.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/grammar.go",
+        "lyger/authored_names.go"
       ],
-      "witnesses": [],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/authored_names_test.go",
+        "lyger/morphology_family_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2094,7 +2152,7 @@
         "Creating",
         "Creator"
       ],
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
+      "notes": "Create selects declaration roles before family validation. Source actions and named Function invocations require complete verb families; lexical noun constructions require complete noun families. Ordinary values and non-callable applicational names remain labels. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "builtin:define",
@@ -2104,9 +2162,18 @@
       "support": "partial",
       "doc": "docs/reference/word-glossary.md#define",
       "sources": [
-        "lexicon/eng/vocabulary.json"
+        "lexicon/eng/vocabulary.json",
+        "lyger/grammar_extraction.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/grammar.go",
+        "lyger/authored_names.go"
       ],
-      "witnesses": [],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/authored_names_test.go",
+        "lyger/named_operand_composition_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2149,7 +2216,7 @@
         "Defining",
         "Definer"
       ],
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
+      "notes": "Define distinguishes ordinary value bindings from lexical definitions. Framed native definitions select noun or verb roles from their declaration form and require complete families; Function data copies do not implicitly declare invocation verbs. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "builtin:describe",
@@ -2214,9 +2281,20 @@
       "support": "partial",
       "doc": "docs/reference/word-glossary.md#use",
       "sources": [
-        "lexicon/eng/vocabulary.json"
+        "lexicon/eng/vocabulary.json",
+        "lyger/builder.go",
+        "lyger/semantics.go",
+        "lyger/binding.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/authored_names.go"
       ],
-      "witnesses": [],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/authored_names_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/dictionary_case_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
@@ -2259,7 +2337,7 @@
         "Using",
         "User"
       ],
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
+      "notes": "A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "builtin:public",
@@ -3110,10 +3188,20 @@
       "support": "partial",
       "doc": "docs/reference/word-glossary.md#is",
       "sources": [
-        "lexicon/eng/vocabulary.json"
+        "lexicon/eng/vocabulary.json",
+        "lyger/grammar_extraction.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/binding.go",
+        "lyger/token_forms.go",
+        "lyger/grammar_types.go"
       ],
-      "witnesses": [],
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/morphology_family_test.go"
+      ],
+      "notes": "An ordinary value assignment retains its value category; a complete framed definition on its right declares a noun family. A stored Function value under one label does not acquire a new invocation family. Shared form spellings retain canonical identity and are selected by grammatical context. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "inflections": [
         "Is",

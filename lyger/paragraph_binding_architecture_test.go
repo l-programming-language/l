@@ -72,7 +72,7 @@ func paragraphBindingUses(t *testing.T, compilation *Compilation, spelling strin
 
 // A test-owned native definition gives namespace/nominal tests distinct source
 // declarations without depending on IO's intentionally private implementation words.
-const paragraphAnnounce = "Define \"Announce|-s|-d|-ing|-r\" to `<DEF>BOD^E{|Statement: ~::std::println!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n"
+const paragraphAnnounce = "Define \"Announce|-s|-d|--ing|-r\" to `<DEF>BOD^E{|Statement: ~::std::println!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n"
 
 func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {
 	source := memberResolutionSource{}
@@ -81,7 +81,7 @@ func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {
 		`BOD^E{|Statement: ~::std::print!("{}", <@Output|Thing@>);~|}`,
 		`BOD^E{|Statement: ~::std::println!("{}", <@Output|Thing@>);~|}`,
 	} {
-		source.main += "\n    Define \"Pulse|-s|-d|-ing\" as `<DEF>" + body + "<DEF>`.\nUse Pulse as \"Stroke\".\n"
+		source.main += "\n    Define \"Pulse|-s|-d|--ing\" as `<DEF>" + body + "<DEF>`.\nUse Pulse as \"Stroke|-s|-d|--ing\".\n"
 	}
 	compilation := executableTestResult(t, source).Compilation
 	definitions := paragraphBindingDeclarations(t, compilation, "Pulse", 2)
@@ -323,9 +323,9 @@ func TestParagraphBindingRequiresTokenScope(t *testing.T) {
 func TestParagraphBindingDelayedInflectionShadowsOuter(t *testing.T) {
 	source := memberResolutionSource{}
 	source.main = paragraphWitness + paragraphAnnounce +
-		"Create \"Launch|-es|-ed|-ing\" for Processing a New Announcer.\n" +
+		"Create \"Launch|-es|-ed|-ing|-er\" for Processing a New Announcer.\n" +
 		"\n    \"scopeMarker\" is `private`.\n" +
-		"Create \"Launch|-es|-ed|-ing\" for Processing a New Whisperer.\n" +
+		"Create \"Launch|-es|-ed|-ing|-er\" for Processing a New Whisperer.\n" +
 		"Create \"Reader\" as a New Basic App.\nThe App Launches x2.\n" +
 		"Define \"Whisper|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~::std::print!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n" +
 		"\nCreate \"OuterReader\" as a New Basic App.\nThe App Launches x1.\n"
@@ -351,8 +351,8 @@ func TestParagraphBindingSiblingDictionaryMembersKeepOwners(t *testing.T) {
 	source.main = paragraphWitness + paragraphAnnounce
 	for index, text := range []string{"x1", "x2"} {
 		source.main += fmt.Sprintf("\n    Create \"Tools\" as a Dictionary.\n"+
-			"Create Tools's \"Speak|-s|-ed|-ing|-er\" for Processing a New Announcer.\n"+
-			"Use Tools's Speak as \"Display\".\n"+
+			"Create Tools's \"Speak|-s|----oke|-ing|-er\" for Processing a New Announcer.\n"+
+			"Use Tools's Speak as \"Display|-s|-ed|-ing|-er\".\n"+
 			"Create \"Reader%d\" as a New Basic App.\nThe App Displays %s.\n", index+1, text)
 	}
 	compilation := executableTestResult(t, source).Compilation

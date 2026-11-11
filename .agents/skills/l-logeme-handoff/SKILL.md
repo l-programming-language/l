@@ -19,6 +19,8 @@ Use the selected `fs.FS` and retained core/logeme resources. Runtime assets and 
 
 Keep source registration and descriptor-target failures upstream with [frontend tracing](../l-frontend-trace/SKILL.md). When stages depend on fixed generated names, trace their authored inputs/results and selected definitions before changing emission. Inspect the native callee behind a leaf for concealed policy, while retaining legitimate bounded operations. Route vocabulary factoring to [word review](../l-review-words/SKILL.md); neither a misleading word role nor tightly coupled stages justify a Rust algorithm, rendered-name recovery or an AML/logeme interface change.
 
+[Authored-name](../../../docs/spec/names-and-scope.md#possessives-and-member-lookup) and [complete-family](../../../docs/spec/definitions.md#inflection-declarations) validation belongs upstream. Preserve native code, AML, `<@Owner.Member@>` template slots and internal identities exactly; dots there do not justify changing backend syntax or repairing a rejected source name or alias.
+
 For Rust, compare every returned artifact exactly and run the separate Expected/Generated compilation stage with retained locks. Do not repair or format actual projects before Cargo. Do not edit `builtins/segments/`, `builtins/templates/`, their interfaces or frozen hash expectations. Read the [current integration limits](../../../builtins/README.md#current-integration-limits); template routes, residual preparation entries and verified compositions are different evidence.
 
 Return input identity, first failing boundary, relevant outputs and evidence limits. Report generation, native compilation, acceptance and runtime verification separately. Use the acceptance skill for the current gate.

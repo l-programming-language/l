@@ -10,16 +10,16 @@ import (
 )
 
 const processPatternSource = "Define \"Dispatch|-es|-ed|-ing|-er\" to `<DEF>BOG^GI{|Key: ~<@Value@>~|}^(<@Payloadcase@>*<@Vacancy@>)<DEF>`.\n" +
-	"Define \"Payloadcase\" as `<DEF>E{|Statement: ~Some(<@Payload|Label@>)~|}*(<@Body@>)<DEF>`.\n" +
-	"Define \"Vacancy\" as `<DEF>E{|Statement: ~None~|}*(<@Body@>)<DEF>`.\n"
+	"Define \"Payloadcase|-s|-like|-ing\" as `<DEF>E{|Statement: ~Some(<@Payload|Label@>)~|}*(<@Body@>)<DEF>`.\n" +
+	"Define \"Vacancy|--ies|---t|----ting\" as `<DEF>E{|Statement: ~None~|}*(<@Body@>)<DEF>`.\n"
 
 func typedProcessSource(nativeType, signature, body string) string {
 	if signature != "" {
 		signature = " with " + signature
 	}
 	return processPatternSource +
-		"Define \"Fallback\" as `<DEF>KY{|Key: ~crate::fallback~|}<DEF>`.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic `exercise` Function with Inputs of \"value\" as `Option<" + nativeType + ">` and Outputs of `" + nativeType + "`.\n" +
+		"Define \"Fallback|-s|-like|-ing\" as `<DEF>KY{|Key: ~crate::fallback~|}<DEF>`.\n\n" +
+		"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic `exercise` Function with Inputs of \"value\" as `Option<" + nativeType + ">` and Outputs of `" + nativeType + "`.\n" +
 		"Dispatch Value, a New Payloadcase using a New Process" + signature + " for " + body + ", and a New Vacancy using a New Process for Returning a New Fallback.\n"
 }
 

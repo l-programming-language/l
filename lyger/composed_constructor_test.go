@@ -94,13 +94,13 @@ func TestStaticFunctionBindsLocalConstructor(t *testing.T) {
 }
 
 func TestStaticFunctionBranchComposition(t *testing.T) {
-	source := "    Publicly create \"Choose|-s|--ing|--r\" as a Generic Function with Inputs of \"flag\" as `bool` and \"left\" as `f64` and \"right\" as `f64` and Outputs of `f64`.\nIf Flag, Return Left, else Return Right.\n"
+	source := "    Publicly create \"Choose|-s|----se|--ing|-r\" as a Generic Function with Inputs of \"flag\" as `bool` and \"left\" as `f64` and \"right\" as `f64` and Outputs of `f64`.\nIf Flag, Return Left, else Return Right.\n"
 	c := compileDefinitionSource(t, source, "branch.l")
 	testNativeDefinitionLibrary(t, c, "Choose", "branch", `#[path="src/branch.rs"] mod generated; fn main(){assert_eq!(generated::choose(true,1.0,2.0),1.0);assert_eq!(generated::choose(false,1.0,2.0),2.0);}`)
 }
 
 func TestStaticSignatureOwnsSelectedTypeDeclaration(t *testing.T) {
-	source := "Define \"Carrier\" as `<DEF>HY{|Key: ~NativeCarrier~, Props: ~&[]&~|}<DEF>`.\n\n" +
+	source := "Define \"Carrier|-s|-like|----ying\" as `<DEF>HY{|Key: ~NativeCarrier~, Props: ~&[]&~|}<DEF>`.\n\n" +
 		"    Publicly create \"Preserve|-s|-d|--ing|--er\" as a Generic Function with Inputs of \"value\" as Carrier and Outputs of Carrier.\nReturn Value.\n"
 	c := compileDefinitionSource(t, source, "types.l")
 	definition, err := c.ComposeDefinition("Preserve")
@@ -117,7 +117,7 @@ func TestStaticSignatureOwnsSelectedTypeDeclaration(t *testing.T) {
 }
 
 func TestStaticFunctionReferenceOwnsDeclaration(t *testing.T) {
-	source := "Define \"Hold|-s|---eld|-ing|-er\" to `<DEF>OB{|Key: ~<@Name@>~, Value: ~<@Value@>~|}<DEF>`.\n\n" +
+	source := "Define \"Hold|-s|----eld|-ing|-er\" to `<DEF>OB{|Key: ~<@Name@>~, Value: ~<@Value@>~|}<DEF>`.\n\n" +
 		"    Publicly create \"Echo|-es|-ed|-ing|-er\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n" +
 		"    Publicly create \"Provide|-s|-d|--ing|--er\" as a Generic Function with No Inputs and Outputs of `fn(f64) -> f64`.\nCreate \"Callback\" as a New Holder of Echoer.\nReturn Callback.\n"
 	c := compileDefinitionSource(t, source, "references.l")
@@ -135,8 +135,8 @@ func TestStaticFunctionReferenceOwnsDeclaration(t *testing.T) {
 }
 
 func TestStaticFunctionConditionalDeclaration(t *testing.T) {
-	source := "Define \"Hold|-s|---eld|-ing|-er\" to `<DEF>OB{|Key: ~<@Name@>~, Value: ~<@Value@>~|}<DEF>`.\n\n" +
-		"    Publicly create \"Choose|-s|--ing|--r\" as a Generic Function with Inputs of \"flag\" as `bool` and \"value\" as `f64` and Outputs of `f64`.\nIf Flag, Create \"Result\" as a New Holder of Value and then Return Result.\nReturn Value.\n"
+	source := "Define \"Hold|-s|----eld|-ing|-er\" to `<DEF>OB{|Key: ~<@Name@>~, Value: ~<@Value@>~|}<DEF>`.\n\n" +
+		"    Publicly create \"Choose|-s|----se|--ing|-r\" as a Generic Function with Inputs of \"flag\" as `bool` and \"value\" as `f64` and Outputs of `f64`.\nIf Flag, Create \"Result\" as a New Holder of Value and then Return Result.\nReturn Value.\n"
 	c := compileDefinitionSource(t, source, "conditional.l")
 	definition, err := c.ComposeDefinition("Choose")
 	if err != nil {
@@ -151,7 +151,7 @@ func TestStaticFunctionConditionalDeclaration(t *testing.T) {
 func TestSourceSequenceComposesWithoutNesting(t *testing.T) {
 	source := "Define \"Emit|-s|-ted|-ting|-ter\" to `<DEF>BOD^E{|Statement: ~println!(\"{}\", <@Value|Text@>);~|}<DEF>`.\n" +
 		"Create \"Report|-s|-ed|-ing|-er\" for Processing a New Emitter of `first` and then Processing a New Emitter of `second`.\n\n" +
-		"    Publicly create \"Notice\" as a Generic Function with No Inputs and Outputs of `()`.\nReport.\n"
+		"    Publicly create \"Notice|-s|-d|--ing|-r\" as a Generic Function with No Inputs and Outputs of `()`.\nReport.\n"
 	c := compileDefinitionSource(t, source, "sequence.l")
 	aml, err := c.ComposeLibrary("Notice", "sequence")
 	if err != nil {
@@ -173,7 +173,7 @@ func TestSourceSequenceComposesWithoutNesting(t *testing.T) {
 
 func TestStaticFunctionDescriptorOwnsLocalTypeInputs(t *testing.T) {
 	source := "\"Borrowing\" describes any Function as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, Lifetimes: ~'a~, GenericTypes: ~T: 'a~|}^(<@Process@>)<DEF>`.\n\n" +
-		"    Publicly create \"Preserve\" as a Generic Borrowing Function with Inputs of \"value\" as `&'a T` and Outputs of `&'a T`.\nReturn Value.\n"
+		"    Publicly create \"Preserve|-s|-d|--ing|-r\" as a Generic Borrowing Function with Inputs of \"value\" as `&'a T` and Outputs of `&'a T`.\nReturn Value.\n"
 	c := compileDefinitionSource(t, source, "generic.l")
 	aml, err := c.ComposeLibrary("Preserve", "generic")
 	if err != nil {
@@ -196,9 +196,9 @@ func TestStaticFunctionDescriptorOwnsLocalTypeInputs(t *testing.T) {
 }
 
 func TestSourceTypeSlotRetainsSelectedDeclaration(t *testing.T) {
-	source := "Define \"Carrier\" as `<DEF>HY{|Key: ~NativeCarrier~, Props: ~&[]&~|}<DEF>`.\n" +
-		"Define \"Buffer\" as `<DEF>MOB{|Key: ~<@Name@>~, Type: ~Vec<<@Element|Type@>>~|}^KY{|Key: ~Vec::new~|}<DEF>`.\n\n" +
-		"    Publicly create \"Collect\" as a Generic Function with No Inputs and Outputs of `Vec<NativeCarrier>`.\nCreate \"Result\" as a New Buffer of Carrier.\nReturn Result.\n"
+	source := "Define \"Carrier|-s|-like|----ying\" as `<DEF>HY{|Key: ~NativeCarrier~, Props: ~&[]&~|}<DEF>`.\n" +
+		"Define \"Buffer|-s|-like|-ing\" as `<DEF>MOB{|Key: ~<@Name@>~, Type: ~Vec<<@Element|Type@>>~|}^KY{|Key: ~Vec::new~|}<DEF>`.\n\n" +
+		"    Publicly create \"Collect|-s|-ed|-ing|-or\" as a Generic Function with No Inputs and Outputs of `Vec<NativeCarrier>`.\nCreate \"Result\" as a New Buffer of Carrier.\nReturn Result.\n"
 	c := compileDefinitionSource(t, source, "type-slot.l")
 	aml, err := c.ComposeLibrary("Collect", "typed")
 	if err != nil {
@@ -251,10 +251,10 @@ func TestSourceInvocationAtomOrderAndCardinality(t *testing.T) {
 }
 
 func TestSourceNativeDeclarationOwnsConstituentTypes(t *testing.T) {
-	source := "Define \"Value\" as `<DEF>HY{|Key: ~Value~, Props: ~&[]&~|}<DEF>`.\n" +
-		"Define \"Layout\" as `<DEF>HY{|Key: ~Container~, Props: ~&[Prop{Key: value, Type: Option<<@Type|Type@>>}Prop]&~|}<DEF>`.\n" +
-		"Define \"Container\" as a New Layout of Value.\n\n" +
-		"    Publicly create \"Keep|-s|--ept|-ing|-er\" as a Generic Function with Inputs of \"value\" as Container and Outputs of Container.\nReturn Value.\n"
+	source := "Define \"Value|-s|-like|--ing\" as `<DEF>HY{|Key: ~Value~, Props: ~&[]&~|}<DEF>`.\n" +
+		"Define \"Layout|-s|-like|-ing\" as `<DEF>HY{|Key: ~Container~, Props: ~&[Prop{Key: value, Type: Option<<@Type|Type@>>}Prop]&~|}<DEF>`.\n" +
+		"Define \"Container|-s|-like|---ing\" as a New Layout of Value.\n\n" +
+		"    Publicly create \"Keep|-s|---pt|-ing|-er\" as a Generic Function with Inputs of \"value\" as Container and Outputs of Container.\nReturn Value.\n"
 	c := compileDefinitionSource(t, source, "types.l")
 	declaration, err := c.ComposeDefinition("Keep")
 	if err != nil {

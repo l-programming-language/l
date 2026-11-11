@@ -13,11 +13,11 @@ import (
 func TestValueBindingForwardingPreservesCaptureBoundary(t *testing.T) {
 	for _, word := range []string{"Capture", "Forwarded", "Routed Carrier", "Nested"} {
 		t.Run(word, func(t *testing.T) {
-			source := "If false, define \"Capture\" as `<DEF>MOB{|Key: ~<@Held|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
-				"Define \"Carrier\" as `<DEF>MOB{|Key: ~<@Held|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+			source := "If false, define \"Capture|-s|-like|--ing\" as `<DEF>MOB{|Key: ~<@Held|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+				"Define \"Carrier|-s|-like|----ying\" as `<DEF>MOB{|Key: ~<@Held|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
 				"Define \"Routed\" as a New Adjective describing any Carrier.\nIt describes any Carrier as a New Capture.\n" +
-				"Define \"Forwarded\" as a New Capture.\nDefine \"Nested\" as a New Carrier of a New Capture.\n" +
-				"Create \"Speak|-s|-ed|-ing\" for Processing a New " + word + ".\nCreate \"Worker\" as a New Basic App.\nThe App Speaks 7.\n"
+				"Define \"Forwarded|-s|-like|---ing\" as a New Capture.\nDefine \"Nested|-s|-like|---ing\" as a New Carrier of a New Capture.\n" +
+				"Create \"Speak|-s|----oke|-ing|-er\" for Processing a New " + word + ".\nCreate \"Worker\" as a New Basic App.\nThe App Speaks 7.\n"
 			_, err := distributionFrontend(t, source, nil)
 			if !errors.Is(err, lerrors.Unsupported) || !strings.Contains(err.Error(), "runtime value Capture cannot be captured") {
 				t.Fatalf("forwarded construction lost canonical capture rejection: %v", err)
@@ -30,16 +30,16 @@ func TestValueBindingUsesSelectedResultLabel(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
 	const core = "builtins/eng/core.l"
 	files[core] = &fstest.MapFile{Data: append(append([]byte(nil), files[core].Data...), []byte("\n"+
-		"Define \"Carrier\" as `<DEF>OB{|Key: ~<@Held|Label@>~, Value: ~<@Value@>~|}<DEF>`.\n"+
-		"Define \"Forwarded\" as a New Carrier.\nUse Forwarded as \"Relayed\".\n"+
+		"Define \"Carrier|-s|-like|----ying\" as `<DEF>OB{|Key: ~<@Held|Label@>~, Value: ~<@Value@>~|}<DEF>`.\n"+
+		"Define \"Forwarded|-s|-like|---ing\" as a New Carrier.\nUse Forwarded as \"Relayed|-s|-like|---ing\".\n"+
 		"Define \"Marked\" as a New Adjective describing any Carrier.\n"+
 		"It describes any Carrier as `<DEF>OB{|Key: ~<@Written|Label@>~, Value: ~<@Operand@>~|}<DEF>`.\n"+
-		"Define \"Parcel\" as a New Marked Carrier.\n"+
+		"Define \"Parcel|-s|-like|-ing\" as a New Marked Carrier.\n"+
 		"Define \"Routed\" as a New Adjective describing any Carrier.\nIt describes any Carrier as a New Parcel.\n"+
-		"Define \"Vacant\" as `<DEF>OB{|Key: ~<@Receipt|Label@>~, Value: ~()~|}<DEF>`.\nDefine \"EmptyParcel\" as a New Vacant.\n"+
+		"Define \"Vacant|-s|-like|-ing\" as `<DEF>OB{|Key: ~<@Receipt|Label@>~, Value: ~()~|}<DEF>`.\nDefine \"EmptyParcel|-s|-like|-ing\" as a New Vacant.\n"+
 		"")...)}
-	const source = "Define \"Acquire\" as `<DEF>MOB{|Key: ~<@Acquired|Label@>~|}^KY{|Key: ~crate::acquire~|}<DEF>`.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `f64`.\nReturn a New Routed Carrier of a New Acquire.\n"
+	const source = "Define \"Acquire|-s|---sitive|--ing\" as `<DEF>MOB{|Key: ~<@Acquired|Label@>~|}^KY{|Key: ~crate::acquire~|}<DEF>`.\n\n" +
+		"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with No Inputs and Outputs of `f64`.\nReturn a New Routed Carrier of a New Acquire.\n"
 	c := NewLygerService(Options{Language: "eng", Resources: files}).NewCompilation([]byte(source), "result-label.l")
 	c.Make()
 	if c.Error != nil {

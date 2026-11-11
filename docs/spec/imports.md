@@ -18,7 +18,7 @@ Dictionary-owned includes stay inside the selected dictionary root/provider. Abs
 
 ## Visibility and aliases
 
-Public/Publicly publish only selected declarations into their source-unit root. An alias preserves the target's canonical identity, signature and members. Private dependencies remain private. Use grammatical possessives, not dot-qualified authored names.
+Public/Publicly publish only selected declarations into their source-unit root. An alias preserves the target's canonical identity, signature and members. Private dependencies remain private. Use grammatical possessives, not dot-qualified authored names or aliases. Imported declarations obey the same [complete-family rules](definitions.md#inflection-declarations) as other authored source. Only qualification removal under an unchanged canonical root inherits a validated family; renames and actor selections follow the explicit [alias-family rules](names-and-scope.md#aliases-and-canonical-identity).
 
 ## Cycles and errors
 

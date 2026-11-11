@@ -10,15 +10,15 @@ import (
 
 func TestEmptyConstructionRetainsRequiredArguments(t *testing.T) {
 	for _, tc := range []struct {
-		name, definition string
-		empty            bool
+		name, family, definition string
+		empty                    bool
 	}{
-		{"Sequence", "W^<@Items|Syllables@>", true},
-		{"Scalar", "W^<@Item|Syllable@>", false},
-		{"RequiredText", "BOD^E{|Statement: ~<@Value|Text@>~|}", false},
+		{"Sequence", "Sequence|-s|-like|--ing", "W^<@Items|Syllables@>", true},
+		{"Scalar", "Scalar|-s|-like|-ing", "W^<@Item|Syllable@>", false},
+		{"RequiredText", "RequiredText|-s|-ual|-ing", "BOD^E{|Statement: ~<@Value|Text@>~|}", false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			result := requireDistributionFrontend(t, "Define \""+tc.name+"\" as `<DEF>"+tc.definition+"<DEF>`.\n", nil)
+			result := requireDistributionFrontend(t, "Define \""+tc.family+"\" as `<DEF>"+tc.definition+"<DEF>`.\n", nil)
 			c := result.Compilation
 			rec := c.Memory[tc.name]
 			if rec == nil {
@@ -123,7 +123,7 @@ func TestEmptyApplicationUsesSourceSequence(t *testing.T) {
 }
 
 func TestEmptyConstructionUsesFirstParameter(t *testing.T) {
-	result := requireDistributionFrontend(t, "Define \"Sequence\" as `<DEF>W^<@Items|Syllables@><DEF>`.\nDefine \"Scalar\" as `<DEF>W^<@Item|Syllable@><DEF>`.\n", nil)
+	result := requireDistributionFrontend(t, "Define \"Sequence|-s|-like|--ing\" as `<DEF>W^<@Items|Syllables@><DEF>`.\nDefine \"Scalar|-s|-like|-ing\" as `<DEF>W^<@Item|Syllable@><DEF>`.\n", nil)
 	c := result.Compilation
 	parameter := func(name string) *objectGram {
 		rec := c.Memory[name]

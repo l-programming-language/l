@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-const paragraphCaptureDefinition = "Publicly create \"Report|-s|-ed|-ing\" for Showing privateText and then Showing any Text."
+const paragraphCaptureDefinition = "Publicly create \"Report|-s|-ed|-ing|-er\" for Showing privateText and then Showing any Text."
 
 // Inspect canonical operands as well as generated Rust: an equal literal alone
 // would not prove that an action kept its defining binding and source span.
@@ -86,7 +86,7 @@ func TestParagraphCaptureStaticDefinitionSurvivesCallerShadow(t *testing.T) {
 				source.main += "\n    Define \"privateText\" as `caller shadow`.\n"
 				verb := "Report"
 				if aliased {
-					source.main += "Use Report as \"Relay\".\n"
+					source.main += "Use Report as \"Relay|-s|-ed|-ing|-er\".\n"
 					verb = "Relay"
 				}
 				invocation := verb + " `argument text`."
@@ -126,8 +126,8 @@ func TestParagraphCaptureImportedRuntimeRequiresActiveStorage(t *testing.T) {
 		escape            bool
 	}{
 		{"direct active", "", "Report", false},
-		{"alias active", "Use Report as \"Relay\".\n", "Relay", false},
-		{"alias escapes", "Use Report as \"Relay\".\n", "Relay", true},
+		{"alias active", "Use Report as \"Relay|-s|-ed|-ing|-er\".\n", "Relay", false},
+		{"alias escapes", "Use Report as \"Relay|-s|-ed|-ing|-er\".\n", "Relay", true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			source := memberResolutionSource{}

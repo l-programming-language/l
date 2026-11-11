@@ -18,7 +18,7 @@ func TestComposedFunctionMembers(t *testing.T) {
 			const core = "builtins/eng/core.l"
 			source := string(files[core].Data)
 			source = strings.Replace(source, "Define any Function's \"Return|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~return <@Statement@>;~|}<DEF>`.", "Define \"Finish|-es|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~return /* composed_return */ <@Statement@>;~|}<DEF>`.\nCreate Function's \"Return|-s|-ed|-ing|-er\" for Processing a New Finisher.", 1)
-			source = strings.Replace(source, "Define any Function's \"Invoke|-s|-d|--ing|--er\" to `<DEF>KY{|Key: ~(<@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.", "Define \"Application\" as `<DEF>KY{|Key: ~(/* composed_invoke */ <@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.\nDefine \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Expression@><DEF>`.\nCreate Function's \"Invoke|-s|-d|--ing|--er\" for Forwarding a New Application.", 1)
+			source = strings.Replace(source, "Define any Function's \"Invoke|-s|-d|--ing|--er\" to `<DEF>KY{|Key: ~(<@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.", "Define \"Application|-s|---ve|--------ying\" as `<DEF>KY{|Key: ~(/* composed_invoke */ <@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.\nDefine \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Expression@><DEF>`.\nCreate Function's \"Invoke|-s|-d|--ing|--er\" for Forwarding a New Application.", 1)
 			if variant == "changed" {
 				source = strings.ReplaceAll(source, "composed_", "changed_")
 			}
@@ -37,7 +37,7 @@ func TestComposedFunctionMembers(t *testing.T) {
 				source = strings.Replace(source, ", Inputs: ~&[<@Arguments|Atoms@>]&~", "", 1)
 			}
 			files[core] = &fstest.MapFile{Data: []byte(source)}
-			c := NewLygerService(Options{Resources: files}).NewCompilation([]byte("Create \"Words\" as a Dictionary.\n\n    Publicly create Words's \"Echo\" as a Generic `echo` Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n    Publicly create Words's \"Supply\" as a Generic `supply` Function with No Inputs and Outputs of `f64`.\nReturn a New Words's Echo of 3.\n"), "members.l")
+			c := NewLygerService(Options{Resources: files}).NewCompilation([]byte("Create \"Words\" as a Dictionary.\n\n    Publicly create Words's \"Echo|-es|-ed|-ing|-er\" as a Generic `echo` Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n    Publicly create Words's \"Supply|--ies|--ied|-ing|--ier\" as a Generic `supply` Function with No Inputs and Outputs of `f64`.\nReturn a New Words's Echo of 3.\n"), "members.l")
 			c.Make()
 			if strings.HasPrefix(variant, "missing") {
 				if c.Error == nil {

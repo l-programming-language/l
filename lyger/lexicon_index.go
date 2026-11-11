@@ -20,18 +20,11 @@ func (l *lexicon) indexLookups() func() {
 	} {
 		index := make(map[string]map[string]lexeme)
 		for key, word := range words {
-			forms := []string{word.Root}
-			for fix := range word.Postfixes {
-				forms = append(forms, processLexFix(word.Root, fix, "postfix"))
-			}
-			for fix := range word.Prefixes {
-				forms = append(forms, processLexFix(word.Root, fix, "prefix"))
-			}
-			for _, form := range forms {
-				if index[form] == nil {
-					index[form] = make(map[string]lexeme)
+			for _, form := range word.forms() {
+				if index[form.Spelling] == nil {
+					index[form.Spelling] = make(map[string]lexeme)
 				}
-				index[form][key] = word
+				index[form.Spelling][key] = word
 			}
 		}
 		l.lookupIndex[category] = index

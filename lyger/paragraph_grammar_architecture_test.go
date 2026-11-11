@@ -234,7 +234,7 @@ func TestParagraphGrammarConjunctionOwnership(t *testing.T) {
 }
 
 func TestParagraphGrammarCoordinatedActionObjects(t *testing.T) {
-	memory := map[string]*record{"Launch": instructionAction(t, `"Launch|-es|-ed|-ing"`), "First": instructionRecord("First", "App", ""), "Second": instructionRecord("Second", "App", "")}
+	memory := map[string]*record{"Launch": instructionAction(t, `"Launch|-es|-ed|-ing|-er"`), "First": instructionRecord("First", "App", ""), "Second": instructionRecord("Second", "App", "")}
 	stmt, err := paragraphGrammarStatement(t, "Launch First and Second and Show `done`", memory)
 	if err != nil {
 		t.Fatal(err)

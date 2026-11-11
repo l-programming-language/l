@@ -172,6 +172,9 @@ func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
 			if err != nil {
 				return nil, "", err
 			}
+			// A framed definition in a value position declares a nominal word.
+			// Active action declarations select their verb role during registration.
+			lexEnt.Lexeme.POS = "noun"
 			return lexEnt, "lexeme.generic", nil
 		}
 		return sb.noun.mem, "primitive.text", nil
@@ -319,10 +322,21 @@ func (sb *subjectGram) finishDeclaration(rec *record) error {
 	}
 	switch rec.Value.Type {
 	case storageLexeme:
-		if err := rec.Value.Lexeme.reLabel(label); err != nil {
+		var err error
+		if rec.Value.Runtime != nil {
+			// Native member projections are data bindings, not declarations of
+			// the configured member's lexical family.
+			err = rec.Value.Lexeme.reLabel(label)
+		} else {
+			err = rec.Value.Lexeme.declareFamily(label)
+		}
+		if err != nil {
 			return err
 		}
 	case storagePrimitive, storageApplicative, storageIterative:
+		if err := rec.declareInvocation(label); err != nil {
+			return err
+		}
 	default:
 		return lerrors.Internal.Errorf("invalid type to update: %s", rec.Value.Type)
 	}

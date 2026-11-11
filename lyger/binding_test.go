@@ -37,7 +37,7 @@ func TestBindingPreservesMorphologyAndDefinition(t *testing.T) {
 		{"noun", `"Process|-es|-ive|-ing"`, "Processing", "verbs.generic.applicative", "active"},
 		{"verb", `"Log|-s|-ged|-ging|-ger"`, "Logger", "nouns.generic.root", "objective"},
 		{"verb", `"Print|-s|-ed|-ing|-er"`, "Prints", "verbs.generic.active", "active"},
-		{"noun", `"Plan|-s"`, "Plans’", "nouns.generic.plural.possessive", "plural"},
+		{"noun", `"Plan|-s|-like|-ning"`, "Plans’", "nouns.generic.plural.possessive", "plural"},
 	} {
 		t.Run(tc.use, func(t *testing.T) {
 			definition := newLexeme(tc.pos)
@@ -65,7 +65,7 @@ func TestBindingPreservesMorphologyAndDefinition(t *testing.T) {
 
 func TestBindingQualifiedMembersAndAmbiguity(t *testing.T) {
 	l := newLexeme("verb")
-	if err := l.reLabel(`"Write|-s"`); err != nil {
+	if err := l.reLabel(`"Write|-s|--ten|--ing|-r"`); err != nil {
 		t.Fatal(err)
 	}
 	member := &record{ID: "Library.Write", Value: &entry{Type: storageLexeme, Lexeme: l}}

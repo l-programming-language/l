@@ -8,8 +8,8 @@ import (
 )
 
 func TestLexiconIndex(t *testing.T) {
-	noun := lexeme{Root: "signal", POS: "noun", Postfixes: map[string]string{"-s": "plural"}, Prefixes: map[string]string{"re-": "repeated"}}
-	verb := lexeme{Root: "signal", POS: "verb", Postfixes: map[string]string{"-ed": "passive"}}
+	noun := lexeme{Root: "signal", POS: "noun", Forms: []lexemeForm{{Role: "plural", Fix: "-s"}, {Role: "repeated", Fix: "re-", Prefix: true}}}
+	verb := lexeme{Root: "signal", POS: "verb", Forms: []lexemeForm{{Role: "passive", Fix: "-ed"}}}
 	lex := &lexicon{Nouns: map[string]lexeme{"message": noun}, Verbs: map[string]lexeme{"send": verb}}
 	check := func(spelling, category, root string) {
 		t.Helper()

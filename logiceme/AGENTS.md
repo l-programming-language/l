@@ -53,6 +53,10 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
   Preserve EA's standalone literal-file boundary without using it to replace
   the composition under test.
 - During the core-only reset the CLI compiles one App bundle. Native/generated Runtime resources and their assembly APIs are removed. Do not restore a native runtime, emit a replacement orchestrator, or repair missing source libraries in the backend.
+- [Authored-name and alias checks](../docs/spec/names-and-scope.md#possessives-and-member-lookup)
+  and [complete word families](../docs/spec/definitions.md#inflection-declarations)
+  belong to Lyger. Preserve dots and bytes in AML, native code, template slots and
+  internal identities. Do not repair rejected source vocabulary in backend output.
 
 ## Workflow and verification
 

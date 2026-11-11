@@ -19,17 +19,17 @@ func TestBuildRejectsCanonicalAssetDestinations(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, mode := range []string{"output symlink", "asset symlink", "missing output descendant", "stdlib", "stdlib symlink"} {
+	for _, mode := range []string{"output symlink", "asset symlink", "missing output descendant", "builtins", "builtins symlink"} {
 		t.Run(mode, func(t *testing.T) {
 			installation := distributiontest.CompleteOverride(t)
 			project := filepath.Join(t.TempDir(), "project")
 			copyBuildProject(t, root, project, "main.l", "")
 			protected := filepath.Join(installation, "lexicon")
-			if strings.HasPrefix(mode, "stdlib") {
-				protected = filepath.Join(installation, "stdlib")
+			if strings.HasPrefix(mode, "builtins") {
+				protected = filepath.Join(installation, "builtins")
 			}
 			output := filepath.Join(t.TempDir(), "output-alias")
-			if mode == "asset symlink" || mode == "stdlib symlink" {
+			if mode == "asset symlink" || mode == "builtins symlink" {
 				physical := filepath.Join(t.TempDir(), "shared-assets")
 				if err := os.Rename(protected, physical); err != nil {
 					t.Fatal(err)

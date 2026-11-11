@@ -9,6 +9,12 @@ this file adds the asset-specific boundaries.
 
 Only `eng/core.l` remains as authored builtin L. It loads directly and includes Print, composed through Process and a private single-call native output leaf. Storage and prelude are deleted; all standard-library authored/native/generated resources are deleted. Do not restore them or implement their policies in Go/Rust. The existing explicit embedding list selects only retained resources.
 
+Core obeys the same [complete-family](../docs/spec/definitions.md#inflection-declarations)
+and [authored-name/alias](../docs/spec/names-and-scope.md#possessives-and-member-lookup)
+contracts as imported and user source, including private leaves. Native definition
+bodies and template slots keep their exact bytes; their internal dotted names are
+not authored L names. Keep configured JSON vocabulary separate from source families.
+
 Letters retain their abstract owners: F/O defines, B/A declares, D/E calculates,
 G/I selects and C/V handles asynchrony. Before composing a form, state its letter
 meanings, input/child cardinalities, output role and existing pairings. An unused

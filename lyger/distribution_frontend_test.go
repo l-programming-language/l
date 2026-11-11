@@ -19,7 +19,7 @@ import (
 )
 
 const distributionCorePrefix = "\n"
-const distributionApp = "Use Print as \"SharedPrint\".\n\"message\" is `Hello World!`.\nCreate \"Hello\" as a New Basic App.\nThe App Prints message.\nExecute Hello.\nShow Hello's Output.\n"
+const distributionApp = "Use Print as \"SharedPrint|-s|-ed|-ing|-er\".\n\"message\" is `Hello World!`.\nCreate \"Hello\" as a New Basic App.\nThe App Prints message.\nExecute Hello.\nShow Hello's Output.\n"
 
 // These cases deliberately request normal resources. No adjacent bootstrap or
 // replacement definition is supplied when the default distribution is absent.
@@ -71,10 +71,10 @@ func distributionNegative(t *testing.T, source, detail string, kind lerrors.Kind
 
 func TestDistributionBuiltins(t *testing.T) {
 	t.Run("BI01-implicit-foundation", func(t *testing.T) {
-		const source = "Use Process as \"Steps\".\nUse Function as \"Routine\".\nUse Function's Return as \"ReturnValue\".\nUse Objective as \"Targeted\".\nUse Main as \"Entry\".\nUse Basic as \"Plain\".\nUse Start as \"Kick\".\nUse Execute as \"Operate\".\nCreate \"Worker\" as a New Plain App.\n"
+		const source = "Use Process as \"Sequence|-s|---tial|--ing\".\nUse Function as \"Routine|-s|-|--ing\".\nUse Function's Return as \"ReturnValue|-s|-d|--ing|-r\".\nUse Objective as \"Targeted\".\nUse Main as \"Entry\".\nUse Basic as \"Plain\".\nUse Start as \"Kick|-s|-ed|-ing|-er\".\nUse Execute as \"Operate|-s|-d|--ing|--or\".\nCreate \"Worker\" as a New Plain App.\n"
 		r := requireDistributionFrontend(t, source, nil)
 		c := r.Compilation
-		for alias, id := range map[string]string{"Steps": "Process", "Routine": "Function", "ReturnValue": "Function.Return", "Targeted": "Objective", "Entry": "Main", "Plain": "Basic", "Kick": "Start", "Operate": "Execute"} {
+		for alias, id := range map[string]string{"Sequence": "Process", "Routine": "Function", "ReturnValue": "Function.Return", "Targeted": "Objective", "Entry": "Main", "Plain": "Basic", "Kick": "Start", "Operate": "Execute"} {
 			canonical := distributionCanonical(t, c, c.Memory[alias])
 			if canonical.ID != id || c.Semantics.Declarations[canonical] == nil {
 				t.Errorf("%s did not bind source-defined %s: %+v", alias, id, canonical)
@@ -112,11 +112,11 @@ func TestDistributionBuiltins(t *testing.T) {
 				t.Errorf("source word %s is in primitive vocabulary: %+v, %v", word, lex, err)
 			}
 		}
-		r := requireDistributionFrontend(t, "Create \"Launch|-es|-ed|-ing\" for Building any App and then Running it.\nCreate \"Collect|-s|-ed|-ing\" for Launching any App and then Awaiting it.\nUse Collect as \"Gather\".\nCreate \"Worker\" as a New Basic App.\nGather Worker.\n", nil)
+		r := requireDistributionFrontend(t, "Create \"Launch|-es|-ed|-ing|-er\" for Building any App and then Running it.\nCreate \"Collect|-s|-ed|-ing|-or\" for Launching any App and then Awaiting it.\nUse Collect as \"Gather|-s|-ed|-ing|-er\".\nCreate \"Worker\" as a New Basic App.\nGather Worker.\n", nil)
 		requireLifecycleInstructions(t, r, []string{"build", "run", "await"})
 	})
 	t.Run("BI04-alias-morphology-and-construction", func(t *testing.T) {
-		r := requireDistributionFrontend(t, "Use Start as \"Kick\".\nUse Execute as \"Operate\".\nUse Basic as \"Plain\".\nUse Function's Return as \"Yield\".\nCreate \"Worker\" as a New Plain App.\n", nil)
+		r := requireDistributionFrontend(t, "Use Start as \"Kick|-s|-ed|-ing|-er\".\nUse Execute as \"Operate|-s|-d|--ing|--or\".\nUse Basic as \"Plain\".\nUse Function's Return as \"Yield|-s|-ed|-ing|-er\".\nCreate \"Worker\" as a New Plain App.\n", nil)
 		for name, forms := range map[string][]string{"Kick": {"Kick", "Kicks", "Kicked", "Kicking", "Kicker"}, "Operate": {"Operate", "Operates", "Operated", "Operating", "Operator"}, "Yield": {"Yield", "Yields", "Yielded", "Yielding", "Yielder"}} {
 			alias := r.Compilation.Memory[name]
 			want := distributionCanonical(t, r.Compilation, alias)
@@ -159,7 +159,7 @@ func TestDistributionBuiltins(t *testing.T) {
 		distributionNegative(t, "Show it.\n", "no preceding subject", lerrors.UnresolvedReference)
 	})
 	t.Run("BI06-local-shadowing", func(t *testing.T) {
-		const source = "Use Execute as \"OriginalExecute\".\n\n    Create \"Execute|-s|-d|--ing|--or\" for Showing any Text.\nExecute `local-only|`.\n\nCreate \"Worker\" as a New Basic App.\nOriginalExecute Worker.\n"
+		const source = "Use Execute as \"OriginalExecute|-s|-d|--ing|--or\".\n\n    Create \"Execute|-s|-d|--ing|--or\" for Showing any Text.\nExecute `local-only|`.\n\nCreate \"Worker\" as a New Basic App.\nOriginalExecute Worker.\n"
 		r := requireDistributionFrontend(t, source, nil)
 		original := distributionCanonical(t, r.Compilation, r.Compilation.Memory["OriginalExecute"])
 		var local *record
@@ -238,7 +238,7 @@ func TestDistributionScopes(t *testing.T) {
 			t.Run(fmt.Sprint(alias), func(t *testing.T) {
 				call := "Collect Worker.\n"
 				if alias {
-					call = "Use Collect as \"Gather\".\nGather Worker.\n"
+					call = "Use Collect as \"Gather|-s|-ed|-ing|-er\".\nGather Worker.\n"
 				}
 				r := requireDistributionFrontend(t, prefix+call, nil)
 				flat := flattenedInstructions(r.Compilation.Semantics.Instructions)
@@ -258,7 +258,7 @@ func TestDistributionScopes(t *testing.T) {
 func TestDistributionSourceProvenance(t *testing.T) {
 	t.Run("MG05-exact-main-and-physical-projection", func(t *testing.T) {
 		const library = "\"value\" is `snow 雪, \\\"quote\\\"`.\r\nShow value.\r\n"
-		const source = "Use Print as \"Display\".\r\n\r\n    Use `nested/words.l`.\r\n\r\n    Use `nested/words.l`.\r\n"
+		const source = "Use Print as \"Display|-s|-ed|-ing|-er\".\r\n\r\n    Use `nested/words.l`.\r\n\r\n    Use `nested/words.l`.\r\n"
 		r := requireDistributionFrontend(t, source, map[string]string{"nested/words.l": library})
 		c := r.Compilation
 		if !bytes.Equal(c.MainBytes, []byte(source)) {
@@ -275,7 +275,7 @@ func TestDistributionSourceProvenance(t *testing.T) {
 		if string(physical[1].Raw) != strings.SplitAfter(library, "\r\n")[0] || physical[1].Span.Start.Line != 1 || physical[2].Span.Start.Line != 2 {
 			t.Fatal("local literal bytes/line spans changed")
 		}
-		want := "Use Print as \"Display\".\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value.\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value."
+		want := "Use Print as \"Display|-s|-ed|-ing|-er\".\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value.\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value."
 		if got := string(renderExpandedSource(physical, c.TextCache)); got != want {
 			t.Fatalf("physical expanded projection = %q; want %q", got, want)
 		}

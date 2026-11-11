@@ -21,6 +21,13 @@ invocations or returns in Go strings, Statement or EA. Native type/name/lifetime
 atoms contain no executable body. Preserve approved logeme interfaces.
 
 Keep lexical POS, inflection role, storage category and value type distinct.
+Enforce the [complete-family contract](../docs/spec/definitions.md#inflection-declarations)
+and [authored-name/alias rules](../docs/spec/names-and-scope.md#possessives-and-member-lookup)
+at source registration and binding, including private, core and imported declarations.
+Trace Function-value storage separately from newly named invocation verbs. Validate
+alias inheritance against the canonical root and selected role through every chain.
+Preserve configured JSON grammar, literal/native/template bytes and internal identities;
+do not add spelling-specific exceptions or source rewrites.
 Preserve original spans, source order, literal bytes, typed origins and paragraph
 identity through imports and expansion. Pronouns follow source order within their
 paragraph, independently of resolution retry order. Aliases and descriptors

@@ -346,6 +346,7 @@ func initLexicalEntry(definition []byte) (*entry, error) {
 
 // record structures an entry for storage in the Memory of an executing L Program
 type record struct {
+	word                 *lexeme // Explicit invocation/alias morphology belongs to this binding.
 	function             *sourceFunction
 	declarationOwner     *record
 	staticConstructor    *constructionNode

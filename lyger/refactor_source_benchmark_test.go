@@ -38,7 +38,7 @@ func BenchmarkRefactorRenderExpandedSource(b *testing.B) {
 	for _, count := range []int{32, 256} {
 		b.Run(fmt.Sprintf("statements=%d", count), func(b *testing.B) {
 			source := refactorBenchmarkSource(count)
-			source = append(source, []byte("Define \"Sequence\" as `<DEF>W^<@Parts|Syllables@><DEF>`.\n")...)
+			source = append(source, []byte("Define \"Sequence|-s|-like|--ing\" as `<DEF>W^<@Parts|Syllables@><DEF>`.\n")...)
 			prepared, err := PrepareSource("bench.l", source)
 			if err != nil {
 				b.Fatal(err)

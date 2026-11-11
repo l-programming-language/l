@@ -10,6 +10,8 @@ Pronouns refer to the last subject defined in their original paragraph. In the [
 
 Use grammatical possessives for members, such as `Function's Return`, or import a member under an explicit local alias. Dot-qualified names are not valid authored L. Member lookup stays with the selected owner; a missing member does not fall back to another owner's namespace.
 
+The prohibition includes declaration labels and import aliases. Text, comments, numbers, paths and native/template contents retain their own syntax. Lexical aliases follow the [canonical-root family rule](../spec/names-and-scope.md#aliases-and-canonical-identity); an alias is not a way to omit a renamed word's required forms.
+
 ## Source ownership
 
 Keep physical source files, lexical scopes, source-order instructions and native file ownership distinct. An import retains the original source spans and its expansion occurrence. A definition retains its definition-site bindings, while each use has its own arguments and diagnostics.

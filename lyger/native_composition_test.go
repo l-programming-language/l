@@ -3,7 +3,7 @@ package Lyger
 import "testing"
 
 func TestNativeConditionComparisonsAndNegation(t *testing.T) {
-	const source = "    Publicly create \"Compare\" as a Generic `compare` Function with Inputs of \"left\" as `f64` and \"right\" as `f64` and Outputs of `f64`.\nIf Left is Right, Return 1, else Return 0.\n"
+	const source = "    Publicly create \"Compare|-s|-d|--ing|-r\" as a Generic `compare` Function with Inputs of \"left\" as `f64` and \"right\" as `f64` and Outputs of `f64`.\nIf Left is Right, Return 1, else Return 0.\n"
 	for _, tc := range []struct {
 		name, operator            string
 		negated                   bool
@@ -30,7 +30,7 @@ func TestNativeConditionComparisonsAndNegation(t *testing.T) {
 		})
 	}
 	t.Run("not-truth", func(t *testing.T) {
-		c := compileDefinitionSource(t, "    Publicly create \"Choose\" as a Generic `choose` Function with Inputs of \"flag\" as `bool` and Outputs of `f64`.\nIf Flag, Return 1, else Return 0.\n", "negated-truth.l")
+		c := compileDefinitionSource(t, "    Publicly create \"Choose|-s|----se|--ing|-r\" as a Generic `choose` Function with Inputs of \"flag\" as `bool` and Outputs of `f64`.\nIf Flag, Return 1, else Return 0.\n", "negated-truth.l")
 		rec, err := c.exportedRecord("Choose")
 		if err != nil {
 			t.Fatal(err)

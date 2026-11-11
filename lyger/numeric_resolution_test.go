@@ -28,7 +28,7 @@ func TestNumericResolutionConfiguredVocabulary(t *testing.T) {
 			wantType := "verbs.observative.root"
 			if inflected {
 				lex.Root = "1e"
-				lex.Postfixes = map[string]string{"-999": "active"}
+				lex.Forms = []lexemeForm{{Role: "active", Fix: "-999"}}
 				wantType = "verbs.observative.active"
 			}
 			gram.lex.Verbs["observative"] = lex
@@ -146,7 +146,7 @@ func TestNumericResolutionPendingNames(t *testing.T) {
 }
 
 func TestNumericResolutionMemberNames(t *testing.T) {
-	for _, form := range []string{"Tools's 1e999", "Tools.1e999"} {
+	for _, form := range []string{"Tools's 1e999"} {
 		for _, exists := range []bool{false, true} {
 			name := form + "/missing"
 			if exists {

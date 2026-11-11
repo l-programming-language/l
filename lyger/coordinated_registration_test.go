@@ -83,8 +83,8 @@ func TestCoordinatedRegistrationAliasesKeepTheirOwnSources(t *testing.T) {
 func TestCoordinatedRegistrationDefinitionLiteralOwnership(t *testing.T) {
 	const first = "`<DEF>E{|Statement: ~first()~|}<DEF>`"
 	const second = "`<DEF>E{|Statement: ~second()~|}<DEF>`"
-	compilation := paragraphPublicationSource(t, "Define \"Alpha\" as "+first+" and define \"Beta\" as "+second+".\n"+
-		"Use Beta as \"Alias\".\n")
+	compilation := paragraphPublicationSource(t, "Define \"Alpha|-s|-like|-ing\" as "+first+" and define \"Beta|-s|-like|-ing\" as "+second+".\n"+
+		"Use Beta as \"Alias|-es|-like|-ing\".\n")
 	if compilation.Error != nil {
 		t.Fatal(compilation.Error)
 	}
@@ -298,7 +298,7 @@ func TestCoordinatedRegistrationFailedRefinementPreservesPublishedDescriptor(t *
 
 func TestCoordinatedRegistrationDescriptorDoesNotBorrowSiblingLiteral(t *testing.T) {
 	const literal = "`<DEF>E{|Statement: ~unrelated()~|}<DEF>`"
-	compilation := paragraphPublicationSource(t, "\"Unrelated\" is "+literal+" and \"Shape\" is a New Adjective describing any App.\n"+
+	compilation := paragraphPublicationSource(t, "\"Unrelated|-s|-like|---ing\" is "+literal+" and \"Shape\" is a New Adjective describing any App.\n"+
 		"It describes any App.\n")
 	if compilation.Error != nil {
 		t.Fatal(compilation.Error)
@@ -325,7 +325,7 @@ func TestCoordinatedRegistrationDescriptorVisibilityAndNominalAlias(t *testing.T
 			name, modifier = "public", "Public "
 		}
 		t.Run(name, func(t *testing.T) {
-			source := paragraphDescriptorWidget + "Use Widget as \"Handle\".\n\n    \"count\" is 1 and \"Shape\" is a New " + modifier + "Adjective describing any Handle.\nIt describes any Widget.\n"
+			source := paragraphDescriptorWidget + "Use Widget as \"Handle|-s|-like|--ing\".\n\n    \"count\" is 1 and \"Shape\" is a New " + modifier + "Adjective describing any Handle.\nIt describes any Widget.\n"
 			compilation := paragraphPublicationSource(t, source)
 			if compilation.Error != nil {
 				t.Fatal(compilation.Error)

@@ -8,6 +8,8 @@ An explicit `.l` include resolves relative to the source that imports it. Preser
 
 Use a grammatical possessive to select a member and an explicit alias for unqualified use. Dot-qualified authored names are invalid. A file include does not automatically create a public namespace.
 
+An alias can inherit a validated family only by removing qualification while keeping its canonical root unchanged. A renamed word or selected actor alias needs an explicit complete family for its role. This also applies through alias chains. See [alias identity and forms](../spec/names-and-scope.md#aliases-and-canonical-identity). Dots in an import path remain path bytes; they do not permit dots in an authored name or alias.
+
 ## Preserve source-unit boundaries
 
 Explicit dictionary imports, when supplied by a complete custom provider, resolve only through that provider's registry and resource root. Their private includes cannot escape to unrelated host files. The compiler does not search the current directory for replacements or fall back to embedded resources when an override is incomplete.

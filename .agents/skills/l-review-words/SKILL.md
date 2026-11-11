@@ -17,7 +17,9 @@ Use the [word design convention](../../../docs/guide/definitions.md#organize-wor
 
 Assess the semantic reason for deeper declaration ownership under the guide's convention. Authored L uses grammatical possessives, not dotted canonical names. Separate declaration design from ordinary member access; unjustified depth is a design concern, not proof of a runtime defect.
 
-Investigate the guide's operation, actor and stage-noun warning signs, including private helpers, while checking its valid controls. Expand every declared form with the actual suffix rules and check intended spelling, role and canonical caller identity. Passing source/metadata consistency can preserve bad morphology; use the registration rules to distinguish passive forms from descriptors.
+Check the [complete-family contract](../../../docs/spec/definitions.md#inflection-declarations) and [authored-name/alias rules](../../../docs/spec/names-and-scope.md#possessives-and-member-lookup) as requirements, including private, core and imported declarations. Distinguish ordinary labels and Function-value storage from lexical declarations and newly named invocations. Trace alias chains to their canonical root and selected role before accepting inherited forms. Preserve dots in data, paths, native/template contents and internal identities.
+
+Investigate the guide's actor and stage-noun warning signs while checking its valid controls. Expand every declared form with the actual suffix rules and inspect intended spelling, role and canonical caller identity. A missing or invalid required family is a contract violation; a complete family can still merit semantic review. Passing source/metadata consistency can preserve bad morphology; use the registration rules to distinguish passive forms from descriptors.
 
 When a suspect noun resembles another word's inflection, show that family's expanded forms and distinguish their canonical records in the report. Give each nominated role/family concern a disposition, including designs retained with a reason; do not leave that identity comparison implicit in a general semantics summary.
 

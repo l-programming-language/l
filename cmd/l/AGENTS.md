@@ -40,6 +40,11 @@ one complete provider without changing CWD; default resources are embedded.
 Do not restore configuration mirrors, bootstrap fallback or deleted libraries.
 Historical build-evidence records do not authorize command replay or tool probes.
 
+Surface Lyger's [authored-name](../../docs/spec/names-and-scope.md#possessives-and-member-lookup)
+and [complete-family](../../docs/spec/definitions.md#inflection-declarations)
+rejections with original source attribution. Do not rewrite declarations, pad
+forms, repair aliases or exempt a selected provider. Paths and Text retain their bytes.
+
 Run the root temporary hello-world gate with its existing pins, watchdogs and
 concurrency. Only frozen logeme assets and their expectations remain protected.
 Report generation, compilation and native execution separately. Publication

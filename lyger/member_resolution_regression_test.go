@@ -164,7 +164,7 @@ func TestDictionaryMemberAliasesPreserveNamespace(t *testing.T) {
 		}
 		t.Run(name, func(t *testing.T) {
 			source := fixture
-			source.main = strings.Replace(source.main, "\"x\" is", aliases+"Use "+owner+"'s Print as \"Display\".\n\"x\" is", 1)
+			source.main = strings.Replace(source.main, "\"x\" is", aliases+"Use "+owner+"'s Print as \"Display|-s|-ed|-ing|-er\".\n\"x\" is", 1)
 			source.main = strings.Replace(source.main, "The App CorePrints x.", "The App Displays x.", 1)
 			compilation := compileMemberResolutionSource(t, source)
 			requireMemberResolutionProgram(t, compilation)

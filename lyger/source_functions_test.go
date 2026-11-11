@@ -16,25 +16,25 @@ func compileFunctionPlan(t *testing.T, source string) (*orchestrationPlan, error
 	return planOrchestration(c.Semantics)
 }
 
-var identityFunction = functionSource("Identity", "\"Value\" as Text", "Text", "Return Value.")
+var identityFunction = functionSource("Echo|-es|-ed|-ing|-er", "\"Value\" as Text", "Text", "Return Value.")
 
 func TestOrdinaryFunctionSourceCases(t *testing.T) {
 	tests := []struct{ name, source, want string }{
-		{"multiple results", functionSource("Pair", "\"First\" as Text and \"Second\" as Number", "Text and Number", "Return First and Second.") + "Pair `hello` and 7 as \"TextResult\" and \"NumberResult\".\nShow TextResult.\nShow NumberResult.\n", ""},
-		{"nested call", identityFunction + functionSource("Wrapper", "\"Message\" as Text", "Text", "Identity Message as \"Nested\".\nReturn Nested.") + "Wrapper `hello` as \"Result\".\nShow Result.\n", ""},
-		{"function argument", identityFunction + functionSource("Apply", "\"Callback\" as Identity and \"Message\" as Text", "Text", "Callback Message as \"Nested\".\nReturn Nested.") + "Apply Identity and `hello` as \"Result\".\nShow Result.\n", ""},
-		{"Function signature alias", identityFunction + "Use Identity as \"Signature\".\n\n" + functionSource("Apply", "\"Callback\" as Signature and \"Message\" as Text", "Text", "Callback Message as \"Nested\".\nReturn Nested.") + "Apply Identity and `hello` as \"Result\".\nShow Result.\n", ""},
-		{"function result", identityFunction + functionSource("Select", "", "Identity", "Return Identity.") + "Select as \"Chosen\".\nChosen `hello` as \"Result\".\nShow Result.\n", ""},
-		{"recursive activation", functionSource("Again", "\"Ready\" as Truth and \"Message\" as Text", "Text", "If Ready, Return Message.\nAgain true and Message as \"Nested\".\nReturn Nested.") + "Again false and `hello` as \"Result\".\nShow Result.\n", ""},
+		{"multiple results", functionSource("Pair|-s|-ed|-ing|-er", "\"First\" as Text and \"Second\" as Number", "Text and Number", "Return First and Second.") + "Pair `hello` and 7 as \"TextResult\" and \"NumberResult\".\nShow TextResult.\nShow NumberResult.\n", ""},
+		{"nested call", identityFunction + functionSource("Wrap|-s|-ped|-ping|-per", "\"Message\" as Text", "Text", "Echo Message as \"Nested\".\nReturn Nested.") + "Wrap `hello` as \"Result\".\nShow Result.\n", ""},
+		{"function argument", identityFunction + functionSource("Apply|--ies|--ied|-ing|--ier", "\"Replay|-s|-ed|-ing|-er\" as Echo and \"Message\" as Text", "Text", "Replay Message as \"Nested\".\nReturn Nested.") + "Apply Echo and `hello` as \"Result\".\nShow Result.\n", ""},
+		{"Function signature alias", identityFunction + "Use Echo as \"Reflect|-s|-ed|-ing|-or\".\n\n" + functionSource("Apply|--ies|--ied|-ing|--ier", "\"Replay|-s|-ed|-ing|-er\" as Reflect and \"Message\" as Text", "Text", "Replay Message as \"Nested\".\nReturn Nested.") + "Apply Echo and `hello` as \"Result\".\nShow Result.\n", ""},
+		{"function result", identityFunction + functionSource("Select|-s|-ed|-ing|-or", "", "Echo", "Return Echo.") + "Select as \"Choose|-s|--en|--ing|-r\".\nChoose `hello` as \"Result\".\nShow Result.\n", ""},
+		{"recursive activation", functionSource("Repeat|-s|-ed|-ing|-er", "\"Ready\" as Truth and \"Message\" as Text", "Text", "If Ready, Return Message.\nRepeat true and Message as \"Nested\".\nReturn Nested.") + "Repeat false and `hello` as \"Result\".\nShow Result.\n", ""},
 		{"conditional missing return", strings.Replace(identityFunction, "Return Value.", "If true, Return Value.", 1), "does not return"},
-		{"conditional returns", strings.Replace(identityFunction, "Return Value.", "If true, Return Value, else Return `other`.", 1) + "Identity `hello` as \"Result\".\n", ""},
-		{"captured value", "Define \"Prefix\" as `before`.\n\n" + functionSource("Read", "", "Text", "Return Prefix.") + "Read as \"Result\".\nShow Result.\n", ""},
-		{"typed List argument", functionSource("Keep", "\"Items\" as List of Text", "List of Text", "Return Items."), ""},
-		{"Function alias", identityFunction + "Use Identity as \"Saved\".\nSaved `hello` as \"Result\".\nShow Result.\n", ""},
+		{"conditional returns", strings.Replace(identityFunction, "Return Value.", "If true, Return Value, else Return `other`.", 1) + "Echo `hello` as \"Result\".\n", ""},
+		{"captured value", "Define \"Prefix\" as `before`.\n\n" + functionSource("Read|-s|-|-ing|-er", "", "Text", "Return Prefix.") + "Read as \"Result\".\nShow Result.\n", ""},
+		{"typed List argument", functionSource("Keep|-s|--pt|-ing|-er", "\"Items\" as List of Text", "List of Text", "Return Items."), ""},
+		{"Function alias", identityFunction + "Use Echo as \"Replay|-s|-ed|-ing|-er\".\nReplay `hello` as \"Result\".\nShow Result.\n", ""},
 		{"missing return", strings.Replace(identityFunction, "Return Value.", "Show Value.", 1), "does not return"},
 		{"wrong return", strings.Replace(identityFunction, "Return Value.", "Return 7.", 1), "requires Text"},
-		{"wrong argument", identityFunction + "Identity 7 as \"Result\".\n", "requires Text"},
-		{"missing result", identityFunction + "Identity `hello`.\n", "result names"},
+		{"wrong argument", identityFunction + "Echo 7 as \"Result\".\n", "requires Text"},
+		{"missing result", identityFunction + "Echo `hello`.\n", "result names"},
 		{"return outside", "Return 7.\n", "unresolved"},
 	}
 	for _, test := range tests {
@@ -52,7 +52,7 @@ func TestOrdinaryFunctionSourceCases(t *testing.T) {
 }
 
 func TestOrdinaryFunctionAliasKeepsSelectedActivation(t *testing.T) {
-	c := executableTestResult(t, memberResolutionSource{main: identityFunction + "Use Identity as \"Saved\".\nSaved `hello` as \"Result\".\n"}).Compilation
+	c := executableTestResult(t, memberResolutionSource{main: identityFunction + "Use Echo as \"Replay|-s|-ed|-ing|-er\".\nReplay `hello` as \"Result\".\n"}).Compilation
 	var declaration, alias, call *instruction
 	if err := c.Semantics.walkInstructions(func(current *instruction) error {
 		switch current.Kind {

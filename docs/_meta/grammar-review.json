@@ -3,26 +3,34 @@
   "sourceHashes": {
     "builtins/eng/core.l": "7f4128a219466116c6371d9e79ba6332c8cbfcd977edd98165c63ec1e86ccd8b",
     "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
-    "lyger/binding.go": "1c82c4334e2bca7481c8a4fd0253f66bf70c5cb82c6c6bdccb908ce73d7a9578",
+    "lyger/authored_names.go": "6c3cfe106e9d35380e1ab900c2076f7822702b551459f6318a20da32acaa7494",
+    "lyger/binding.go": "dfb94a1506efdc53cf3d538c2f49858ff949bba143d13a7f7c4d8e5a7cefc1b1",
+    "lyger/builder.go": "62964b71f110d8ca51c725d708eedd150945d43b5233b96089f0ab6adda56738",
     "lyger/construction.go": "4f33cb90d73e2770b51f6fb16646aeca08e7bcf83c3941cab5fb2c9e8a15e43b",
     "lyger/constructor_grammar.go": "cbd8d830bb3a8d0625e60d237afe5749155229b058a82ad6cac2eab44f8386f8",
     "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
     "lyger/function_definitions.go": "0ea998503ec2a3c1a107217d52629a1e4b9d2a02f32a24db6a95f4abea0919dd",
-    "lyger/grammar_extraction.go": "00d22753eb6da432d5e460ac984f0202e40e16238e0a6ad2256fdc892632c453",
-    "lyger/grammar_match.go": "f451e7aff7aefae4a4cd63293a60eff4ff04df38c8a563c0139f4468044f55ca",
+    "lyger/grammar.go": "41c3384acff211f2d9e31f3437e6db23b25c9df3d64d4685c6b001dffb27b1da",
+    "lyger/grammar_extraction.go": "d4cc3cf17bd85d4176f95630c18be786e8bae9eb782ab39adac2ccc9474c9dc9",
+    "lyger/grammar_match.go": "8f8d754384759b2599aff0d3b88fffbb88aab4ea54f8f3e143b5e5876fd3e58b",
     "lyger/grammar_terms.go": "873b16a7d99eb137069d1a96ee9efb91b4eb3e272c140636e6c8e02e173d678d",
+    "lyger/grammar_types.go": "b55308b02eba49180c371124cd368884e79e8fd5da978317d907e805b658cc41",
     "lyger/instructions.go": "c2fa788245436f92036891370e9dc180a0646772d0efa96ec3cec8e3459f7c34",
+    "lyger/lexical_types.go": "c6e39587d924129f245eea3777a94b1b73fa5283d6df722885835522711ce816",
+    "lyger/lexicon.go": "30d93c45948715c38e87d179f56dba44581c2429960698245eb8f847b6525794",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
     "lyger/lowering.go": "e39ec42ec18f531633efe629e147a37edeb3ff638c526ab4e795b3b0ac85efcb",
     "lyger/process_inputs.go": "1f4d64f923f872dd74adb949dc591a384a43b09e8fa2dfde960e88bd76e429cb",
     "lyger/runtime_values_source.go": "2b4c234b780146e05a80f5dbf90156d6f98fe2934935ebf76f2647430136a60b",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
     "lyger/semantic_resolution.go": "9e340190c53baaf3e73cdbfd7887d2bdf8c0619f2980dd59cff2a2132ab144c6",
+    "lyger/semantics.go": "f22bf9d76bacaa5c8217021eb8c8fa3c5b0728b6193d703d646a697671d78abe",
     "lyger/source_body.go": "81da3955864cfb1526647733fd5acc2900fd0d29a662fa1b69425d67f865cbb0",
     "lyger/source_descriptors.go": "04fbd8ab93d664bda6de12d482acba06ca5b450530ef573ca25c863411d1cee5",
-    "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
-    "lyger/types.go": "08db7741ed9a099f34f4bd84a0af3e22f4f62e44e396ca5adca8dc20b35386ba",
-    "lyger/token_forms.go": "41bc8a6d505fdea4f6c351f73060f0fd422745a5b5c083c8354fe7ade4013d6a"
+    "lyger/source_functions.go": "458bb1d18d5b0b70f8a5b9f56c3b88ef20362a6da950d0ab5535e158d75fbaf0",
+    "lyger/token_forms.go": "3fa8b7a24cc5795c9f3211e0aa7faaf5a5549bce15ede04d06aa8f28b6b8fd70",
+    "lyger/types.go": "667c8e349b66253dd4f8297ff1980d981b86f275d1a0dba247b616fda9b0dd75",
+    "lyger/word_families.go": "a19d20f58d321bbf6558a1f39cfdcfeadc21c2d1bcb3c9754a543d6708c34903"
   },
   "entries": {
     "value": {
@@ -74,7 +82,7 @@
           "doc": "docs/spec/names-and-scope.md#possessives-and-member-lookup",
           "topic": "Bound references",
           "support": "partial",
-          "notes": "References preserve canonical declaration/member identity. A reference must resolve in its owning scope. The value category independently determines permitted use."
+          "notes": "Authored references use possessives or scoped aliases; dotted authored names reject. Resolution preserves canonical declaration/member identity and lexical ownership. The concrete value category determines permitted use."
         }
       }
     },
@@ -82,7 +90,7 @@
       "doc": "docs/spec/names-and-scope.md#declarations-and-definitions",
       "topic": "Subjects and declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
+      "notes": "Quoted declaration labels obey authored-name validation. The selected role determines whether a complete noun/verb family or an ordinary value label is required. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "cases": {
         "type": {
           "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
@@ -107,16 +115,16 @@
         "definitional": {
           "doc": "docs/spec/definitions.md#framing-and-escaping",
           "topic": "Native-backed definitions",
-          "notes": "A quoted name with a definitional Text phrase must satisfy paired framing and typed definition parsing."
+          "notes": "A complete framed native definition in an as/value position declares a noun family and requires all four forms. Framing and typed definition parsing remain separate checks."
         },
         "value": {
           "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
           "topic": "Value declarations",
-          "notes": "A quoted name and value phrase retain the concrete value category and assignment/definite-assignment boundaries."
+          "notes": "Ordinary value labels retain concrete value categories and assignment/definite-assignment boundaries. A single-name Function binding stores data without creating an invocation family."
         },
         "declaration": {
           "topic": "Declaration sites",
-          "notes": "A quoted name may carry an optional phrase. Registration ownership and context determine whether that site is a usable declaration."
+          "notes": "A quoted label may carry an optional phrase. Name validation and the resolved lexical/value role determine its required family and publication."
         },
         "definitive": {
           "doc": "docs/spec/names-and-scope.md#possessives-and-member-lookup",
@@ -136,24 +144,24 @@
         "directive": {
           "doc": "docs/spec/definitions.md#source-actions",
           "topic": "Source action declaration",
-          "notes": "A quoted action label followed by a for/directive body records ordered source actions and typed any-parameters."
+          "notes": "A source action label supplies all five verb forms before its for/directive body records ordered actions and typed any-parameters."
         },
         "utilization": {
           "doc": "docs/spec/definitions.md#framing-and-escaping",
           "topic": "Native/source definition body",
-          "notes": "A quoted label with a to/utilization phrase defines native text or a supported action relation. It is not an import provider phrase."
+          "notes": "A to/utilization native definition declares a complete five-form verb family. Its native Text retains separate framing and byte rules; it is not an import-provider phrase."
         },
         "callable": {
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Functions",
           "support": "partial",
-          "notes": "An encapsulated paragraph begins with the ordinary Function declaration and owns its body. Public visibility exposes the Function, not its parameters."
+          "notes": "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. An encapsulated paragraph owns the body; Public exposes the Function, not its parameters."
         },
         "signature": {
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Functions",
           "support": "partial",
-          "notes": "A quoted parameter name is paired with a complete runtime type or an existing callable signature."
+          "notes": "A parameter label is paired with a complete runtime type or existing callable signature. Ordinary parameter names stay single labels; invoking a Function parameter under its own name requires an explicit five-form verb family."
         }
       }
     },
@@ -206,7 +214,7 @@
           "doc": "docs/spec/names-and-scope.md#possessives-and-member-lookup",
           "topic": "Bound references",
           "support": "partial",
-          "notes": "References preserve canonical declaration/member identity. A reference must resolve in its owning scope. The value category independently determines permitted use."
+          "notes": "Authored references use possessives or scoped aliases; dotted authored names reject. Resolution preserves canonical declaration/member identity and lexical ownership. The concrete value category determines permitted use."
         },
         "named": {
           "doc": "docs/spec/definitions.md#descriptors-and-constructors",
@@ -221,12 +229,12 @@
         "declarative": {
           "doc": "docs/spec/names-and-scope.md#declarations-and-definitions",
           "topic": "Declared object name",
-          "notes": "A quoted identifier occurs as an owned declaration/reference role. It is not a Text literal or a universal executable scalar value."
+          "notes": "A quoted label retains its declaration/reference role and rejects dotted authored names. Ordinary result labels are distinct from lexical families; introducing a new Function invocation name requires its explicit verb family."
         },
         "dependent": {
           "doc": "docs/spec/imports.md#explicit-source-file-imports",
           "topic": "Dependency-qualified reference",
-          "notes": "A named reference carries a dependency phrase. Supported Use import scanning and source-provider ownership remain authoritative. Arbitrary grammar placement does not imply import execution."
+          "notes": "A dependency-qualified reference obeys source-provider ownership. Import names and aliases reject dots before expansion; dotted literal paths retain their bytes. Grammar recognition alone does not imply import execution."
         },
         "argument": {
           "doc": "docs/spec/collections-and-categories.md#lists",
@@ -300,7 +308,7 @@
         "definitional": {
           "doc": "docs/spec/definitions.md#framing-and-escaping",
           "topic": "Native definition Text",
-          "notes": "The body is a typed Text object with explicit framing/escaping at the definition boundary."
+          "notes": "A typed, completely framed definition Text selects a noun family in this value position. Family validation does not alter native/template bytes or replace typed argument checks."
         },
         "value": {
           "doc": "docs/spec/values.md#declarations-assignment-and-reading-values",
@@ -310,19 +318,19 @@
         "alias": {
           "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
           "topic": "Aliases",
-          "notes": "A declarative alias phrase must resolve its target and preserve canonical ownership. It does not copy an application or widen visibility."
+          "notes": "A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Canonical ownership, signature and visibility remain unchanged."
         },
         "callable": {
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Functions",
           "support": "partial",
-          "notes": "Declares an ordinary Function with its signature."
+          "notes": "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family."
         },
         "signature": {
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Functions",
           "support": "partial",
-          "notes": "Pairs a named parameter with a complete runtime type or existing Function signature."
+          "notes": "A parameter label is paired with a complete runtime type or existing callable signature. Ordinary parameter names stay single labels; invoking a Function parameter under its own name requires an explicit five-form verb family."
         }
       }
     },
@@ -393,13 +401,13 @@
       "doc": "docs/spec/imports.md#explicit-source-file-imports",
       "topic": "Imports and dependencies",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. Import expansion remains confined to the selected provider and original source owner. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.assign.passive": {
       "doc": "docs/spec/control-flow.md#assignment",
       "topic": "Assignment",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Value assignment takes precedence when the complete statement matches. A single-name Function copy remains data; framed lexical definitions still require complete noun families. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.generic.imperative": {
       "doc": "docs/spec/definitions.md#source-actions",
@@ -419,7 +427,7 @@
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Function words",
           "support": "partial",
-          "notes": "A Function declaration defines an ordinary invocation verb. Its sentence binds ordered typed arguments and explicit result names. Member ownership selects the declaration."
+          "notes": "The selected Function binding must declare its own complete invocation verb family. Typed arguments and result labels retain their order and canonical owner. Single-name Function storage does not create an implicit invocation spelling."
         }
       }
     },
@@ -433,7 +441,7 @@
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Function words",
           "support": "partial",
-          "notes": "A Function declaration defines an ordinary invocation verb. Its sentence binds ordered typed arguments and explicit result names. Member ownership selects the declaration."
+          "notes": "The selected Function binding must declare its own complete invocation verb family. Typed arguments and result labels retain their order and canonical owner. Single-name Function storage does not create an implicit invocation spelling."
         }
       }
     },
@@ -461,7 +469,7 @@
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Function words",
           "support": "partial",
-          "notes": "A Function declaration defines an ordinary invocation verb. Its sentence binds ordered typed arguments and explicit result names. Member ownership selects the declaration."
+          "notes": "The selected Function binding must declare its own complete invocation verb family. Typed arguments and result labels retain their order and canonical owner. Single-name Function storage does not create an implicit invocation spelling."
         }
       }
     },
@@ -469,13 +477,13 @@
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
+      "notes": "Create retains its configured clause form; registration classifies the introduced word or value and validates authored names and any required complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "cases": {
         "callable": {
           "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
           "topic": "Typed Functions",
           "support": "partial",
-          "notes": "Registers a typed Function and invocation family at a paragraph boundary. Capture analysis retains lexical owners."
+          "notes": "Registers a typed Function with an explicit complete five-form invocation family at a paragraph boundary. Capture analysis retains lexical owners."
         }
       }
     },
@@ -483,43 +491,43 @@
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Create retains its configured clause form; registration classifies the introduced word or value and validates authored names and any required complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.declarative.passive": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Create retains its configured clause form; registration classifies the introduced word or value and validates authored names and any required complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.declarative.applicative": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Declarations",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Create retains its configured clause form; registration classifies the introduced word or value and validates authored names and any required complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.definitive.imperative": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Define retains its configured clause form; lexical noun/verb definitions require complete families while ordinary values remain bindings. Framed definition bytes keep their native/template boundary. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.definitive.active": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Define retains its configured clause form; lexical noun/verb definitions require complete families while ordinary values remain bindings. Framed definition bytes keep their native/template boundary. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.definitive.passive": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Define retains its configured clause form; lexical noun/verb definitions require complete families while ordinary values remain bindings. Framed definition bytes keep their native/template boundary. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.definitive.applicative": {
       "doc": "docs/spec/definitions.md#create-define-and-describe",
       "topic": "Definitions",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Define retains its configured clause form; lexical noun/verb definitions require complete families while ordinary values remain bindings. Framed definition bytes keep their native/template boundary. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.descriptive.imperative": {
       "doc": "docs/spec/definitions.md#descriptors-and-constructors",
@@ -645,25 +653,25 @@
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.associative.active": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.associative.passive": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.associative.applicative": {
       "doc": "docs/spec/names-and-scope.md#aliases-and-canonical-identity",
       "topic": "Aliases",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     "clause.generative.imperative": {
       "doc": "docs/spec/execution.md#build-run-stop-and-await",
@@ -985,7 +993,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "Typed Functions",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution.",
+      "notes": "Typed signatures preserve parameter identity and scope. Ordinary labels remain single names; a Function parameter invoked by its own name needs an explicit five-form verb family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
       "cases": {
         "inputs_only": {
           "doc": "docs/reference/word-glossary.md#process",
@@ -1005,7 +1013,7 @@
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "topic": "Typed Functions",
       "support": "partial",
-      "notes": "Configured recognizer retained. The current CLI builds one standalone App with core Print and Text; recognition alone does not establish execution."
+      "notes": "Typed result labels preserve result order and storage. A Function result may be stored under a single name, but invoking that result under a new name requires an explicit five-form verb family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     }
   }
 }

@@ -9,13 +9,13 @@ import (
 )
 
 func TestNestedDefinitionOperands(t *testing.T) {
-	source := "Define \"Hold|-s|---eld|-ing|-er\" to `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}<DEF>`.\n" +
+	source := "Define \"Hold|-s|----eld|-ing|-er\" to `<DEF>OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}<DEF>`.\n" +
 		"Define \"Count|-s|-ed|-ing|-er\" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~fetch_add~, Receiver: ~<@Value@>~, Inputs: ~&[1, std::sync::atomic::Ordering::SeqCst]&~|}<DEF>`.\n\n" +
 		"    Publicly create \"Echo|-es|-ed|-ing|-er\" as a Generic Function with Inputs of \"value\" as `&std::sync::atomic::AtomicUsize` and Outputs of `usize`.\nReturn a New Counter of Value.\n\n" +
-		"Use Echo as \"Relay\".\n\n" +
-		"    Publicly create \"Result\" as a Generic Function with Inputs of \"__l_nested_0\" as `&std::sync::atomic::AtomicUsize` and Outputs of `usize`.\nCreate \"Previous\" as a New Holder of a New Relay of __l_nested_0.\nReturn a New Holder of a New Relay of __l_nested_0.\n"
+		"Use Echo as \"Relay|-s|-ed|-ing|-er\".\n\n" +
+		"    Publicly create \"Calculate|-s|-d|--ing|-r\" as a Generic `result` Function with Inputs of \"__l_nested_0\" as `&std::sync::atomic::AtomicUsize` and Outputs of `usize`.\nCreate \"Previous\" as a New Holder of a New Relay of __l_nested_0.\nReturn a New Holder of a New Relay of __l_nested_0.\n"
 	c := compileDefinitionSource(t, source, "nested.l")
-	definition, err := c.ComposeDefinition("Result")
+	definition, err := c.ComposeDefinition("Calculate")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,7 +29,7 @@ func TestNestedDefinitionOperands(t *testing.T) {
 	if !provenance {
 		t.Fatal("nested result lost its use-site source span")
 	}
-	testNativeDefinitionLibrary(t, c, "Result", "nested", `#[path="src/nested.rs"] mod generated; fn main(){let value=std::sync::atomic::AtomicUsize::new(7);assert_eq!(generated::result(&value),8);assert_eq!(value.load(std::sync::atomic::Ordering::SeqCst),9);}`)
+	testNativeDefinitionLibrary(t, c, "Calculate", "nested", `#[path="src/nested.rs"] mod generated; fn main(){let value=std::sync::atomic::AtomicUsize::new(7);assert_eq!(generated::result(&value),8);assert_eq!(value.load(std::sync::atomic::Ordering::SeqCst),9);}`)
 }
 
 func TestDefinitionChildAndSiblingGrouping(t *testing.T) {

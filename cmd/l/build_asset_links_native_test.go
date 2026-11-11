@@ -15,11 +15,11 @@ import (
 
 func TestBuildAcceptsLinkedResourceBundle(t *testing.T) {
 	assets := distributiontest.CompleteOverride(t)
-	shared := filepath.Join(t.TempDir(), "shared library")
-	if err := os.Rename(filepath.Join(assets, "stdlib"), shared); err != nil {
+	shared := filepath.Join(t.TempDir(), "shared builtins")
+	if err := os.Rename(filepath.Join(assets, "builtins"), shared); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.Symlink(shared, filepath.Join(assets, "stdlib")); err != nil {
+	if err := os.Symlink(shared, filepath.Join(assets, "builtins")); err != nil {
 		t.Fatal(err)
 	}
 	// Both spellings eventually point back to previously visited directories.

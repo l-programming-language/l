@@ -12,8 +12,8 @@ import (
 	Logiceme "github.com/l-programming-language/l/logiceme"
 )
 
-const parametricConstructorSource = "Define \"Parameterised\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~<@Types|Type@>~|}^(<@Process@>)<DEF>`.\n" +
-	"Use Function's Return as Parameterised's \"Return\".\nUse Function's Invoke as Parameterised's \"Invoke\".\n"
+const parametricConstructorSource = "Define \"Parameterised|-s|-like|---ing\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~<@Types|Type@>~|}^(<@Process@>)<DEF>`.\n" +
+	"Use Function's Return as Parameterised's \"Return|-s|-ed|-ing|-er\".\nUse Function's Invoke as Parameterised's \"Invoke|-s|-d|--ing|--er\".\n"
 
 func TestLeadingCompositionGroup(t *testing.T) {
 	for source, want := range map[string]string{
@@ -51,7 +51,7 @@ func TestConstructorLabelArity(t *testing.T) {
 
 func TestExplicitConstructorParameters(t *testing.T) {
 	source := parametricConstructorSource + "\n" +
-		"    Publicly create \"Carry|-ies|-ied|-ying|-ier\" as a Generic Parameterised of `T` with Inputs of \"value\" as `T` and Outputs of `T`.\nReturn Value.\n"
+		"    Publicly create \"Carry|--ies|--ied|-ing|--ier\" as a Generic Parameterised of `T` with Inputs of \"value\" as `T` and Outputs of `T`.\nReturn Value.\n"
 	c := compileDefinitionSource(t, source, "explicit-parameters.l")
 	definition, err := c.ComposeDefinition("Carry")
 	if err != nil {
@@ -74,7 +74,7 @@ func TestActorDescriptorBase(t *testing.T) {
 		"It describes any Transmitter as `<DEF>(BOD^E{|Statement: ~/* outer before */~|}*<@Transmitter@>*BOD^E{|Statement: ~let _ = &<@Name|Label@>; /* outer after */~|})<DEF>`.\n" +
 		"Define \"Observed\" as a New Adjective describing any Transmitter.\n" +
 		"It describes any Transmitter as `<DEF>(BOD^E{|Statement: ~let _ = &<@Value@>; /* inner before */~|}*<@Transmitter@>*BOD^E{|Statement: ~/* inner after */~|})<DEF>`.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\n" +
+		"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\n" +
 		"Create \"Receipt\" as a New Tracked Observed Transmitter of Value.\nReturn Receipt.\n"
 	c := compileDefinitionSource(t, source, "actor-descriptor.l")
 	generated := generatedDefinitionSource(t, c, "Exercise")
@@ -104,7 +104,7 @@ func TestSourceWrapperOwnership(t *testing.T) {
 			source := "Define \"Transmit|-s|-ted|-ting|-ter\" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::transmit~, Inputs: ~&[<@Context@>, <@Value@>]&~|}<DEF>`.\n" +
 				"Define \"Complete|-s|-d|--ing|-r\" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::complete~, Inputs: ~&[<@Context@>, <@Receipt@>]&~|}<DEF>`.\n" +
 				"Define \"Tracked\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Completer of any Thing and any Transmitter.\n\n" +
-				"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"context\" as `" + test.typ + "` and \"value\" as `u64` and Outputs of `u64`.\n" +
+				"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"context\" as `" + test.typ + "` and \"value\" as `u64` and Outputs of `u64`.\n" +
 				"Create \"Receipt\" as a New Tracked Transmitter of Context and Value.\nReturn Receipt.\n"
 			c := compileDefinitionSource(t, source, "wrapper-ownership.l")
 			observer := test.functions + ` #[path="src/wrapper_ownership.rs"] mod generated; fn main() { ` + test.observer + ` }`
@@ -164,10 +164,10 @@ func TestSourceWrapperIdentity(t *testing.T) {
 		{"same-spelling-foreign-target", leaf, "Transmitter", true},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			source := leaf + "Use Transmit as \"Routed\".\n" +
+			source := leaf + "Use Transmit as \"Routed|-s|-ed|-ing|-er\".\n" +
 				"Define \"Finish|-es|-ed|-ing|-er\" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::finish~, Inputs: ~&[<@Original@>, <@Receipt@>]&~|}<DEF>`.\n" +
 				"Define \"Tracked\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Finisher of any Thing and any Routed.\n\n" +
-				"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\n" + test.local +
+				"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\n" + test.local +
 				"Return a New Tracked " + test.target + " of Value.\n"
 			c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "source-wrapper-identity.l")
 			c.Make()
@@ -215,8 +215,8 @@ func TestConstructorGrammarDiscardsFailedAlternative(t *testing.T) {
 }
 
 func TestSourceFunctionReplacementRejects(t *testing.T) {
-	source := "Define \"Changed\" as a New Adjective describing any Function.\nIt describes any Function as a New Function of any Process.\nDefine \"Wrapped\" as a New Changed Function.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic Changed Function with No Inputs and Outputs of `f64`.\nReturn 7.\n"
+	source := "Define \"Changed\" as a New Adjective describing any Function.\nIt describes any Function as a New Function of any Process.\nDefine \"Wrapped|-s|-like|----ing\" as a New Changed Function.\n\n" +
+		"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Changed Function with No Inputs and Outputs of `f64`.\nReturn 7.\n"
 	c := compileDefinitionSource(t, source, "source-function.l")
 	if template, err := c.callableTemplate(c.Memory["Wrapped"], make(map[*record]bool)); err != nil || template != nil {
 		t.Fatalf("source replacement cannot supply a native Function signature: %v", err)
@@ -239,7 +239,7 @@ func TestReplacementResultSignature(t *testing.T) {
 					}
 					source := "Define \"Transmit|-s|-ted|-ting|-ter\" to `" + definition + "`.\n" +
 						"Define \"Changed\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as `" + tc.replacement + "`.\n\n" +
-						"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn a New " + modifiers + "Transmitter of Value.\n"
+						"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn a New " + modifiers + "Transmitter of Value.\n"
 					c := compileDefinitionSource(t, source, "word-library-result-signature.l")
 					testNativeDefinitionLibrary(t, c, "Exercise", "result_signature", `#[path="src/result_signature.rs"]mod generated;fn main(){assert_eq!(generated::exercise(7.0),7.0);}`)
 				})
@@ -252,7 +252,7 @@ func TestReplacementNamedResult(t *testing.T) {
 	const named = "<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>"
 	const expression = "<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>"
 	for _, pair := range [][2]string{{named, expression}, {expression, named}} {
-		source := "Define \"Transmit|-s|-ted|-ting|-ter\" to `" + pair[0] + "`.\nDefine \"Changed\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as `" + pair[1] + "`.\n\n    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nCreate \"Receipt\" as a New Changed Transmitter of Value.\nReturn Receipt.\n"
+		source := "Define \"Transmit|-s|-ted|-ting|-ter\" to `" + pair[0] + "`.\nDefine \"Changed\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as `" + pair[1] + "`.\n\n    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nCreate \"Receipt\" as a New Changed Transmitter of Value.\nReturn Receipt.\n"
 		c := compileDefinitionSource(t, source, "replacement-named-result.l")
 		testNativeDefinitionLibrary(t, c, "Exercise", "named_result", `#[path="src/named_result.rs"]mod generated;fn main(){assert_eq!(generated::exercise(7.0),7.0);}`)
 	}
@@ -266,11 +266,11 @@ func TestInheritedSignatures(t *testing.T) {
 	}{
 		{"zero", "<DEF>KY{|Key: ~crate::constant~|}<DEF>", "Create \"Transmit|-s|-ted|-ting|-ter\" for Forwarding a New Pass.", "a New Transmitter", "7.0", 0, true},
 		{"variadic", "<DEF>KY{|Key: ~crate::sum~, Inputs: ~&[<@Values|Atoms@>]&~|}<DEF>", "Create \"Transmit|-s|-ted|-ting|-ter\" for Forwarding a New Pass.", "a New Transmitter of 2 and 3", "5.0", 1, false},
-		{"source-value-alias", "<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>", "Define \"Transmitter\" as a New Pass.\nUse Transmitter as \"Routed\".", "a New Routed of 3", "3.0", 1, true},
+		{"source-value-alias", "<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>", "Define \"Transmitter|-s|-like|---ing\" as a New Pass.\nUse Transmitter as \"Routed|-s|-like|--ing\".", "a New Routed of 3", "3.0", 1, true},
 		{"callable-member", "<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>", "Create Function's \"Transmit|-s|-ted|-ting|-ter\" for Forwarding a New Pass.", "a New Function's Transmitter of 3", "3.0", 1, true},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			source := "Define \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Expression@><DEF>`.\nDefine \"Pass\" as `" + test.leaf + "`.\n" + test.declaration + "\n\n    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `f64`.\nReturn " + test.expression + ".\n"
+			source := "Define \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Expression@><DEF>`.\nDefine \"Pass|-es|-like|-ing\" as `" + test.leaf + "`.\n" + test.declaration + "\n\n    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with No Inputs and Outputs of `f64`.\nReturn " + test.expression + ".\n"
 			c := compileDefinitionSource(t, source, "inherited-signature.l")
 			name := "Transmit"
 			if test.name == "callable-member" {
@@ -298,7 +298,7 @@ func TestInheritedSignatures(t *testing.T) {
 }
 
 func TestReferenceOnlyActionRejects(t *testing.T) {
-	source := "Define \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Value@><DEF>`.\n\n    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nForward Value.\nReturn 7.\n"
+	source := "Define \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Value@><DEF>`.\n\n    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nForward Value.\nReturn 7.\n"
 	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "reference-only-action.l")
 	c.Make()
 	err := c.Error
@@ -342,7 +342,7 @@ func TestFunctionActorDescriptorBase(t *testing.T) {
 		"    Publicly create \"Transmit|-s|-ted|-ting|-ter\" as a Generic Polymorphic Parameterised with Inputs of \"value\" as `T` and Outputs of `T`.\nReturn Value.\n\n" +
 		"Define \"Tracked\" as a New Adjective describing any Transmitter.\n" +
 		"It describes any Transmitter as `<DEF>(<@Transmitter@>*BOD^E{|Statement: ~let _ = &<@Name|Label@>;~|})<DEF>`.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"value\" as `String` and Outputs of `String`.\n" +
+		"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"value\" as `String` and Outputs of `String`.\n" +
 		"Create \"Receipt\" as a New Tracked Transmitter of Value.\nReturn Receipt.\n"
 	c := compileDefinitionSource(t, source, "function-actor-descriptor.l")
 	generated := generatedDefinitionSource(t, c, "Exercise")
@@ -357,7 +357,7 @@ func TestSourceActorDescriptorBase(t *testing.T) {
 		"    Create \"Complete|-s|-d|--ing|-r\" as a Generic Parameterised of `T: ?Sized` with Inputs of \"context\" as `&mut T` and \"receipt\" as `u64` and Outputs of `u64`.\nReturn Receipt.\n" +
 		"Publicly define \"Tracked\" as a New Adjective describing any Transmitter.\n" +
 		"It describes any Transmitter as a New Completer of any Thing and any Transmitter.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"context\" as `&mut u64` and \"value\" as `u64` and Outputs of `u64`.\n" +
+		"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"context\" as `&mut u64` and \"value\" as `u64` and Outputs of `u64`.\n" +
 		"Create \"Receipt\" as a New Tracked Transmitter of Context and Value.\nReturn Receipt.\n"
 	c := compileDefinitionSource(t, source, "source-actor-descriptor.l")
 	generated := generatedDefinitionSource(t, c, "Exercise")
@@ -377,7 +377,7 @@ func TestSourceActorDescriptorNative(t *testing.T) {
 		"    Create \"Complete|-s|-d|--ing|-r\" as a Generic Parameterised of `T: std::io::Write + ?Sized` with Inputs of \"context\" as `&mut T` and \"receipt\" as `u64` and Outputs of `u64`.\nAppend Context.\nReturn Receipt.\n" +
 		"Publicly define \"Tracked\" as a New Adjective describing any Transmitter.\n" +
 		"It describes any Transmitter as a New Completer of any Thing and any Transmitter.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"context\" as `&mut dyn std::io::Write` and \"value\" as `u64` and Outputs of `u64`.\n" +
+		"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"context\" as `&mut dyn std::io::Write` and \"value\" as `u64` and Outputs of `u64`.\n" +
 		"Create \"Receipt\" as a New Tracked Transmitter of Context and Value.\nReturn Receipt.\n"
 	c := compileDefinitionSource(t, source, "source-actor-descriptor-native.l")
 	testNativeDefinitionLibrary(t, c, "Exercise", "exercise", `#[path="src/exercise.rs"] mod generated; fn main() { let mut sink = Vec::<u8>::new(); assert_eq!(generated::exercise(&mut sink, 17), 17); assert_eq!(sink, b"basewrapped"); }`)
@@ -385,7 +385,7 @@ func TestSourceActorDescriptorNative(t *testing.T) {
 
 func TestNamedSourceWrapperEvaluatesForwardedInputOnce(t *testing.T) {
 	source := parametricConstructorSource + "\n" +
-		"Define \"Acquire\" as `<DEF>KY{|Key: ~acquire_context~|}<DEF>`.\n\n" +
+		"Define \"Acquire|-s|---sitive|--ing\" as `<DEF>KY{|Key: ~acquire_context~|}<DEF>`.\n\n" +
 		"    Publicly create \"Transmit|-s|-ted|-ting|-ter\" as a Generic Parameterised of `T: Copy` with Inputs of \"context\" as `T` and \"value\" as `u64` and Outputs of `u64`.\nReturn Value.\n\n" +
 		"    Create \"Complete|-s|-d|--ing|-r\" as a Generic Parameterised of `T: Copy` with Inputs of \"context\" as `T` and \"receipt\" as `u64` and Outputs of `u64`.\nReturn Receipt.\n" +
 		"Publicly define \"Tracked\" as a New Adjective describing any Transmitter.\n" +
@@ -418,11 +418,11 @@ func TestNamedSourceWrapperEvaluatesForwardedInputOnce(t *testing.T) {
 }
 
 func TestSourceSequenceRetainsPrerequisite(t *testing.T) {
-	source := "Define \"Next\" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::next_value~|}<DEF>`.\n" +
+	source := "Define \"Next|-s|-like|-ing\" as `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::next_value~|}<DEF>`.\n" +
 		"Define \"Mark|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~crate::mark(<@Value@>);~|}<DEF>`.\n" +
 		"Create \"Forward|-s|-ed|-ing|-er\" for Processing a New Process for Marking any Thing.\n" +
 		"Create \"Prepare|-s|-d|--ing|--er\" for Forwarding a New Next.\n" +
-		"Create \"Exercise\" for Processing a Generic `exercise` Function of a New Process of a New Preparer with No Inputs and No Outputs.\n"
+		"Create \"Exercise|-s|-d|--ing|-r\" for Processing a Generic `exercise` Function of a New Process of a New Preparer with No Inputs and No Outputs.\n"
 	c := compileDefinitionSource(t, source, "source-sequence-prerequisite.l")
 	instance, err := c.ComposeDefinition("Exercise")
 	if err != nil {
@@ -433,7 +433,7 @@ func TestSourceSequenceRetainsPrerequisite(t *testing.T) {
 	}
 	// The native observer uses the ordinary declaration role for its Function;
 	// the nested Prepare -> Forward -> Process prerequisite is unchanged.
-	nativeSource := strings.Replace(source, "Create \"Exercise\" for Processing a Generic `exercise` Function of a New Process of a New Preparer with No Inputs and No Outputs.\n", "\n    Publicly create \"Exercise\" as a Generic `exercise` Function with No Inputs and No Outputs.\nPrepare.\n", 1)
+	nativeSource := strings.Replace(source, "Create \"Exercise|-s|-d|--ing|-r\" for Processing a Generic `exercise` Function of a New Process of a New Preparer with No Inputs and No Outputs.\n", "\n    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic `exercise` Function with No Inputs and No Outputs.\nPrepare.\n", 1)
 	native := compileDefinitionSource(t, nativeSource, "source-sequence-prerequisite-native.l")
 	testNativeDefinitionLibrary(t, native, "Exercise", "source_prerequisite", `static EVENTS:std::sync::Mutex<Vec<u8>>=std::sync::Mutex::new(Vec::new());pub fn next_value()->u64{EVENTS.lock().unwrap().push(1);7}pub fn mark(value:u64){assert_eq!(value,7);EVENTS.lock().unwrap().push(2);}#[path="src/source_prerequisite.rs"]mod generated;fn main(){generated::exercise();assert_eq!(&*EVENTS.lock().unwrap(),&[1,2]);}`)
 }
@@ -448,14 +448,14 @@ func TestSourceWrapperOperandsOnce(t *testing.T) {
 		{"wrapper-owned-operand", leaf, "Tracked", "a New Witness", "1,2,6,3,5"},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			source := "Define \"Acquire\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\n" +
-				"Define \"Witness\" as `<DEF>KY{|Key: ~crate::witness~|}<DEF>`.\n" +
-				"Define \"Payload\" as `<DEF>KY{|Key: ~crate::payload~|}<DEF>`.\n" + test.base +
+			source := "Define \"Acquire|-s|---sitive|--ing\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\n" +
+				"Define \"Witness|-es|-like|-ing\" as `<DEF>KY{|Key: ~crate::witness~|}<DEF>`.\n" +
+				"Define \"Payload|-s|-like|-ing\" as `<DEF>KY{|Key: ~crate::payload~|}<DEF>`.\n" + test.base +
 				"Define \"Complete|-s|-d|--ing|-r\" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::complete~, Inputs: ~&[<@Context@>, <@Receipt@>]&~|}<DEF>`.\n" +
 				"Define \"Finish|-es|-ed|-ing|-er\" to `<DEF>MOB{|Key: ~<@Name|Label@>~|}^KY{|Key: ~crate::finish~, Inputs: ~&[<@Context@>, <@Receipt@>]&~|}<DEF>`.\n" +
 				"Define \"Tracked\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Completer of " + test.wrapperInput + " and any Transmitter.\n" +
 				"Define \"Noted\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Finisher of any Thing and any Transmitter.\n\n" +
-				"    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `String`.\n" +
+				"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with No Inputs and Outputs of `String`.\n" +
 				"Create \"Receipt\" as a New " + test.modifiers + " Transmitter of a New Acquire and a New Payload.\nReturn Receipt.\n"
 			c := compileDefinitionSource(t, source, "wrapper-operands-once.l")
 			testNativeDefinitionLibrary(t, c, "Exercise", "wrapper_operands", `
@@ -474,15 +474,15 @@ fn main() { for _ in 0..2 { EVENTS.lock().unwrap().clear(); assert_eq!(generated
 }
 
 func TestTransparentValueWrapper(t *testing.T) {
-	const words = "Define \"Acquire\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\n" +
+	const words = "Define \"Acquire|-s|---sitive|--ing\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\n" +
 		"Define \"Transmit|-s|-ted|-ting|-ter\" to `<DEF><@Value@><DEF>`.\n" +
 		"Define \"Finish|-es|-ed|-ing|-er\" to `<DEF>KY{|Key: ~crate::finish~, Inputs: ~&[<@Original@>, <@Receipt@>]&~|}<DEF>`.\n" +
 		"Define \"Tracked\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Finisher of any Thing and any Transmitter.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `f64`.\n"
+		"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with No Inputs and Outputs of `f64`.\n"
 	for _, test := range []struct{ name, declaration, expression string }{
 		{"control", "", "a New Transmitter"},
 		{"wrapped", "", "a New Tracked Transmitter"},
-		{"source-value", "Define \"Routed\" as a New Transmitter.\nDefine \"Observed\" as a New Adjective describing any Routed.\nIt describes any Routed as a New Finisher of any Thing and any Routed.\n", "a New Observed Routed"},
+		{"source-value", "Define \"Routed|-s|-like|--ing\" as a New Transmitter.\nDefine \"Observed\" as a New Adjective describing any Routed.\nIt describes any Routed as a New Finisher of any Thing and any Routed.\n", "a New Observed Routed"},
 		{"source-action", "Create \"Route|-s|-d|--ing|-r\" for Transmitting a New Transmitter.\nDefine \"Observed\" as a New Adjective describing any Router.\nIt describes any Router as a New Finisher of any Thing and any Router.\n", "a New Observed Router"},
 	} {
 		t.Run(test.name, func(t *testing.T) {
@@ -494,13 +494,13 @@ func TestTransparentValueWrapper(t *testing.T) {
 }
 
 func TestNamedCallableKeyIsOperand(t *testing.T) {
-	source := "Define \"Relay|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~<@Target@>~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n\n    Publicly create \"Exercise\" as a Generic Function with Inputs of \"target\" as `fn(f64)->f64` and \"value\" as `f64` and Outputs of `f64`.\nCreate \"Receipt\" as a New Relayer of Target and Value.\nReturn Receipt.\n"
+	source := "Define \"Relay|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~<@Target@>~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n\n    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"target\" as `fn(f64)->f64` and \"value\" as `f64` and Outputs of `f64`.\nCreate \"Receipt\" as a New Relayer of Target and Value.\nReturn Receipt.\n"
 	c := compileDefinitionSource(t, source, "callable-key.l")
 	testNativeDefinitionLibrary(t, c, "Exercise", "callable_key", `#[path="src/callable_key.rs"]mod generated;fn main(){assert_eq!(generated::exercise(std::convert::identity,7.0),7.0);}`)
 }
 
 func TestTransparentOwnedValueIsNotCloned(t *testing.T) {
-	source := "Define \"Acquire\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\nDefine \"Transmit|-s|-ted|-ting|-ter\" to `<DEF><@Value@><DEF>`.\nDefine \"Finish|-es|-ed|-ing|-er\" to `<DEF>KY{|Key: ~crate::finish~, Inputs: ~&[<@Original@>, <@Receipt@>]&~|}<DEF>`.\nDefine \"Tracked\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Finisher of any Thing and any Transmitter.\n\n    Publicly create \"Exercise\" as a Generic Function with No Inputs and Outputs of `String`.\nReturn a New Tracked Transmitter of a New Acquire.\n"
+	source := "Define \"Acquire|-s|---sitive|--ing\" as `<DEF>KY{|Key: ~crate::acquire~|}<DEF>`.\nDefine \"Transmit|-s|-ted|-ting|-ter\" to `<DEF><@Value@><DEF>`.\nDefine \"Finish|-es|-ed|-ing|-er\" to `<DEF>KY{|Key: ~crate::finish~, Inputs: ~&[<@Original@>, <@Receipt@>]&~|}<DEF>`.\nDefine \"Tracked\" as a New Adjective describing any Transmitter.\nIt describes any Transmitter as a New Finisher of any Thing and any Transmitter.\n\n    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with No Inputs and Outputs of `String`.\nReturn a New Tracked Transmitter of a New Acquire.\n"
 	c := compileDefinitionSource(t, source, "transparent-owned.l")
 	aml, err := c.ComposeLibrary("Exercise", "transparent_owned")
 	if err != nil {
@@ -527,9 +527,9 @@ func TestTransparentOwnedValueIsNotCloned(t *testing.T) {
 
 func TestInheritedConstructorDirectOperand(t *testing.T) {
 	const words = "Define \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Expression@><DEF>`.\n" +
-		"Define \"Pass\" as `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+		"Define \"Pass|-es|-like|-ing\" as `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
 		"Create \"Transmit|-s|-ted|-ting|-ter\" for Forwarding a New Pass.\n\n" +
-		"    Publicly create \"Exercise\" as a Generic Function with Inputs of \"condition\" as `bool` and \"value\" as `f64` and Outputs of `f64`.\n"
+		"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic Function with Inputs of \"condition\" as `bool` and \"value\" as `f64` and Outputs of `f64`.\n"
 	for _, test := range []struct{ name, body, observer string }{
 		{"direct", "Return a New Transmitter of Value.\n", `assert_eq!(generated::exercise(true,3.0),3.0);`},
 		{"branch", "If Condition, Return a New Transmitter of Value, else Return 7.\n", `assert_eq!(generated::exercise(true,3.0),3.0);assert_eq!(generated::exercise(false,3.0),7.0);`},
