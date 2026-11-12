@@ -22,6 +22,7 @@ func TestLiteralFramingPreservesSourceText(t *testing.T) {
 		{"inner whitespace", "` <DEF>A<DEF> `", "` <DEF>A<DEF> `"},
 		{"escaped unicode", "`" + `雪 <DEF> \"quoted\" \\path` + "`", "`" + `雪 <DEF> \"quoted\" \\path` + "`"},
 		{"paired frame", "`<DEF>W^<@Parts|Syllables@><DEF>`", "`W^<@Parts|Syllables@>`"},
+		{"native comment delimiters", "`<DEF>E{|Statement: ~\"***note***\"~|}<DEF>`", "`E{|Statement: ~\"***note***\"~|}`"},
 		{"definition escaping", "`" + `<DEF>E{|Value: ~\"snow 雪\" \\path~|}<DEF>` + "`", "`" + `E{|Value: ~"snow 雪" \path~|}` + "`"},
 		{"empty frame display", "`<DEF><DEF>`", "``"},
 		{"nested frame display", "`<DEF>A<DEF><DEF>`", "`A<DEF>`"},
@@ -134,6 +135,7 @@ func TestLiteralFramingLexemeStorage(t *testing.T) {
 		{"quoted word", "`<DEF>[\"A\"]<DEF>`", "`[\"A\"]`", "generic.word"},
 		{"quoted syllable", "`<DEF>W^<@Body@><DEF>`", "`W^<@Body@>`", "generic.syllable"},
 		{"bare syllable", "<DEF>W^<@Body@><DEF>", "W^<@Body@>", "generic.syllable"},
+		{"native comment delimiters", "`<DEF>E{|Statement: ~\"***note***\"~|}<DEF>`", "`E{|Statement: ~\"***note***\"~|}`", "generic.syllable"},
 		{"encoded body", "`" + `<DEF>E{|Value: ~\"quote\" \\path~|}<DEF>` + "`", "`" + `E{|Value: ~\"quote\" \\path~|}` + "`", "generic.syllable"},
 		{"interior marker awaits parser validation", "`<DEF>A<DEF><DEF>`", "`A<DEF>`", "generic.syllable"},
 	} {
@@ -162,7 +164,7 @@ func TestLiteralFramingCompilePreservesOrdinaryText(t *testing.T) {
 		t.Fatal(err)
 	}
 	config := canonicalTestOptions()
-	for _, message := range []string{"ordinary tag", "literal <DEF> tag", "<DEF>", "雪 <DEF> \"quoted\" text"} {
+	for _, message := range []string{"ordinary tag", "literal <DEF> tag", "<DEF>", "雪 <DEF> \"quoted\" text", "***", "***note***"} {
 		t.Run(message, func(t *testing.T) {
 			literal := "`" + message + "`"
 			source := bytes.Replace(original, []byte("`Hello World!`"), []byte(literal), 1)

@@ -6,19 +6,14 @@ func (r *record) declareInvocation(label string) error {
 	if !r.isFunction() {
 		return nil
 	}
-	parsed, err := parseDeclarationLabel(label)
-	if err != nil {
+	word := newLexeme("verb")
+	if err := word.reLabel(label); err != nil {
 		return err
 	}
 	r.word = nil
-	if len(parsed.Slots) == 1 {
-		return nil
+	if len(word.Forms) > 0 {
+		r.word = word
 	}
-	word := newLexeme("verb")
-	if err := word.declareFamily(label); err != nil {
-		return err
-	}
-	r.word = word
 	return nil
 }
 

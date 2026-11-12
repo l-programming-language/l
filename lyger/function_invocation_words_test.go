@@ -47,14 +47,23 @@ func TestFunctionWordAndValueShareBinding(t *testing.T) {
 }
 
 func TestFunctionMemberSentence(t *testing.T) {
-	const source = "Create \"User\" as a Dictionary.\nDefine \"Store\" as `store`.\n\n" +
-		"    Publicly create User's \"Walk|-s|-ed|-ing|-er\" as a New Function with Inputs of \"Location\" as Text and No Outputs.\nShow Location.\n\n" +
-		"The User walks to the Store.\n"
-	c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
-	requireOrchestrationPlan(t, c.Semantics)
-	last := c.Semantics.Instructions[len(c.Semantics.Instructions)-1]
-	if last.Kind != instructionInvoke || last.Target.Record.ID != "User.Walk" || len(last.Arguments) != 1 || last.Arguments[0].Record.ID != "Store" {
-		t.Fatal("subject, inflected member, or prepositional argument changed binding")
+	for _, owner := range []string{"Create \"User\" as a Dictionary.", "Define \"User|-s|-like|-ing\" as `<DEF>E{|Statement: ~7~|}<DEF>`.", "Define \"User|-s|-|-ing\" as `<DEF>E{|Statement: ~7~|}<DEF>`."} {
+		for _, active := range []string{"-s", "-"} {
+			t.Run(owner+active, func(t *testing.T) {
+				source := owner + "\nDefine \"Store\" as `store`.\n\n" +
+					"    Publicly create User's \"Walk|" + active + "|-ed|-ing|-er\" as a New Function with Inputs of \"Location\" as Text and No Outputs.\nShow Location.\n\n" +
+					"The User " + processLexFix("walk", active, "postfix") + " to the Store.\n"
+				c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
+				requireOrchestrationPlan(t, c.Semantics)
+				last := c.Semantics.Instructions[len(c.Semantics.Instructions)-1]
+				statement := c.Statements[len(c.Statements)-1].sGram
+				subject, verb := statement.subject.noun.binding, statement.predicate.clauses[0].verb.binding
+				if subject.Record != c.Memory["User"] || subject.Form != "root" || verb.Record != c.Memory["User.Walk"] || verb.Form != "active" ||
+					last.Kind != instructionInvoke || last.Target.Record != verb.Record || len(last.Arguments) != 1 || last.Arguments[0].Record != c.Memory["Store"] {
+					t.Fatal("subject, inflected member, or prepositional argument changed binding")
+				}
+			})
+		}
 	}
 }
 

@@ -152,6 +152,14 @@ func (l *lexeme) getValueType() string {
 // reLabel accepts ordinary binding names. Supplying cases explicitly always
 // declares a complete family; declareFamily additionally rejects bare roots.
 func (l *lexeme) reLabel(labelString string) error {
+	return l.applyLabel(labelString, false)
+}
+
+func (l *lexeme) declareFamily(label string) error {
+	return l.applyLabel(label, l.POS == "noun" || l.POS == "verb")
+}
+
+func (l *lexeme) applyLabel(labelString string, requireFamily bool) error {
 	label, err := parseDeclarationLabel(labelString)
 	if err != nil {
 		return err
@@ -173,25 +181,10 @@ func (l *lexeme) reLabel(labelString string) error {
 	}
 	candidate := *l
 	candidate.Root, candidate.Forms = strings.ToLower(label.Root), forms
-	if len(label.Slots) > 1 {
+	if len(label.Slots) > 1 || requireFamily {
 		if err := candidate.validateFamily(); err != nil {
 			return err
 		}
-	}
-	l.Root, l.Forms = candidate.Root, candidate.Forms
-	return nil
-}
-
-func (l *lexeme) declareFamily(label string) error {
-	if l.POS != "noun" && l.POS != "verb" {
-		return l.reLabel(label)
-	}
-	candidate := *l
-	if err := candidate.reLabel(label); err != nil {
-		return err
-	}
-	if err := candidate.validateFamily(); err != nil {
-		return err
 	}
 	l.Root, l.Forms = candidate.Root, candidate.Forms
 	return nil
@@ -237,32 +230,12 @@ func (l *lexeme) validateFamily() error {
 
 func validFamilySpelling(spelling string) bool {
 	// A declared case must survive token loading and binding as its own word.
-	// Trailing commas mark conjunction; possessive suffixes select an owner.
+	// Comment delimiters, conjunction commas and possessive suffixes cannot name cases.
+	if strings.Contains(spelling, "***") {
+		return false
+	}
 	_, possessive := possessiveOwner(spelling)
 	return !possessive && !strings.HasSuffix(spelling, ",") && spelling != "" && utf8.ValidString(spelling) && !strings.ContainsAny(spelling, ".\"`|") && strings.IndexFunc(spelling, func(r rune) bool { return unicode.IsSpace(r) || unicode.IsControl(r) }) < 0
-}
-
-// checkDescriptors scans a lexeme for a particular adverb or adjective
-//
-//	usage example: descType = "adverb", descID = "progression"
-func (l *lexeme) checkDescriptors(descType string, descID string) bool {
-	switch descType {
-	case "adjective":
-		descID = "adjectives." + descID
-		for _, adj := range l.Adjectives {
-			if adj.tType == descID {
-				return true
-			}
-		}
-	case "adverb":
-		descID = "adverbs." + descID
-		for _, adv := range l.Adverbs {
-			if adv.tType == descID {
-				return true
-			}
-		}
-	}
-	return false
 }
 
 // loadSyncActions keeps sibling actions in source order. Cloning prevents a

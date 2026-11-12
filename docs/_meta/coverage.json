@@ -7586,8 +7586,8 @@
           {
             "source": "lyger/utilities.go",
             "lines": [
-              61,
-              81
+              62,
+              82
             ]
           }
         ],
@@ -7980,8 +7980,8 @@
           {
             "source": "lyger/utilities.go",
             "lines": [
-              61,
-              81
+              62,
+              82
             ]
           }
         ],
@@ -8009,8 +8009,8 @@
           {
             "source": "lyger/utilities.go",
             "lines": [
-              61,
-              81
+              62,
+              82
             ]
           }
         ],
@@ -8038,8 +8038,8 @@
           {
             "source": "lyger/utilities.go",
             "lines": [
-              61,
-              81
+              62,
+              82
             ]
           }
         ],
@@ -8067,8 +8067,8 @@
           {
             "source": "lyger/utilities.go",
             "lines": [
-              61,
-              81
+              62,
+              82
             ]
           }
         ],
@@ -9681,8 +9681,8 @@
           {
             "source": "lyger/utilities.go",
             "lines": [
-              61,
-              81
+              62,
+              82
             ]
           }
         ],
@@ -14520,7 +14520,7 @@
   ],
   "sourceHashes": {
     "lexicon/eng/vocabulary.json": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c",
-    "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
+    "lyger/utilities.go": "983a90ab216d8e565ea18bd4fbfbe980095bd621aba752d71f0ba93a5f4b0d40",
     "builtins/eng/core.l": "7f4128a219466116c6371d9e79ba6332c8cbfcd977edd98165c63ec1e86ccd8b",
     "lyger/definition_bindings.go": "005db56993a6e3567feae5f5c40c1d75728b8ce423ed594f58aa8db5aeb0617b",
     "lyger/source_functions.go": "ab3d26463bdc3165d342947453f50af4dced25f1f7909c18ba62e37c580f4569",
@@ -14530,14 +14530,14 @@
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
     "lyger/function_definitions.go": "f221af06ddb210136ca4fca064117282d892ce0e9d045993c9f62ccf0a0c9063",
     "lyger/lowering.go": "ca6f102431f550add818f36cbfa7e718b5773f5a5edbe418a63d50261838f067",
-    "lyger/token_forms.go": "36ffd02367647f12fe45e2d05b0ee24b2f36170d415001c9e6bf6942c485706d",
+    "lyger/token_forms.go": "5b7700f6f57f2d3d122310241e572579156a739785ada163ef2d07f80eda13c9",
     "lyger/native_bindings.go": "8d84fb1a479c721cdf04803d3e96ff0b371f17c286c8edf8f82a749c189ce9db",
     "lyger/native_composition.go": "ddaefeb909467b13b7c5d61e32c4a04e20e2a7a04c5c2e2a6dc110160c82e579",
-    "lyger/word_families.go": "a19d20f58d321bbf6558a1f39cfdcfeadc21c2d1bcb3c9754a543d6708c34903",
-    "lyger/lexical_types.go": "49502a5839493a35e03a9b2377eba0e44bee95a780262949c49dd552edc45e39",
+    "lyger/word_families.go": "fd88e14af504bec33fd6914e71365e40910b59ed94b33b83578518cad7ac96a6",
+    "lyger/lexical_types.go": "a62b2acc1e4981ee9a364f980ffdb45d1f6af56146f9c33560377f5ab06950ce",
     "lyger/grammar_extraction.go": "327898de705a5c29dd073ef8ef5372f3d0d3f78d94bd04038036d29b79c7760c",
     "lyger/authored_names.go": "62c89f7e5ad9651e34db707347fd103776b51c2b4b13c5aa02f8d07dc9fd36a3",
-    "lyger/grammar_types.go": "3338914d55a2d7eb22e8def058c5b40181600eda1dfa2f07250524b51818b86d",
+    "lyger/grammar_types.go": "5cee8e4907c9e827cb301f2802f0ec56719730428b4c443837b81632be2f4f97",
     "lyger/types.go": "667c8e349b66253dd4f8297ff1980d981b86f275d1a0dba247b616fda9b0dd75",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
     "lyger/grammar.go": "a70f120dea002e1bf256a520e14c01e9cd6a30c99871e18e728d6acb8d77618d",

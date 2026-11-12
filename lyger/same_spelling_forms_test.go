@@ -240,10 +240,23 @@ func TestSameSpellingFormsSpeculationIsPure(t *testing.T) {
 		t.Fatal("speculative clause changed its source token")
 	}
 	active := indexedTestWord(t, "Read", `"Read|-|-|-ing|-er"`, false)
-	failedActive := boundFormStatement(t, "Target Read Value unexpected", map[string]*record{"Read": active})
-	before := *failedActive.tokens[1]
-	if err := failedActive.loadGram(); err == nil || failedActive.tokens[1].binding != before.binding || failedActive.tokens[1].tType != before.tType || !bytes.Equal(failedActive.tokens[1].rawBytes, before.rawBytes) {
-		t.Fatal("failed subject-active candidate committed a form or accepted trailing garbage")
+	parcel := morphologyNounRecord(t, "Parcel", `"Parcel|-s|-|-ing"`)
+	for _, subject := range []string{"Target", "Parcel"} {
+		failedActive := boundFormStatement(t, subject+" Read Value Target", map[string]*record{"Read": active, "Parcel": parcel})
+		before := []token{*failedActive.tokens[0], *failedActive.tokens[1]}
+		if err := failedActive.loadGram(); err == nil {
+			t.Fatal("failed subject-active candidate accepted trailing garbage")
+		}
+		for index, original := range before {
+			current := failedActive.tokens[index]
+			if current.binding != original.binding || current.tType != original.tType || !bytes.Equal(current.rawBytes, original.rawBytes) {
+				t.Fatal("failed subject-active candidate committed a form")
+			}
+		}
+		failedActive.tokens = failedActive.tokens[:len(failedActive.tokens)-1]
+		if err := failedActive.loadGram(); err != nil || failedActive.tokens[0].binding != before[0].binding || failedActive.tokens[1].binding.Record != active || failedActive.tokens[1].binding.Form != "active" {
+			t.Fatalf("successful retry lost subject or active identity: %v", err)
+		}
 	}
 	failed, _ := formTestStatement(t, "Target is Read Value unexpected", false)
 	if err := failed.loadGram(); err == nil {
@@ -259,6 +272,32 @@ func TestSameSpellingFormsSpeculationIsPure(t *testing.T) {
 	for _, tok := range continuation.tokens {
 		if tok.hasRole("verb", "action.expansive") && tok.tType != "verbs.expansive.root" {
 			t.Fatal("failed continuation committed a speculative passive form")
+		}
+	}
+}
+
+func TestSameSpellingNominalFunctionValues(t *testing.T) {
+	for _, kind := range []string{"ordinary", "native", "action"} {
+		for _, spelling := range []string{"Read", "Reads"} {
+			t.Run(kind+"/"+spelling, func(t *testing.T) {
+				read := indexedTestWord(t, "Read", `"Read|-s|-|-ing|-er"`, kind == "ordinary")
+				if kind == "native" {
+					read.function = &sourceFunction{Native: true}
+				}
+				parcel := morphologyNounRecord(t, "Parcel", `"Parcel|-s|-|-ing"`)
+				statement := boundFormStatement(t, `Create "Saved" as a New Parcel `+spelling, map[string]*record{"Read": read, "Parcel": parcel})
+				if err := statement.loadGram(); err != nil {
+					t.Fatal(err)
+				}
+				role := "root"
+				if kind != "action" && spelling == "Read" {
+					role = "descriptive"
+				}
+				modifier, noun := statement.tokens[5].binding, statement.tokens[6].binding
+				if modifier.Record != parcel || modifier.Form != role || noun.Record != read || noun.Form != map[string]string{"Read": "root", "Reads": "active"}[spelling] {
+					t.Fatal("bare Function data or nominal modifier lost its selected identity")
+				}
+			})
 		}
 	}
 }

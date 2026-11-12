@@ -12,11 +12,11 @@
     "lyger/function_definitions.go": "f221af06ddb210136ca4fca064117282d892ce0e9d045993c9f62ccf0a0c9063",
     "lyger/grammar.go": "a70f120dea002e1bf256a520e14c01e9cd6a30c99871e18e728d6acb8d77618d",
     "lyger/grammar_extraction.go": "327898de705a5c29dd073ef8ef5372f3d0d3f78d94bd04038036d29b79c7760c",
-    "lyger/grammar_match.go": "0d1b04eb3082fe80cb195b0c81acd741c800e18b718129431a90d69bdf99cc20",
+    "lyger/grammar_match.go": "94190b3b24379a09f3f459668e5a1c10900000e49851a15d74dfd8ddb6e443b9",
     "lyger/grammar_terms.go": "873b16a7d99eb137069d1a96ee9efb91b4eb3e272c140636e6c8e02e173d678d",
-    "lyger/grammar_types.go": "3338914d55a2d7eb22e8def058c5b40181600eda1dfa2f07250524b51818b86d",
+    "lyger/grammar_types.go": "5cee8e4907c9e827cb301f2802f0ec56719730428b4c443837b81632be2f4f97",
     "lyger/instructions.go": "967bac7b96b0e58af946bffe5758b214fbf7100274c0ff8878f467edeecd2a44",
-    "lyger/lexical_types.go": "49502a5839493a35e03a9b2377eba0e44bee95a780262949c49dd552edc45e39",
+    "lyger/lexical_types.go": "a62b2acc1e4981ee9a364f980ffdb45d1f6af56146f9c33560377f5ab06950ce",
     "lyger/lexicon.go": "61ef7084addda6fafc745a305fab2cdd40bce33e01f74ba1921651477ff29bbe",
     "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
     "lyger/lowering.go": "ca6f102431f550add818f36cbfa7e718b5773f5a5edbe418a63d50261838f067",
@@ -28,9 +28,9 @@
     "lyger/source_body.go": "81da3955864cfb1526647733fd5acc2900fd0d29a662fa1b69425d67f865cbb0",
     "lyger/source_descriptors.go": "04fbd8ab93d664bda6de12d482acba06ca5b450530ef573ca25c863411d1cee5",
     "lyger/source_functions.go": "ab3d26463bdc3165d342947453f50af4dced25f1f7909c18ba62e37c580f4569",
-    "lyger/token_forms.go": "36ffd02367647f12fe45e2d05b0ee24b2f36170d415001c9e6bf6942c485706d",
+    "lyger/token_forms.go": "5b7700f6f57f2d3d122310241e572579156a739785ada163ef2d07f80eda13c9",
     "lyger/types.go": "667c8e349b66253dd4f8297ff1980d981b86f275d1a0dba247b616fda9b0dd75",
-    "lyger/word_families.go": "a19d20f58d321bbf6558a1f39cfdcfeadc21c2d1bcb3c9754a543d6708c34903"
+    "lyger/word_families.go": "fd88e14af504bec33fd6914e71365e40910b59ed94b33b83578518cad7ac96a6"
   },
   "entries": {
     "value": {

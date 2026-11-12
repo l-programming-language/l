@@ -7,17 +7,17 @@
     "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
     "lyger/grammar.go": "a70f120dea002e1bf256a520e14c01e9cd6a30c99871e18e728d6acb8d77618d",
     "lyger/grammar_extraction.go": "327898de705a5c29dd073ef8ef5372f3d0d3f78d94bd04038036d29b79c7760c",
-    "lyger/grammar_types.go": "3338914d55a2d7eb22e8def058c5b40181600eda1dfa2f07250524b51818b86d",
+    "lyger/grammar_types.go": "5cee8e4907c9e827cb301f2802f0ec56719730428b4c443837b81632be2f4f97",
     "lyger/instructions.go": "967bac7b96b0e58af946bffe5758b214fbf7100274c0ff8878f467edeecd2a44",
-    "lyger/lexical_types.go": "49502a5839493a35e03a9b2377eba0e44bee95a780262949c49dd552edc45e39",
+    "lyger/lexical_types.go": "a62b2acc1e4981ee9a364f980ffdb45d1f6af56146f9c33560377f5ab06950ce",
     "lyger/lexicon.go": "61ef7084addda6fafc745a305fab2cdd40bce33e01f74ba1921651477ff29bbe",
     "lyger/process_inputs.go": "7eb38086266da7268cdc8cf1235cd11d42b3c57eee12a1bf29ec1a2bbcdf75de",
     "lyger/runtime_values_source.go": "2b4c234b780146e05a80f5dbf90156d6f98fe2934935ebf76f2647430136a60b",
     "lyger/semantics.go": "131a6dd8a353a2bd204617e3e9b8ea44b71753afaacb004b4730de13f817b67e",
     "lyger/source_functions.go": "ab3d26463bdc3165d342947453f50af4dced25f1f7909c18ba62e37c580f4569",
-    "lyger/token_forms.go": "36ffd02367647f12fe45e2d05b0ee24b2f36170d415001c9e6bf6942c485706d",
-    "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
-    "lyger/word_families.go": "a19d20f58d321bbf6558a1f39cfdcfeadc21c2d1bcb3c9754a543d6708c34903"
+    "lyger/token_forms.go": "5b7700f6f57f2d3d122310241e572579156a739785ada163ef2d07f80eda13c9",
+    "lyger/utilities.go": "983a90ab216d8e565ea18bd4fbfbe980095bd621aba752d71f0ba93a5f4b0d40",
+    "lyger/word_families.go": "fd88e14af504bec33fd6914e71365e40910b59ed94b33b83578518cad7ac96a6"
   },
   "entries": {
     "nouns.it": {

@@ -886,7 +886,7 @@ func (sb *clauseGram) loadTyping(sType string) error {
 			form = parts[2]
 		}
 	}
-	head := clauseHeadForForm(sb.tokens, form)
+	head := clauseHead(sb.tokens, form)
 	if head != nil && form != "" {
 		sb.verbForm = head.grammaticalForm(form)
 		// Source bindings own their declared morphology; configured native
@@ -1261,7 +1261,12 @@ func (sg *statementGram) gramSwitch(term grammarTerm) error {
 	case term.Kind == termGrammar && term.Family == familyPredicate:
 		return buildGrammarChild(&sg.predicate, initPredicateGram, term.Name, sg.getUnassociatedTokens(), sg.gram)
 	case term.Kind == termGrammar && term.Family == familySubject:
-		return buildGrammarChild(&sg.subject, initSubjectGram, term.Name, sg.getUnassociatedTokens(), sg.gram)
+		available := sg.getUnassociatedTokens()
+		if sg.gType == "statement.subjective.active" {
+			index, _ := firstVerb(available)
+			available = available[:index] // The selected action belongs to the predicate, even when its root is also a Function value.
+		}
+		return buildGrammarChild(&sg.subject, initSubjectGram, term.Name, available, sg.gram)
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Type: "+term.className())
 	}
@@ -1270,61 +1275,48 @@ func (sg *statementGram) gramSwitch(term grammarTerm) error {
 // build identifies and inits & builds pointers to subjectGram and predicateGram for subject and predicate
 func (sg *statementGram) build() error {
 	primary := sg.getPrimaryType()
-	if sg.gType == "statement.objective.imperative" {
-		for index, tok := range sg.tokens {
-			if tok.getPOS(true) != "verb" {
-				continue
-			}
-			if view := tok.grammaticalForm("active"); index > 0 && view != nil && tok.binding != nil {
-				// Context-free root lookup stays first. A subject-active parse
-				// uses the same identity only if the whole imperative fails.
-				candidate := sg.clone()
-				signatureError := sg.gram.signatureError
-				if err := candidate.buildCase(primary); err == nil {
-					*sg = candidate
-					return nil
-				}
-				sg.gram.signatureError = signatureError
-				active, err := initStatementGram(view.lexicalType, sg.tokens, sg.gram)
-				if err != nil {
-					return err
-				}
-				if err := active.buildCase(primary); err != nil {
-					return err
-				}
-				*sg = *active
-				return nil
-			}
-			break
-		}
+	fallback := primary
+	var active *tokenForm
+	if index, tok := firstVerb(sg.tokens); sg.gType == "statement.objective.imperative" && index > 0 && tok != nil && tok.binding != nil {
+		active = tok.grammaticalForm("active")
 	}
 	if primary == "assign" {
 		for index, tok := range sg.tokens {
 			if !tok.hasRole("verb", "action.passive") {
 				continue
 			}
-			head := clauseHead(sg.tokens[index+1:])
+			head := clauseHead(sg.tokens[index+1:], "")
 			if head != nil && head.binding != nil && head.binding.Record.isFunction() && head.grammaticalForm("passive") != nil {
-				// A complete Function-value assignment wins. Only an incomplete
-				// assignment retries the same record as a declared passive verb.
-				candidate := sg.clone()
-				signatureError := sg.gram.signatureError
-				if err := candidate.buildCase(primary); err == nil {
-					*sg = candidate
-					return nil
-				}
-				sg.gram.signatureError = signatureError
-				candidate = sg.clone()
-				if err := candidate.buildCase("generic"); err != nil {
-					return err
-				}
-				*sg = candidate
-				return nil
+				fallback = "generic"
 			}
 			break
 		}
 	}
-	return sg.buildCase(primary)
+	if active == nil && fallback == primary {
+		return sg.buildCase(primary)
+	}
+	// A complete imperative or Function-value assignment wins. Only failure
+	// retries the selected identity's declared form, without committing it.
+	candidate := sg.clone()
+	signatureError := sg.gram.signatureError
+	if err := candidate.buildCase(primary); err == nil {
+		*sg = candidate
+		return nil
+	}
+	sg.gram.signatureError = signatureError
+	candidate = sg.clone()
+	if active != nil {
+		parsed, err := initStatementGram(active.lexicalType, sg.tokens, sg.gram)
+		if err != nil {
+			return err
+		}
+		candidate = *parsed
+	}
+	if err := candidate.buildCase(fallback); err != nil {
+		return err
+	}
+	*sg = candidate
+	return nil
 }
 
 func (sg *statementGram) buildCase(primary string) error {

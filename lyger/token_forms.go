@@ -111,6 +111,10 @@ func followingNominal(tokens []*token) bool {
 		if tok.getPOS(true) == "adjective" {
 			continue
 		}
+		if tok.getPOS(true) == "verb" {
+			binding := tok.binding
+			return binding != nil && binding.Form == "root" && (binding.Record.isFunction() || binding.Record.function != nil)
+		}
 		return tok.defined || tok.isRawType() || tok.isDeclare() || tok.getPOS(true) == "noun"
 	}
 	return false
@@ -149,14 +153,19 @@ func associateNominalAdjectives(term grammarTerm, available []*token, adjectives
 	return nil
 }
 
-// clauseHead observes the same adverb/possessive prefix accepted by grammar.
-func clauseHead(tokens []*token) *token {
-	return clauseHeadForForm(tokens, "")
+// Statement typing and its active retry select the same first verb occurrence.
+func firstVerb(tokens []*token) (int, *token) {
+	for index, tok := range tokens {
+		if tok.getPOS(true) == "verb" {
+			return index, tok
+		}
+	}
+	return len(tokens), nil
 }
 
 // Only an explicit applicative context can promote a selected noun's active
 // form; ordinary lookup and the possessive owner retain their original roles.
-func clauseHeadForForm(tokens []*token, form string) *token {
+func clauseHead(tokens []*token, form string) *token {
 	for _, tok := range tokens {
 		if tok.getPOS(true) == "verb" {
 			return tok
@@ -173,7 +182,7 @@ func clauseHeadForForm(tokens []*token, form string) *token {
 
 func (sg *statementGram) commitForms() error {
 	collector := grammarFormCollector{seen: make(map[any]bool), forms: make(map[*token]*tokenForm)}
-	collector.visit(sg)
+	collectGrammarForms(&collector, sg)
 	if collector.err != nil {
 		return collector.err
 	}
@@ -213,78 +222,53 @@ func (c *grammarFormCollector) visit(node any) {
 	c.seen[node] = true
 	switch node := node.(type) {
 	case *statementGram:
-		if node == nil {
-			return
-		}
-		c.visit(node.subject)
-		c.visit(node.predicate)
-		collectGrammarForms(c, node.clauses)
+		collectGrammarForms(c, node.subject)
+		collectGrammarForms(c, node.predicate)
+		collectGrammarForms(c, node.clauses...)
 	case *subjectGram:
-		if node == nil {
-			return
-		}
 		c.add(node.noun, node.nounForm, node.adjectiveForms)
-		c.visit(node.phrase)
+		collectGrammarForms(c, node.phrase)
 	case *objectGram:
-		if node == nil {
-			return
-		}
 		c.add(node.noun, node.nounForm, node.adjectiveForms)
-		c.visit(node.name)
-		c.visit(node.phrase)
-		c.visit(node.clause)
+		collectGrammarForms(c, node.name)
+		collectGrammarForms(c, node.phrase)
+		collectGrammarForms(c, node.clause)
 	case *valueGram:
-		if node == nil {
-			return
-		}
 		c.add(node.noun, node.nounForm, node.adjectiveForms)
 	case *phraseGram:
-		if node == nil {
-			return
-		}
-		c.visit(node.subject)
-		c.visit(node.obj)
-		c.visit(node.phrase)
-		collectGrammarForms(c, node.subjects)
-		collectGrammarForms(c, node.objects)
-		collectGrammarForms(c, node.values)
-		collectGrammarForms(c, node.clauses)
+		collectGrammarForms(c, node.subject)
+		collectGrammarForms(c, node.obj)
+		collectGrammarForms(c, node.phrase)
+		collectGrammarForms(c, node.subjects...)
+		collectGrammarForms(c, node.objects...)
+		collectGrammarForms(c, node.values...)
+		collectGrammarForms(c, node.clauses...)
 	case *clauseGram:
-		if node == nil {
-			return
-		}
 		c.add(node.verb, node.verbForm, nil)
-		c.visit(node.subject)
-		c.visit(node.obj)
-		c.visit(node.predicate)
-		c.visit(node.phrase)
-		collectGrammarForms(c, node.objects)
-		collectGrammarForms(c, node.values)
-		collectGrammarForms(c, node.phrases)
-		collectGrammarForms(c, node.clauses)
+		collectGrammarForms(c, node.subject)
+		collectGrammarForms(c, node.obj)
+		collectGrammarForms(c, node.predicate)
+		collectGrammarForms(c, node.phrase)
+		collectGrammarForms(c, node.objects...)
+		collectGrammarForms(c, node.values...)
+		collectGrammarForms(c, node.phrases...)
+		collectGrammarForms(c, node.clauses...)
 	case *predicateGram:
-		if node == nil {
-			return
-		}
-		c.visit(node.obj)
-		collectGrammarForms(c, node.clauses)
-		collectGrammarForms(c, node.conditionals)
+		collectGrammarForms(c, node.obj)
+		collectGrammarForms(c, node.clauses...)
+		collectGrammarForms(c, node.conditionals...)
 	case *conditionalGram:
-		if node == nil {
-			return
-		}
-		collectGrammarForms(c, node.clauses)
-		collectGrammarForms(c, node.conditions)
+		collectGrammarForms(c, node.clauses...)
+		collectGrammarForms(c, node.conditions...)
 	case *conditionGram:
-		if node == nil {
-			return
-		}
-		collectGrammarForms(c, node.values)
+		collectGrammarForms(c, node.values...)
 	}
 }
 
-func collectGrammarForms[T any](collector *grammarFormCollector, nodes []T) {
+func collectGrammarForms[T any](collector *grammarFormCollector, nodes ...*T) {
 	for _, node := range nodes {
-		collector.visit(node)
+		if node != nil {
+			collector.visit(node)
+		}
 	}
 }

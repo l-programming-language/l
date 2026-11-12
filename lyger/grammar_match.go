@@ -156,30 +156,25 @@ func applyGrammarRule[T any](target *T, rule string, clone func(T) T,
 			return err
 		}
 		candidate = clone(*target)
+		var apply func(*T, grammarTerm) error
+		var kind string
 		switch term.Kind {
 		case termGrammar, termCase:
 			if term.Family == familyStatement {
 				return lerrors.InvalidConfiguration.Errorf("%s: unknown grammar rule element %s", part, part)
 			}
-			if grammatical == nil {
-				err = lerrors.InvalidConfiguration.Errorf("unsupported grammatical rule %s", part)
-			} else {
-				err = grammatical(&candidate, term)
-			}
+			apply, kind = grammatical, "grammatical"
 		case termLexical, termIdentifier:
-			if lexical == nil {
-				err = lerrors.InvalidConfiguration.Errorf("unsupported lexical rule %s", part)
-			} else {
-				err = lexical(&candidate, term)
-			}
+			apply, kind = lexical, "lexical"
 		case termType:
-			if typed == nil {
-				err = lerrors.InvalidConfiguration.Errorf("unsupported typed rule %s", part)
-			} else {
-				err = typed(&candidate, term)
-			}
+			apply, kind = typed, "typed"
 		default:
 			return lerrors.InvalidConfiguration.Errorf("%s: unknown grammar rule element %s", part, part)
+		}
+		if apply == nil {
+			err = lerrors.InvalidConfiguration.Errorf("unsupported %s rule %s", kind, part)
+		} else {
+			err = apply(&candidate, term)
 		}
 		if err != nil {
 			if term.Optional {
@@ -391,7 +386,7 @@ func buildGrammarClauses(term grammarTerm, tokens []*token, gram *grammar) ([]*c
 			// An unqualified clause admits the declared forms of its selected
 			// word. Keep a successful root parse; retry its same-spelling
 			// passive only when that first grammar candidate cannot consume it.
-			head := clauseHead(input)
+			head := clauseHead(input, "")
 			if head != nil && head.grammaticalForm("root") != nil && head.grammaticalForm("passive") != nil {
 				gram.signatureError = signatureError
 				clause, err = buildGrammarNode(initClauseGram("clause.passive", input, gram))

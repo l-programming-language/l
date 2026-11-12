@@ -59,6 +59,8 @@ func TestMorphologyCompleteFamily(t *testing.T) {
 		{"verb", `"Read|-s|------past|-ing|-er"`},
 		{"verb", `"Read|-s|-----|-ing|-er"`},
 		{"verb", `"Read|-|-|-|-'s"`},
+		{"verb", `"Read|-|-|-|-***"`},
+		{"verb", `"Fold**|-s|-\u002a|-ing|-er"`},
 		{"verb", `"R\u002eead|-s|-|-ing|-er"`},
 		{"verb", `"Read|-s|-\u002e|-ing|-er"`},
 		{"verb", "\"Read|-s|-`|-ing|-er\""},
@@ -105,7 +107,7 @@ func TestMorphologyRequiresEveryDeclaredCase(t *testing.T) {
 	} {
 		parts := strings.Split(family.label, "|")
 		for slot := range parts {
-			defects := []string{"'s", "’S", "s'", "S’", ","}
+			defects := []string{"'s", "’S", "s'", "S’", ",", "***", "***note***"}
 			if slot > 0 {
 				defects = append(defects, "omitted", "empty", "malformed")
 			}
@@ -145,6 +147,10 @@ func TestMorphologySpellingRejectsBeforePublication(t *testing.T) {
 		{"Parcel,|-s|-like|-ing", "Define %q as `<DEF>E{|Statement: ~7~|}<DEF>`."},
 		{"Fold|-s|-ed's|-ing|-er", "Use Print as %q."},
 		{"Fold|-s|-ed's|-ing|-er", "    Publicly create %q as a New Function with No Inputs and Outputs of Text.\nReturn `value`.\n"},
+		{"Parcel***|-s|-like|-ing", "Define %q as `<DEF>E{|Statement: ~7~|}<DEF>`."},
+		{"Fold|-s|-ed***note***|-ing|-er", "Create %q for Printing any Text."},
+		{"Fold|-s|-ed***|-ing|-er", "Use Print as %q."},
+		{"Fold|-s|-ed***|-ing|-er", "    Publicly create %q as a New Function with No Inputs and Outputs of Text.\nReturn `value`.\n"},
 	} {
 		t.Run(tc.declaration+tc.label, func(t *testing.T) {
 			c := paragraphPublicationSource(t, fmt.Sprintf(tc.declaration, tc.label))
@@ -160,7 +166,7 @@ func TestMorphologySpellingRejectsBeforePublication(t *testing.T) {
 }
 
 func TestMorphologySpellingPreservesSourceRoles(t *testing.T) {
-	for _, suffix := range []string{"-ed", "-", "-ed'", "-ed’", "-ed!", "-ed;", "-ed/", "-ed\\", "-ed,past"} {
+	for _, suffix := range []string{"-ed", "-", "-ed'", "-ed’", "-ed!", "-ed;", "-ed/", "-ed\\", "-ed,past", "-ed*", "-ed**"} {
 		t.Run(suffix, func(t *testing.T) {
 			spelling := "Fold" + suffix[1:]
 			source := fmt.Sprintf("Create %q for Printing any Text.\nCreate \"Worker\" as a New Basic App.\nWorker is %s `payload's,`.\n", "Fold|-s|"+suffix+"|-ing|-er", spelling)
