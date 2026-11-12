@@ -5,7 +5,7 @@ import "testing"
 func TestLexicalReservationsFollowPublicationAndNewDeclarations(t *testing.T) {
 	parent := &lexicalScope{records: map[string]*record{}}
 	scope := &lexicalScope{parent: parent, records: map[string]*record{}}
-	declaration := &scopeDeclaration{Token: &token{rawBytes: []byte(`"Write|-s|--ten|--ing"`)}}
+	declaration := &scopeDeclaration{Token: &token{rawBytes: []byte(`"Write|-s|--ten|--ing|-r"`)}}
 	scope.declarations = append(scope.declarations, declaration)
 	for _, spelling := range []string{"Write", "Writes", "Written", "Writing", "WRITES’"} {
 		binding, state, err := scope.lookupLocal([]byte(spelling))
@@ -14,7 +14,7 @@ func TestLexicalReservationsFollowPublicationAndNewDeclarations(t *testing.T) {
 		}
 	}
 	word := newLexeme("verb")
-	if err := word.reLabel(`"Write|-s|--ten|--ing"`); err != nil {
+	if err := word.reLabel(`"Write|-s|--ten|--ing|-r"`); err != nil {
 		t.Fatal(err)
 	}
 	rec := &record{ID: "Write", Value: &entry{Type: storageLexeme, Lexeme: word}}
@@ -30,7 +30,7 @@ func TestLexicalReservationsFollowPublicationAndNewDeclarations(t *testing.T) {
 
 func TestLexicalReservationsRetainOwnerNamespaces(t *testing.T) {
 	scope := &lexicalScope{parent: &lexicalScope{}, records: map[string]*record{}, declarations: []*scopeDeclaration{
-		{Token: &token{rawBytes: []byte(`"Retain|-s"`)}, Owner: &token{rawBytes: []byte("App's")}},
+		{Token: &token{rawBytes: []byte(`"Retain|-s|-ed|-ing|-er"`)}, Owner: &token{rawBytes: []byte("App's")}},
 		{Token: &token{rawBytes: []byte(`"Private"`)}, Owner: &token{rawBytes: []byte("Library's")}},
 	}}
 	for _, spelling := range []string{"APP.Retain", "App.Retains’"} {

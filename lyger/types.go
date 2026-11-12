@@ -154,6 +154,14 @@ type applicative struct {
 	Operation  *op
 }
 
+// storedPointer rejects an absent typed payload without losing its identity.
+func storedPointer[T any](kind valueType, value *T, category string) (val, error) {
+	if value == nil {
+		return val{}, lerrors.Internal.Errorf("%s %s has no readable value", category, kind)
+	}
+	return val{Type: kind, Data: value}, nil
+}
+
 // value retains canonical payload identity; it never copies an application.
 func (a *applicative) value() (val, error) {
 	if a == nil {
@@ -161,41 +169,23 @@ func (a *applicative) value() (val, error) {
 	}
 	switch a.Type {
 	case valueApp:
-		if a.App != nil {
-			return val{Type: a.Type, Data: a.App}, nil
-		}
+		return storedPointer(a.Type, a.App, "applicative")
 	case valueService:
-		if a.Service != nil {
-			return val{Type: a.Type, Data: a.Service}, nil
-		}
+		return storedPointer(a.Type, a.Service, "applicative")
 	case valueClass:
-		if a.Class != nil {
-			return val{Type: a.Type, Data: a.Class}, nil
-		}
+		return storedPointer(a.Type, a.Class, "applicative")
 	case valueObject:
-		if a.Object != nil {
-			return val{Type: a.Type, Data: a.Object}, nil
-		}
+		return storedPointer(a.Type, a.Object, "applicative")
 	case valueAttribute:
-		if a.Attribute != nil {
-			return val{Type: a.Type, Data: a.Attribute}, nil
-		}
+		return storedPointer(a.Type, a.Attribute, "applicative")
 	case valueDefinition:
-		if a.Definition != nil {
-			return val{Type: a.Type, Data: a.Definition}, nil
-		}
+		return storedPointer(a.Type, a.Definition, "applicative")
 	case valueFunction:
-		if a.Function != nil {
-			return val{Type: a.Type, Data: a.Function}, nil
-		}
+		return storedPointer(a.Type, a.Function, "applicative")
 	case valueProperty:
-		if a.Property != nil {
-			return val{Type: a.Type, Data: a.Property}, nil
-		}
+		return storedPointer(a.Type, a.Property, "applicative")
 	case valueOperation:
-		if a.Operation != nil {
-			return val{Type: a.Type, Data: a.Operation}, nil
-		}
+		return storedPointer(a.Type, a.Operation, "applicative")
 	}
 	return val{}, lerrors.Internal.Errorf("applicative %s has no readable value", a.Type)
 }
@@ -243,17 +233,11 @@ func (i *iterative) value() (val, error) {
 	}
 	switch i.Type {
 	case valueList:
-		if i.List != nil {
-			return val{Type: i.Type, Data: i.List}, nil
-		}
+		return storedPointer(i.Type, i.List, "iterative")
 	case valueMap:
-		if i.Map != nil {
-			return val{Type: i.Type, Data: i.Map}, nil
-		}
+		return storedPointer(i.Type, i.Map, "iterative")
 	case valueDictionary:
-		if i.Dictionary != nil {
-			return val{Type: i.Type, Data: i.Dictionary}, nil
-		}
+		return storedPointer(i.Type, i.Dictionary, "iterative")
 	}
 	return val{}, lerrors.Internal.Errorf("iterative %s has no readable value", i.Type)
 }
@@ -299,23 +283,15 @@ func (e *entry) value() (val, error) {
 	if payloads != 1 {
 		return val{}, lerrors.Internal.Errorf("entry %q requires one storage payload, got %d", e.ID, payloads)
 	}
-	switch e.Type {
-	case storagePrimitive:
-		if e.Primitive != nil {
-			return e.Primitive.value()
-		}
-	case storageLexeme:
-		if e.Lexeme != nil {
-			return val{Type: valueLexeme, Data: e.Lexeme}, nil
-		}
-	case storageApplicative:
-		if e.Applicative != nil {
-			return e.Applicative.value()
-		}
-	case storageIterative:
-		if e.Iterative != nil {
-			return e.Iterative.value()
-		}
+	switch {
+	case e.Type == storagePrimitive && e.Primitive != nil:
+		return e.Primitive.value()
+	case e.Type == storageLexeme && e.Lexeme != nil:
+		return val{Type: valueLexeme, Data: e.Lexeme}, nil
+	case e.Type == storageApplicative && e.Applicative != nil:
+		return e.Applicative.value()
+	case e.Type == storageIterative && e.Iterative != nil:
+		return e.Iterative.value()
 	}
 	return val{}, lerrors.Internal.Errorf("entry %q has inconsistent %s storage", e.ID, e.Type)
 }
@@ -370,6 +346,7 @@ func initLexicalEntry(definition []byte) (*entry, error) {
 
 // record structures an entry for storage in the Memory of an executing L Program
 type record struct {
+	word                 *lexeme // Explicit invocation/alias morphology belongs to this binding.
 	function             *sourceFunction
 	declarationOwner     *record
 	staticConstructor    *constructionNode

@@ -1,5 +1,5 @@
-    "fraction" is 3.14. Show fraction.
-Show fraction.
+    "fraction" is 3.14. "copy" is fraction.
+"again" is fraction.
 
     "other" is `tail.`.
-Show other.
+"ending" is other.

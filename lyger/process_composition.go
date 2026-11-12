@@ -1,7 +1,6 @@
 package Lyger
 
 import (
-	"fmt"
 	"github.com/l-programming-language/l/lerrors"
 )
 
@@ -78,72 +77,4 @@ func samePlannedApp(left, right *orchestrationValue) bool {
 		return left.App != nil && left.App == right.App
 	}
 	return left.Storage != nil && left.Storage == right.Storage
-}
-
-func (e *orchestrationEmitter) processInstruction(current *orchestrationInstruction) ([]string, error) {
-	if current.App != nil {
-		return e.canonicalProcess(current, e.processReceiver(current))
-	}
-	selected, err := e.value(current.Target)
-	if err != nil {
-		return nil, err
-	}
-	name := fmt.Sprintf("lSelectedApp%d", e.processSelection)
-	e.processSelection++
-	cases := make([]builtinAppCase, 0, len(current.AppCases))
-	for _, branch := range current.AppCases {
-		canonical := e.apps[branch.App]
-		if canonical == "" {
-			return nil, lerrors.Internal.Errorf("dynamic App case has no canonical handle")
-		}
-		// The selected comparison proves this private receiver's canonical target.
-		// Each operation still binds the checked App and its hygienic local.
-		receiver := &builtinProcessReceiver{value: branch.Target, name: name}
-		body, err := e.canonicalProcess(branch, receiver)
-		if err != nil {
-			return nil, err
-		}
-		cases = append(cases, builtinAppCase{canonical: canonical, body: body})
-	}
-	var returned *record
-	if e.functionWords != nil {
-		returned = e.functionWords.Return
-	} else {
-		returned, err = e.compilation.builtinRecord("Function.Return")
-		if err != nil {
-			return nil, err
-		}
-	}
-	return e.composeAppSelection(name, current.Target, selected.text, cases, returned)
-}
-func (e *orchestrationEmitter) canonicalProcess(current *orchestrationInstruction, receiver *builtinProcessReceiver) ([]string, error) {
-	switch current.Source.Kind {
-	case instructionBuild:
-		return e.processes.instantiate(builtinProcessBuild, builtinProcessOperands{receiver: receiver})
-	case instructionRun:
-		return e.processes.instantiate(builtinProcessRun, builtinProcessOperands{receiver: receiver})
-	case instructionStop:
-		return e.processes.instantiate(builtinProcessStop, builtinProcessOperands{receiver: receiver})
-	case instructionAwait:
-		invocation := &builtinProcessInvocation{index: e.invocation}
-		e.invocation++
-		var body []string
-		if current.Continuation != nil {
-			var err error
-			body, err = e.block(current.Continuation, true)
-			if err != nil {
-				return nil, err
-			}
-		}
-		finish, err := e.processes.instantiate(builtinProcessFinish, builtinProcessOperands{invocation: invocation})
-		if err != nil {
-			return nil, err
-		}
-		process, err := e.compilation.processDefinition(append(body, finish...))
-		if err != nil {
-			return nil, err
-		}
-		return e.processes.instantiate(builtinProcessAwait, builtinProcessOperands{receiver: receiver, invocation: invocation, body: &builtinProcessBody{definition: process}})
-	}
-	return nil, lerrors.Internal.Errorf("invalid process operation %s", current.Source.Kind)
 }

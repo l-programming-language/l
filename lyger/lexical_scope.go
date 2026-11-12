@@ -2,7 +2,6 @@ package Lyger
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/l-programming-language/l/lerrors"
@@ -125,15 +124,16 @@ func (d *scopeDeclaration) surfaceForms() []string {
 		}
 		prefix = strings.ToLower(kind) + "."
 	}
-	label, err := strconv.Unquote(string(d.Token.rawBytes))
+	label, err := parseDeclarationLabel(string(d.Token.rawBytes))
 	if err != nil {
 		return nil
 	}
-	parts := strings.Split(strings.ToLower(label), "|")
-	forms := []string{prefix + parts[0]}
+	parts := label.Slots
+	root := strings.ToLower(label.Root)
+	forms := []string{prefix + root}
 	for _, fix := range parts[1:] {
 		if strings.HasPrefix(fix, "-") {
-			forms = append(forms, prefix+processLexFix(parts[0], fix, "postfix"))
+			forms = append(forms, prefix+processLexFix(root, strings.ToLower(fix), "postfix"))
 		}
 	}
 	return forms

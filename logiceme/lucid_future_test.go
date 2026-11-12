@@ -55,7 +55,7 @@ func TestLucidFutureBoundaries(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			input := lucidFutureDocument(c.source)
 			before := bytes.Clone(input)
-			bundle, err := NewLogicemeService(runtimeGenerationResources(t)).Evaluate(input)
+			bundle, err := NewLogicemeService(backendTestResources(t)).Evaluate(input)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -143,7 +143,7 @@ func TestLucidFutureValidation(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			input := lucidFutureDocument(c.source)
 			before := bytes.Clone(input)
-			bundle, err := NewLogicemeService(runtimeGenerationResources(t)).Evaluate(input)
+			bundle, err := NewLogicemeService(backendTestResources(t)).Evaluate(input)
 			if !bytes.Equal(before, input) {
 				t.Fatal("rejection mutated AML")
 			}
@@ -157,7 +157,7 @@ func TestLucidFutureValidation(t *testing.T) {
 	}
 	for _, form := range []string{"CV", "DV", "CO", "COB"} {
 		t.Run(form+" rejects Deferred", func(t *testing.T) {
-			_, err := NewLogicemeService(runtimeGenerationResources(t)).Evaluate(lucidFutureDocument(form + "{|Deferred: ~False~|}"))
+			_, err := NewLogicemeService(backendTestResources(t)).Evaluate(lucidFutureDocument(form + "{|Deferred: ~False~|}"))
 			if !errors.Is(err, lerrors.Unsupported) || !strings.Contains(err.Error(), "Deferred is unsupported") {
 				t.Fatalf("Deferred accepted or misclassified: %v", err)
 			}
@@ -174,7 +174,7 @@ func TestLucidFutureLocalInputs(t *testing.T) {
 		{"DV{|Key: ~Void~|}", "(Void).await"},
 	} {
 		t.Run(local.source, func(t *testing.T) {
-			ss, err := loadSegmentalSystem(runtimeGenerationResources(t))
+			ss, err := loadSegmentalSystem(backendTestResources(t))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -217,7 +217,7 @@ func TestLucidFutureProviderIsolation(t *testing.T) {
 	for _, provider := range []struct {
 		name      string
 		resources fs.FS
-	}{{"filesystem", runtimeGenerationResources(t)}, {"embedded", distribution.Files()}} {
+	}{{"filesystem", backendTestResources(t)}, {"embedded", distribution.Files()}} {
 		t.Run(provider.name, func(t *testing.T) {
 			resources := &lucidRecordingFS{FS: provider.resources, reads: map[string]bool{}}
 			service := NewLogicemeService(resources)
@@ -262,7 +262,7 @@ func TestLucidFutureProviderIsolation(t *testing.T) {
 	}
 	for _, asset := range assets {
 		t.Run("missing "+asset, func(t *testing.T) {
-			resources := lucidFutureMissingFS{FS: runtimeGenerationResources(t), missing: asset}
+			resources := lucidFutureMissingFS{FS: backendTestResources(t), missing: asset}
 			input := bytes.Clone(documents[0])
 			bundle, err := NewLogicemeService(resources).Evaluate(input)
 			if !errors.Is(err, fs.ErrNotExist) || !strings.Contains(err.Error(), asset) {

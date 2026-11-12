@@ -54,12 +54,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Prepare all checks
+      - name: Prepare pinned tools and dependencies
         id: prepare
         uses: ./.github/actions/prepare
         with:
           cold-cache: ${{ inputs.cold_cache && 'true' || 'false' }}
-      - name: Run lint, acceptance, and native compilation
+      - name: Run temporary Hello World and frozen logeme gate
         env:
           CARGO_INCREMENTAL: '0'
         run: scripts/l-check
@@ -68,12 +68,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: checks-${{ matrix.os }}-${{ github.run_attempt }}
-          path: |
-            .harness/runs/
-            .harness/phase1/cli/**/*.stdout
-            .harness/phase1/cli/**/*.stderr
-            .harness/phase1/cli/**/*.json
-            .harness/phase1/cli/**/sources/**/*.l
+          path: .harness/runs/
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 7

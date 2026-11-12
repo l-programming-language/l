@@ -1,9 +1,9 @@
 # Manual releases and documentation deployment
 
-**Publication is manual-only.** The committed [release policy](ci-templates/release-policy.json)
-registers the native publisher and controls production access. A dry run validates
-and packages without publishing; production requires a public repository and an
-authorized dispatch from main. Enabling the policy does not itself create a release.
+**Publication is disabled.** The committed [release policy](ci-templates/release-policy.json)
+has no registered native publisher. The workflows below remain available for
+review and explicitly authorized dry runs; publication requires a separate
+[activation](#deliberate-activation-after-review).
 
 ## Workflows and source identity
 
@@ -14,12 +14,11 @@ or Admin access. Each job checks out the dispatch's captured full SHA. The
 requested version must equal root `VERSION`; the source tag is `vVERSION` at
 that SHA. Merges and tag pushes do not publish anything.
 
-The native publisher runs preparation and canonical `scripts/l-check` on
-`darwin-arm64`, `linux-arm64`, and `linux-amd64`. It retains fresh
-lint, acceptance, and tagged-native reports for every target. Full gates keep
-the existing pins, both unfiltered test phases, watchdogs and concurrency. A
-manual dry run prepares validation and packages without enabling publication.
-Do not dispatch it merely to inspect this implementation: the
+The retained release protocol expects lint, acceptance and tagged-native reports
+on `darwin-arm64`, `linux-arm64` and `linux-amd64`. The current `scripts/l-check`
+runs only the temporary hello-world gate and cannot supply that proof. These
+disabled workflows are not the reset's validation path. Do not dispatch them
+merely to inspect their implementation: the
 [validation policy](../docs/development-harness.md#validation-authorization)
 keeps hosted dispatch authorization separate from local checks.
 
@@ -195,6 +194,9 @@ language fingerprints determine the snapshot; the language release is untouched.
 
 ## Deliberate activation after review
 
+Activation needs a separately reviewed release gate. The temporary hello-world
+gate does not satisfy the retained native release protocol.
+
 1. Verify `l-programming-language/l` is public and immutable releases are enabled.
    Check immutability in Settings before each dispatch: the automatic workflow
    token has no Administration permission to read that setting. Publication
@@ -246,5 +248,5 @@ The legacy-named `npm run ci:verify-disabled` command now validates the committe
 manual release policy as well as unprivileged PR checks. It permits only the three
 reviewed release workflow paths, rejects automatic release triggers, mutable
 Action pins, missing authorization and publication work before authorization.
-The `.yml.disabled` files in `ci-templates/` are retained reviewable templates;
-no runtime helper copies or activates them.
+The canonical workflows live only in `.github/workflows/`; no activation copies
+or alternate workflow templates are retained.

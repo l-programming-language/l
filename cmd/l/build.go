@@ -121,7 +121,7 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 	for i := range ids {
 		destinations[i] = filepath.Join(generationDir, fmt.Sprintf("app-%03d", i))
 	}
-	workspace, err := generated.workspace(c.log, stem, generation, inventory)
+	workspace, err := generated.workspace()
 	if err != nil {
 		return "", err
 	}
@@ -144,9 +144,9 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 		recorder = &nativeBuildRecorder{environment: environment}
 		ctx = context.WithValue(ctx, nativeBuildEvidenceKey{}, recorder)
 	}
-	entry := filepath.Join(stage, "orchestrator")
+	entry := filepath.Join(stage, "entry")
 	setup(nil)
-	buildErr := compileCargoWorkspace(ctx, workspace.apps, workspace.entry, workspace.libraries, workspace.support, filepath.Join(stage, "workspace"), destinations, entry)
+	buildErr := compileCargoWorkspace(ctx, nil, workspace.entry, nil, filepath.Join(stage, "workspace"), nil, entry)
 	if buildErr != nil {
 		buildErr = fmt.Errorf("build Rust workspace: %w", buildErr)
 	}
@@ -155,6 +155,11 @@ func buildExecutable(ctx context.Context, c *compiler, options buildOptions) (bu
 	}
 	if buildErr != nil {
 		return "", buildErr
+	}
+	// The published entry and its immutable generation retain the same Cargo
+	// artifact. There is no generated launcher or process-supervision program.
+	if err := copyCargoArtifact(entry, destinations[0]); err != nil {
+		return "", err
 	}
 	for index, destination := range destinations {
 		content, err := os.ReadFile(destination)
@@ -229,7 +234,7 @@ func validateAssetDestinations(assetRoot string, destinations ...string) error {
 		}
 		return nil
 	}
-	for _, asset := range []string{"builtins", "lexicon", "stdlib"} {
+	for _, asset := range []string{"dictionaries.json", "builtins", "lexicon", "stdlib"} {
 		if err := visit(filepath.Join(assetRoot, asset)); err != nil {
 			return err
 		}

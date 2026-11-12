@@ -8,8 +8,8 @@ import (
 func TestTypedFormalMemberSelection(t *testing.T) {
 	library := "Define any Thing's \"Render|-s|-ed|-ing|-er\" as a New Verb.\n" +
 		"Define any Number's \"Render|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~println!(\"owned {}\", <@Value|Number@>);~|}<DEF>`.\n" +
-		"Create \"IO\" as a Dictionary.\nCreate IO's \"Print|-s|-ed|-ing|-er\" for Processing any Thing's Renderer.\n"
-	source := "Use IO's Print from `io`.\n" +
+		"Create \"Catalog\" as a Dictionary.\nCreate Catalog's \"Print|-s|-ed|-ing|-er\" for Processing any Thing's Renderer.\n"
+	source := "Use Catalog's Print from `catalog`.\n" +
 		"Define any Number's \"Render|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~println!(\"caller {}\", <@Value|Number@>);~|}<DEF>`.\n" +
 		"Create \"Worker\" as a New Basic App.\nThe App Prints 2.\nThe App Prints 3.\n"
 	for _, variant := range []string{"owned", "changed", "missing"} {
@@ -20,7 +20,7 @@ func TestTypedFormalMemberSelection(t *testing.T) {
 				lines := strings.Split(selected, "\n")
 				selected = strings.Join(append(lines[:1], lines[2:]...), "\n")
 			}
-			files["stdlib/eng/io/dictionary.l"].Data = []byte(selected)
+			installTestDictionary(t, files, "catalog", "Catalog", selected)
 			c := NewLygerService(Options{Resources: files}).NewCompilation([]byte(source), "member.l")
 			c.Make()
 			if variant == "missing" {
@@ -41,7 +41,7 @@ func TestTypedFormalMemberSelection(t *testing.T) {
 					t.Fatalf("selected definition was substituted or evaluated repeatedly: %s", step.Expression)
 				}
 				declaration := c.Semantics.Declarations[step.sequence[0].definition]
-				if declaration == nil || declaration.source.Unit.Dictionary != "IO" {
+				if declaration == nil || declaration.source.Unit.Dictionary != "Catalog" {
 					t.Fatalf("member lost its source ownership: %+v", declaration)
 				}
 			}
@@ -51,11 +51,12 @@ func TestTypedFormalMemberSelection(t *testing.T) {
 
 func TestTypedFormalFunctionDependenciesReachAppObject(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
-	files["stdlib/eng/io/dictionary.l"].Data = []byte("Create \"IO\" as a Dictionary.\nDefine any Thing's \"Render|-s|-ed|-ing|-er\" as a New Verb.\n" +
+	installTestDictionary(t, files, "catalog", "Catalog", "Create \"Catalog\" as a Dictionary.\n")
+	files["stdlib/eng/catalog/dictionary.l"].Data = []byte("Create \"Catalog\" as a Dictionary.\nDefine any Thing's \"Render|-s|-ed|-ing|-er\" as a New Verb.\n" +
 		"Define \"Discard|-s|-ed|-ing|-er\" to `<DEF>MOB{|Key: ~_~|}^(<@Value@>)<DEF>`.\n\n" +
 		"    Publicly create any Number's \"Render|-s|-ed|-ing|-er\" as a Generic `owned` Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n" +
-		"Create IO's \"Print|-s|-ed|-ing|-er\" for Processing a New Discarder of any Thing's Renderer.\n")
-	c := NewLygerService(Options{Resources: files}).NewCompilation([]byte("Use IO's Print from `io`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints 2.\nThe App Prints 3.\n"), "member.l")
+		"Create Catalog's \"Print|-s|-ed|-ing|-er\" for Processing a New Discarder of any Thing's Renderer.\n")
+	c := NewLygerService(Options{Resources: files}).NewCompilation([]byte("Use Catalog's Print from `catalog`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints 2.\nThe App Prints 3.\n"), "member.l")
 	c.Make()
 	if c.Error != nil {
 		t.Fatal(c.Error)

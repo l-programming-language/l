@@ -97,10 +97,10 @@ func TestLucidIterationValidation(t *testing.T) {
 			input := lucidRead(t, "iteration-invalid/"+c.name+".aml.txt")
 			before := bytes.Clone(input)
 			lucidWrite(t, filepath.Join(dir, "input.aml.txt"), input)
-			config := runtimeGenerationResources(t)
+			config := backendTestResources(t)
 			resources := &lucidRecordingFS{FS: config, reads: map[string]bool{}}
 			config = resources
-			bundle, err := NewLogicemeService(config).Evaluate(input, GenerationOptions{IncludeRuntime: false})
+			bundle, err := NewLogicemeService(config).Evaluate(input)
 			if !bytes.Equal(input, before) {
 				lucidIssue(t, r, "production validation: mutated input")
 			}
@@ -154,7 +154,7 @@ func TestLucidIterateBranches(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			defer executionRegistryPanicAsFailure(t)
 			r, dir := lucidRecord(t, "iterate-"+c.name, "primitive")
-			ss, err := loadSegmentalSystem(runtimeGenerationResources(t))
+			ss, err := loadSegmentalSystem(backendTestResources(t))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -192,7 +192,7 @@ func TestLucidIterationIsolation(t *testing.T) {
 	for _, provider := range []string{"filesystem", "embedded"} {
 		t.Run(provider, func(t *testing.T) {
 			defer executionRegistryPanicAsFailure(t)
-			config := runtimeGenerationResources(t)
+			config := backendTestResources(t)
 			if provider == "embedded" {
 				config = distribution.Files()
 			}
@@ -206,7 +206,7 @@ func TestLucidIterationIsolation(t *testing.T) {
 				input := lucidRead(t, name+".aml.txt")
 				before := bytes.Clone(input)
 				lucidWrite(t, filepath.Join(dir, "input.aml.txt"), input)
-				got, err := service.Evaluate(input, GenerationOptions{IncludeRuntime: false})
+				got, err := service.Evaluate(input)
 				if !bytes.Equal(input, before) {
 					lucidIssue(t, r, "production isolation: mutated complete AML input")
 				}
@@ -250,7 +250,7 @@ func TestLucidIterationIsolation(t *testing.T) {
 }
 
 func TestLucidIterationAssetProviders(t *testing.T) {
-	config := runtimeGenerationResources(t)
+	config := backendTestResources(t)
 	filesystem := config
 	config = distribution.Files()
 	embedded := config
@@ -265,7 +265,7 @@ func TestLucidIterationAssetProviders(t *testing.T) {
 	// or an all-rejections implementation satisfying the malformed cases.
 	input := lucidRead(t, "communication.aml.txt")
 	before := bytes.Clone(input)
-	got, err := NewLogicemeService(config).Evaluate(input, GenerationOptions{})
+	got, err := NewLogicemeService(config).Evaluate(input)
 	if err != nil {
 		t.Fatal(err)
 	}

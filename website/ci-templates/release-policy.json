@@ -3,11 +3,8 @@
   "repository": "l-programming-language/l",
   "productionBranch": "main",
   "origin": "https://ldocs.org",
-  "publicationEnabled": true,
+  "publicationEnabled": false,
   "targets": ["darwin-arm64", "linux-arm64", "linux-amd64"],
-  "nativePublisher": {
-    "workflowId": 397906834,
-    "workflowPath": ".github/workflows/release.yml"
-  },
-  "activationPrerequisite": "Publication requires manual Maintain/Admin dispatch from main, a public repository, main-only environments and compatible release settings. Publication uses this repository's GITHUB_TOKEN; Apple signing credentials are required from v1.0.0. Merges and tag pushes do not publish releases."
+  "nativePublisher": null,
+  "activationPrerequisite": "Publication is disabled. A separately reviewed activation must register the native publisher and authorize manual Maintain/Admin dispatch from main. Merges and tag pushes do not publish releases."
 }

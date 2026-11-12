@@ -33,16 +33,6 @@
       "generated": false
     },
     {
-      "source": "docs/guide/values.md",
-      "route": "/docs/guide/values/",
-      "title": "Values",
-      "description": "Use Text, Number and Truth values and display their output.",
-      "section": "Learn L",
-      "order": 2,
-      "role": "explanatory",
-      "generated": false
-    },
-    {
       "source": "docs/guide/names-and-paragraphs.md",
       "route": "/docs/guide/names-and-paragraphs/",
       "title": "Names and paragraphs",
@@ -63,42 +53,12 @@
       "generated": false
     },
     {
-      "source": "docs/guide/control-flow.md",
-      "route": "/docs/guide/control-flow/",
-      "title": "Control flow",
-      "description": "Use conditions, ordered actions and Exit.",
-      "section": "Learn L",
-      "order": 5,
-      "role": "explanatory",
-      "generated": false
-    },
-    {
       "source": "docs/guide/imports.md",
       "route": "/docs/guide/imports/",
       "title": "Imports",
       "description": "Import library dictionaries and source files with local aliases.",
       "section": "Learn L",
       "order": 6,
-      "role": "explanatory",
-      "generated": false
-    },
-    {
-      "source": "docs/guide/apps-and-services.md",
-      "route": "/docs/guide/apps-and-services/",
-      "title": "Apps and Services",
-      "description": "Organize App processes and their Service libraries.",
-      "section": "Learn L",
-      "order": 7,
-      "role": "explanatory",
-      "generated": false
-    },
-    {
-      "source": "docs/guide/lifecycle.md",
-      "route": "/docs/guide/lifecycle/",
-      "title": "Lifecycle and output",
-      "description": "Run, stop and await Apps, then read their captured output.",
-      "section": "Learn L",
-      "order": 8,
       "role": "explanatory",
       "generated": false
     },
@@ -117,7 +77,7 @@
       "source": "docs/cli/index.md",
       "route": "/docs/cli/",
       "title": "CLI overview",
-      "description": "Commands for building L programs, inspecting contracts, and checking the compiler version.",
+      "description": "Commands for building L programs, recording native build evidence and checking the compiler version.",
       "section": "CLI",
       "order": 0,
       "role": "explanatory",
@@ -155,32 +115,12 @@
       "generated": false
     },
     {
-      "source": "docs/cli/runtime.md",
-      "route": "/docs/cli/runtime/",
-      "title": "Run a built program",
-      "description": "Launch a built program and keep its companion files together.",
-      "section": "CLI",
-      "order": 3,
-      "role": "explanatory",
-      "generated": false
-    },
-    {
       "source": "docs/cli/troubleshooting.md",
       "route": "/docs/cli/troubleshooting/",
       "title": "Troubleshooting",
       "description": "Resolve toolchain, compilation and program execution failures.",
       "section": "CLI",
       "order": 4,
-      "role": "explanatory",
-      "generated": false
-    },
-    {
-      "source": "docs/contracts.md",
-      "route": "/docs/cli/contracts/",
-      "title": "Contracts reference",
-      "description": "Inspect bindings, enforce contract profiles, and verify source adjectives with explicit assurance scopes.",
-      "section": "CLI",
-      "order": 5,
       "role": "explanatory",
       "generated": false
     },
@@ -248,7 +188,7 @@
       "source": "docs/spec/names-and-scope.md",
       "route": "/docs/spec/names-and-scope/",
       "title": "Names, scope, and evaluation state",
-      "description": "Binding, visibility, definite assignment and captured values.",
+      "description": "Binding, visibility, canonical identity and definite assignment.",
       "section": "Language reference",
       "order": 6,
       "role": "normative",
@@ -297,8 +237,8 @@
     {
       "source": "docs/spec/execution.md",
       "route": "/docs/spec/execution/",
-      "title": "Execution and lifecycle",
-      "description": "App lifecycle, captured streams, continuations and cleanup.",
+      "title": "Execution",
+      "description": "Standalone App execution and explicitly unavailable runtime effects.",
       "section": "Language reference",
       "order": 11,
       "role": "normative",
@@ -347,33 +287,13 @@
       "sidebar": false
     },
     {
-      "source": "docs/reference/builtins/index.md",
-      "route": "/docs/reference/builtins/",
-      "title": "Builtin reference",
-      "description": "Implicit language facilities available without an import.",
-      "section": "Libraries",
-      "order": 10,
-      "role": "normative",
-      "generated": false
-    },
-    {
-      "source": "docs/reference/builtins/definitions.md",
-      "route": "/docs/reference/builtins/definitions/",
-      "title": "Construction and definition builtins",
-      "description": "Builtins for constructing Apps and defining behavior.",
-      "section": "Libraries",
-      "order": 15,
-      "role": "normative",
-      "generated": false
-    },
-    {
-      "source": "docs/reference/builtins/lifecycle.md",
-      "route": "/docs/reference/builtins/lifecycle/",
-      "title": "Lifecycle and observation builtins",
-      "description": "Build, Run, Stop, Await, Start, Execute, Show and Exit.",
-      "section": "Libraries",
-      "order": 15,
-      "role": "normative",
+      "source": "docs/reference/words.md",
+      "route": "/docs/words/",
+      "title": "Native Words",
+      "description": "Alphabetical index of implicit builtin, core and configured grammatical words.",
+      "section": "Language reference",
+      "order": -1,
+      "role": "explanatory",
       "generated": false
     },
     {
@@ -552,26 +472,6 @@
       "sidebar": false
     },
     {
-      "source": "docs/stdlib/index.md",
-      "route": "/docs/stdlib/",
-      "title": "Standard library",
-      "description": "Available library dictionaries and how to import them.",
-      "section": "Libraries",
-      "order": 0,
-      "role": "explanatory",
-      "generated": false
-    },
-    {
-      "source": "docs/stdlib/eng/io.md",
-      "route": "/docs/stdlib/eng/io/",
-      "title": "IO",
-      "description": "Value printing, borrowed byte output, line completion and IO failures.",
-      "section": "Libraries",
-      "order": 1,
-      "role": "explanatory",
-      "generated": false
-    },
-    {
       "source": "docs/internals/index.md",
       "route": "/docs/internals/",
       "title": "Inside the compiler",
@@ -579,16 +479,6 @@
       "section": "Internals",
       "order": 0,
       "role": "explanatory",
-      "generated": false
-    },
-    {
-      "source": "docs/internals/storage.md",
-      "route": "/docs/internals/storage/",
-      "title": "Storage compositions",
-      "description": "Internal source words for results, traversal, returns, ownership and bytes.",
-      "section": "Internals",
-      "order": 1,
-      "role": "implementation",
       "generated": false
     },
     {
@@ -605,7 +495,7 @@
       "source": "docs/cli-build.md",
       "route": "/docs/internals/build-and-runtime/",
       "title": "Building and running L programs",
-      "description": "Native workspace planning, executable publication and process semantics.",
+      "description": "Standalone App source generation, native compilation and executable publication.",
       "section": "Internals",
       "order": 11,
       "role": "normative",
@@ -620,17 +510,6 @@
       "order": 12,
       "role": "implementation",
       "generated": false
-    },
-    {
-      "source": "docs/contracts-evidence.md",
-      "route": "/docs/internals/contracts-evidence/",
-      "title": "Contracts evidence",
-      "description": "Historical validation pointers, source identities and evidence availability.",
-      "section": "Internals",
-      "order": 13,
-      "role": "implementation",
-      "generated": false,
-      "sidebar": false
     },
     {
       "source": "logiceme/AML.md",
@@ -713,6 +592,16 @@
       "role": "explanatory",
       "generated": false,
       "sidebar": false
+    },
+    {
+      "source": "docs/reference/word-glossary.md",
+      "route": "/docs/word-glossary/",
+      "title": "Word Glossary",
+      "description": "Configured grammar and retained core declarations, with current executable support boundaries.",
+      "section": "Language reference",
+      "order": -0.5,
+      "role": "explanatory",
+      "generated": false
     }
   ]
 }

@@ -85,10 +85,10 @@ func TestLucidSelectionValidation(t *testing.T) {
 			input := lucidRead(t, "selection-invalid/"+c.name+".aml.txt")
 			before := bytes.Clone(input)
 			lucidWrite(t, filepath.Join(dir, "input.aml.txt"), input)
-			config := runtimeGenerationResources(t)
+			config := backendTestResources(t)
 			resources := &lucidRecordingFS{FS: config, reads: map[string]bool{}}
 			config = resources
-			bundle, err := NewLogicemeService(config).Evaluate(input, GenerationOptions{IncludeRuntime: false})
+			bundle, err := NewLogicemeService(config).Evaluate(input)
 			if !bytes.Equal(input, before) {
 				lucidIssue(t, r, "production validation: mutated input")
 			}
@@ -128,7 +128,7 @@ func TestLucidSelectionIsolation(t *testing.T) {
 	for _, provider := range []string{"filesystem", "embedded"} {
 		t.Run(provider, func(t *testing.T) {
 			defer executionRegistryPanicAsFailure(t)
-			config := runtimeGenerationResources(t)
+			config := backendTestResources(t)
 			if provider == "embedded" {
 				config = distribution.Files()
 			}
@@ -140,7 +140,7 @@ func TestLucidSelectionIsolation(t *testing.T) {
 				input := lucidRead(t, name+".aml.txt")
 				before := bytes.Clone(input)
 				lucidWrite(t, filepath.Join(dir, "input.aml.txt"), input)
-				got, err := service.Evaluate(input, GenerationOptions{IncludeRuntime: false})
+				got, err := service.Evaluate(input)
 				if !bytes.Equal(input, before) {
 					lucidIssue(t, r, "production isolation: mutated complete AML input")
 				}
@@ -177,7 +177,7 @@ func TestLucidSelectionIsolation(t *testing.T) {
 // An explicit resource provider must account for the same frozen files as the
 // embedded provider; successful compilation is not needed to prove selection.
 func TestLucidSelectionAssetProviders(t *testing.T) {
-	config := runtimeGenerationResources(t)
+	config := backendTestResources(t)
 	filesystem := config
 	config = distribution.Files()
 	embedded := config
@@ -198,7 +198,7 @@ func TestLucidSelectionAssetProviders(t *testing.T) {
 	// The known valid original control also prevents an all-rejections path
 	// from masquerading as validation coverage for the selected language.
 	input := lucidRead(t, "communication.aml.txt")
-	got, err := NewLogicemeService(config).Evaluate(input, GenerationOptions{})
+	got, err := NewLogicemeService(config).Evaluate(input)
 	if err != nil {
 		t.Fatal(err)
 	}

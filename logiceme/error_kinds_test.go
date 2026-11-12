@@ -13,7 +13,7 @@ import (
 )
 
 func TestBackendErrorKindsAtPublicBoundary(t *testing.T) {
-	config := runtimeGenerationResources(t)
+	config := backendTestResources(t)
 	missing := filepath.Join(t.TempDir(), "absent")
 	for _, tc := range []struct {
 		name, message string
@@ -21,12 +21,8 @@ func TestBackendErrorKindsAtPublicBoundary(t *testing.T) {
 		run           func() error
 	}{
 		{"nil service", "source generator configuration is required", lerrors.InvalidConfiguration, func() error { _, err := (*LogicemeService)(nil).Evaluate(nil); return err }},
-		{"options", "source generation accepts at most one options value", lerrors.InvalidInput, func() error {
-			_, err := NewLogicemeService(config).Evaluate(nil, GenerationOptions{}, GenerationOptions{})
-			return err
-		}},
 		{"asset read", missing, lerrors.IO, func() error { _, err := ReadSysFile(missing); return err }},
-		{"templates", "builtins/templates/config/config.lu", lerrors.IO, func() error { _, err := loadSupportTemplates(os.DirFS(missing), false); return err }},
+		{"templates", "builtins/templates/config/config.lu", lerrors.IO, func() error { _, err := loadSupportTemplates(os.DirFS(missing)); return err }},
 		{"evaluate assets", "builtins/segments/consonants/execute.lu", lerrors.IO, func() error { _, err := NewLogicemeService(os.DirFS(missing)).Evaluate(nil); return err }},
 		{"evaluate AML", "Rust document requires exactly one complete STRUCTURE", lerrors.Syntax, func() error { _, err := NewLogicemeService(config).Evaluate([]byte("<PROGRAM></PROGRAM>")); return err }},
 	} {

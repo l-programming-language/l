@@ -45,7 +45,7 @@ let passed = false, failure;
 try {
   await mkdir(join(sandbox, 'sources'));
   // This is a release-user example, independent of repository fixtures and Go.
-  await writeFile(join(sandbox, 'sources/main.l'), 'Use IO\'s Print from `io` as "Print".\n\n"message" is `Hello World!`.\nCreate "Hello" as a New Basic App.\nThe App Prints message.\nExecute Hello.\nShow Hello\'s Output.\n');
+  await writeFile(join(sandbox, 'sources/main.l'), '"message" is `Hello World!`.\nCreate "Hello" as a New Basic App.\nThe App Prints message.\n');
   await run('bash', [join(directory, 'install-release.sh'), '--from-dir', directory, '--version', record.version, '--prefix', join(sandbox, 'bin'), '--with-toolchain'], 15 * 60 * 1000);
   env.PATH = `${join(sandbox, 'bin')}:${join(env.CARGO_HOME, 'bin')}:${process.env.PATH}`;
   const binary = join(sandbox, 'bin/l');

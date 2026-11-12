@@ -218,3 +218,24 @@ func TestBuildCommandEmptyProcessArguments(t *testing.T) {
 		t.Fatal("an empty process argument list should return a command error")
 	}
 }
+
+func TestRemovedContractCommandsAreUnknown(t *testing.T) {
+	for _, args := range [][]string{
+		{"contracts"}, {"contracts", "--help"}, {"contracts", "inspect", "missing.l"},
+		{"contracts", "check", "--profile", "NoBlocking", "missing.l"},
+		{"contracts", "explain", "--binding", "meaning", "missing.l"},
+		{"contracts", "verify-dictionary", "missing"},
+		{"contracts", "evidence", "capture", "--output", "missing.json", "missing.l"},
+	} {
+		t.Run(strings.Join(args, " "), func(t *testing.T) {
+			var stdout, stderr bytes.Buffer
+			status := run(context.Background(), args, &stdout, &stderr)
+			if status != 2 || stdout.Len() != 0 || !strings.Contains(stderr.String(), `unknown command "contracts"; expected build`) {
+				t.Fatalf("removed command returned status %d, stdout=%q stderr=%q", status, stdout.String(), stderr.String())
+			}
+			if !strings.Contains(stderr.String(), buildUsage) || strings.Contains(buildUsage, "l contracts") {
+				t.Fatal("unknown command did not report the current build interface")
+			}
+		})
+	}
+}

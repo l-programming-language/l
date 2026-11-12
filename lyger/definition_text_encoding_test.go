@@ -96,7 +96,7 @@ func TestDefinitionTextEncodingBindings(t *testing.T) {
 func definitionTextMainCalls(t *testing.T, bundle Logiceme.Executable, function string) []string {
 	t.Helper()
 	file := observeBundleMain(t, bundle)
-	method := observedMethodName(function)
+	method := function
 	fn := file.function(t, "main")
 	var values []string
 	for _, call := range nativetest.RustCalls(fn.Body) {
@@ -152,7 +152,7 @@ func TestDefinitionTextEncodingGeneratedLiterals(t *testing.T) {
 			template := parseTestDefinition(t, `<DEF>BOD^E{|Statement: ~::std::println!("{}", <@Value|Thing@>);~|}<DEF>`)
 			instance := bindTestDefinition(t, template, map[string]DefinitionArgument{"Value": {Kind: "Text", Text: tc.text}})
 			document := []byte(`<PROGRAM><STRUCTURE><BOOK "TextEncoding"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`</S|><|S|>`FW{|Key: ~main~|}^W^" + instance.Expression + "`</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>")
-			bundle, err := backend.Evaluate(document, Logiceme.GenerationOptions{IncludeRuntime: false})
+			bundle, err := backend.Evaluate(document)
 			recordBundle(t, bundle)
 			if err != nil {
 				t.Fatal(err)

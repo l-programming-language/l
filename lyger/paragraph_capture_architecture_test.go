@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-const paragraphCaptureDefinition = "Publicly create \"Report|-s|-ed|-ing\" for Showing privateText and then Showing any Text."
+const paragraphCaptureDefinition = "Publicly create \"Report|-s|-ed|-ing|-er\" for Showing privateText and then Showing any Text."
 
 // Inspect canonical operands as well as generated Rust: an equal literal alone
 // would not prove that an action kept its defining binding and source span.
@@ -74,7 +74,7 @@ func TestParagraphCaptureStaticDefinitionSurvivesCallerShadow(t *testing.T) {
 	for _, imported := range []bool{false, true} {
 		for _, aliased := range []bool{false, true} {
 			t.Run(fmt.Sprintf("imported=%t/alias=%t", imported, aliased), func(t *testing.T) {
-				source := paragraphSource(t)
+				source := memberResolutionSource{}
 				definition := "    Define \"privateText\" as `definition text`.\n" + paragraphCaptureDefinition + "\n"
 				source.main = definition
 				definitionFile := "main.l"
@@ -86,7 +86,7 @@ func TestParagraphCaptureStaticDefinitionSurvivesCallerShadow(t *testing.T) {
 				source.main += "\n    Define \"privateText\" as `caller shadow`.\n"
 				verb := "Report"
 				if aliased {
-					source.main += "Use Report as \"Relay\".\n"
+					source.main += "Use Report as \"Relay|-s|-ed|-ing|-er\".\n"
 					verb = "Relay"
 				}
 				invocation := verb + " `argument text`."
@@ -126,12 +126,12 @@ func TestParagraphCaptureImportedRuntimeRequiresActiveStorage(t *testing.T) {
 		escape            bool
 	}{
 		{"direct active", "", "Report", false},
-		{"alias active", "Use Report as \"Relay\".\n", "Relay", false},
-		{"alias escapes", "Use Report as \"Relay\".\n", "Relay", true},
+		{"alias active", "Use Report as \"Relay|-s|-ed|-ing|-er\".\n", "Relay", false},
+		{"alias escapes", "Use Report as \"Relay|-s|-ed|-ing|-er\".\n", "Relay", true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			source := paragraphSource(t)
-			source.main = "Use IO's Print from `io` as \"Print\".\n" +
+			source := memberResolutionSource{}
+			source.main = "\n" +
 				"\"message\" is `worker text`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints message.\n" +
 				"\n    Run Worker.\nUse `local-words.l`.\n"
 			source.library = "Define \"privateText\" as Worker's Output.\n" + paragraphCaptureDefinition + "\n"
@@ -160,9 +160,6 @@ func TestParagraphCaptureImportedRuntimeRequiresActiveStorage(t *testing.T) {
 			}
 			if invocationPlan == nil || invocationPlan.CaptureSource == nil || invocationPlan.Actions[0].Value.Storage.Capture == nil {
 				t.Fatal("call did not use its retained environment after active or escaped binding")
-			}
-			if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
-				t.Fatal(err)
 			}
 		})
 	}

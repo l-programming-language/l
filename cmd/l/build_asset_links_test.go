@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,15 +14,15 @@ import (
 
 func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 	for _, tc := range []struct {
-		name, resource string
-		directoryLink  bool
-		hardLink       bool
+		name, resource, diagnostic string
+		directoryLink              bool
+		hardLink                   bool
 	}{
-		{"dictionary index", "stdlib/index.json", false, false},
-		{"grammar", "lexicon/eng/grammar.json", false, false},
-		{"runtime host adapter", "builtins/templates/runtime/host.lu", false, false},
-		{"nested directory", "builtins/templates/runtime/host.lu", true, false},
-		{"hard link", "stdlib/index.json", false, true},
+		{"dictionary index", "dictionaries.json", "compiler assets", false, false},
+		{"grammar", "lexicon/eng/grammar.json", "compiler assets", false, false},
+		{"core", "builtins/eng/core.l", "source input", false, false},
+		{"nested directory", "builtins/eng/core.l", "source input", true, false},
+		{"hard link", "dictionaries.json", "compiler assets", false, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			assets := distributiontest.CompleteOverride(t)
@@ -64,13 +65,15 @@ func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 				t.Fatal(err)
 			}
 			main := filepath.Join(t.TempDir(), filepath.Base(output)+".l")
-			source := "Use IO's Print from `io` as \"Print\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints `linked resource`.\nExecute Worker.\n"
+			source := "Create \"Worker\" as a New Basic App.\nThe App Prints `linked resource`.\n"
 			if err := os.WriteFile(main, []byte(source), 0600); err != nil {
 				t.Fatal(err)
 			}
 			c, options := pathTestCompiler(t, assets, main, outside)
 			_, err = buildExecutable(context.Background(), c, options)
-			if err == nil || !strings.Contains(err.Error(), "compiler assets") {
+			// Core is also consumed source, so source-input protection rejects
+			// its destination before the remaining compiler-resource checks.
+			if err == nil || !strings.Contains(err.Error(), tc.diagnostic) {
 				t.Fatalf("linked compiler resource destination accepted or wrong prerequisite failed: %v", err)
 			}
 			after, err := os.ReadFile(output)
@@ -78,5 +81,19 @@ func TestBuildProtectsLinkedResourceFiles(t *testing.T) {
 				t.Fatalf("linked resource changed: %v", err)
 			}
 		})
+	}
+}
+
+func TestAssetDestinationsIgnoreRetiredRuntimeRoot(t *testing.T) {
+	assets := distributiontest.CompleteOverride(t)
+	output := filepath.Join(t.TempDir(), "program")
+	if err := validateAssetDestinations(assets, output); err != nil {
+		t.Fatalf("complete provider control: %v", err)
+	}
+	if err := os.Symlink(filepath.Join(t.TempDir(), "missing"), filepath.Join(assets, "runtime")); err != nil {
+		t.Fatal(err)
+	}
+	if err := validateAssetDestinations(assets, output); err != nil {
+		t.Fatalf("retired root affected the selected provider: %v", err)
 	}
 }

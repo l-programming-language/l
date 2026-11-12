@@ -108,13 +108,6 @@ func TestDefinitionNullIsTypedAtom(t *testing.T) {
 	}
 }
 
-func TestDefinitionNullCompleteApplication(t *testing.T) {
-	source := []byte("Use IO's Print from `io`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints Null.\n")
-	if got := runSourceIO(t, source, "null-io.l"); !bytes.Equal(got, []byte("<nil>\n")) {
-		t.Fatalf("Null output: %q", got)
-	}
-}
-
 func TestDefinitionLifetimeCompleteApplication(t *testing.T) {
 	flat := parseTestDefinition(t, `<DEF>FW{|Key: ~borrow~, Lifetimes: ~'a~, Inputs: ~&[Prop{Key: value, Type: &'a str}Prop]&~, Outputs: ~&[&'a str]&~|}^W^BOD^E{|Statement: ~return value;~|}<DEF>`)
 	borrow := bindTestDefinition(t, flat, nil)
@@ -130,12 +123,12 @@ func TestDefinitionLifetimeCompleteApplication(t *testing.T) {
 		words.WriteString("<|W|><|S|>`" + expression + "`</S|></W|>")
 	}
 	document := `<PROGRAM><STRUCTURE><BOOK "Worker"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main">` + words.String() + `</SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`
-	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate([]byte(document), Logiceme.GenerationOptions{})
+	bundle, err := Logiceme.NewLogicemeService(canonicalTestOptions().Resources).Evaluate([]byte(document))
 	recordBundle(t, bundle)
 	if err != nil {
 		t.Fatal(err)
 	}
-	binary := buildActualBundle(t, bundle, "Worker", false, "")
+	binary := buildActualBundle(t, bundle, "Worker")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	command := exec.CommandContext(ctx, binary)

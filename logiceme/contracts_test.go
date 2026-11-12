@@ -9,17 +9,13 @@ import (
 
 func TestContractsBackendPreflight(t *testing.T) {
 	service := NewLogicemeService(nil)
-	for _, runtime := range []bool{false, true} {
+	{
 		input := libraryFixture(t)
-		if runtime {
-			input = workspaceRuntimeInput()
-		}
-		options := GenerationOptions{IncludeRuntime: runtime}
-		ordinary, err := service.Evaluate(input, options)
+		ordinary, err := service.Evaluate(input)
 		if err != nil {
 			t.Fatal(err)
 		}
-		prepared, err := service.PrepareContractGeneration(input, options)
+		prepared, err := service.PrepareContractGeneration(input)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -51,44 +47,24 @@ func TestContractsBackendPreflight(t *testing.T) {
 	}
 }
 
-func TestContractsWorkspacePreflight(t *testing.T) {
-	service := NewLogicemeService(nil)
-	placement := WorkspaceRuntime{Package: "l_runtime_support", RelativeDirectory: "../support/runtime"}
-	ordinary, support, err := service.EvaluateWorkspaceEntry(workspaceRuntimeInput(), placement)
-	if err != nil {
-		t.Fatal(err)
-	}
-	prepared, err := service.PrepareWorkspaceContractGeneration(workspaceRuntimeInput(), placement)
-	if err != nil {
-		t.Fatal(err)
-	}
-	generated, library, err := prepared.RenderWorkspace()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !reflect.DeepEqual(ordinary, generated) || !reflect.DeepEqual(support, library) {
-		t.Fatal("workspace preflight changed entry sources")
-	}
-}
-
 func TestContractsBackendDependenciesInvalidateAssurance(t *testing.T) {
 	service := NewLogicemeService(nil)
 	system, err := loadSegmentalSystem(service.resources)
 	if err != nil {
 		t.Fatal(err)
 	}
-	templates, err := loadSupportTemplates(service.resources, false)
+	templates, err := loadSupportTemplates(service.resources)
 	if err != nil {
 		t.Fatal(err)
 	}
 	input := libraryFixture(t)
-	first, err := prepareContractGeneration(input, system, templates, GenerationOptions{}, nil, true)
+	first, err := prepareContractGeneration(input, system, templates, true)
 	if err != nil {
 		t.Fatal(err)
 	}
 	// A temporary in-memory body change leaves the frozen resource untouched.
 	system.Declaration.Content = append(append([]byte(nil), system.Declaration.Content...), '\n')
-	second, err := prepareContractGeneration(input, system, templates, GenerationOptions{}, nil, true)
+	second, err := prepareContractGeneration(input, system, templates, true)
 	if err != nil {
 		t.Fatal(err)
 	}

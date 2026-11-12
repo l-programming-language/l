@@ -16,27 +16,24 @@ func TestAppBodyRejectsRuntimeCaptures(t *testing.T) {
 					name, aliases = "copy", "Use message as \"first\".\nUse first as \"copy\".\n"
 				}
 				t.Run(literal+"/"+condition+"/"+name, func(t *testing.T) {
-					source := distributionIOImport + "If " + condition + ", define \"message\" as " + literal + ".\n" + aliases +
+					source := distributionCorePrefix + "If " + condition + ", define \"message\" as " + literal + ".\n" + aliases +
 						"Create \"Worker\" as a New Basic App.\nThe App Prints " + name + ".\nExecute Worker.\n"
 					distributionNegative(t, source, "runtime value message cannot be captured by an App body", lerrors.Unsupported)
 				})
 			}
 		}
 	}
-	// IO.Print itself composes Process and its private typed Print definitions. An
-	// alias must retain that composition and the original value's identity.
-	distributionNegative(t, distributionIOImport+"Use Print as \"Display\".\nIf false, define \"message\" as `payload`.\nCreate \"Worker\" as a New Basic App.\nThe App Displays message.\n", "runtime value message cannot be captured by an App body", lerrors.Unsupported)
+	// Core Print composes Process with its private Logger. An alias must
+	// retain that composition and the original value's identity.
+	distributionNegative(t, distributionCorePrefix+"Use Print as \"Display|-s|-ed|-ing|-er\".\nIf false, define \"message\" as `payload`.\nCreate \"Worker\" as a New Basic App.\nThe App Displays message.\n", "runtime value message cannot be captured by an App body", lerrors.Unsupported)
 }
 
 func TestAppBodyRetainsStaticCaptures(t *testing.T) {
 	for _, declaration := range []string{"\"message\" is `static payload`.\n", "Define \"message\" as `static payload`.\n"} {
-		source := distributionIOImport + declaration + "Use message as \"copy\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints copy.\nExecute Worker.\n"
+		source := distributionCorePrefix + declaration + "Use message as \"copy\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints copy.\nExecute Worker.\n"
 		result := requireDistributionFrontend(t, source, nil)
 		if !strings.Contains(string(result.BackendAML), "static payload") {
 			t.Fatal("static App capture lost its explicit source value")
-		}
-		if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
-			t.Fatal(err)
 		}
 	}
 }
@@ -75,6 +72,6 @@ func TestRuntimeRecordsFollowExpandedActionsAndAliases(t *testing.T) {
 
 func TestAppBodyRejectsConditionalComposedDefinition(t *testing.T) {
 	source := "If false, define \"Log|-s|-ged|-ging|-ger\" to `<DEF>BOD^E{|Statement: ~::std::println!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n" +
-		"Use Log as \"Emit\".\nCreate \"Speak|-s|-ed|-ing\" for Processing a New Emit.\nCreate \"Worker\" as a New Basic App.\nThe App Speaks `payload`.\n"
+		"Use Log as \"Emit|-s|-ted|-ting|-ter\".\nCreate \"Speak|-s|----oke|-ing|-er\" for Processing a New Emitter.\nCreate \"Worker\" as a New Basic App.\nThe App Speaks `payload`.\n"
 	distributionNegative(t, source, "runtime value Log cannot be captured by an App body", lerrors.Unsupported)
 }

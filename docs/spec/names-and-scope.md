@@ -1,79 +1,65 @@
 # Names, scope, and evaluation state
 
-L resolves names before emitting Rust. Paragraph boundaries determine lexical scope; runtime activations determine when values are initialized and retained.
+L resolves names before emitting Rust. Source ownership, lexical scope and canonical identity remain distinct from executable support.
 
 ## Declarations and definitions
 
-Quoted labels declare names. `Create` introduces a category or action, `Define` supplies a value or native definition, and `"name" is value` declares or assigns. The grammatical site and resolved value determine their meaning.
-
-A statement publishes its declarations together, preserving separate coordinated targets and source order. Failure leaves existing bindings intact. Duplicate names in one namespace reject; private scopes may reuse spellings. Dependency retries do not reorder execution or pronouns. Forward local names reserve their spellings before lookup considers outer names or builtins.
-
-<!-- example:binding-forward-member -->
-
-Both indented `Show App's Label` occurrences bind the local Label, including the earlier occurrence. The final Show binds the outer Label. This binding witness does not authorize reading an unassigned runtime value: [definite assignment](#runtime-storage-and-definite-assignment) is checked separately.
+Quoted labels declare names. Grammar and resolved values determine whether a declaration introduces a value, action, native definition or descriptor. A complete declaration batch publishes atomically; rejection leaves existing bindings intact. Forward local declarations reserve names before lookup can bind an outer meaning.
 
 ## Paragraph scope
 
-An ordinary paragraph uses its program or dictionary's environment. Four spaces before its first code line create a private scope. Parent bindings remain available unless shadowed; siblings cannot access each other's private declarations.
+Four spaces before a paragraph's first code line open a private scope. A physical blank line outside comments or literals ends it. Parent bindings remain visible unless shadowed; private sibling bindings do not.
 
-Public/Publicly publish only the selected declaration into the source unit's root, retaining its identity. They do not expose other declarations or a private owner's namespace. Each visibility modifier must target one declaration in its clause.
+Public/Publicly publish the selected declaration into its source unit's root without exposing other private members or changing canonical identity.
 
-<!-- example:local-shadowing -->
+### Public
 
-Each indented paragraph owns its `message`; the final Show reads the outer one. Expected stdout is `inner7truesecondouter`, without a newline.
+[Public in the Word Glossary](../reference/word-glossary.md#word-builtin-public).
 
-<!-- example:binding-public-scalars -->
+### Publicly
 
-This private paragraph publishes Greeting, Count and Enabled. Later paragraphs in the [complete example](../../demo/paragraphs/public-values.l) can name them. The excerpt omits the subsequent Dictionary and Show statements.
+[Publicly in the Word Glossary](../reference/word-glossary.md#word-builtin-publicly).
 
 ## Pronouns
 
-It, this and that bind the last subject **defined** in their original source paragraph. References within a statement use its incoming subject; coordinated declarations establish the next subject in source order. Mentioning an object or executing an action does not change it. A new paragraph has no inherited antecedent.
+It, this and that bind the last subject defined in their original paragraph. Mentioning an operand does not change the subject. A new paragraph has no inherited antecedent. In the [basic program](../guide/first-program.md), `The App` selects the App just created.
 
-<!-- example:binding-pronoun-alias -->
+A source action can bind a pronoun to its typed argument. Imported occurrences retain their own paragraph provenance rather than replacing the caller's antecedent.
 
-`Use Worker as "Job"` makes Job the latest subject. `Start it` starts that same App; both Await statements address its invocation, and `Job's Output` reads finalized stdout. Expected output is `canonical\n` once.
+### It
 
-<!-- example:binding-pronoun-boundary -->
+[It in the Word Glossary](../reference/word-glossary.md#word-grammar-word-it).
 
-This example rejects: `Await it` begins a paragraph without a subject. Use Worker explicitly and launch it before Await; changing the pronoun alone does not launch it.
+### This
 
-Within an action definition, a pronoun may bind a preceding `any` parameter, as in Start's “Building any App and then Running it”. Ambiguous generic antecedents reject. Imports retain their own paragraph origins and cannot replace the caller's antecedent.
+[This in the Word Glossary](../reference/word-glossary.md#word-grammar-word-this).
+
+### That
+
+[That in the Word Glossary](../reference/word-glossary.md#word-grammar-word-that).
 
 ## Possessives and member lookup
 
-`Worker's Output` and `it's Output` select a member of the bound owner. Dotted names and imported aliases preserve that ownership: a missing member never falls back to a different outer owner. Members can be words, definitions or values; implicit Output/Error require an App.
-
-<!-- example:file-import-helper -->
-
-`LocalTools's "Greeting"` and `LocalTools's "Display…"` declare vocabulary members. The [importing program](imports.md#explicit-source-file-imports) aliases them before using unqualified names. These are not runtime Map entries.
+Use grammatical possessives or explicitly scoped aliases. Dot-qualified authored names are invalid in references, declarations and import aliases, including quoted names and forms. This applies to all authored source, including core, private declarations and imports. Dots in Text, comments, numeric literals, import paths, native code, AML, template slots such as `<@Owner.Member@>` and internal compiler identities retain their separate meanings and bytes. Lookup first checks a complete visible binding, then commits to its canonical owner and member tables. A missing member cannot fall through to an unrelated owner. Nested access does not justify deep declaration ownership; prefer one possessive when declaring a word.
 
 ## Aliases and canonical identity
 
-`Use existing as "Alias"` retains the declaration's App identity, descriptor, members and signature. Imports use this relationship after checking exports. Aliases create no new process slot and confer no Main entry status. Cycles and unresolved targets reject. Dictionary private bindings stay in the dictionary; qualified members require an explicit alias for unqualified use.
+An alias retains its target's identity, members, signature and descriptor applicability. Same-spelled private declarations are different meanings. Qualified members require an explicit alias for unqualified use; private dictionary dependencies do not become caller exports.
 
-## Runtime storage and definite assignment
+A lexical alias may inherit forms only when it removes qualification and retains the unchanged canonical root of an already complete, validated family. For example, selecting a qualified Print root under the unqualified name Print can retain that family. A renamed alias must declare the complete family for its role. An alias selected from an actor form needs an explicit noun family, even when the alias keeps the actor's spelling. Alias chains are checked against the canonical family and selected role, so an intermediate alias cannot turn a rename or actor selection into qualification removal.
 
-Assignments write at their source positions. Every path continuing to a read must have assigned the value; exiting branches cannot reach the read. Conditional declarations supply no hidden initial value.
+These rules apply to import aliases and local lexical aliases. They do not require inflections on ordinary value bindings. A Function value can be stored or forwarded under one value label; creating a new invocation name requires the [explicit verb family](definitions.md#declaration-roles-and-identity).
 
-Assignment, arguments, returns and captures snapshot ordinary values and retain explicit Pointer identity. Short reads may borrow storage; [Pointer](values.md#pointer) shares targets without Rust lifetime annotations.
+## Evaluation and definite assignment
 
-An action or Function declaration retains an environment for its activation. Captured assignments update that environment. Copies and aliases retain it until their last owner is released, even after the original name is rebound. Every capture must be assigned when the declaration executes. Static definitions retain definition-site bindings.
+Preserve once-only argument evaluation and definition-site bindings through source expansion. A checked value must be assigned on every continuing path to its read; the compiler must not manufacture a default or clone ownership away.
 
-Source-word arguments evaluate once in the caller before entering the callee's environment. List/Map arguments retain their supplied contents. A callee can read an older captured List while receiving Text extracted from the caller's current List.
-
-## Output snapshots
-
-Output requires finalized capture; declaration, Build and assignment do not implicitly Await. Stored Output retains the bytes read from that invocation after reruns. App continuations get fresh local storage per invocation; repeated Await returns the same result without repeating effects. See [execution](execution.md#continuations-and-activation).
-
-<!-- example:repeated-activation -->
-
-Each Run/Await pair activates the indented continuation once, showing its local result twice. The outer snapshot retains the first invocation. Expected stdout is six `Repeat\n` lines; the [counter-based witness](../../testdata/phase1/f08-rerun-keeps-snapshot/case.json) additionally checks differing invocation bytes.
+These compiler invariants do not provide a runtime capture implementation. Runtime-dependent effects and captures remain outside the standalone boundary.
 
 ## Diagnostics
 
-Unresolved names, ambiguous inflections, duplicate publication, cycles, inaccessible captures and incompatible assignments retain distinct diagnostics with original spans and expanded call sites. Internal Unknown storage never supplies a fallback value.
+Unresolved references, duplicate publication, cycles and incompatible assignments retain original spans and expanded call-site context. Internal unknown state is not a fallback value.
 
 ## Sources and witnesses
 
-See [scope planning](../../lyger/scope.go), [environments](../../lyger/lexical_scope.go), [member resolution](../../lyger/semantic_resolution.go), [binding](../../lyger/binding.go), [visibility](../../lyger/visibility.go), [publication](../../lyger/publication.go) and [flow analysis](../../lyger/orchestration_flow.go). Tests cover [bindings](../../lyger/paragraph_binding_architecture_test.go), [publication](../../lyger/paragraph_publication_architecture_test.go), [captures](../../lyger/paragraph_capture_architecture_test.go), [activations](../../lyger/paragraph_activation_architecture_test.go), [assignment](../../lyger/orchestration_plan_test.go), [stored output](../../lyger/orchestrator_test.go), [caller arguments](../../lyger/source_action_arguments_test.go) and [last-owner release](../../lyger/runtime_lifetime_test.go).
+See [scope planning](../../lyger/scope.go), [lexical scope](../../lyger/lexical_scope.go), [semantic resolution](../../lyger/semantic_resolution.go) and [publication](../../lyger/publication.go).

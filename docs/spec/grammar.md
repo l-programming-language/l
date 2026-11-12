@@ -1,10 +1,10 @@
 # Grammar and vocabulary
 
-The exact English grammar lives in `lexicon/eng/grammar.json`; the exact configured words live in `lexicon/eng/vocabulary.json`. This chapter explains their notation and semantic groupings. The generated inventory preserves every rule, named case, and vocabulary entry without treating every table combination as executable.
+The exact English grammar lives in `lexicon/eng/grammar.json`, and the exact configured words live in `lexicon/eng/vocabulary.json`. This chapter explains their notation and semantic groupings. The generated inventory preserves every rule, named case, and vocabulary entry without treating every table combination as executable.
 
 ## Inventory and authority
 
-The inspected English grammar has 99 rules and 306 named cases. Its categories are three NOUN rules, thirteen PHRASE rules, sixty-nine CLAUSE rules, one CONDITION rule, four CONDITIONAL rules, five PREDICATE rules, and four STATEMENT rules. The vocabulary has 72 entries across eight parts of speech. These counts describe the reviewed source snapshot; freshness checks must catch later changes.
+The inspected English grammar has 99 rules and 307 named cases. Its categories are three NOUN rules, thirteen PHRASE rules, sixty-nine CLAUSE rules, one CONDITION rule, four CONDITIONAL rules, five PREDICATE rules, and four STATEMENT rules. The vocabulary has 72 entries across eight parts of speech. These counts describe the reviewed source snapshot. Freshness checks must catch later changes.
 
 The [complete rule and case inventory](../_generated/grammar.md) provides a stable entry for every configured recognizer, and the [vocabulary inventory](../_generated/vocabulary.md) retains each root, inflection, role, and handler description. These tables supplement the semantic explanations below.
 
@@ -17,7 +17,7 @@ The notation is specialized and is not EBNF:
 | Notation | Actual parser meaning |
 | --- | --- |
 | `A \| B` | Sequence: match A, then B |
-| `TERM*` | Optional TERM; failure leaves the prior state intact |
+| `TERM*` | Optional TERM. Failure leaves the prior state intact |
 | `[TERM]` | Multiple association of TERM, using the grammar's coordinated-sequence handling |
 | `[TERM]*` | Optional multiple association |
 | `CASE` | Select a named case for this rule |
@@ -35,9 +35,9 @@ The decoder validates family names, qualification depth, type patterns, and decl
 
 ## Matching and ambiguity
 
-Nested grammar consumes a contiguous source prefix. Every candidate case begins from the same state; the parser chooses the successful candidate consuming the longest prefix. Equal lengths use sorted case names, so map iteration order does not decide the parse. Optional elements commit only on success. A full statement rejects leftover unassociated tokens.
+Nested grammar consumes a contiguous source prefix. Every candidate case begins from the same state. The parser chooses the successful candidate consuming the longest prefix. Equal lengths use sorted case names, so map iteration order does not decide the parse. Optional elements commit only on success. A full statement rejects leftover unassociated tokens.
 
-A parse choice is different from semantic ambiguity. If a spelling resolves to more than one valid lexical declaration, binding can report AmbiguousReference even after a grammar shape has been recognized. Coordinated subjects/objects retain occurrence identity; identical token spelling is not token identity.
+A parse choice is different from semantic ambiguity. If a spelling resolves to more than one valid lexical declaration, binding can report AmbiguousReference even after a grammar shape has been recognized. Coordinated subjects/objects retain occurrence identity. Identical token spelling is not token identity.
 
 ## Values, subjects, and objects
 
@@ -45,27 +45,41 @@ The value rule recognizes definitive references and Text/Number/Truth/Null/type/
 
 Articles and adjectives modify these positions. `a`/`an` is indefinite, `the` definite, `any` identifies variable arguments in supported action signatures, and `no` expresses absence or a supported negative condition. These roles are not interchangeable decoration.
 
-A subject identifies what is being defined or acted upon; an object supplies the action operand. That distinction matters for `The App Prints message`: the App owns the native body effect, while message supplies Print's argument. In `Run Worker`, Worker is the outer lifecycle operand.
+A subject identifies what is being defined or acted upon, while an object supplies the action operand. That distinction matters for `The App Prints message`: the App owns the native body effect, while message supplies Print's argument.
 
 ### Read a complete sentence in context
 
-The [complete first program](../guide/first-program.md#read-the-program) gives those grammatical roles a concrete meaning:
+The [complete first program](../guide/first-program.md#the-source) gives those grammatical roles a concrete meaning:
 
 | Source phrase | Role in this program |
 | --- | --- |
 | `"message" is` followed by Text | Declares a name and assigns its literal value |
-| `Create "Hello" as a New Basic App` | Imperative declaration; `as` introduces the construction |
+| `Create "Hello" as a New Basic App` | Imperative declaration. The word `as` introduces the construction |
 | `The App Prints message` | Active statement: App is the subject, Prints is the action, and message is its operand |
-| `Execute Hello` | Imperative source-action call with Hello as its argument |
-| `Hello's Output` | Member access, used here as the operand of Show |
 
-`The App` associates Print with the App's generated body. The outer Execute and Show sentences control execution and display its result. Grammatical form does not erase that ownership distinction.
+`The App` associates Print with the App's generated body. The built standalone App performs that output directly. Grammatical form does not erase that ownership distinction.
+
+### Any
+
+[Any in the Word Glossary](../reference/word-glossary.md#word-grammar-word-any).
+
+### No
+
+[No in the Word Glossary](../reference/word-glossary.md#word-grammar-word-no).
+
+### A
+
+[A in the Word Glossary](../reference/word-glossary.md#word-grammar-word-a).
+
+### The
+
+[The in the Word Glossary](../reference/word-glossary.md#word-grammar-word-the).
 
 ## Phrases
 
 The thirteen phrase families are generic, directive, declarative, locative, objective, inflective, associative, indicative, utilization, dependency, signature, arguments, and results.
 
-Declarative `as` relates a subject to a type, value, definition, or alias. Directive `for` introduces action composition. Utilization `to` connects a native-backed definition or imperative use. Associative `with` composes described child structures; `using` comes from source-defined inflection and supplies parameters. Dependency `from` selects a dictionary or explicit source provider in supported import forms.
+Declarative `as` relates a subject to a type, value, definition, or alias. Directive `for` introduces action composition. Utilization `to` connects a native-backed definition or imperative use. Associative `with` composes described child structures. The word `using` is the applicative form of configured Use and supplies parameters. Dependency `from` selects a dictionary or explicit source provider in supported import forms.
 
 Locative `at` and inflective `in` participate in [collection updates and typed reads](collections-and-categories.md). A phrase's meaning follows its owning action, not the preposition alone.
 
@@ -73,73 +87,119 @@ Signature phrases declare ordered Function inputs and outputs, argument phrases 
 
 ### Compose an action with `for`
 
-These two builtin declarations use a directive phrase:
+`for` introduces a source action body. Core Print uses this form to compose its private output leaf through Process. Typed arguments, inflections and pronouns retain their declared meaning; `and then` is source sequencing rather than the grammar JSON's notation.
 
-<!-- example:lexical-action-inflections -->
+The [Main descriptor](lexical-types.md#describe-with-an-adjective) uses `of`, `with` and `using` in Function/Object/Service construction. Core is already loaded.
 
-`for` introduces the action body. `Building`, `Running`, `Starting`, and `Awaiting` are applicative verb forms in that body; `any App` declares the argument, and `it` refers to it. The source conjunction `and then` separates the actions. The bars inside each quoted label declare inflections; they are unrelated to the grammar JSON's sequence notation. These definitions are implicitly loaded already, so do not redeclare them in a program.
+### As
 
-In the basic program, `from` and `as` select the IO dictionary and local alias. The [Main descriptor example](lexical-types.md#describe-with-an-adjective) uses `of`, `with`, and `using` in Function/Object/Service construction.
+[As in the Word Glossary](../reference/word-glossary.md#word-grammar-word-as).
+
+### Of
+
+[Of in the Word Glossary](../reference/word-glossary.md#word-grammar-word-of).
+
+### At
+
+[At in the Word Glossary](../reference/word-glossary.md#word-grammar-word-at).
+
+### With
+
+[With in the Word Glossary](../reference/word-glossary.md#word-grammar-word-with).
+
+### In
+
+[In in the Word Glossary](../reference/word-glossary.md#word-grammar-word-in).
+
+### Out
+
+[Out in the Word Glossary](../reference/word-glossary.md#word-grammar-word-out).
+
+### By
+
+[By in the Word Glossary](../reference/word-glossary.md#word-grammar-word-by).
+
+### From
+
+[From in the Word Glossary](../reference/word-glossary.md#word-grammar-word-from).
+
+### To
+
+[To in the Word Glossary](../reference/word-glossary.md#word-grammar-word-to).
+
+### Than
+
+[Than in the Word Glossary](../reference/word-glossary.md#word-grammar-word-than).
+
+### For
+
+[For in the Word Glossary](../reference/word-glossary.md#word-grammar-word-for).
 
 ## Clauses and grammatical forms
 
-Most action families have imperative, active, passive, and applicative clauses. The configured verb root acts as the imperative. Active is typically the `-s` form, passive the past form, and applicative the `-ing` form; source inflection declarations determine the actual spelling.
+Most action families have imperative, active, passive, and applicative clauses. The configured verb root acts as the imperative. Active is typically the `-s` form, passive the past form, and applicative the `-ing` form. Source inflection declarations determine the actual spelling.
 
 | Action family | Root | Current semantic boundary |
 | --- | --- | --- |
 | Declarative | Create | Named values, actions, and supported construction |
-| Definitive | Define | Scalar/runtime definitions and native-backed definitions |
+| Definitive | Define | Value and native-backed definitions |
 | Descriptive | Describe | Source descriptors and bounded construction refinements |
 | Associative | Use | Aliases and explicit imports |
-| Generative | Build | Checked App operation |
-| Executive | Run | Launch without join |
-| Suspensive | Await | Join/finalize and activate continuation once |
-| Interruptive | Stop | Request termination without join |
-| Observative | Show | Write supported value bytes to outer output |
-| Terminative | Exit | Terminate the whole program |
-| Expansive / locative | Put / Place | Supported collection insertion and replacement |
-| Receptive / reductive | Get / Take | Recognized collection forms; general execution not established |
-| Inflective / deflective | Import / Export | Configured roots; not replacements for supported Use import syntax |
+| Generative | Build | Unavailable runtime effect |
+| Executive | Run | Unavailable runtime effect |
+| Suspensive | Await | Unavailable runtime effect |
+| Interruptive | Stop | Unavailable runtime effect |
+| Observative | Show | Unavailable runtime observation |
+| Terminative | Exit | Unavailable runtime effect |
+| Expansive / locative | Put / Place | Runtime updates outside the standalone boundary |
+| Receptive / reductive | Get / Take | Recognized collection forms with no established general execution |
+| Inflective / deflective | Import / Export | Configured roots that do not replace supported Use import syntax |
 | Generic | Source-defined word | Depends on bound typed definition/action |
 
-These forms are not freely interchangeable in all owners. Imperative and outer passive Await are implemented. Await inside an active App or Service body parses but rejects unsupported ownership. A standalone applicative sentence is not an executable statement simply because applicative clauses can appear in an action body.
+Grammatical voice does not widen the current executable boundary. Build, Run, Await, Stop, Show and Exit reject as runtime-dependent effects. Standalone applicative clauses do not become executable statements merely because action bodies use them.
 
-### Supported passive Await
+<a id="supported-passive-await"></a>
 
-This canonical example uses an imperative Run followed by passive Await:
+### Passive Await
 
-<!-- example:grammar-passive-await -->
-
-`Worker is awaited` is an outer join operation, with the same lifecycle role as `Await Worker`. The following Show reads finalized output. The existing LANG-02 runtime witness expects `passive` followed by one newline. The active `The App Prints message` sentence still supplies the App body; grammatical voice and effect ownership are separate concerns.
+The grammar recognizes passive Await, but lifecycle execution is unavailable. No outer-program workaround supplies the removed Runtime.
 
 ### Recognized but rejected active Await
 
-This negative fixture deliberately puts Await in an App body:
+App-body Await is also unavailable. Unsupported effects must reject without being moved, omitted or replaced by a generated runner.
 
-<!-- example:grammar-active-await-rejected -->
+### Get
 
-**Rejected at executable-body lowering.** `Controller awaits Worker` can be classified grammatically, but source-level child-body process supervision is unsupported. Compilation rejects that statement; it does not silently move it to the orchestrator. Put lifecycle orchestration in the outer program, as in the preceding passive example. This negative fixture is an existing rejection witness, not a program to run or a newly observed diagnostic.
+[Get in the Word Glossary](../reference/word-glossary.md#word-builtin-get).
+
+### Take
+
+[Take in the Word Glossary](../reference/word-glossary.md#word-builtin-take).
+
+### Import
+
+[Import in the Word Glossary](../reference/word-glossary.md#word-builtin-import).
+
+### Export
+
+[Export in the Word Glossary](../reference/word-glossary.md#word-builtin-export).
 
 ## Conditions
 
-The condition rule contains truth, has, equals, is, isnt, less, greater, less_equal, and greater_equal cases. Exact spellings arise from configured is/isnt, have/has, equal/equals, less/greater, than, not, and articles. Equality requires matching supported scalar types; ordering requires Number; has is limited to a target's Error.
+The condition rule recognizes truth, has, equality, inequality and ordering forms. Their exact spellings come from configured vocabulary. A branch separator comma is source punctuation, distinct from the grammar configuration's `|` sequence notation.
 
-The configured if/else/otherwise/while families are not equally executable. If, an attached else, and paragraph-local otherwise have bounded instruction support. While currently reaches an unsupported outer conditional boundary. Multiple joined conditions reject, so the grammar's repeated CONDITION form does not establish boolean conjunction or short-circuit evaluation.
-
-The [Truth conditional example](values.md#truth) shows an actual `If enabled equals true, await Worker, else exit` statement with its declarations and execution context. It compares Truth operands and attaches an else branch to that If. For complete branch examples and explicitly rejected loop forms, see [operations and control flow](control-flow.md). A branch separator comma is source punctuation; it is not the grammar configuration's `|` sequence marker.
+Recognition does not supply runtime selection, error inspection, boolean short-circuiting or general loops. Keep [control-flow limits](control-flow.md) distinct from this grammar inventory.
 
 ## Predicates and statements
 
-Predicates assemble clauses in imperative, active, passive, applicative, or conditional form. Passive predicates include assignment. Statements choose objective imperative/conditional or subjective active/passive organization. Subjective App effects contribute application body code; outer instructions control orchestration. Standalone Service body effects reject. The same action spelling can therefore be valid in one ownership context and rejected in another.
-
-Source order is retained after expansion. A sequence of native unary lifecycle operands runs each operation in order. A source-defined action with one parameter and several coordinated actuals expands its complete action body for each actual before proceeding to the next.
+Predicates assemble clauses in imperative, active, passive, applicative or conditional form. Statements choose objective or subjective organization. In the supported example, the App subject owns its Print body. Source order, ownership and paragraph provenance survive expansion.
 
 ## Vocabulary reference
 
 Nouns include pronouns, Input/Output/Error, List/Map/Dictionary, Null/Thing/Text/Number/Byte/Truth/Pointer, native Func/Prop/Op concepts, Definition/Attribute, and Object/Class/Service/App. The adjective entries are Public, New, and Generic. Adverbs are Publicly, Not, Less, Greater, and Then. Prepositions are as/of/at/with/in/out/by/from/to/than/for. Articles are any/no/a/the, conjunctions and/or, and evaluations if/else/otherwise/while.
 
-The [source-defined builtins](../reference/builtins/index.md#source-defined-facilities) are implicit. Standard-library words such as Print require import. New words compose existing definitions; vocabulary recognition alone does not implement an action.
+The [builtin vocabulary](../reference/word-glossary.md) includes configured words and source-defined core words. Core Print is implicit; no standard-library dictionary is bundled. New words compose existing definitions. Vocabulary recognition alone does not implement an action.
 
 ## Sources and witnesses
 
-Exact data: [grammar](../../lexicon/eng/grammar.json), [vocabulary](../../lexicon/eng/vocabulary.json). Parser: [grammar terms](../../lyger/grammar_terms.go), [matching](../../lyger/grammar_match.go), [grammar types](../../lyger/grammar_types.go), [sequence parsing](../../lyger/grammar.go). Lowering: [instructions](../../lyger/instructions.go), [native roles](../../lyger/ir_kinds.go). Witnesses: [term decoding](../../lyger/grammar_terms_test.go), [consumption](../../lyger/grammar_consumption_test.go), [sequence ownership](../../lyger/grammar_sequence_test.go), [paragraph grammar](../../lyger/paragraph_grammar_architecture_test.go), and [phase-one language](../../lyger/phase1_language_test.go).
+Exact data: [grammar](../../lexicon/eng/grammar.json), [vocabulary](../../lexicon/eng/vocabulary.json). Parser: [grammar terms](../../lyger/grammar_terms.go), [matching](../../lyger/grammar_match.go), [grammar types](../../lyger/grammar_types.go), [sequence parsing](../../lyger/grammar.go). Lowering: [instructions](../../lyger/instructions.go), [native roles](../../lyger/ir_kinds.go). Witnesses: [term decoding](../../lyger/grammar_terms_test.go), [consumption](../../lyger/grammar_consumption_test.go), [sequence ownership](../../lyger/grammar_sequence_test.go), and [paragraph grammar](../../lyger/paragraph_grammar_architecture_test.go).

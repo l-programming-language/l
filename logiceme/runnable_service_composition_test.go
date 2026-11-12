@@ -100,7 +100,7 @@ func runnableServiceGenerate(t *testing.T, service *LogicemeService, kind string
 	t.Helper()
 	input := runnableServiceRead(t, kind+".aml.txt")
 	before := bytes.Clone(input)
-	bundle, err := service.Evaluate(input, GenerationOptions{})
+	bundle, err := service.Evaluate(input)
 	if !bytes.Equal(input, before) {
 		t.Fatal("runnable Service generation mutated framed AML")
 	}
@@ -117,7 +117,7 @@ func runnableServiceGenerate(t *testing.T, service *LogicemeService, kind string
 func TestRunnableServiceComposition(t *testing.T) {
 	for _, provider := range []string{"filesystem", "embedded"} {
 		t.Run(provider, func(t *testing.T) {
-			config := runtimeGenerationResources(t)
+			config := backendTestResources(t)
 			if provider == "embedded" {
 				config = nil
 			}
@@ -138,16 +138,14 @@ func TestRunnableServiceLibraryBoundaries(t *testing.T) {
 	base := string(runnableServiceRead(t, "library.aml.txt"))
 	for _, test := range []struct {
 		name, source, diagnostic string
-		runtime                  bool
 	}{
-		{"runtime", base, "library-only package cannot include runtime", true},
-		{"settings", strings.Replace(base, "<SETTINGS></SETTINGS>", `<SETTINGS><JSON>{"Key":"TOKEN","Type":"String","Value":"service"}</JSON></SETTINGS>`, 1), "library-only package cannot supply executable configuration", false},
-		{"primary", strings.Replace(base, `"Primary":false`, `"Primary":true`, 1), "library target cannot be Primary", false},
+		{"settings", strings.Replace(base, "<SETTINGS></SETTINGS>", `<SETTINGS><JSON>{"Key":"TOKEN","Type":"String","Value":"service"}</JSON></SETTINGS>`, 1), "library-only package cannot supply executable configuration"},
+		{"primary", strings.Replace(base, `"Primary":false`, `"Primary":true`, 1), "library target cannot be Primary"},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			input := []byte(test.source)
 			before := bytes.Clone(input)
-			bundle, err := NewLogicemeService(runtimeGenerationResources(t)).Evaluate(input, GenerationOptions{IncludeRuntime: test.runtime})
+			bundle, err := NewLogicemeService(backendTestResources(t)).Evaluate(input)
 			if !errors.Is(err, lerrors.InvalidInput) || !strings.Contains(err.Error(), test.diagnostic) {
 				t.Fatalf("library boundary = %v; want InvalidInput containing %q", err, test.diagnostic)
 			}
@@ -163,7 +161,7 @@ func TestRunnableServiceLibraryBoundaries(t *testing.T) {
 func TestRunnableServicePrivateComposition(t *testing.T) {
 	for _, kind := range []string{"private-entry", "private-module", "private-module-adapter"} {
 		t.Run(kind, func(t *testing.T) {
-			service := NewLogicemeService(runtimeGenerationResources(t))
+			service := NewLogicemeService(backendTestResources(t))
 			bundle := runnableServiceGenerate(t, service, kind)
 			runnableServiceCompare(t, bundle, runnableServiceExpected(t, kind))
 		})
@@ -226,7 +224,7 @@ func TestRunnableServicePrivateCompositionNative(t *testing.T) {
 				t.Run(phase, func(t *testing.T) {
 					library, adapter := runnableServiceExpected(t, kind), runnableServiceExpected(t, adapterKind)
 					if phase == "Generated" {
-						service := NewLogicemeService(runtimeGenerationResources(t))
+						service := NewLogicemeService(backendTestResources(t))
 						library = runnableServiceGenerate(t, service, kind)
 						adapter = runnableServiceGenerate(t, service, adapterKind)
 						runnableServiceCompare(t, library, runnableServiceExpected(t, kind))
@@ -283,7 +281,7 @@ func TestRunnableServiceCompositionNative(t *testing.T) {
 		t.Run(phase, func(t *testing.T) {
 			library, adapter := runnableServiceExpected(t, "library"), runnableServiceExpected(t, "adapter")
 			if phase == "Generated" {
-				service := NewLogicemeService(runtimeGenerationResources(t))
+				service := NewLogicemeService(backendTestResources(t))
 				library = runnableServiceGenerate(t, service, "library")
 				adapter = runnableServiceGenerate(t, service, "adapter")
 				runnableServiceCompare(t, library, runnableServiceExpected(t, "library"))

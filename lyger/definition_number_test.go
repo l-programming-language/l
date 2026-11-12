@@ -2,13 +2,16 @@ package Lyger
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"math"
+	"os/exec"
 	"reflect"
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/l-programming-language/l/lerrors"
 	Logiceme "github.com/l-programming-language/l/logiceme"
@@ -138,10 +141,9 @@ func TestDefinitionNumberPrimitiveParity(t *testing.T) {
 		})
 	}
 	for _, number := range []float64{math.NaN(), math.Inf(1), math.Inf(-1)} {
-		e := &orchestrationEmitter{}
-		bound, err := e.literalValue(&primitive{Type: valueNumber, Number: number})
-		if bound != (emittedExpression{}) || len(e.pending) != 0 || !errors.Is(err, lerrors.Unsupported) || errors.Is(err, lerrors.Syntax) || err.Error() != "non-finite Number is not supported" {
-			t.Fatalf("nonfinite primitive Number changed its failure: %#v/%v/%v", bound, e.pending, err)
+		bound, err := nativeLiteralArgument(&primitive{Type: valueNumber, Number: number})
+		if !reflect.DeepEqual(bound, DefinitionArgument{}) || !errors.Is(err, lerrors.Unsupported) || errors.Is(err, lerrors.Syntax) || err.Error() != "non-finite Number is not supported" {
+			t.Fatalf("nonfinite primitive Number changed its failure: %#v/%v/%v", bound, nil, err)
 		}
 	}
 }
@@ -161,7 +163,7 @@ func TestDefinitionNumberNativeBits(t *testing.T) {
 	body = append(body, `BOD^E{|Statement: ~let native: i64 = 3_i64; assert_eq!(native, 3_i64);~|}`)
 	document := []byte(`<PROGRAM><STRUCTURE><BOOK "Worker"><OUTLINE><JSON>{"AppMeta":{"AppGenDir":"/src"}}</JSON><JSON>{"Services":[{"Name":"main","Location":"/src/","GenericObjects":["main"]}]}</JSON><JSON>{"Objects":[{"Name":"main","Type":"root"}]}</JSON></OUTLINE><SETTINGS></SETTINGS><CONTENT><CHAPTER "main"><SENTENCE "main"><|W|><|S|>` + "`A`" + `</S|><|S|>` + "`FW{|Key: ~main~, Outputs: ~&[()]&~|}^W^(" + strings.Join(body, "*") + ")`" + `</S|></W|></SENTENCE></CHAPTER></CONTENT></BOOK></STRUCTURE></PROGRAM>`)
 	before := bytes.Clone(document)
-	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate(document, Logiceme.GenerationOptions{})
+	bundle, err := Logiceme.NewLogicemeService(canonicalTestOptions().Resources).Evaluate(document)
 	recordBundle(t, bundle)
 	if err != nil {
 		t.Fatal(err)
@@ -169,18 +171,18 @@ func TestDefinitionNumberNativeBits(t *testing.T) {
 	if !bytes.Equal(document, before) {
 		t.Fatal("Number generation changed backend input")
 	}
-	if got := runRawTextBundle(t, bundle); string(got) != want.String() {
+	if got := runNumberBundle(t, bundle); string(got) != want.String() {
 		t.Fatalf("native Number bits = %q; want %q", got, want.String())
 	}
 }
 
 func TestDefinitionNumberSourceAction(t *testing.T) {
 	source := []byte("Define \"Check|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~{ let value: f64 = <@Value|Number@>; ::std::println!(\"{:016x}\", value.to_bits()); }~|}<DEF>`.\n" +
-		"Create \"Inspect|-s|-ed|-ing\" for Processing a New Checker.\n" +
+		"Create \"Inspect|-s|-ed|-ing|-or\" for Processing a New Checker.\n" +
 		"Create \"Worker\" as a New Basic App.\n" +
 		"The App Inspects 3.\nThe App Inspects -0.\nThe App Inspects 9007199254740993.\n")
 	before := bytes.Clone(source)
-	result, err := NewLygerService(phase1Options(t)).Compile(source, "number-action.l")
+	result, err := NewLygerService(canonicalTestOptions()).Compile(source, "number-action.l")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -188,15 +190,29 @@ func TestDefinitionNumberSourceAction(t *testing.T) {
 	if err != nil || len(units) != 1 {
 		t.Fatalf("Number action application units: %v", err)
 	}
-	bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{})
+	bundle, err := Logiceme.NewLogicemeService(canonicalTestOptions().Resources).Evaluate(units[0].BackendAML)
 	recordBundle(t, bundle)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := runRawTextBundle(t, bundle); string(got) != "4008000000000000\n8000000000000000\n4340000000000000\n" {
+	if got := runNumberBundle(t, bundle); string(got) != "4008000000000000\n8000000000000000\n4340000000000000\n" {
 		t.Fatalf("L Number action lost binary64 values: %q", got)
 	}
 	if !bytes.Equal(source, before) {
 		t.Fatal("Number action compilation changed source input")
 	}
+}
+
+func runNumberBundle(t *testing.T, bundle Logiceme.Executable) []byte {
+	t.Helper()
+	binary := buildActualBundle(t, bundle, "Worker")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	command := exec.CommandContext(ctx, binary)
+	var stdout, stderr bytes.Buffer
+	command.Stdout, command.Stderr = &stdout, &stderr
+	if err := command.Run(); err != nil || stderr.Len() != 0 {
+		t.Fatalf("numeric standalone application: %v; stderr=%q", err, stderr.Bytes())
+	}
+	return stdout.Bytes()
 }

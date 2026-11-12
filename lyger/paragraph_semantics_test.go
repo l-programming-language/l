@@ -1,51 +1,14 @@
 package Lyger
 
 import (
-	"bytes"
 	"fmt"
-	"os"
 	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
 )
 
-// These are prospective paragraph acceptance tests. Compilation errors are
-// failures, not expected outcomes: the implementation comes in the next task.
-func paragraphSource(t *testing.T) memberResolutionSource {
-	t.Helper()
-	read := func(name string) string {
-		content, err := os.ReadFile(filepath.Join("..", "demo", "paragraphs", name))
-		if err != nil {
-			t.Fatal(err)
-		}
-		return string(content)
-	}
-	return memberResolutionSource{main: read("main.l")}
-}
-
-// Isolate coordinated declaration grammar from inline punctuation and local
-// scopes, using the demo's exact declaration sentence and bootstrap vocabulary.
-func TestParagraphsCoordinatedDeclarations(t *testing.T) {
-	source := paragraphSource(t)
-	lines := strings.Split(source.main, "\n")
-	if len(lines) < 2 {
-		t.Fatal("paragraph demo has no declaration sentence")
-	}
-	source.main = lines[0] + "\n" + lines[1] + "\nCreate \"First\" as a New Basic App.\nThe App Prints x1.\nCreate \"Second\" as a New Basic App.\nThe App Prints x2.\n"
-	compilation := executableTestResult(t, source).Compilation
-	if !bytes.Contains(compilation.ExpandedBytes, []byte(lines[1])) {
-		t.Error("coordinated declaration changed in the expanded-source view")
-	}
-	for name, text := range map[string]string{"x1": "`Hello World!`", "x2": "`Hello Again World!`"} {
-		rec := compilation.Memory[name]
-		if rec == nil || rec.Value == nil || rec.Value.Primitive == nil || rec.Value.Primitive.Type != valueText || rec.Value.Primitive.Text != text {
-			t.Errorf("coordinated declaration %s must retain exact Text %q; record=%+v", name, text, rec)
-		}
-	}
-}
-
-const paragraphGlobals = "Use IO's Print from `io` as \"Print\".\n\"x1\" is `Hello World!`.\n\"x2\" is `Hello Again World!`.\n"
+const paragraphGlobals = "\n\"x1\" is `Hello World!`.\n\"x2\" is `Hello Again World!`.\n"
 
 func paragraphBlock(app, input, owner string) string {
 	return "\n    Create \"" + app + "\" as a New Basic App.\nThe App Prints " + input + ".\nDefine \"y\" as " + owner + " Output.\nShow y.\n"
@@ -62,7 +25,7 @@ func TestParagraphsLocalBindings(t *testing.T) {
 		{"first paragraph resolves late", "", "First's", "Second's", true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			source := paragraphSource(t)
+			source := memberResolutionSource{}
 			source.main = paragraphGlobals + tc.global + paragraphBlock("First", "x1", tc.firstOwner) + paragraphBlock("Second", "x2", tc.secondOwner)
 			if tc.delayed {
 				source.main = strings.Replace(source.main, "New Basic App", "New Deferred App", 1)
@@ -134,7 +97,7 @@ func TestParagraphsRejectEscapedLocal(t *testing.T) {
 		{"sibling paragraph", "\n    Create \"Second\" as a New Basic App.\nThe App Prints x2.\nShow y.\n"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			source := paragraphSource(t)
+			source := memberResolutionSource{}
 			source.main = paragraphGlobals + paragraphBlock("First", "x1", "First's")
 			if control := compileMemberResolutionSource(t, source); control.Error != nil {
 				t.Fatalf("valid local declaration control did not compile: %v", control.Error)
@@ -153,10 +116,9 @@ func TestParagraphsRejectEscapedLocal(t *testing.T) {
 	}
 }
 
-// Ordinary paragraphs are general scopes, not anonymous App callbacks. Runtime
-// source ordering and whole-program Exit are exercised by the real CLI suite.
+// Ordinary paragraphs retain independent declaration scopes.
 func TestParagraphsOrdinaryScopesRetainDistinctDeclarations(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = "    \"value\" is `first`.\nShow value.\n" +
 		"\n    \"value\" is `second`.\nShow value.\n"
 	compilation := executableTestResult(t, source).Compilation
@@ -195,7 +157,7 @@ func TestParagraphsCoordinatedDispatch(t *testing.T) {
 		{"canonical alias", "Use Second as \"Other\".\nExecute Other and First.\n", []string{"Second", "First"}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			source := paragraphSource(t)
+			source := memberResolutionSource{}
 			// Public Apps escape their defining paragraphs; coordination retains
 			// the source-defined action and canonical targets, including aliases.
 			source.main = paragraphGlobals + "\n    Create \"First\" as a New Public Basic App.\nThe App Prints x1.\n\n    Create \"Second\" as a New Public Basic App.\nThe App Prints x2.\n\n" + tc.dispatch
@@ -226,7 +188,7 @@ func TestParagraphsCoordinatedDispatch(t *testing.T) {
 }
 
 func TestParagraphsMultipleSubjectsKeepExactMemberOwners(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphGlobals + "\n    Create \"First\" as a New Basic App.\nThe App Prints x1.\n" +
 		"Create \"Second\" as a New Basic App.\nThe App Prints x2.\n" +
 		"If it has an Error, exit with it's Error, else define \"firstResult\" as First's Output.\n" +
@@ -267,26 +229,6 @@ func TestParagraphsMultipleSubjectsKeepExactMemberOwners(t *testing.T) {
 	for _, name := range []string{"First", "Second", "firstResult", "secondResult"} {
 		if compilation.Memory[name] != nil {
 			t.Errorf("private subject or dependent value %s leaked globally", name)
-		}
-	}
-}
-
-func TestParagraphsDemoCompiles(t *testing.T) {
-	source := paragraphSource(t)
-	compilation := executableTestResult(t, source).Compilation
-	if compilation.Semantics == nil || compilation.Program == nil || len(compilation.ProcStatements) != 0 {
-		t.Fatal("paragraph demo did not complete semantic construction")
-	}
-	var apps []string
-	for _, app := range compilation.Semantics.Apps {
-		apps = append(apps, app.ID)
-	}
-	if !reflect.DeepEqual(apps, []string{"HelloWorldApp1", "HelloWorldApp2"}) || len(compilation.Program.Books) != 2 {
-		t.Fatalf("paragraph App construction order = %v; want both demo Apps", apps)
-	}
-	for _, text := range []string{`Inputs: ~&["Hello World!"]&~`, `Inputs: ~&["Hello Again World!"]&~`} {
-		if !bytes.Contains(compilation.ASMBytes, []byte(text)) || !bytes.Contains(compilation.Program.BackendBytes, []byte(text)) {
-			t.Errorf("application AML lost paragraph body %s", text)
 		}
 	}
 }

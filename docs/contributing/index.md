@@ -1,6 +1,6 @@
 # Contribute to L documentation
 
-Canonical prose lives under `docs/`; `website/` projects it into the documentation site. Start with [CONTRIBUTING.md](../../CONTRIBUTING.md) for issue linkage and the pull-request checklist.
+Canonical prose lives under `docs/`. `website/` projects it into the documentation site. Start with [CONTRIBUTING.md](../../CONTRIBUTING.md) for issue linkage and the pull-request checklist.
 
 ## Choose the change
 

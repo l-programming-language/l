@@ -2,8 +2,7 @@ package Lyger
 
 import (
 	"bytes"
-	"os"
-	"path/filepath"
+
 	"testing"
 )
 
@@ -89,36 +88,6 @@ func assertParagraphSource(t *testing.T, path, source string, want []paragraphSo
 			t.Errorf("literal %d lost its statement/paragraph ownership: %+v", i, span)
 		}
 	}
-}
-
-func TestParagraphSourceDemoSentences(t *testing.T) {
-	path := filepath.Join("..", "demo", "paragraphs", "main.l")
-	raw, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	// The author corrected the declaration's missing period before these tests
-	// were added. Use the demo unchanged: no implicit newline terminator or
-	// test-only punctuation insertion is part of this contract.
-	assertParagraphSource(t, path, string(raw), []paragraphSourceSentence{
-		{"Use IO's Print from `io` as \"Print\".", 1, 1, 1},
-		{"\"x1\" is `Hello World!` and \"x2\" is `Hello Again World!`.", 2, 1, 1},
-		{"Create \"HelloWorldApp1\" as a New Public Basic App.", 5, 5, 2},
-		{"The App Prints x1.", 5, 56, 2},
-		{"If it has an Error, exit with the Error, else define \"y\" as it's Output.", 5, 75, 2},
-		{"If x1 isnt y, exit with an error of `text values of both x1 & y should be Hello World`.", 6, 1, 2},
-		{"Otherwise, show y and then exit with error.", 6, 89, 2},
-		{"Create \"HelloWorldApp2\" as a New Public Basic App.", 8, 5, 3},
-		{"The App Prints x2.", 8, 56, 3},
-		{"If it has an Error, exit with the Error, else define \"y\" as it's Output.", 8, 75, 3},
-		{"If x2 isnt y, exit with an error of `text values of both x2 & y should be Hello World`.", 9, 1, 3},
-		{"Otherwise, show y and then exit with error.", 9, 89, 3},
-		{"Execute HelloWorldApp1 and HelloWorldApp2.", 12, 1, 4},
-	}, []string{
-		"`io`", "`Hello World!`", "`Hello Again World!`",
-		"`text values of both x1 & y should be Hello World`",
-		"`text values of both x2 & y should be Hello World`",
-	})
 }
 
 func TestParagraphSourceInlineAndContinuationLines(t *testing.T) {

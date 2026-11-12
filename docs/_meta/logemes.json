@@ -5,7 +5,7 @@
   ],
   "executedStages": [],
   "sourceHashes": {
-    "builtins/README.md": "c19436cf7bfb39e8c1d8980f5c792702cffd6633739a8e0d387c66a18f2614a6",
+    "builtins/README.md": "7562ff675896a6734f3d835c85e195fffc546925bec98007a796bd43642039d1",
     "builtins/segments/consonants/calculate.lu": "bb4103a000d7cfd3d50886c32b0b411624e4dfcef13b569fb5fd446d2bb1f0ef",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
     "builtins/segments/consonants/define.lu": "d2b292d8fd284d677f7866cb7ae745adef00cb9ca6b3d92c92ec609e36de2899",
@@ -634,7 +634,7 @@
         "logiceme/glyph_expression_occurrence_test.go",
         "logiceme/segment_cases_test.go"
       ],
-      "notes": "CV constructs one unscheduled future; local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing; this adds no async-FW modifier or Function dispatcher.",
+      "notes": "CV constructs one unscheduled future. Local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing. This adds no async-FW modifier or Function dispatcher.",
       "evidence": "static-inspection; existing-witness-not-run"
     }
   ]

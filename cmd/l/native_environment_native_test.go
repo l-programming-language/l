@@ -10,36 +10,33 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/l-programming-language/l/internal/testsupport/phase1"
+	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 )
 
 func TestNativeEvidenceRecordsActualBuildWithoutRunningApp(t *testing.T) {
-	source := contractCLIInput(t)
+	source := nativeEvidenceSource(t)
 	project := filepath.Dir(source)
 	output := filepath.Join(project, "native-evidence.json")
-	stdout, stderr, err := runBuildCommand(t, phase1.CLI(t), project, nil, "build", "--native-evidence-output", output, source)
+	stdout, stderr, err := runBuildCommand(t, nativetest.InstalledCLI(t), project, nil, "build", "--native-evidence-output", output, source)
 	if err != nil {
 		t.Fatalf("evidence-producing native build failed: %v\n%s\n%s", err, stdout, stderr)
 	}
 	environment := readBuildEnvironment(t, output)
 	binary := strings.TrimSpace(string(stdout))
 	generation := environment.Configuration["companion-generation"]
-	counts := map[string]int{}
+	artifacts := map[string]bool{}
 	for _, artifact := range environment.Artifacts {
-		counts[artifact.SHA256]++
+		artifacts[artifact.SHA256] = true
 	}
 	for _, file := range []string{binary, filepath.Join(binary+".apps", "generations", generation, "app-000")} {
-		data := readContractFile(t, file)
-		counts[nativeBytesHash(data)]--
-	}
-	for _, count := range counts {
-		if count != 0 {
-			t.Fatalf("artifact inventory differs from published binaries: %v", counts)
+		data := readNativeEvidenceFile(t, file)
+		if !artifacts[nativeBytesHash(data)] {
+			t.Fatalf("published binary missing from build artifact inventory: %s", file)
 		}
 	}
-	// Consume the actual record under the same kernel process/network restrictions
-	// used for missing, hostile and test-only evidence.
-	runOfflineHelper(t, "L_CONTRACTS_BUILD_RECORD="+output, "L_CONTRACTS_BUILD_SOURCE="+source)
+	if len(environment.Artifacts) != 1 || len(artifacts) != 1 {
+		t.Fatalf("standalone build must record its single compiled artifact: %+v", environment.Artifacts)
+	}
 	builds := 0
 	for _, execution := range environment.Executions {
 		if execution.Kind == "build" {
@@ -57,11 +54,11 @@ func TestNativeEvidenceRecordsActualBuildWithoutRunningApp(t *testing.T) {
 	// Both destinations pass preflight. A missing evidence parent fails after
 	// compilation, before the candidate generation becomes visible.
 
-	old := nativeBytesHash(readContractFile(t, binary))
+	old := nativeBytesHash(readNativeEvidenceFile(t, binary))
 	missing := filepath.Join(project, "absent", "record.json")
-	_, stderr, err = runBuildCommand(t, phase1.CLI(t), project, nil, "build", "--native-evidence-output", missing, source)
+	_, stderr, err = runBuildCommand(t, nativetest.InstalledCLI(t), project, nil, "build", "--native-evidence-output", missing, source)
 	entries, readErr := os.ReadDir(filepath.Join(binary+".apps", "generations"))
-	if err == nil || !strings.Contains(string(stderr), "write requested native evidence") || readErr != nil || len(entries) != 1 || entries[0].Name() != generation || nativeBytesHash(readContractFile(t, binary)) != old || readBuildEnvironment(t, output).Fingerprint != environment.Fingerprint {
+	if err == nil || !strings.Contains(string(stderr), "write requested native evidence") || readErr != nil || len(entries) != 1 || entries[0].Name() != generation || nativeBytesHash(readNativeEvidenceFile(t, binary)) != old || readBuildEnvironment(t, output).Fingerprint != environment.Fingerprint {
 		t.Fatalf("late evidence failure disturbed an installed generation: %v %s", err, stderr)
 	}
 }
@@ -97,15 +94,15 @@ mkdir "$dir" && touch "$dir/occupied" || exit 1
 exit 0`
 			}
 			script := "#!/bin/sh\nfor arg do\n if [ \"$arg\" = build ]; then\n" + action + "\n fi\ndone\nexec \"$REAL_CARGO\" \"$@\"\n"
-			launcher := writeContractFile(t, filepath.Join(tools, "cargo"), []byte(script))
+			launcher := writeNativeEvidenceFile(t, filepath.Join(tools, "cargo"), []byte(script))
 			if err := os.Chmod(launcher, 0700); err != nil {
 				t.Fatal(err)
 			}
-			source := writeContractFile(t, filepath.Join(project, "entry.l"), []byte("Exit.\n"))
+			source := writeNativeEvidenceFile(t, filepath.Join(project, "entry.l"), []byte("Create \"Worker\" as a New Basic App.\nThe App Prints `hello`.\n"))
 			record := filepath.Join(project, "native-evidence.json")
 			env := []string{"PATH=" + tools + string(os.PathListSeparator) + os.Getenv("PATH"), "REAL_CARGO=" + cargo, "TEST_GENERATIONS=" + filepath.Join(output+".apps", "generations")}
-			stdout, stderr, buildErr := runBuildCommand(t, phase1.CLI(t), project, env, "build", "--native-evidence-output", record, source)
-			old := readContractFile(t, output)
+			stdout, stderr, buildErr := runBuildCommand(t, nativetest.InstalledCLI(t), project, env, "build", "--native-evidence-output", record, source)
+			old := readNativeEvidenceFile(t, output)
 			if buildErr == nil || len(stdout) != 0 || string(old) != "old" {
 				t.Fatalf("failed build replaced previous publication: %v %s", buildErr, stderr)
 			}

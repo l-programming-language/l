@@ -1,4 +1,3 @@
-Use IO's Print from `io` as "Print".
 "Left" is a New Adjective describing any Service, Object, or Function.
 It describes a Generic `left` Function of any Process with No Inputs and No Outputs.
 It describes a Generic `left` Object with a New Objective Left Function using any Process.

@@ -78,7 +78,7 @@ func TestCargoCachePublishesCurrentSourceUnderContention(t *testing.T) {
 			// use the complete single-member workspace and native comments to
 			// find distinct sources in the same bucket.
 			probe := filepath.Join(directory, fmt.Sprintf("identity-%d", index))
-			if err := os.MkdirAll(filepath.Join(probe, "orchestrator", "src"), 0700); err != nil {
+			if err := os.MkdirAll(filepath.Join(probe, "entry", "src"), 0700); err != nil {
 				errors <- err
 				return
 			}
@@ -96,10 +96,10 @@ func TestCargoCachePublishesCurrentSourceUnderContention(t *testing.T) {
 					return
 				}
 				for name, data := range map[string][]byte{
-					"Cargo.toml":               []byte("[workspace]\nresolver = \"3\"\nmembers = [\n \"orchestrator\",\n]\n"),
-					"Cargo.lock":               lock,
-					"orchestrator/Cargo.toml":  manifest,
-					"orchestrator/src/main.rs": source,
+					"Cargo.toml":        []byte("[workspace]\nresolver = \"3\"\nmembers = [\n \"entry\",\n]\n"),
+					"Cargo.lock":        lock,
+					"entry/Cargo.toml":  manifest,
+					"entry/src/main.rs": source,
 				} {
 					if err := os.WriteFile(filepath.Join(probe, name), data, 0600); err != nil {
 						errors <- err
@@ -122,7 +122,7 @@ func TestCargoCachePublishesCurrentSourceUnderContention(t *testing.T) {
 			}
 			build := filepath.Join(directory, fmt.Sprintf("build-%d", index))
 			output := filepath.Join(directory, fmt.Sprintf("app-%d", index))
-			if err := compileCargoWorkspace(ctx, nil, bundle, nil, nil, build, nil, output); err != nil {
+			if err := compileCargoWorkspace(ctx, nil, bundle, nil, build, nil, output); err != nil {
 				errors <- err
 				return
 			}

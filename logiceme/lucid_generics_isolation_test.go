@@ -25,7 +25,7 @@ func TestLucidGenericsIsolation(t *testing.T) {
 	for _, provider := range []string{"filesystem", "embedded"} {
 		t.Run(provider, func(t *testing.T) {
 			defer executionRegistryPanicAsFailure(t)
-			config := runtimeGenerationResources(t)
+			config := backendTestResources(t)
 			filesystem := config
 			if provider == "embedded" {
 				config = distribution.Files()
@@ -47,7 +47,7 @@ func TestLucidGenericsIsolation(t *testing.T) {
 				input := lucidRead(t, name+".aml.txt")
 				before := bytes.Clone(input)
 				lucidWrite(t, filepath.Join(dir, "input.aml.txt"), input)
-				got, err := service.Evaluate(input, GenerationOptions{IncludeRuntime: false})
+				got, err := service.Evaluate(input)
 				if !bytes.Equal(input, before) {
 					lucidIssue(t, r, "production isolation: mutated complete AML input")
 				}

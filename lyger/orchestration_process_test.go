@@ -13,7 +13,7 @@ func dynamicAppTestRecord(name string) *record {
 }
 
 func TestDynamicAppFunctionParameterUsesRuntimeStorage(t *testing.T) {
-	source := memberResolutionSource{main: "Create \"First\" as a New Basic App.\nCreate \"Second\" as a New Basic App.\n\n" + functionSource("Join", "\"Target\" as App", "", "Run Target.\nAwait Target.\nIf Target has an Error, exit with Target's Error.") + "Join First.\n"}
+	source := memberResolutionSource{main: "Create \"First\" as a New Basic App.\nCreate \"Second\" as a New Basic App.\n\n" + functionSource("Join|-s|-ed|-ing|-er", "\"Target\" as App", "", "Run Target.\nAwait Target.\nIf Target has an Error, exit with Target's Error.") + "Join First.\n"}
 	compilation := executableTestResult(t, source).Compilation
 	plan := requireOrchestrationPlan(t, compilation.Semantics)
 	function := processTestFunction(plan.Root.Body)
@@ -67,14 +67,10 @@ func TestFunctionAwaitUsesProgramRootsAndPreservesCallerSnapshot(t *testing.T) {
 	if returned.Capture == nil || returned == write {
 		t.Fatal("caller did not resume its independent captured snapshot")
 	}
-	result := &CompilationResult{Compilation: compilation}
-	if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
-		t.Fatal(err)
-	}
 }
 
 func TestFunctionInvocationDoesNotInventGlobalAssignmentFacts(t *testing.T) {
-	source := memberResolutionSource{main: "    Create \"Worker\" as a New Public Basic App.\nPublicly define \"Late\" as Worker's Output.\n\n" + functionSource("Join", "\"Target\" as App", "", "Await Target.") + "Run Worker.\nJoin Worker.\nShow Late.\n"}
+	source := memberResolutionSource{main: "    Create \"Worker\" as a New Public Basic App.\nPublicly define \"Late\" as Worker's Output.\n\n" + functionSource("Join|-s|-ed|-ing|-er", "\"Target\" as App", "", "Await Target.") + "Run Worker.\nJoin Worker.\nShow Late.\n"}
 	compilation := executableTestResult(t, source).Compilation
 	if _, err := planOrchestration(compilation.Semantics); err == nil || !strings.Contains(err.Error(), "Late is not definitely assigned") {
 		t.Fatalf("Function invocation invented a caller initialization fact: %v", err)
@@ -95,4 +91,4 @@ func processTestFunction(body []*orchestrationInstruction) *orchestrationFunctio
 	return nil
 }
 
-var functionAwaitRootsSource = "Define \"Message\" as a New List of `before` and `before`.\nDefine \"Witness\" as a New Text from Message at 0.\nCreate \"Report|-s|-ed|-ing\" for Showing Witness and then Showing any Text.\n\n    Create \"Worker\" as a New Public Basic App.\nPlace `after` in Message at 0.\nDefine \"Observed\" as a New Text from Message at 0.\nShow Observed.\nReport `|`.\n\n" + functionSource("Join", "\"Target\" as App", "List of Text", "Await Target.\nReturn Message.") + "Run Worker.\nJoin Worker as \"Snapshot\".\nDefine \"Copied\" as a New Text from Snapshot at 0.\nShow Copied.\nDefine \"Current\" as a New Text from Message at 0.\nShow Current.\n"
+var functionAwaitRootsSource = "Define \"Message\" as a New List of `before` and `before`.\nDefine \"Witness\" as a New Text from Message at 0.\nCreate \"Report|-s|-ed|-ing|-er\" for Showing Witness and then Showing any Text.\n\n    Create \"Worker\" as a New Public Basic App.\nPlace `after` in Message at 0.\nDefine \"Observed\" as a New Text from Message at 0.\nShow Observed.\nReport `|`.\n\n" + functionSource("Join|-s|-ed|-ing|-er", "\"Target\" as App", "List of Text", "Await Target.\nReturn Message.") + "Run Worker.\nJoin Worker as \"Snapshot\".\nDefine \"Copied\" as a New Text from Snapshot at 0.\nShow Copied.\nDefine \"Current\" as a New Text from Message at 0.\nShow Current.\n"

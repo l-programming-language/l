@@ -227,7 +227,7 @@ func lucidGenerate(t *testing.T, name string, r *lucidResult, dir string) (bundl
 	input := lucidRead(t, name+".aml.txt")
 	original := bytes.Clone(input)
 	lucidWrite(t, filepath.Join(dir, "input.aml.txt"), input)
-	service := NewLogicemeService(runtimeGenerationResources(t))
+	service := NewLogicemeService(backendTestResources(t))
 	var generationErr error
 	func() {
 		defer func() {
@@ -235,7 +235,7 @@ func lucidGenerate(t *testing.T, name string, r *lucidResult, dir string) (bundl
 				generationErr = fmt.Errorf("production panic: %v\n%s", p, debug.Stack())
 			}
 		}()
-		bundle, generationErr = service.Evaluate(input, GenerationOptions{IncludeRuntime: false})
+		bundle, generationErr = service.Evaluate(input)
 	}()
 	if !bytes.Equal(input, original) {
 		lucidIssue(t, r, "production generation: Evaluate mutated the complete AML input")
@@ -344,7 +344,7 @@ func TestLucidTemplatesFrozen(t *testing.T) {
 	if err := json.Unmarshal(lucidRead(t, "templates.sha256.json"), &hashes); err != nil {
 		t.Fatal(err)
 	}
-	resources := runtimeGenerationResources(t)
+	resources := backendTestResources(t)
 	paths, err := fs.Glob(resources, "builtins/segments/*/*.lu")
 	if err != nil {
 		t.Fatal(err)

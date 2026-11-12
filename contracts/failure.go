@@ -94,62 +94,6 @@ func CheckRetryFailureBeforeEffect(summary FailureSummary, footprint FailureFoot
 	return result
 }
 
-type CleanupFailure struct {
-	ID          string `json:"id"`
-	Message     string `json:"message"`
-	LaunchOrder int    `json:"launch_order"`
-}
-
-type CleanupReport struct {
-	Primary    string           `json:"primary,omitempty"`
-	Secondary  []CleanupFailure `json:"secondary,omitempty"`
-	ExitStatus int              `json:"exit_status"`
-	Policy     string           `json:"policy"`
-	Coverage   Coverage         `json:"coverage"`
-}
-
-// RuntimeCleanupReport models the existing documented orchestrator policy:
-// preserve the accepted primary failure, append cleanup failures once in launch
-// order, and turn an otherwise successful exit into failure. Native conformance
-// remains an independent obligation; this function does not grant it.
-func RuntimeCleanupReport(primary string, acceptedStatus int, cleanup []CleanupFailure) CleanupReport {
-	return RuntimeCleanupReportWithCauses(primary, nil, acceptedStatus, cleanup)
-}
-
-// RuntimeCleanupReportWithCauses retains error identity across an accepted
-// primary cause chain and shutdown cleanup. Equal text does not imply the same
-// failure. The caller supplies identities from the runtime error cause graph.
-func RuntimeCleanupReportWithCauses(primary string, primaryCauses []string, acceptedStatus int, cleanup []CleanupFailure) CleanupReport {
-	result := CleanupReport{Primary: primary, ExitStatus: acceptedStatus, Policy: "l-runtime-primary-plus-launch-ordered-cleanup/1", Coverage: Known}
-	seen := make(map[string]bool)
-	for _, id := range primaryCauses {
-		if id != "" {
-			seen[id] = true
-		}
-	}
-	for _, failure := range cleanup {
-		if failure.ID == "" {
-			result.Coverage = Partial
-			result.Secondary = append(result.Secondary, failure)
-			continue
-		}
-		if !seen[failure.ID] {
-			seen[failure.ID] = true
-			result.Secondary = append(result.Secondary, failure)
-		}
-	}
-	// Stable insertion preserves actual order for equal launch ordinals.
-	for i := 1; i < len(result.Secondary); i++ {
-		for j := i; j > 0 && result.Secondary[j].LaunchOrder < result.Secondary[j-1].LaunchOrder; j-- {
-			result.Secondary[j], result.Secondary[j-1] = result.Secondary[j-1], result.Secondary[j]
-		}
-	}
-	if acceptedStatus == 0 && (primary != "" || len(result.Secondary) != 0) {
-		result.ExitStatus = 1
-	}
-	return result
-}
-
 // CheckFailureSummaryProfile projects actual outcome effects onto an explicit
 // runtime resource footprint. Structural target paths are not resource paths.
 func CheckFailureSummaryProfile(summary DerivedSummary, profile Profile, footprint FailureFootprint, disjoint []FailureResourcePair) []Obligation {

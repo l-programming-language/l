@@ -20,6 +20,14 @@ JSON inputs and checked source regions supply grammar, vocabulary, CLI help, and
 
 The standard-library catalog joins index language/key identities to authored pages and reviewed public exports. Routes use `/docs/stdlib/<lexicon>/<dictionary>/`; new dictionaries require both documentation and reviewed coverage. Catalog rendering is independent of any one dictionary.
 
+## Word reference projection
+
+Canonical word explanations stay in their registered `docs/` pages. Reviewed semantic records identify their exact source/anchor through `doc`; minimal word metadata supplies grammatical role, relevant forms and targets, and audience. Same-meaning associations point directly to a canonical entry. Configured vocabulary review participates in coverage, so absence of optional presentation metadata cannot hide a public meaning. Internal dictionaries and value tags retain their classifications.
+
+A standalone `word:` marker follows its owning heading. The existing Markdown AST validates its association and extracts the entry's own definition paragraph before generating facts or expanding examples. Nested senses have separate boundaries. One transient collection supplies headers, builtin/library navigation and `/docs/words/`; there is no checked-in expanded word database or second routing map. Definitions remain authored once, and Pagefind ignores generated navigation while indexing readable entry ownership, declared forms and target context.
+
+Whole-inventory validation precedes output publication. Missing entries, stale review dependencies, invalid associations or ambiguous markers fail preparation without replacing the previous complete projection. Ordinary preparation and website checks remain static; explicit example verification or native witness execution records separate evidence. The [documentation contributor guide](../docs/contributing/documentation.md#maintain-word-entries) owns the entry template and maintainer workflow.
+
 ## Identity and release boundary
 
 `/version.json` records language and documentation identities, channel, dirty status, and source fingerprint. Local previews use root `VERSION`; source archives retain null Git fields.

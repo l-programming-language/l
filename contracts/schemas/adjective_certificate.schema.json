@@ -70,7 +70,7 @@
           "type": "string"
         },
         "schema_version": {
-          "const": "1.1"
+          "const": "2.0"
         }
       },
       "required": [
@@ -1499,7 +1499,7 @@
       "type": "object"
     }
   },
-  "$id": "l-contracts/1.1/adjective_certificate",
+  "$id": "l-contracts/2.0/adjective_certificate",
   "$ref": "#/$defs/AdjectiveCertificateDocument",
   "$schema": "https://json-schema.org/draft/2020-12/schema"
 }

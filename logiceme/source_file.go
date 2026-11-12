@@ -29,7 +29,6 @@ type Object struct {
 
 // CompiledObject ...
 type CompiledObject struct {
-	headerSize      int
 	Name            string
 	Type            string
 	Package         string
@@ -106,18 +105,10 @@ func (obj *Object) Assemble(meta MetaDict, segSys SegmentalSystem) (CompiledObje
 			return CompiledObject{}, sourceObjectError(cName, err)
 		}
 	}
-	headerSize := 0
 	if segSys.Language == "Rust" && !literal {
-		for _, word := range obj.Sentence.Tensor.Dimensions {
-			if len(word.Dimensions) > 0 {
-				headerSize = len(word.Dimensions[0].Content)
-				break
-			}
-		}
 		if obj.header.structural {
 			// These are typed source-graph items, separate from the unchanged
-			// A glyph's package comment and import payloads. Retain the boundary
-			// as provenance for support assembly; never recover it from source.
+			// A glyph's package comment and import payloads.
 			var prefix bytes.Buffer
 			for _, attribute := range obj.header.Attributes {
 				prefix.WriteString(attribute)
@@ -125,13 +116,11 @@ func (obj *Object) Assemble(meta MetaDict, segSys SegmentalSystem) (CompiledObje
 			for _, module := range obj.header.Modules {
 				prefix.WriteString(module)
 			}
-			headerSize += prefix.Len()
 			prefix.Write(obj.Sentence.Content)
 			obj.Sentence.Content = prefix.Bytes()
 		}
 	}
 	cObject := CompiledObject{
-		headerSize:      headerSize,
 		Name:            cName,
 		Type:            obj.Type,
 		Package:         obj.Package,

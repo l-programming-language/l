@@ -2,81 +2,52 @@
 
 # L
 
-L is a human-readable programming language with applications as values. It
-compiles to native programs for macOS and Linux; Apps run in separate OS processes.
+L is a human-readable programming language implemented in Go. Lyger resolves
+source meaning into AML, and Logiceme composes native Rust through logeme templates.
 
-**Early development:** backward compatibility is not guaranteed before `v1.0.0`.
-Releases are published manually; merging into main does not release L.
+## Current development boundary
+
+This checkout supports one standalone App using core Print. The standard
+libraries and Runtime have been removed for reconstruction in L. Process
+supervision, capture and runtime-dependent words are unavailable. Publication
+is disabled, and existing releases describe earlier capabilities.
 
 ## A first program
 
-The [basic demo](demo/basic/main.l) creates an App, runs it, and displays its output:
+The [basic demo](demo/basic/main.l) uses the implicit core vocabulary:
 
 ```l
-Use IO's Print from `io` as "Print".
-
 "message" is `Hello World!`.
 Create "Hello" as a New Basic App.
 The App Prints message.
-Execute Hello.
-Show Hello's Output.
 ```
 
-See the [first-program walkthrough](docs/guide/first-program.md) for an explanation
-of the syntax and execution steps.
-
-## Try L
-
-[L releases](https://github.com/l-programming-language/l/releases) support
-Apple Silicon macOS (ARM64) and Linux (ARM64 and x86-64). In a Bash or Zsh
-terminal, install the latest stable release and activate it:
+Print writes Text followed by a newline. Build and execute it with this checkout:
 
 ```sh
-(set -o pipefail; curl --proto '=https' --tlsv1.2 -fsSL https://ldocs.org/install.sh | sh) && . "$HOME/.local/share/l/env"
+scripts/l-go run ./cmd/l build --output-dir .harness/hello demo/basic/main.l
+.harness/hello/main
 ```
 
-Setup asks once before installing L, preparing its pinned Rust dependencies,
-and configuring Bash and Zsh. Check the installation:
+See the [first-program guide](docs/guide/first-program.md) and
+[build guide](docs/cli/build.md) for the current boundary.
 
-```sh
-l --version
-```
+## Local setup
 
-Native C/linker tools are required; setup explains what is missing. The
-[installation guide](docs/cli/installation.md) covers getting started. A
-[versioned manual installer](docs/cli/installation-options.md#download-and-inspect-the-release-installer)
-is also available, along with options for custom locations and shell setup.
-Binary installation needs neither Go nor a source checkout; pre-1.0 macOS
-binaries are unsigned.
+Use the pinned Go and Rust tools described in the
+[development guide](docs/development-harness.md). `scripts/l-go` selects the
+repository's Go version. Explicit `scripts/l-ci bootstrap` prepares pinned tools
+and locked dependencies; build commands do not fetch missing tools implicitly.
 
-Save the example as `main.l`, then build and run it:
-
-```sh
-l build main.l
-./main
-```
-
-Output is `Hello World!` followed by a newline. Keep `main` and `main.apps/`
-together when moving the program. Running the result requires neither L nor the
-Go/Rust toolchains. See the [CLI guide](docs/cli/build.md) for build options.
-
-## Learn more
-
-- [Learn L](docs/guide/index.md): syntax, values, and Apps.
-- [Language specification](docs/spec/index.md): the implemented language contract.
-- [CLI reference](docs/cli/index.md): installation, commands, and runtime behavior.
-- [Architecture](docs/architecture.md): compiler and process design.
+Run `scripts/l-check` for the temporary hello-world gate. It checks actual source
+compilation and execution, selected core authority, rejection of unsupported
+runtime effects and frozen logeme assets. This is not full language acceptance.
 
 ## Contributing
 
-Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the
-[development guide](docs/development-harness.md). Pull requests run Linux CI;
-expensive local validation remains subject to the
-[validation policy](docs/development-harness.md#validation-authorization).
-
-Maintainers can find publication prerequisites and recovery steps in the
-[release activation guide](website/DEPLOYMENT.md).
-
-## License
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [architecture](docs/architecture.md), and
+[documentation development](website/README.md). Keep compiler coverage useful
+without retaining deleted vocabulary as a requirement. Do not change the frozen
+logeme templates or restore hardcoded runtime implementations.
 
 L is licensed under [Apache-2.0](LICENSE).

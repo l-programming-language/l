@@ -2,9 +2,11 @@ package Lyger
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/fs"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -15,10 +17,6 @@ import (
 type token struct {
 	rawBytes           []byte // []byte(key)
 	tType              string // prepositions.consignment.associative.root / type / primitive,
-	category           string // POS type (noun, verb, etc.),
-	subCategory        string // vocab type, i.e. primitive, structure, applicative, etc...
-	class              string // vocab sub-type, i.e. () (text, app, number, etc.), or structure type (list, etc...)
-	abstract           bool   // concrete if false
 	conjoined          bool   // if rawBytes ended with a comma
 	defined            bool   // if true token is user defined word aka id, if false token is a built in word
 	mem                *entry // raw data value
@@ -28,6 +26,7 @@ type token struct {
 	bindingError       error
 	scope              *lexicalScope
 	rangeError         error // Provisional primitive failure until names resolve.
+	numericLiteral     bool  // Authored dotted Number; immutable across binding retries.
 }
 
 // isPossessive returns whether the token is possessive or now
@@ -129,21 +128,16 @@ func (t *token) getPOS(trim bool) string {
 	return rawPOS
 }
 
-// isDeclare checks if token is conditional, i.e. if/else/otherwise
-func (t *token) isConditional() (bool, string) {
-	if t.getPOS(false) == "evaluations" {
-		sStr := strings.Split(t.tType, ".")
-		if len(sStr) > 2 {
-			//  conditional (if) | exceptional (else) | alternative (otherwise)
-			switch sStr[1] {
-			case "conditional", "exceptional", "alternative":
-				return true, sStr[1]
-			default:
-				return false, ""
-			}
+// isConditional identifies if/else/otherwise statement heads.
+func (t *token) isConditional() bool {
+	parts := strings.Split(t.tType, ".")
+	if len(parts) > 2 && parts[0] == "evaluations" {
+		switch parts[1] {
+		case "conditional", "exceptional", "alternative":
+			return true
 		}
 	}
-	return false, ""
+	return false
 }
 
 // isDeclare checks if token is declarative, i.e. wrapped in ""
@@ -166,8 +160,8 @@ func (t *token) getImplicitRoot() string {
 	return string(t.rawBytes)
 }
 
-// loadEntry uses t.rawBytes and loads the data entry
-func (t *token) loadEntry() error {
+// scan classifies the source token and loads its data entry.
+func (t *token) scan() error {
 	t.rangeError = nil
 	// 1) Check if token is a literal primitive data value (text, number, truth, ID)
 	if bytes.HasSuffix(t.rawBytes, []byte(",")) {
@@ -180,19 +174,21 @@ func (t *token) loadEntry() error {
 		t.tType = "primitive." + strings.ToLower(prim.Type.String())
 		return nil
 	}
-	// 2) Check if token is an explicit data type (Primitive, Applicative, Iterative, Lexical)
-	tType, tCat := checkType(t.rawBytes)
-	if tType != "Unknown" && tCat != storageUnknown {
-		t.mem = initEntry(tType, tCat)
-		t.tType = "type." + strings.ToLower(tCat.String()) + "." + strings.ToLower(tType)
-		return nil
-	}
-	// 3) Lookup if token is a primitive lexeme
-	l, lCat, lErr := t.gram.lex.lookup(t.rawBytes)
-	if lErr == nil {
-		t.mem = &entry{Type: storageLexeme, Lexeme: l}
-		t.tType = lCat
-		return nil
+	if !t.numericLiteral {
+		// 2) Check if token is an explicit data type (Primitive, Applicative, Iterative, Lexical)
+		tType, tCat := checkType(t.rawBytes)
+		if tType != "Unknown" && tCat != storageUnknown {
+			t.mem = initEntry(tType, tCat)
+			t.tType = "type." + strings.ToLower(tCat.String()) + "." + strings.ToLower(tType)
+			return nil
+		}
+		// 3) Lookup if token is a primitive lexeme
+		l, lCat, lErr := t.gram.lex.lookup(t.rawBytes)
+		if lErr == nil {
+			t.mem = &entry{Type: storageLexeme, Lexeme: l}
+			t.tType = lCat
+			return nil
+		}
 	}
 	// 4) Else load an unknown primitive for now
 	if errors.Is(primErr, strconv.ErrRange) {
@@ -200,15 +196,6 @@ func (t *token) loadEntry() error {
 	}
 	t.mem = &entry{Type: storagePrimitive, Primitive: newPrimitive(valueUnknown)}
 	t.tType = "primitive.unknown"
-	return nil
-}
-
-// scan token and determine key, category/subCategory, class, load new lexeme using gram.lex.lookup()
-func (t *token) scan() error {
-	err := t.loadEntry()
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -235,62 +222,110 @@ type lexicon struct {
 	Evaluations  map[string]lexeme `json:"evaluations,omitempty"`
 }
 
-// scanLex for a matching lexical entry for an inputted POS Type
-func (l *lexicon) scanLex(tBytes []byte, lType string) (lexeme, string) {
-	switch lType {
-	case "Nouns":
-		var isPossessive bool
-		owner, possessive := possessiveOwner(string(tBytes))
-		isPossessive, tBytes = possessive, []byte(owner)
-		reLexeme, lCat := l.scanMap(tBytes, lType, l.Nouns)
-		if isPossessive && lCat != "NotFound" {
-			lCat = lCat + ".possessive"
-		}
-		return reLexeme, lCat
-	case "Verbs":
-		return l.scanMap(tBytes, lType, l.Verbs)
-	case "Adjectives":
-		return l.scanMap(tBytes, lType, l.Adjectives)
-	case "Adverbs":
-		return l.scanMap(tBytes, lType, l.Adverbs)
-	case "Prepositions":
-		return l.scanMap(tBytes, lType, l.Prepositions)
-	case "Articles":
-		return l.scanMap(tBytes, lType, l.Articles)
-	case "Conjunctions":
-		return l.scanMap(tBytes, lType, l.Conjunctions)
-	case "Evaluations":
-		return l.scanMap(tBytes, lType, l.Evaluations)
-	default:
-		return lexeme{}, "Error"
+// Configured vocabulary retains its JSON prefix/postfix maps. The compiler's
+// ordered representation is separate because authored roles may share fixes.
+type configuredLexeme struct {
+	lexeme
+	Prefixes  map[string]string `json:"prefixes,omitempty"`
+	Postfixes map[string]string `json:"postfixes,omitempty"`
+}
+
+type lexicalCategory struct {
+	name  string
+	words *map[string]lexeme
+}
+
+// The configured schema and lookup priority share one category inventory.
+func (l *lexicon) categories() []lexicalCategory {
+	return []lexicalCategory{
+		{"nouns", &l.Nouns}, {"verbs", &l.Verbs}, {"adjectives", &l.Adjectives}, {"adverbs", &l.Adverbs},
+		{"prepositions", &l.Prepositions}, {"articles", &l.Articles}, {"conjunctions", &l.Conjunctions}, {"evaluations", &l.Evaluations},
 	}
+}
+
+func (l *lexicon) UnmarshalJSON(data []byte) error {
+	var configured map[string]map[string]configuredLexeme
+	if err := json.Unmarshal(data, &configured); err != nil {
+		return err
+	}
+	var candidate lexicon
+	for _, category := range candidate.categories() {
+		words, found := configured[category.name]
+		if !found {
+			continue
+		}
+		*category.words = make(map[string]lexeme, len(words))
+		for key, word := range words {
+			for _, affixes := range []struct {
+				fixes  map[string]string
+				prefix bool
+			}{{word.Postfixes, false}, {word.Prefixes, true}} {
+				fixes := make([]string, 0, len(affixes.fixes))
+				for fix := range affixes.fixes {
+					fixes = append(fixes, fix)
+				}
+				sort.Strings(fixes)
+				for _, fix := range fixes {
+					word.Forms = append(word.Forms, lexemeForm{Role: affixes.fixes[fix], Fix: fix, Prefix: affixes.prefix})
+				}
+			}
+			(*category.words)[key] = word.lexeme
+		}
+	}
+	*l = candidate
+	return nil
+}
+
+func (l lexicon) MarshalJSON() ([]byte, error) {
+	configured := make(map[string]map[string]configuredLexeme)
+	for _, category := range l.categories() {
+		if len(*category.words) == 0 {
+			continue
+		}
+		entries := make(map[string]configuredLexeme, len(*category.words))
+		for key, word := range *category.words {
+			entry := configuredLexeme{lexeme: word, Prefixes: make(map[string]string), Postfixes: make(map[string]string)}
+			entry.Forms = nil
+			for _, form := range word.Forms {
+				fixes := entry.Postfixes
+				if form.Prefix {
+					fixes = entry.Prefixes
+				}
+				if prior, found := fixes[form.Fix]; found && prior != form.Role {
+					return nil, fmt.Errorf("configured %s %s has multiple roles for affix %q", category.name, key, form.Fix)
+				}
+				fixes[form.Fix] = form.Role
+			}
+			entries[key] = entry
+		}
+		configured[category.name] = entries
+	}
+	return json.Marshal(configured)
 }
 
 // lookup checks an input token to determine if it represents a defined lexeme of the lexicon
 func (l *lexicon) lookup(tBytes []byte) (*lexeme, string, error) {
-	var reLexeme lexeme
-	var lCat string
-	lTypes := []string{
-		"Nouns",
-		"Verbs",
-		"Adjectives",
-		"Adverbs",
-		"Prepositions",
-		"Articles",
-		"Conjunctions",
-		"Evaluations",
-	}
 	tBytes = cleanTokenBytes(tBytes)
-	for _, lType := range lTypes {
-		reLexeme, lCat = l.scanLex(tBytes, lType)
-		if lCat != "NotFound" {
-			return &reLexeme, strings.ToLower(lType) + "." + lCat, nil
-		} else if lCat == "Error" {
-			fmt.Println("\nMATCH ERROR!!! THIS SHOULDN'T HAPPEN BTW" + string(tBytes))
-			return &reLexeme, strings.ToLower(lType) + "." + lCat, lerrors.Internal.Errorf("%s", "unknown POS Type: "+lType)
+	for _, category := range l.categories() {
+		raw, possessive := tBytes, false
+		if category.name == "nouns" {
+			var owner string
+			owner, possessive = possessiveOwner(string(raw))
+			raw = []byte(owner)
+		}
+		words := *category.words
+		if l.lookupIndex != nil {
+			words = l.lookupIndex[category.name][string(raw)]
+		}
+		word, form := checkLexemeMap(raw, words)
+		if form != "NotFound" {
+			if possessive {
+				form += ".possessive"
+			}
+			return &word, category.name + "." + form, nil
 		}
 	}
-	return &reLexeme, lCat, lerrors.UnresolvedReference.Errorf("NotFound")
+	return &lexeme{}, "NotFound", lerrors.UnresolvedReference.Errorf("NotFound")
 }
 
 func loadLexicon(resources fs.FS, lang string) (*lexicon, error) {

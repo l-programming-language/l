@@ -1,44 +1,31 @@
-# Iterative Types
+# Collection and namespace categories
 
-| Type | Meaning | Operations |
-| --- | --- | --- |
-| [List](#lists) | Ordered owned values with an element type. | Construct, append, read and replace by zero-based index. |
-| [Map](#maps) | Owned typed values keyed by Text bytes. | Insert, read and replace; keys have deterministic byte order. |
-| [Dictionary](#dictionaries) | A vocabulary namespace with its own owner. | Declare and import words; use Map for runtime key/value data. |
-
-Assignment, arguments, results and captures snapshot ordinary elements while retaining nested [Pointer](values.md#pointer) identity. These operations introduce no implicit traversal, membership or removal API.
+List, Map and Dictionary remain distinct compiler meanings. The current standalone Print path does not provide runtime collection operations or the deleted Storage library.
 
 ## Lists
 
+[List](../reference/word-glossary.md#word-type-list) denotes an ordered collection category.
+
 ### Declare a List
 
-```l
-Define "items" as a New List of Number.
-Put 7 in items.
-Place 9 in items at 0.
-Define "first" as a New Number from items at 0.
-Show first.
-```
-
-`of Number` declares the element type. The read states its expected result type; incompatible reads or updates reject. Indices must be nonnegative integers within bounds. A List constructed from differently typed values infers Thing elements and preserves their individual kinds. Typed reads verify complete element types and Function signatures. A List owns its elements; an L List does not become native `Props` or `Texts` metadata.
+A recognized declaration category is not an executable collection implementation. Consult the selected definition and current build boundary before relying on construction or updates.
 
 ## Maps
 
-```l
-Define "names" as a New Map of Text.
-Put `Ada` in names as `first`.
-Define "name" as a New Text from names at `first`.
-Show name.
-```
-
-`as` supplies the Text key; `at` selects it. Reading a missing key reports an error. No default value is inserted. Text keys preserve their bytes rather than applying Unicode normalization.
+[Map](../reference/word-glossary.md#word-type-map) denotes a keyed collection category. It is distinct from a vocabulary namespace.
 
 ## Dictionaries
 
-A Dictionary owns named vocabulary members. `Create "Shared" as a New Public Dictionary` declares the owner; `Shared's "Display|-s|-ed|-ing|-er"` declares a member word. Aliases preserve the owner and member identities. See the [public-values example](../guide/values.md#text-number-and-truth-together).
+[Dictionary](../reference/word-glossary.md#word-type-dictionary) owns source vocabulary and its lexical namespace. The root registry is empty. Project declarations and explicit imports retain canonical ownership; see [imports](imports.md).
 
-An imported dictionary has its own source scope and exports. [Indexed imports](imports.md#indexed-dictionaries) select those exports; computed Map keys do not participate in lexical lookup.
+## Put
+
+[Put](../reference/word-glossary.md#word-builtin-put) remains configured vocabulary. Runtime insertion is outside the current executable boundary.
+
+## Place
+
+[Place](../reference/word-glossary.md#word-builtin-place) remains configured vocabulary. Runtime replacement is outside the current executable boundary.
 
 ## Sources and witnesses
 
-[Runtime values](../../lyger/runtime_types.go), [source operations](../../lyger/runtime_values_source.go), and [value regressions](../../lyger/runtime_values_test.go) define runtime collections. [Member-resolution tests](../../lyger/member_resolution_regression_test.go) cover vocabulary ownership.
+See [value types](../../lyger/types.go), [member resolution](../../lyger/semantic_resolution.go) and [execution limits](execution.md). Retained collection tests are historical regression material.

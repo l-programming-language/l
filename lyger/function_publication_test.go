@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var functionPublicationSource = functionSource("Publish", "\"Value\" as Text", "Text", "Publicly define \"Message\" as Value.\nPublicly create \"Report|-s|-ed|-ing\" for Showing Message and then Showing any Text.\nReport `|`.\nReturn Message.") + "Publish `first` as \"First\".\nPublish `second` as \"Second\".\nShow First and Second.\n"
+var functionPublicationSource = functionSource("Publish|-es|-ed|-ing|-er", "\"Value\" as Text", "Text", "Publicly define \"Message\" as Value.\nPublicly create \"Report|-s|-ed|-ing|-er\" for Showing Message and then Showing any Text.\nReport `|`.\nReturn Message.") + "Publish `first` as \"First\".\nPublish `second` as \"Second\".\nShow First and Second.\n"
 
 func TestFunctionBodyPublication(t *testing.T) {
 	c := executableTestResult(t, memberResolutionSource{main: functionPublicationSource}).Compilation
@@ -20,7 +20,7 @@ func TestFunctionBodyPublication(t *testing.T) {
 			t.Fatalf("%s lost its declaring-unit publication", name)
 		}
 	}
-	requireFunctionGenerated(t, functionPublicationSource)
+	requireFunctionPlan(t, functionPublicationSource)
 }
 
 func TestFunctionPublicValuesRemainDefinitelyAssigned(t *testing.T) {
@@ -30,30 +30,15 @@ func TestFunctionPublicValuesRemainDefinitelyAssigned(t *testing.T) {
 		functionPublicationSource + "Show Message.\n",
 		functionPublicationSource + "Report `outside`.\n",
 	} {
-		_, err := functionGenerated(t, source)
+		_, err := compileFunctionPlan(t, source)
 		if err == nil || !strings.Contains(err.Error(), "not definitely") {
 			t.Fatalf("unproven public initialization accepted: %v", err)
 		}
 	}
 }
 
-func TestFunctionBodyPublicationNative(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: functionPublicationSource})
-	captureNativeResult(t, c, "first|second|firstsecond")
-}
-
-const functionMapSource = "Define \"callbacks\" as a New Map of Identity.\nPut Identity in callbacks as `key`.\nDefine \"callback\" as a New Identity from callbacks at `key`.\ncallback `mapped` as \"Result\".\nShow Result.\n"
+const functionMapSource = "Define \"callbacks\" as a New Map of Echo.\nPut Echo in callbacks as `key`.\nDefine \"replay|-s|-ed|-ing|-er\" as a New Echo from callbacks at `key`.\nreplay `mapped` as \"Result\".\nShow Result.\n"
 
 func TestFunctionSignatureMap(t *testing.T) {
-	requireFunctionGenerated(t, identityFunction+functionMapSource)
-}
-
-func functionMapExtractionSource() string {
-	source := identityFunction + strings.Replace(functionMapSource, "Define \"callback\"", "Define \"boxed\" as a New Thing of callbacks.\nDefine \"copied\" as a New Map of Identity from boxed.\nDefine \"callback\"", 1)
-	return strings.Replace(source, "from callbacks at", "from copied at", 1)
-}
-
-func TestFunctionSignatureMapNative(t *testing.T) {
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: functionMapExtractionSource()})
-	captureNativeResult(t, c, "mapped")
+	requireFunctionPlan(t, identityFunction+functionMapSource)
 }

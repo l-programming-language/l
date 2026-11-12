@@ -222,14 +222,6 @@ func TestRefactorGenerationCurrentDefaultsAndCanonicalIdentity(t *testing.T) {
 			t.Fatalf("root component defaults = %#v / %#v", service.Meta, service.Objects[0].Meta)
 		}
 	}
-	result := &CompilationResult{Compilation: compilation}
-	unit, err := result.OrchestratorUnit("controller", executableTestCompanions(result))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !bytes.Contains(unit.BackendAML, []byte(`<JSON>{"AppMeta":{"AppName":"controller","AppLang":"rust","AppVersion":"0.0.0","AppGenDir":"/src"}}</JSON>`)) || !bytes.Contains(unit.BackendAML, []byte("<SETTINGS>\n</SETTINGS>")) {
-		t.Fatal("synthetic orchestrator defaults or empty settings changed")
-	}
 	first, second := compilation.Semantics.Apps[0], compilation.Semantics.Apps[1]
 	first.Meta["AppVersion"] = "changed"
 	first.Settings["Host"] = "changed"

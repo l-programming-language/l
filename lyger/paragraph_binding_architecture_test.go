@@ -72,16 +72,16 @@ func paragraphBindingUses(t *testing.T, compilation *Compilation, spelling strin
 
 // A test-owned native definition gives namespace/nominal tests distinct source
 // declarations without depending on IO's intentionally private implementation words.
-const paragraphAnnounce = "Define \"Announce|-s|-d|-ing|-r\" to `<DEF>BOD^E{|Statement: ~::std::println!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n"
+const paragraphAnnounce = "Define \"Announce|-s|-d|--ing|-r\" to `<DEF>BOD^E{|Statement: ~::std::println!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n"
 
 func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphWitness
 	for _, body := range []string{
 		`BOD^E{|Statement: ~::std::print!("{}", <@Output|Thing@>);~|}`,
 		`BOD^E{|Statement: ~::std::println!("{}", <@Output|Thing@>);~|}`,
 	} {
-		source.main += "\n    Define \"Pulse|-s|-d|-ing\" as `<DEF>" + body + "<DEF>`.\nUse Pulse as \"Stroke\".\n"
+		source.main += "\n    Define \"Pulse|-s|-d|--ing\" as `<DEF>" + body + "<DEF>`.\nUse Pulse as \"Stroke|-s|-d|--ing\".\n"
 	}
 	compilation := executableTestResult(t, source).Compilation
 	definitions := paragraphBindingDeclarations(t, compilation, "Pulse", 2)
@@ -108,7 +108,7 @@ func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {
 		t.Fatal("distinct local templates produced the same expansion")
 	}
 	for index, alias := range aliases {
-		parameter := &objectGram{noun: &token{binding: &tokenBinding{Record: alias.record}}}
+		parameter := &objectGram{nominalGram: nominalGram{noun: &token{binding: &tokenBinding{Record: alias.record}}}}
 		constructor := &constructionNode{Nominal: "holder", Parameters: []*objectGram{parameter}}
 		if err := compilation.validateConstructionParameters(constructor, []DefinitionInstance{instances[index]}); err != nil {
 			t.Fatalf("valid local nominal alias rejected: %v", err)
@@ -125,7 +125,7 @@ func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {
 }
 
 func TestParagraphBindingPrivateAppsKeepRunTargetsAndBodies(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphWitness
 	for _, text := range []string{"first private body", "second private body"} {
 		source.main += "\n    \"message\" is `" + text + "`.\n" +
@@ -321,11 +321,11 @@ func TestParagraphBindingRequiresTokenScope(t *testing.T) {
 }
 
 func TestParagraphBindingDelayedInflectionShadowsOuter(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphWitness + paragraphAnnounce +
-		"Create \"Launch|-es|-ed|-ing\" for Processing a New Announcer.\n" +
+		"Create \"Launch|-es|-ed|-ing|-er\" for Processing a New Announcer.\n" +
 		"\n    \"scopeMarker\" is `private`.\n" +
-		"Create \"Launch|-es|-ed|-ing\" for Processing a New Whisperer.\n" +
+		"Create \"Launch|-es|-ed|-ing|-er\" for Processing a New Whisperer.\n" +
 		"Create \"Reader\" as a New Basic App.\nThe App Launches x2.\n" +
 		"Define \"Whisper|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~::std::print!(\"{}\", <@Output|Thing@>);~|}<DEF>`.\n" +
 		"\nCreate \"OuterReader\" as a New Basic App.\nThe App Launches x1.\n"
@@ -347,12 +347,12 @@ func TestParagraphBindingDelayedInflectionShadowsOuter(t *testing.T) {
 }
 
 func TestParagraphBindingSiblingDictionaryMembersKeepOwners(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphWitness + paragraphAnnounce
 	for index, text := range []string{"x1", "x2"} {
 		source.main += fmt.Sprintf("\n    Create \"Tools\" as a Dictionary.\n"+
-			"Create Tools's \"Speak|-s|-ed|-ing|-er\" for Processing a New Announcer.\n"+
-			"Use Tools's Speak as \"Display\".\n"+
+			"Create Tools's \"Speak|-s|----oke|-ing|-er\" for Processing a New Announcer.\n"+
+			"Use Tools's Speak as \"Display|-s|-ed|-ing|-er\".\n"+
 			"Create \"Reader%d\" as a New Basic App.\nThe App Displays %s.\n", index+1, text)
 	}
 	compilation := executableTestResult(t, source).Compilation

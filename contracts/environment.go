@@ -31,7 +31,6 @@ type NativeEnvironment struct {
 	Target        string               `json:"target"`
 	Compiler      string               `json:"compiler"`
 	PanicPolicy   string               `json:"panic_policy"`
-	Runtime       string               `json:"runtime"`
 	Allocator     string               `json:"allocator"`
 	Configuration map[string]string    `json:"configuration"`
 	Inputs        map[string]string    `json:"inputs"`
@@ -57,7 +56,7 @@ func (value NativeEnvironment) Validate() error {
 	if value.Method == "build" {
 		expectedVersion = "2"
 	}
-	if value.Version != expectedVersion || !containsString([]string{"capture", "build", "test-only"}, value.Method) || value.Host == "" || value.Target == "" || value.Compiler == "" || value.PanicPolicy == "" || value.Runtime == "" || value.Allocator == "" || len(value.Inputs) == 0 {
+	if value.Version != expectedVersion || !containsString([]string{"capture", "build", "test-only"}, value.Method) || value.Host == "" || value.Target == "" || value.Compiler == "" || value.PanicPolicy == "" || value.Allocator == "" || len(value.Inputs) == 0 {
 		return fmt.Errorf("native environment requires a supported version, method and explicit configuration/input identities")
 	}
 	generation, placed := value.Configuration["companion-generation"]

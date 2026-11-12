@@ -38,7 +38,7 @@ func BenchmarkRefactorRenderExpandedSource(b *testing.B) {
 	for _, count := range []int{32, 256} {
 		b.Run(fmt.Sprintf("statements=%d", count), func(b *testing.B) {
 			source := refactorBenchmarkSource(count)
-			source = append(source, []byte("Define \"Sequence\" as `<DEF>W^<@Parts|Syllables@><DEF>`.\n")...)
+			source = append(source, []byte("Define \"Sequence|-s|-like|--ing\" as `<DEF>W^<@Parts|Syllables@><DEF>`.\n")...)
 			prepared, err := PrepareSource("bench.l", source)
 			if err != nil {
 				b.Fatal(err)
@@ -163,7 +163,7 @@ func BenchmarkRefactorLiteralRestoration(b *testing.B) {
 					for j := range tokens {
 						tokens[j] = &token{rawBytes: []byte(raw[j]), tType: "primitive.text", mem: &entry{Type: storagePrimitive, Primitive: &primitive{Type: valueText, Text: raw[j]}}}
 					}
-					statement := &lStatement{tokens: tokens, sGram: &statementGram{tokens: tokens, predicate: &predicateGram{tokens: tokens, obj: &objectGram{tokens: tokens, noun: tokens[0]}}}}
+					statement := &lStatement{tokens: tokens, sGram: &statementGram{tokens: tokens, predicate: &predicateGram{tokens: tokens, obj: &objectGram{nominalGram: nominalGram{tokens: tokens, noun: tokens[0]}}}}}
 					if err := statement.uncacheLiterals(pool); err != nil || !bytes.Equal(tokens[0].rawBytes, want) {
 						b.Fatalf("restore: %v", err)
 					}
@@ -227,7 +227,7 @@ func BenchmarkRefactorGrammarSequence(b *testing.B) {
 				if err != nil {
 					b.Fatal(err)
 				}
-				objects, _, err := buildGrammarObjects(term, statement.tokens, gram)
+				objects, _, err := buildBoundedGrammarObjects(term, statement.tokens, gram, grammarArity{})
 				if err != nil || len(objects) != count {
 					b.Fatalf("sequence returned %d objects: %v", len(objects), err)
 				}

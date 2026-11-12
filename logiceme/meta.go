@@ -401,17 +401,12 @@ func parseStructFields(structStr string) [][]string {
 // ParseStructArray returns parsed and processed *MetaObj Arrays from a pre-formatted string
 func ParseStructArray(arrayStr string) []*MetaObj {
 	reMeta := []*MetaObj{}
-	reArray := []string{}
 	mArray := strings.Trim(strings.Trim(arrayStr, "&["), "]&")
 	structType := determineStructType(mArray)
 	structReg, _ := LoadRegex("Structs", structType) //nolint:errcheck // LoadRegex retains its public error signature but returns nil after compilation.
 	structs := structReg.Parse([]byte(mArray))
-	for _, sVal := range structs {
-		reArray = append(reArray, string(sVal))
-	}
-	for ind, reArr := range reArray {
-		indStr := strconv.Itoa(ind)
-		mObj := MetaObj{Key: indStr, Value: reArr, Type: "Struct"}
+	for ind, source := range structs {
+		mObj := MetaObj{Key: strconv.Itoa(ind), Value: string(source), Type: "Struct"}
 		reMeta = append(reMeta, &mObj)
 	}
 	return reMeta

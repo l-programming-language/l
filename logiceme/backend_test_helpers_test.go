@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func runtimeGenerationResources(t *testing.T) fs.FS {
+func backendTestResources(t *testing.T) fs.FS {
 	t.Helper()
 	root, err := filepath.Abs("..")
 	if err != nil {

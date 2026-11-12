@@ -11,8 +11,8 @@ import (
 func TestDictionaryLibraryOwnsDeclarationDependencies(t *testing.T) {
 	source := "Create \"Words\" as a Dictionary.\n\n" +
 		"    Publicly create \"Echo|-es|-ed|-ing|-er\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n" +
-		"    Publicly create Words's \"Supply|-ies|-ied|-ying|-ier\" as a Generic Function with No Inputs and Outputs of `f64`.\nCreate \"Result\" as a New Echoer of 2.\nReturn Result.\n\n" +
-		"    Publicly create \"Unused\" as a Generic Function with No Inputs and Outputs of `f64`.\nReturn 3.\n"
+		"    Publicly create Words's \"Supply|--ies|--ied|-ing|--ier\" as a Generic Function with No Inputs and Outputs of `f64`.\nCreate \"Result\" as a New Echoer of 2.\nReturn Result.\n\n" +
+		"    Publicly create \"Ignore|-s|-d|--ing|-r\" as a Generic `unused` Function with No Inputs and Outputs of `f64`.\nReturn 3.\n"
 	c := compileDefinitionSource(t, source, "library.l")
 	aml, err := c.ComposeLibrary("Words", "runtime")
 	if err != nil {

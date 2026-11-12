@@ -3,14 +3,37 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { spawnSync } from 'node:child_process';
 import { checkCoverage, generateReferences, references, referenceEntries } from '../scripts/references.mjs';
 import { sha256 } from '../scripts/lib.mjs';
 import { anchors, parseMarkdown } from '../scripts/content.mjs';
 import GithubSlugger from 'github-slugger';
+import { prepare } from '../scripts/prepare.mjs';
 
 const jsonText = (value) => JSON.stringify(value, null, 2) + '\n';
 const segment = 'builtins/segments/rust/a.def';
 const page = (source, route) => ({ source, route, title: source, description: 'Synthetic reference witness.', section: 'Reference', order: 1, role: 'implementation', generated: source.startsWith('docs/_generated/') });
+
+test('current core catalog has canonical glossary routes and no retired library records', async () => {
+  const root = new URL('../../', import.meta.url);
+  const map = JSON.parse(await fs.readFile(new URL('website/content-map.json', root), 'utf8'));
+  const semantic = JSON.parse(await fs.readFile(new URL('docs/_meta/semantics.json', root), 'utf8'));
+  const glossary = map.pages.find((page) => page.route === '/docs/word-glossary/');
+  assert.ok(glossary, 'one detailed glossary has a maintained canonical route');
+  const canonical = semantic.entries.filter((entry) => entry.word);
+  assert.ok(canonical.length > 0);
+  for (const entry of canonical) {
+    assert.equal(entry.doc.split('#')[0], glossary.source, entry.id);
+    assert.ok(entry.word.definitions?.length, `${entry.id} has an authoritative definition`);
+  }
+  const native = map.pages.find((page) => page.route === '/docs/words/');
+  assert.equal(native.title, 'Native Words');
+  const nativeTree = parseMarkdown(await fs.readFile(new URL(native.source, root), 'utf8'));
+  assert.deepEqual(nativeTree.children.filter((node) => node.type === 'html' && /word-index/.test(node.value)).map((node) => node.value), ['<!-- word-index:builtins -->']);
+  assert.ok(canonical.some((entry) => entry.id === 'builtin:print'));
+  assert.ok(semantic.entries.every((entry) => !entry.dictionary));
+  assert.ok(map.pages.every((page) => !page.route.startsWith('/docs/stdlib/')));
+});
 
 async function write(root, relative, content) {
   const target = path.join(root, relative);
@@ -29,15 +52,15 @@ async function fixture(t) {
   const root = await fs.realpath(temporary);
   t.after(() => fs.rm(root, { recursive: true, force: true }));
   const grammar = { statement: { category: 'statement', class: 'action', structure: '<subject> | predicate', cases: { direct: 'verb | object', passive: 'subject | verb' } } };
-  const vocabulary = { verbs: { Show: { forms: ['Show', 'Shows'], description: 'Write a value.' } } };
-  const index = { format: 1, languages: { eng: { io: { entry: 'stdlib/eng/io/dictionary.l', dictionary: 'IO' } } } };
+  // These words belong only to this temporary metadata fixture.
+  const vocabulary = { verbs: { Mark: { forms: ['Mark', 'Marks'], description: 'Mark a test item.' } } };
+  const index = { format: 1, languages: { eng: { fixture: { entry: 'fixtures/fixture/dictionary.l', dictionary: 'Fixture' } } } };
   const files = {
     'lexicon/eng/grammar.json': jsonText(grammar),
     'lexicon/eng/vocabulary.json': jsonText(vocabulary),
-    'stdlib/index.json': jsonText(index),
-    'stdlib/eng/io/dictionary.l': 'Create "IO" as a Dictionary.\n',
+    'dictionaries.json': jsonText(index),
+    'fixtures/fixture/dictionary.l': 'Create "Fixture" as a Dictionary.\n',
     'cmd/l/command.go': 'package main\nconst buildUsage = `l build [SOURCE]\nOptions: --help\n`\n',
-    'cmd/l/contracts.go': 'package main\nconst contractsUsage = `l contracts inspect INPUT\nl contracts verify-dictionary --assurance symbolic --adjective MEANING DICTIONARY\n`\n',
     'cmd/l/command_test.go': '// Existing CLI witness; fixture is never compiled.\n',
     'lyger/value_kinds.go': 'package Lyger\nvar valueTypeNames = [valueTypeCount]string{\n valueText: "Text",\n}\n',
     'lyger/grammar_terms.go': '// source notation implementation\n',
@@ -55,11 +78,11 @@ async function fixture(t) {
     'logiceme/testdata/lucid/rejected.rs.txt': '// intentional native rejection\n',
     'logiceme/testdata/lucid/forms-invalid/bad.aml.txt': '<PROGRAM>unclosed\n',
     'logiceme/testdata/lucid/README.md': '# Synthetic Lucid witness\n',
-    'docs/spec/grammar.md': '# Grammar\n\n## Statement structure\n\nConfigured grammar and its limits.\n',
+    'docs/spec/grammar.md': '# Grammar\n\n## Statement structure\n\nConfigured grammar and its limits.\n\n## Mark\n\n<!-- word:builtin:mark -->\n\nMark a test item.\n',
     'docs/spec/values.md': '# Values\n\n## Text\n\nA source-backed value category.\n',
     'docs/cli/build.md': '# Build\n\n## Command syntax\n\nBuild a source.\n\n## Target OS\n\nRejected.\n',
     'docs/reference/logemes/index.md': '# Logemes\n\n## Segment A\n\nBounded backend behavior.\n',
-    'docs/stdlib/io.md': '# IO\n\n## Print\n\nPublic output action.\n',
+    'docs/dictionaries/fixture.md': '# Fixture\n\n## Draw\n\n<!-- word:stdlib:Fixture.Draw -->\n\nA test-owned drawing action.\n',
   };
   for (const [name, bytes] of Object.entries(files)) await write(root, name, bytes);
   const review = (source, entries) => ({ schemaVersion: 1, sourceHashes: { [source]: sha256(files[source]) }, entries });
@@ -67,10 +90,10 @@ async function fixture(t) {
     statement: { support: 'partial', topic: 'Statement structure', doc: 'docs/spec/grammar.md#statement-structure', notes: 'Recognition is separate from supported lowering.' },
   })));
   await write(root, 'docs/_meta/vocabulary-review.json', jsonText(review('lexicon/eng/vocabulary.json', {
-    'verbs.Show': { support: 'supported', topic: 'Statement structure', doc: 'docs/spec/grammar.md#statement-structure', notes: 'Reviewed source action.' },
+    'verbs.Mark': { support: 'supported', topic: 'Statement structure', doc: 'docs/spec/grammar.md#statement-structure', notes: 'Reviewed source action.', wordRef: 'builtin:mark' },
   })));
   await write(root, 'docs/_meta/cli-review.json', jsonText({
-    schemaVersion: 1, sourceHashes: { 'cmd/l/command.go': sha256(files['cmd/l/command.go']), 'cmd/l/contracts.go': sha256(files['cmd/l/contracts.go']) },
+    schemaVersion: 1, sourceHashes: { 'cmd/l/command.go': sha256(files['cmd/l/command.go']) },
     entries: ['build', '-os'].map((name) => ({
       id: `cli:${name}`, kind: 'cli', name, role: 'normative', support: name === '-os' ? 'rejected' : 'supported',
       doc: `docs/cli/build.md#${name === '-os' ? 'target-os' : 'command-syntax'}`,
@@ -79,13 +102,14 @@ async function fixture(t) {
   }));
   const semantic = (id, kind, name, source, doc) => ({
     id, kind, name, role: 'implementation', support: 'supported', doc,
-    ...(kind === 'stdlib-export' ? { dictionary: { lexicon: 'eng', key: 'io' }, visibility: 'public' } : {}),
+    ...(kind === 'stdlib-export' ? { dictionary: { lexicon: 'eng', key: 'fixture' }, visibility: 'public' } : {}),
     sources: [source],
     witnesses: ['lyger/scanner_test.go'], evidence: 'static-inspection; existing-witness-not-run',
   });
-  await write(root, 'docs/_meta/semantics.json', jsonText({ schemaVersion: 3, checkedStages: ['static-source-inspection'], executedStages: [], sourceHashes: { 'lyger/value_kinds.go': sha256(files['lyger/value_kinds.go']), 'stdlib/eng/io/dictionary.l': sha256(files['stdlib/eng/io/dictionary.l']) }, entries: [
+  await write(root, 'docs/_meta/semantics.json', jsonText({ schemaVersion: 3, checkedStages: ['static-source-inspection'], executedStages: [], sourceHashes: { 'lyger/value_kinds.go': sha256(files['lyger/value_kinds.go']), 'fixtures/fixture/dictionary.l': sha256(files['fixtures/fixture/dictionary.l']) }, entries: [
     semantic('value:Text', 'value-tag', 'Text', 'lyger/value_kinds.go', 'docs/spec/values.md#text'),
-    semantic('stdlib:IO.Print', 'stdlib-export', 'IO.Print', 'stdlib/eng/io/dictionary.l', 'docs/stdlib/io.md#print'),
+    { ...semantic('stdlib:Fixture.Draw', 'stdlib-export', 'Fixture.Draw', 'fixtures/fixture/dictionary.l', 'docs/dictionaries/fixture.md#draw'), word: { partOfSpeech: 'verb' } },
+    { ...semantic('builtin:mark', 'builtin', 'Mark', 'lyger/value_kinds.go', 'docs/spec/grammar.md#mark'), word: { partOfSpeech: 'verb' } },
   ] }));
   await write(root, 'docs/_meta/logemes.json', jsonText({ schemaVersion: 3, checkedStages: ['static-source-inspection'], executedStages: [], sourceHashes: { [segment]: sha256(files[segment]) }, entries: [
     semantic('logeme:A', 'logeme', 'A', segment, 'docs/reference/logemes/index.md#segment-a'),
@@ -99,7 +123,7 @@ async function fixture(t) {
     page('docs/spec/values.md', '/docs/spec/values/'),
     page('docs/cli/build.md', '/docs/cli/build/'),
     page('docs/reference/logemes/index.md', '/docs/reference/logemes/'),
-    page('docs/stdlib/io.md', '/docs/stdlib/eng/io/'),
+    page('docs/dictionaries/fixture.md', '/docs/stdlib/eng/fixture/'),
   ];
   await write(root, 'website/content-map.json', jsonText({ schemaVersion: 1, pages }));
   return { root, pages };
@@ -121,9 +145,6 @@ test('mechanical reference inventory is deterministic and preserves evidence-sta
   assert.match(first.files['docs/_generated/grammar.md'], /&lt;subject&gt; &#124; predicate/);
   assert.match(first.files['docs/_generated/cli-help.md'], /source-derived.*, not runtime-captured/);
   assert.ok(first.files['docs/_generated/cli-help.md'].includes('l build [SOURCE]\nOptions: --help\n'));
-  assert.ok(first.files['docs/_generated/cli-help.md'].includes('l contracts inspect INPUT\nl contracts verify-dictionary --assurance symbolic --adjective MEANING DICTIONARY\n'));
-  assert.match(first.files['docs/_generated/cli-help.md'], /From `contractsUsage` in \[cmd\/l\/contracts.go\]/);
-  assert.equal(first.inventory.inputs['cmd/l/contracts.go'], sha256(await fs.readFile(path.join(root, 'cmd/l/contracts.go'))));
   assert.match(first.files['docs/_generated/lucid.md'], /Runtime execution is a separate witness\. This inventory reports no validation run/);
   assert.match(first.files['docs/_generated/lucid.md'], /Intentional rejection: E0603/);
   assert.ok(Object.values(first.inventory.inputs).every((hash) => /^[a-f0-9]{64}$/.test(hash)));
@@ -143,6 +164,70 @@ test('fresh snapshots and complete meaningful coverage pass from a no-Git fixtur
     if (!['entries', 'schemaVersion', 'notes', 'evidenceSets', 'classifications'].includes(key)) assert.deepEqual(coverage[key], value);
   }
   await assert.rejects(fs.access(path.join(root, 'docs/_generated/inventory.json')), { code: 'ENOENT' });
+});
+
+test('word coverage cannot omit a public export by deleting optional word metadata', async (t) => {
+  const { root, pages } = await fixture(t);
+  const inventory = await references({ root, write: true });
+  await editJSON(root, 'docs/_meta/semantics.json', (value) => { delete value.entries.find((entry) => entry.id === 'stdlib:Fixture.Draw').word; });
+  await assert.rejects(checkCoverage(root, pages, inventory), /Missing word coverage.*stdlib:Fixture.Draw/);
+});
+
+test('word associations, forms, targets and canonical marker ownership fail closed', async (t) => {
+  const mutations = [
+    ['unknown part of speech', (entry) => { entry.word.partOfSpeech = 'command'; }, /part of speech/],
+    ['undeclared form', (entry) => { entry.word.formRoles = { Drawer: { partOfSpeech: 'noun', role: 'actor' } }; }, /Undeclared form/],
+    ['missing target', (entry) => { entry.word.targets = [{ entry: 'missing' }]; }, /target/],
+    ['missing target form', (entry) => { entry.word.targets = [{ entry: 'builtin:mark', form: 'Invented' }]; }, /target form/],
+    ['conflicting association', (entry) => { entry.wordRef = 'builtin:mark'; }, /both word and wordRef/],
+    ['dangling association', (entry) => { delete entry.word; entry.wordRef = 'missing'; }, /canonical word/],
+    ['self association', (entry) => { delete entry.word; entry.wordRef = entry.id; }, /canonical word/],
+  ];
+  for (const [label, mutate, error] of mutations) await t.test(label, async (t) => {
+    const { root, pages } = await fixture(t);
+    const inventory = await references({ root, write: true });
+    await editJSON(root, 'docs/_meta/semantics.json', (value) => mutate(value.entries.find((entry) => entry.id === 'stdlib:Fixture.Draw')));
+    await assert.rejects(checkCoverage(root, pages, inventory), error);
+  });
+  for (const [label, body, error] of [
+    ['wrong anchor', '## Other\n\n<!-- word:stdlib:Fixture.Draw -->\n\nWrong owner.\n\n## Draw\n\nOriginal anchor.', /wrong source or anchor/],
+    ['duplicate marker', '## Draw\n\n<!-- word:stdlib:Fixture.Draw -->\n\nDefinition.\n\n## Again\n\n<!-- word:stdlib:Fixture.Draw -->\n\nDuplicate.', /Duplicate word marker/],
+    ['missing definition', '## Draw\n\n<!-- word:stdlib:Fixture.Draw -->\n\n```l\n"value" is `fixture`.\n```', /definition paragraph/],
+    ['misplaced marker', '## Draw\n\nAn introduction.\n\n<!-- word:stdlib:Fixture.Draw -->\n\nDefinition.', /immediately after/],
+  ]) await t.test(label, async (t) => {
+    const { root, pages } = await fixture(t);
+    const inventory = await references({ root, write: true });
+    await write(root, 'docs/dictionaries/fixture.md', '# Fixture\n\n' + body + '\n');
+    await assert.rejects(checkCoverage(root, pages, inventory), error);
+  });
+});
+
+test('normal word preparation is static and an invalid refresh preserves every owned output', async (t) => {
+  const { root } = await fixture(t);
+  const sentinel = path.join(root, 'native-work-ran');
+  const command = `${process.execPath} -e ${JSON.stringify(`require('fs').writeFileSync(${JSON.stringify(sentinel)}, 'replayed')`)}`;
+  await editJSON(root, 'docs/_meta/semantics.json', (value) => {
+    const word = value.entries.find((entry) => entry.id === 'stdlib:Fixture.Draw');
+    word.evidence = 'Recorded only: ' + command;
+    word.commands = [command];
+  });
+  await write(root, 'docs/_meta/examples.json', jsonText({ schemaVersion: 1, examples: [] }));
+  for (const tool of ['l', 'go', 'rustc', 'cargo']) {
+    await write(root, `tools/${tool}`, `#!/bin/sh\nprintf invoked > '${sentinel.replaceAll("'", "'\\''")}'\nexit 89\n`);
+    await fs.chmod(path.join(root, 'tools', tool), 0o755);
+  }
+  await references({ root, write: true });
+  const site = path.join(root, 'website');
+  const invocation = `import {prepare} from ${JSON.stringify(new URL('../scripts/prepare.mjs', import.meta.url).href)}; await prepare(${JSON.stringify({ root, site })});`;
+  const result = spawnSync(process.execPath, ['--input-type=module', '-e', invocation], { encoding: 'utf8', timeout: 10000, env: { ...process.env, PATH: path.join(root, 'tools') + path.delimiter + process.env.PATH } });
+  assert.equal(result.status, 0, result.stderr);
+  await assert.rejects(fs.access(sentinel), { code: 'ENOENT' });
+  const owned = JSON.parse(await fs.readFile(path.join(site, '.generated/owned.json'), 'utf8'));
+  const before = new Map(await Promise.all([...owned, '.generated/owned.json'].map(async (name) => [name, await fs.readFile(path.join(site, name))])));
+  await editJSON(root, 'docs/_meta/semantics.json', (value) => { delete value.entries.find((entry) => entry.id === 'stdlib:Fixture.Draw').word; });
+  await assert.rejects(prepare({ root, site }), /Missing word coverage/);
+  for (const [name, bytes] of before) assert.deepEqual(await fs.readFile(path.join(site, name)), bytes, name);
+  await assert.rejects(fs.access(sentinel), { code: 'ENOENT' });
 });
 
 test('changing a reviewed grammar or vocabulary dependency fails before snapshot refresh', async (t) => {
@@ -174,10 +259,10 @@ test('new grammar and vocabulary inventory needs reviewed semantic classificatio
 
 test('removed source entries leave detectable stale reviewed mappings', async (t) => {
   const { root } = await fixture(t);
-  await editJSON(root, 'lexicon/eng/vocabulary.json', (value) => { delete value.verbs.Show; });
+  await editJSON(root, 'lexicon/eng/vocabulary.json', (value) => { delete value.verbs.Mark; });
   const hash = sha256(await fs.readFile(path.join(root, 'lexicon/eng/vocabulary.json')));
   await editJSON(root, 'docs/_meta/vocabulary-review.json', (value) => { value.sourceHashes['lexicon/eng/vocabulary.json'] = hash; });
-  await assert.rejects(generateReferences(root), /Stale reviewed vocabulary entry: verbs.Show/);
+  await assert.rejects(generateReferences(root), /Stale reviewed vocabulary entry: verbs.Mark/);
 });
 
 test('changed CLI implementation cannot be approved by mechanical snapshot generation', async (t) => {
@@ -192,23 +277,11 @@ test('changed CLI implementation cannot be approved by mechanical snapshot gener
   assert.deepEqual(await fs.readFile(path.join(root, 'docs/_meta/cli-review.json')), reviewBytes);
 });
 
-test('contracts parser changes require independent review before snapshot generation', async (t) => {
+test('build help extraction rejects an unrecognized constant after parser review', async (t) => {
   const { root } = await fixture(t);
-  await references({ root, write: true });
-  const helpBytes = await fs.readFile(path.join(root, 'docs/_generated/cli-help.md'));
-  const reviewBytes = await fs.readFile(path.join(root, 'docs/_meta/cli-review.json'));
-  await fs.appendFile(path.join(root, 'cmd/l/contracts.go'), 'flags.StringVar(&command.NewOption, "new-option", "", "new contracts behavior")\n');
-  await assert.rejects(generateReferences(root), /Reviewed CLI dependency changed: cmd\/l\/contracts.go/);
-  await assert.rejects(references({ root, write: true }), /snapshot generation cannot approve this change/);
-  assert.deepEqual(await fs.readFile(path.join(root, 'docs/_generated/cli-help.md')), helpBytes);
-  assert.deepEqual(await fs.readFile(path.join(root, 'docs/_meta/cli-review.json')), reviewBytes);
-});
-
-test('contracts help extraction rejects an unrecognized constant after parser review', async (t) => {
-  const { root } = await fixture(t);
-  await write(root, 'cmd/l/contracts.go', 'package main\nvar contractsUsage = "changed representation"\n');
-  await editJSON(root, 'docs/_meta/cli-review.json', (value) => { value.sourceHashes['cmd/l/contracts.go'] = sha256('package main\nvar contractsUsage = "changed representation"\n'); });
-  await assert.rejects(generateReferences(root), /raw-string constant contractsUsage/);
+  await write(root, 'cmd/l/command.go', 'package main\nvar buildUsage = "changed representation"\n');
+  await editJSON(root, 'docs/_meta/cli-review.json', (value) => { value.sourceHashes['cmd/l/command.go'] = sha256('package main\nvar buildUsage = "changed representation"\n'); });
+  await assert.rejects(generateReferences(root), /raw-string constant buildUsage/);
 });
 
 test('CLI review cannot omit its approval hash or substitute unrelated inventory entries', async (t) => {
@@ -216,11 +289,6 @@ test('CLI review cannot omit its approval hash or substitute unrelated inventory
     const { root } = await fixture(subtest);
     await editJSON(root, 'docs/_meta/cli-review.json', (value) => { delete value.sourceHashes['cmd/l/command.go']; });
     await assert.rejects(generateReferences(root), /reviewed command.go hash/);
-  });
-  await t.test('missing contracts hash', async (subtest) => {
-    const { root } = await fixture(subtest);
-    await editJSON(root, 'docs/_meta/cli-review.json', (value) => { delete value.sourceHashes['cmd/l/contracts.go']; });
-    await assert.rejects(generateReferences(root), /reviewed contracts.go hash/);
   });
   await t.test('wrong kind', async (subtest) => {
     const { root } = await fixture(subtest);
@@ -265,7 +333,7 @@ test('coverage detects mechanical input changes when rendered references are unc
 });
 
 test('semantic source hashes require review of changed library and segment meanings', async (t) => {
-  for (const source of ['stdlib/eng/io/dictionary.l', segment]) {
+  for (const source of ['fixtures/fixture/dictionary.l', segment]) {
     await t.test(source, async (subtest) => {
       const { root, pages } = await fixture(subtest);
       const inventory = await references({ root, write: true });
@@ -385,14 +453,14 @@ test('snapshot note catalog preserves every reviewed explanation and rejects dan
 
 test('compact inventories preserve configured fields, anchors and deduplicated review notes', async (t) => {
   const { root } = await fixture(t);
-  for (const [kind, duplicate] of [['grammar', (data) => { data.duplicate = { ...data.statement }; }], ['vocabulary', (data) => { data.verbs.Tell = { ...data.verbs.Show, description: 'Preserve <literal> | punctuation & bytes.' }; }]]) {
+  for (const [kind, duplicate] of [['grammar', (data) => { data.duplicate = { ...data.statement }; }], ['vocabulary', (data) => { data.verbs.Tell = { ...data.verbs.Mark, description: 'Preserve <literal> | punctuation & bytes.' }; }]]) {
     const source = `lexicon/eng/${kind}.json`;
     await editJSON(root, source, duplicate);
     const hash = sha256(await fs.readFile(path.join(root, source)));
     await editJSON(root, `docs/_meta/${kind}-review.json`, (review) => {
       review.sourceHashes[source] = hash;
       if (kind === 'grammar') review.entries.duplicate = { ...review.entries.statement };
-      else review.entries['verbs.Tell'] = { ...review.entries['verbs.Show'] };
+      else review.entries['verbs.Tell'] = { ...review.entries['verbs.Mark'] };
     });
   }
   const { files } = await generateReferences(root);

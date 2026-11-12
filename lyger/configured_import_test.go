@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	distribution "github.com/l-programming-language/l"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -17,22 +15,7 @@ import (
 
 func configuredImportAssets(t *testing.T, root string, words [3]string) Options {
 	t.Helper()
-	resources := fstest.MapFS{}
-	if err := fs.WalkDir(distribution.Files(), ".", func(name string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if entry.IsDir() {
-			return nil
-		}
-		raw, err := fs.ReadFile(distribution.Files(), name)
-		if err == nil {
-			resources[name] = &fstest.MapFile{Data: raw}
-		}
-		return err
-	}); err != nil {
-		t.Fatal(err)
-	}
+	resources := dictionaryIndexFilesystem(t)
 
 	for name, file := range resources {
 		if strings.HasSuffix(name, ".l") {
@@ -296,17 +279,22 @@ func TestConfiguredDictionaryImportBindings(t *testing.T) {
 		t.Run(fmt.Sprint(namespace), func(t *testing.T) {
 			root := t.TempDir()
 			cfg := configuredImportAssets(t, root, [3]string{"Adopt", "via", "named"})
-			source := "Adopt IO's Print via `io`.\n"
-			if namespace {
-				source = "Adopt IO via `io`.\nAdopt IO's Print named \"Print\".\n"
+			files, ok := cfg.Resources.(fstest.MapFS)
+			if !ok {
+				t.Fatal("configured import fixture requires map resources")
 			}
-			source += "Create \"Hello\" named a New Basic App.\nThe App Prints `dialect`.\nExecute Hello.\n"
+			installTestDictionary(t, files, "catalog", "Catalog", "Create \"Catalog\" named a Dictionary.\nCreate Catalog's \"Emit|-s|-ted|-ting|-ter\" for Printing any Text.\n")
+			source := "Adopt Catalog's Emit via `catalog` named \"Display|-s|-ed|-ing|-er\".\n"
+			if namespace {
+				source = "Adopt Catalog via `catalog`.\nAdopt Catalog's Emit named \"Display|-s|-ed|-ing|-er\".\n"
+			}
+			source += "Create \"Hello\" named a New Basic App.\nThe App Displays `dialect`.\n"
 			main := writeSourceFile(t, root, "main.l", source)
 			result, err := NewLygerService(cfg).Compile([]byte(source), main)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !bytes.Contains(result.BackendAML, []byte(`Inputs: ~&["dialect"]&~`)) {
+			if !bytes.Contains(result.BackendAML, []byte(`::std::println!("{}", "dialect")`)) {
 				t.Fatalf("selected dictionary failed under configured import words: %s", result.BackendAML)
 			}
 		})

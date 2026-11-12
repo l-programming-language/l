@@ -8,7 +8,7 @@ import (
 )
 
 func TestObjectAnalysisDoesNotRetainPublicSourceMutation(t *testing.T) {
-	system, err := loadSegmentalSystem(runtimeGenerationResources(t))
+	system, err := loadSegmentalSystem(backendTestResources(t))
 	if err != nil {
 		t.Fatal(err)
 	}

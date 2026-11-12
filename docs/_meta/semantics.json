@@ -1,74 +1,36 @@
 {
   "schemaVersion": 3,
   "checkedStages": [
-    "static-source-inspection"
+    "static-declaration-inspection"
   ],
   "executedStages": [],
   "sourceHashes": {
-    "builtins/eng/core.l": "dfc682c0cd5b36292f0a13b4360b4721a479c47246b6da068b1ef5b11ed70b09",
-    "builtins/runtime/eng/dictionary.l": "97e8402b2100c9b74c4b62ef67005d562b8594d19a590c3df1f2dcd98d797551",
-    "builtins/runtime/eng/foundations.l": "3f21a1e80f4249af50a48d35149f2144b00fa3c448eae1a3ab465b97b6044fd7",
-    "builtins/runtime/eng/number.l": "7d9f41f3990343b3ec6c63f5b03ca4762c5fab7207641d20515327ff71012f2b",
-    "docs/cli-build.md": "d66aacb6e7996bd4860ad7b60fe96a157227fc5cfe442dd8c40e9e5a1c5fe7e9",
-    "lexicon/eng/grammar.json": "6094e3840fa78a22aa9daffe41a698fa02208674b02bf0397b90d0f7b1520c2c",
-    "lexicon/eng/vocabulary.json": "a50acf4454f51d8b97a441d46bbaf35ffc31b8756be1b7223e700db74f24e321",
-    "logiceme/logiceme_service.go": "415866d9fc5a7d12b76aed7c42b87554d9d93d06a1b14835bb8f848299b46776",
-    "logiceme/runtime_composition.go": "24f443bd4fba2d87f7031c1acf3e39d02657c6fe4fb368449ac6a193ffe9b0b7",
-    "lyger/application_units.go": "d4e6587bfa78729e21032ce5d083a8e6fb2e768e5cfc01ef3b5485af0b6c8e07",
-    "lyger/binding.go": "ae768960f2e1e9bb6dea5e5154844dc3a4d3638cc2f8815572c99dafc348ab35",
-    "lyger/builder.go": "4ac944a308bb7f0e940013c32488a2cbb89f450de2fec15e1b7558c33c004845",
-    "lyger/builtin_app_selection.go": "d27277189643bcb740dc4cd064aefa8fd810f5bff073a7d9d434f9bfec1f092f",
-    "lyger/builtin_bindings.go": "702ae6b5a81caf0bf482feb43138372a0ad026bf26952a8526a6f548160b37f6",
-    "lyger/builtin_operations.go": "c05bed44bfd03a5ede642e0fc785056eb743959039dede7305da625cc90d42c9",
-    "lyger/construction.go": "d9112edcd3c28d508b6d0849dedd7d746ee6179d585fe88571f51a1341734bd9",
-    "lyger/constructor_grammar.go": "5a4b766982a31035bb298e6adf4e2014c406a3fd11213ad42c8144b64e642156",
-    "lyger/contracts_lowering.go": "6bb0190727db25891a178b9a7343a69a74a5b870ad01536e5ea1d03167fe5cfa",
-    "lyger/definition_bindings.go": "7729518ee61aad720085adb17bb201bfdcecaffd068625fda7b9dfd57e9586b8",
-    "lyger/entry_composition.go": "561579d280ba920406d3f38b0c96aa8ffe324eca0be7877071783340d8f23214",
-    "lyger/execution_composition.go": "16488cc98b137f93c910a795d891131614cea18314b428ba1089ec86c032e7e7",
-    "lyger/function_composition.go": "028b2b49eb47681cc23e3b3272fa2ba5b689d2ca8c7596453471e1a69f06f4ea",
-    "lyger/function_definitions.go": "1888437b6c54abf864ee600cb576e7a2bf905204777e044d86382da8ff8595dd",
-    "lyger/grammar.go": "0e24157ab96bed610a8914f962646c1a1d38eea70c8c1f655ae6023b47e72ec5",
-    "lyger/grammar_extraction.go": "fe13127514bcee6bc85018e9752888cbd0a3067da400ee79a5769e404dc06d1e",
-    "lyger/grammar_match.go": "b786e6529240d292cc0d84ec1d86f3b9d9c949ade892d9f0d8d71f2807123364",
-    "lyger/grammar_terms.go": "8545917ce8baf6564685b00860d5cd1da9d63fdd8903eafbf6657c6ba79078a9",
-    "lyger/grammar_types.go": "a14fd3aac73b9a66a087f0e0eada9d09f37c6e1a08b2295fe9119044a480b8ae",
-    "lyger/instruction_captures.go": "d22fa76784237c14aac180a9ee92c9838c101e52586026657bb8453b4f0616d2",
-    "lyger/instructions.go": "efb8cc58f9665652dd8a1aa480ae7cc4b9d71e0b3bf4c14b22787deb8cc9884e",
-    "lyger/ir_kinds.go": "d552e2cd21079344f25317d13aec439bb665d269678a879169ac065b45058a79",
-    "lyger/lexical_scope.go": "9de4a95cbc9d4923f880330ac178717152008d8c604e50d7a7c744bebf26fa96",
-    "lyger/lexical_types.go": "6b27f2eddd39ef7968363dd64db257c0d170760e55408271c4db499c2f0324cd",
-    "lyger/lexicon.go": "e6c61d41351f3116573742fbe107f87de188c9b36e0b6fc0cb14a8b74e60c2c7",
-    "lyger/literal_atoms.go": "d807f3f501cfd32971051477268933da1d4a80237030d053baade881b293c95b",
-    "lyger/lowering.go": "a3b2bec3b690d9192a3da0fabd5fe863586d95e5aba035a0a98ca42fb5278ef2",
-    "lyger/orchestration_captures.go": "598e97c702210cafe0ad086dcbee7e2c45b6b9c18f86aac2cc5b6e66e6cedb7c",
-    "lyger/orchestration_plan.go": "5a9fbaa1d0e0eaf132720b960db17a216a11c65e90cf2ddb79e039200dc9ac0d",
-    "lyger/process_inputs.go": "8d694eebf5de74b5585f10a04c24146426918036ebec3906d97cf4602721dfce",
-    "lyger/publication.go": "9da8cdfa67fd9225890e374fcefa455263a1dc80aeaa42568e0b45668a331a54",
-    "lyger/registration.go": "e55d5e4e001d863ab082b8415e4a84c7d573b493a6bfe8fb0df015fcec738898",
-    "lyger/runtime_types.go": "4334d0bc85798b5afac5fa32ba1dd33dc1b95e887a707e5e6f3995a635e363fc",
-    "lyger/runtime_value_words.go": "820e42f8b6a8ef2ddf18b756bb54528ff36b18764108db4d3abce4714812670c",
-    "lyger/runtime_values_plan.go": "91ff1b5e9143c06fd85f883a2130a06abb10a7777b4d534b99625f6c35536671",
-    "lyger/runtime_values_source.go": "035627ee309710ca699fedd6aa0229f34992b7b6aa584b5f7219c504bb8d85a8",
+    "builtins/eng/core.l": "ab7b40904901e1a1b3736c131247bc5ade337d2dc099a857eb88b07125053125",
+    "lexicon/eng/vocabulary.json": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c",
+    "lyger/authored_names.go": "62c89f7e5ad9651e34db707347fd103776b51c2b4b13c5aa02f8d07dc9fd36a3",
+    "lyger/binding.go": "12ec1f499d9d63e469ceef62b3487dc4e7927d23a6fe60e8df70a723894b89a2",
+    "lyger/builder.go": "62964b71f110d8ca51c725d708eedd150945d43b5233b96089f0ab6adda56738",
+    "lyger/builtin_bindings.go": "000b82c6180290edeb46a3a7850957926588c924eddf5424a5432cfd2ccb7b00",
+    "lyger/definition_bindings.go": "e1f9620bed75d9a6055925007b0c86cf511725e7f999312a31beaf86119d1643",
+    "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
+    "lyger/function_definitions.go": "08cca2ec62e3db95731b99bff08a55232be34a6be812df725e5004167e165fdf",
+    "lyger/grammar.go": "a70f120dea002e1bf256a520e14c01e9cd6a30c99871e18e728d6acb8d77618d",
+    "lyger/grammar_extraction.go": "327898de705a5c29dd073ef8ef5372f3d0d3f78d94bd04038036d29b79c7760c",
+    "lyger/grammar_types.go": "5cee8e4907c9e827cb301f2802f0ec56719730428b4c443837b81632be2f4f97",
+    "lyger/lexical_types.go": "a62b2acc1e4981ee9a364f980ffdb45d1f6af56146f9c33560377f5ab06950ce",
+    "lyger/lowering.go": "8cd5c06a90d73a68acb5b9b69916f2012a7c6fb3cc36631ea92b8437a3ee5397",
+    "lyger/native_bindings.go": "8d84fb1a479c721cdf04803d3e96ff0b371f17c286c8edf8f82a749c189ce9db",
+    "lyger/native_composition.go": "2fc09276079f68c54f1ddf74c3450cbc55836a0c633545d0e875709f1e68b7d2",
+    "lyger/runtime_types.go": "68e235a0c65f596b91f5e2a6326b260f5722d772547f914d011a917384dd7bb0",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
-    "lyger/semantic_resolution.go": "9e340190c53baaf3e73cdbfd7887d2bdf8c0619f2980dd59cff2a2132ab144c6",
-    "lyger/semantics.go": "db528f999f22cf3ab5c2ff04fbca7709f270d321ae6350341c1d69feb72658b9",
-    "lyger/source_body.go": "81da3955864cfb1526647733fd5acc2900fd0d29a662fa1b69425d67f865cbb0",
-    "lyger/source_descriptors.go": "7f9a47a50d5fa679e7323d1c5e485174e2080d3c885ccfcd3f687a56e436b98e",
-    "lyger/source_functions.go": "13219578ea52738924bd7c34fc4261b3fc61cf0dfbc8246c2c3d76f6819aa991",
-    "lyger/source_return_context.go": "cd0d682596f6d0859c423f0701e9a295ef0794dd39c5f24b42f09f66a86c8c8b",
-    "lyger/source_units.go": "7863a09ff06755f9e8cf07046dc6d8c6d3df7199a667ba2340a64d5f818c6c81",
-    "lyger/source_units_topology.go": "eb006bc1866daab6eba15a67c0e35b8c2bee94a15328927d388e54789c002ff5",
-    "lyger/storage_words.go": "27daf80e13a829b55c4cfc41ee2b12d3006b622eb2a1eaf3ee79d3b0cd79d557",
-    "lyger/types.go": "8d1c5403e26386b560c2bad36d8e5b3aaed28174708f46dda470f572fcf75859",
-    "lyger/utilities.go": "4dbdede69d68f50c117e24c7671dba0d665590784e35732a1575d2236ec2a6f6",
+    "lyger/semantics.go": "131a6dd8a353a2bd204617e3e9b8ea44b71753afaacb004b4730de13f817b67e",
+    "lyger/source_descriptors.go": "73dc0e3c1cd387dd7f41fa07b03a22ad77321c68b70c7a6b6860c9b4fc51fad5",
+    "lyger/source_functions.go": "60bcf48563ba76df5a10f71675d6944328439b37516cba39da151b8adc46efd1",
+    "lyger/token_forms.go": "5b7700f6f57f2d3d122310241e572579156a739785ada163ef2d07f80eda13c9",
+    "lyger/types.go": "667c8e349b66253dd4f8297ff1980d981b86f275d1a0dba247b616fda9b0dd75",
+    "lyger/utilities.go": "983a90ab216d8e565ea18bd4fbfbe980095bd621aba752d71f0ba93a5f4b0d40",
     "lyger/value_kinds.go": "9b4100396374e6c04d3c749587890aaf41f83ed88f2a9a1324b2f454e0a02488",
-    "lyger/visibility.go": "556742e4894ee976c95a79554c44a48d4b5478476ee8a76818295ae58cef92f3",
-    "lyger/word_values.go": "449b35c1a97327533fa663131fa3817c71b30675cce7cf63d387eb27578e1240",
-    "lyger/workspace_units.go": "09e818a5f50be6d56d896a5b59892c62ee97b0c519886229b38fd8d063481a49",
-    "stdlib/eng/io/dictionary.l": "52d59eea2f063372f2ed55e2fd9673bccf32f21595ddc7530a2363175dc29664",
-    "stdlib/eng/storage/dictionary.l": "939f4e9f5180f9962b4bc1b44b48fb08f0e6c0536f35b41f5800cc5b4e81201d",
-    "stdlib/index.json": "a1bb074ecc3318519339ed6f76fc415ec3ebbe4b6f2b13860ec734d1441a7ab4"
+    "lyger/word_families.go": "fd88e14af504bec33fd6914e71365e40910b59ed94b33b83578518cad7ac96a6"
   },
   "entries": [
     {
@@ -76,100 +38,160 @@
       "kind": "type",
       "name": "Text",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/values.md#text",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#text",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/literal_atoms.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
-        "lyger/definition_bindings.go",
-        "lyger/grammar.go",
-        "lyger/runtime_types.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/raw_text_test.go",
-        "lyger/definition_text_encoding_test.go",
-        "lyger/runtime_values_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              93,
+              101
+            ]
+          }
+        ],
+        "formRoles": {
+          "Text": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Texts": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Text",
+        "Texts"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:number",
       "kind": "type",
       "name": "Number",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/values.md#number",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#number",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/literal_atoms.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
-        "lyger/definition_bindings.go",
-        "lyger/runtime_types.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/definition_number_test.go",
-        "lyger/numeric_resolution_test.go",
-        "lyger/io_numeric_test.go",
-        "lyger/runtime_values_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              102,
+              110
+            ]
+          }
+        ],
+        "formRoles": {
+          "Number": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Numbers": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Number",
+        "Numbers"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:truth",
       "kind": "type",
       "name": "Truth",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/values.md#truth",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#truth",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/literal_atoms.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
-        "lyger/definition_bindings.go",
-        "lyger/runtime_types.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/orchestrator_test.go",
-        "lyger/runtime_values_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              120,
+              128
+            ]
+          }
+        ],
+        "formRoles": {
+          "Truth": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Truths": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Truth",
+        "Truths"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:thing",
       "kind": "type",
       "name": "Thing",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/values.md#thing",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#thing",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "lyger/runtime_values_source.go",
-        "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go",
-        "lyger/runtime_transfer_test.go",
-        "lyger/runtime_type_boundaries_test.go"
-      ],
-      "notes": "Explicit Thing boundaries retain concrete runtime types; typed reads validate full element types and callable signatures. No implicit coercion or dynamic arithmetic.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              84,
+              92
+            ]
+          }
+        ],
+        "formRoles": {
+          "Thing": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Things": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Thing",
+        "Things"
+      ]
     },
     {
       "id": "type:byte",
@@ -177,22 +199,39 @@
       "name": "Byte",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/values.md#byte-and-bytes",
+      "doc": "docs/reference/word-glossary.md#byte",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/literal_atoms.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l",
-        "lyger/definition_bindings.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              111,
+              119
+            ]
+          }
+        ],
+        "formRoles": {
+          "Byte": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Bytes": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Byte",
+        "Bytes"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:bytes",
@@ -200,71 +239,114 @@
       "name": "Bytes",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/values.md#byte-and-bytes",
+      "doc": "docs/reference/word-glossary.md#bytes",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "lyger/runtime_values_source.go",
-        "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/utilities.go"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go",
-        "lyger/runtime_transfer_test.go"
-      ],
-      "notes": "Owned byte sequences construct from Text, snapshot and support checked indexed reads as Number. Byte mutation and numeric-width families are not supplied.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lyger/utilities.go",
+            "lines": [
+              62,
+              82
+            ]
+          }
+        ],
+        "formRoles": {
+          "Bytes": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Bytes"
+      ]
     },
     {
       "id": "type:pointer",
       "kind": "type",
       "name": "Pointer",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/values.md#pointer",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#pointer",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "lyger/runtime_values_source.go",
-        "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go",
-        "lyger/runtime_transfer_test.go",
-        "lyger/runtime_type_boundaries_test.go",
-        "lyger/runtime_lifetime_test.go"
-      ],
-      "notes": "Managed typed handles share targets; reads snapshot ordinary contents. Checked mutation rejects ownership cycles, including container and callable-environment edges. No pointer arithmetic or raw-address API.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              129,
+              137
+            ]
+          }
+        ],
+        "formRoles": {
+          "Pointer": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Pointers": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Pointer",
+        "Pointers"
+      ]
     },
     {
       "id": "type:null",
       "kind": "type",
       "name": "Null",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/values.md#null-and-internal-states",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#null",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "lyger/runtime_values_source.go",
-        "lyger/runtime_values_plan.go",
-        "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go",
-        "lyger/runtime_transfer_test.go"
-      ],
-      "notes": "Null initializes an explicit absence value; typed reads preserve evaluation and type/index/key checks. Unassigned storage and the native-definition Null atom remain separate.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              75,
+              83
+            ]
+          }
+        ],
+        "formRoles": {
+          "Null": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Nulls": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Null",
+        "Nulls"
+      ]
     },
     {
       "id": "type:list",
@@ -272,23 +354,39 @@
       "name": "List",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/collections-and-categories.md#lists",
+      "doc": "docs/reference/word-glossary.md#list",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "lyger/runtime_values_source.go",
-        "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go",
-        "lyger/runtime_type_boundaries_test.go",
-        "lyger/source_action_arguments_test.go"
-      ],
-      "notes": "Typed owned Lists construct, append, replace and read indexed values; heterogeneous construction infers Thing without coercion. Indices and complete element types are checked. Iteration/removal remain outside this API.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              57,
+              65
+            ]
+          }
+        ],
+        "formRoles": {
+          "List": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Lists": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "List",
+        "Lists"
+      ]
     },
     {
       "id": "type:dictionary",
@@ -296,101 +394,199 @@
       "name": "Dictionary",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/collections-and-categories.md#dictionaries",
+      "doc": "docs/reference/word-glossary.md#dictionary",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/source_units.go",
-        "lyger/semantic_resolution.go",
-        "lyger/grammar_extraction.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/member_resolution_regression_test.go",
-        "lyger/paragraph_visibility_test.go",
-        "lyger/numeric_resolution_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              66,
+              74
+            ]
+          }
+        ],
+        "formRoles": {
+          "Dictionary": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Dictionaries": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Dictionary",
+        "Dictionaries"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:app",
       "kind": "type",
       "name": "App",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/applicational-types.md#apps",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#app",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/application_units.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/application_units_test.go",
-        "lyger/runtime_type_boundaries_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              210,
+              218
+            ]
+          }
+        ],
+        "formRoles": {
+          "App": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Apps": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "App",
+        "Apps"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:service",
       "kind": "type",
       "name": "Service",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/applicational-types.md#services",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#service",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/workspace_units.go",
-        "lyger/instructions.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/runnable_service_test.go"
-      ],
-      "notes": "Service declarations remain structural; standalone bodies, packages and native process operations are unsupported. App-constructed Service libraries retain their workspace topology. Static inspection; witnesses not run.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              201,
+              209
+            ]
+          }
+        ],
+        "formRoles": {
+          "Service": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Services": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Service",
+        "Services"
+      ]
     },
     {
       "id": "type:class",
       "kind": "type",
       "name": "Class",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/applicational-types.md#classes-and-objects",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#class",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/source_units_topology.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/recursive_classes_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              192,
+              200
+            ]
+          }
+        ],
+        "formRoles": {
+          "Class": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Classes": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Class",
+        "Classes"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:object",
       "kind": "type",
       "name": "Object",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/applicational-types.md#classes-and-objects",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#object",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/source_units_topology.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/recursive_classes_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              183,
+              191
+            ]
+          }
+        ],
+        "formRoles": {
+          "Object": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Objects": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Object",
+        "Objects"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:attribute",
@@ -398,18 +594,39 @@
       "name": "Attribute",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
+      "doc": "docs/reference/word-glossary.md#attribute",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/construction.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              174,
+              182
+            ]
+          }
+        ],
+        "formRoles": {
+          "Attribute": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Attributes": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Attribute",
+        "Attributes"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:definition",
@@ -417,55 +634,76 @@
       "name": "Definition",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
+      "doc": "docs/reference/word-glossary.md#definition",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/definition_bindings.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/definition_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              165,
+              173
+            ]
+          }
+        ],
+        "formRoles": {
+          "Definition": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Definitions": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Definition",
+        "Definitions"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:function",
       "kind": "type",
       "name": "Function",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#function",
       "sources": [
         "builtins/eng/core.l",
         "lyger/definition_bindings.go",
         "lyger/source_functions.go",
         "lyger/function_composition.go",
         "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "lyger/storage_words.go",
         "lyger/binding.go",
         "lyger/scope.go",
-        "stdlib/eng/storage/dictionary.l",
         "lyger/function_definitions.go",
-        "lyger/lowering.go"
+        "lyger/lowering.go",
+        "lyger/token_forms.go",
+        "lyger/native_bindings.go",
+        "lyger/native_composition.go",
+        "lyger/word_families.go",
+        "lyger/lexical_types.go",
+        "lyger/grammar_extraction.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go"
       ],
       "witnesses": [
-        "lyger/source_functions_test.go",
-        "lyger/runtime_transfer_test.go",
-        "lyger/runtime_type_boundaries_test.go",
-        "lyger/function_publication_test.go",
-        "lyger/function_declaration_boundaries_test.go",
+        "lyger/authored_family_registration_test.go",
         "lyger/function_invocation_words_test.go",
-        "lyger/function_composition_test.go",
-        "lyger/function_scope_regression_test.go",
-        "lyger/function_transfer_regression_test.go",
-        "lyger/function_contract_regression_test.go",
-        "lyger/nested_definition_test.go"
+        "lyger/same_spelling_forms_test.go",
+        "lyger/morphology_family_test.go",
+        "lyger/function_member_composition_test.go"
       ],
-      "notes": "Functions bind typed invocation verbs and private bodies. Signatures include canonical constructor identity; aliases preserve it and incompatible transfers reject. Emission uses selected builtin/logeme definitions.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence. Invocation uses the selected core root Invoke definition; only Return remains a constructor member. The Callable role accepts native-backed source Functions under their complete invocation family, not ordinary runtime Function values.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "wordRef": "builtin:function"
     },
     {
       "id": "type:property",
@@ -481,11 +719,9 @@
         "lexicon/eng/vocabulary.json",
         "lyger/definition_bindings.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:operation",
@@ -501,73 +737,132 @@
         "lexicon/eng/vocabulary.json",
         "lyger/definition_bindings.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "type:noun",
       "kind": "type",
       "name": "Noun",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#noun",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/lexical_types.go"
+        "lyger/lexical_types.go",
+        "lyger/grammar_extraction.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go",
+        "lyger/token_forms.go"
       ],
       "witnesses": [
-        "lyger/binding_test.go"
+        "lyger/morphology_family_test.go",
+        "lyger/authored_family_registration_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lyger/utilities.go",
+            "lines": [
+              62,
+              82
+            ]
+          }
+        ],
+        "formRoles": {
+          "Noun": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Noun"
+      ],
+      "notes": "An authored noun family requires root, plural, descriptive and active forms. Missing, empty, malformed, surplus or all-identical expanded families reject. Ordinary value, parameter and result labels and non-callable applicational names may remain single labels. Configured JSON vocabulary retains its existing forms. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "type:verb",
       "kind": "type",
       "name": "Verb",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#verb",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
         "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/lexical_types.go"
+        "lyger/lexical_types.go",
+        "lyger/source_functions.go",
+        "lyger/word_families.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go",
+        "lyger/token_forms.go"
       ],
       "witnesses": [
-        "lyger/action_definition_test.go"
+        "lyger/morphology_family_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/authored_family_registration_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lyger/utilities.go",
+            "lines": [
+              62,
+              82
+            ]
+          }
+        ],
+        "formRoles": {
+          "Verb": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Verb"
+      ],
+      "notes": "An authored verb family requires root, active, passive, applicative and objective forms, including source actions and named Functions. At least one expanded derived form differs from its root case-insensitively; individual forms may share spellings. Configured JSON vocabulary keeps its existing forms. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "type:adjective",
       "kind": "type",
       "name": "Adjective",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#adjective",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/semantics.go",
-        "lyger/source_descriptors.go",
-        "lyger/builtin_bindings.go"
+        "lyger/utilities.go"
       ],
-      "witnesses": [
-        "lyger/paragraph_descriptor_identity_test.go",
-        "lyger/word_library_constructor_test.go",
-        "lyger/word_library_pos_test.go"
-      ],
-      "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Descriptors retain canonical targets through aliases and qualified imports. One selected construction signature governs operand roles, arity and result labels; source forwarding inherits its open requirements. Value operands, including transparent forwarding, evaluate once in authored order. Structured bodies retain their execution placement; native moves and borrows remain checked. This is not a resource-cost certificate."
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lyger/utilities.go",
+            "lines": [
+              62,
+              82
+            ]
+          }
+        ],
+        "formRoles": {
+          "Adjective": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Adjective"
+      ]
     },
     {
       "id": "type:adverb",
@@ -575,18 +870,34 @@
       "name": "Adverb",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/lexical-types.md#attributes-definitions-and-lexical-categories",
+      "doc": "docs/reference/word-glossary.md#adverb",
       "sources": [
-        "lyger/types.go",
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lexicon/eng/vocabulary.json",
-        "lyger/lexical_types.go"
+        "lyger/utilities.go"
       ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lyger/utilities.go",
+            "lines": [
+              62,
+              82
+            ]
+          }
+        ],
+        "formRoles": {
+          "Adverb": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Adverb"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "value-tag:Thing",
@@ -596,19 +907,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#thing",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go",
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Text",
@@ -618,15 +921,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#text",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Number",
@@ -636,15 +935,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#number",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Truth",
@@ -654,15 +949,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#truth",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Bytes",
@@ -672,19 +963,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#byte-and-bytes",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go",
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Pointer",
@@ -694,19 +977,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#pointer",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go",
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Lexeme",
@@ -716,15 +991,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:App",
@@ -734,15 +1005,11 @@
       "support": "internal",
       "doc": "docs/spec/applicational-types.md#apps",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Service",
@@ -752,15 +1019,11 @@
       "support": "internal",
       "doc": "docs/spec/applicational-types.md#services",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Class",
@@ -770,15 +1033,11 @@
       "support": "internal",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Object",
@@ -788,15 +1047,11 @@
       "support": "internal",
       "doc": "docs/spec/applicational-types.md#classes-and-objects",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Attribute",
@@ -806,15 +1061,11 @@
       "support": "internal",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Definition",
@@ -824,15 +1075,11 @@
       "support": "internal",
       "doc": "docs/spec/applicational-types.md#attributes-and-definitions",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Function",
@@ -842,20 +1089,11 @@
       "support": "internal",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go",
-        "lyger/source_functions.go",
-        "lyger/function_composition.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/source_functions_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Property",
@@ -865,15 +1103,11 @@
       "support": "internal",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Operation",
@@ -883,15 +1117,11 @@
       "support": "internal",
       "doc": "docs/spec/applicational-types.md#functions-properties-and-operations",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:List",
@@ -901,19 +1131,11 @@
       "support": "internal",
       "doc": "docs/spec/collections-and-categories.md#lists",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go",
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Dictionary",
@@ -923,15 +1145,11 @@
       "support": "internal",
       "doc": "docs/spec/collections-and-categories.md#dictionaries",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Error",
@@ -941,19 +1159,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go",
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:ID",
@@ -963,15 +1173,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:None",
@@ -981,15 +1187,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Unknown",
@@ -999,15 +1201,11 @@
       "support": "internal",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "Internal tag; source construction and runtime support are documented separately.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "value-tag:Null",
@@ -1017,226 +1215,577 @@
       "support": "internal",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/stored_values_test.go",
-        "lyger/refactor_value_characterization_test.go",
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Internal representation tag; source constructors, typed storage and ownership are implemented separately from raw primitive/native-definition encoding.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "builtin:start",
       "kind": "builtin",
       "name": "Start",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#start",
       "sources": [
-        "builtins/eng/core.l",
-        "docs/cli-build.md"
+        "builtins/eng/core.l"
       ],
-      "witnesses": [
-        "lyger/action_definition_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Start": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Starts": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Started": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Starting": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Starter": {
+            "partOfSpeech": "noun",
+            "role": "objective (actor)"
+          }
+        },
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Start",
+        "Starts",
+        "Started",
+        "Starting",
+        "Starter"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:execute",
       "kind": "builtin",
       "name": "Execute",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#start-and-execute",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#execute",
       "sources": [
-        "builtins/eng/core.l",
-        "docs/cli-build.md"
+        "builtins/eng/core.l"
       ],
-      "witnesses": [
-        "lyger/action_definition_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Execute": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Executes": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Executed": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Executing": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Executor": {
+            "partOfSpeech": "noun",
+            "role": "objective (actor)"
+          }
+        },
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              2,
+              2
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Execute",
+        "Executes",
+        "Executed",
+        "Executing",
+        "Executor"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:build",
       "kind": "builtin",
       "name": "Build",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#build",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#build",
       "sources": [
-        "lyger/builtin_operations.go",
-        "lyger/instructions.go",
-        "docs/cli-build.md"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/builtin_operations_contract_test.go"
-      ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Build": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Builds": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Built": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Building": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Builder": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              302,
+              310
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Build",
+        "Builds",
+        "Built",
+        "Building",
+        "Builder"
+      ]
     },
     {
       "id": "builtin:run",
       "kind": "builtin",
       "name": "Run",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#run",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#run",
       "sources": [
-        "lyger/builtin_operations.go",
-        "lyger/instructions.go",
-        "docs/cli-build.md"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/phase1_language_test.go"
-      ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Run": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Runs": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Running": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Runner": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          },
+          "Ran": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              311,
+              319
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Run",
+        "Runs",
+        "Ran",
+        "Running",
+        "Runner"
+      ]
     },
     {
       "id": "builtin:stop",
       "kind": "builtin",
       "name": "Stop",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#stop",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#stop",
       "sources": [
-        "lyger/builtin_operations.go",
-        "lyger/instructions.go",
-        "docs/cli-build.md"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/runnable_service_test.go"
-      ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Stop": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Stops": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Stopped": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Stopping": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Stopper": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              333,
+              341
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Stop",
+        "Stops",
+        "Stopped",
+        "Stopping",
+        "Stopper"
+      ]
     },
     {
       "id": "builtin:await",
       "kind": "builtin",
       "name": "Await",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#await",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#await",
       "sources": [
-        "lyger/builtin_operations.go",
-        "lyger/instructions.go",
-        "docs/cli-build.md"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/phase1_nested_await_test.go"
-      ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              320,
+              332
+            ]
+          }
+        ],
+        "formRoles": {
+          "Await": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Awaits": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Awaited": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Awaiting": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          }
+        }
+      },
+      "inflections": [
+        "Await",
+        "Awaits",
+        "Awaited",
+        "Awaiting"
+      ]
     },
     {
       "id": "builtin:show",
       "kind": "builtin",
       "name": "Show",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#show",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#show",
       "sources": [
-        "lyger/execution_composition.go",
-        "lyger/entry_composition.go",
-        "docs/cli-build.md"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/orchestrator_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Show": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Shows": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Showed": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Showing": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Shower": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              360,
+              368
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Show",
+        "Shows",
+        "Showed",
+        "Showing",
+        "Shower"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:exit",
       "kind": "builtin",
       "name": "Exit",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#exit",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#exit",
       "sources": [
-        "lyger/execution_composition.go",
-        "lyger/entry_composition.go",
-        "lyger/instructions.go",
-        "docs/cli-build.md"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/phase1_language_test.go",
-        "lyger/phase1_shutdown_test.go",
-        "lyger/source_functions_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Exit": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Exits": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Exited": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Exiting": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Exiter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              369,
+              377
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Exit",
+        "Exits",
+        "Exited",
+        "Exiting",
+        "Exiter"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:output",
       "kind": "builtin",
       "name": "Output",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#appoutput",
       "sources": [
-        "lyger/orchestration_plan.go",
-        "docs/cli-build.md"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/orchestrator_test.go"
-      ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              39,
+              47
+            ]
+          }
+        ],
+        "formRoles": {
+          "Output": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Outputs": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Output",
+        "Outputs"
+      ]
     },
     {
       "id": "builtin:error",
       "kind": "builtin",
       "name": "Error",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/lifecycle.md#output-and-error",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#apperror",
       "sources": [
-        "lyger/orchestration_plan.go",
-        "docs/cli-build.md"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/phase1_language_test.go"
-      ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              48,
+              56
+            ]
+          }
+        ],
+        "formRoles": {
+          "Error": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Errors": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Error",
+        "Errors"
+      ]
     },
     {
       "id": "builtin:process",
       "kind": "builtin",
       "name": "Process",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/definitions.md#process",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#process",
       "sources": [
-        "builtins/eng/core.l",
-        "lyger/construction.go",
-        "lyger/definition_bindings.go",
-        "lyger/source_body.go",
-        "lyger/function_definitions.go",
-        "lyger/process_inputs.go",
-        "lyger/lowering.go",
-        "lyger/constructor_grammar.go",
-        "stdlib/eng/storage/dictionary.l",
-        "lyger/binding.go",
-        "lyger/scope.go",
-        "lyger/source_return_context.go"
+        "builtins/eng/core.l"
       ],
-      "witnesses": [
-        "lyger/definition_test.go",
-        "lyger/construction_test.go",
-        "lyger/scoped_definition_test.go",
-        "lyger/process_inputs_test.go",
-        "lyger/word_library_acceptance_test.go"
-      ],
-      "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Ordered source operations use the shared instruction path. Provisional input labels acquire their actual Process scope before semantic use and cannot shadow enclosing Function parameters or escape into siblings. Explicit annotations preserve declared types and dependencies for native type and borrow checking. No callable outputs or closure runtime are added."
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "word": {
+        "partOfSpeech": "noun",
+        "audience": "authoring",
+        "formRoles": {
+          "Process": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Processes": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          },
+          "Processive": {
+            "partOfSpeech": "adjective",
+            "role": "descriptive"
+          },
+          "Processing": {
+            "partOfSpeech": "verb",
+            "role": "applicative (noun active form)"
+          }
+        },
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              3,
+              3
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Process",
+        "Processes",
+        "Processive",
+        "Processing"
+      ]
     },
     {
       "id": "builtin:function",
@@ -1244,24 +1793,62 @@
       "name": "Function",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/reference/builtins/definitions.md#function",
+      "doc": "docs/reference/word-glossary.md#function",
       "sources": [
         "builtins/eng/core.l",
-        "lyger/construction.go",
-        "lyger/definition_bindings.go",
         "lyger/source_functions.go",
-        "lyger/function_composition.go",
-        "lyger/function_definitions.go",
-        "lyger/lowering.go"
+        "lyger/binding.go",
+        "lyger/word_families.go",
+        "lyger/lexical_types.go",
+        "lyger/grammar_extraction.go",
+        "lyger/authored_names.go",
+        "lyger/grammar_types.go",
+        "lyger/token_forms.go"
       ],
       "witnesses": [
-        "lyger/definition_test.go",
-        "lyger/construction_test.go",
-        "lyger/function_composition_test.go",
-        "lyger/nested_definition_test.go"
+        "lyger/authored_family_registration_test.go",
+        "lyger/function_invocation_words_test.go",
+        "lyger/morphology_family_test.go",
+        "lyger/function_member_composition_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "The canonical Function definition supplies composed signatures and Process bodies for source declarations and constructed Objects."
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "notes": "Core Function is a complete authored noun family providing the selected typed callable construction. Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence. Invocation uses the selected core root Invoke definition; only Return remains a constructor member. The Callable role accepts native-backed source Functions under their complete invocation family, not ordinary runtime Function values.",
+      "word": {
+        "partOfSpeech": "noun",
+        "formRoles": {
+          "Function": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Functions": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          },
+          "Functional": {
+            "partOfSpeech": "adjective",
+            "role": "descriptive"
+          },
+          "Functioning": {
+            "partOfSpeech": "verb",
+            "role": "applicative (noun active form)"
+          }
+        },
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              4,
+              4
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Function",
+        "Functions",
+        "Functional",
+        "Functioning"
+      ]
     },
     {
       "id": "builtin:function.return",
@@ -1269,226 +1856,601 @@
       "name": "Function.Return",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/reference/builtins/definitions.md#functionreturn",
+      "doc": "docs/reference/word-glossary.md#functionreturn",
       "sources": [
         "builtins/eng/core.l",
-        "lyger/construction.go",
-        "lyger/definition_bindings.go",
-        "lyger/source_functions.go",
-        "lyger/function_composition.go",
-        "lyger/binding.go",
-        "lyger/scope.go",
-        "lyger/function_definitions.go",
-        "lyger/lowering.go",
-        "lyger/instructions.go",
-        "lyger/source_return_context.go",
-        "lyger/contracts_lowering.go"
+        "lyger/source_functions.go"
       ],
       "witnesses": [
-        "lyger/definition_test.go",
-        "lyger/construction_test.go",
-        "lyger/function_composition_test.go",
-        "lyger/function_contract_regression_test.go",
-        "lyger/nested_definition_test.go",
-        "lyger/word_library_reject_test.go"
+        "lyger/function_return_composition_test.go",
+        "lyger/function_member_composition_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Root-authored returning actions use their caller\u2019s selected Return. Its implementation keeps lexical delegates; Function-owned Returns retain their constructor contract and reject incompatible callers. Known unconditional source-actor and transparent-Process exits terminate typed caller flow. Real Function calls, conditional and opaque bodies retain their own boundaries and native obligations."
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "notes": "Return remains a member of the selected Function constructor and binds after source result checks. Invoke is a separate core root verb. This declaration and its compiler witnesses do not establish ordinary runtime Function execution.",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Return": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Returns": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Returned": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Returning": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Returner": {
+            "partOfSpeech": "noun",
+            "role": "objective (actor)"
+          }
+        },
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              5,
+              5
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Return",
+        "Returns",
+        "Returned",
+        "Returning",
+        "Returner"
+      ]
     },
     {
       "id": "builtin:retain",
       "kind": "builtin",
       "name": "Retain",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/definitions.md#retain",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#retain",
       "sources": [
-        "builtins/eng/core.l",
-        "stdlib/eng/storage/dictionary.l",
-        "lyger/builtin_app_selection.go",
-        "lyger/storage_words.go"
+        "builtins/eng/core.l"
       ],
-      "witnesses": [
-        "lyger/word_library_acceptance_test.go",
-        "lyger/word_library_ownership_test.go"
-      ],
-      "notes": "Core Retain consumes a borrowed Arc and returns another handle to the same allocation without cloning its payload. The App source wrapper delegates to core Retain without lifecycle effects; Storage.Retain remains Rc-based. Atomic ownership does not certify payload Send/Sync or destructor costs.",
-      "evidence": "static-inspection; word-library native ownership witnesses"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Retain": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Retains": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Retained": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Retaining": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Retainer": {
+            "partOfSpeech": "noun",
+            "role": "objective (actor)"
+          }
+        },
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              14,
+              14
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Retain",
+        "Retains",
+        "Retained",
+        "Retaining",
+        "Retainer"
+      ]
     },
     {
       "id": "builtin:objective",
       "kind": "builtin",
       "name": "Objective",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/definitions.md#objective",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#objective",
       "sources": [
-        "builtins/eng/core.l",
-        "lyger/construction.go",
-        "lyger/definition_bindings.go"
+        "builtins/eng/core.l"
       ],
-      "witnesses": [
-        "lyger/definition_test.go",
-        "lyger/construction_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "adjective",
+        "audience": "authoring",
+        "targets": [
+          {
+            "entry": "builtin:function",
+            "form": "Function"
+          }
+        ],
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              7,
+              7
+            ]
+          }
+        ],
+        "formRoles": {
+          "Objective": {
+            "partOfSpeech": "adjective",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Objective"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:main",
       "kind": "builtin",
       "name": "Main",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/definitions.md#main",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#main",
       "sources": [
-        "builtins/eng/core.l",
-        "lyger/construction.go",
-        "lyger/definition_bindings.go"
+        "builtins/eng/core.l"
       ],
-      "witnesses": [
-        "lyger/definition_test.go",
-        "lyger/construction_test.go"
-      ],
-      "notes": "Source-defined Service/Object/Function construction descriptor used by Apps; it grants no standalone Service process role.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "adjective",
+        "targets": [
+          {
+            "entry": "builtin:function",
+            "form": "Function"
+          },
+          {
+            "entry": "type:object",
+            "form": "Object"
+          },
+          {
+            "entry": "type:service",
+            "form": "Service"
+          }
+        ],
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              9,
+              12
+            ]
+          }
+        ],
+        "formRoles": {
+          "Main": {
+            "partOfSpeech": "adjective",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Main"
+      ]
     },
     {
       "id": "builtin:basic",
       "kind": "builtin",
       "name": "Basic",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/reference/builtins/definitions.md#basic",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#basic",
       "sources": [
-        "builtins/eng/core.l",
-        "lyger/construction.go",
-        "lyger/definition_bindings.go"
+        "builtins/eng/core.l"
       ],
-      "witnesses": [
-        "lyger/definition_test.go",
-        "lyger/construction_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "adjective",
+        "targets": [
+          {
+            "entry": "type:app",
+            "form": "App"
+          }
+        ],
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              13,
+              13
+            ]
+          }
+        ],
+        "formRoles": {
+          "Basic": {
+            "partOfSpeech": "adjective",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Basic"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:create",
       "kind": "builtin",
       "name": "Create",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/definitions.md#create-define-and-describe",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#create",
       "sources": [
         "lexicon/eng/vocabulary.json",
-        "lyger/semantics.go",
-        "lyger/registration.go"
+        "lyger/grammar_extraction.go",
+        "lyger/source_functions.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/grammar.go",
+        "lyger/authored_names.go"
       ],
       "witnesses": [
-        "lyger/coordinated_registration_test.go"
+        "lyger/authored_family_registration_test.go",
+        "lyger/authored_names_test.go",
+        "lyger/morphology_family_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Create": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Creates": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Created": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Creating": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Creator": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              239,
+              247
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Create",
+        "Creates",
+        "Created",
+        "Creating",
+        "Creator"
+      ],
+      "notes": "Create selects declaration roles before family validation. Source actions and named Function invocations require complete verb families; lexical noun constructions require complete noun families. Ordinary values and non-callable applicational names remain labels. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "builtin:define",
       "kind": "builtin",
       "name": "Define",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/definitions.md#create-define-and-describe",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#define",
       "sources": [
         "lexicon/eng/vocabulary.json",
-        "lyger/semantics.go",
-        "lyger/definition_bindings.go"
+        "lyger/grammar_extraction.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/grammar.go",
+        "lyger/authored_names.go"
       ],
       "witnesses": [
-        "lyger/definition_test.go"
+        "lyger/authored_family_registration_test.go",
+        "lyger/authored_names_test.go",
+        "lyger/named_operand_composition_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Define": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Defines": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Defined": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Defining": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Definer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              248,
+              256
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Define",
+        "Defines",
+        "Defined",
+        "Defining",
+        "Definer"
+      ],
+      "notes": "Define distinguishes ordinary value bindings from lexical definitions. Framed native definitions select noun or verb roles from their declaration form and require complete families; Function data copies do not implicitly declare invocation verbs. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "builtin:describe",
       "kind": "builtin",
       "name": "Describe",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#describe",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lyger/semantics.go",
-        "lyger/construction.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/paragraph_descriptor_identity_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Describe": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Describes": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Described": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Describing": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Describer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              257,
+              265
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Describe",
+        "Describes",
+        "Described",
+        "Describing",
+        "Describer"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:use",
       "kind": "builtin",
       "name": "Use",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/imports.md#indexed-dictionaries",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#use",
       "sources": [
         "lexicon/eng/vocabulary.json",
         "lyger/builder.go",
-        "lyger/source_units.go"
+        "lyger/semantics.go",
+        "lyger/binding.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/authored_names.go"
       ],
       "witnesses": [
-        "lyger/configured_import_test.go"
+        "lyger/authored_family_registration_test.go",
+        "lyger/authored_names_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/dictionary_case_test.go"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Use": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Uses": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Used": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Using": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "User": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              230,
+              238
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Use",
+        "Uses",
+        "Used",
+        "Using",
+        "User"
+      ],
+      "notes": "A lexical alias inherits forms only when removing qualification under the unchanged canonical root of a complete validated family. Renames and selected actor aliases declare complete families; alias chains cannot bypass validation. Ordinary value aliases remain data. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence."
     },
     {
       "id": "builtin:public",
       "kind": "builtin",
       "name": "Public",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/names-and-scope.md#paragraph-scope",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#public",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lyger/visibility.go",
-        "lyger/publication.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/paragraph_visibility_test.go",
-        "lyger/function_publication_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "adjective",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              398,
+              403
+            ]
+          }
+        ],
+        "formRoles": {
+          "Public": {
+            "partOfSpeech": "adjective",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Public"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:publicly",
       "kind": "builtin",
       "name": "Publicly",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/names-and-scope.md#paragraph-scope",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#publicly",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lyger/visibility.go",
-        "lyger/publication.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/paragraph_visibility_test.go",
-        "lyger/function_publication_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "adverb",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              424,
+              429
+            ]
+          }
+        ],
+        "formRoles": {
+          "Publicly": {
+            "partOfSpeech": "adverb",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Publicly"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:new",
       "kind": "builtin",
       "name": "New",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#new",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lyger/construction.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/construction_test.go"
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "adjective",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              404,
+              412
+            ]
+          }
+        ],
+        "formRoles": {
+          "New": {
+            "partOfSpeech": "adjective",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "New"
       ],
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text."
     },
     {
       "id": "builtin:generic",
@@ -1496,18 +2458,34 @@
       "name": "Generic",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/spec/definitions.md#descriptors-and-constructors",
+      "doc": "docs/reference/word-glossary.md#generic",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lyger/construction.go",
-        "lyger/constructor_grammar.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/construction_test.go",
-        "lyger/word_library_constructor_test.go"
-      ],
-      "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Native source constructors accept explicit ordered parameter atoms through their declared slots. GenericTypes and Lifetimes retain their approved local native-input contract; this does not infer parameters or introduce general L generics."
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "word": {
+        "partOfSpeech": "adjective",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              413,
+              421
+            ]
+          }
+        ],
+        "formRoles": {
+          "Generic": {
+            "partOfSpeech": "adjective",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Generic"
+      ]
     },
     {
       "id": "builtin:input",
@@ -1515,686 +2493,365 @@
       "name": "Input",
       "role": "explanatory",
       "support": "partial",
-      "doc": "docs/reference/builtins/index.md#runtime-members",
+      "doc": "docs/reference/word-glossary.md#input",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lyger/construction.go",
-        "docs/cli-build.md",
-        "lyger/process_inputs.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/construction_test.go",
-        "lyger/process_inputs_test.go"
-      ],
-      "evidence": "static-inspection; existing-witness-not-run",
-      "notes": "Input metadata covers Function parameters and scoped structured Process bindings. No App process input transport is supplied."
+      "witnesses": [],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              30,
+              38
+            ]
+          }
+        ],
+        "formRoles": {
+          "Input": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Inputs": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Input",
+        "Inputs"
+      ]
     },
     {
       "id": "builtin:put",
       "kind": "builtin",
       "name": "Put",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#lists",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#put",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lexicon/eng/grammar.json",
-        "lyger/ir_kinds.go",
-        "lyger/instructions.go",
-        "lyger/runtime_values_plan.go",
-        "lyger/runtime_value_words.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Typed updates append/replace List elements, write Map values or replace a Pointer target. Destination kind, keys, element types and managed ownership cycles are checked.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Put": {
+            "partOfSpeech": "verb",
+            "role": "root / passive"
+          },
+          "Puts": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Putting": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Putter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              266,
+              274
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Put",
+        "Puts",
+        "Put",
+        "Putting",
+        "Putter"
+      ]
     },
     {
       "id": "builtin:place",
       "kind": "builtin",
       "name": "Place",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#lists",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#place",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lexicon/eng/grammar.json",
-        "lyger/ir_kinds.go",
-        "lyger/instructions.go",
-        "lyger/runtime_values_plan.go",
-        "lyger/runtime_value_words.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Typed updates append/replace List elements, write Map values or replace a Pointer target. Destination kind, keys, element types and managed ownership cycles are checked.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Place": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Places": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Placed": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Placing": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Placer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              275,
+              283
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Place",
+        "Places",
+        "Placed",
+        "Placing",
+        "Placer"
+      ]
     },
     {
       "id": "builtin:get",
       "kind": "builtin",
       "name": "Get",
       "role": "explanatory",
-      "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#get",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lexicon/eng/grammar.json",
-        "lyger/ir_kinds.go",
-        "lyger/instructions.go"
+        "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Get": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Gets": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Gotten": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Getting": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Getter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              284,
+              292
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Get",
+        "Gets",
+        "Gotten",
+        "Getting",
+        "Getter"
+      ]
     },
     {
       "id": "builtin:take",
       "kind": "builtin",
       "name": "Take",
       "role": "explanatory",
-      "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#take",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lexicon/eng/grammar.json",
-        "lyger/ir_kinds.go",
-        "lyger/instructions.go"
+        "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Take": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Takes": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Taken": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Taking": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Taker": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              293,
+              301
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Take",
+        "Takes",
+        "Taken",
+        "Taking",
+        "Taker"
+      ]
     },
     {
       "id": "builtin:import",
       "kind": "builtin",
       "name": "Import",
       "role": "explanatory",
-      "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#import",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lexicon/eng/grammar.json",
-        "lyger/ir_kinds.go",
-        "lyger/instructions.go"
+        "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Import": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Imports": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Imported": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Importing": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Importer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              342,
+              350
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Import",
+        "Imports",
+        "Imported",
+        "Importing",
+        "Importer"
+      ]
     },
     {
       "id": "builtin:export",
       "kind": "builtin",
       "name": "Export",
       "role": "explanatory",
-      "support": "unresolved",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#export",
       "sources": [
-        "lexicon/eng/vocabulary.json",
-        "lexicon/eng/grammar.json",
-        "lyger/ir_kinds.go",
-        "lyger/instructions.go"
+        "lexicon/eng/vocabulary.json"
       ],
       "witnesses": [],
-      "notes": "Configured grammar/vocabulary root. No general native outer instruction implementation is established; use the described supported forms instead.",
-      "evidence": "static-inspection; no-existing-witness-listed"
-    },
-    {
-      "id": "stdlib:eng:io",
-      "kind": "stdlib-export",
-      "name": "IO",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
-      "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/io/dictionary.l",
-        "lyger/source_units.go",
-        "lyger/lexical_scope.go"
-      ],
-      "witnesses": [
-        "lyger/configured_import_test.go",
-        "lyger/dictionary_ownership_test.go"
-      ],
-      "notes": "Reviewed registered export namespace for dictionary language=eng key=io. Index-driven addition/rename/deletion must trigger new review.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "io"
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "formRoles": {
+          "Export": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Exports": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Exported": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Exporting": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Exporter": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        },
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              351,
+              359
+            ]
+          }
+        ]
       },
-      "visibility": "namespace"
-    },
-    {
-      "id": "stdlib-export:eng:io:IO.Print",
-      "kind": "stdlib-export",
-      "name": "IO.Print",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#import-and-calling-forms",
-      "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/io/dictionary.l",
-        "lyger/source_units.go",
-        "lyger/definition_bindings.go",
-        "lyger/lowering.go",
-        "lyger/function_definitions.go"
-      ],
-      "witnesses": [
-        "lyger/configured_import_test.go",
-        "lyger/raw_text_test.go",
-        "lyger/io_numeric_test.go",
-        "lyger/nested_definition_test.go",
-        "lyger/word_library_acceptance_test.go",
-        "lyger/word_library_io_policy_test.go"
-      ],
-      "notes": "Print retains Render then private Write. Write obtains one stdout guard, invokes the source Lined Sender and applies shared Result.Expect with the existing failure message; bytes, formatting and LF policy remain unchanged.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "io"
-      },
-      "visibility": "public",
       "inflections": [
-        "Print",
-        "Prints",
-        "Printed",
-        "Printing",
-        "Printer"
-      ],
-      "argumentRoles": [
-        "Output (Thing)"
-      ],
-      "effect": "Writes the selected typed rendering and appends LF; no L return value is declared."
-    },
-    {
-      "id": "stdlib-export:eng:io:IO.Output",
-      "kind": "stdlib-export",
-      "name": "IO.Output",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
-      "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/io/dictionary.l",
-        "lyger/source_units.go",
-        "lyger/function_definitions.go"
-      ],
-      "witnesses": [
-        "lyger/word_library_acceptance_test.go",
-        "lyger/word_library_io_policy_test.go"
-      ],
-      "notes": "One selected std::io::stdout call. Resource identity does not establish authority or isolation.",
-      "evidence": "static-inspection; word-library native and import witnesses",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "io"
-      },
-      "visibility": "public",
-      "inflections": [
-        "Output"
-      ],
-      "argumentRoles": [],
-      "effect": "Obtains the standard-output handle; does not lock, write or flush."
-    },
-    {
-      "id": "stdlib-export:eng:io:IO.Diagnostic",
-      "kind": "stdlib-export",
-      "name": "IO.Diagnostic",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
-      "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/io/dictionary.l",
-        "lyger/source_units.go",
-        "lyger/function_definitions.go"
-      ],
-      "witnesses": [
-        "lyger/word_library_acceptance_test.go",
-        "lyger/word_library_io_policy_test.go"
-      ],
-      "notes": "One selected std::io::stderr call. It supplies an alternate native writer handle without adding an input or networking API.",
-      "evidence": "static-inspection; word-library native and import witnesses",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "io"
-      },
-      "visibility": "public",
-      "inflections": [
-        "Diagnostic"
-      ],
-      "argumentRoles": [],
-      "effect": "Obtains the standard-error handle; does not redirect Print."
-    },
-    {
-      "id": "stdlib-export:eng:io:IO.Send",
-      "kind": "stdlib-export",
-      "name": "IO.Send",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
-      "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/io/dictionary.l",
-        "lyger/source_units.go",
-        "lyger/function_definitions.go"
-      ],
-      "witnesses": [
-        "lyger/word_library_acceptance_test.go"
-      ],
-      "notes": "The source Function composes a borrowed byte view with write_all. Its native operation handles short writes and Interrupted, and rejects zero progress with WriteZero; L adds no extra retry policy. A failure can follow partial output; allocation and blocking remain native obligations.",
-      "evidence": "static-inspection; word-library native and import witnesses",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "io"
-      },
-      "visibility": "public",
-      "inflections": [
-        "Send",
-        "Sends",
-        "Sent",
-        "Sending",
-        "Sender"
-      ],
-      "argumentRoles": [
-        "Writer (&mut W: std::io::Write + ?Sized)",
-        "Payload (&P: AsRef<[u8]> + ?Sized)"
-      ],
-      "effect": "Writes the borrowed byte view and returns std::io::Result<()>; no added LF, lock, flush or panic."
-    },
-    {
-      "id": "stdlib-export:eng:io:IO.Lined",
-      "kind": "stdlib-export",
-      "name": "IO.Lined",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
-      "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/io/dictionary.l",
-        "lyger/source_units.go",
-        "lyger/function_definitions.go",
-        "stdlib/eng/storage/dictionary.l",
-        "lyger/source_descriptors.go",
-        "lyger/builtin_bindings.go",
-        "lyger/process_inputs.go"
-      ],
-      "witnesses": [
-        "lyger/word_library_acceptance_test.go",
-        "lyger/word_library_constructor_test.go",
-        "lyger/word_library_io_policy_test.go"
-      ],
-      "notes": "Targets the actual derived Sender. Its private L-authored helper selects the retained Result; base evaluation, generic arguments, result binding and helper provenance are preserved. It adds no output transaction or lifecycle operation.",
-      "evidence": "static-inspection; word-library native and import witnesses",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "io"
-      },
-      "visibility": "public",
-      "inflections": [
-        "Lined"
-      ],
-      "argumentRoles": [
-        "Selected Sender invocation"
-      ],
-      "effect": "After payload success, sends LF through the same writer; returns the first error or unit success."
-    },
-    {
-      "id": "stdlib-export:eng:io:IO.Flush",
-      "kind": "stdlib-export",
-      "name": "IO.Flush",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/stdlib/eng/io.md#explicit-byte-output",
-      "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/io/dictionary.l",
-        "lyger/source_units.go",
-        "lyger/function_definitions.go"
-      ],
-      "witnesses": [
-        "lyger/word_library_acceptance_test.go"
-      ],
-      "notes": "One Write::flush call. Flushing may block or fail and does not establish durable storage.",
-      "evidence": "static-inspection; word-library native and import witnesses",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "io"
-      },
-      "visibility": "public",
-      "inflections": [
-        "Flush",
-        "Flushes",
-        "Flushed",
-        "Flushing",
-        "Flusher"
-      ],
-      "argumentRoles": [
-        "Writer (&mut std::io::Write)"
-      ],
-      "effect": "Requests an explicit native writer flush and returns its IO Result."
-    },
-    {
-      "id": "stdlib-internal:eng:io:output",
-      "kind": "stdlib-export",
-      "name": "Render / Write",
-      "role": "implementation",
-      "support": "internal",
-      "doc": "docs/stdlib/eng/io.md#public-and-private-names",
-      "sources": [
-        "stdlib/eng/io/dictionary.l",
-        "lyger/lexical_scope.go",
-        "lyger/source_units.go"
-      ],
-      "witnesses": [
-        "lyger/dictionary_ownership_test.go",
-        "lyger/dictionary_dependency_capture_test.go",
-        "lyger/word_library_io_policy_test.go"
-      ],
-      "notes": "Render, Write, Lock, byte view and line-completion source helpers remain private dependencies. Stream, Check and Slice have no compatibility aliases; public byte IO is classified separately.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "io"
-      },
-      "visibility": "private"
-    },
-    {
-      "id": "grammar-group:values-subjects-objects",
-      "kind": "grammar-group",
-      "name": "values-subjects-objects",
-      "role": "explanatory",
-      "support": "partial",
-      "doc": "docs/spec/grammar.md#values-subjects-and-objects",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/types.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:phrases",
-      "kind": "grammar-group",
-      "name": "phrases",
-      "role": "explanatory",
-      "support": "partial",
-      "doc": "docs/spec/grammar.md#phrases",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/grammar_types.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:declarations",
-      "kind": "grammar-group",
-      "name": "declarations",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/registration.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:definitions",
-      "kind": "grammar-group",
-      "name": "definitions",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/definition_bindings.go",
-        "lyger/source_body.go",
-        "lyger/lowering.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go",
-        "lyger/scoped_definition_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:descriptors",
-      "kind": "grammar-group",
-      "name": "descriptors",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/construction.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:aliases-imports",
-      "kind": "grammar-group",
-      "name": "aliases-imports",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/builder.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:process-lifecycle",
-      "kind": "grammar-group",
-      "name": "process-lifecycle",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/instructions.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Native process operations and implicit Output/Error require an App; source-defined actions and explicit members retain lexical precedence.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:collection-actions",
-      "kind": "grammar-group",
-      "name": "collection-actions",
-      "role": "explanatory",
-      "support": "partial",
-      "doc": "docs/spec/grammar.md#clauses-and-grammatical-forms",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/ir_kinds.go",
-        "lyger/instructions.go",
-        "lyger/runtime_values_source.go",
-        "lyger/runtime_values_plan.go",
-        "lyger/runtime_value_words.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
-      ],
-      "witnesses": [
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Put/Place lower to checked runtime updates; typed constructor reads supply indexed access. Get/Take, general source loop syntax and general removal remain unsupported. Storage traversal inside native Functions is a separate source composition.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:conditions",
-      "kind": "grammar-group",
-      "name": "conditions",
-      "role": "explanatory",
-      "support": "partial",
-      "doc": "docs/spec/grammar.md#conditions",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/orchestration_plan.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:while",
-      "kind": "grammar-group",
-      "name": "while",
-      "role": "explanatory",
-      "support": "rejected",
-      "doc": "docs/spec/grammar.md#conditions",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/instructions.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:joined-conditions",
-      "kind": "grammar-group",
-      "name": "joined-conditions",
-      "role": "explanatory",
-      "support": "rejected",
-      "doc": "docs/spec/grammar.md#conditions",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/instructions.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:predicates-statements",
-      "kind": "grammar-group",
-      "name": "predicates-statements",
-      "role": "explanatory",
-      "support": "partial",
-      "doc": "docs/spec/grammar.md#predicates-and-statements",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/instructions.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:vocabulary",
-      "kind": "grammar-group",
-      "name": "vocabulary",
-      "role": "explanatory",
-      "support": "partial",
-      "doc": "docs/spec/grammar.md#vocabulary-reference",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/lexicon.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:notation",
-      "kind": "grammar-group",
-      "name": "notation",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/grammar.md#configuration-notation",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/grammar_terms.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
-    },
-    {
-      "id": "grammar-group:matching",
-      "kind": "grammar-group",
-      "name": "matching",
-      "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/grammar.md#matching-and-ambiguity",
-      "sources": [
-        "lexicon/eng/grammar.json",
-        "lexicon/eng/vocabulary.json",
-        "lyger/grammar_match.go"
-      ],
-      "witnesses": [
-        "lyger/grammar_terms_test.go",
-        "lyger/grammar_consumption_test.go"
-      ],
-      "notes": "Groups inventoried grammar/vocabulary entries; linked prose and implementation define support. Recognition alone does not establish execution.",
-      "evidence": "static-inspection; existing-witness-not-run"
+        "Export",
+        "Exports",
+        "Exported",
+        "Exporting",
+        "Exporter"
+      ]
     },
     {
       "id": "value-tag:invalid-zero",
@@ -2204,40 +2861,46 @@
       "support": "internal",
       "doc": "docs/spec/values.md#null-and-internal-states",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/refactor_value_characterization_test.go"
-      ],
-      "notes": "The unnamed zero value is a compiler sentinel; it is not one of the 23 named representation tags or a public source constructor. valueTypeCount is an enum bound, not a stored value. Static inspection only.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "type:map",
       "kind": "type",
       "name": "Map",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/collections-and-categories.md#maps",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#map",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "lyger/runtime_values_source.go",
-        "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/utilities.go"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go",
-        "lyger/runtime_transfer_test.go",
-        "lyger/function_publication_test.go",
-        "lyger/runtime_lifetime_test.go",
-        "lyger/source_action_arguments_test.go"
-      ],
-      "notes": "Owned typed values keyed by Text bytes; insertion/replacement and checked reads preserve complete element types and deterministic byte ordering. Distinct from a vocabulary Dictionary.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lyger/utilities.go",
+            "lines": [
+              62,
+              82
+            ]
+          }
+        ],
+        "formRoles": {
+          "Map": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          }
+        }
+      },
+      "inflections": [
+        "Map"
+      ]
     },
     {
       "id": "value-tag:Map",
@@ -2247,137 +2910,1391 @@
       "support": "internal",
       "doc": "docs/spec/collections-and-categories.md#maps",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/types.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/value_kinds.go"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go"
-      ],
-      "notes": "Internal representation tag; executable source semantics are defined by the linked runtime type contract.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim"
     },
     {
       "id": "type:error",
       "kind": "type",
       "name": "Error",
       "role": "explanatory",
-      "support": "supported",
-      "doc": "docs/spec/execution.md#output-and-error",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#error",
       "sources": [
-        "lyger/value_kinds.go",
-        "lyger/utilities.go",
-        "lyger/runtime_types.go",
-        "lyger/word_values.go",
-        "lyger/runtime_values_source.go",
-        "lyger/runtime_values_plan.go",
-        "stdlib/eng/storage/dictionary.l"
+        "lyger/runtime_types.go"
       ],
-      "witnesses": [
-        "lyger/runtime_values_test.go",
-        "lyger/runtime_transfer_test.go"
-      ],
-      "notes": "Error values can be constructed, stored, captured and placed in typed containers. App Error is optional until inspected; extracting an absent Error rejects. Direct Show remains unsupported.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lyger/runtime_types.go",
+            "lines": [
+              70,
+              80
+            ]
+          }
+        ],
+        "formRoles": {
+          "Error": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Errors": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      },
+      "inflections": [
+        "Error",
+        "Errors"
+      ]
     },
     {
-      "id": "grammar-group:runtime-captures",
-      "kind": "grammar-group",
-      "name": "runtime-captures",
+      "id": "builtin:invoke",
+      "kind": "builtin",
+      "name": "Invoke",
       "role": "explanatory",
       "support": "supported",
-      "doc": "docs/spec/names-and-scope.md#runtime-storage-and-definite-assignment",
+      "doc": "docs/reference/word-glossary.md#word-builtin-invoke",
       "sources": [
-        "lyger/instruction_captures.go",
-        "lyger/orchestration_captures.go",
-        "lyger/storage_words.go",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/core.l",
+        "lyger/definition_bindings.go",
+        "lyger/function_definitions.go",
+        "lyger/source_functions.go",
+        "lyger/lowering.go",
+        "lyger/native_composition.go",
+        "lyger/word_families.go",
+        "lyger/builtin_bindings.go",
+        "lyger/source_descriptors.go"
       ],
       "witnesses": [
-        "lyger/orchestration_captures_test.go",
-        "lyger/function_publication_test.go",
-        "lyger/runtime_lifetime_test.go",
-        "lyger/source_action_arguments_test.go"
+        "lyger/authored_family_registration_test.go",
+        "lyger/composed_constructor_test.go",
+        "lyger/function_member_composition_test.go"
       ],
-      "notes": "Activation-specific environments snapshot ordinary captures and retain shared Pointer targets. Actual arguments evaluate once in caller scope before callee entry; copies retain environments until last-owner release. App-process capture transport is not inferred.",
-      "evidence": "static-inspection; existing-witness-not-run"
+      "notes": "Core Invoke is a root verb for native-authoring application, separate from Function construction. Callable requires the selected binding's complete verb family and a resolved native-backed source Function; a following terminal Atoms slot supplies the checked argument count. Complete verb aliases and copies qualify. Single-label storage, noun aliases, Text native names or paths, and ordinary runtime Function values reject. Slot roles and order determine the pair. The selected source definition and canonical dependencies are retained; no runtime callback, lifecycle or capture support is claimed.",
+      "evidence": "static-declaration-inspection; existing-witness-not-run; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Invoke": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Invokes": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Invoked": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Invoking": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Invoker": {
+            "partOfSpeech": "noun",
+            "role": "objective (actor)"
+          }
+        },
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              6,
+              6
+            ]
+          }
+        ]
+      },
+      "inflections": [
+        "Invoke",
+        "Invokes",
+        "Invoked",
+        "Invoking",
+        "Invoker"
+      ]
     },
     {
-      "id": "stdlib-internal:eng:storage",
-      "kind": "stdlib-export",
-      "name": "Storage",
-      "role": "implementation",
-      "support": "internal",
-      "doc": "docs/internals/storage.md#results-and-errors",
+      "id": "builtin:delegate",
+      "kind": "builtin",
+      "name": "Delegate",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#delegate",
       "sources": [
-        "stdlib/index.json",
-        "stdlib/eng/storage/dictionary.l"
+        "builtins/eng/core.l"
       ],
-      "witnesses": [
-        "lyger/private_dictionary_test.go",
-        "lyger/definition_export_test.go",
-        "lyger/word_library_acceptance_test.go",
-        "lyger/word_library_ownership_test.go",
-        "lyger/source_formal_composition_test.go"
-      ],
-      "notes": "Explicitly importable implementation vocabulary, not an implicit builtin or public dictionary catalog. Source compositions own typed traversal, result binding, lazy failures, release sequencing, byte appends and caller returns. Native allocation, blocking and destructor costs remain separate obligations.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "storage"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "word": {
+        "partOfSpeech": "verb",
+        "audience": "authoring",
+        "formRoles": {
+          "Delegate": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Delegates": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Delegated": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Delegating": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Delegator": {
+            "partOfSpeech": "noun",
+            "role": "objective (actor)"
+          }
+        },
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              8,
+              8
+            ]
+          }
+        ]
       },
-      "visibility": "namespace"
+      "inflections": [
+        "Delegate",
+        "Delegates",
+        "Delegated",
+        "Delegating",
+        "Delegator"
+      ]
     },
     {
-      "id": "stdlib-internal:eng:runtime",
-      "kind": "stdlib-export",
-      "name": "Runtime",
-      "role": "implementation",
-      "support": "internal",
-      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "id": "grammar-word:it",
+      "kind": "grammar-word",
+      "name": "It",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#it",
       "sources": [
-        "stdlib/index.json",
-        "builtins/runtime/eng/dictionary.l",
-        "logiceme/runtime_composition.go",
-        "logiceme/logiceme_service.go"
+        "lexicon/eng/vocabulary.json"
       ],
-      "witnesses": [
-        "lyger/private_dictionary_test.go",
-        "lyger/definition_export_test.go"
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "It",
+        "they"
       ],
-      "notes": "Source implementation vocabulary selected through canonical dependencies; excluded from the public standard-library catalog.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "runtime"
-      },
-      "visibility": "namespace"
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              3,
+              11
+            ]
+          }
+        ],
+        "formRoles": {
+          "It": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "they": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      }
     },
     {
-      "id": "stdlib-internal:eng:format",
-      "kind": "stdlib-export",
-      "name": "Formatting",
-      "role": "implementation",
-      "support": "internal",
-      "doc": "docs/architecture.md#embedded-builtins-and-explicit-dictionaries",
+      "id": "grammar-word:that",
+      "kind": "grammar-word",
+      "name": "That",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#that",
       "sources": [
-        "stdlib/index.json",
-        "builtins/runtime/eng/number.l",
-        "builtins/runtime/eng/foundations.l"
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "That",
+        "Those"
+      ],
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              12,
+              20
+            ]
+          }
+        ],
+        "formRoles": {
+          "That": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "Those": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:this",
+      "kind": "grammar-word",
+      "name": "This",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#this",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "This",
+        "These"
+      ],
+      "word": {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              21,
+              29
+            ]
+          }
+        ],
+        "formRoles": {
+          "This": {
+            "partOfSpeech": "noun",
+            "role": "root"
+          },
+          "These": {
+            "partOfSpeech": "noun",
+            "role": "plural"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:is",
+      "kind": "grammar-word",
+      "name": "Is",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#is",
+      "sources": [
+        "lexicon/eng/vocabulary.json",
+        "lyger/grammar_extraction.go",
+        "lyger/lexical_types.go",
+        "lyger/word_families.go",
+        "lyger/binding.go",
+        "lyger/token_forms.go",
+        "lyger/grammar_types.go"
       ],
       "witnesses": [
-        "lyger/format_dictionary_test.go",
-        "lyger/io_numeric_test.go"
+        "lyger/authored_family_registration_test.go",
+        "lyger/same_spelling_forms_test.go",
+        "lyger/morphology_family_test.go"
       ],
-      "notes": "IO and Runtime select one canonical formatting Function and its source-owned dependencies; importing IO does not load process supervision.",
-      "evidence": "static-inspection; existing-witness-not-run",
-      "dictionary": {
-        "lexicon": "eng",
-        "key": "format"
+      "notes": "An ordinary value assignment retains its value category; a complete framed definition on its right declares a noun family. A stored Function value under one label does not acquire a new invocation family. Shared form spellings retain canonical identity and are selected by grammatical context. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Is",
+        "Isnt"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              221,
+              229
+            ]
+          }
+        ],
+        "formRoles": {
+          "Is": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Isnt": {
+            "partOfSpeech": "verb",
+            "role": "null"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:have",
+      "kind": "grammar-word",
+      "name": "Have",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#have",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Have",
+        "Has",
+        "Had",
+        "Having",
+        "Haver"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              378,
+              386
+            ]
+          }
+        ],
+        "formRoles": {
+          "Have": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Has": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Had": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Having": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Haver": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:equal",
+      "kind": "grammar-word",
+      "name": "Equal",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#equal",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Equal",
+        "Equals",
+        "Equaled",
+        "Equaling",
+        "Equaler"
+      ],
+      "word": {
+        "partOfSpeech": "verb",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              387,
+              395
+            ]
+          }
+        ],
+        "formRoles": {
+          "Equal": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Equals": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Equaled": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Equaling": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Equaler": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:not",
+      "kind": "grammar-word",
+      "name": "Not",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#not",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Not"
+      ],
+      "word": {
+        "partOfSpeech": "adverb",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              430,
+              438
+            ]
+          }
+        ],
+        "formRoles": {
+          "Not": {
+            "partOfSpeech": "adverb",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:less",
+      "kind": "grammar-word",
+      "name": "Less",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#less",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Less"
+      ],
+      "word": {
+        "partOfSpeech": "adverb",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              439,
+              447
+            ]
+          }
+        ],
+        "formRoles": {
+          "Less": {
+            "partOfSpeech": "adverb",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:greater",
+      "kind": "grammar-word",
+      "name": "Greater",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#greater",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Greater"
+      ],
+      "word": {
+        "partOfSpeech": "adverb",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              448,
+              456
+            ]
+          }
+        ],
+        "formRoles": {
+          "Greater": {
+            "partOfSpeech": "adverb",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:then",
+      "kind": "grammar-word",
+      "name": "Then",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#then",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Then"
+      ],
+      "word": {
+        "partOfSpeech": "adverb",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              457,
+              465
+            ]
+          }
+        ],
+        "formRoles": {
+          "Then": {
+            "partOfSpeech": "adverb",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:as",
+      "kind": "grammar-word",
+      "name": "As",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#as",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "As"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              468,
+              476
+            ]
+          }
+        ],
+        "formRoles": {
+          "As": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:of",
+      "kind": "grammar-word",
+      "name": "Of",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#of",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Of"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              477,
+              485
+            ]
+          }
+        ],
+        "formRoles": {
+          "Of": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:at",
+      "kind": "grammar-word",
+      "name": "At",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#at",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "At"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              486,
+              494
+            ]
+          }
+        ],
+        "formRoles": {
+          "At": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:with",
+      "kind": "grammar-word",
+      "name": "With",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#with",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "With"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              495,
+              503
+            ]
+          }
+        ],
+        "formRoles": {
+          "With": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:in",
+      "kind": "grammar-word",
+      "name": "In",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#in",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "In"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              504,
+              512
+            ]
+          }
+        ],
+        "formRoles": {
+          "In": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:out",
+      "kind": "grammar-word",
+      "name": "Out",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#out",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Out"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              513,
+              521
+            ]
+          }
+        ],
+        "formRoles": {
+          "Out": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:by",
+      "kind": "grammar-word",
+      "name": "By",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#by",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "By"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              522,
+              530
+            ]
+          }
+        ],
+        "formRoles": {
+          "By": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:from",
+      "kind": "grammar-word",
+      "name": "From",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#from",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "From"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              531,
+              539
+            ]
+          }
+        ],
+        "formRoles": {
+          "From": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:to",
+      "kind": "grammar-word",
+      "name": "To",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#to",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "To"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              540,
+              548
+            ]
+          }
+        ],
+        "formRoles": {
+          "To": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:than",
+      "kind": "grammar-word",
+      "name": "Than",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#than",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Than"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              549,
+              557
+            ]
+          }
+        ],
+        "formRoles": {
+          "Than": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:for",
+      "kind": "grammar-word",
+      "name": "For",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#for",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "For"
+      ],
+      "word": {
+        "partOfSpeech": "preposition",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              558,
+              566
+            ]
+          }
+        ],
+        "formRoles": {
+          "For": {
+            "partOfSpeech": "preposition",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:any",
+      "kind": "grammar-word",
+      "name": "Any",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#any",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Any"
+      ],
+      "word": {
+        "partOfSpeech": "article",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              569,
+              577
+            ]
+          }
+        ],
+        "formRoles": {
+          "Any": {
+            "partOfSpeech": "article",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:no",
+      "kind": "grammar-word",
+      "name": "No",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#no",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "No"
+      ],
+      "word": {
+        "partOfSpeech": "article",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              578,
+              586
+            ]
+          }
+        ],
+        "formRoles": {
+          "No": {
+            "partOfSpeech": "article",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:a",
+      "kind": "grammar-word",
+      "name": "A",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#a-1",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "A",
+        "An"
+      ],
+      "word": {
+        "partOfSpeech": "article",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              587,
+              595
+            ]
+          }
+        ],
+        "formRoles": {
+          "A": {
+            "partOfSpeech": "article",
+            "role": "root"
+          },
+          "An": {
+            "partOfSpeech": "article",
+            "role": "alt"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:the",
+      "kind": "grammar-word",
+      "name": "The",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#the",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "The"
+      ],
+      "word": {
+        "partOfSpeech": "article",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              596,
+              604
+            ]
+          }
+        ],
+        "formRoles": {
+          "The": {
+            "partOfSpeech": "article",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:and",
+      "kind": "grammar-word",
+      "name": "And",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#and",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "And"
+      ],
+      "word": {
+        "partOfSpeech": "conjunction",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              607,
+              619
+            ]
+          }
+        ],
+        "formRoles": {
+          "And": {
+            "partOfSpeech": "conjunction",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:or",
+      "kind": "grammar-word",
+      "name": "Or",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#or",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Or"
+      ],
+      "word": {
+        "partOfSpeech": "conjunction",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              620,
+              632
+            ]
+          }
+        ],
+        "formRoles": {
+          "Or": {
+            "partOfSpeech": "conjunction",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:if",
+      "kind": "grammar-word",
+      "name": "If",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#if",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "If"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              635,
+              643
+            ]
+          }
+        ],
+        "formRoles": {
+          "If": {
+            "partOfSpeech": "evaluation",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:else",
+      "kind": "grammar-word",
+      "name": "Else",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#else",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Else"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              644,
+              652
+            ]
+          }
+        ],
+        "formRoles": {
+          "Else": {
+            "partOfSpeech": "evaluation",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:otherwise",
+      "kind": "grammar-word",
+      "name": "Otherwise",
+      "role": "explanatory",
+      "support": "partial",
+      "doc": "docs/reference/word-glossary.md#otherwise",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "Otherwise"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              653,
+              661
+            ]
+          }
+        ],
+        "formRoles": {
+          "Otherwise": {
+            "partOfSpeech": "evaluation",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "grammar-word:while",
+      "kind": "grammar-word",
+      "name": "While",
+      "role": "explanatory",
+      "support": "rejected",
+      "doc": "docs/reference/word-glossary.md#while",
+      "sources": [
+        "lexicon/eng/vocabulary.json"
+      ],
+      "witnesses": [],
+      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "inflections": [
+        "While"
+      ],
+      "word": {
+        "partOfSpeech": "evaluation",
+        "definitions": [
+          {
+            "source": "lexicon/eng/vocabulary.json",
+            "lines": [
+              662,
+              670
+            ]
+          }
+        ],
+        "formRoles": {
+          "While": {
+            "partOfSpeech": "evaluation",
+            "role": "root"
+          }
+        }
+      }
+    },
+    {
+      "id": "builtin:print",
+      "kind": "builtin",
+      "name": "Print",
+      "role": "explanatory",
+      "support": "supported",
+      "doc": "docs/reference/word-glossary.md#print",
+      "sources": [
+        "builtins/eng/core.l"
+      ],
+      "witnesses": [
+        "cmd/l/core_hello_world_test.go"
+      ],
+      "evidence": "static-source-inspection; existing-witness-not-run",
+      "word": {
+        "partOfSpeech": "verb",
+        "definitions": [
+          {
+            "source": "builtins/eng/core.l",
+            "lines": [
+              17,
+              17
+            ]
+          }
+        ],
+        "formRoles": {
+          "Print": {
+            "partOfSpeech": "verb",
+            "role": "root"
+          },
+          "Prints": {
+            "partOfSpeech": "verb",
+            "role": "active"
+          },
+          "Printed": {
+            "partOfSpeech": "verb",
+            "role": "passive"
+          },
+          "Printing": {
+            "partOfSpeech": "verb",
+            "role": "applicative"
+          },
+          "Printer": {
+            "partOfSpeech": "noun",
+            "role": "actor"
+          }
+        }
       },
-      "visibility": "namespace"
+      "inflections": [
+        "Print",
+        "Prints",
+        "Printed",
+        "Printing",
+        "Printer"
+      ]
     }
   ]
 }

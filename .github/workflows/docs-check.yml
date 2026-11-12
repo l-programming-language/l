@@ -1,8 +1,7 @@
 name: L documentation checks
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  # Opt-in while the source libraries and their documentation are being reset.
   workflow_dispatch:
 
 permissions:

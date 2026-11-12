@@ -13,11 +13,9 @@ type functionParameter struct {
 type sourceFunction struct {
 	Native       bool
 	Constructor  *constructionNode
-	Invoke       *record
 	aliases      map[*record]*record
 	Definition   *record
 	Return       *record
-	Word         *lexeme
 	Record       *record
 	Header       *lStatement
 	Scope        *lexicalScope
@@ -42,22 +40,6 @@ func (f *sourceFunction) signature() runtimeTypeRef {
 	return result
 }
 
-func (c *Compilation) reserveFunctionParameter(statement *lStatement, tok *token) {
-	if c.Scope.declarations[tok] != nil {
-		return
-	}
-	position := 0
-	for index, current := range statement.tokens {
-		if current == tok {
-			position = index
-			break
-		}
-	}
-	declaration := &scopeDeclaration{SubjectID: tok.declarationRoot(), Token: tok, TokenIndex: position, Scope: tok.scope}
-	tok.scope.declarations = append(tok.scope.declarations, declaration)
-	c.Scope.declarations[tok] = declaration
-}
-
 func runtimeRecord(tok *token, typ runtimeTypeRef, statement *lStatement) (*record, error) {
 	kind, category := checkType([]byte(typ.Kind.String()))
 	if typ.Kind == valueError {
@@ -71,7 +53,15 @@ func runtimeRecord(tok *token, typ runtimeTypeRef, statement *lStatement) (*reco
 	}
 	value := initEntry(typ.Kind.String(), category)
 	value.Runtime = &runtimeReference{Source: statement}
-	return &record{ID: strings.Trim(string(tok.rawBytes), `"`), Type: strings.ToLower(category.String()) + "." + strings.ToLower(typ.Kind.String()), Value: value, runtimeType: &typ}, nil
+	label, err := parseDeclarationLabel(string(tok.rawBytes))
+	if err != nil {
+		return nil, err
+	}
+	rec := &record{ID: label.Root, Type: strings.ToLower(category.String()) + "." + strings.ToLower(typ.Kind.String()), Value: value, runtimeType: &typ}
+	if err := rec.declareInvocation(string(tok.rawBytes)); err != nil {
+		return nil, err
+	}
+	return rec, nil
 }
 
 func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrationSite, prepared *statementRegistration) (bool, error) {
@@ -166,28 +156,22 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		return true, lerrors.Syntax.Errorf("a paragraph has only one Function body")
 	}
 	word := newLexeme("verb")
-	if err := word.reLabel(string(target.rawBytes)); err != nil {
+	if err := word.declareFamily(string(target.rawBytes)); err != nil {
 		return true, err
 	}
 	definition, err := canonicalRecord(object.noun.binding.Record, c.Semantics.Aliases)
 	if err != nil {
 		return true, err
 	}
-	function := &sourceFunction{Native: native, aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition, Word: word}
-	for _, name := range []string{"Return", "Invoke"} {
-		binding, _, err := c.resolver().lookupMember(definition, []byte(name))
-		if err != nil {
-			return true, err
-		}
-		if binding == nil {
-			return true, lerrors.UnresolvedReference.Errorf("Function constructor has no %s definition", name)
-		}
-		if name == "Return" {
-			function.Return = binding.Record
-		} else {
-			function.Invoke = binding.Record
-		}
+	function := &sourceFunction{Native: native, aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition}
+	binding, _, err := c.resolver().lookupMember(definition, []byte("Return"))
+	if err != nil {
+		return true, err
 	}
+	if binding == nil {
+		return true, lerrors.UnresolvedReference.Errorf("Function constructor has no Return definition")
+	}
+	function.Return = binding.Record
 	constructor := *object
 	if !native {
 		constructor.phrase = nil // Runtime signatures are resolved below; descriptors still belong to the constructor.
@@ -205,14 +189,10 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: target, Record: function.Record})
 		for i, input := range node.Inputs {
 			token := node.InputTokens[i]
-			argument := definitionReferenceArgument(input.Key)
-			argument.source = statement.source.Span
-			noun := newLexeme("noun")
-			if err := noun.reLabel(string(token.rawBytes)); err != nil {
+			parameter, err := nativeReferenceRecord(statement, token, input.Key)
+			if err != nil {
 				return true, err
 			}
-			parameter := &record{ID: input.Key, Type: "lexeme.noun.generic", Value: &entry{Type: storageLexeme, Lexeme: noun}, definitionArgument: &argument}
-			c.reserveFunctionParameter(statement, token)
 			prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: token, Record: parameter})
 		}
 		prepared.functions = append(prepared.functions, function)
@@ -221,7 +201,7 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 	value := initEntry("Function", storageApplicative)
 	value.Applicative.Function.Source = function
 	value.Runtime = &runtimeReference{Source: statement}
-	rec := &record{ID: strings.SplitN(strings.Trim(string(target.rawBytes), `"`), "|", 2)[0], Type: "applicative.function", Value: value}
+	rec := &record{ID: strings.SplitN(strings.Trim(string(target.rawBytes), `"`), "|", 2)[0], Type: "applicative.function", Value: value, word: word}
 	function.Record = rec
 	prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: target, Record: rec})
 	seen := make(map[string]bool)
@@ -245,7 +225,6 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		if err != nil {
 			return true, err
 		}
-		c.reserveFunctionParameter(statement, parameter.noun)
 		function.Inputs = append(function.Inputs, functionParameter{record, typ})
 		prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: parameter.noun, Record: record})
 	}
@@ -302,6 +281,9 @@ func (b *instructionBuilder) functionOperation(clause *clauseGram, ctx instructi
 			return nil, err
 		}
 	} else {
+		if clause.verb.binding == nil || !clause.verb.binding.Record.hasInvocationFamily() {
+			return nil, lerrors.Syntax.Errorf("Function invocation requires this binding's complete verb family")
+		}
 		target, err := b.tokenValue(clause.verb, ctx)
 		if err != nil {
 			return nil, err

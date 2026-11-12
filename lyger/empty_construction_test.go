@@ -10,21 +10,21 @@ import (
 
 func TestEmptyConstructionRetainsRequiredArguments(t *testing.T) {
 	for _, tc := range []struct {
-		name, definition string
-		empty            bool
+		name, family, definition string
+		empty                    bool
 	}{
-		{"Sequence", "W^<@Items|Syllables@>", true},
-		{"Scalar", "W^<@Item|Syllable@>", false},
-		{"RequiredText", "BOD^E{|Statement: ~<@Value|Text@>~|}", false},
+		{"Sequence", "Sequence|-s|-like|--ing", "W^<@Items|Syllables@>", true},
+		{"Scalar", "Scalar|-s|-like|-ing", "W^<@Item|Syllable@>", false},
+		{"RequiredText", "RequiredText|-s|-ual|-ing", "BOD^E{|Statement: ~<@Value|Text@>~|}", false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			result := requireDistributionFrontend(t, "Define \""+tc.name+"\" as `<DEF>"+tc.definition+"<DEF>`.\n", nil)
+			result := requireDistributionFrontend(t, "Define \""+tc.family+"\" as `<DEF>"+tc.definition+"<DEF>`.\n", nil)
 			c := result.Compilation
 			rec := c.Memory[tc.name]
 			if rec == nil {
 				t.Fatal("source-defined constructor argument was not registered")
 			}
-			node := &constructionNode{Nominal: "holder", Parameters: []*objectGram{{noun: &token{binding: &tokenBinding{Record: rec}}}}}
+			node := &constructionNode{Nominal: "holder", Parameters: []*objectGram{{nominalGram: nominalGram{noun: &token{binding: &tokenBinding{Record: rec}}}}}}
 			instance, err := c.emptyConstructionSequence(node)
 			if err != nil || (instance != nil) != tc.empty {
 				t.Fatalf("empty argument = %+v, %v; want available %v", instance, err, tc.empty)
@@ -56,7 +56,7 @@ func TestEmptyApplicationUsesSourceSequence(t *testing.T) {
 			if err != nil || len(units) != 1 {
 				t.Fatalf("empty App units: %v", err)
 			}
-			bundle, err := Logiceme.NewLogicemeService(phase1Options(t).Resources).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{IncludeRuntime: false})
+			bundle, err := Logiceme.NewLogicemeService(canonicalTestOptions().Resources).Evaluate(units[0].BackendAML)
 			recordBundle(t, bundle)
 			if err != nil {
 				t.Fatal(err)
@@ -123,14 +123,14 @@ func TestEmptyApplicationUsesSourceSequence(t *testing.T) {
 }
 
 func TestEmptyConstructionUsesFirstParameter(t *testing.T) {
-	result := requireDistributionFrontend(t, "Define \"Sequence\" as `<DEF>W^<@Items|Syllables@><DEF>`.\nDefine \"Scalar\" as `<DEF>W^<@Item|Syllable@><DEF>`.\n", nil)
+	result := requireDistributionFrontend(t, "Define \"Sequence|-s|-like|--ing\" as `<DEF>W^<@Items|Syllables@><DEF>`.\nDefine \"Scalar|-s|-like|-ing\" as `<DEF>W^<@Item|Syllable@><DEF>`.\n", nil)
 	c := result.Compilation
 	parameter := func(name string) *objectGram {
 		rec := c.Memory[name]
 		if rec == nil {
 			t.Fatalf("source-defined %s argument was not registered", name)
 		}
-		return &objectGram{noun: &token{binding: &tokenBinding{Record: rec}}}
+		return &objectGram{nominalGram: nominalGram{noun: &token{binding: &tokenBinding{Record: rec}}}}
 	}
 	for _, tc := range []struct {
 		name       string
@@ -139,7 +139,7 @@ func TestEmptyConstructionUsesFirstParameter(t *testing.T) {
 	}{
 		{"scalar before sequence", []*objectGram{parameter("Scalar"), parameter("Sequence")}, false},
 		{"sequence before scalar", []*objectGram{parameter("Sequence"), parameter("Scalar")}, true},
-		{"missing binding before sequence", []*objectGram{{noun: &token{}}, parameter("Sequence")}, false},
+		{"missing binding before sequence", []*objectGram{{nominalGram: nominalGram{noun: &token{}}}, parameter("Sequence")}, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			node := &constructionNode{Nominal: "holder", Parameters: tc.parameters}

@@ -34,13 +34,11 @@ func TestDemoGeneratesBuildableSource(t *testing.T) {
 			sourcePath := filepath.Join(root, "demo/basic/main.l")
 			if tc.name != "demo" {
 				source = bytes.ReplaceAll(source, []byte(`"Hello"`), []byte(strconv.Quote(tc.app)))
-				source = bytes.ReplaceAll(source, []byte("Execute Hello."), []byte("Execute "+tc.app+"."))
-				source = bytes.ReplaceAll(source, []byte("Show Hello's"), []byte("Show "+tc.app+"'s"))
 				source = bytes.Replace(source, []byte("`Hello World!`"), []byte("`"+tc.text+"`"), 1)
 			}
 			if tc.name == "renamed vocabulary" {
 				directory := t.TempDir()
-				source = []byte("Use IO's Print from `io` as \"Display\".\nUse Execute as \"Launch\".\nUse Basic as \"Plain\".\n\"message\" is `" + tc.text + "`.\nCreate \"" + tc.app + "\" as a New Plain App.\nThe App Displays message.\nLaunch it.\nShow it's Output.\n")
+				source = []byte("Use Print as \"Display|-s|-ed|-ing|-er\".\nUse Basic as \"Plain\".\n\"message\" is `" + tc.text + "`.\nCreate \"" + tc.app + "\" as a New Plain App.\nThe App Displays message.\n")
 				sourcePath = filepath.Join(directory, "story.l")
 			}
 			compiler := newCompiler(&cliData{jobType: "build", mainPath: sourcePath, osType: "ubuntu"})

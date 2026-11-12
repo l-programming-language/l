@@ -19,7 +19,7 @@ func instructionRecord(id, kind, text string) *record {
 func instructionAction(t *testing.T, label string) *record {
 	t.Helper()
 	lex := newLexeme("verb")
-	if err := lex.reLabel(label); err != nil {
+	if err := lex.declareFamily(label); err != nil {
 		t.Fatal(err)
 	}
 	return &record{ID: lex.Root, Type: "lexeme.verb.generic", Value: &entry{Type: storageLexeme, Lexeme: lex}}
@@ -72,12 +72,12 @@ func instructionTestGrammar(t *testing.T, source string, memory map[string]*reco
 }
 
 func TestInstructionsPreserveRuntimeBranchesAndCustomActionOrder(t *testing.T) {
-	action := instructionAction(t, `"Launch|-es|-ed|-ing"`)
+	action := instructionAction(t, `"Launch|-es|-ed|-ing|-er"`)
 	job := instructionRecord("Worker", "App", "")
 	message := instructionRecord("message", "Text", "`unchanged\ntext`")
 	result := instructionRecord("response", "Text", "")
 	memory := map[string]*record{action.ID: action, job.ID: job, message.ID: message, result.ID: result}
-	source := "Create \"Launch|-es|-ed|-ing\" for Building any App and then Running it.\nCreate \"Worker\" as a New App.\nLaunch it.\nIf it has an Error, exit with the Error, else define \"response\" as it's Output.\nIf message isnt response, exit with an error of `unaltered failure\nmessage`.\nOtherwise, show response and then exit.\n"
+	source := "Create \"Launch|-es|-ed|-ing|-er\" for Building any App and then Running it.\nCreate \"Worker\" as a New App.\nLaunch it.\nIf it has an Error, exit with the Error, else define \"response\" as it's Output.\nIf message isnt response, exit with an error of `unaltered failure\nmessage`.\nOtherwise, show response and then exit.\n"
 	statements, scopes, semantics := instructionTestGrammar(t, source, memory)
 	semantics.Declarations = map[*record]*lStatement{action: statements[0], job: statements[1], result: statements[3]}
 	instructions, err := buildInstructions(statements, scopes, semantics)
@@ -122,11 +122,11 @@ func TestInstructionsPreserveRuntimeBranchesAndCustomActionOrder(t *testing.T) {
 }
 
 func TestInstructionsUseSourceActionAliasesAndIgnoreRetryOrder(t *testing.T) {
-	action := instructionAction(t, `"Prepare|-s|-d|-ing"`)
-	alias := instructionAction(t, `"Start|-s|-ed|-ing"`)
+	action := instructionAction(t, `"Prepare|-s|-d|--ing|-r"`)
+	alias := instructionAction(t, `"Start|-s|-ed|-ing|-er"`)
 	job := instructionRecord("Other", "App", "")
 	memory := map[string]*record{action.ID: action, alias.ID: alias, job.ID: job}
-	source := "Create \"Prepare|-s|-d|-ing\" for Building any App and then Running it.\nCreate \"Other\" as a New App.\nStart it.\n"
+	source := "Create \"Prepare|-s|-d|--ing|-r\" for Building any App and then Running it.\nCreate \"Other\" as a New App.\nStart it.\n"
 	statements, scopes, semantics := instructionTestGrammar(t, source, memory)
 	semantics.Declarations = map[*record]*lStatement{action: statements[0], job: statements[1]}
 	semantics.Aliases = map[*record]*record{alias: action}
@@ -159,10 +159,10 @@ func TestInstructionsRejectOtherwiseWithoutAnAdjacentConditional(t *testing.T) {
 }
 
 func TestInstructionsKeepAppBodyCallsSeparateFromImperativeCalls(t *testing.T) {
-	action := instructionAction(t, `"Launch|-es|-ed|-ing"`)
+	action := instructionAction(t, `"Launch|-es|-ed|-ing|-er"`)
 	job := instructionRecord("Worker", "App", "")
 	memory := map[string]*record{action.ID: action, job.ID: job}
-	source := "Create \"Launch|-es|-ed|-ing\" for Building any App and then Running it.\nCreate \"Worker\" as a New App.\nThe App Launches it.\nLaunch it.\n"
+	source := "Create \"Launch|-es|-ed|-ing|-er\" for Building any App and then Running it.\nCreate \"Worker\" as a New App.\nThe App Launches it.\nLaunch it.\n"
 	statements, scopes, semantics := instructionTestGrammar(t, source, memory)
 	semantics.Declarations = map[*record]*lStatement{action: statements[0], job: statements[1]}
 	instructions, err := buildInstructions(statements, scopes, semantics)
@@ -175,10 +175,10 @@ func TestInstructionsKeepAppBodyCallsSeparateFromImperativeCalls(t *testing.T) {
 }
 
 func TestInstructionsRejectIncompleteInputsAndWrongActionArgument(t *testing.T) {
-	action := instructionAction(t, `"Launch|-es|-ed|-ing"`)
+	action := instructionAction(t, `"Launch|-es|-ed|-ing|-er"`)
 	value := instructionRecord("message", "Text", "`message`")
 	memory := map[string]*record{action.ID: action, value.ID: value}
-	source := "Create \"Launch|-es|-ed|-ing\" for Building any App and then Running it.\nLaunch message.\n"
+	source := "Create \"Launch|-es|-ed|-ing|-er\" for Building any App and then Running it.\nLaunch message.\n"
 	statements, scopes, semantics := instructionTestGrammar(t, source, memory)
 	declarations := map[*record]*lStatement{action: statements[0]}
 	semantics.Declarations = declarations
@@ -200,10 +200,10 @@ func TestInstructionsRejectIncompleteInputsAndWrongActionArgument(t *testing.T) 
 }
 
 func TestInstructionsRejectRecursiveSourceAction(t *testing.T) {
-	action := instructionAction(t, `"Repeat|-s|-ed|-ing"`)
+	action := instructionAction(t, `"Repeat|-s|-ed|-ing|-er"`)
 	job := instructionRecord("Worker", "App", "")
 	memory := map[string]*record{action.ID: action, job.ID: job}
-	source := "Create \"Repeat|-s|-ed|-ing\" for Building any App and then Repeating it.\nCreate \"Worker\" as a New App.\nRepeat it.\n"
+	source := "Create \"Repeat|-s|-ed|-ing|-er\" for Building any App and then Repeating it.\nCreate \"Worker\" as a New App.\nRepeat it.\n"
 	statements, scopes, semantics := instructionTestGrammar(t, source, memory)
 	semantics.Declarations = map[*record]*lStatement{action: statements[0]}
 	if _, err := buildInstructions(statements, scopes, semantics); err == nil || !strings.Contains(err.Error(), "recursive source action") {

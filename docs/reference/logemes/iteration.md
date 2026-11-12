@@ -17,7 +17,7 @@ The caller owns iterator expressions, patterns, borrowing and explicit native aw
 
 OG takes one Key/Keys native pattern and one nonempty Value/Values, without children. DOG takes the pattern and exactly one Calculation, without native Values. They only occur as X conditions and preserve `let pattern = value` as a fragment. PO attaches one native label to one Iteration, with no extra wrapper block, native Values or trailing semicolon.
 
-This allows the label to target the loop itself. Condition bindings have their Rust loop-body scope; they do not become surrounding L paragraph bindings. Native pattern syntax is supplied data, not a general pattern language invented at the AML boundary.
+This allows the label to target the loop itself. Condition bindings have their Rust loop-body scope. They do not become surrounding L paragraph bindings. Native pattern syntax is supplied data, not a general pattern language invented at the AML boundary.
 
 ## Unsupported forms and native failures
 

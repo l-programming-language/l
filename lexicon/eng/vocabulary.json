@@ -267,7 +267,7 @@
       "root": "put",
       "pos": "verb",
       "type": "action.expansive",
-      "postfixes": {"-s": "active", "-": "passive", "-ting": "applicative", "-er": "objective"},
+      "postfixes": {"-s": "active", "-": "passive", "-ting": "applicative", "-ter": "objective"},
       "value": "PUT(inputs[0], inputs[1], inputs[2])",
       "inputs": ["*.thing", "*.noun.iterative", "text"],
       "outputs": ["value"]
@@ -312,7 +312,7 @@
       "root": "run",
       "pos": "verb",
       "type": "action.executive",
-      "postfixes": {"-s": "active", "--an": "passive", "-ning": "applicative", "-ner": "objective"},
+      "postfixes": {"-s": "active", "---an": "passive", "-ning": "applicative", "-ner": "objective"},
       "value": "RUN(inputs[0])",
       "inputs": ["*.noun.app"],
       "outputs": ["value"]
@@ -334,7 +334,7 @@
       "root": "stop",
       "pos": "verb",
       "type": "action.interruptive",
-      "postfixes": {"-s": "active", "-ped": "passive", "-ping": "applicative", "-pper": "objective"},
+      "postfixes": {"-s": "active", "-ped": "passive", "-ping": "applicative", "-per": "objective"},
       "value": "STOP(inputs[0])",
       "inputs": ["*.noun.app"],
       "outputs": ["value"]

@@ -21,8 +21,8 @@ func TestDemoCompilationRetainsSemanticProgram(t *testing.T) {
 		}
 		t.Fatalf("compile: %v", comp.Error)
 	}
-	if comp.Program == nil || len(comp.Program.Books) == 0 {
-		t.Fatal("successful compilation must retain its application graph")
+	if comp.Program == nil || len(comp.Program.Books) != 1 || comp.Program.Books[0].Name != "HelloWorldApp" {
+		t.Fatal("successful compilation must retain its source application graph")
 	}
 	mainStatements := 0
 	for _, statement := range comp.SourceStatements {
@@ -30,23 +30,16 @@ func TestDemoCompilationRetainsSemanticProgram(t *testing.T) {
 			mainStatements++
 		}
 	}
-	if mainStatements != 8 || len(comp.ProcStatements) != 0 {
+	if mainStatements != 3 || len(comp.ProcStatements) != 0 {
 		t.Fatalf("main/unresolved statements = %d/%d", mainStatements, len(comp.ProcStatements))
 	}
-	printAlias := comp.Memory["Print"]
-	printDefinition, err := canonicalRecord(printAlias, comp.Semantics.Aliases)
-	if err != nil || printDefinition == nil || printDefinition.ID != "IO.Print" {
-		t.Fatalf("selected import lost IO.Print: %v", err)
+	printDefinition, err := comp.builtinRecord("Print")
+	if err != nil || printDefinition == nil || printDefinition.ID != "Print" {
+		t.Fatalf("implicit builtin lost core Print: %v", err)
 	}
-	if comp.Memory["IO"] != nil || comp.Memory["Write"] != nil || comp.Memory["Discard"] != nil {
-		t.Fatal("selected IO import published its unit bindings")
-	}
-	output := comp.Memory["y"].Value
-	if output.Type.String() != "Primitive" || output.Primitive.Type.String() != "Text" || output.Runtime == nil || output.Runtime.OwnerID != "helloworldapp" || output.Runtime.Member.String() != "output" {
-		t.Fatal("Output assignment must retain typed deferred member access")
-	}
-	if _, err := argumentFromToken(&token{mem: output}); err == nil {
-		t.Fatal("runtime stdout was treated as a compile-time literal")
+	declaration := comp.Semantics.Declarations[printDefinition]
+	if declaration == nil || declaration.source == nil || declaration.source.Unit == nil || declaration.source.Unit.Kind != SourceBuiltin || declaration.source.Unit.Origin.Name != "builtins/eng/core.l" {
+		t.Fatal("Print lost its canonical builtin source provenance")
 	}
 	before := bytes.Clone(comp.ASMBytes)
 	program := comp.Program

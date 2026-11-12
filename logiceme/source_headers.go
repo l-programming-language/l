@@ -8,15 +8,6 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-const runtimeHeaderBoundary = "// The source assembler supplies a same-module generated item with this contract:"
-
-var runtimeModuleHeaders = []string{
-	"pub(crate) mod runtime;\n",
-	"#[cfg(any(target_os = \"linux\", target_os = \"macos\"))]\n#[path = \"process_unix.rs\"]\npub(crate) mod process;\n",
-	"#[cfg(not(any(target_os = \"linux\", target_os = \"macos\")))]\n#[path = \"process_other.rs\"]\npub(crate) mod process;\n",
-}
-var runtimeImportHeaders = []string{"use std::io::Write;\n", "use std::panic::{catch_unwind, resume_unwind, AssertUnwindSafe};\n", "use std::process::ExitCode;\n"}
-
 func sourceHeaderMeta(header sourceHeader) MetaDict {
 	var meta MetaDict
 	// The copied A template owns `use` punctuation. These lines were framed
@@ -44,7 +35,7 @@ func sourceHeaderMeta(header sourceHeader) MetaDict {
 
 // prepareSourceHeaders establishes explicit module relationships before
 // any A is interpreted. The graph describes source ownership, never runtime lifetimes.
-func prepareSourceHeaders(app *App, includeRuntime bool, workspace *WorkspaceRuntime) error {
+func prepareSourceHeaders(app *App) error {
 	objects := map[string]*Object{}
 	if err := app.eachObject(func(object *Object) error {
 		if _, ok := objects[object.Name]; ok {
@@ -72,9 +63,9 @@ func prepareSourceHeaders(app *App, includeRuntime bool, workspace *WorkspaceRun
 	}
 	v2 := app.Outline.Meta.GetVal("StructureVersion") == "2"
 	for _, object := range objects {
-		// Explicit topology and runtime support own these source items. The
-		// nonruntime bundle keeps its frozen A-only header contract.
-		object.header.structural = v2 || includeRuntime
+		// Explicit topology owns these source items. Legacy bundles retain
+		// their frozen A-only header contract.
+		object.header.structural = v2
 	}
 	var primary *Object
 	if v2 {
@@ -91,16 +82,13 @@ func prepareSourceHeaders(app *App, includeRuntime bool, workspace *WorkspaceRun
 			root := objects[target.Root]
 			root.header.root = true
 			root.header.library = target.Kind == "lib"
-			app.sourceTargets = append(app.sourceTargets, preparedSourceTarget{TargetDescriptor: target, Path: objectSourcePath(root), Literal: root.header.literal})
+			app.sourceTargets = append(app.sourceTargets, preparedSourceTarget{TargetDescriptor: target, Path: objectSourcePath(root)})
 			if target.Primary {
 				root.header.primary = true
 				primary = root
 			}
 		}
 		if libraryOnlyTargets(app.sourceTargets) {
-			if includeRuntime {
-				return lerrors.InvalidInput.Errorf("library-only package cannot include runtime")
-			}
 			// This is the package's source root, not an executable Primary.
 			primary = objects[targets[0].Root]
 		}
@@ -125,9 +113,6 @@ func prepareSourceHeaders(app *App, includeRuntime bool, workspace *WorkspaceRun
 	if primary == nil {
 		return lerrors.InvalidInput.Errorf("Rust application %q has no primary entry Object", app.Name)
 	}
-	if workspace != nil && primary.header.literal {
-		return lerrors.InvalidInput.Errorf("Rust workspace entry requires a composed primary Object, not an opaque EA file")
-	}
 	for _, object := range objects {
 		if object.header.root && !object.header.literal {
 			object.header.Attributes = []string{"#![forbid(unsafe_code)]\n"}
@@ -135,16 +120,6 @@ func prepareSourceHeaders(app *App, includeRuntime bool, workspace *WorkspaceRun
 	}
 	if !primary.header.literal && !primary.header.library {
 		primary.header.Modules = append(primary.header.Modules, "mod config;\n")
-		if includeRuntime {
-			if workspace == nil {
-				primary.header.Modules = append(primary.header.Modules, runtimeModuleHeaders...)
-			} else {
-				// Root the dependency in the extern prelude so an identically
-				// named user module cannot shadow the coordinator-owned crate.
-				primary.header.Imports = append(primary.header.Imports, "use ::"+workspace.Package+"::runtime;\n")
-			}
-			primary.header.Imports = append(primary.header.Imports, runtimeImportHeaders...)
-		}
 	}
 	if v2 {
 		classEntries := map[string]OutlineEntry{}
@@ -156,12 +131,6 @@ func prepareSourceHeaders(app *App, includeRuntime bool, workspace *WorkspaceRun
 			seen := map[string]bool{}
 			if root.header.primary {
 				seen["config"] = true
-				if includeRuntime {
-					seen["runtime"] = true
-					if workspace == nil {
-						seen["process"] = true
-					}
-				}
 			}
 			for _, member := range members {
 				var child *Object
@@ -388,37 +357,4 @@ func importAtoms(raw string) ([]string, error) {
 		parts[i] = part
 	}
 	return parts, nil
-}
-
-// The A occurrence was compiled in its own Scalar tensor. Its byte length is
-// structural provenance, so support insertion never searches completed source
-// for attributes, functions, comments or marker-like native payloads.
-func (app *CompiledApp) compiledHeaderSize(name string) (int, bool) {
-	var class func(CompiledClass) (int, bool)
-	class = func(item CompiledClass) (int, bool) {
-		for _, object := range item.Objects {
-			if object.Name == name {
-				return object.headerSize, true
-			}
-		}
-		for _, child := range item.SubClasses {
-			if length, ok := class(child); ok {
-				return length, true
-			}
-		}
-		return 0, false
-	}
-	for _, service := range app.Services {
-		for _, object := range service.Objects {
-			if object.Name == name {
-				return object.headerSize, true
-			}
-		}
-		for _, item := range service.Classes {
-			if length, ok := class(item); ok {
-				return length, true
-			}
-		}
-	}
-	return 0, false
 }

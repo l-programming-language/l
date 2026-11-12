@@ -9,15 +9,12 @@ import (
 )
 
 var contractEnums = map[reflect.Type][]string{
-	reflect.TypeOf(Coverage("")):          {string(Known), string(Partial), string(Unknown), string(NotApplicable)},
-	reflect.TypeOf(Status("")):            {string(Established), string(Contradicted), string(Unresolved)},
-	reflect.TypeOf(Outcome("")):           {string(Normal), string(ReturnedFailure), string(GuardRejected), string(Panic), string(Abort), string(Cancelled), string(ProcessFailure)},
-	reflect.TypeOf(Phase("")):             {"", string(Elaboration), string(Construction), string(Invocation), string(Destruction), string(Cleanup)},
-	reflect.TypeOf(EffectKind("")):        {"read", "write", "allocate", "deallocate", "release", "io", "spawn", string(EffectSignal), "transfer", "wait", "block", "suspend", "time", "random", "environment", "foreign", "panic", "opaque", "synchronize", "replace", "cleanup"},
-	reflect.TypeOf(ProtocolAuthority("")): {string(TransitionOwner), string(Observer), string(SharedTransition), string(UnknownAuthority)},
-	reflect.TypeOf(AppStage("")):          {string(AppIdle), string(AppRunning), string(AppDraining), string(AppFinalized)},
-	reflect.TypeOf(ContinuationClaim("")): {string(ClaimUnclaimed), string(ClaimActive), string(ClaimFinished)},
-	reflect.TypeOf(NodeKind("")):          {string(Sequence), string(Branch), string(Event), string(Call), string(Callback), string(Native), string(Guard), string(Require), string(Acquire), string(Move), string(Release), string(Scope), string(Repeat), string(Mutation), string(Return), string(CheckedResult)},
+	reflect.TypeOf(Coverage("")):   {string(Known), string(Partial), string(Unknown), string(NotApplicable)},
+	reflect.TypeOf(Status("")):     {string(Established), string(Contradicted), string(Unresolved)},
+	reflect.TypeOf(Outcome("")):    {string(Normal), string(ReturnedFailure), string(GuardRejected), string(Panic), string(Abort), string(Cancelled), string(ProcessFailure)},
+	reflect.TypeOf(Phase("")):      {"", string(Elaboration), string(Construction), string(Invocation), string(Destruction), string(Cleanup)},
+	reflect.TypeOf(EffectKind("")): {"read", "write", "allocate", "deallocate", "release", "io", "spawn", string(EffectSignal), "transfer", "wait", "block", "suspend", "time", "random", "environment", "foreign", "panic", "opaque", "synchronize", "replace", "cleanup"},
+	reflect.TypeOf(NodeKind("")):   {string(Sequence), string(Branch), string(Event), string(Call), string(Callback), string(Native), string(Guard), string(Require), string(Acquire), string(Move), string(Release), string(Scope), string(Repeat), string(Mutation), string(Return), string(CheckedResult)},
 }
 
 // The same model selects the strict decoder and the offline schema.

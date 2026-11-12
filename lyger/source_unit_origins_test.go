@@ -12,22 +12,25 @@ import (
 	"strings"
 	"testing"
 	"testing/fstest"
-
-	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 )
 
 func TestSourceUnitOriginsAndPhysicalProjection(t *testing.T) {
 	for _, override := range []bool{false, true} {
 		t.Run(fmt.Sprint(override), func(t *testing.T) {
-			cfg := Options{}
+			files := dictionaryIndexFilesystem(t)
+			installTestDictionary(t, files, "catalog", "Catalog", "Create \"Catalog\" as a Dictionary.\nDefine Catalog's \"Message\" as `owned`.\n")
+			cfg := Options{Resources: files}
 			if override {
-				root := distributiontest.CompleteOverride(t)
+				root := t.TempDir()
+				if err := os.CopyFS(root, files); err != nil {
+					t.Fatal(err)
+				}
 				cfg = Options{Resources: os.DirFS(root), AssetRoot: root}
 			}
 			project := t.TempDir()
 			main := filepath.Join(project, "main.l")
 			included := writeSourceFile(t, project, "nested/local.l", "\"value\" is `snow 雪`.\r\nShow value.\r\n")
-			source := "Use IO's Print from `io` as \"FirstPrint\".\r\nUse IO's Print from `io` as \"SecondPrint\".\r\n\r\n    Use `nested/local.l`.\r\n\r\n    Use `nested/local.l`.\r\n"
+			source := "Use Catalog's Message from `catalog` as \"FirstPrint\".\r\nUse Catalog's Message from `catalog` as \"SecondPrint\".\r\n\r\n    Use `nested/local.l`.\r\n\r\n    Use `nested/local.l`.\r\n"
 			if err := os.WriteFile(main, []byte(source), 0600); err != nil {
 				t.Fatal(err)
 			}
@@ -40,8 +43,8 @@ func TestSourceUnitOriginsAndPhysicalProjection(t *testing.T) {
 			if !bytes.Equal(c.MainBytes, []byte(source)) || !bytes.Equal(c.Prepared.Original, []byte(source)) {
 				t.Fatal("unit preparation changed original main bytes")
 			}
-			if len(c.SourceUnits) != 5 || len(c.SourceOrigins) != 8 {
-				t.Fatalf("units/origins=%d/%d; want5/8", len(c.SourceUnits), len(c.SourceOrigins))
+			if len(c.SourceUnits) != 3 || len(c.SourceOrigins) != 5 {
+				t.Fatalf("units/origins=%d/%d; want3/5", len(c.SourceUnits), len(c.SourceOrigins))
 			}
 			units := map[SourceKind]*SourceUnit{}
 			dictionaries := map[string]*SourceUnit{}
@@ -64,7 +67,7 @@ func TestSourceUnitOriginsAndPhysicalProjection(t *testing.T) {
 			if !reflect.DeepEqual(c.Memory, c.Scope.Root.records) || c.Scope.Root.isParagraph() || units[SourceBuiltin].root.isParagraph() || units[SourceDictionary].root.isParagraph() {
 				t.Fatal("unit roots became activation frames")
 			}
-			if c.SourceUnits[0] != dictionaries["Storage"] || c.SourceUnits[1].Kind != SourceBuiltin || c.SourceUnits[2] != dictionaries["Formatting"] || c.SourceUnits[3] != dictionaries["IO"] || c.SourceUnits[4].Kind != SourceProgram {
+			if c.SourceUnits[0].Kind != SourceBuiltin || c.SourceUnits[1] != dictionaries["Catalog"] || c.SourceUnits[2].Kind != SourceProgram {
 				t.Fatal("source unit inventory lost dependency order")
 			}
 			for _, unit := range dictionaries {
@@ -133,21 +136,22 @@ func checkSourceOrigin(t *testing.T, c *Compilation, origin SourceOrigin, overri
 
 func TestSourceUnitDiamondIdentity(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
+	installTestDictionary(t, files, "catalog", "Catalog", "Create \"Catalog\" as a Dictionary.\nDefine Catalog's \"Message\" as `owned`.\n")
 	var index dictionaryIndex
-	if err := json.Unmarshal(files["stdlib/index.json"].Data, &index); err != nil {
+	if err := json.Unmarshal(files["dictionaries.json"].Data, &index); err != nil {
 		t.Fatal(err)
 	}
 	for _, name := range []string{"Left", "Right"} {
 		key := strings.ToLower(name)
 		entry := "stdlib/eng/" + key + "/dictionary.l"
 		index.Languages["eng"][key] = dictionaryEntry{Entry: entry, Dictionary: name}
-		files[entry] = &fstest.MapFile{Data: []byte("Use IO's Print from `io` as \"Imported\".\nCreate \"" + name + "\" as a Dictionary.\nUse Imported as " + name + "'s \"Print\".\n")}
+		files[entry] = &fstest.MapFile{Data: []byte("Use Catalog's Message from `catalog` as \"Imported\".\nCreate \"" + name + "\" as a Dictionary.\nUse Imported as " + name + "'s \"Print\".\n")}
 	}
 	raw, err := json.Marshal(index)
 	if err != nil {
 		t.Fatal(err)
 	}
-	files["stdlib/index.json"].Data = raw
+	files["dictionaries.json"].Data = raw
 	cfg := Options{Resources: files}
 	source := "Use Left's Print from `left` as \"FirstPrint\".\nUse Right's Print from `right` as \"SecondPrint\".\n"
 	result, err := NewLygerService(cfg).Compile([]byte(source), filepath.Join(t.TempDir(), "main.l"))
@@ -156,31 +160,31 @@ func TestSourceUnitDiamondIdentity(t *testing.T) {
 	}
 	c := result.Compilation
 	assertFrontendResources(t, c)
-	if len(c.SourceUnits) != 7 {
-		t.Fatalf("diamond units=%d; want7", len(c.SourceUnits))
+	if len(c.SourceUnits) != 5 {
+		t.Fatalf("diamond units=%d; want5", len(c.SourceUnits))
 	}
-	var ioUnit *SourceUnit
+	var sharedUnit *SourceUnit
 	for _, unit := range c.SourceUnits {
-		if unit.Dictionary == "IO" {
-			if ioUnit != nil {
-				t.Fatal("diamond loaded IO twice")
+		if unit.Dictionary == "Catalog" {
+			if sharedUnit != nil {
+				t.Fatal("diamond loaded Catalog twice")
 			}
-			ioUnit = unit
+			sharedUnit = unit
 		}
 	}
-	if ioUnit == nil || distributionCanonical(t, c, c.Memory["FirstPrint"]) != distributionCanonical(t, c, c.Memory["SecondPrint"]) {
-		t.Fatal("diamond exports lost canonical IO definition")
+	if sharedUnit == nil || distributionCanonical(t, c, c.Memory["FirstPrint"]) != distributionCanonical(t, c, c.Memory["SecondPrint"]) {
+		t.Fatal("diamond exports lost canonical Catalog definition")
 	}
 	declarations, edges := 0, 0
 	for _, statement := range c.SourceStatements {
-		if statement.Unit == ioUnit && strings.Contains(string(statement.Raw), "Create IO's") {
+		if statement.Unit == sharedUnit && strings.Contains(string(statement.Raw), "Define Catalog's") {
 			declarations++
 		}
-		if statement.imported != nil && statement.imported.unit == ioUnit {
+		if statement.imported != nil && statement.imported.unit == sharedUnit {
 			edges++
 		}
 	}
 	if declarations != 1 || edges != 2 {
-		t.Fatalf("IO definition/import edges=%d/%d; want1/2", declarations, edges)
+		t.Fatalf("Catalog definition/import edges=%d/%d; want1/2", declarations, edges)
 	}
 }

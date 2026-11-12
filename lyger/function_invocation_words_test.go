@@ -7,15 +7,15 @@ import (
 
 func TestFunctionInvocationWords(t *testing.T) {
 	for _, source := range []string{
-		identityFunction + "Identity `direct` as \"Result\".\nShow Result.\n",
-		identityFunction + "Define \"Saved\" as Identity.\nSaved `copy` as \"Result\".\nShow Result.\n",
+		identityFunction + "Echo `direct` as \"Result\".\nShow Result.\n",
+		identityFunction + "Define \"Replay|-s|-ed|-ing|-er\" as Echo.\nReplay `copy` as \"Result\".\nShow Result.\n",
 		functionSource("Echo|-es|-ed|-ing|-er", "\"Value\" as Text", "Text", "Return Value.") + "Echo `direct` as \"Result\".\nShow Result.\n",
-		functionSource("Done", "", "", "Show `done`.") + "Done.\n",
+		functionSource("Complete|-s|-d|--ing|--er", "", "", "Show `done`.") + "Complete.\n",
 	} {
 		c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
 		requireOrchestrationPlan(t, c.Semantics)
 	}
-	c := compileMemberResolutionSource(t, memberResolutionSource{main: identityFunction + "Call Identity with `unsupported` as \"Result\".\n"})
+	c := compileMemberResolutionSource(t, memberResolutionSource{main: identityFunction + "Call Echo with `unsupported` as \"Result\".\n"})
 	if c.Error == nil {
 		t.Fatal("removed Call vocabulary remains accepted")
 	}
@@ -27,7 +27,8 @@ func TestFunctionWordAndValueShareBinding(t *testing.T) {
 		t.Fatal(err)
 	}
 	rec := &record{ID: "Echo", Value: initEntry("Function", storageApplicative)}
-	rec.Value.Applicative.Function.Source = &sourceFunction{Word: word}
+	rec.word = word
+	rec.Value.Applicative.Function.Source = &sourceFunction{}
 	for _, spelling := range []string{"Echo", "Echoes", "Echoed", "Echoing", "Echoer"} {
 		binding, ok := rec.binding(newBindingQuery([]byte(spelling)))
 		if !ok || binding.Record != rec {
@@ -35,9 +36,10 @@ func TestFunctionWordAndValueShareBinding(t *testing.T) {
 		}
 	}
 	copy := *rec
-	copy.ID = "Saved"
-	if binding, ok := copy.binding(newBindingQuery([]byte("Saved"))); !ok || binding.Record != &copy {
-		t.Fatal("copy has no invocation word")
+	copy.ID = "Replay"
+	copy.word = nil
+	if binding, ok := copy.binding(newBindingQuery([]byte("Replay"))); !ok || binding.Record != &copy || binding.POS != "" {
+		t.Fatal("copy lost its data binding or inherited an invocation word")
 	}
 	if _, ok := copy.binding(newBindingQuery([]byte("Echo"))); ok {
 		t.Fatal("copy retained the source word's root")
@@ -45,21 +47,30 @@ func TestFunctionWordAndValueShareBinding(t *testing.T) {
 }
 
 func TestFunctionMemberSentence(t *testing.T) {
-	const source = "Create \"User\" as a Dictionary.\nDefine \"Store\" as `store`.\n\n" +
-		"    Publicly create User's \"Walk|-s|-ed|-ing|-er\" as a New Function with Inputs of \"Location\" as Text and No Outputs.\nShow Location.\n\n" +
-		"The User walks to the Store.\n"
-	c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
-	requireOrchestrationPlan(t, c.Semantics)
-	last := c.Semantics.Instructions[len(c.Semantics.Instructions)-1]
-	if last.Kind != instructionInvoke || last.Target.Record.ID != "User.Walk" || len(last.Arguments) != 1 || last.Arguments[0].Record.ID != "Store" {
-		t.Fatal("subject, inflected member, or prepositional argument changed binding")
+	for _, owner := range []string{"Create \"User\" as a Dictionary.", "Define \"User|-s|-like|-ing\" as `<DEF>E{|Statement: ~7~|}<DEF>`.", "Define \"User|-s|-|-ing\" as `<DEF>E{|Statement: ~7~|}<DEF>`."} {
+		for _, active := range []string{"-s", "-"} {
+			t.Run(owner+active, func(t *testing.T) {
+				source := owner + "\nDefine \"Store\" as `store`.\n\n" +
+					"    Publicly create User's \"Walk|" + active + "|-ed|-ing|-er\" as a New Function with Inputs of \"Location\" as Text and No Outputs.\nShow Location.\n\n" +
+					"The User " + processLexFix("walk", active, "postfix") + " to the Store.\n"
+				c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
+				requireOrchestrationPlan(t, c.Semantics)
+				last := c.Semantics.Instructions[len(c.Semantics.Instructions)-1]
+				statement := c.Statements[len(c.Statements)-1].sGram
+				subject, verb := statement.subject.noun.binding, statement.predicate.clauses[0].verb.binding
+				if subject.Record != c.Memory["User"] || subject.Form != "root" || verb.Record != c.Memory["User.Walk"] || verb.Form != "active" ||
+					last.Kind != instructionInvoke || last.Target.Record != verb.Record || len(last.Arguments) != 1 || last.Arguments[0].Record != c.Memory["Store"] {
+					t.Fatal("subject, inflected member, or prepositional argument changed binding")
+				}
+			})
+		}
 	}
 }
 
 func TestFunctionReturnUsesBoundMember(t *testing.T) {
 	c := executableTestResult(t, memberResolutionSource{main: identityFunction}).Compilation
 	for _, function := range c.Semantics.Functions {
-		if function.Definition == nil || function.Return == nil || function.Invoke == nil {
+		if function.Definition == nil || function.Return == nil {
 			t.Fatal("Function lost its source definitions")
 		}
 		if len(function.Body) != 1 || function.Body[0].Kind != instructionReturn || function.Body[0].SourceToken.binding.Record != function.Return {
@@ -105,12 +116,12 @@ func TestFunctionWordsComposeWithActions(t *testing.T) {
 
 func TestFunctionReturnAliasesKeepSelectedDefinition(t *testing.T) {
 	for name, body := range map[string]string{
-		"direct alias":  "Use Return as \"Finish\".\nFinish Value.",
-		"chained alias": "Use Return as \"Finish\".\nUse Finish as \"Complete\".\nComplete Value.",
-		"member alias":  "Use Function's Return as \"Finish\".\nFinish Value.",
+		"direct alias":  "Use Return as \"Finish|-es|-ed|-ing|-er\".\nFinish Value.",
+		"chained alias": "Use Return as \"Finish|-es|-ed|-ing|-er\".\nUse Finish as \"Complete|-s|-d|--ing|--er\".\nComplete Value.",
+		"member alias":  "Use Function's Return as \"Finish|-es|-ed|-ing|-er\".\nFinish Value.",
 	} {
 		t.Run(name, func(t *testing.T) {
-			source := strings.Replace(identityFunction, "Return Value.", body, 1) + "Identity `done` as \"Result\".\nShow Result.\n"
+			source := strings.Replace(identityFunction, "Return Value.", body, 1) + "Echo `done` as \"Result\".\nShow Result.\n"
 			c := executableTestResult(t, memberResolutionSource{main: source}).Compilation
 			for _, function := range c.Semantics.Functions {
 				if len(function.Body) != 1 || function.Body[0].Kind != instructionReturn || function.Body[0].Function != function {
@@ -121,38 +132,30 @@ func TestFunctionReturnAliasesKeepSelectedDefinition(t *testing.T) {
 					t.Fatalf("aliased return changed selected definition: %v", err)
 				}
 			}
-			requireFunctionGenerated(t, source)
+			requireFunctionPlan(t, source)
 		})
 	}
 }
 
 func TestFunctionImportedReturnAlias(t *testing.T) {
-	main := "Use Finish from `local-words.l` as \"Complete\".\n\n" +
-		functionSource("Identity", "\"Value\" as Text", "Text", "Complete Value.") + "Identity `done` as \"Result\".\nShow Result.\n"
-	c := executableTestResult(t, memberResolutionSource{main: main, library: "Use Function's Return as \"Finish\".\n"}).Compilation
-	result := &CompilationResult{Compilation: c}
-	if _, err := result.OrchestratorUnit("entry", executableTestCompanions(result)); err != nil {
+	main := "Use Finish from `local-words.l` as \"Complete|-s|-d|--ing|--er\".\n\n" +
+		functionSource("Echo|-es|-ed|-ing|-er", "\"Value\" as Text", "Text", "Complete Value.") + "Echo `done` as \"Result\".\nShow Result.\n"
+	c := executableTestResult(t, memberResolutionSource{main: main, library: "Use Function's Return as \"Finish|-es|-ed|-ing|-er\".\n"}).Compilation
+	if _, err := planOrchestration(c.Semantics); err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestFunctionConstructorAliasKeepsCallbackContract(t *testing.T) {
-	const source = "Use Function as \"Callable\".\n\n" +
-		"    Publicly create \"Identity\" as a New Callable with Inputs of \"Value\" as Text and Outputs of Text.\nReturn Value.\n\n" +
-		"    Publicly create \"Apply\" as a New Callable with Inputs of \"Callback\" as Identity and Outputs of Text.\nCallback `done` as \"Result\".\nReturn Result.\n\n" +
-		"Apply Identity as \"Selected\".\nShow Selected.\n"
-	requireFunctionGenerated(t, source)
+	const source = "Use Function as \"Routine|-s|--al|--ing\".\n\n" +
+		"    Publicly create \"Echo|-es|-ed|-ing|-er\" as a New Routine with Inputs of \"Value\" as Text and Outputs of Text.\nReturn Value.\n\n" +
+		"    Publicly create \"Apply|--ies|--ied|-ing|--ier\" as a New Routine with Inputs of \"Replay|-s|-ed|-ing|-er\" as Echo and Outputs of Text.\nReplay `done` as \"Result\".\nReturn Result.\n\n" +
+		"Apply Echo as \"Selected\".\nShow Selected.\n"
+	requireFunctionPlan(t, source)
 }
 
 func TestFunctionEmptyCallbackKeepsBoundDefinition(t *testing.T) {
-	var source = functionSource("Done", "", "", "Show `done`.") +
-		functionSource("Apply", "\"Callback\" as Function", "", "Callback.") + "Apply Done.\n"
-	requireFunctionGenerated(t, source)
-}
-
-func TestFunctionMemberAndComposedWordsNative(t *testing.T) {
-	const source = "Create \"User\" as a Dictionary.\nDefine \"Store\" as `store`.\n\n" +
-		"    Publicly create User's \"Walk|-s|-ed|-ing|-er\" as a New Function with Inputs of \"Location\" as Text and No Outputs.\nUse Return as \"Finish\".\nShow Location.\nFinish.\nShow `unreachable`.\n\n" +
-		"The User walks to the Store.\nUse User's Walk as \"Walk\".\nCreate \"Travel|-s|-ed|-ing|-er\" for Walking any Text.\nTravel `park` and then Show `after`.\nIf false, Walk `wrong`, else Walk `home`.\n"
-	runtimeBundleResult(t, runtimeValuesBundle(t, source), "storeparkafterhome", "")
+	var source = functionSource("Complete|-s|-d|--ing|--er", "", "", "Show `done`.") +
+		functionSource("Apply|--ies|--ied|-ing|--ier", "\"Replay|-s|-ed|-ing|-er\" as Function", "", "Replay.") + "Apply Complete.\n"
+	requireFunctionPlan(t, source)
 }

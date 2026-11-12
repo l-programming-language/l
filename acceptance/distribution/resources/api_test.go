@@ -40,7 +40,7 @@ func TestDistributionAPI(t *testing.T) {
 	cmd.WaitDelay = 2 * time.Second
 	buildOutput, buildErr := cmd.CombinedOutput()
 	cancel()
-	for _, id := range []string{"FS05", "FS06", "FS07", "FS08", "FS09", "FS12", "FS13", "FS14", "FS15", "MG10", "ReleaseInventory"} {
+	for _, id := range []string{"FS05", "FS06", "FS07", "FS08", "FS09", "FS12", "FS13", "FS14", "FS15", "ReleaseInventory"} {
 		t.Run(id, func(t *testing.T) {
 			if buildErr != nil {
 				t.Fatalf("distribution-api prerequisite failed: %v\n%s\nintended assertion not exercised; runtime not exercised", buildErr, buildOutput)

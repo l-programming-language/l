@@ -35,7 +35,7 @@ func TestFrontendErrorKindsAtOrigins(t *testing.T) {
 	})
 	t.Run("ambiguous reference", func(t *testing.T) {
 		lexeme := newLexeme("verb")
-		if err := lexeme.reLabel(`"Write|-s"`); err != nil {
+		if err := lexeme.reLabel(`"Write|-s|--ten|--ing|-r"`); err != nil {
 			t.Fatal(err)
 		}
 		one := &record{ID: "One", Value: &entry{Type: storageLexeme, Lexeme: lexeme}}
@@ -63,7 +63,7 @@ func TestFrontendErrorKindsAtOrigins(t *testing.T) {
 		requireFrontendErrorKind(t, err, lerrors.Unsupported, "unsupported condition operator contains")
 	})
 	t.Run("internal invariant", func(t *testing.T) {
-		_, err := (&orchestrationEmitter{}).literalValue(nil)
+		_, err := nativeLiteralArgument(nil)
 		requireFrontendErrorKind(t, err, lerrors.Internal, "literal has no primitive value")
 	})
 }

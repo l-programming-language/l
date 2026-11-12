@@ -16,11 +16,17 @@ A useful specification says both what readers can rely on and how that claim is 
 | Disposition | Meaning |
 | --- | --- |
 | Supported | Accepted and implemented within the documented boundary |
-| Partial | Some specific forms/stages work; the omitted boundary is named |
+| Partial | Some specific forms/stages work. The missing capability and its failing stage are named |
 | Unsupported | Recognized/rejected or unavailable |
 | Internal-only | An implementation representation, not a constructible public facility |
 | Design-only | A conceptual model with no present support claim |
 | Unresolved | Conflicting evidence requires further investigation |
+
+Classify the stated meaning, not every imaginable use of its spelling. Intentional
+operand, ownership and context rules do not make an implemented meaning partial.
+For a partial word, its canonical entry must name the implemented subset and the
+specific missing form, operation or stage. Use rejected/unsupported for a known
+unavailable operation. Reserve unresolved for a question the evidence cannot settle.
 
 A single item can have distinct frontend and backend support. For example, a callable template may be accepted by the Rust backend without proving a public L closure form. A raw AML library visibility check at native Rust compilation does not establish an L frontend entry syntax.
 
@@ -28,11 +34,11 @@ A single item can have distinct frontend and backend support. For example, a cal
 
 Static inspection establishes what source and contracts currently say. An existing test witness establishes the intended assertion and exercised path. Neither means that the test ran for this checkout.
 
-Example labels distinguish a **complete program**, a **compile-only example**, an **expected compilation failure**, and a **fragment** that needs surrounding code. Complete programs that intentionally exit unsuccessfully are marked **expected runtime failure**. Expand **Example evidence** for the source description and validation record; `existing-witness-not-run` identifies retained tests, not a fresh execution.
+Example labels distinguish a **complete program**, a **compile-only example**, an **expected compilation failure**, and a **fragment** that needs surrounding code. Complete programs that intentionally exit unsuccessfully are marked **expected runtime failure**. Expand **Example evidence** for the source description and validation record. `existing-witness-not-run` identifies retained tests, not a fresh execution.
 
-Source-generation success establishes returned source bytes. Independent expected-Rust compilation establishes feasibility of an oracle. Compiling generated Rust establishes that returned artifacts compile. Supervised runtime checks establish behavior on their actual host and inputs. Full acceptance adds the unfiltered inventory, integrity and original-outcome requirements.
+Source-generation success establishes returned source bytes. Independent expected-Rust compilation establishes feasibility of an oracle. Compiling generated Rust establishes that returned artifacts compile. Supervised runtime checks establish behavior on their actual host and inputs. The temporary hello-world gate checks its selected outcomes and frozen logeme inputs. The former unfiltered suites remain outside current completion requirements.
 
-The [implementation ledger](../../testdata/integration/IMPLEMENTATION.md) identifies the tested source, host and validation stages. It does not validate a later checkout. The [Lucid guide](../../logiceme/testdata/lucid/README.md) covers generation, native compilation and three focused future execution checks; the [Service ledger](../../testdata/service-execution/coverage.md) separates generation, native and runtime witnesses.
+The [Lucid guide](../../logiceme/testdata/lucid/README.md) separates generation, native compilation and bounded execution. Historical results apply only to their recorded revision and host. They do not validate the current checkout.
 
 ## Resolve a discrepancy without changing semantics
 
@@ -42,6 +48,6 @@ Leave a precise unresolved item when the evidence conflicts. A documentation tas
 
 ## What a documentation review checks
 
-Every discovered public surface item needs a meaningful section and evidence. Generated inventory complements prose; it does not replace definitions, usage, failure boundaries and examples. Review terminology, imports, source ordering, literal bytes, visibility and target assumptions together.
+Every discovered public surface item needs a meaningful section and evidence. Generated inventory complements prose. It does not replace definitions, usage, failure boundaries and examples. Review terminology, imports, source ordering, literal bytes, visibility and target assumptions together.
 
-Website tests also have boundaries. Automated accessibility checks identify the rules they execute; they are not exhaustive certification. Screenshots require visual inspection. A build alone does not establish search behavior, keyboard access, mobile layout or no-JavaScript readability. Report those results separately from language verification.
+Website tests also have boundaries. Automated accessibility checks identify the rules they execute. They are not exhaustive certification. Screenshots require visual inspection. A build alone does not establish search behavior, keyboard access, mobile layout or no-JavaScript readability. Report those results separately from language verification.

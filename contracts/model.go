@@ -1,4 +1,4 @@
-// Package contracts defines the compiler-independent L Contracts v1.1 model.
+// Package contracts defines the compiler-independent L Contracts v2.0 model.
 // Declarations are inputs to checking, never certificates of their own validity.
 package contracts
 
@@ -9,8 +9,8 @@ import (
 	"strings"
 )
 
-const SchemaVersion = "1.1"
-const AnalyzerVersion = "l-contracts-1.1/5"
+const SchemaVersion = "2.0"
+const AnalyzerVersion = "l-contracts-2.0/1"
 const TrackAPolicy = "l-existing-resolution/1"
 const ReferencePolicy = "unique-applicable/1"
 

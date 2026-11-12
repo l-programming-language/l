@@ -36,7 +36,6 @@ type contractRecorder struct {
 	statements               map[*token]*lStatement
 	lookupReasons            map[*token]string
 	descriptors              []contractDescriptorUse
-	sourceConstructions      []contractSourceConstruction
 	definitions              map[*record]contracts.DefinitionKey
 	declarationTokens        map[*record]*token
 	occurrences              map[sourceOccurrenceID]contracts.BindingOccurrenceID
@@ -46,8 +45,6 @@ type contractRecorder struct {
 	environments             map[*lexicalScope]contracts.BindingEnvironmentKey
 	configurationFingerprint string
 	lowering                 []contracts.LoweringStep
-	nativeAnalysis           *contractNativeAnalysis
-	nativeEmissions          map[*instruction][]contractNativeEmission
 	identityReady            bool
 }
 
@@ -59,9 +56,9 @@ func (r *contractRecorder) logicalSource(path string) string {
 	if strings.HasPrefix(path, "resource:") {
 		return path
 	}
-	for _, unit := range r.compilation.SourceUnits {
-		if unit.Origin.Name == path && strings.HasPrefix(unit.Origin.Identity, "resource:") {
-			return unit.Origin.Identity
+	for _, origin := range r.compilation.SourceOrigins {
+		if origin.Name == path && strings.HasPrefix(origin.Identity, "resource:") {
+			return origin.Identity
 		}
 	}
 	if relative, err := filepath.Rel(r.compilation.RootDir, path); err == nil {
@@ -179,13 +176,6 @@ func (r *contractRecorder) rebaseConstruction(from, to *constructionNode) {
 	for i := range r.descriptors {
 		if r.descriptors[i].Target == from {
 			r.descriptors[i].Target = to
-		}
-	}
-	for i := range r.sourceConstructions {
-		if r.sourceConstructions[i].Target == from {
-			// The source operation happened on this fresh contribution before
-			// its merge. Its local snapshots are not snapshots of the receiver.
-			r.sourceConstructions[i].Detached = true
 		}
 	}
 }

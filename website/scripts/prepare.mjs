@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { repository, website, json, stable, safeFile, contained, atomicWrite, exists, withLock, isMain } from './lib.mjs';
 import { identity } from './provenance.mjs';
-import { validateMap, validateStdlib, preparePage } from './content.mjs';
+import { validateMap, validateStdlib, preparePage, parseDocument } from './content.mjs';
 import { references, semanticEntries } from './references.mjs';
 
 export async function publishOwned(site, outputs) {
@@ -28,17 +28,22 @@ export async function publishOwned(site, outputs) {
 export async function prepare({ root = repository, site = website, verifyReferences = true } = {}) {
   return withLock(path.join(site, '.generated'), async () => {
     const map = validateMap(await json(path.join(site, 'content-map.json')));
-    if (verifyReferences) await references({ root });
-    const dictionaries = verifyReferences ? validateStdlib(await json(path.join(root, 'stdlib/index.json')), map.pages, await semanticEntries(root)) : [];
+    const sourceTexts = new Map(), documents = new Map();
+    for (const p of map.pages) {
+      const text = await fs.readFile(await safeFile(root, p.source), 'utf8');
+      sourceTexts.set(p.source, text);
+      documents.set(p.source, parseDocument(text, p.source.endsWith('.mdx')));
+    }
+    const context = { documents };
+    if (verifyReferences) await references({ root, context });
+    const dictionaries = verifyReferences ? validateStdlib(await json(path.join(root, 'dictionaries.json')), map.pages, await semanticEntries(root)) : [];
     const version = await identity(root, site, { production: process.env.DOCS_CHANNEL === 'production' });
     const examples = (await json(path.join(root, 'docs/_meta/examples.json'))).examples;
-    const sourceTexts = new Map();
-    for (const p of map.pages) sourceTexts.set(p.source, await fs.readFile(await safeFile(root, p.source), 'utf8'));
     const assets = new Map(); const outputs = new Map();
     const problems = [];
     for (const p of map.pages) {
       try {
-        const content = await preparePage({ root, page: p, pages: map.pages, identity: version, examples, sourceTexts, assets, dictionaries });
+        const content = await preparePage({ root, page: p, pages: map.pages, identity: version, examples, sourceTexts, assets, dictionaries, documents, words: context.words });
         const ext = p.source.endsWith('.mdx') ? 'mdx' : 'md';
         outputs.set(`src/content/docs${p.route}index.${ext}`, content);
       } catch (e) { problems.push(e.message); }
@@ -47,7 +52,14 @@ export async function prepare({ root = repository, site = website, verifyReferen
     for (const [name, bytes] of assets) outputs.set(`public/content-assets/${name}`, bytes);
     const navigation = map.pages.filter((p) => p.sidebar !== false);
     const groups = [...new Set(navigation.map((p) => p.section))];
-    const sidebar = groups.map((label) => ({ label, collapsed: label !== 'Learn L', items: navigation.filter((p) => p.section === label).sort((a, b) => a.order - b.order || a.route.localeCompare(b.route)).map((p) => ({ label: p.title, link: p.route })) }));
+    navigation.sort((a, b) => a.order - b.order || a.route.localeCompare(b.route));
+    const item = (p) => {
+      const children = navigation.filter((child) => child.parent === p.route);
+      return children.length
+        ? { label: p.title, collapsed: false, items: [{ label: 'Overview', link: p.route }, ...children.map(item)] }
+        : { label: p.title, link: p.route };
+    };
+    const sidebar = groups.map((label) => ({ label, collapsed: label !== 'Learn L', items: navigation.filter((p) => p.section === label && p.parent === undefined).map(item) }));
     outputs.set('.generated/sidebar.json', stable(sidebar));
     outputs.set('.generated/version.json', stable(version));
     outputs.set('public/version.json', stable(version));

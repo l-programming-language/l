@@ -6,6 +6,23 @@ import { website, json, walk, exists, contained, atomicWrite, stable, isMain } f
 
 function elements(node, found = []) { if (node.tagName) found.push(node); for (const child of node.childNodes ?? []) elements(child, found); return found; }
 const attrs = (node) => Object.fromEntries((node.attrs ?? []).map((a) => [a.name, a.value]));
+
+async function checkSearch(dist, files) {
+  const required = ['pagefind/pagefind.js', 'pagefind/pagefind-worker.js', 'pagefind/pagefind-entry.json'];
+  let entry;
+  try { entry = await json(path.join(dist, 'pagefind/pagefind-entry.json')); }
+  catch (error) { throw new Error(`Invalid Pagefind entry metadata: ${error.message}`); }
+  if (!entry || typeof entry.version !== 'string' || !entry.version || !entry.languages || Array.isArray(entry.languages) || typeof entry.languages !== 'object' || !Object.keys(entry.languages).length) throw new Error('Invalid Pagefind language inventory.');
+  for (const language of Object.values(entry.languages)) {
+    if (!language || !/^[\w-]+$/.test(language.hash ?? '') || !/^[\w-]+$/.test(language.wasm ?? '') || !Number.isInteger(language.page_count) || language.page_count < 1) throw new Error('Invalid Pagefind language metadata.');
+    required.push(`pagefind/pagefind.${language.hash}.pf_meta`, `pagefind/wasm.${language.wasm}.pagefind`);
+  }
+  for (const file of required) if (!files.includes(file)) throw new Error(`Missing Pagefind asset: ${file}`);
+  for (const file of files.filter((file) => file.startsWith('pagefind/'))) {
+    if (!(await fs.stat(path.join(dist, file))).size) throw new Error(`Empty Pagefind asset: ${file}`);
+  }
+}
+
 export async function checkDist(site = website) {
   const dist = path.join(site, 'dist'); const files = await walk(dist);
   const map = await json(path.join(site, 'content-map.json'));
@@ -13,7 +30,8 @@ export async function checkDist(site = website) {
   const bootstrap = await fs.readFile(path.join(site, 'public/install.sh'));
   if (!files.includes('install.sh') || !(await fs.readFile(path.join(dist, 'install.sh'))).equals(bootstrap)) throw new Error('Built install.sh differs from the authored installation bootstrap.');
   for (const route of ['/', ...map.pages.map((p) => p.route)]) if (!files.includes(route.slice(1) + 'index.html')) throw new Error(`Missing real static route: ${route}`);
-  if (!files.includes('404.html') || !files.some((p) => p.startsWith('pagefind/') && p.endsWith('.js'))) throw new Error('Missing static 404 or built Pagefind index.');
+  if (!files.includes('404.html')) throw new Error('Missing static 404.');
+  await checkSearch(dist, files);
   if (files.some((p) => /(?:^|\/)(?:_meta|reports|ci-templates|node_modules)(?:\/|$)/.test(p))) throw new Error('Private maintenance content leaked into dist.');
   const pages = new Map();
   for (const file of files.filter((p) => p.endsWith('.html'))) {

@@ -140,58 +140,6 @@
       ],
       "type": "object"
     },
-    "AppProtocolState": {
-      "additionalProperties": false,
-      "properties": {
-        "app": {
-          "$ref": "#/$defs/TargetRef"
-        },
-        "authority": {
-          "$ref": "#/$defs/ProtocolAuthority"
-        },
-        "claim": {
-          "$ref": "#/$defs/ContinuationClaim"
-        },
-        "invocation": {
-          "type": "string"
-        },
-        "joined": {
-          "type": "boolean"
-        },
-        "outstanding": {
-          "type": "boolean"
-        },
-        "owner": {
-          "type": "string"
-        },
-        "stage": {
-          "$ref": "#/$defs/AppStage"
-        },
-        "startup_failure": {
-          "type": "boolean"
-        },
-        "stop_requested": {
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "app",
-        "stage",
-        "outstanding",
-        "claim",
-        "authority"
-      ],
-      "type": "object"
-    },
-    "AppStage": {
-      "enum": [
-        "idle",
-        "running",
-        "draining",
-        "finalized"
-      ],
-      "type": "string"
-    },
     "Atom": {
       "additionalProperties": false,
       "properties": {
@@ -513,14 +461,6 @@
         "obligations"
       ],
       "type": "object"
-    },
-    "ContinuationClaim": {
-      "enum": [
-        "unclaimed",
-        "active",
-        "finished"
-      ],
-      "type": "string"
     },
     "CostExpr": {
       "additionalProperties": false,
@@ -1605,9 +1545,6 @@
         "producer": {
           "type": "string"
         },
-        "runtime": {
-          "type": "string"
-        },
         "schema_version": {
           "type": "string"
         },
@@ -1637,7 +1574,6 @@
         "target",
         "compiler",
         "panic_policy",
-        "runtime",
         "allocator",
         "configuration",
         "inputs",
@@ -2677,15 +2613,6 @@
       ],
       "type": "object"
     },
-    "ProtocolAuthority": {
-      "enum": [
-        "transition_owner",
-        "observer",
-        "shared_transition",
-        "unknown"
-      ],
-      "type": "string"
-    },
     "ReferenceSelection": {
       "additionalProperties": false,
       "properties": {
@@ -2816,15 +2743,6 @@
         "kind": {
           "const": "contract_report"
         },
-        "lifecycle": {
-          "items": {
-            "$ref": "#/$defs/AppProtocolState"
-          },
-          "type": [
-            "array",
-            "null"
-          ]
-        },
         "lowering": {
           "$ref": "#/$defs/LoweringInventory"
         },
@@ -2911,7 +2829,7 @@
           "type": "string"
         },
         "schema_version": {
-          "const": "1.1"
+          "const": "2.0"
         },
         "scope": {
           "$ref": "#/$defs/ReportScope"
@@ -3764,7 +3682,7 @@
       "type": "object"
     }
   },
-  "$id": "l-contracts/1.1/contract_report",
+  "$id": "l-contracts/2.0/contract_report",
   "$ref": "#/$defs/Report",
   "$schema": "https://json-schema.org/draft/2020-12/schema"
 }

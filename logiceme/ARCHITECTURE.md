@@ -5,9 +5,9 @@ assembler. [LOGEMES.md](../builtins/LOGEMES.md) defines the logical alphabet;
 [CONTRACTS.md](../builtins/CONTRACTS.md) defines invariants; [AML.md](AML.md)
 defines the input boundary. This map distinguishes existing entry points from
 required architecture: a template route is not evidence that every contract is met.
-The frontend, CLI and raw API generate Rust. Runtime support is the only
-generation option; no output-target selector remains. See the [implementation record](../testdata/integration/IMPLEMENTATION.md)
-for dated generation, native execution and acceptance evidence.
+The frontend, CLI and raw API generate Rust. The current CLI uses runtime-free
+source generation; deleted Runtime assets are not available. See the
+[temporary gate](../docs/development-harness.md#temporary-core-only-gate).
 
 ## Position in L
 
@@ -43,8 +43,7 @@ caller/build coordinator: materialize, validate, compile, publish, run
 
 Source assembly is the product of Logiceme, not native compilation or execution.
 The compiler implementation remains Go even when the generated project is Rust.
-Each App remains a separate native process; tasks inside a generated app do not
-replace L's App lifecycle.
+The CLI currently compiles one standalone App.
 
 ## Code map
 
@@ -62,7 +61,6 @@ replace L's App lifecycle.
 | [native_framing.go](native_framing.go), [source_scan.go](source_scan.go) | Native framed payloads and ordered generation-document scanning |
 | [source_file.go](source_file.go) | Object compilation/assembly and the limited literal-file path |
 | [support_templates.go](support_templates.go), [bundle_support.go](bundle_support.go) | Support loading/rendering, linking, path validation and dependencies |
-| [workspace_runtime.go](workspace_runtime.go) | Separate workspace entry and runtime-library bundles |
 | [glyph_render.go](glyph_render.go) | Rust executable-case selection, primitive dispatch and explicit child forwarding |
 | [glyph_prepare.go](glyph_prepare.go), [native_metadata.go](native_metadata.go), [glyph_metadata_validation.go](glyph_metadata_validation.go), [glyph_roles.go](glyph_roles.go) | Rust record preparation, local input validation and role checks; additional branches remain beyond the bounded Lucid scope |
 | [source_graph.go](source_graph.go), [source_headers.go](source_headers.go) | Recursive source ownership, explicit binary/library targets, module declarations and structural header assembly separate from frozen A |
@@ -77,19 +75,16 @@ compiler IR or duplicate the implementation per target.
 
 `NewLogicemeService(resources fs.FS)` selects one complete asset provider; nil
 uses embedded resources. A private typed table registers the 18 glyphs with fresh
-metadata per evaluation. `Evaluate(input []byte, options ...GenerationOptions)`
-accepts at most one options value containing only `IncludeRuntime`. Invalid
-option counts return errors and a zero-value Executable. Natural-language
-selection belongs to `Lyger.Options`.
+metadata per evaluation. `Evaluate(input []byte)` accepts complete framed AML.
+Natural-language selection belongs to `Lyger.Options`.
 
 An Executable has ByteArrays, MapArrays, DependencyArrays and EnvDepArrays indexed
 by application; each byte array aligns with its path. Preserve order, bytes and
 independent ownership of results. Reusing a service must not mutate a previous
 result or leak metadata. Actual native compilation is a separate boundary.
 
-Current integration detail: Rust assembles every book in a document in order.
-The coordinator consumes explicit application/library units and builds a Cargo
-workspace. All generated entries and companion applications are native Rust.
+Rust assembles every book in a document in order. Raw backend topology is separate
+from the CLI's single-App executable boundary.
 
 ## Frontend lowering boundary
 
@@ -101,8 +96,8 @@ Resolved native type/name/value atoms contain no executable body or closure.
 The [source-word guide](../docs/guide/definitions.md) owns composition practice;
 [the native-definition guide](../docs/guide/native-definitions.md) owns leaf boundaries.
 Use the [approved callable and generic interfaces](../builtins/README.md#typed-functions-and-anonymous-callables)
-without changing frozen templates. Native helpers supply resolved ownership and
-App supervision, not erased Function dispatch or concealed L algorithms.
+without changing frozen templates. Native leaves perform one bounded operation;
+they cannot conceal L algorithms or supply a replacement runtime.
 
 ## Layer contracts
 
@@ -188,42 +183,22 @@ library targets; native EA contents remain opaque. See the
 [topology contract](../builtins/README.md#frontend-topology-and-library-packages).
 
 Validate normalized final paths, duplicates and reserved support collisions.
-Do not infer cross-App modules. Keep source bundles atomic on failure. Support
-templates may contain complete runtime implementations; segment templates may not.
+Do not infer cross-App modules. Keep source bundles atomic on failure. Retained
+support templates own configuration and packaging; segment templates contain no
+runtime policy. Authored/native/generated Runtime assets have been removed.
 
 Each Rust package has a Cargo manifest. Explicit topology supports binary targets
 and a sole library-only package. A library-only package has declared sources and
-Cargo.toml, without executable config/runtime/start/stop artifacts; IncludeRuntime
-and supplied SETTINGS reject. Mixed packages retain one Primary binary and at
-most one library. The CLI builds validated packages together as a workspace.
+Cargo.toml, without executable config/start/stop artifacts; supplied SETTINGS
+reject. Mixed packages retain one Primary binary and at
+most one library. The current CLI builds one standalone App package.
 
-Runtime assembly wraps the first/orchestrator book and consumes the future
-returned by its composed function, whose generated signature is:
+Plain composed entries with SETTINGS receive a prepared initialization operation
+before user effects. EA remains an opaque whole-file boundary. Neither the
+backend nor the CLI supplies an orchestrator or process runtime.
 
-```rust
-fn l_main(runtime: &runtime::Runtime) -> impl std::future::Future<Output = runtime::Result<()>> + '_
-```
-
-Companion entries remain ordinary entry points. IncludeRuntime installs the
-known pinned runtime dependency rows, rejecting conflicting supplied rows. The
-assembler does not resolve crate versions, retry builds, translate Go source or
-infer dependencies from `use` statements.
-
-The CLI's `EvaluateWorkspaceEntry` bridge renders the entry and a separate
-runtime library under the [runtime selection contract](../docs/cli-build.md#source-generation-and-native-builds).
-It selects the runtime import before rendering the header, then links the entry
-wrapper. Allocated package identities and dependency paths stay outside AML
-metadata. Ordinary `Evaluate`/`IncludeRuntime` retain inline-runtime bundles.
-
-The runtime wrapper supplies configuration startup before creating Tokio and
-executes the composed future through Runtime supervision. Plain composed entries
-with SETTINGS receive a prepared initialization operation before user effects.
-EA remains an opaque whole-file path with its distinct support handling.
-
-Lucid cases use `IncludeRuntime: false`; three future cases also execute generated
-programs. Frontend, topology and runtime regressions separately exercise native
-outputs. Consult their [implementation evidence](../testdata/integration/IMPLEMENTATION.md)
-independently of the Lucid ledger; focused checks establish no full-acceptance result.
+Three Lucid future cases have separate execution observers. Generation, native compilation and execution remain distinct
+claims. The temporary hello-world gate does not run the complete Lucid matrix.
 
 ## Cross-cutting invariants
 
@@ -232,21 +207,14 @@ independently of the Lucid ledger; focused checks establish no full-acceptance r
 - Shared ordered-body rendering and loop scoping remain shared with generic systemless interpretation.
   Narrow Rust hooks handle existing records, forwarded aliases and A's Header
   loop; they do not replace the shared interpreter or normalize completed source.
-- Preserve L aliases, value snapshots and App identity. Missing lifetime or
+- Preserve canonical identities and typed bindings. Missing lifetime or
   mutability information does not authorize cloning or implicit value changes.
 - Keep diagnostics separate from application streams, preserve error causes,
   and return failures instead of process exits or partial bundles.
-- Keep raw process output byte-preserving, including non-UTF-8 data, in runtime
-  support. A Rust String substitution is not a blanket mapping for raw output.
-- Configuration runs before Tokio resources exist. The Rust support design uses
-  startup re-execution rather than unsafe environment mutation; explicit cleanup
-  remains necessary for App processes and finalized captures.
 
-See [CLI/runtime semantics](../docs/cli-build.md) for observable lifecycle details
-and [Rust support documentation](../builtins/README.md) for the bounded
-support contracts. Actual supervised tests, not asset presence or target selection,
-provide runtime evidence; their passing scope does not prove every platform or
-unrelated native form.
+See the [build contract](../docs/cli-build.md) for standalone execution and
+[Rust support documentation](../builtins/README.md) for bounded template contracts.
+Actual execution tests establish behavior only for their host and inputs.
 
 ## Navigation for changes and evidence
 
@@ -267,13 +235,9 @@ controls. Passing reports from other matrices do not validate these templates.
 
 The [acceptance guide](../docs/development-harness.md) owns the repository gate;
 the Rust suite owns its separate Expected/Generated native compilation stage.
-The [current ledger](testdata/lucid/FAILURES.md) records dated exact-generation,
-validation, native-compilation and acceptance evidence. The 18 template hashes
-remain frozen after finite reviewed amendments, linked from the
-[Rust reference](../builtins/README.md). Those records authorize no future
-interface expansion. Three future cases execute generated programs; broader
-runtime regressions cover native applications and topology. Deployment scripts
-remain unexecuted. Report evidence layers and outstanding failures separately.
+The 18 template hashes remain frozen. Three future cases execute generated
+programs separately; deployment scripts remain unexecuted. Report generation,
+compilation and execution results separately.
 
 ## Documentation design and provenance
 

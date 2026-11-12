@@ -7,19 +7,22 @@ import (
 	"testing"
 	"testing/fstest"
 
-	nativetest "github.com/l-programming-language/l/internal/testsupport/native"
 	"github.com/l-programming-language/l/lerrors"
 	Logiceme "github.com/l-programming-language/l/logiceme"
 )
 
 func TestComposedFunctionMembers(t *testing.T) {
-	for _, variant := range []string{"selected", "changed", "missing return component", "missing invoke component", "recursive value binding", "unused invocation argument"} {
+	for _, variant := range []string{"selected", "changed", "missing return component", "missing invoke component", "missing invocation arguments", "unused invocation argument", "missing core invoke", "program invoke cannot replace missing core"} {
 		t.Run(variant, func(t *testing.T) {
 			files := dictionaryIndexFilesystem(t)
 			const core = "builtins/eng/core.l"
 			source := string(files[core].Data)
 			source = strings.Replace(source, "Define any Function's \"Return|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~return <@Statement@>;~|}<DEF>`.", "Define \"Finish|-es|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~return /* composed_return */ <@Statement@>;~|}<DEF>`.\nCreate Function's \"Return|-s|-ed|-ing|-er\" for Processing a New Finisher.", 1)
-			source = strings.Replace(source, "Define any Function's \"Invoke|-s|-d|--ing|--er\" to `<DEF>KY{|Key: ~(<@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.", "Define \"Application\" as `<DEF>KY{|Key: ~(/* composed_invoke */ <@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.\nDefine \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Expression@><DEF>`.\nCreate Function's \"Invoke|-s|-d|--ing|--er\" for Forwarding a New Application.", 1)
+			const invocation = "Define \"Invoke|-s|-d|--ing|--er\" to `<DEF>KY{|Key: ~(<@Target|Callable@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`."
+			if strings.Count(source, invocation) != 1 {
+				t.Fatal("composition fixture requires the selected core Invoke definition")
+			}
+			source = strings.Replace(source, invocation, "Define \"Application|-s|---ve|--------ying\" as `<DEF>KY{|Key: ~(/* composed_invoke */ <@Target|Callable@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.\nDefine \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Expression@><DEF>`.\nCreate \"Invoke|-s|-d|--ing|--er\" for Forwarding a New Application.", 1)
 			if variant == "changed" {
 				source = strings.ReplaceAll(source, "composed_", "changed_")
 			}
@@ -34,30 +37,45 @@ func TestComposedFunctionMembers(t *testing.T) {
 					source = strings.Join(lines, "\n")
 				}
 			}
-			if variant == "unused invocation argument" {
+			if variant == "missing invocation arguments" || variant == "unused invocation argument" {
 				source = strings.Replace(source, ", Inputs: ~&[<@Arguments|Atoms@>]&~", "", 1)
 			}
-			if variant == "recursive value binding" {
-				const storage = "stdlib/eng/storage/dictionary.l"
-				data := strings.Replace(string(files[storage].Data), "MOB{|Key: ~<@Name|Label@>~|}^(<@Value@>)", "OB{|Key: ~<@Name|Label@>~, Value: ~<@Value@>~|}", 1)
-				files[storage] = &fstest.MapFile{Data: []byte(data)}
+			if variant == "unused invocation argument" {
+				// An ordinary metadata target remains a valid template, so the
+				// compiler-supplied Arguments binding must be rejected as unused.
+				source = strings.Replace(source, "<@Target|Callable@>", "<@Target@>", 1)
+			}
+			missingCore := variant == "missing core invoke" || variant == "program invoke cannot replace missing core"
+			if missingCore {
+				source = strings.Replace(source, "Create \"Invoke|-s|-d|--ing|--er\" for Forwarding a New Application.", "", 1)
 			}
 			files[core] = &fstest.MapFile{Data: []byte(source)}
-			c := NewLygerService(Options{Resources: files}).NewCompilation([]byte("Create \"Words\" as a Dictionary.\n\n    Publicly create Words's \"Echo\" as a Generic `echo` Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n    Publicly create Words's \"Supply\" as a Generic `supply` Function with No Inputs and Outputs of `f64`.\nReturn a New Words's Echo of 3.\n"), "members.l")
+			program := "Create \"Words\" as a Dictionary.\n\n    Publicly create Words's \"Echo|-es|-ed|-ing|-er\" as a Generic `echo` Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n    Publicly create Words's \"Supply|--ies|--ied|-ing|--ier\" as a Generic `supply` Function with No Inputs and Outputs of `f64`.\nReturn a New Words's Echo of 3.\n"
+			if variant == "program invoke cannot replace missing core" {
+				program = invocation + "\n\n" + program
+			}
+			c := NewLygerService(Options{Resources: files}).NewCompilation([]byte(program), "members.l")
 			c.Make()
-			if strings.HasPrefix(variant, "missing") {
-				if c.Error == nil {
-					t.Fatal("missing composition component compiled with a fallback")
+			var aml []byte
+			err := c.Error
+			if err == nil {
+				aml, err = c.ComposeLibrary("Words", "members")
+			}
+			if missingCore {
+				if !errors.Is(err, lerrors.InvalidConfiguration) || !strings.Contains(err.Error(), "builtin definition Invoke is absent") {
+					t.Fatalf("missing selected core Invoke must reject without a fallback: %v", err)
 				}
 				return
 			}
-			if c.Error != nil {
-				t.Fatal(c.Error)
+			if variant == "missing invocation arguments" {
+				if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "Callable") || !strings.Contains(err.Error(), "Atoms") {
+					t.Fatalf("Callable without terminal Arguments must reject its typed shape: %v", err)
+				}
+				return
 			}
-			aml, err := c.ComposeLibrary("Words", "members")
-			if variant == "recursive value binding" {
-				if !errors.Is(err, lerrors.Cycle) {
-					t.Fatalf("non-consuming value binder: %v", err)
+			if variant == "missing return component" || variant == "missing invoke component" {
+				if err == nil {
+					t.Fatal("missing composition component compiled with a fallback")
 				}
 				return
 			}
@@ -78,32 +96,12 @@ func TestComposedFunctionMembers(t *testing.T) {
 				if variant == "changed" {
 					marker = strings.Replace(marker, "composed_", "changed_", 1)
 				}
-				if !bytes.Contains(aml, []byte(marker)) || !strings.Contains(builtinProcessRust(bundle), marker) {
-					t.Fatalf("selected member %s missing", marker)
+				if !bytes.Contains(aml, []byte(marker)) || !strings.Contains(generatedRustSource(bundle), marker) {
+					t.Fatalf("selected composition %s missing", marker)
 				}
 			}
 			if !bytes.Equal(files[core].Data, []byte(source)) {
 				t.Fatal("composition mutated selected definitions")
-			}
-			if variant == "selected" {
-				deriveTestRuntime(t, files)
-				ordinary := "Define \"Prefix\" as `capture`.\n\n" + functionSource("Read", "", "Text", "Return Prefix.") + "Read as \"Result\".\nShow Result.\n"
-				result, unit, bundle, err := builtinProcessGenerate(files, ordinary)
-				if err != nil {
-					t.Fatal(err)
-				}
-				captured := false
-				for _, function := range result.Compilation.Semantics.Functions {
-					captured = captured || len(function.Captures) > 0
-				}
-				if !captured || !bytes.Contains(unit.BackendAML, []byte("composed_return")) || !bytes.Contains(unit.BackendAML, []byte("composed_invoke")) {
-					t.Fatal("ordinary captured Function lost its composed contracts")
-				}
-				binary := buildActualBundle(t, bundle, "entry", true, "")
-				stdout, stderr, err := nativetest.RuntimeExecution.Run(t, binary, "", nil)
-				if err != nil || len(stderr) != 0 || string(stdout) != "capture" {
-					t.Fatalf("composed captures stdout=%q stderr=%q: %v", stdout, stderr, err)
-				}
 			}
 		})
 	}

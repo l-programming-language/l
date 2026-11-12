@@ -11,23 +11,42 @@ import (
 // component. Nominal remains the source-defined type; function structure is
 // recognized from the bound definition when lowered.
 type constructionNode struct {
-	Nominal            string
-	Name               string
-	Definition         *record
-	Source             *objectGram
-	Children           []*constructionNode
-	Wrappers           []*descriptorRule
-	Parameters         []*objectGram
-	Arguments          []*objectGram // Child and parameter operands in authored order.
-	InputsDefined      bool
-	OutputsDefined     bool
-	Dependencies       []DefinitionInstance
-	InputTokens        []*token
-	Inputs             []DefinitionProperty
-	Outputs            []string
-	contractOperations []contractConstructionOperation
-	contractRules      []*descriptorRule
-	contractIdentity   string
+	Nominal        string
+	Name           string
+	Definition     *record
+	Source         *objectGram
+	Children       []*constructionNode
+	Wrappers       []*descriptorRule
+	Parameters     []*objectGram
+	Arguments      []*objectGram // Child and parameter operands in authored order.
+	InputsDefined  bool
+	OutputsDefined bool
+	Dependencies   []DefinitionInstance
+	InputTokens    []*token
+	Inputs         []DefinitionProperty
+	Outputs        []string
+}
+
+// Preserve canonical runtime-capture diagnostics before rejecting a wrong-role
+// constructor in a deferred body. Both named and positional expansion use this.
+func (node *constructionNode) validateRole(dynamic map[*record]bool) error {
+	if err := node.Source.constructionRole(); err != nil {
+		rec := node.Definition
+		if rec != nil && (dynamic[rec] || rec.Value != nil && rec.Value.Runtime != nil) {
+			return lerrors.Unsupported.Errorf("runtime value %s cannot be captured by an App body", rec.ID)
+		}
+		// A selected descriptor can construct its canonical actor target from
+		// a root reference. Unrelated modifiers and passive forms cannot.
+		if binding := node.Source.noun.binding; binding != nil && binding.Form == "root" {
+			for _, rule := range node.Wrappers {
+				if rule.Target.definition == rec && rule.Object != nil && rule.Object.noun != nil && rule.Object.noun.getPOS(true) == "noun" {
+					return nil
+				}
+			}
+		}
+		return err
+	}
+	return nil
 }
 
 type applicationConstruction struct {
@@ -52,8 +71,6 @@ func (c *Compilation) descriptorFor(tok *token) (*descriptorDefinition, error) {
 }
 
 func (dst *constructionNode) mergeDescriptor(src *constructionNode) {
-	dst.contractOperations = append(dst.contractOperations, shiftedContractOperations(src.contractOperations, len(dst.Children))...)
-	dst.contractRules = append(dst.contractRules, src.contractRules...)
 	if src.Name != "" {
 		dst.Name = src.Name
 	}
@@ -76,7 +93,6 @@ type constructionMode uint8
 
 const (
 	constructionConcrete constructionMode = iota
-	constructionSymbolic
 	constructionHeaderOnly
 )
 
@@ -84,13 +100,12 @@ func (c *Compilation) constructObject(obj *objectGram, active map[*descriptorRul
 	return c.constructObjectMode(obj, active, constructionConcrete)
 }
 
-// Symbolic construction shares source selection and ordered merging with real
-// construction. It produces a structural delta, never an App or emitted body.
+// Header-only construction prepares source signatures without expanding
+// their component relations or emitting an App body.
 func (c *Compilation) constructObjectMode(obj *objectGram, active map[*descriptorRule]bool, mode constructionMode) (*constructionNode, error) {
 	if obj == nil || obj.noun == nil {
 		return nil, lerrors.Internal.Errorf("cannot construct an object without a nominal type")
 	}
-	recording := mode == constructionSymbolic || mode == constructionConcrete && c.contractRecorder != nil
 	nominal, err := nominalType(obj.noun)
 	if err != nil {
 		return nil, err
@@ -101,11 +116,9 @@ func (c *Compilation) constructObjectMode(obj *objectGram, active map[*descripto
 		if err != nil {
 			return nil, err
 		}
-		node.contractWrite("constructor", obj.noun, recording)
 	}
 	if obj.name != nil && obj.name.noun != nil {
 		node.Name = unquoteImportWord(obj.name.noun.rawBytes)
-		node.contractWrite("name", obj.name.noun, recording)
 	}
 	for _, adjective := range valueModifiers(obj.adjectives) {
 		descriptor, err := c.descriptorFor(adjective)
@@ -144,15 +157,12 @@ func (c *Compilation) constructObjectMode(obj *objectGram, active map[*descripto
 		// it does not create another application component.
 		node.Parameters = append(node.Parameters, obj.clause.orderedObjects()...)
 		node.Arguments = append(node.Arguments, obj.clause.orderedObjects()...)
-		for _, parameter := range obj.clause.orderedObjects() {
-			node.contractWrite("parameters", parameter.noun, recording)
-		}
 	}
 	return node, nil
 }
 
 func (c *Compilation) applyDescriptor(node *constructionNode, descriptor *descriptorDefinition, target nominalIdentity, active map[*descriptorRule]bool, mode constructionMode, adjective *token) (bool, error) {
-	recording := adjective != nil && (mode == constructionSymbolic || mode == constructionConcrete && c.contractRecorder != nil)
+	recording := adjective != nil && c.contractRecorder != nil && mode == constructionConcrete
 	matched := false
 	for _, rule := range descriptor.Rules {
 		if rule.Target != target {
@@ -160,20 +170,14 @@ func (c *Compilation) applyDescriptor(node *constructionNode, descriptor *descri
 		}
 		matched = true
 		if recording {
-			node.contractRules = append(node.contractRules, rule)
-		}
-		var before *constructionNode
-		if adjective != nil && c.contractRecorder != nil && mode == constructionConcrete {
-			before = cloneContractConstruction(node)
 			c.contractRecorder.descriptors = append(c.contractRecorder.descriptors, contractDescriptorUse{Token: adjective, Rule: rule, Target: node})
 		}
-		sourceWrapper, err := c.sourceDescriptorObject(rule)
+		sourceWrapper, _, err := c.sourceDescriptorObject(rule)
 		if err != nil {
 			return false, err
 		}
 		if rule.Template != nil || sourceWrapper != nil {
 			node.Wrappers = append(node.Wrappers, rule)
-			node.contractWrite("wrappers", adjective, recording)
 		} else {
 			if active[rule] {
 				return false, lerrors.Cycle.Errorf("recursive descriptor %s for %s", descriptor.Record.ID, node.Nominal)
@@ -185,19 +189,15 @@ func (c *Compilation) applyDescriptor(node *constructionNode, descriptor *descri
 				return false, err
 			}
 			node.mergeDescriptor(instance)
-			if before != nil {
+			if recording {
 				c.contractRecorder.rebaseConstruction(instance, node)
 			}
-		}
-		if before != nil {
-			c.contractRecorder.recordSourceConstruction(adjective, descriptor.Record, rule, node, before)
 		}
 	}
 	return matched, nil
 }
 
 func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phraseGram, active map[*descriptorRule]bool, mode constructionMode) error {
-	symbolic := mode == constructionSymbolic
 	if phrase == nil {
 		return nil
 	}
@@ -206,13 +206,11 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 			node.InputsDefined = node.InputsDefined || marker.hasRole("noun", "functional.inflective")
 			node.OutputsDefined = node.OutputsDefined || marker.hasRole("noun", "functional.deflective")
 		}
-		node.contractWrite("inputs", node.Source.noun, symbolic || c.contractRecorder != nil)
-		node.contractWrite("outputs", node.Source.noun, symbolic || c.contractRecorder != nil)
 		for _, input := range phrase.subjects {
 			if input.phrase == nil || input.phrase.obj == nil {
 				return lerrors.InvalidInput.Errorf("Function input requires a type")
 			}
-			typ, dependency, err := c.constructionSignatureType(input.phrase.obj.noun, symbolic)
+			typ, dependency, err := c.nativeSignatureType(input.phrase.obj.noun)
 			if err != nil {
 				return err
 			}
@@ -230,7 +228,7 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 			node.InputTokens = append(node.InputTokens, input.noun)
 		}
 		for _, output := range phrase.orderedObjects() {
-			typ, dependency, err := c.constructionSignatureType(output.noun, symbolic)
+			typ, dependency, err := c.nativeSignatureType(output.noun)
 			if err != nil {
 				return err
 			}
@@ -255,7 +253,7 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 			return lerrors.Internal.Errorf("constructor relation has no object")
 		}
 		if obj.noun.hasRole("noun", "functional.inflective") || obj.noun.hasRole("noun", "functional.deflective") {
-			if err := c.bindConstructorSignatureMode(node, obj, symbolic); err != nil {
+			if err := c.bindConstructorSignature(node, obj); err != nil {
 				return err
 			}
 			continue
@@ -266,13 +264,9 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 			if err != nil {
 				return err
 			}
-			if symbolic || c.contractRecorder != nil {
-				node.contractOperations = append(node.contractOperations, childContractOperations(child, len(node.Children), obj.noun)...)
-			}
 			node.Children = append(node.Children, child)
 		} else {
 			node.Parameters = append(node.Parameters, obj)
-			node.contractWrite("parameters", obj.noun, symbolic || c.contractRecorder != nil)
 			// Nested operands belong to their own constructor. Existing topology
 			// descriptors still expose their signature relations to this owner.
 			count := len(node.Arguments)
@@ -283,21 +277,6 @@ func (c *Compilation) constructRelationsMode(node *constructionNode, phrase *phr
 		}
 	}
 	return c.constructRelationsMode(node, phrase.phrase, active, mode)
-}
-
-func (c *Compilation) constructionSignatureType(tok *token, symbolic bool) (string, *DefinitionInstance, error) {
-	if !symbolic {
-		return c.nativeSignatureType(tok)
-	}
-	argument, err := argumentFromToken(tok)
-	if err != nil {
-		return "", nil, err
-	}
-	if argument.Kind != definitionArgText.String() {
-		return "", nil, lerrors.Unsupported.Errorf("symbolic signature requires a literal native type atom")
-	}
-	typed, err := argument.nativeType()
-	return typed.typeAtom, nil, err
 }
 
 func (c *Compilation) nativeSignatureType(tok *token) (string, *DefinitionInstance, error) {
@@ -322,9 +301,9 @@ func (c *Compilation) nativeSignatureType(tok *token) (string, *DefinitionInstan
 	return typed.typeAtom, nil, nil
 }
 
-// bindSignature reads native signature atoms authored in a compile-time
+// bindConstructorSignature reads native signature atoms authored in a compile-time
 // constructor. Ordinary source Functions continue through sourceTypeFromObject.
-func (c *Compilation) bindConstructorSignatureMode(node *constructionNode, object *objectGram, symbolic bool) error {
+func (c *Compilation) bindConstructorSignature(node *constructionNode, object *objectGram) error {
 	input := object.noun.hasRole("noun", "functional.inflective")
 	defined := &node.OutputsDefined
 	if input {
@@ -334,11 +313,6 @@ func (c *Compilation) bindConstructorSignatureMode(node *constructionNode, objec
 		return lerrors.InvalidInput.Errorf("function signature is supplied more than once")
 	}
 	*defined = true
-	field := "outputs"
-	if input {
-		field = "inputs"
-	}
-	node.contractWrite(field, object.noun, symbolic || c.contractRecorder != nil)
 	if object.article != nil && object.article.hasRole("article", "none") {
 		if object.phrase != nil {
 			return lerrors.InvalidInput.Errorf("absent function signature has values")
@@ -352,7 +326,7 @@ func (c *Compilation) bindConstructorSignatureMode(node *constructionNode, objec
 		// Coordinated Outputs is retained under the Inputs relation by the
 		// ordinary object grammar. It is another signature, not a parameter.
 		if item.noun.hasRole("noun", "functional.inflective") || item.noun.hasRole("noun", "functional.deflective") {
-			if err := c.bindConstructorSignatureMode(node, item, symbolic); err != nil {
+			if err := c.bindConstructorSignature(node, item); err != nil {
 				return err
 			}
 			continue
@@ -364,7 +338,7 @@ func (c *Compilation) bindConstructorSignatureMode(node *constructionNode, objec
 			}
 			typeObject = item.phrase.orderedObjects()[0]
 		}
-		typ, dependency, err := c.constructionSignatureType(typeObject.noun, symbolic)
+		typ, dependency, err := c.nativeSignatureType(typeObject.noun)
 		if err != nil {
 			return err
 		}

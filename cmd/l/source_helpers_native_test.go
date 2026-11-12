@@ -39,9 +39,6 @@ func assertFrontendResources(t testing.TB, c *Lyger.Compilation) {
 		if u.Kind == Lyger.SourceBuiltin && !strings.HasSuffix(u.Origin.Name, "builtins/eng/core.l") {
 			t.Errorf("Rust builtin selection: %q", u.Origin.Name)
 		}
-		if u.Kind == Lyger.SourceDictionary && u.Dictionary == "IO" && !strings.HasSuffix(u.Origin.Name, "stdlib/eng/io/dictionary.l") {
-			t.Errorf("Rust IO selection: %q", u.Origin.Name)
-		}
 	}
 	if c.Program != nil {
 		for _, a := range c.Program.Apps {
@@ -83,23 +80,6 @@ func assertMemberSourceBuild(t *testing.T, bundle Logiceme.Executable, text stri
 	}
 	for i, p := range bundle.MapArrays[0] {
 		t.Logf("%s %d bytes SHA256 %x", p, len(bundle.ByteArrays[0][i]), sha256.Sum256(bundle.ByteArrays[0][i]))
-	}
-	buildReturnedBundle(t, bundle)
-}
-
-func assertParagraphSourceSyntax(t *testing.T, contents [][]byte, paths []string, printed *string) {
-	t.Helper()
-	bundle := Logiceme.Executable{ByteArrays: [][][]byte{contents}, MapArrays: [][]string{paths}}
-	main := observeBundleMain(t, bundle).Function(t, "main")
-	unit := len(main.Result) == 0 || observedUnitOutput(main.Result)
-	// The runtime-owned native entry returns process status; ordinary App
-	// entry functions remain unit. Both are checked by rustc below.
-	status := printed == nil && strings.ReplaceAll(nativetest.RustTokensText(main.Result), " ", "") == "->ExitCode"
-	if len(main.Parameters) != 0 || (!unit && !status) {
-		t.Fatal("paragraph main signature")
-	}
-	if printed != nil {
-		observedText(t, main.Body, *printed)
 	}
 	buildReturnedBundle(t, bundle)
 }

@@ -55,7 +55,7 @@ func definitionGrammarSignature(tok *token, constructor, named bool) (grammarAri
 
 // Grammar and lowering select the same header without allocating value labels.
 func (c *Compilation) constructorGrammarSignature(noun *token, modifiers []*token, named bool) (grammarArity, error) {
-	node, err := c.constructObjectMode(&objectGram{noun: noun, adjectives: modifiers}, make(map[*descriptorRule]bool), constructionHeaderOnly)
+	node, err := c.constructObjectMode(&objectGram{nominalGram: nominalGram{noun: noun, adjectives: modifiers}}, make(map[*descriptorRule]bool), constructionHeaderOnly)
 	if err != nil {
 		return grammarArity{}, err
 	}
@@ -127,28 +127,6 @@ func (c *Compilation) descriptorGrammarReady(descriptor *record, target nominalI
 		}
 	}
 	return nil
-}
-
-func (c *Compilation) sourceActionInputs(statement *lStatement, target *token) ([]string, error) {
-	sites, err := statement.sGram.registrationSites()
-	if err != nil {
-		return nil, err
-	}
-	for _, site := range sites {
-		if site.subject == nil || site.subject.noun != target {
-			continue
-		}
-		formals, err := site.actionParameters(statement)
-		if err != nil {
-			return nil, err
-		}
-		inputs := make([]string, len(formals))
-		for index, formal := range formals {
-			inputs[index] = formal.Name
-		}
-		return inputs, nil
-	}
-	return nil, nil
 }
 
 func buildBoundedGrammarObjects(term grammarTerm, tokens []*token, gram *grammar, limit grammarArity) ([]*objectGram, []*token, error) {

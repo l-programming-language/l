@@ -13,8 +13,8 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
   support assets; Lyger may supply resolved native type/name/value atoms through
   approved AML fields, without executable bodies or closures. It must not depend on Lyger types, Go-only plan pointers
   or source-language parsing. Keep scanning, composition, interpretation and linking distinct.
-- Rust is the only generated language. Evaluate accepts at most one options value,
-  containing only IncludeRuntime; no output-target selector remains.
+- Rust is the only generated language. Evaluate accepts complete framed AML;
+  no runtime-injection or output-target option remains.
   Natural-language selection belongs to Lyger. Process all books without
   contaminating reused services or prior bundles.
 - `NewLogicemeService(fs.FS)` selects a complete provider; nil uses embedded
@@ -47,16 +47,16 @@ Root instructions, [runtime semantics](../docs/cli-build.md), and
 - Rust A renders a package comment and collected file-owned imports. The source
   assembler adds graph-owned safety/module items separately at the compiled A
   boundary and composes configuration initialization before user effects. Sole
-  library targets return sources/Cargo only, reject executable settings/runtime
+  library targets return sources/Cargo only, reject executable settings
   and export nonprivate composed items. Keep all of this out of frozen A; see
   [topology and libraries](../builtins/README.md#frontend-topology-and-library-packages).
   Preserve EA's standalone literal-file boundary without using it to replace
   the composition under test.
-- The CLI workspace-entry bridge places canonical runtime/process assets in a
-  dedicated library through typed header/support assembly. Keep its allocated
-  package/path separate from AML metadata. Ordinary Evaluate/IncludeRuntime
-  callers retain their inline-runtime bundles; do not rewrite completed source
-  or expose the private runtime placement as a glyph input.
+- During the core-only reset the CLI compiles one App bundle. Native/generated Runtime resources and their assembly APIs are removed. Do not restore a native runtime, emit a replacement orchestrator, or repair missing source libraries in the backend.
+- [Authored-name and alias checks](../docs/spec/names-and-scope.md#possessives-and-member-lookup)
+  and [complete word families](../docs/spec/definitions.md#inflection-declarations)
+  belong to Lyger. Preserve dots and bytes in AML, native code, template slots and
+  internal identities. Do not repair rejected source vocabulary in backend output.
 
 ## Workflow and verification
 
@@ -73,20 +73,18 @@ and scoped extensions. Follow the
 and separate compilation. The 18 Rust segments are frozen by that suite; keep
 their bytes, interfaces and hash expectations unchanged. Do not substitute a
 different matrix to make the current tests pass.
-The [result ledger](testdata/lucid/FAILURES.md) records exact generation,
-expected/actual native compilation and acceptance separately; it does not establish
-correctness of every compiler branch. Runtime behavior is checked
-separately by supervised native regressions and the [implementation record](../testdata/integration/IMPLEMENTATION.md).
-Retain shared backend controls and the required downstream test identities;
-their native observers check the Rust frontend/CLI obligations.
+Core Print execution is checked by the temporary hello-world gate.
+Retain independent backend composition controls without requiring the removed
+library implementation or its private observer interfaces.
 
-Do not change protected input bytes, expected-value helpers, locks or canonical
-resources outside an explicit finite amendment. Generated install/start/stop
-scripts are artifacts, never local validation commands. Keep process supervision
-and raw stdout/continuation semantics in dedicated support, not glyphs.
+Preserve frozen logeme bytes and hash expectations. Remove obsolete library
+fixtures when authorized; retain useful independent compiler assertions. Generated
+install/start/stop scripts are artifacts, never local validation commands.
 
-Root [acceptance instructions](../AGENTS.md#current-contract) and the
+Root [acceptance instructions](../AGENTS.md#current-reset-boundary) and the
 [validation policy](../docs/development-harness.md#validation-authorization)
 govern local and hosted checks. Report proposed, implemented, generated, compiled
 and runtime-verified separately, including unrun stages. Focused checks do not
 establish full validation; documentation checks establish no native result.
+
+Current completion is the temporary hello-world gate in root instructions. Only logeme templates remain protected during this reset.

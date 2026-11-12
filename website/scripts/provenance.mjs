@@ -28,8 +28,8 @@ export function sourceURL(root, relative, identity) {
   return links.get(key);
 }
 
-export const languageRoots = ['cmd', 'lyger', 'logiceme', 'builtins', 'stdlib', 'lexicon', 'lerrors', 'utilities', 'resources', 'internal', 'tools', 'acceptance', 'testdata', 'demo', 'scripts', 'harness', '.ci'];
-export const languageFiles = ['go.mod', 'go.sum', '.go-version', '.ci-tools.json', '.golangci.yml', 'install.sh', 'VERSION'];
+export const languageRoots = ['cmd', 'lyger', 'logiceme', 'contracts', 'builtins', 'stdlib', 'lexicon', 'lerrors', 'utilities', 'resources', 'internal', 'tools', 'acceptance', 'testdata', 'demo', 'scripts', 'harness', '.ci'];
+export const languageFiles = ['dictionaries.json', 'go.mod', 'go.sum', '.go-version', '.ci-tools.json', '.golangci.yml', 'install.sh', 'VERSION'];
 export async function inputInventory(root) {
   const files = [];
   for (const entry of await fs.readdir(root, { withFileTypes: true })) if (entry.isFile() && entry.name.endsWith('.go')) files.push(entry.name);

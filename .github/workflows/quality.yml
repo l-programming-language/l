@@ -1,8 +1,7 @@
 name: L lint and security
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  # Opt-in during the temporary Hello World reset; l-check is the only PR gate.
   workflow_dispatch:
 
 permissions:

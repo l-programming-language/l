@@ -10,7 +10,7 @@ import (
 func TestParagraphIdentityArtifactCollisionReservation(t *testing.T) {
 	var firstIDs []string
 	for attempt := 0; attempt < 2; attempt++ {
-		source := paragraphSource(t)
+		source := memberResolutionSource{}
 		source.main = paragraphGlobals + "Create \"Worker_1\" as a New Basic App.\nThe App Prints x1.\n"
 		for _, text := range []string{"first private", "second private"} {
 			source.main += "\n    \"message\" is `" + text + "`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints message.\n"
@@ -56,7 +56,7 @@ func TestParagraphIdentityArtifactCollisionReservation(t *testing.T) {
 }
 
 func TestParagraphIdentityApplicationOrderIgnoresResolutionOrder(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphGlobals + "Create \"Earlier\" as a New Future App.\nThe App Prints x1.\nCreate \"Later\" as a New Basic App.\nThe App Prints x2.\n\"Future\" describes a Generic App with a New Main Service using any Process.\n"
 	compilation := executableTestResult(t, source).Compilation
 	units, err := (&CompilationResult{Compilation: compilation}).ApplicationUnits()
@@ -73,7 +73,7 @@ func TestParagraphIdentityApplicationOrderIgnoresResolutionOrder(t *testing.T) {
 }
 
 func TestParagraphIdentityCoordinatedAppConstructionSource(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphGlobals + "\"First\" is a New Basic App and \"Second\" is a New Basic App.\nFirst Prints x1.\nSecond Prints x2.\n"
 	compilation := executableTestResult(t, source).Compilation
 	declarations := paragraphBindingDeclarations(t, compilation, "Second", 1)
@@ -94,7 +94,7 @@ func TestParagraphIdentityCoordinatedAppConstructionSource(t *testing.T) {
 }
 
 func TestParagraphIdentityRootAppKeepsBuildName(t *testing.T) {
-	source := paragraphSource(t)
+	source := memberResolutionSource{}
 	source.main = paragraphGlobals + "Create \"Worker\" as a New Basic App.\nThe App Prints x1.\n\n    Create \"Worker\" as a New Basic App.\nThe App Prints x2.\n"
 	compilation := executableTestResult(t, source).Compilation
 	units, err := (&CompilationResult{Compilation: compilation}).ApplicationUnits()

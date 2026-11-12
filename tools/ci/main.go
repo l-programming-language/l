@@ -59,7 +59,7 @@ func main() {
 
 func run(args []string) error {
 	if len(args) != 1 {
-		return errors.New("usage: scripts/l-ci metadata|install|bootstrap|lint|acceptance|native|check")
+		return errors.New("usage: scripts/l-ci metadata|install|bootstrap|lint|acceptance|native|check|hello")
 	}
 	root, err := os.Getwd()
 	if err != nil {
@@ -103,7 +103,7 @@ func readPins(root string) (toolPins, error) {
 }
 
 func runStage(root string, pins toolPins, stage string) error {
-	if stage != "install" && stage != "bootstrap" && stage != "lint" && stage != "acceptance" && stage != "native" {
+	if stage != "install" && stage != "bootstrap" && stage != "lint" && stage != "acceptance" && stage != "native" && stage != "hello" {
 		return fmt.Errorf("unknown CI stage %q", stage)
 	}
 	runs := filepath.Join(root, ".harness", "runs")
@@ -142,6 +142,8 @@ func runStage(root string, pins toolPins, stage string) error {
 		err = r.acceptance()
 	case "native":
 		err = r.native()
+	case "hello":
+		err = r.hello()
 	}
 	r.report.FinishedAt, r.report.Passed = time.Now().UTC(), err == nil
 	if err != nil {

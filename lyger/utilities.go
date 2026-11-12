@@ -1,6 +1,7 @@
 package Lyger
 
 import (
+	"slices"
 	"strconv"
 	"strings"
 
@@ -266,7 +267,9 @@ func isDeclarativeGrammar(sType string) bool {
 func checkActions(actionSequence []*lexeme) (string, error) {
 	seqType := "async"
 	for ind, actionLex := range actionSequence {
-		if actionLex.checkDescriptors("adverb", "progression.root") {
+		if slices.ContainsFunc(actionLex.Adverbs, func(tok *token) bool {
+			return tok.tType == "adverbs.progression.root"
+		}) {
 			if ind == len(actionSequence)-1 {
 				seqType = "sync"
 			} else {

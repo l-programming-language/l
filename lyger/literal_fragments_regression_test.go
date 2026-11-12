@@ -281,7 +281,7 @@ func TestLiteralFragmentsCompileToExactAML(t *testing.T) {
 			if !bytes.Equal(comp.ExpandedBytes, wantExpanded) {
 				t.Errorf("expanded source differs, including separators/EOF:\n%s", comp.ExpandedBytes)
 			}
-			wantPrint := []byte("Inputs: ~&[" + strconv.Quote(tc.scalar) + "]&~")
+			wantPrint := []byte(`Statement: ~::std::println!("{}", ` + strconv.Quote(tc.scalar) + `);~`)
 			for name, markup := range map[string][]byte{"observable": comp.ASMBytes, "backend": comp.Program.BackendBytes} {
 				if !bytes.Contains(markup, wantPrint) {
 					t.Errorf("%s AML missing exact %s:\n%s", name, wantPrint, markup)

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"maps"
+
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -16,7 +17,6 @@ import (
 	"time"
 
 	"github.com/l-programming-language/l/contracts"
-	distributiontest "github.com/l-programming-language/l/internal/testsupport/distribution"
 )
 
 type nativeObservationFixture struct {
@@ -87,7 +87,7 @@ func newNativeObservationFixture(t *testing.T) *nativeObservationFixture {
 
 func readBuildEnvironment(t *testing.T, path string) contracts.NativeEnvironment {
 	t.Helper()
-	data := readContractFile(t, path)
+	data := readNativeEvidenceFile(t, path)
 	document, err := contracts.DecodeDocument(data)
 	if err != nil {
 		t.Fatal(err)
@@ -164,6 +164,42 @@ func TestNativeEnvironmentCaptureFailureAndTarget(t *testing.T) {
 	}
 }
 
+func TestNativeEnvironmentExactSourceDependencies(t *testing.T) {
+	fixture := newNativeObservationFixture(t)
+	environment := fixture.capture(t, "")
+	if !maps.Equal(environment.Inputs, fixture.report.Inputs) || !maps.Equal(environment.Dependencies, fixture.report.Lowering.Fingerprints) {
+		t.Fatalf("capture lost selected source or implementation identities: %+v", environment)
+	}
+	for _, mutation := range []string{"unchanged", "changed-source", "missing-source", "extra-source", "changed-dependency", "missing-dependency", "extra-dependency"} {
+		t.Run(mutation, func(t *testing.T) {
+			inputs, dependencies := maps.Clone(fixture.report.Inputs), maps.Clone(fixture.report.Lowering.Fingerprints)
+			want := contracts.Unresolved
+			switch mutation {
+			case "unchanged":
+				want = contracts.Established
+			case "changed-source":
+				inputs["source:entry"] = "changed"
+			case "missing-source":
+				delete(inputs, "source:entry")
+			case "extra-source":
+				inputs["source:extra"] = "extra"
+			case "changed-dependency":
+				dependencies["helper"] = "changed"
+			case "missing-dependency":
+				delete(dependencies, "helper")
+			case "extra-dependency":
+				dependencies["extra"] = "extra"
+			}
+			if got, reason := contracts.EnvironmentApplicability(environment, inputs, dependencies); got != want {
+				t.Fatalf("want %s, got %s: %s", want, got, reason)
+			}
+			if len(fixture.calls) != 6 {
+				t.Fatal("offline applicability replayed tool observations")
+			}
+		})
+	}
+}
+
 func TestNativeEvidenceBuildRecordingAndNoReplay(t *testing.T) {
 	fixture := newNativeObservationFixture(t)
 	environment := fixture.capture(t, "")
@@ -183,7 +219,7 @@ func TestNativeEvidenceBuildRecordingAndNoReplay(t *testing.T) {
 	if len(loaded.Executions) != 7 || loaded.Executions[6].Status != "failed" || len(loaded.Artifacts) != 0 || len(fixture.calls) != 6 {
 		t.Fatalf("failed build evidence was favorable or replayed: %+v", loaded)
 	}
-	writeContractFile(t, fixture.paths["cargo"], []byte("changed tool"))
+	writeNativeEvidenceFile(t, fixture.paths["cargo"], []byte("changed tool"))
 	if err := recorder.verifyTools(); err == nil {
 		t.Fatal("changed executable retained captured identity")
 	}
@@ -213,7 +249,7 @@ func TestNativeEvidenceConfigurationAndWorkspaceIdentity(t *testing.T) {
 			t.Fatalf("unlisted environment variable retained even as a hash: %s", key)
 		}
 	}
-	writeContractFile(t, filepath.Join(root, "config.toml"), []byte("[build]\njobs=1\n"))
+	writeNativeEvidenceFile(t, filepath.Join(root, "config.toml"), []byte("[build]\njobs=1\n"))
 	second := nativeTestConfiguration(t, root, environment)
 	if reflect.DeepEqual(first, second) {
 		t.Fatal("newly matching Cargo configuration did not change identity")
@@ -222,7 +258,7 @@ func TestNativeEvidenceConfigurationAndWorkspaceIdentity(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	writeContractFile(t, filepath.Join(root, "main.rs"), []byte("fn main() {}\n"))
+	writeNativeEvidenceFile(t, filepath.Join(root, "main.rs"), []byte("fn main() {}\n"))
 	after, err := nativeWorkspaceFingerprint(root)
 	if err != nil || before == after {
 		t.Fatalf("actual workspace bytes did not affect build inputs: %q / %q, %v", before, after, err)
@@ -298,7 +334,7 @@ func TestNativeEvidenceBuildOptionAndDestinations(t *testing.T) {
 	if _, err := resolveNativeEvidenceOutput(filepath.Join(alias, "entry"), []string{source}, output, output+".apps", ""); err == nil {
 		t.Fatal("symlinked parent concealed future executable overwrite")
 	}
-	target := writeContractFile(t, filepath.Join(root, "target"), []byte("previous"))
+	target := writeNativeEvidenceFile(t, filepath.Join(root, "target"), []byte("previous"))
 	link := filepath.Join(root, "record.json")
 	if err := os.Symlink(target, link); err != nil {
 		t.Fatal(err)
@@ -320,128 +356,25 @@ func TestNativeEvidenceBuildOptionAndDestinations(t *testing.T) {
 
 }
 
-func TestNativeEnvironmentOfflineConfigurationApplicability(t *testing.T) {
-	fixture := newNativeObservationFixture(t)
-	environment := fixture.capture(t, "")
-	for _, path := range fixture.paths {
-		if err := os.Remove(path); err != nil {
-			t.Fatal(err)
-		}
-	}
-	if status, _, err := validateNativeEnvironmentConfiguration(environment); err != nil || status != contracts.Established || len(fixture.calls) != 6 {
-		t.Fatalf("offline check re-observed historical tools: %s, %v", status, err)
-	}
-	t.Run("environment", func(t *testing.T) {
-		t.Setenv("CC", "test-only-changed-compiler")
-		if status, _, err := validateNativeEnvironmentConfiguration(environment); err != nil || status != contracts.Unresolved {
-			t.Fatalf("changed relevant environment remained applicable: %s, %v", status, err)
-		}
-	})
-	t.Run("malformed-config-path", func(t *testing.T) {
-		malformed := environment
-		malformed.Configuration = maps.Clone(environment.Configuration)
-		malformed.Configuration["cargo-config:/not-an-allowed-location/secret"] = "hash"
-		if _, _, err := validateNativeEnvironmentConfiguration(malformed); err == nil {
-			t.Fatal("arbitrary recorded config path accepted")
-		}
-	})
-	for _, key := range []string{"CARGO_REGISTRY_TOKEN", "CARGO_REGISTRIES_PRIVATE_TOKEN", "RUSTC_SECRET", "UNRELATED_SECRET"} {
-		t.Run("unlisted-"+key, func(t *testing.T) {
-			malformed := environment
-			malformed.Configuration = maps.Clone(environment.Configuration)
-			malformed.Configuration["environment:"+key] = nativeBytesHash([]byte("not-even-a-credential-hash"))
-			if _, _, err := validateNativeEnvironmentConfiguration(malformed); err == nil {
-				t.Fatal("unlisted environment key accepted in supplied evidence")
-			}
-		})
-	}
-	configDir := filepath.Join(filepath.Dir(fixture.report.Entry), ".cargo")
-	if err := os.Mkdir(configDir, 0700); err != nil {
+func readNativeEvidenceFile(t *testing.T, path string) []byte {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
 		t.Fatal(err)
 	}
-	writeContractFile(t, filepath.Join(configDir, "config.toml"), []byte("[build]\njobs=2\n"))
-	if status, _, err := validateNativeEnvironmentConfiguration(environment); err != nil || status != contracts.Unresolved || len(fixture.calls) != 6 {
-		t.Fatalf("newly matching config was ignored or commands replayed: %s, %v", status, err)
-	}
+	return data
 }
 
-// Change an import and an asset between the member and final entry renders.
-// Each recorded dependency must name the bytes that its own unit consumed.
-func TestNativeBuildEvidenceUsesPreparedInputs(t *testing.T) {
-	for _, drift := range []bool{false, true} {
-		t.Run(fmt.Sprintf("changed-between-members-and-entry=%t", drift), func(t *testing.T) {
-			source := contractCLIInput(t)
-			helper := writeContractFile(t, filepath.Join(filepath.Dir(source), "helper.l"), nil)
-			data := readContractFile(t, source)
-			writeContractFile(t, source, append([]byte("Use `helper.l`.\n"), data...))
-			assets := distributiontest.CompleteOverride(t)
-			c, _ := pathTestCompiler(t, assets, source, t.TempDir())
-			compiled, err := c.lyger.CompileForContracts(c.mainBytes, source)
-			if err != nil {
-				t.Fatal(err)
-			}
-			var inventory contracts.LoweringInventory
-			generated, err := generatePackages(c.log, compiled, &inventory)
-			if err != nil {
-				t.Fatal(err)
-			}
-			template := filepath.Join(assets, "builtins/templates/install/cargo.lu")
-			original := readContractFile(t, template)
-			entryTemplate := original
-			if drift {
-				entryTemplate = append(append([]byte(nil), original...), []byte("\n# fixture save\n")...)
-				writeContractFile(t, template, entryTemplate)
-				writeContractFile(t, helper, []byte("\n"))
-			}
-			if _, err := generated.workspace(c.log, "main", "123", &inventory); err != nil {
-				t.Fatal(err)
-			}
-			report := contracts.NewReport(source)
-			bindings, lowering, err := compiled.RecordedInventory()
-			if err != nil {
-				t.Fatal(err)
-			}
-			report.Inputs, report.Lowering = bindings.Inputs, lowering
-			mergeLowering(&report.Lowering, "backend", inventory)
-			fixture := newNativeObservationFixture(t)
-			fixture.report = report
-			env, err := captureNativeEnvironmentWith(context.Background(), report, "", fixture.observer)
-			if err != nil {
-				t.Fatal(err)
-			}
-			env.Method, env.Version = "build", "2"
-			env.Configuration["companion-generation"] = "123"
-			key := contracts.StableID("backend-meaning", "install/cargo.lu")
-			if env.Inputs["source:helper.l"] != nativeBytesHash(nil) || env.Dependencies["backend:unit:Worker:"+key] != contracts.StableID("backend-input", original) ||
-				env.Dependencies["backend:orchestrator:"+key] != contracts.StableID("backend-input", entryTemplate) {
-				t.Fatal("evidence did not bind each phase to its consumed inputs")
-			}
-			env = contracts.SealNativeEnvironment(env)
-			file := scopedWrite(t, t.TempDir(), "environment.json", env)
-			fresh, _ := contractJSON(t, source, 0, "inspect", "--assets", assets, "--native-environment", file)
-			want := contracts.Established
-			if drift {
-				want = contracts.Unresolved
-			}
-			if status, reason := contracts.EnvironmentApplicability(*fresh.NativeEnvironment, fresh.Inputs, fresh.Lowering.Fingerprints); status != want {
-				t.Fatalf("offline build identity %s, want %s: %s", status, want, reason)
-			}
-			if status, _ := contracts.EnvironmentApplicability(env, report.Inputs, fresh.Lowering.Fingerprints); status != want {
-				t.Fatal("changed provider retained build assurance independently of source changes")
-			}
-			for _, token := range []string{"", "../escape", "/abs"} {
-				env.Configuration["companion-generation"] = token
-				if err := contracts.SealNativeEnvironment(env).Validate(); err == nil {
-					t.Fatalf("accepted invalid companion placement %q", token)
-				}
-			}
-			origins := compiled.Compilation.SourceOrigins
-			second := origins[0]
-			second.SHA256 = nativeBytesHash([]byte("different import bytes"))
-			compiled.Compilation.SourceOrigins = append(origins, second)
-			if _, _, err := compiled.RecordedInventory(); err == nil {
-				t.Fatal("two digests for one logical source certified only the last read")
-			}
-		})
+func writeNativeEvidenceFile(t *testing.T, path string, data []byte) string {
+	t.Helper()
+	if err := os.WriteFile(path, data, 0600); err != nil {
+		t.Fatal(err)
 	}
+	return path
+}
+
+func nativeEvidenceSource(t *testing.T) string {
+	t.Helper()
+	source := "Create \"Worker\" as a New Basic App.\nThe App Prints `hello`.\n"
+	return writeNativeEvidenceFile(t, filepath.Join(t.TempDir(), "main.l"), []byte(source))
 }

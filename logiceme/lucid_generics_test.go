@@ -44,7 +44,7 @@ func TestLucidGenericPrimitives(t *testing.T) {
 		for _, mode := range modes {
 			t.Run(c.name+"/"+mode.name, func(t *testing.T) {
 				defer executionRegistryPanicAsFailure(t)
-				ss, err := loadSegmentalSystem(runtimeGenerationResources(t))
+				ss, err := loadSegmentalSystem(backendTestResources(t))
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -195,7 +195,7 @@ func TestLucidGenericPreparation(t *testing.T) {
 		} {
 			t.Run(form+"/"+c.name, func(t *testing.T) {
 				defer executionRegistryPanicAsFailure(t)
-				ss, err := loadSegmentalSystem(runtimeGenerationResources(t))
+				ss, err := loadSegmentalSystem(backendTestResources(t))
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -242,7 +242,7 @@ func TestLucidGenericBlankPreparation(t *testing.T) {
 			for _, blank := range []struct{ name, value string }{{"empty", ""}, {"whitespace", " \t "}} {
 				t.Run(form+"/"+field+"/"+blank.name, func(t *testing.T) {
 					defer executionRegistryPanicAsFailure(t)
-					ss, err := loadSegmentalSystem(runtimeGenerationResources(t))
+					ss, err := loadSegmentalSystem(backendTestResources(t))
 					if err != nil {
 						t.Fatal(err)
 					}
@@ -281,7 +281,7 @@ func TestLucidGenericInheritedPreparation(t *testing.T) {
 				}
 				t.Run(name, func(t *testing.T) {
 					defer executionRegistryPanicAsFailure(t)
-					ss, err := loadSegmentalSystem(runtimeGenerationResources(t))
+					ss, err := loadSegmentalSystem(backendTestResources(t))
 					if err != nil {
 						t.Fatal(err)
 					}
@@ -314,7 +314,7 @@ func TestLucidGenericInheritedPreparation(t *testing.T) {
 }
 
 func TestLucidGenericChildIsolation(t *testing.T) {
-	ss, err := loadSegmentalSystem(runtimeGenerationResources(t))
+	ss, err := loadSegmentalSystem(backendTestResources(t))
 	if err != nil {
 		t.Fatal(err)
 	}

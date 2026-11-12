@@ -101,18 +101,14 @@ func TestParagraphPublicationPublicMemberKeepsPrivateOwner(t *testing.T) {
 	} {
 		t.Run(memberDeclaration, func(t *testing.T) {
 			source := "    Create \"Hidden\" as a Dictionary.\n" + memberDeclaration + "\n" +
-				"\"PrivateSibling\" is `private`.\n\nUse Hidden.Exported as \"Alias\".\n"
+				"\"PrivateSibling\" is `private`.\n"
 			compilation := paragraphPublicationSource(t, source)
 			if compilation.Error != nil {
 				t.Fatal(compilation.Error)
 			}
-			member, alias := compilation.Memory["Hidden.Exported"], compilation.Memory["Alias"]
-			if member == nil || alias == nil {
-				t.Fatal("Public member did not publish its qualified binding for the outer alias")
-			}
-			canonical, err := canonicalRecord(alias, compilation.Semantics.Aliases)
-			if err != nil || canonical != member {
-				t.Fatalf("outer member alias lost canonical identity: %v", err)
+			member := compilation.Memory["Hidden.Exported"]
+			if member == nil {
+				t.Fatal("Public member did not publish its canonical binding")
 			}
 			var owner *record
 			for _, statement := range compilation.Statements {
@@ -128,8 +124,8 @@ func TestParagraphPublicationPublicMemberKeepsPrivateOwner(t *testing.T) {
 			if owner.storageScope.records["Hidden.Exported"] != member || member.storageScope != compilation.Scope.Root {
 				t.Fatal("Public member lost its local binding or global storage scope")
 			}
-			if alias.Value.Iterative.Dictionary != member.Value.Iterative.Dictionary || member.Value.Iterative.Dictionary.ID != "Hidden.Exported" {
-				t.Fatal("outer alias cloned or renamed the published dictionary member")
+			if member.Value.Iterative.Dictionary.ID != "Hidden.Exported" {
+				t.Fatal("publication renamed the dictionary member")
 			}
 			if compilation.Memory["Hidden"] != nil || compilation.Memory["PrivateSibling"] != nil {
 				t.Fatal("Public member published its private owner or sibling")

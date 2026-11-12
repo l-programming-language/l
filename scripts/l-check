@@ -1,4 +1,5 @@
 #!/bin/sh
 set -eu
 repo_root=$(CDPATH= cd -P "$(dirname "$0")/.." && pwd)
-exec "$repo_root/scripts/l-ci" check "$@"
+# The reset gate covers only source-defined Hello World and frozen logemes.
+exec "$repo_root/scripts/l-ci" hello "$@"

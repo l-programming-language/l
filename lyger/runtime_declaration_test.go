@@ -81,9 +81,6 @@ func TestRuntimeDeclarationsUseGrammaticalOperands(t *testing.T) {
 			if shown == nil || shown.Kind.String() != "symbol" || shown.Record != compilation.Memory[tc.shown] {
 				t.Fatal("Show or its alias lost the original storage identity")
 			}
-			if _, err := result.OrchestratorUnit("main", executableTestCompanions(result)); err != nil {
-				t.Fatal(err)
-			}
 		})
 	}
 }

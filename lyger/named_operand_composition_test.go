@@ -12,7 +12,7 @@ func TestNamedOperandComposition(t *testing.T) {
 	for _, word := range []string{"Finisher", "Completion", "Alias"} {
 		t.Run(word, func(t *testing.T) {
 			source := "Define \"Finish|-es|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~/* <@Label|Text@> */ return <@Statement@>;~|}<DEF>`.\n" +
-				"Define \"Completion\" as a New Finisher.\nUse Completion as \"Alias\".\n" +
+				"Define \"Completion|-s|----e|----ing\" as a New Finisher.\nUse Completion as \"Alias|-es|-like|-ing\".\n" +
 				"Create \"Respond|-s|-ed|-ing|-er\" for Processing a New " + word + " of `marker`.\n"
 			c := compileDefinitionSource(t, source, "named-operands.l")
 			rec, err := c.exportedRecord("Respond")
@@ -61,9 +61,9 @@ func TestNamedActionLiteralOperands(t *testing.T) {
 }
 
 func TestNamedConstructorArgumentEvaluatesOnce(t *testing.T) {
-	c := compileDefinitionSource(t, "Define \"Next\" as `<DEF>KY{|Key: ~next~|}<DEF>`.\n"+
-		"Define \"Pair\" as `<DEF>KY{|Key: ~pair~, Inputs: ~&[<@Value@>, <@Value@>]&~|}<DEF>`.\n"+
-		"Define \"Copy\" as a New Pair.\nCreate \"Apply|-s|-ed|-ing|-er\" for Processing a New Copy of a New Next.\n", "named-once.l")
+	c := compileDefinitionSource(t, "Define \"Next|-s|-like|-ing\" as `<DEF>KY{|Key: ~next~|}<DEF>`.\n"+
+		"Define \"Pair|-s|-wise|-ing\" as `<DEF>KY{|Key: ~pair~, Inputs: ~&[<@Value@>, <@Value@>]&~|}<DEF>`.\n"+
+		"Define \"Copy|--ies|--ied|-ing\" as a New Pair.\nCreate \"Apply|-s|-ed|-ing|-er\" for Processing a New Copy of a New Next.\n", "named-once.l")
 	rec, err := c.exportedRecord("Apply")
 	if err != nil {
 		t.Fatal(err)

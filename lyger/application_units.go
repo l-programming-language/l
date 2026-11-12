@@ -6,12 +6,6 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
-// AppArtifact identifies a prebuilt companion relative to the orchestrator.
-type AppArtifact struct {
-	ID                 string
-	RelativeExecutable string
-}
-
 // BuildUnit is one complete, canonical, single-application logeme document.
 type BuildUnit struct {
 	ID         string

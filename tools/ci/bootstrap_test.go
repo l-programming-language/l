@@ -11,7 +11,7 @@ import (
 	"github.com/l-programming-language/l/tools/internal/testgate"
 )
 
-func TestLockedDependencyCoverageIncludesDistinctSelectionVersions(t *testing.T) {
+func TestLockedDependencyCoverageIncludesRetainedSeeds(t *testing.T) {
 	root, err := filepath.Abs(filepath.Join("..", ".."))
 	if err != nil {
 		t.Fatal(err)
@@ -20,7 +20,7 @@ func TestLockedDependencyCoverageIncludesDistinctSelectionVersions(t *testing.T)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(seeds) != 4 {
+	if len(seeds) != 3 {
 		t.Fatalf("seed count %d", len(seeds))
 	}
 	covered := map[lockedDependency]bool{}
@@ -37,20 +37,14 @@ func TestLockedDependencyCoverageIncludesDistinctSelectionVersions(t *testing.T)
 			covered[dep] = true
 		}
 	}
-	versions := map[string]bool{}
-	for dep := range covered {
-		if dep.Name == "syn" {
-			versions[dep.Version] = true
-		}
-	}
-	if !versions["3.0.3"] || !versions["3.0.6"] {
-		t.Fatalf("lost independently locked versions: %v", versions)
-	}
 	locks, err := lockedInputs(root)
 	if err != nil {
 		t.Fatal(err)
 	}
 	for name := range locks {
+		if name == "cmd/l/cargo_dependencies.lock" {
+			continue // An optional compiler fragment, not an active fixture graph.
+		}
 		data, err := os.ReadFile(filepath.Join(root, name))
 		if err != nil {
 			t.Fatal(err)

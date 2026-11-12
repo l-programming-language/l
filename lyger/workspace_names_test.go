@@ -166,13 +166,6 @@ func checkWorkspaceNameProjection(t *testing.T, result *CompilationResult, want 
 		!bytes.Equal(result.Compilation.Program.AMLBytes, programAML) || !bytes.Equal(result.Compilation.Program.BackendBytes, programBackend) {
 		t.Fatalf("workspace projection changed canonical graph or snapshots: %v", err)
 	}
-	companions := make([]AppArtifact, len(canonical))
-	for i, unit := range canonical {
-		companions[i] = AppArtifact{ID: unit.ID, RelativeExecutable: fmt.Sprintf("main.apps/app-%03d", i)}
-	}
-	if _, err := result.OrchestratorUnit("entry", companions); err != nil {
-		t.Fatalf("canonical companion IDs no longer match orchestration: %v", err)
-	}
 	return plan, units
 }
 

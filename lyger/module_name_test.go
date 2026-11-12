@@ -55,7 +55,7 @@ func TestFrontendEncodedSiblingClassIdentity(t *testing.T) {
 	if len(service.Classes) != 2 || service.Classes[0].ID != "move" || service.Classes[1].ID != "__l_name_6d6f7665" || service.Classes[0] == service.Classes[1] {
 		t.Fatal("source Class identities were changed or merged")
 	}
-	bundle, err := Logiceme.NewLogicemeService(cfg.Resources).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{})
+	bundle, err := Logiceme.NewLogicemeService(cfg.Resources).Evaluate(units[0].BackendAML)
 	if err != nil {
 		t.Fatalf("distinct permitted Class identities must generate: %v", err)
 	}
@@ -77,7 +77,7 @@ func TestFrontendEncodedSiblingClassIdentity(t *testing.T) {
 	if err != nil || !bytes.Equal(again[0].BackendAML, beforeAML) {
 		t.Fatalf("repeated projection changed source identity: %v", err)
 	}
-	buildActualBundle(t, bundle, units[0].ID, false, "")
+	buildActualBundle(t, bundle, units[0].ID)
 }
 
 func TestWorkspaceEncodedServiceAliasIdentity(t *testing.T) {

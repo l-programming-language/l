@@ -281,7 +281,14 @@ func (l *lStatement) uncacheLiterals(textCache map[string][]byte) error {
 func (l *lStatement) tokenize() error {
 	p := newParser(l.stmtBytes)
 	for _, tokenBytes := range p.parseTokens() {
+		numericLiteral := authoredNumericLiteral(tokenBytes)
+		if !numericLiteral {
+			if err := validateAuthoredName(tokenBytes); err != nil {
+				return err
+			}
+		}
 		newT := newToken(tokenBytes, l.gram)
+		newT.numericLiteral = numericLiteral
 		err := newT.scan()
 		if err != nil {
 			return err
@@ -293,28 +300,14 @@ func (l *lStatement) tokenize() error {
 
 // determineType of lStatement based on first verb identified.
 func (l *lStatement) determineType() {
-	for ind, sToken := range l.tokens {
-		if ind == 0 && l.sType == "" {
-			isCond, _ := sToken.isConditional()
-			if isCond {
-				l.sType = sToken.tType
-			}
+	for index, tok := range l.tokens {
+		if l.sType == "" && (index == 0 && tok.isConditional() || tok.getPOS(false) == "verbs") {
+			l.sType = tok.tType
 		}
-		if sToken.getPOS(false) == "verbs" && l.sType == "" {
-			if l.sType == "" {
-				l.sType = sToken.tType
-			}
-		}
-		if sToken.getPOS(false) == "unknown" {
+		if tok.getPOS(false) == "unknown" {
 			l.sType = "unknown"
 			break
 		}
-		/*
-			if sToken.getPOS(false) == "unknown" || sToken.tType == "nouns.NotFound.possessive" {
-					l.sType = "unknown"
-					break
-			}
-		*/
 	}
 }
 
@@ -348,7 +341,7 @@ func (l *lStatement) loadGram() error {
 		family, _ := statementTypeMap(l.sType) //nolint:errcheck // The original grammar error stays primary; unknown is the intended fallback diagnostic prefix.
 		return fmt.Errorf("%s: %w", family, err)
 	}
-	return nil
+	return l.sGram.commitForms()
 }
 
 // newLStatement inputs rawBytes and grammar, and loads them into headBytes, stmtBytes, and tokens

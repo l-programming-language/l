@@ -13,8 +13,9 @@ import (
 
 func TestDictionaryImportsCannotCaptureCallerAddedMembers(t *testing.T) {
 	files := dictionaryIndexFilesystem(t)
+	installTestDictionary(t, files, "catalog", "Catalog", "Create \"Catalog\" as a Dictionary.\n")
 	var index dictionaryIndex
-	if err := json.Unmarshal(files["stdlib/index.json"].Data, &index); err != nil {
+	if err := json.Unmarshal(files["dictionaries.json"].Data, &index); err != nil {
 		t.Fatal(err)
 	}
 	const entry = "stdlib/eng/tools/dictionary.l"
@@ -23,19 +24,19 @@ func TestDictionaryImportsCannotCaptureCallerAddedMembers(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	files["stdlib/index.json"] = &fstest.MapFile{Data: encoded}
+	files["dictionaries.json"] = &fstest.MapFile{Data: encoded}
 	const prefix = "Create \"Tools\" as a Dictionary.\n"
 	files[entry] = &fstest.MapFile{Data: []byte(prefix + "Define Tools's \"Gift\" as `module|`.\n")}
 	cfg := Options{Resources: files}
 	main := filepath.Join(t.TempDir(), "main.l")
-	const imports = "Use IO from `io`.\nUse Tools's Gift from `tools` as \"Gift\".\n"
+	const imports = "Use Catalog from `catalog`.\nUse Tools's Gift from `tools` as \"Gift\".\n"
 	if _, err := NewLygerService(cfg).Compile([]byte(imports+"Show Gift.\n"), main); err != nil {
 		t.Fatalf("valid independent export prerequisite: %v", err)
 	}
-	files[entry] = &fstest.MapFile{Data: []byte(prefix + "Use IO's Gift from `io` as \"ImportedGift\".\nUse ImportedGift as Tools's \"Gift\".\n")}
-	source := imports + "Define IO's \"Gift\" as `caller|`.\nShow Gift.\n"
+	files[entry] = &fstest.MapFile{Data: []byte(prefix + "Use Catalog's Gift from `catalog` as \"ImportedGift\".\nUse ImportedGift as Tools's \"Gift\".\n")}
+	source := imports + "Define Catalog's \"Gift\" as `caller|`.\nShow Gift.\n"
 	result, err := NewLygerService(cfg).Compile([]byte(source), main)
-	if result != nil || !errors.Is(err, lerrors.Unsupported) || !strings.Contains(err.Error(), "cannot modify dictionary stdlib/eng/io/dictionary.l") || !strings.Contains(err.Error(), "main.l:3:1") {
+	if result != nil || !errors.Is(err, lerrors.Unsupported) || !strings.Contains(err.Error(), "cannot modify dictionary stdlib/eng/catalog/dictionary.l") || !strings.Contains(err.Error(), "main.l:3:1") {
 		t.Fatalf("caller-added namespace member must not satisfy dictionary export dependency: result-present=%t error=%v", result != nil, err)
 	}
 }

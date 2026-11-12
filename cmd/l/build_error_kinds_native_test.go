@@ -26,7 +26,7 @@ func TestBuildBoundaryErrorKinds(t *testing.T) {
 		if err == nil {
 			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 			defer cancel()
-			err = compileCargoWorkspace(ctx, nil, bundle, nil, nil, filepath.Join(t.TempDir(), "src"), nil, filepath.Join(t.TempDir(), "out"))
+			err = compileCargoWorkspace(ctx, nil, bundle, nil, filepath.Join(t.TempDir(), "src"), nil, filepath.Join(t.TempDir(), "out"))
 		}
 		var native *exec.ExitError
 		if !errors.Is(err, lerrors.Internal) || !errors.As(err, &native) || native.ExitCode() == 0 {

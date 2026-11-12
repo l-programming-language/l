@@ -93,30 +93,39 @@ func (c *Compilation) instantiateDefinition(rec *record, arguments map[string]De
 	if len(c.definitionTemporaries) == 0 {
 		defer c.definitionScope()()
 	}
-	used := make(map[string]bool)
-	node := &constructionNode{Definition: rec, Nominal: rec.ID}
-	for _, name := range descriptors {
-		modifier, err := c.builtinRecord(name)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		descriptor := c.Semantics.Descriptors[modifier]
-		if descriptor == nil {
-			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s is not a descriptor", name)
-		}
-		matched, err := c.applyDescriptor(node, descriptor, nominalIdentity{definition: rec}, make(map[*descriptorRule]bool), constructionConcrete, nil)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		if !matched {
-			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s does not describe %s", name, rec.ID)
-		}
+	node, err := c.definitionConstruction(rec, descriptors...)
+	if err != nil {
+		return DefinitionInstance{}, err
 	}
-	bound, err := c.instantiateNamedConstruction(node, arguments, used, make(map[*record]bool))
+	used := make(map[string]bool)
+	bound, err := c.instantiateNamedConstruction(node, arguments, used, make(map[*record]bool), nil)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
 	return bound, validateDefinitionArguments(rec, arguments, used)
+}
+
+// Result naming and construction use the same selected descriptor chain.
+func (c *Compilation) definitionConstruction(rec *record, descriptors ...string) (*constructionNode, error) {
+	node := &constructionNode{Definition: rec, Nominal: rec.ID}
+	for _, name := range descriptors {
+		modifier, err := c.builtinRecord(name)
+		if err != nil {
+			return nil, err
+		}
+		descriptor := c.Semantics.Descriptors[modifier]
+		if descriptor == nil {
+			return nil, lerrors.TypeMismatch.Errorf("%s is not a descriptor", name)
+		}
+		matched, err := c.applyDescriptor(node, descriptor, nominalIdentity{definition: rec}, make(map[*descriptorRule]bool), constructionConcrete, nil)
+		if err != nil {
+			return nil, err
+		}
+		if !matched {
+			return nil, lerrors.TypeMismatch.Errorf("%s does not describe %s", name, rec.ID)
+		}
+	}
+	return node, nil
 }
 
 func validateDefinitionArguments(rec *record, arguments map[string]DefinitionArgument, used map[string]bool) error {
@@ -128,7 +137,7 @@ func validateDefinitionArguments(rec *record, arguments map[string]DefinitionArg
 	return nil
 }
 
-func (c *Compilation) instantiateNamedObject(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
+func (c *Compilation) instantiateNamedObject(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
 	node, err := c.constructObject(object, make(map[*descriptorRule]bool))
 	if err != nil {
 		return DefinitionInstance{}, err
@@ -138,33 +147,36 @@ func (c *Compilation) instantiateNamedObject(object *objectGram, arguments map[s
 			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s received %d unused arguments", node.Nominal, len(values))
 		}
 		for _, parameter := range node.Arguments {
-			value, _, err := c.namedObjectArgument(parameter, arguments, used, active)
+			value, _, err := c.namedObjectArgument(parameter, arguments, used, active, dynamic)
 			if err != nil {
 				return DefinitionInstance{}, err
 			}
 			values = append(values, value)
 		}
 	}
-	return c.instantiateNamedConstruction(node, arguments, used, active, values...)
+	return c.instantiateNamedConstruction(node, arguments, used, active, dynamic, values...)
 }
 
-func (c *Compilation) namedObjectArgument(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active map[*record]bool) (DefinitionArgument, bool, error) {
-	return c.definitionOperand(object, active, nil, func(child *objectGram) (DefinitionInstance, bool, error) {
-		instance, err := c.instantiateNamedObject(child, arguments, used, active)
+func (c *Compilation) namedObjectArgument(object *objectGram, arguments map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool) (DefinitionArgument, bool, error) {
+	return c.definitionOperand(object, active, dynamic, func(child *objectGram) (DefinitionInstance, bool, error) {
+		instance, err := c.instantiateNamedObject(child, arguments, used, active, dynamic)
 		return instance, false, err
 	})
 }
 
-func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local map[string]DefinitionArgument, localUsed map[string]bool, active map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
+func (c *Compilation) instantiateNamedConstruction(node *constructionNode, local map[string]DefinitionArgument, localUsed map[string]bool, active, dynamic map[*record]bool, values ...DefinitionArgument) (DefinitionInstance, error) {
+	if err := node.validateRole(dynamic); err != nil {
+		return DefinitionInstance{}, err
+	}
 	var signatures map[*record]bool
-	if len(node.Wrappers) > 0 || len(values) > 0 {
+	if len(node.Wrappers) > 0 || len(values) > 0 || node.Name != "" {
 		signatures = make(map[*record]bool)
 	}
 	header, wrappers, selected, err := c.constructionHeader(node, node.Source != nil && node.Source.name != nil, signatures)
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	return c.instantiateConstruction(node, header, wrappers, selected, values, local, localUsed, active, nil)
+	return c.instantiateConstruction(node, header, wrappers, selected, values, local, localUsed, active, dynamic)
 }
 
 func (c *Compilation) instantiateConstruction(node *constructionNode, header definitionHeader, wrappers []*DefinitionTemplate, selected int, values []DefinitionArgument, local map[string]DefinitionArgument, used map[string]bool, active, dynamic map[*record]bool) (DefinitionInstance, error) {
@@ -187,6 +199,8 @@ func (c *Compilation) instantiateConstruction(node *constructionNode, header def
 	var instance DefinitionInstance
 	if selected == len(wrappers) {
 		instance, err = c.instantiateSourceCall(node.Definition, arguments, local, used, active, dynamic)
+	} else if wrappers[selected] == nil {
+		instance, err = c.instantiateSourceDescriptor(node.Wrappers[selected], DefinitionInstance{}, arguments, node.Name, local, used, active, dynamic)
 	} else {
 		bindings, bindErr := bindDefinitionArguments(header.template, arguments, local, used)
 		if bindErr != nil {
@@ -197,17 +211,13 @@ func (c *Compilation) instantiateConstruction(node *constructionNode, header def
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	if node.Name != "" && (header.implicitName == nil || header.implicitName.Type == "Label" || header.template.hasDeclarationName()) {
+	if node.Name != "" && (selected == len(wrappers) || wrappers[selected] != nil) && (header.implicitName == nil || header.implicitName.Type == "Label" || header.template.hasDeclarationName()) {
 		result := definitionReferenceArgument(node.Name)
 		if node.Source != nil {
 			result.source = c.operandSource(node.Source.noun)
 		}
 		if header.implicitName == nil {
-			var descriptors []string
-			if instance.result == nil {
-				descriptors = []string{"Storage.Produced"}
-			}
-			instance, err = c.instantiateDescribedBuiltin("Storage.Binding", descriptors, map[string]DefinitionArgument{"Name": result, "Value": {Kind: definitionArgDefinition.String(), Definition: &instance}})
+			instance, err = bindDefinitionResult(result, DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &instance})
 			if err != nil {
 				return DefinitionInstance{}, err
 			}
@@ -228,7 +238,7 @@ func (c *Compilation) instantiateConstruction(node *constructionNode, header def
 	}
 	for index := selected - 1; index >= 0; index-- {
 		if wrappers[index] == nil {
-			instance, err = c.instantiateSourceDescriptor(node.Wrappers[index], instance, values, node.Name, active, dynamic)
+			instance, err = c.instantiateSourceDescriptor(node.Wrappers[index], instance, values, node.Name, local, used, active, dynamic)
 		} else {
 			instance, err = c.instantiateDescriptorWrapper(node.Wrappers[index], wrappers[index], instance, local, used)
 		}
@@ -246,19 +256,21 @@ func (c *Compilation) constructionTemplates(node *constructionNode) ([]*Definiti
 	wrappers := make([]*DefinitionTemplate, len(node.Wrappers))
 	selected := -1
 	for i, rule := range node.Wrappers {
+		wraps := false
 		if rule.Template == nil {
-			continue
+			_, wraps, err = c.sourceDescriptorObject(rule)
+		} else {
+			wrappers[i], err = ParseDefinitionTemplate(rule.Template.rawBytes, rule.Source.source.Span)
+			if err == nil {
+				var base string
+				base, err = c.descriptorBaseSlot(rule, wrappers[i])
+				wraps = base != ""
+			}
 		}
-		wrappers[i], err = ParseDefinitionTemplate(rule.Template.rawBytes, rule.Source.source.Span)
 		if err != nil {
 			return nil, -1, err
 		}
-		wrapper := wrappers[i]
-		base, err := c.descriptorBaseSlot(rule, wrapper)
-		if err != nil {
-			return nil, -1, err
-		}
-		if base == "" {
+		if !wraps {
 			if selected >= 0 {
 				return nil, -1, lerrors.InvalidInput.Errorf("constructor %s has competing descriptor definitions", node.Nominal)
 			}
@@ -377,6 +389,9 @@ func (c *Compilation) callableTemplate(rec *record, active map[*record]bool) (*D
 	if selected >= 0 {
 		template = wrappers[selected]
 	}
+	if template == nil {
+		return nil, nil
+	}
 	bound := *template
 	bound.Slots = nil
 	supplied := 0
@@ -391,7 +406,7 @@ func (c *Compilation) callableTemplate(rec *record, active map[*record]bool) (*D
 }
 
 // Value-taking metadata receives a named result, never a nested executable
-// composition. The selected Binding definition owns the operation and storage.
+// composition. Compiler AML binding preserves its once-only evaluation.
 func (c *Compilation) atomArgument(argument DefinitionArgument) (DefinitionArgument, error) {
 	if argument.atoms != nil {
 		atoms := append([]DefinitionArgument(nil), (*argument.atoms)...)
@@ -416,7 +431,7 @@ func (c *Compilation) atomArgument(argument DefinitionArgument) (DefinitionArgum
 	c.definitionValues[argument.Definition] = true
 	defer delete(c.definitionValues, argument.Definition)
 	name := c.definitionLabel()
-	bound, err := c.instantiateDescribedBuiltin("Storage.Binding", []string{"Storage.Produced"}, map[string]DefinitionArgument{"Name": definitionReferenceArgument(name), "Value": argument})
+	bound, err := bindDefinitionResult(definitionReferenceArgument(name), argument)
 	if err != nil {
 		return DefinitionArgument{}, err
 	}
@@ -436,7 +451,7 @@ func (c *Compilation) instantiateTemplate(template *DefinitionTemplate, argument
 		bindings[name] = argument
 	}
 	for _, slot := range template.Slots {
-		if template.metadataSlots[slot.Name] && (slot.Type == "" || slot.Type == "Atoms") {
+		if template.metadataSlots[slot.Name] && (slot.Type == "" || slot.Type == "Atoms" || slot.Type == "Callable") {
 			argument, err := c.atomArgument(bindings[slot.Name])
 			if err != nil {
 				return DefinitionInstance{}, err
@@ -444,5 +459,14 @@ func (c *Compilation) instantiateTemplate(template *DefinitionTemplate, argument
 			bindings[slot.Name] = argument
 		}
 	}
-	return template.Instantiate(bindings)
+	instance, err := template.Instantiate(bindings)
+	if err == nil && instance.result == nil && template.hasDeclarationName() && len(template.Slots) > 0 {
+		// A selected declaration's first Key slot names its result even when
+		// forwarded through a named source action. Keep the bound identity;
+		// never recover a name from rendered AML.
+		if name := bindings[template.Slots[0].Name]; name.reference != "" {
+			instance.result = &name
+		}
+	}
+	return instance, err
 }

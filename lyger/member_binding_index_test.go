@@ -28,12 +28,12 @@ func TestMemberBindingIndexFollowsPublicationAndLifetime(t *testing.T) {
 		}
 		publication.commit(&Compilation{Scope: plan, Semantics: semantics}, &lStatement{})
 	}
-	first := indexedTestWord(t, "Tools.Write", `"Write|-s"`, false)
+	first := indexedTestWord(t, "Tools.Write", `"Write|-s|--ten|--ing|-r"`, false)
 	publish(first)
 	if binding, state, err := resolver.lookupMember(alias, []byte("WRITES’")); err != nil || state != lookupFound || binding.Record != first || !binding.Possessive {
 		t.Fatalf("published alias member = %v, %s, %v", binding, state, err)
 	}
-	replacement := indexedTestWord(t, "Tools.Write", `"Write|--ten"`, false)
+	replacement := indexedTestWord(t, "Tools.Write", `"Write|-|--ten|--ing|-r"`, false)
 	publish(replacement)
 	if binding, state, err := resolver.lookupMember(owner, []byte("Writes")); err != nil || state != lookupPending || binding != nil {
 		t.Fatalf("retired member morphology = %v, %s, %v", binding, state, err)
@@ -53,9 +53,9 @@ func TestMemberBindingIndexFollowsPublicationAndLifetime(t *testing.T) {
 
 func TestMemberBindingIndexRetainsNamespacesAndAmbiguity(t *testing.T) {
 	left, right := qualifiedDictionaryRecord("Left"), qualifiedDictionaryRecord("Right")
-	left.members["a"] = indexedTestWord(t, "Left.Write", `"Write|-s"`, false)
-	left.members["z"] = indexedTestWord(t, "Left.Other", `"Write|-s"`, false)
-	right.members["a"] = indexedTestWord(t, "Right.Write", `"Write|-s"`, false)
+	left.members["a"] = indexedTestWord(t, "Left.Write", `"Write|-s|--ten|--ing|-r"`, false)
+	left.members["z"] = indexedTestWord(t, "Left.Other", `"Write|-s|--ten|--ing|-r"`, false)
+	right.members["a"] = indexedTestWord(t, "Right.Write", `"Write|-s|--ten|--ing|-r"`, false)
 	plan := &scopePlan{Root: &lexicalScope{records: map[string]*record{}}}
 	release := plan.indexBindings()
 	defer release()

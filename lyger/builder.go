@@ -123,6 +123,14 @@ func (b *builder) expand(source *PreparedSource, unit *SourceUnit, parent source
 			b.appendStatement(statement)
 			continue
 		}
+		// Imports can disappear during expansion without reaching tokenization.
+		// Validate their authored names before opening a dependency or projecting
+		// an alias; literal file paths retain their original dotted bytes.
+		for _, word := range words {
+			if err := validateAuthoredName(word); err != nil {
+				return statement.Span.wrapError(err)
+			}
+		}
 		name := imported.filePath
 		if value, ok := source.TextCache["`"+name+"`"]; ok {
 			name = unquoteImportWord(value)

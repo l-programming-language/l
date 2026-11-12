@@ -164,11 +164,8 @@
         "producer": {
           "type": "string"
         },
-        "runtime": {
-          "type": "string"
-        },
         "schema_version": {
-          "const": "1.1"
+          "const": "2.0"
         },
         "target": {
           "type": "string"
@@ -196,7 +193,6 @@
         "target",
         "compiler",
         "panic_policy",
-        "runtime",
         "allocator",
         "configuration",
         "inputs",
@@ -233,7 +229,7 @@
       "type": "object"
     }
   },
-  "$id": "l-contracts/1.1/native_environment",
+  "$id": "l-contracts/2.0/native_environment",
   "$ref": "#/$defs/NativeEnvironment",
   "$schema": "https://json-schema.org/draft/2020-12/schema"
 }

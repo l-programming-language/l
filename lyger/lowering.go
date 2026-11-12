@@ -238,24 +238,16 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 		instance.definition = rec
 		return instance, err
 	}
-	if object != nil {
-		if used != nil {
-			return c.instantiateNamedObject(object, named, used, active, args...)
-		}
-		instance, forwarded, err := c.instantiateStaticObject(object, args, active, dynamic)
-		if err == nil && len(args) > 0 && !forwarded {
-			err = lerrors.InvalidInput.Errorf("%s received %d unused arguments", rec.ID, len(args))
-		}
-		instance.Symbol, instance.definition = rec.ID, rec
-		return instance, err
-	}
 	if used != nil {
+		if object != nil {
+			return c.instantiateNamedObject(object, named, used, active, dynamic, args...)
+		}
 		if len(args) > 0 {
 			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("constructor %s requires a declared parameter signature", rec.ID)
 		}
 		return c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
 			instance, _, err := c.instantiateSourceAction(action, active, dynamic, func(object *objectGram) (DefinitionArgument, bool, error) {
-				return c.namedObjectArgument(object, named, used, active)
+				return c.namedObjectArgument(object, named, used, active, dynamic)
 			})
 			return instance, err
 		})
@@ -267,7 +259,7 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 	}
 	if len(parameters) > 0 {
 		if len(args) != len(parameters) {
-			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("source action requires %d arguments, got %d", len(parameters), len(args))
+			return DefinitionInstance{}, lerrors.InvalidInput.Errorf("source definition requires %d arguments, got %d", len(parameters), len(args))
 		}
 		args, _, before, err = c.bindWrapperOperands(definitionHeader{parameters: parameters}, args, nil)
 		if err != nil {
@@ -277,21 +269,28 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 			args[index].formal = &parameters[index]
 		}
 	}
+	var bound DefinitionInstance
 	forwarded := false
-	resultSymbol := ""
-	var resultDefinition *record
-	bound, err := c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
-		instance, used, err := c.instantiateStaticAction(action, args, active, dynamic)
-		if err != nil {
-			return DefinitionInstance{}, err
-		}
-		forwarded = forwarded || used
-		if resultDefinition != nil && (resultDefinition != instance.definition || resultSymbol != instance.Symbol) {
-			return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("action definition %s returns incompatible nominal types", rec.ID)
-		}
-		resultSymbol, resultDefinition = instance.Symbol, instance.definition
-		return instance, nil
-	})
+	if object != nil {
+		bound, forwarded, err = c.instantiateStaticObject(object, args, active, dynamic)
+		bound.Symbol, bound.definition = rec.ID, rec
+	} else {
+		resultSymbol := ""
+		var resultDefinition *record
+		bound, err = c.composeSourceActions(rec, func(action *clauseGram) (DefinitionInstance, error) {
+			instance, used, err := c.instantiateStaticAction(action, args, active, dynamic)
+			if err != nil {
+				return DefinitionInstance{}, err
+			}
+			forwarded = forwarded || used
+			if resultDefinition != nil && (resultDefinition != instance.definition || resultSymbol != instance.Symbol) {
+				return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("action definition %s returns incompatible nominal types", rec.ID)
+			}
+			resultSymbol, resultDefinition = instance.Symbol, instance.definition
+			return instance, nil
+		})
+		bound.Symbol, bound.definition = resultSymbol, resultDefinition
+	}
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
@@ -299,7 +298,6 @@ func (c *Compilation) instantiateSourceCall(rec *record, args []DefinitionArgume
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("%s received %d unused arguments", rec.ID, len(args))
 	}
 	bound.before = append(before, bound.before...)
-	bound.Symbol, bound.definition = resultSymbol, resultDefinition
 	return bound, nil
 }
 
@@ -361,6 +359,17 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 	if action.verb == nil || action.verb.binding == nil {
 		return DefinitionInstance{}, false, lerrors.UnresolvedReference.Errorf("source operation has no definition")
 	}
+	// Directives require the selected binding's invocation family. Nominal
+	// construction reaches instantiateSourceCall through its own role check.
+	if binding := action.verb.binding.Record; !binding.hasInvocationFamily() {
+		function, err := c.nativeFunctionReference(binding)
+		if err != nil {
+			return DefinitionInstance{}, false, err
+		}
+		if function != nil {
+			return DefinitionInstance{}, false, lerrors.Syntax.Errorf("Function invocation requires this binding's complete verb family")
+		}
+	}
 	var arguments []DefinitionArgument
 	var ledger []DefinitionBinding
 	used := false
@@ -376,7 +385,7 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 		arguments = append(arguments, argument)
 	}
 	for _, value := range action.values {
-		argument, _, err := c.staticObjectArgument(&objectGram{noun: value.noun}, nil, active, dynamic)
+		argument, _, err := c.staticObjectArgument(&objectGram{nominalGram: nominalGram{noun: value.noun}}, nil, active, dynamic)
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}
@@ -449,6 +458,23 @@ func (c *Compilation) definitionOperand(object *objectGram, active, dynamic map[
 			}
 			if rec.Value != nil && rec.Value.Type == storageLexeme {
 				child, used, err := compose(object)
+				if err == nil && child.result != nil && child.result.callable != nil {
+					selected, selectionErr := c.Semantics.selectedDefinition(rec)
+					if selectionErr != nil {
+						return DefinitionArgument{}, false, selectionErr
+					}
+					reference, referenceErr := c.transparentReference(object)
+					if referenceErr != nil {
+						return DefinitionArgument{}, false, referenceErr
+					}
+					if selected.object != nil || reference != nil {
+						// Reading an authored value definition selects that label's
+						// family, not the permission of the value it forwards.
+						value, proof := *child.result, *child.result.callable
+						proof.binding = object.noun.binding.Record
+						value.callable, child.result = &proof, &value
+					}
+				}
 				return DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &child}, used, err
 			}
 		}
@@ -514,6 +540,9 @@ func (c *Compilation) bindFormalMember(object *objectGram, arguments []Definitio
 }
 
 func (c *Compilation) instantiateStaticConstruction(node *constructionNode, inherited []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionInstance, bool, error) {
+	if err := node.validateRole(dynamic); err != nil {
+		return DefinitionInstance{}, false, err
+	}
 	inputs := c.processInputArguments(node.Source)
 	header, wrappers, selected, err := c.constructionHeader(node, node.Source != nil && node.Source.name != nil, make(map[*record]bool))
 	if err != nil {
@@ -706,7 +735,7 @@ func (c *Compilation) lowerAppBody(app *App) ([]DefinitionInstance, error) {
 	}
 	var body []DefinitionInstance
 	for _, stmt := range c.Statements {
-		if stmt.passiveLifecycle() {
+		if stmt.passiveLifecycle() || stmt.passivePut() {
 			continue
 		}
 		target, err := c.statementApp(stmt)
@@ -752,9 +781,7 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	if template == nil || !template.IsFunction() {
-		return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s does not define a function structure", node.Nominal)
-	}
+	callable := template != nil && template.IsFunction()
 	wrappers, selected, err := c.constructionTemplates(node)
 	if err != nil {
 		return DefinitionInstance{}, err
@@ -763,6 +790,9 @@ func (c *Compilation) instantiateFunctionConstructor(node *constructionNode, bod
 		template = wrappers[selected]
 	} else {
 		selected = len(wrappers)
+	}
+	if !callable || template == nil || !template.IsFunction() {
+		return DefinitionInstance{}, lerrors.TypeMismatch.Errorf("%s does not define a function structure", node.Nominal)
 	}
 	if node.Name == "" || !node.InputsDefined || !node.OutputsDefined {
 		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("function constructor requires name and explicit signature")

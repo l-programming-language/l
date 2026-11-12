@@ -47,19 +47,16 @@ func (sb *subjectGram) getDeclareLabel() (string, error) {
 	return "", lerrors.Syntax.Errorf("%s", "subject noun value not declarative: "+string(sb.noun.rawBytes))
 }
 
-// isLexical determines whether the subject declaration or definition type is both lexical and/or determinate
-func (sb *subjectGram) isLexical() (bool, bool) {
-	if sb.cType == "type" || sb.cType == "list" || sb.cType == "dict" {
-		return false, true
-	} else if sb.cType == "definitional" {
-		return true, true
-	} else if sb.cType == "declarative" || sb.cType == "directive" || sb.cType == "utilization" {
-		if sb.phrase != nil {
-			return sb.phrase.isLexical()
-		}
-		return true, false
+// isLexical determines whether the declaration supplies a lexical definition.
+func (sb *subjectGram) isLexical() bool {
+	switch sb.cType {
+	case "definitional":
+		return true
+	case "declarative", "directive", "utilization":
+		return sb.phrase == nil || sb.phrase.cType == "definitional" || sb.phrase.sType == "phrase.directive"
+	default:
+		return false
 	}
-	return false, false
 }
 
 // extractedDeclaration keeps the defining source token with its semantic record.
@@ -79,8 +76,7 @@ func (sb *subjectGram) getDeclaration() (extractedDeclaration, error) {
 	if sb == nil || sb.noun == nil || sb.phrase == nil {
 		return extractedDeclaration{}, lerrors.Syntax.Errorf("subject declaration requires a noun and value phrase")
 	}
-	lexical, _ := sb.isLexical()
-	recEntry, valType, err := sb.phrase.getValue(lexical)
+	recEntry, valType, err := sb.phrase.getValue(sb.isLexical())
 	if err != nil {
 		return extractedDeclaration{}, err
 	}
@@ -90,6 +86,46 @@ func (sb *subjectGram) getDeclaration() (extractedDeclaration, error) {
 // referenceID builds an ID string for the object
 func (sb *objectGram) referenceID() string {
 	return nominalRecordID(sb.article, sb.noun, sb.adjectives)
+}
+
+// Construction uses nominal forms; a Function root also names its callable type.
+// Inspect the selected token, leaving its operation family and aliases intact.
+func (sb *objectGram) constructionRole() error {
+	if sb == nil || sb.noun == nil || sb.noun.lexeme() == nil || sb.noun.getPOS(true) == "noun" || sb.noun.getPOS(true) == "type" || sb.noun.tType == "" && sb.noun.lexeme().POS == "noun" {
+		return nil
+	}
+	binding := sb.noun.binding
+	if binding != nil && binding.Form == "root" && (binding.Record.isFunction() || binding.Record.function != nil) {
+		return nil
+	}
+	for _, modifier := range sb.adjectives {
+		if modifier.hasRole("adjective", "initialization") || modifier.hasRole("adjective", "abstraction") {
+			return lerrors.Syntax.Errorf("construction requires a noun or actor, got %q", sb.noun.rawBytes)
+		}
+	}
+	return nil
+}
+
+// Declaration values are checked even when unused. Directive bodies retain
+// their deferred source-action semantics and are checked when instantiated.
+func (c *Compilation) constructionValueRoles(sb *objectGram) error {
+	if err := sb.constructionRole(); err != nil {
+		node, err := c.constructObjectMode(sb, make(map[*descriptorRule]bool), constructionHeaderOnly)
+		if err != nil {
+			return err
+		}
+		if err := node.validateRole(nil); err != nil {
+			return err
+		}
+	}
+	if sb != nil {
+		for _, operand := range constructorOperands(sb) {
+			if err := c.constructionValueRoles(operand); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 // getValue returns a record entry and valueType for the assignable value of the objectGram
@@ -116,6 +152,11 @@ func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
 		value.bindFrom(sb.noun.mem)
 		switch value.Type {
 		case storageLexeme:
+			// An actor constructs a nominal value; its operation keeps its own
+			// verb family on the selected source token and canonical record.
+			if sb.noun.getPOS(true) == "noun" {
+				value.Lexeme.POS = "noun"
+			}
 			value.Lexeme.Adjectives = append(value.Lexeme.Adjectives, valueModifiers(sb.adjectives)...)
 			return value, value.Lexeme.getValueType(), nil
 		case storagePrimitive, storageApplicative, storageIterative:
@@ -127,6 +168,9 @@ func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
 			if err != nil {
 				return nil, "", err
 			}
+			// A framed definition in a value position declares a nominal word.
+			// Active action declarations select their verb role during registration.
+			lexEnt.Lexeme.POS = "noun"
 			return lexEnt, "lexeme.generic", nil
 		}
 		return sb.noun.mem, "primitive.text", nil
@@ -173,18 +217,6 @@ func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
 		return sb.noun.mem, "iterative.dict", nil
 	}
 	return nil, "", lerrors.Unsupported.Errorf("cannot extract value from object %q", sb.cType)
-}
-
-// isLexical determines whether the phraseGram declaration or definition type is both lexical and/or determinate
-func (sb *phraseGram) isLexical() (bool, bool) {
-	if sb.cType == "definitional" {
-		return true, true
-	}
-	if sb.sType == "phrase.directive" {
-		return true, true
-	}
-	// TODO LATER MAY NEED TO SUB GRAMMAR LEXICALITY CHECK
-	return false, false
 }
 
 // getValue returns a record entry and valueType for the assignable value of the phraseGram
@@ -274,10 +306,21 @@ func (sb *subjectGram) finishDeclaration(rec *record) error {
 	}
 	switch rec.Value.Type {
 	case storageLexeme:
-		if err := rec.Value.Lexeme.reLabel(label); err != nil {
+		var err error
+		if rec.Value.Runtime != nil {
+			// Native member projections are data bindings, not declarations of
+			// the configured member's lexical family.
+			err = rec.Value.Lexeme.reLabel(label)
+		} else {
+			err = rec.Value.Lexeme.declareFamily(label)
+		}
+		if err != nil {
 			return err
 		}
 	case storagePrimitive, storageApplicative, storageIterative:
+		if err := rec.declareInvocation(label); err != nil {
+			return err
+		}
 	default:
 		return lerrors.Internal.Errorf("invalid type to update: %s", rec.Value.Type)
 	}

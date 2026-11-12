@@ -2,7 +2,7 @@
 
 This independent npm package builds the canonical repository documentation with Astro and Starlight. The production origin is **https://ldocs.org/**; local navigation stays on localhost. The package's `private: true` flag prevents npm publication.
 
-[Documentation checks](../.github/workflows/docs-check.yml) run on pull requests. Publication requires an authorized manual release from main. Initial docs and binaries share one immutable release; docs corrections use separate immutable snapshots. See [deployment](DEPLOYMENT.md) for activation, release and recovery procedures.
+[Documentation checks](../.github/workflows/docs-check.yml) run on pull requests. Publication is disabled pending separate reviewed activation. See [deployment](DEPLOYMENT.md) for the retained release and recovery procedures.
 
 ## Setup and local use
 
@@ -10,7 +10,7 @@ Follow [local development](../docs/contributing/local-development.md) for the pi
 
 ## Website verification
 
-The [verification recipe](../docs/contributing/local-development.md#check-the-built-site) runs content/reference checks, unit tests, one static build, and browser checks. Reports and screenshots are ignored under `reports/`; [recorded results](reports/validation.md) apply to their documented revision.
+The [verification recipe](../docs/contributing/local-development.md#check-the-built-site) runs content/reference checks, unit tests, one static build, and browser checks. Reports and screenshots are ignored under `reports/` and apply only to the checkout and commands that produced them.
 
 ## Content and references
 

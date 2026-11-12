@@ -1,7 +1,6 @@
 package contracts
 
 import (
-	"bytes"
 	"reflect"
 	"testing"
 )
@@ -142,7 +141,7 @@ func TestUnsupportedOrIncompleteRecordsRequireFreshAnalysis(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		old := bytes.Replace(data, []byte(`"schema_version": "1.1"`), []byte(`"schema_version": "1.0"`), 1)
+		old := replaceDocumentField(t, data, "schema_version", "1.0")
 		if _, err := DecodeDocument(old); err == nil {
 			t.Fatal("unsupported predecessor metadata accepted")
 		}

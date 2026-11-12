@@ -10,7 +10,7 @@ import (
 	"unicode/utf8"
 )
 
-func (p *Program) linkBundleSupport(templates map[string][]byte, includeRuntime bool, workspace *WorkspaceRuntime) error {
+func (p *Program) linkBundleSupport(templates map[string][]byte) error {
 	apps := p.Compiler.CompiledApps
 	if len(apps) == 0 || len(apps) != len(p.Scanner.Program.Books) || len(apps) != len(p.Executable.MapArrays) || len(apps) != len(p.Executable.ByteArrays) {
 		return lerrors.Internal.Errorf("Rust assembly requires one complete bundle per application book")
@@ -47,25 +47,11 @@ func (p *Program) linkBundleSupport(templates map[string][]byte, includeRuntime 
 		libraryOnly := libraryOnlyTargets(app.sourceTargets)
 		mainPath := path.Join(mainDirectory, "main.rs")
 		binaryName := app.Name
-		literalEntry := true
 		for _, target := range app.sourceTargets {
 			if target.Primary || libraryOnly {
 				mainPath = target.Path
 				mainDirectory = path.Dir(mainPath)
 				binaryName = target.Name
-				literalEntry = target.Literal
-			}
-		}
-		if len(app.sourceTargets) == 0 {
-			for ai := range p.Compiler.Apps {
-				if ai == i {
-					_ = p.Compiler.Apps[ai].eachObject(func(object *Object) error { //nolint:errcheck // The visitor only records entry metadata and always returns nil.
-						if object.header.primary {
-							literalEntry = object.header.literal
-						}
-						return nil
-					})
-				}
 			}
 		}
 		mainIndex := -1
@@ -81,22 +67,6 @@ func (p *Program) linkBundleSupport(templates map[string][]byte, includeRuntime 
 		dependencies, err := appDependencies(app.Outline.Meta)
 		if err != nil {
 			return fmt.Errorf("Rust application %q dependencies: %w", app.Name, err)
-		}
-		if includeRuntime && i == 0 {
-			dependencies, err = runtimeDependencies(dependencies)
-			if err != nil {
-				return fmt.Errorf("Rust application %q runtime dependencies: %w", app.Name, err)
-			}
-			if workspace != nil {
-				for _, row := range dependencies {
-					name, _, _ := strings.Cut(row, "=")
-					if strings.ReplaceAll(strings.TrimSpace(name), "-", "_") == workspace.Package {
-						return lerrors.InvalidInput.Errorf("Rust workspace runtime dependency %q collides with supplied entry dependency", workspace.Package)
-					}
-				}
-				quoted, _ := json.Marshal(workspace.RelativeDirectory) //nolint:errcheck // JSON marshaling a string cannot fail.
-				dependencies = append(dependencies, fmt.Sprintf("%s = { path = %s }", workspace.Package, quoted))
-			}
 		}
 		settings, err := bookSettings(p.Scanner.Program.Tags, p.Scanner.Program.Books[i])
 		if err != nil {
@@ -131,14 +101,6 @@ func (p *Program) linkBundleSupport(templates map[string][]byte, includeRuntime 
 				{"/stop.sh", bytes.Clone(templates["operate/stop.lu"])},
 			}...)
 		}
-		if includeRuntime && i == 0 && workspace == nil {
-			for _, name := range []string{"runtime", "runtime/host", "process_unix", "process_other"} {
-				files = append(files, struct {
-					name    string
-					content []byte
-				}{path.Join(mainDirectory, name+".rs"), bytes.Clone(runtimeSupportSource(templates, name))})
-			}
-		}
 		for _, file := range files {
 			for _, existing := range seen {
 				if bundlePathsCollide(file.name, existing) {
@@ -146,31 +108,6 @@ func (p *Program) linkBundleSupport(templates map[string][]byte, includeRuntime 
 				}
 			}
 			seen = append(seen, file.name)
-		}
-		if includeRuntime && i == 0 {
-			// The AML supplies l_main, not another entry point. The fixed
-			// wrapper owns configuration startup and Tokio initialization.
-			if literalEntry {
-				main := append(bytes.Clone(templates["runtime/main.lu"]), '\n')
-				p.Executable.ByteArrays[i][mainIndex] = append(main, p.Executable.ByteArrays[i][mainIndex]...)
-			} else {
-				wrapper := templates["runtime/main.lu"]
-				boundary := bytes.Index(wrapper, []byte(runtimeHeaderBoundary))
-				if boundary < 0 {
-					return lerrors.InvalidConfiguration.Errorf("runtime entry template lacks its generated-body contract boundary")
-				}
-				headerSize, found := app.compiledHeaderSize(mainPath)
-				source := p.Executable.ByteArrays[i][mainIndex]
-				if !found || headerSize < 0 || headerSize > len(source) {
-					return lerrors.Internal.Errorf("missing compiled A boundary for %s", mainPath)
-				}
-				var assembled bytes.Buffer
-				assembled.Write(source[:headerSize])
-				assembled.Write(wrapper[boundary:])
-				assembled.WriteByte('\n')
-				assembled.Write(source[headerSize:])
-				p.Executable.ByteArrays[i][mainIndex] = assembled.Bytes()
-			}
 		}
 		for _, file := range files {
 			p.Executable.MapArrays[i] = append(p.Executable.MapArrays[i], file.name)
@@ -239,44 +176,6 @@ func appDependencies(meta MetaDict) ([]string, error) {
 	return rows, nil
 }
 
-// Selecting lifecycle support selects its pinned dependency contract. This is
-// independent of native user expressions and does not resolve a new lock graph.
-func runtimeDependencies(supplied []string) ([]string, error) {
-	needed := []string{
-		`tokio = { version = "=1.53.1", features = ["rt-multi-thread", "macros", "process", "io-util", "io-std", "signal", "sync", "time"] }`,
-		`nix = { version = "=0.31.3", features = ["signal", "process"] }`,
-	}
-	result := append([]string(nil), supplied...)
-	for _, dependency := range needed {
-		name, _, _ := strings.Cut(dependency, "=")
-		name = strings.TrimSpace(name)
-		found := false
-		for _, row := range supplied {
-			key, _, _ := strings.Cut(row, "=")
-			if strings.TrimSpace(key) == name {
-				if row != dependency {
-					return nil, lerrors.InvalidInput.Errorf("selected runtime requires dependency %s; conflicting supplied dependency %q", dependency, row)
-				}
-				found = true
-			}
-		}
-		if !found {
-			result = append(result, dependency)
-		}
-	}
-	return result, nil
-}
-
 func shellQuoted(value string) string {
 	return "'" + strings.ReplaceAll(value, "'", "'\"'\"'") + "'"
-}
-
-func runtimeSupportSource(templates map[string][]byte, name string) []byte {
-	if name == "runtime" {
-		return templates["runtime/runtime.rs"]
-	}
-	if name == "runtime/host" {
-		return templates["runtime/host.lu"]
-	}
-	return templates["runtime/"+name+".lu"]
 }

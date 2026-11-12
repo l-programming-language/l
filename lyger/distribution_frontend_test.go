@@ -18,8 +18,8 @@ import (
 	Logiceme "github.com/l-programming-language/l/logiceme"
 )
 
-const distributionIOImport = "Use IO's Print from `io` as \"Print\".\n"
-const distributionApp = "\"message\" is `Hello World!`.\nCreate \"Hello\" as a New Basic App.\nThe App Prints message.\nExecute Hello.\nShow Hello's Output.\n"
+const distributionCorePrefix = "\n"
+const distributionApp = "Use Print as \"SharedPrint|-s|-ed|-ing|-er\".\n\"message\" is `Hello World!`.\nCreate \"Hello\" as a New Basic App.\nThe App Prints message.\nExecute Hello.\nShow Hello's Output.\n"
 
 // These cases deliberately request normal resources. No adjacent bootstrap or
 // replacement definition is supplied when the default distribution is absent.
@@ -71,10 +71,10 @@ func distributionNegative(t *testing.T, source, detail string, kind lerrors.Kind
 
 func TestDistributionBuiltins(t *testing.T) {
 	t.Run("BI01-implicit-foundation", func(t *testing.T) {
-		const source = "Use Process as \"Steps\".\nUse Function as \"Routine\".\nUse Function's Return as \"ReturnValue\".\nUse Objective as \"Targeted\".\nUse Main as \"Entry\".\nUse Basic as \"Plain\".\nUse Start as \"Kick\".\nUse Execute as \"Operate\".\nCreate \"Worker\" as a New Plain App.\n"
+		const source = "Use Process as \"Sequence|-s|---tial|--ing\".\nUse Function as \"Routine|-s|-|--ing\".\nUse Function's Return as \"ReturnValue|-s|-d|--ing|-r\".\nUse Objective as \"Targeted\".\nUse Main as \"Entry\".\nUse Basic as \"Plain\".\nUse Start as \"Kick|-s|-ed|-ing|-er\".\nUse Execute as \"Operate|-s|-d|--ing|--or\".\nCreate \"Worker\" as a New Plain App.\n"
 		r := requireDistributionFrontend(t, source, nil)
 		c := r.Compilation
-		for alias, id := range map[string]string{"Steps": "Process", "Routine": "Function", "ReturnValue": "Function.Return", "Targeted": "Objective", "Entry": "Main", "Plain": "Basic", "Kick": "Start", "Operate": "Execute"} {
+		for alias, id := range map[string]string{"Sequence": "Process", "Routine": "Function", "ReturnValue": "Function.Return", "Targeted": "Objective", "Entry": "Main", "Plain": "Basic", "Kick": "Start", "Operate": "Execute"} {
 			canonical := distributionCanonical(t, c, c.Memory[alias])
 			if canonical.ID != id || c.Semantics.Declarations[canonical] == nil {
 				t.Errorf("%s did not bind source-defined %s: %+v", alias, id, canonical)
@@ -97,7 +97,7 @@ func TestDistributionBuiltins(t *testing.T) {
 		}{{"Start", []string{"build", "run"}}, {"Execute", []string{"build", "run", "await"}}} {
 			t.Run(tc.verb, func(t *testing.T) {
 				r := requireDistributionFrontend(t, "Create \"Worker\" as a New Basic App.\n"+tc.verb+" Worker.\n", nil)
-				phase1Lifecycle(t, r, tc.want)
+				requireLifecycleInstructions(t, r, tc.want)
 				calls := r.Compilation.Semantics.Instructions
 				if len(calls) != 1 || calls[0].Kind != instructionCall || calls[0].Definition == nil || !calls[0].Synchronous {
 					t.Fatalf("%s lost its source action definition/ordered expansion: %+v", tc.verb, calls)
@@ -106,17 +106,17 @@ func TestDistributionBuiltins(t *testing.T) {
 		}
 	})
 	t.Run("BI03-no-primitive-spelling-dispatch", func(t *testing.T) {
-		g := phase1Grammar(t)
+		g := configuredGrammar(t)
 		for _, word := range []string{"start", "execute", "print"} {
 			if lex, _, err := g.lex.lookup([]byte(word)); !errors.Is(err, lerrors.UnresolvedReference) || (lex != nil && lex.Root != "") {
 				t.Errorf("source word %s is in primitive vocabulary: %+v, %v", word, lex, err)
 			}
 		}
-		r := requireDistributionFrontend(t, "Create \"Launch|-es|-ed|-ing\" for Building any App and then Running it.\nCreate \"Collect|-s|-ed|-ing\" for Launching any App and then Awaiting it.\nUse Collect as \"Gather\".\nCreate \"Worker\" as a New Basic App.\nGather Worker.\n", nil)
-		phase1Lifecycle(t, r, []string{"build", "run", "await"})
+		r := requireDistributionFrontend(t, "Create \"Launch|-es|-ed|-ing|-er\" for Building any App and then Running it.\nCreate \"Collect|-s|-ed|-ing|-or\" for Launching any App and then Awaiting it.\nUse Collect as \"Gather|-s|-ed|-ing|-er\".\nCreate \"Worker\" as a New Basic App.\nGather Worker.\n", nil)
+		requireLifecycleInstructions(t, r, []string{"build", "run", "await"})
 	})
 	t.Run("BI04-alias-morphology-and-construction", func(t *testing.T) {
-		r := requireDistributionFrontend(t, "Use Start as \"Kick\".\nUse Execute as \"Operate\".\nUse Basic as \"Plain\".\nUse Function's Return as \"Yield\".\nCreate \"Worker\" as a New Plain App.\n", nil)
+		r := requireDistributionFrontend(t, "Use Start as \"Kick|-s|-ed|-ing|-er\".\nUse Execute as \"Operate|-s|-d|--ing|--or\".\nUse Basic as \"Plain\".\nUse Function's Return as \"Yield|-s|-ed|-ing|-er\".\nCreate \"Worker\" as a New Plain App.\n", nil)
 		for name, forms := range map[string][]string{"Kick": {"Kick", "Kicks", "Kicked", "Kicking", "Kicker"}, "Operate": {"Operate", "Operates", "Operated", "Operating", "Operator"}, "Yield": {"Yield", "Yields", "Yielded", "Yielding", "Yielder"}} {
 			alias := r.Compilation.Memory[name]
 			want := distributionCanonical(t, r.Compilation, alias)
@@ -153,13 +153,13 @@ func TestDistributionBuiltins(t *testing.T) {
 	})
 	t.Run("BI05-no-effects-or-pronoun-subject", func(t *testing.T) {
 		r := requireDistributionFrontend(t, "Show `only-user-effect|`.\n", nil)
-		if got := phase1Kinds(r.Compilation.Semantics.Instructions); !reflect.DeepEqual(got, []string{"show"}) || len(r.Compilation.Semantics.Continuations) != 0 {
+		if got := flattenedInstructionKinds(r.Compilation.Semantics.Instructions); !reflect.DeepEqual(got, []string{"show"}) || len(r.Compilation.Semantics.Continuations) != 0 {
 			t.Fatalf("implicit initialization added runtime effects/continuations: %v", got)
 		}
 		distributionNegative(t, "Show it.\n", "no preceding subject", lerrors.UnresolvedReference)
 	})
 	t.Run("BI06-local-shadowing", func(t *testing.T) {
-		const source = "Use Execute as \"OriginalExecute\".\n\n    Create \"Execute|-s|-d|--ing|--or\" for Showing any Text.\nExecute `local-only|`.\n\nCreate \"Worker\" as a New Basic App.\nOriginalExecute Worker.\n"
+		const source = "Use Execute as \"OriginalExecute|-s|-d|--ing|--or\".\n\n    Create \"Execute|-s|-d|--ing|--or\" for Showing any Text.\nExecute `local-only|`.\n\nCreate \"Worker\" as a New Basic App.\nOriginalExecute Worker.\n"
 		r := requireDistributionFrontend(t, source, nil)
 		original := distributionCanonical(t, r.Compilation, r.Compilation.Memory["OriginalExecute"])
 		var local *record
@@ -171,109 +171,18 @@ func TestDistributionBuiltins(t *testing.T) {
 		if local == nil || local == original || r.Compilation.Memory["Execute"] != nil {
 			t.Fatal("local shadow altered or published the builtin")
 		}
-		phase1Lifecycle(t, r, []string{"build", "run", "await"})
-		if !reflect.DeepEqual(phase1Kinds(r.Compilation.Semantics.Instructions), []string{"show", "build", "run", "await"}) {
+		requireLifecycleInstructions(t, r, []string{"build", "run", "await"})
+		if !reflect.DeepEqual(flattenedInstructionKinds(r.Compilation.Semantics.Instructions), []string{"show", "build", "run", "await"}) {
 			t.Fatal("local source word did not own its call")
 		}
 		again := requireDistributionFrontend(t, "Create \"Worker\" as a New Basic App.\nExecute Worker.\n", nil)
-		phase1Lifecycle(t, again, []string{"build", "run", "await"})
-	})
-}
-
-func TestDistributionIO(t *testing.T) {
-	t.Run("IO02-explicit-import-and-private-helpers", func(t *testing.T) {
-		r := requireDistributionFrontend(t, distributionIOImport+distributionApp, nil)
-		for _, name := range []string{"IO", "IO.Print", "Write", "Discard", "Text.Render"} {
-			if r.Compilation.Memory[name] != nil {
-				t.Errorf("selected import leaked %s", name)
-			}
-		}
-		t.Run("Print-needs-import", func(t *testing.T) {
-			distributionNegative(t, distributionApp, "Prints", lerrors.UnresolvedReference)
-		})
-		for _, word := range []string{"Write", "Discard"} {
-			t.Run(word+"-is-private", func(t *testing.T) {
-				distributionNegative(t, distributionIOImport+distributionApp+"Show "+word+".\n", word, lerrors.UnresolvedReference)
-			})
-		}
-	})
-	t.Run("IO04-alias-forms-and-canonical-body", func(t *testing.T) {
-		base := requireDistributionFrontend(t, distributionIOImport+distributionApp, nil)
-		for _, name := range []string{"Display", "Render"} {
-			t.Run(name, func(t *testing.T) {
-				source := "Use IO's Print from `io` as \"" + name + "\".\n" + strings.Replace(distributionApp, "Prints", name+"s", 1)
-				r := requireDistributionFrontend(t, source, nil)
-				alias := r.Compilation.Memory[name]
-				canonical := distributionCanonical(t, r.Compilation, alias)
-				if canonical.ID != "IO.Print" {
-					t.Fatalf("canonical target = %s", canonical.ID)
-				}
-				for _, suffix := range []string{"", "s", "ed", "ing", "er"} {
-					binding, err := resolveTokenBinding([]byte(name+suffix), map[string]*record{name: alias})
-					if err != nil || binding == nil || distributionCanonical(t, r.Compilation, binding.Record) != canonical {
-						t.Errorf("alias form %s%s: %v", name, suffix, err)
-					}
-				}
-				if !bytes.Equal(base.BackendAML, r.BackendAML) {
-					t.Fatal("renaming selected Print changed the child program")
-				}
-			})
-		}
-	})
-	t.Run("IO05-caller-cannot-replace-private-Write", func(t *testing.T) {
-		const caller = "Define \"Write|-s|----ote|--ing|-r\" to `<DEF>BOD^E{|Statement: ~::std::print!(\"{}\", \"caller-wrong|\");~|}<DEF>`.\n"
-		r := requireDistributionFrontend(t, caller+distributionIOImport+distributionApp, nil)
-		c := r.Compilation
-		body, err := c.lowerAppBody(c.Semantics.Apps[0])
-		if err != nil {
-			t.Fatal(err)
-		}
-		dependencies, err := definitionClosure(body...)
-		if err != nil {
-			t.Fatal(err)
-		}
-		callerWrite := c.Memory["Write"]
-		var privateWrite *record
-		for _, dependency := range dependencies {
-			if dependency.definition == callerWrite {
-				t.Fatal("caller replaced a selected dictionary dependency")
-			}
-			declaration := c.Semantics.Declarations[dependency.definition]
-			if dependency.Symbol == "Write" && declaration != nil && declaration.source.Unit.Dictionary == "IO" {
-				privateWrite = dependency.definition
-			}
-		}
-		if callerWrite == nil || privateWrite == nil || privateWrite == callerWrite || privateWrite.storageScope == callerWrite.storageScope {
-			t.Fatal("IO helper and caller share mutable bindings/scope")
-		}
-	})
-	t.Run("IO06-ordinary-source-and-backend", func(t *testing.T) {
-		r := requireDistributionFrontend(t, distributionIOImport+distributionApp, nil)
-		print := distributionCanonical(t, r.Compilation, r.Compilation.Memory["Print"])
-		declaration := r.Compilation.Semantics.Declarations[print]
-		if declaration == nil || !strings.Contains(string(declaration.source.Raw), "Create IO's") || print.Value.Lexeme == nil || len(print.Value.Lexeme.Actions) == 0 {
-			t.Fatal("Print lost ordinary source definition/action representation")
-		}
-		units, err := r.ApplicationUnits()
-		if err != nil || len(units) != 1 {
-			t.Fatalf("child units = %d, %v", len(units), err)
-		}
-		bundle, err := Logiceme.NewLogicemeService(nil).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{IncludeRuntime: false})
-		recordBundle(t, bundle)
-		if err != nil {
-			t.Fatalf("real backend prerequisite failed; runtime not exercised: %v", err)
-		}
-		wrapper := "Use IO's Print from `io` as \"ImportedPrint\".\nCreate \"LocalWords\" as a Dictionary.\nUse ImportedPrint as LocalWords's \"Paint\".\n"
-		local := requireDistributionFrontend(t, "Use LocalWords's Paint from `words.l` as \"Print\".\n"+distributionApp, map[string]string{"words.l": wrapper})
-		if !bytes.Equal(local.BackendAML, r.BackendAML) {
-			t.Fatal("ordinary local reexport changed source-defined IO behavior")
-		}
+		requireLifecycleInstructions(t, again, []string{"build", "run", "await"})
 	})
 }
 
 func TestDistributionScopes(t *testing.T) {
 	t.Run("DI08-unit-roots-are-not-activation-frames", func(t *testing.T) {
-		r := requireDistributionFrontend(t, distributionIOImport+"\"global\" is `root|`.\n\n    Create \"Worker\" as a New Public Basic App.\nThe App Prints global.\nDefine \"privateResult\" as Worker's Output.\nShow privateResult.\n\nRun Worker.\nAwait Worker.\nShow global.\n", nil)
+		r := requireDistributionFrontend(t, distributionCorePrefix+"\"global\" is `root|`.\n\n    Create \"Worker\" as a New Public Basic App.\nThe App Prints global.\nDefine \"privateResult\" as Worker's Output.\nShow privateResult.\n\nRun Worker.\nAwait Worker.\nShow global.\n", nil)
 		c := r.Compilation
 		if c.Memory["global"] == nil || c.Memory["global"].storageScope != c.Scope.Root || c.Memory["Worker"] == nil || c.Memory["privateResult"] != nil {
 			t.Fatal("builtin parent changed program-global or paragraph-private ownership")
@@ -281,13 +190,10 @@ func TestDistributionScopes(t *testing.T) {
 		if len(c.Semantics.Continuations) != 1 {
 			t.Fatalf("continuations = %d; want only Worker", len(c.Semantics.Continuations))
 		}
-		if _, err := r.OrchestratorUnit("entry", executableTestCompanions(r)); err != nil {
-			t.Fatalf("unit-root/definite-assignment lowering failed: %v", err)
-		}
 	})
 	t.Run("DI11-independent-parallel-compilations", func(t *testing.T) {
 
-		requireDistributionFrontend(t, distributionIOImport+distributionApp, nil)
+		requireDistributionFrontend(t, distributionCorePrefix+distributionApp, nil)
 		const count = 8
 		var wg sync.WaitGroup
 		results := make([]*CompilationResult, count)
@@ -300,7 +206,7 @@ func TestDistributionScopes(t *testing.T) {
 			wg.Add(1)
 			go func(i int) {
 				defer wg.Done()
-				results[i], errs[i] = NewLygerService(Options{}).Compile([]byte(distributionIOImport+distributionApp), filepath.Join(dirs[i], "main.l"))
+				results[i], errs[i] = NewLygerService(Options{}).Compile([]byte(distributionCorePrefix+distributionApp), filepath.Join(dirs[i], "main.l"))
 			}(i)
 		}
 		wg.Wait()
@@ -309,7 +215,7 @@ func TestDistributionScopes(t *testing.T) {
 			if errs[i] != nil || r == nil {
 				t.Fatalf("parallel compilation %d: %v", i, errs[i])
 			}
-			current := distributionCanonical(t, r.Compilation, r.Compilation.Memory["Print"])
+			current := distributionCanonical(t, r.Compilation, r.Compilation.Memory["SharedPrint"])
 			for _, previous := range canonical {
 				if current == previous || current.Value.Lexeme == previous.Value.Lexeme {
 					t.Fatal("parallel compilations shared dictionary definitions")
@@ -327,15 +233,15 @@ func TestDistributionScopes(t *testing.T) {
 		}
 	})
 	t.Run("DI12-source-action-argument-possessive", func(t *testing.T) {
-		const prefix = distributionIOImport + "Create \"Tools\" as a Dictionary.\nCreate Tools's \"Collect|-s|-ed|-ing|-or\" for Awaiting any App and then Showing it's Output.\nUse Tools's Collect as \"Collect\".\n\"first\" is `worker`.\n\"second\" is `other`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints first.\nCreate \"Other\" as a New Basic App.\nThe App Prints second.\nRun Worker and Other.\nAwait Other.\n"
+		const prefix = distributionCorePrefix + "Create \"Tools\" as a Dictionary.\nCreate Tools's \"Collect|-s|-ed|-ing|-or\" for Awaiting any App and then Showing it's Output.\nUse Tools's Collect as \"Collect\".\n\"first\" is `worker`.\n\"second\" is `other`.\nCreate \"Worker\" as a New Basic App.\nThe App Prints first.\nCreate \"Other\" as a New Basic App.\nThe App Prints second.\nRun Worker and Other.\nAwait Other.\n"
 		for _, alias := range []bool{false, true} {
 			t.Run(fmt.Sprint(alias), func(t *testing.T) {
 				call := "Collect Worker.\n"
 				if alias {
-					call = "Use Collect as \"Gather\".\nGather Worker.\n"
+					call = "Use Collect as \"Gather|-s|-ed|-ing|-er\".\nGather Worker.\n"
 				}
 				r := requireDistributionFrontend(t, prefix+call, nil)
-				flat := phase1Flat(r.Compilation.Semantics.Instructions)
+				flat := flattenedInstructions(r.Compilation.Semantics.Instructions)
 				if len(flat) < 2 {
 					t.Fatal("source action lost ordered effects")
 				}
@@ -352,7 +258,7 @@ func TestDistributionScopes(t *testing.T) {
 func TestDistributionSourceProvenance(t *testing.T) {
 	t.Run("MG05-exact-main-and-physical-projection", func(t *testing.T) {
 		const library = "\"value\" is `snow 雪, \\\"quote\\\"`.\r\nShow value.\r\n"
-		const source = "Use IO's Print from `io` as \"Print\".\r\n\r\n    Use `nested/words.l`.\r\n\r\n    Use `nested/words.l`.\r\n"
+		const source = "Use Print as \"Display|-s|-ed|-ing|-er\".\r\n\r\n    Use `nested/words.l`.\r\n\r\n    Use `nested/words.l`.\r\n"
 		r := requireDistributionFrontend(t, source, map[string]string{"nested/words.l": library})
 		c := r.Compilation
 		if !bytes.Equal(c.MainBytes, []byte(source)) {
@@ -369,11 +275,11 @@ func TestDistributionSourceProvenance(t *testing.T) {
 		if string(physical[1].Raw) != strings.SplitAfter(library, "\r\n")[0] || physical[1].Span.Start.Line != 1 || physical[2].Span.Start.Line != 2 {
 			t.Fatal("local literal bytes/line spans changed")
 		}
-		want := "Use IO's Print as \"Print\".\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value.\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value."
+		want := "Use Print as \"Display|-s|-ed|-ing|-er\".\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value.\n\"value\" is `snow 雪, \\\"quote\\\"`.\nShow value."
 		if got := string(renderExpandedSource(physical, c.TextCache)); got != want {
 			t.Fatalf("physical expanded projection = %q; want %q", got, want)
 		}
-		var implicit, dictionary bool
+		var implicit, corePrint bool
 		for _, statement := range c.SourceStatements {
 			if testPathWithin(root, statement.Span.Path) {
 				continue
@@ -382,10 +288,10 @@ func TestDistributionSourceProvenance(t *testing.T) {
 				t.Errorf("embedded source became a host path: %s", statement.Span.Path)
 			}
 			implicit = implicit || strings.Contains(string(statement.Raw), "Create \"Start|")
-			dictionary = dictionary || strings.Contains(string(statement.Raw), "Create IO's")
+			corePrint = corePrint || strings.Contains(string(statement.Raw), "Publicly create \"Print|")
 		}
-		if !implicit || !dictionary {
-			t.Fatal("complete diagnostic source lost builtin or dictionary unit")
+		if !implicit || !corePrint {
+			t.Fatal("complete diagnostic source lost core declarations")
 		}
 		wantPaths := []string{c.MainPath, filepath.Join(root, "nested/words.l"), filepath.Join(root, "nested/words.l")}
 		if !reflect.DeepEqual(c.SourcePaths, wantPaths) {
@@ -407,7 +313,7 @@ func TestDistributionServices(t *testing.T) {
 			t.Fatal(err)
 		}
 		project := t.TempDir()
-		input := []byte("Use IO's Print from `io` as \"Print\".\nCreate \"Hello\" as a New Basic App.\nThe App Prints `Hello World!`.\nExecute Hello.\nShow Hello's Output.\n")
+		input := []byte("\nCreate \"Hello\" as a New Basic App.\nThe App Prints `Hello World!`.\nExecute Hello.\nShow Hello's Output.\n")
 		main := filepath.Join(project, "main.l")
 		if err := os.WriteFile(main, input, 0600); err != nil {
 			t.Fatal(err)

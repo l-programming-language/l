@@ -107,9 +107,11 @@ func definitionLiteral(tokens []*token) (*token, error) {
 
 // A statement is prepared in full before any semantic relationships are published.
 type statementRegistration struct {
-	declarations []extractedDeclaration
-	descriptors  []*descriptorDefinition
-	functions    []*sourceFunction
+	declarations    []extractedDeclaration
+	descriptors     []*descriptorDefinition
+	functions       []*sourceFunction
+	processTokens   map[*token]token
+	processBindings map[*token]*scopeDeclaration
 }
 
 func (d *descriptorDefinition) clone() *descriptorDefinition {
@@ -146,11 +148,55 @@ func (c *Compilation) prepareAlias(site registrationSite) (extractedDeclaration,
 	}
 	value := &entry{}
 	value.bindFrom(target.Value)
-	id := strings.Trim(string(alias.rawBytes), `"`)
-	if value.Lexeme != nil {
-		value.Lexeme.Root = strings.ToLower(id)
+	label, err := parseDeclarationLabel(string(alias.rawBytes))
+	if err != nil {
+		return extractedDeclaration{}, err
 	}
-	return extractedDeclaration{Token: alias, Record: &record{ID: id, Type: target.Type, Value: value, function: canonical.function}, Alias: target}, nil
+	rec := &record{ID: label.Root, Type: target.Type, Value: value, function: canonical.function}
+	if original := target.bindingWord(); original != nil {
+		word := original.cloneUse()
+		if binding.POS == "verb" && binding.Form == "objective" {
+			word.POS = "noun"
+		}
+		// Only an actual possessive reference to the unchanged canonical root
+		// removes qualification. Renamed or actor aliases cannot launder a
+		// different root or role through an intermediate complete family.
+		sourceQualified, aliasQualified := false, false
+		for i, tok := range site.clause.tokens {
+			if i > 0 {
+				_, qualified := possessiveOwner(string(site.clause.tokens[i-1].rawBytes))
+				if tok == source {
+					sourceQualified = qualified
+				} else if tok == alias {
+					aliasQualified = qualified
+				}
+			}
+		}
+		canonicalWord := canonical.bindingWord()
+		inherit := len(label.Slots) == 1 && sourceQualified && !aliasQualified && binding.Form == "root" &&
+			canonicalWord != nil && canonicalWord.POS == original.POS && canonicalWord.validateFamily() == nil &&
+			strings.EqualFold(label.Root, canonicalWord.Root) && strings.EqualFold(label.Root, original.Root) && original.validateFamily() == nil
+		if canonical.definitionArgument != nil {
+			// Typed inputs and local results use nominal records to carry native
+			// references. Renaming their data does not declare vocabulary.
+			if err := word.reLabel(string(alias.rawBytes)); err != nil {
+				return extractedDeclaration{}, err
+			}
+		} else if !inherit {
+			if err := word.declareFamily(string(alias.rawBytes)); err != nil {
+				return extractedDeclaration{}, err
+			}
+		}
+		if value.Type == storageLexeme {
+			value.Lexeme = word
+			rec.Type = word.getValueType()
+		} else {
+			rec.word = word
+		}
+	} else if err := rec.declareInvocation(string(alias.rawBytes)); err != nil {
+		return extractedDeclaration{}, err
+	}
+	return extractedDeclaration{Token: alias, Record: rec, Alias: target}, nil
 }
 
 func (c *Compilation) prepareDescriptor(stmt *lStatement, site registrationSite, prepared *statementRegistration) error {
@@ -252,6 +298,9 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 		return prepared, err
 	}
 	for _, site := range sites {
+		if err := c.constructionValueRoles(site.valueObject()); err != nil {
+			return statementRegistration{}, err
+		}
 		if handled, err := c.prepareDefinitionBindingSite(stmt, site, &prepared); handled || err != nil {
 			if err != nil {
 				return statementRegistration{}, err
@@ -280,6 +329,16 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 			return statementRegistration{}, err
 		}
 		value := declaration.Record.Value
+		if declaration.Alias == nil && value.Lexeme != nil && value.Lexeme.Value == "" && len(value.Lexeme.Actions) > 0 {
+			formals, err := sourceParametersIn(stmt, site.parameterTokens())
+			if err != nil {
+				return statementRegistration{}, err
+			}
+			value.Lexeme.Inputs = make([]string, len(formals))
+			for index, formal := range formals {
+				value.Lexeme.Inputs[index] = formal.Name
+			}
+		}
 		var typed *objectGram
 		if runtime := value.Runtime; runtime != nil && runtimeReadPhrase(runtime.Expression) != nil {
 			typed = runtime.Expression
@@ -304,16 +363,23 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 	return prepared, nil
 }
 
-func (c *Compilation) registerStatement(stmt *lStatement) error {
-	if err := c.prepareProcessInputs(stmt); err != nil {
-		return err
-	}
+func (c *Compilation) registerStatement(stmt *lStatement) (err error) {
 	sites, err := stmt.sGram.registrationSites()
 	if err != nil {
 		return err
 	}
 	prepared, err := c.prepareRegistration(stmt, sites)
 	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			for tok, original := range prepared.processTokens {
+				*tok = original
+			}
+		}
+	}()
+	if err = c.prepareProcessInputs(stmt, &prepared); err != nil {
 		return err
 	}
 	return c.publishRegistration(stmt, prepared)

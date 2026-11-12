@@ -1,31 +1,21 @@
-# Import dictionaries and project source
+# Import project source
 
-Builtins are implicit, standard dictionaries are imported explicitly, and project files use `.l` includes. Neighboring files cannot silently replace a standard dictionary.
-
-<a id="import-the-public-io-member"></a>
-
-## Import a public IO member
-
-The [basic program](first-program.md) imports IO's Print from `io` under the local name Print. The index maps `eng/io` to the IO dictionary; its [public members](../stdlib/eng/io.md#public-and-private-names) also include byte output and the Lined descriptor. Rendering, locking and line-completion helpers remain private. Builtins need no project copy, but dictionary words require their import. A local `io` or `io.l` does not shadow the indexed `io` import.
+Core loads directly from the selected resource provider. The root [dictionary registry](../../dictionaries.json) is empty: IO, Formatting, Storage and Runtime are not bundled dictionaries.
 
 ## Import a project-owned member
 
-<!-- example:file-import -->
+An explicit `.l` include resolves relative to the source that imports it. Preserve both files when moving a project. Imported declarations retain their original source spans and import occurrence; aliases retain the selected declaration's canonical identity.
 
-The companion file supplies the declarations:
+Use a grammatical possessive to select a member and an explicit alias for unqualified use. Dot-qualified authored names are invalid. A file include does not automatically create a public namespace.
 
-<!-- example:file-import-helper -->
-
-The first sentence loads the declarations in `helpers.l`, including LocalTools and its members, then gives Greeting a local alias. Display is now known, so the second sentence only creates its short alias; it needs no file clause. `Display Greeting` calls the Show action and produces `local hello|` without a newline.
-
-Keep both files together. `helpers.l` resolves beside the importing source, regardless of the CLI's working directory or executable location. The [distribution CLI tests](../../acceptance/distribution/cli/cli_test.go) cover this behavior and the exact output.
+An alias can inherit a validated family only by removing qualification while keeping its canonical root unchanged. A renamed word or selected actor alias needs an explicit complete family for its role. This also applies through alias chains. See [alias identity and forms](../spec/names-and-scope.md#aliases-and-canonical-identity). Dots in an import path remain path bytes; they do not permit dots in an authored name or alias.
 
 ## Preserve source-unit boundaries
 
-Project files expand at their import positions. Builtins and indexed dictionaries retain separate scopes; dictionaries inherit builtins, not arbitrary caller locals. An alias preserves its member's canonical owner and identity without exposing private helpers.
+Explicit dictionary imports, when supplied by a complete custom provider, resolve only through that provider's registry and resource root. Their private includes cannot escape to unrelated host files. The compiler does not search the current directory for replacements or fall back to embedded resources when an override is incomplete.
 
-Lookup checks a complete qualified binding before traversing members of its selected owner. A missing member does not trigger a search through unrelated names or filesystem paths. Import cycles reject; missing files and members produce distinct errors attributed to the original source.
+A program's `.l` includes resolve beside the importer. Cycles, missing files and missing members reject with source attribution. See the [import specification](../spec/imports.md).
 
 ## Use a complete custom resource bundle
 
-Released compilers embed the English resources used above. Compiler developers can [override the resource bundle](../development-harness.md#compiler-defaults). Next, organize [Apps and Services](apps-and-services.md).
+[Developer overrides](../development-harness.md#compiler-defaults) replace the entire provider. They do not restore removed libraries or widen the standalone executable boundary.

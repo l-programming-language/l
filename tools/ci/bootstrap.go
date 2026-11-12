@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"sort"
@@ -103,7 +102,11 @@ func (r *runner) bootstrap() (resultErr error) {
 		}
 		protected[filepath.Join(r.root, name)] = digest
 	}
-	defer func() { resultErr = errors.Join(resultErr, unchangedDependencyInputs(protected)) }()
+	defer func() {
+		for path, digest := range protected {
+			resultErr = errors.Join(resultErr, requireUnchanged(path, digest))
+		}
+	}()
 	if err := r.installLinters(); err != nil {
 		return err
 	}
@@ -150,6 +153,11 @@ func (r *runner) bootstrap() (resultErr error) {
 		}
 	}
 	for name := range locks {
+		// This optional compiler lock fragment has no active manifest during the
+		// reset. Preserve its bytes above; fetch only retained fixture graphs.
+		if name == "cmd/l/cargo_dependencies.lock" {
+			continue
+		}
 		dependencies, err := readLockDependencies(filepath.Join(r.root, name))
 		if err != nil {
 			return fmt.Errorf("%s: %w", name, err)
@@ -164,9 +172,6 @@ func (r *runner) bootstrap() (resultErr error) {
 		}
 	}
 	if err := prepareGoRaceDependencies(r.command); err != nil {
-		return err
-	}
-	if err := r.prepareRustDependencies(seeds); err != nil {
 		return err
 	}
 	after, err := lockedInputs(r.root)
@@ -256,24 +261,7 @@ func lockedInputs(root string) (map[string]string, error) {
 }
 
 func prepareSeeds(root, directory string) ([]string, error) {
-	runtimeSeed := filepath.Join(directory, "runtime")
-	err := filepath.WalkDir(filepath.Join(root, "lyger", "test", "native"), func(path string, entry fs.DirEntry, walkErr error) error {
-		if walkErr != nil {
-			return walkErr
-		}
-		if entry.IsDir() {
-			return nil
-		}
-		relative, err := filepath.Rel(filepath.Join(root, "lyger", "test", "native"), path)
-		if err != nil {
-			return err
-		}
-		return copyFile(path, filepath.Join(runtimeSeed, relative))
-	})
-	if err != nil {
-		return nil, err
-	}
-	seeds := []string{runtimeSeed}
+	var seeds []string
 	base := filepath.Join(root, "logiceme", "testdata", "lucid")
 	for _, seed := range []struct{ name, manifest, lock, source string }{{"plain", "Cargo.toml.txt", "Cargo.lock", "grouping.rs.txt"}, {"tokio", "Cargo-tokio.toml.txt", "Cargo-tokio.lock", "communication.rs.txt"}, {"selection", "Cargo-select.toml.txt", "Cargo-select.lock", "select-communication.rs.txt"}} {
 		path := filepath.Join(directory, seed.name)

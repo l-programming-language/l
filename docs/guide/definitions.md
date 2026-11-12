@@ -1,53 +1,47 @@
 # Define vocabulary and behavior
 
-Give each word a coherent purpose and explicit inputs, results and effects. Decompose behavior where a step has a useful independent meaning, not to meet a line limit or add forwarding layers.
+Give each word a coherent meaning and explicit inputs, results and effects. This is compiler and source-authoring guidance; the supported executable remains one standalone App with core Print.
 
 ## Compose a source action
 
-<!-- example:local-definitions -->
+`Create ... for ...` declares a source action with typed arguments. Core Print composes a Process using its private Log action. Definition-site references keep their bindings, while each use supplies its own arguments and source provenance.
 
-`Create ... for ...` defines Launch. `any App` declares its argument; `it` refers to that argument. `Launch First` builds, runs and awaits First. Coordinated operands each receive the complete body in order. Source actions retain their [definition-site bindings](../spec/names-and-scope.md#runtime-storage-and-definite-assignment).
-
-`"Launch|-es|-ed|-ing"` declares Launch, Launches, Launched and Launching; see [word forms](values.md#read-pipe-delimited-word-forms). Each paragraph owns its Launch action and Compact descriptor, so sibling definitions remain independent.
+Pipe-delimited labels declare the family's actual forms. Nouns require four forms and verbs require five, including source actions and named Function invocations. `"Print|-s|-ed|-ing|-er"` gives Print, Prints, Printed, Printing and Printer. Expand every suffix and ensure at least one derived form differs from the root case-insensitively. Missing, empty, malformed, surplus or all-identical families reject. See the [complete-family contract](../spec/definitions.md#inflection-declarations) and [inflection rules](../spec/lexical-structure.md#vocabulary-and-inflection).
 
 ## Give a result-bearing operation a Function
 
-<!-- example:composed-functions -->
+A Function provides an explicit typed callable boundary and Return. A source action expands a composition, while a Process supplies a body to another composition. Choose the form according to the meaning and dataflow. Do not imply capture or runtime support merely because a callable record exists.
 
-Identity returns its Text input. Relay names that call's result Nested and returns it. The outer call names Result before Show reads it. The [first-program commands](first-program.md#build-and-run) build and run this complete example; it writes exactly `hello`, without a newline. Relay makes the dataflow visible here; a forwarding word is useful in real code when it adds a meaningful boundary.
-
-Each Function's four-space paragraph owns its inputs and body; the blank line ends it. Publicly exposes the Function, not its local names. A Function invocation has fresh parameters and locals. A source action such as Launch expands its ordered actions; a Process supplies a body to another composition; an App owns a separate OS process. Choose the form that matches the work.
+Declare the five forms when naming a Function invocation. Storing or forwarding an existing Function value under a single value label does not create a new invocation name. Ordinary values, parameter and result labels, and non-callable App names keep single labels.
 
 ## Organize words by meaning and grammatical role
 
-Use single-word lexical roots and Dictionary/member ownership to group related meanings. IO owns Send and Lined; imported aliases retain that ownership. Keep helpers private and expose the operations callers need. [Project dictionary imports](imports.md#import-a-project-owned-member) show this organization.
+Choose a meaning before declaration syntax. Distinguish an action, its actor constructor, an exact-target modifier, a predicate and a noun denoting a value, resource, field, layout or native pattern. Inspect what callers receive and what changes. [Registration rules](../spec/definitions.md#declaration-roles-and-identity) explain the chosen form; they do not prove that the design is useful.
 
-A verb describes an action; its actor noun constructs that action's definition. IO's `"Send|-s|--t|-ing|-er"` declares Send, Sends, Sent, Sending and Sender as forms of one identity. The adjective Lined describes how to construct a Sender. Follow the [inflection rules](../spec/lexical-structure.md#vocabulary-and-inflection) rather than guessing spellings.
+Prefer one possessive in a declaration, such as `Dictionary's Word`. Dot-qualified names are not valid authored L; dotted catalog identities are documentation notation. Deeper declarations need a semantic owner, such as a nominal target or representation-owned field. Nested member access does not require equally deep declarations or public helpers.
+
+Use single-word roots and keep helpers private unless callers need their interfaces. A reusable mechanism should have an appropriate source owner. One caller does not by itself make a helper unnecessary, and a useful L composition need not be split into one word per step.
+
+A verb's actor form keeps the same canonical family. Expand every declared suffix with the actual inflection rules, then check spelling, role and caller identity. Do not declare a duplicate actor noun or relabel metadata to disguise an incorrect source role. A lexical alias can inherit forms only by removing qualification while keeping an unchanged canonical root. Renames and selected actor aliases need explicit complete families; see [aliases](../spec/names-and-scope.md#aliases-and-canonical-identity).
+
+Single-form noun or verb declarations are invalid, including private helpers. Orphan actor nouns and adjective-shaped stage nouns warrant semantic review even when their declared families are complete. Concrete nouns, projections, bounded patterns and private continuations can be valid when their roles and declarations fit. A modifier needs a compatible base and canonical target; similar English names do not establish that relationship.
+
+Before sharing or removing a mechanism, compare operands/results, target identity, mutation, moves, borrows, retention, destruction, evaluation order and failure behavior. Inspect the native callee as well as the leaf. Independent words need explicit inputs and result labels rather than fixed generated names.
+
+A general exported interface needs a meaningfully different composition witness. Preserve distinct policies and useful observers when reducing duplication. Migrate declarations, forms, callers, aliases, descriptor targets and dependencies together for an authorized role change.
 
 ## Keep branch data inside its Process
 
-The implementation dictionary's Require illustrates composition in a Function with native types:
-
-<!-- example:source-require -->
-
-Option.Select receives Value and two Process bodies. The present branch binds Payload as `T`; only the absent branch constructs Failure from Message. Returning completes Require. This fragment needs its dictionary declarations and native caller; it is not a standalone program.
-
-Name intermediate results the next operation needs. Declare each Process input's type and ownership; `_` requests native inference. Inputs and locals stay in that body, with distinct bindings on repeated or nested use. See [Process](../reference/builtins/definitions.md#process) for scope/cardinality and [Return](../reference/builtins/definitions.md#functionreturn) for caller selection and lexical delegation.
+Typed Process inputs and intermediate labels remain inside their owning body, including repeated and nested uses. Preserve conditional demand and once-only evaluation. See the [native boundary](native-definitions.md#keep-branch-data-inside-its-process).
 
 ## Describe construction
 
-In the Launch example, Compact describes a Generic App with a Main Service. `using any Process` passes the supplied body into that entry structure. `New Compact App` applies the pattern, much like Basic.
-
-Descriptor targets are canonical identities: an App rule cannot describe a Service, and a same-named private declaration is a different target. Generic here selects a construction pattern; it does not declare type parameters.
-
-A wrapper composes around its retained base; a replacement supplies a new construction. Checked value operands evaluate once in source order, while Process bodies stay within their branch or iteration. Reusing a value does not clone it or erase its borrow contract. The [native guide's Lined example](native-definitions.md#compose-a-wrapper) shows a source wrapper that uses the base result and original writer.
+A descriptor targets canonical nominal identity. A same-spelled private declaration is a different target. Wrappers retain their base and original operands; replacements supply a new construction. Reuse must not silently clone a consumed value or erase borrow requirements. Core Main and Basic supply the retained entry composition.
 
 ## Know the implicit foundation
 
-The [implicit foundation](../reference/builtins/index.md#source-defined-facilities) includes Start/Execute and the Process/Function/Objective/Main composition behind Basic. Extend existing words before adding a native leaf; the [native guide](native-definitions.md) explains that boundary.
+[Core](../../builtins/eng/core.l) loads directly. Its declarations include Process, Function, Main, Basic and Print. Start and Execute remain declared, but their lifecycle effects reject. No standard-library dictionary is bundled.
 
 ## Diagnose a definition failure
 
-Check the selected word, its argument count and types, and the original source location. Return belongs to a Function; Exit terminates the program. Every continuing result-bearing Function path must return. Expansion cycles, malformed native framing and unsupported target compositions are distinct failures.
-
-Continue with [control flow](control-flow.md), [imports](imports.md), and [lifecycle](lifecycle.md) before the advanced [native-definition guide](native-definitions.md).
+Check the selected word, declared role, canonical target, typed operands and original source span. Expansion cycles, framing errors and unsupported native composition are separate failures. Preserve those boundaries and use [native definitions](native-definitions.md) for the retained target interface.

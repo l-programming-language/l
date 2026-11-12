@@ -82,20 +82,10 @@ export function verifyReleaseWorkflow(value, name, policy) {
 }
 
 export async function verifyDisabled({ root = resolve(script, '../../..') } = {}) {
-  const site = join(root, 'website'), templateDir = join(site, 'ci-templates');
-  const names = await readdir(templateDir);
-  const templates = names.filter((n) => /\.ya?ml\.disabled$/.test(n));
-  if (!['docs-check.yml.disabled', 'docs-release-pages.yml.disabled', 'docs-recover-pages.yml.disabled'].every((name) => templates.includes(name))) fail('Required dormant website workflow templates are missing');
-  for (const name of names) if (/\.ya?ml$/.test(name)) fail(`Website template is not physically disabled: ${name}`);
-  for (const name of templates) {
-    if ((await lstat(join(templateDir, name))).isSymbolicLink()) fail(`Workflow template must be a regular owned file: ${name}`);
-    const value = YAML.parse(await readFile(join(templateDir, name), 'utf8'), { uniqueKeys: true });
-    if (!value || typeof value.name !== 'string' || !value.on || !value.jobs) fail(`Invalid workflow template: ${name}`);
-    if (Object.hasOwn(value.on, 'pull_request_target')) fail('Website templates must never use privileged pull_request_target');
-    verifyActions(value, name);
-  }
+  const site = join(root, 'website'), policyDir = join(site, 'ci-templates');
+  for (const name of await readdir(policyDir)) if (/\.ya?ml(?:\.disabled)?$/.test(name)) fail(`Keep one canonical workflow under .github/workflows: ${name}`);
   const workflows = join(root, '.github/workflows');
-  const policyPath = join(templateDir, 'release-policy.json');
+  const policyPath = join(policyDir, 'release-policy.json');
   const policy = await exists(policyPath) ? JSON.parse(await readFile(policyPath, 'utf8')) : null;
   if (!await exists(join(workflows, 'docs-check.yml'))) fail('Required active documentation checks are missing');
   if (await exists(workflows)) for (const name of await readdir(workflows)) {
@@ -126,7 +116,7 @@ export async function verifyDisabled({ root = resolve(script, '../../..') } = {}
     const text = await readFile(join(site, 'scripts', name), 'utf8');
     if (/(?:copyFile|rename|writeFile|cp\s|mv\s)[^\n]{0,200}\.github\/workflows/.test(text)) fail(`Possible workflow activation helper: ${name}`);
   }
-  return { templates: templates.length, state: 'checks-active', deployment: policy?.publicationEnabled ? 'manual-only' : 'disabled' };
+  return { state: 'checks-active', deployment: policy?.publicationEnabled ? 'manual-only' : 'disabled' };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === script) verifyDisabled().then((result) => console.log(`Website checks are active; publication policy: ${result.deployment}. Checked ${result.templates} retained templates; no deployment performed.`)).catch((error) => { console.error(error.message); process.exitCode = 1; });
+if (process.argv[1] && resolve(process.argv[1]) === script) verifyDisabled().then((result) => console.log(`Website checks are active; publication policy: ${result.deployment}. No deployment performed.`)).catch((error) => { console.error(error.message); process.exitCode = 1; });

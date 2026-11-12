@@ -1,69 +1,69 @@
 # Applicational Types
 
-| Type | What it represents | Current use in L |
-| --- | --- | --- |
-| [App](#apps) | An application with source, identity and process state. | Construct, build, run, stop and await a separate process; read its Output or Error. |
-| [Service](#services) | A unit of code composed into an App. | Main supplies the entry structure; additional App-constructed Services become libraries. A standalone Service is structural. |
-| [Class](#classes-and-objects) | A group of source modules, Objects and nested Classes. | Organize generated code; no independent process or runtime scope. |
-| [Object](#classes-and-objects) | A source-file unit containing definitions. | Own generated file content; no automatic runtime lifetime. |
-| [Function](#functions-properties-and-operations) | A callable with typed inputs, results and retained captures. | Invoke its descriptive verb with fresh parameters and locals. |
-| [Attribute](#attributes-and-definitions) | A composed part of an Object. | Internal construction representation; no general source field-construction API. |
-| [Definition](#attributes-and-definitions) | The implementation attached to a constructed element. | Internal representation used by source and logeme-backed definitions; no general standalone constructor. |
-| [Property](#functions-properties-and-operations) | Field or parameter information. | Internal/native representation; reading a member does not construct a Property. |
-| [Operation](#functions-properties-and-operations) | A structured native operation. | Internal/native representation; source actions are defined as words. |
+These categories describe source and generated-code organization. The supported executable is one standalone App with a core Print body.
 
-Only Apps own process lifecycle. Internal categories do not imply source constructors. [Lexical Types](lexical-types.md) explains the words that express these structures.
+| Category | Meaning |
+| --- | --- |
+| App | Application source selected for standalone native compilation |
+| Service | Source structure; core Main supplies the App's entry composition |
+| Class | Group of generated modules |
+| Object | Source-file owner |
+| Function | Typed callable composition |
+| Attribute, Definition | Compiler construction and implementation records |
+| Property, Operation | Native representation records |
+
+Internal categories do not automatically supply source constructors or a runtime.
 
 ## Apps
 
+[App](../reference/word-glossary.md#word-type-app) is the standalone compilation target.
+
 ### Create and execute an App
 
-The [first program](../guide/first-program.md#read-the-program) constructs a Basic App, supplies its Print body and observes its captured output. Basic composes the Main Service, Object and entry Function; Execute builds, runs and awaits the App.
-
-`l build` publishes the native program; running that program performs its lifecycle actions. Aliases preserve App identity. Separate declarations remain separate Apps even if they use the same name in different private scopes.
+Follow the [first program](../guide/first-program.md). Build it with `l build`, then invoke the resulting executable. Do not add source-level lifecycle actions.
 
 ## Services
 
-Basic supplies the primary Main Service. Additional Services constructed inside an App become native libraries whose nonprivate composed items form their interface. The [Service composition example](../guide/apps-and-services.md#service-composition) builds Main, Left and Right Services inside an App and explains how the body is passed into them.
-
-A standalone Service declaration creates no package or process. Standalone body effects, native lifecycle operations and implicit Output/Error reject; explicit static members and source-defined actions still use normal lexical lookup. See the [Service composition contract](../cli-build.md#service-composition).
+[Service](../reference/word-glossary.md#word-type-service) participates in source organization. The current CLI rejects additional Service libraries; a retained Service declaration does not create a process.
 
 ## Classes and Objects
 
-Classes group modules and source files; Objects own files. Neither introduces a paragraph scope or process lifetime. Nested Classes retain explicit parents and source order. Native imports and visibility belong to their owning file/module; Class metadata does not silently become every child's default.
+### Class
+
+[Class](../reference/word-glossary.md#word-type-class) groups source modules without introducing a running lifetime.
+
+### Object
+
+[Object](../reference/word-glossary.md#word-type-object) owns file content and its metadata.
 
 ### Compose an Object inside nested Classes
 
-<!-- example:recursive-classes -->
-
-Read descriptors inside out: Leaf supplies the Main Object; Middle and Outer enclose it; Grouped adds the Service; Tree adds the App. Applying Tree produces `Recursive` → Service `main` → Class `outer` → Class `middle` → Class `leaf` → Object `main`, which owns the entry Function. Construction alone performs no lifecycle action.
+Preserve canonical ownership through construction and native projection. Classes cannot inject defaults into file-owned Object metadata. The current tutorial does not claim arbitrary nested compositions are covered by the temporary gate.
 
 ## Attributes and Definitions
 
-A Function composed inside an Object is represented as an Attribute containing a Definition. [Adjective descriptors](lexical-types.md#describe-with-an-adjective) and named definitions express this structure; these categories add no field syntax or interchangeable constructors.
+### Attribute
+
+[Attribute](../reference/word-glossary.md#word-type-attribute) is a retained construction category.
+
+### Definition
+
+[Definition](../reference/word-glossary.md#word-type-definition) records a selected implementation. Its identity is distinct from its word's grammatical role.
 
 ## Functions, Properties, and Operations
 
-A Function declaration also defines its invocation verb. Its encapsulated paragraph supplies the body:
+Core [Function](../reference/word-glossary.md#word-builtin-function) supplies callable metadata and a Process body. Preserve ordered typed inputs/results, canonical invocation identity and once-only evaluation. Return belongs to its selected Function and is distinct from whole-program Exit.
 
-<!-- example:composed-function-definition -->
+Core [Invoke](../reference/word-glossary.md#word-builtin-invoke) is a separate root verb for native-backed source Function application. Its frontend-only Callable slot requires the selected binding's complete verb family and a resolved native-backed source Function. Single-label storage, noun aliases and ordinary runtime Function values are not Callable targets. See the [typed-slot contract](definitions.md#typed-slots).
 
-Four leading spaces begin the private body; a blank line ends it. Public exposes Identity, not Value. The [complete Function example](../guide/definitions.md#give-a-result-bearing-operation-a-function) calls it through Relay and names the caller's result explicitly. A label may declare related [word forms](lexical-structure.md#vocabulary-and-inflection).
+A named Function invocation requires a complete five-form verb family. A single ordinary label can store or forward a Function value without introducing a new invocation name. Non-callable applicational names, including App names, remain ordinary labels. See [declaration roles and identity](definitions.md#declaration-roles-and-identity).
 
-Invocations check ordered types and have fresh locals. Function signatures include canonical constructor identity; incompatible constructors reject, including boxed values. Copies and aliases retain signatures and captures. Every continuing result-bearing path must Return through its bound member; Exit terminates the program.
-
-The header retains surrounding conditions and coordinated effects. Captures must be assigned when it executes; ordinary values snapshot and explicit Pointers share targets. An invocation assigns its explicit results, without inferring assignment from side effects. A Function may Await an App and its continuation. Dictionary/Class units have no executable initialization phase.
-
-Source declarations and Object construction use the same selected Function/logeme definitions. Ordinary signatures do not infer native lifetime or generic parameters. Native-backed constructors can accept explicit atoms within the [definition contract](definitions.md#composition-and-source-ownership); this introduces no overloads, variadic Function signatures or inference across opaque native bodies.
+Native Func/Prop/Op records follow the [logeme contracts](../../builtins/README.md). They do not supply source-level capture, process transport or automatic lifetime inference.
 
 ### Construct a Function in an Object
 
-<!-- example:function-object-descriptor -->
-
-`first` has No Inputs and No Outputs; `any Process` receives its body. `Objective First` supplies the Object, which the [complete fixture](../../lyger/test/classes/interleaved.l) composes into a Class and App.
-
-`Worker's Output` selects an App member after Await; it does not create a Property record. Native `Func`, `Prop` and `Op` metadata have separate [logeme contracts](../../builtins/README.md). To name a sequence of source actions, [define a verb such as Launch](lexical-types.md#define-and-use-a-word); this does not construct an internal Operation.
+Core Main composes a Function inside an Object inside a Service, while Basic composes the App. Its Function has no inputs or outputs and receives the selected Process body. See [core](../../builtins/eng/core.l) and [definitions](definitions.md).
 
 ## Sources and witnesses
 
-See [application structures](../../lyger/application_types.go), [type recognition](../../lyger/utilities.go), [construction](../../lyger/construction.go), [builtins](../../builtins/eng/core.l), [workspace projection](../../lyger/workspace_units.go), [recursive-Class tests](../../lyger/recursive_classes_test.go), and [Service coverage](../../testdata/service-execution/coverage.md).
+See [application structures](../../lyger/application_types.go), [construction](../../lyger/construction.go), [workspace projection](../../lyger/workspace_units.go) and the [temporary hello-world gate](../development-harness.md).

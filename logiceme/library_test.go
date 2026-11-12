@@ -26,8 +26,8 @@ func libraryFixture(t *testing.T) []byte {
 func TestLibraryOnlyBundle(t *testing.T) {
 	input := libraryFixture(t)
 	before := bytes.Clone(input)
-	service := NewLogicemeService(runtimeGenerationResources(t))
-	bundle, err := service.Evaluate(input, GenerationOptions{})
+	service := NewLogicemeService(backendTestResources(t))
+	bundle, err := service.Evaluate(input)
 	nativetest.RecordBundle(t, "library", bundle)
 	if !bytes.Equal(input, before) {
 		t.Fatal("library evaluation mutated AML")
@@ -71,7 +71,7 @@ func TestLibraryOnlyBundle(t *testing.T) {
 	if !bytes.Contains(cargo, []byte("[lib]\nname = \"library_fixture\"\npath = \"src/lib.rs\"")) || bytes.Contains(cargo, []byte("[[bin]]")) {
 		t.Fatalf("library target manifest:\n%s", cargo)
 	}
-	repeated, err := service.Evaluate(input, GenerationOptions{})
+	repeated, err := service.Evaluate(input)
 	if err != nil || !reflect.DeepEqual(repeated, bundle) {
 		t.Fatalf("repeat library evaluation: %v", err)
 	}
@@ -99,16 +99,14 @@ func TestLibraryOnlyRejectsExecutableOptions(t *testing.T) {
 	base := string(libraryFixture(t))
 	for _, tc := range []struct {
 		name, input, diagnostic string
-		runtime                 bool
 	}{
-		{"primary library", strings.Replace(base, `"Primary":false`, `"Primary":true`, 1), "library target cannot be Primary", false},
-		{"runtime", base, "library-only package cannot include runtime", true},
-		{"configuration", strings.Replace(base, "<SETTINGS></SETTINGS>", `<SETTINGS><JSON>{"Key":"TOKEN","Type":"String","Value":"value"}</JSON></SETTINGS>`, 1), "library-only package cannot supply executable configuration", false},
+		{"primary library", strings.Replace(base, `"Primary":false`, `"Primary":true`, 1), "library target cannot be Primary"},
+		{"configuration", strings.Replace(base, "<SETTINGS></SETTINGS>", `<SETTINGS><JSON>{"Key":"TOKEN","Type":"String","Value":"value"}</JSON></SETTINGS>`, 1), "library-only package cannot supply executable configuration"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			input := []byte(tc.input)
 			before := bytes.Clone(input)
-			bundle, err := NewLogicemeService(runtimeGenerationResources(t)).Evaluate(input, GenerationOptions{IncludeRuntime: tc.runtime})
+			bundle, err := NewLogicemeService(backendTestResources(t)).Evaluate(input)
 			if err == nil || !errors.Is(err, lerrors.InvalidInput) || !strings.Contains(err.Error(), tc.diagnostic) {
 				t.Fatalf("library failure = %v; want %s", err, tc.diagnostic)
 			}

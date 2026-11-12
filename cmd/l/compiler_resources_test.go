@@ -16,7 +16,7 @@ import (
 
 func TestCompilerResourceSelection(t *testing.T) {
 	main := filepath.Join(t.TempDir(), "main.l")
-	if err := os.WriteFile(main, []byte("Show `selected`.\n"), 0600); err != nil {
+	if err := os.WriteFile(main, []byte("Create \"Worker\" as a New Basic App.\nThe App Prints `selected`.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 	initialize := func(t *testing.T, options compilerInitOptions) *compiler {
@@ -55,7 +55,7 @@ func TestCompilerResourceSelection(t *testing.T) {
 		if c.options.Language != "eng" || c.options.AssetRoot != "" {
 			t.Fatalf("explicit language selection = %#v", c.options)
 		}
-		if _, err := fs.Stat(c.options.Resources, "stdlib/index.json"); err != nil {
+		if _, err := fs.Stat(c.options.Resources, "dictionaries.json"); err != nil {
 			t.Fatalf("explicit language lost embedded resources: %v", err)
 		}
 	})
@@ -66,7 +66,7 @@ func TestCompilerResourceSelection(t *testing.T) {
 				t.Fatal(err)
 			}
 		}
-		indexPath := filepath.Join(assets, "stdlib/index.json")
+		indexPath := filepath.Join(assets, "dictionaries.json")
 		data, err := os.ReadFile(indexPath)
 		if err != nil {
 			t.Fatal(err)
@@ -84,7 +84,7 @@ func TestCompilerResourceSelection(t *testing.T) {
 		if err := os.WriteFile(indexPath, data, 0600); err != nil {
 			t.Fatal(err)
 		}
-		if err := os.WriteFile(main, []byte("Use IO's Print from `io` as \"Print\".\nShow `selected`.\n"), 0600); err != nil {
+		if err := os.WriteFile(main, []byte("Create \"Worker\" as a New Basic App.\nThe App Prints `selected`.\n"), 0600); err != nil {
 			t.Fatal(err)
 		}
 		command, err := parseCommand([]string{"build", "--language=selected", "--assets", assets, main})

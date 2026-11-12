@@ -206,14 +206,13 @@ test('deployment guard permits reviewed checks and rejects publication, npm hook
   const root = await temporary(t), site = join(root, 'website');
   await mkdir(join(site, 'ci-templates'), { recursive: true }); await mkdir(join(site, 'scripts'));
   await mkdir(join(root, '.github/workflows'), { recursive: true });
-  const minimal = 'name: Dormant fixture\non:\n  pull_request: {}\njobs:\n  check:\n    runs-on: ubuntu-24.04\n    steps:\n      - run: true\n';
-  for (const name of ['docs-check.yml.disabled', 'docs-release-pages.yml.disabled', 'docs-recover-pages.yml.disabled']) await writeFile(join(site, 'ci-templates', name), minimal);
+  const minimal = 'name: Fixture\non:\n  pull_request: {}\njobs:\n  check:\n    runs-on: ubuntu-24.04\n    steps:\n      - run: true\n';
   await writeFile(join(site, 'package.json'), '{"scripts":{"build":"node build.mjs"}}');
   await assert.rejects(verifyDisabled({ root }), /Required active/);
-  const checks = minimal.replace('name: Dormant fixture', 'name: L documentation checks\npermissions:\n  contents: read');
+  const checks = minimal.replace('name: Fixture', 'name: L documentation checks\npermissions:\n  contents: read');
   const approved = join(root, '.github/workflows/docs-check.yml');
   await writeFile(approved, checks);
-  assert.deepEqual(await verifyDisabled({ root }), { templates: 3, state: 'checks-active', deployment: 'disabled' });
+  assert.deepEqual(await verifyDisabled({ root }), { state: 'checks-active', deployment: 'disabled' });
   const quality = join(root, '.github/workflows/quality.yml');
   await writeFile(quality, checks.replace('- run: true', '- run: npm --prefix=website audit --audit-level=high'));
   assert.equal((await verifyDisabled({ root })).deployment, 'disabled');
@@ -248,6 +247,6 @@ test('deployment guard permits reviewed checks and rejects publication, npm hook
   await assert.rejects(verifyDisabled({ root }), /lifecycle/); await writeFile(join(site, 'package.json'), '{}');
   await writeFile(join(site, 'package.json'), '{"scripts":{"build":"cp ci-templates/docs-check.yml.disabled ../.github/workflows/docs.yml"}}');
   await assert.rejects(verifyDisabled({ root }), /addresses active/); await writeFile(join(site, 'package.json'), '{}');
-  await writeFile(join(site, 'ci-templates/docs-check.yml.disabled'), minimal.replace('- run: true', '- uses: actions/checkout@v4'));
-  await assert.rejects(verifyDisabled({ root }), /Unpinned/);
+  await writeFile(join(site, 'ci-templates/docs-check.yml.disabled'), minimal);
+  await assert.rejects(verifyDisabled({ root }), /canonical workflow/);
 });

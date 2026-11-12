@@ -1,6 +1,6 @@
 # Logemes and the Rust target
 
-A logeme is a small logical unit represented by a symbol and a native template. Syllables compose those units; sequences connect syllables. Lyger lowers resolved L source to AML, and the Go implementation called Logiceme interprets that framed input into Rust source bundles. Source generation is not compilation or execution.
+A logeme is a small logical unit represented by a symbol and a native template. Syllables compose those units, and sequences connect syllables. Lyger lowers resolved L source to AML, and the Go implementation called Logiceme interprets that framed input into Rust source bundles. Source generation is not compilation or execution.
 
 ## Three contracts to keep separate
 
@@ -21,6 +21,6 @@ The [alphabet](alphabet.md) is a target-independent design model. The [Rust asse
 
 ## Evidence status
 
-The descriptions here are source-inspected implementation reference, informed by maintained contracts and existing tests. No backend generation, native compilation or runtime execution is performed by a normal website build. Historical green results in the [ledger](../../../logiceme/testdata/lucid/FAILURES.md) apply to their recorded revision and host.
+The descriptions here are source-inspected implementation reference, informed by maintained contracts and existing tests. No backend generation, native compilation or runtime execution is performed by a normal website build.
 
 Every selected segment and supported case family is classified in the documentation coverage manifest. This is an implementation inventory and audit aid, not independent maintainer ratification of a new language standard.

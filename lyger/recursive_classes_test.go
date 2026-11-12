@@ -200,7 +200,7 @@ func TestFrontendRecursiveClassSource(t *testing.T) {
 			}
 		})
 	}
-	bundle, err := Logiceme.NewLogicemeService(cfg.Resources).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{IncludeRuntime: false})
+	bundle, err := Logiceme.NewLogicemeService(cfg.Resources).Evaluate(units[0].BackendAML)
 	recordBundle(t, bundle)
 	if err != nil {
 		t.Fatal(err)
@@ -217,7 +217,7 @@ func TestFrontendRecursiveClassSource(t *testing.T) {
 		"/src/__l_class_middle.rs": {"mod leaf;"},
 		"/src/__l_class_leaf.rs":   {"mod main;"},
 	})
-	buildActualBundle(t, bundle, units[0].ID, false, "")
+	buildActualBundle(t, bundle, units[0].ID)
 
 }
 
@@ -260,7 +260,7 @@ func TestFrontendInterleavedClassSource(t *testing.T) {
 	if len(group.members) != 4 || group.members[0].Object == nil || group.members[1].Class == nil || group.members[2].Object == nil || group.members[3].Object == nil || group.members[3].Object.ID != group.Root {
 		t.Fatal("source interleaving lost at Class lowering")
 	}
-	bundle, err := Logiceme.NewLogicemeService(cfg.Resources).Evaluate(units[0].BackendAML, Logiceme.GenerationOptions{IncludeRuntime: false})
+	bundle, err := Logiceme.NewLogicemeService(cfg.Resources).Evaluate(units[0].BackendAML)
 	recordBundle(t, bundle)
 	if err != nil {
 		t.Fatalf("%v\n%s", err, units[0].BackendAML)
@@ -278,7 +278,7 @@ func TestFrontendInterleavedClassSource(t *testing.T) {
 		"/src/__l_class_branch.rs": {"mod first;", "mod leaf;", "mod last;"},
 		"/src/__l_class_leaf.rs":   {"mod deep;"},
 	})
-	buildActualBundle(t, bundle, units[0].ID, false, "")
+	buildActualBundle(t, bundle, units[0].ID)
 }
 
 func assertClassModules(t *testing.T, bundle Logiceme.Executable, expected map[string][]string) {

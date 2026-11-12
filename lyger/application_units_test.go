@@ -15,14 +15,6 @@ func executableTestResult(t *testing.T, source memberResolutionSource) *Compilat
 	return &CompilationResult{Compilation: comp, ExpandedSource: bytes.Clone(comp.ExpandedBytes), AML: bytes.Clone(comp.ASMBytes), BackendAML: bytes.Clone(comp.Program.BackendBytes)}
 }
 
-func executableTestCompanions(result *CompilationResult) []AppArtifact {
-	var resultApps []AppArtifact
-	for _, app := range result.Compilation.Program.Apps {
-		resultApps = append(resultApps, AppArtifact{ID: app.buildName(), RelativeExecutable: "main.apps/" + app.buildName()})
-	}
-	return resultApps
-}
-
 func TestApplicationUnitsPreserveSnapshotsAndBookOrder(t *testing.T) {
 	source := memberResolutionFixture(t)
 	source.main += "\n\nCreate \"SecondWorker\" as a New Basic App.\nThe App Prints x.\n"
@@ -59,7 +51,7 @@ func TestApplicationUnitsSingleAppMatchesExistingBackendDocument(t *testing.T) {
 	}
 }
 
-func TestBuildUnitsRejectIncompleteGraphsAndArtifactMappings(t *testing.T) {
+func TestBuildUnitsRejectIncompleteGraphs(t *testing.T) {
 	var absent *CompilationResult
 	if _, err := absent.ApplicationUnits(); err == nil {
 		t.Fatal("nil compilation accepted")
@@ -68,25 +60,6 @@ func TestBuildUnitsRejectIncompleteGraphsAndArtifactMappings(t *testing.T) {
 		t.Fatal("empty compilation accepted")
 	}
 	result := executableTestResult(t, memberResolutionFixture(t))
-	for _, tc := range []struct {
-		name      string
-		id        string
-		artifacts []AppArtifact
-	}{
-		{name: "missing", id: "main"},
-		{name: "unknown", id: "main", artifacts: []AppArtifact{{ID: "Other", RelativeExecutable: "main.apps/Other"}}},
-		{name: "duplicate", id: "main", artifacts: []AppArtifact{{ID: "HelloWorldApp", RelativeExecutable: "main.apps/one"}, {ID: "HelloWorldApp", RelativeExecutable: "main.apps/two"}}},
-		{name: "absolute", id: "main", artifacts: []AppArtifact{{ID: "HelloWorldApp", RelativeExecutable: "/tmp/Worker"}}},
-		{name: "escape", id: "main", artifacts: []AppArtifact{{ID: "HelloWorldApp", RelativeExecutable: "../Worker"}}},
-		{name: "empty path", id: "main", artifacts: []AppArtifact{{ID: "HelloWorldApp"}}},
-		{name: "empty id", artifacts: []AppArtifact{{ID: "HelloWorldApp", RelativeExecutable: "main.apps/Worker"}}},
-	} {
-		t.Run(tc.name, func(t *testing.T) {
-			if _, err := result.OrchestratorUnit(tc.id, tc.artifacts); err == nil {
-				t.Fatal("invalid build artifact mapping accepted")
-			}
-		})
-	}
 	result.Compilation.Program.Books[0].Name = "Missing"
 	if _, err := result.ApplicationUnits(); err == nil || !strings.Contains(err.Error(), "application") {
 		t.Fatalf("mismatched graph accepted: %v", err)

@@ -15,11 +15,11 @@ import (
 
 func TestBuildAcceptsLinkedResourceBundle(t *testing.T) {
 	assets := distributiontest.CompleteOverride(t)
-	shared := filepath.Join(t.TempDir(), "shared library")
-	if err := os.Rename(filepath.Join(assets, "stdlib"), shared); err != nil {
+	shared := filepath.Join(t.TempDir(), "shared builtins")
+	if err := os.Rename(filepath.Join(assets, "builtins"), shared); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.Symlink(shared, filepath.Join(assets, "stdlib")); err != nil {
+	if err := os.Symlink(shared, filepath.Join(assets, "builtins")); err != nil {
 		t.Fatal(err)
 	}
 	// Both spellings eventually point back to previously visited directories.
@@ -31,7 +31,7 @@ func TestBuildAcceptsLinkedResourceBundle(t *testing.T) {
 	}
 	project := t.TempDir()
 	main := filepath.Join(project, "main.l")
-	source := "Use IO's Print from `io` as \"Print\".\nCreate \"Worker\" as a New Basic App.\nThe App Prints `linked resources`.\nExecute Worker.\nShow Worker's Output.\n"
+	source := "\nCreate \"Worker\" as a New Basic App.\nThe App Prints `linked resources`.\n"
 	if err := os.WriteFile(main, []byte(source), 0600); err != nil {
 		t.Fatal(err)
 	}

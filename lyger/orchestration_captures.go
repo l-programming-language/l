@@ -17,8 +17,6 @@ type orchestrationCallable struct {
 	Owner  *orchestrationBlock
 }
 
-func (slot *orchestrationCallable) name() string { return fmt.Sprintf("lCallable%d", slot.ID) }
-
 type orchestrationCaptureAccess struct {
 	Name  string
 	Index int
