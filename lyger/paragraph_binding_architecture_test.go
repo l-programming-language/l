@@ -108,7 +108,7 @@ func TestParagraphBindingPrivateNominalsDistinguishIdentity(t *testing.T) {
 		t.Fatal("distinct local templates produced the same expansion")
 	}
 	for index, alias := range aliases {
-		parameter := &objectGram{noun: &token{binding: &tokenBinding{Record: alias.record}}}
+		parameter := &objectGram{nominalGram: nominalGram{noun: &token{binding: &tokenBinding{Record: alias.record}}}}
 		constructor := &constructionNode{Nominal: "holder", Parameters: []*objectGram{parameter}}
 		if err := compilation.validateConstructionParameters(constructor, []DefinitionInstance{instances[index]}); err != nil {
 			t.Fatalf("valid local nominal alias rejected: %v", err)

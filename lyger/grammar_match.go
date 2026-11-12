@@ -26,17 +26,6 @@ func (selected tokenSelection) add(tokens ...*token) {
 	}
 }
 
-// ordered returns nonnil associations in their original source order.
-func (selected tokenSelection) ordered(source []*token) []*token {
-	result := make([]*token, 0, len(selected))
-	for _, tok := range source {
-		if tok != nil && selected[tok] {
-			result = append(result, tok)
-		}
-	}
-	return result
-}
-
 func (selected tokenSelection) remaining(source []*token) []*token {
 	result := make([]*token, 0, len(source))
 	for _, tok := range source {
@@ -290,21 +279,24 @@ func (s conditionalGram) clone() conditionalGram {
 	return s
 }
 
-func (s valueGram) clone() valueGram {
+func (s nominalGram) clone() nominalGram {
 	s.adjectives = append([]*token(nil), s.adjectives...)
 	s.adjectiveForms = append([]selectedTokenForm(nil), s.adjectiveForms...)
+	return s
+}
+
+func (s valueGram) clone() valueGram {
+	s.nominalGram = s.nominalGram.clone()
 	return s
 }
 
 func (s subjectGram) clone() subjectGram {
-	s.adjectives = append([]*token(nil), s.adjectives...)
-	s.adjectiveForms = append([]selectedTokenForm(nil), s.adjectiveForms...)
+	s.nominalGram = s.nominalGram.clone()
 	return s
 }
 
 func (s objectGram) clone() objectGram {
-	s.adjectives = append([]*token(nil), s.adjectives...)
-	s.adjectiveForms = append([]selectedTokenForm(nil), s.adjectiveForms...)
+	s.nominalGram = s.nominalGram.clone()
 	return s
 }
 

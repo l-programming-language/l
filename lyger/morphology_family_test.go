@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
@@ -33,6 +34,8 @@ func TestMorphologyCompleteFamily(t *testing.T) {
 		{"verb", `"Execute|-s|-d|--ing|--or"`},
 		{"verb", `"Read|-s|-|-|-"`},
 		{"noun", `"Thing|-s|-|-"`},
+		{"verb", `"Fold'|--s|--ed'|--ing|--er"`},
+		{"noun", `"Parcel’|----s|----like|----ing"`},
 	} {
 		t.Run(tc.label, func(t *testing.T) {
 			word := newLexeme(tc.pos)
@@ -55,6 +58,7 @@ func TestMorphologyCompleteFamily(t *testing.T) {
 		{"verb", `"Read|-|--D|---AD|----EAD"`},
 		{"verb", `"Read|-s|------past|-ing|-er"`},
 		{"verb", `"Read|-s|-----|-ing|-er"`},
+		{"verb", `"Read|-|-|-|-'s"`},
 		{"verb", `"R\u002eead|-s|-|-ing|-er"`},
 		{"verb", `"Read|-s|-\u002e|-ing|-er"`},
 		{"verb", "\"Read|-s|-`|-ing|-er\""},
@@ -86,9 +90,11 @@ func TestMorphologyLabelParsing(t *testing.T) {
 			t.Errorf("invalid label %s: %v", raw, err)
 		}
 	}
-	word := newLexeme("noun")
-	if err := word.reLabel(`"Message"`); err != nil || word.Root != "message" || len(word.Forms) != 0 {
-		t.Fatalf("ordinary name acquired required family cases: %+v, %v", word, err)
+	for _, label := range []string{"Message", "Message's", "Messages’", "Message,"} {
+		word := newLexeme("noun")
+		if err := word.reLabel(strconv.Quote(label)); err != nil || word.Root != strings.ToLower(label) || len(word.Forms) != 0 {
+			t.Fatalf("ordinary name acquired required family cases: %+v, %v", word, err)
+		}
 	}
 }
 
@@ -98,8 +104,12 @@ func TestMorphologyRequiresEveryDeclaredCase(t *testing.T) {
 		{"verb", "Fold|-s|-ed|-ing|-er"},
 	} {
 		parts := strings.Split(family.label, "|")
-		for slot := 1; slot < len(parts); slot++ {
-			for _, defect := range []string{"omitted", "empty", "malformed"} {
+		for slot := range parts {
+			defects := []string{"'s", "’S", "s'", "S’", ","}
+			if slot > 0 {
+				defects = append(defects, "omitted", "empty", "malformed")
+			}
+			for _, defect := range defects {
 				t.Run(family.pos+"/"+strconv.Itoa(slot)+"/"+defect, func(t *testing.T) {
 					invalid := append([]string(nil), parts...)
 					switch defect {
@@ -109,6 +119,8 @@ func TestMorphologyRequiresEveryDeclaredCase(t *testing.T) {
 						invalid[slot] = ""
 					case "malformed":
 						invalid[slot] = "not-a-suffix"
+					default:
+						invalid[slot] += defect
 					}
 					word := newLexeme(family.pos)
 					if err := word.declareFamily(strconv.Quote(strings.Join(invalid, "|"))); !errors.Is(err, lerrors.Syntax) {
@@ -120,6 +132,57 @@ func TestMorphologyRequiresEveryDeclaredCase(t *testing.T) {
 				})
 			}
 		}
+	}
+}
+
+func TestMorphologySpellingRejectsBeforePublication(t *testing.T) {
+	for _, tc := range []struct{ label, declaration string }{
+		{"Fold|-s|-ed's|-ing|-er", "Create %q for Printing any Text."},
+		{"Read|-|-|-|-'s", "Create %q for Printing any Text."},
+		{"Fold|-s|-ed,|-ing|-er", "Create %q for Printing any Text."},
+		{"Fold's|-s|-ed|-ing|-er", "Define %q to `<DEF>E{|Statement: ~7~|}<DEF>`."},
+		{"Parcel|-s|-like|-ing’s", "Define %q as `<DEF>E{|Statement: ~7~|}<DEF>`."},
+		{"Parcel,|-s|-like|-ing", "Define %q as `<DEF>E{|Statement: ~7~|}<DEF>`."},
+		{"Fold|-s|-ed's|-ing|-er", "Use Print as %q."},
+		{"Fold|-s|-ed's|-ing|-er", "    Publicly create %q as a New Function with No Inputs and Outputs of Text.\nReturn `value`.\n"},
+	} {
+		t.Run(tc.declaration+tc.label, func(t *testing.T) {
+			c := paragraphPublicationSource(t, fmt.Sprintf(tc.declaration, tc.label))
+			if !errors.Is(c.Error, lerrors.Syntax) || !strings.Contains(c.Error.Error(), "family") || !strings.Contains(c.Error.Error(), "main.l:1:") {
+				t.Fatalf("invalid family escaped declaration validation: %v", c.Error)
+			}
+			root := strings.Split(tc.label, "|")[0]
+			if c.Memory[root] != nil {
+				t.Fatalf("invalid family published %q", root)
+			}
+		})
+	}
+}
+
+func TestMorphologySpellingPreservesSourceRoles(t *testing.T) {
+	for _, suffix := range []string{"-ed", "-", "-ed'", "-ed’", "-ed!", "-ed;", "-ed/", "-ed\\", "-ed,past"} {
+		t.Run(suffix, func(t *testing.T) {
+			spelling := "Fold" + suffix[1:]
+			source := fmt.Sprintf("Create %q for Printing any Text.\nCreate \"Worker\" as a New Basic App.\nWorker is %s `payload's,`.\n", "Fold|-s|"+suffix+"|-ing|-er", spelling)
+			c := paragraphPublicationSource(t, source)
+			if c.Error != nil {
+				t.Fatal(c.Error)
+			}
+			uses := 0
+			for _, statement := range testProgramStatements(c.Statements) {
+				for _, tok := range statement.tokens {
+					if string(tok.rawBytes) == spelling {
+						uses++
+						if tok.binding == nil || tok.binding.Record != c.Memory["Fold"] || tok.binding.Form != "passive" || tok.binding.Possessive {
+							t.Fatalf("source spelling lost its declared passive role: %+v", tok.binding)
+						}
+					}
+				}
+			}
+			if uses != 1 {
+				t.Fatalf("passive uses = %d, want 1", uses)
+			}
+		})
 	}
 }
 

@@ -69,7 +69,7 @@ func TestRefactorBoundExtractionRetainsStorageIdentity(t *testing.T) {
 		{Type: storageIterative, Iterative: &iterative{Type: valueDictionary, Dictionary: newDict()}},
 	} {
 		noun := &token{rawBytes: []byte("existing"), mem: original, defined: true}
-		object := &objectGram{cType: "definitive", noun: noun}
+		object := &objectGram{nominalGram: nominalGram{cType: "definitive", noun: noun}}
 		value, path, err := object.getValue(false)
 		if err != nil {
 			t.Fatal(err)
@@ -119,8 +119,8 @@ func TestRefactorDeclarationExtractionRejectsMalformedStorage(t *testing.T) {
 
 func TestRefactorDeclarationExtractionPropagatesActionFailure(t *testing.T) {
 	subject := &subjectGram{
-		cType: "directive", noun: &token{rawBytes: []byte(`"Action"`)},
-		phrase: &phraseGram{cType: "definitive", sType: "phrase.directive", clauses: []*clauseGram{{}}},
+		nominalGram: nominalGram{cType: "directive", noun: &token{rawBytes: []byte(`"Action"`)}},
+		phrase:      &phraseGram{cType: "definitive", sType: "phrase.directive", clauses: []*clauseGram{{}}},
 	}
 	if _, err := subject.getDeclaration(); err == nil || err.Error() != "directive action requires a bound lexeme" {
 		t.Fatalf("action extraction lost its original failure: %v", err)

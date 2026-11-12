@@ -53,12 +53,12 @@ func TestCheckedLoweringRejectsMalformedResolvedStorage(t *testing.T) {
 			}
 			noun := &token{rawBytes: []byte("Worker"), mem: tc.value, binding: &tokenBinding{Record: record, Root: "Worker"}}
 			compilation := &Compilation{Semantics: newSemanticProgram()}
-			statement := &lStatement{sGram: &statementGram{subject: &subjectGram{noun: noun}}}
+			statement := &lStatement{sGram: &statementGram{subject: &subjectGram{nominalGram: nominalGram{noun: noun}}}}
 			if actual, err := compilation.statementApp(statement); err == nil || !strings.Contains(err.Error(), tc.want) || actual != nil {
 				t.Fatalf("application body accepted malformed owner storage: %v/%v", actual, err)
 			}
 			unboundNominal := &token{rawBytes: []byte("App"), mem: tc.value}
-			if actual, err := compilation.constructObject(&objectGram{noun: unboundNominal}, make(map[*descriptorRule]bool)); err == nil || !strings.Contains(err.Error(), tc.want) || actual != nil {
+			if actual, err := compilation.constructObject(&objectGram{nominalGram: nominalGram{noun: unboundNominal}}, make(map[*descriptorRule]bool)); err == nil || !strings.Contains(err.Error(), tc.want) || actual != nil {
 				t.Fatalf("construction accepted malformed resolved nominal: %v/%v", actual, err)
 			}
 		})
@@ -71,7 +71,7 @@ func TestCheckedDefinitionDiscoveryPropagatesStorageError(t *testing.T) {
 	compilation := &Compilation{Semantics: newSemanticProgram()}
 	target := &token{rawBytes: []byte(`"ForeignDefinition"`), tType: "primitive.text", mem: &entry{Type: storagePrimitive, Primitive: &primitive{Type: valueText, Text: `"ForeignDefinition"`}}}
 	compilation.Semantics.Subjects[target] = record
-	compilation.Semantics.Declarations[record] = &lStatement{sGram: &statementGram{subject: &subjectGram{noun: target}, predicate: &predicateGram{cType: "assign", obj: &objectGram{tokens: []*token{invalid}}}}}
+	compilation.Semantics.Declarations[record] = &lStatement{sGram: &statementGram{subject: &subjectGram{nominalGram: nominalGram{noun: target}}, predicate: &predicateGram{cType: "assign", obj: &objectGram{nominalGram: nominalGram{tokens: []*token{invalid}}}}}}
 	if actual, err := compilation.recordTemplate(record); err == nil || !strings.Contains(err.Error(), "requires one storage payload") || actual != nil {
 		t.Fatalf("definition lookup converted malformed storage into an absent template: %v/%v", actual, err)
 	}
@@ -85,7 +85,7 @@ func TestCheckedApplicationBodyUsesCanonicalAliasOwner(t *testing.T) {
 	semantics.Aliases[alias] = canonical
 	compilation := &Compilation{Semantics: semantics}
 	noun := &token{rawBytes: []byte("Alias"), mem: alias.Value, binding: &tokenBinding{Record: alias, Root: "Alias"}}
-	actual, err := compilation.statementApp(&lStatement{sGram: &statementGram{subject: &subjectGram{noun: noun}}})
+	actual, err := compilation.statementApp(&lStatement{sGram: &statementGram{subject: &subjectGram{nominalGram: nominalGram{noun: noun}}}})
 	if err != nil || actual != app {
 		t.Fatalf("application body lost canonical alias owner: %p/%v, want %p", actual, err, app)
 	}
@@ -95,7 +95,7 @@ func TestCheckedApplicationBodyIgnoresOtherApplicativePayloads(t *testing.T) {
 	record := &record{ID: "App", Value: &entry{Type: storageApplicative, Applicative: &applicative{Type: valueService, Service: &service{}}}}
 	noun := &token{rawBytes: []byte("App"), mem: record.Value, binding: &tokenBinding{Record: record, Root: "App"}}
 	compilation := &Compilation{Semantics: newSemanticProgram()}
-	actual, err := compilation.statementApp(&lStatement{sGram: &statementGram{subject: &subjectGram{noun: noun}}})
+	actual, err := compilation.statementApp(&lStatement{sGram: &statementGram{subject: &subjectGram{nominalGram: nominalGram{noun: noun}}}})
 	if err != nil || actual != nil {
 		t.Fatalf("non-App applicative was treated as an application subject: %v/%v", actual, err)
 	}

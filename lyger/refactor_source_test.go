@@ -185,14 +185,14 @@ func TestRefactorLiteralRestorationSharesGrammarTokens(t *testing.T) {
 			}
 			original := bytes.Clone(prepared.Original)
 			parserView := bytes.Clone(prepared.PreparedBytes)
-			lexicalType, category, binding := cached.tType, cached.category, cached.binding
+			lexicalType, binding := cached.tType, cached.binding
 			if err := statement.uncacheLiterals(prepared.TextCache); err != nil {
 				t.Fatal(err)
 			}
 			if string(cached.rawBytes) != literal || cached.mem == nil || cached.mem.Primitive == nil || cached.mem.Primitive.Text != literal {
 				t.Fatalf("literal restoration = %q / %+v", cached.rawBytes, cached.mem)
 			}
-			if cached.tType != lexicalType || cached.category != category || cached.binding != binding || string(prepared.TextCache[id]) != literal || !bytes.Equal(prepared.Original, original) || !bytes.Equal(prepared.PreparedBytes, parserView) {
+			if cached.tType != lexicalType || cached.binding != binding || string(prepared.TextCache[id]) != literal || !bytes.Equal(prepared.Original, original) || !bytes.Equal(prepared.PreparedBytes, parserView) {
 				t.Fatal("restoration mutated lexical identity, source, or literal pool")
 			}
 			prepared.TextCache[id][1] = 'X'

@@ -55,7 +55,7 @@ func definitionGrammarSignature(tok *token, constructor, named bool) (grammarAri
 
 // Grammar and lowering select the same header without allocating value labels.
 func (c *Compilation) constructorGrammarSignature(noun *token, modifiers []*token, named bool) (grammarArity, error) {
-	node, err := c.constructObjectMode(&objectGram{noun: noun, adjectives: modifiers}, make(map[*descriptorRule]bool), constructionHeaderOnly)
+	node, err := c.constructObjectMode(&objectGram{nominalGram: nominalGram{noun: noun, adjectives: modifiers}}, make(map[*descriptorRule]bool), constructionHeaderOnly)
 	if err != nil {
 		return grammarArity{}, err
 	}

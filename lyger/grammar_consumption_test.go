@@ -65,7 +65,7 @@ func TestGrammarPossessiveSubjectConsumesSourceOrder(t *testing.T) {
 	if err = subject.build(); err != nil {
 		t.Fatal(err)
 	}
-	if subject.noun != tokens[2] || !reflect.DeepEqual(subject.getLexTokens(), tokens[:3]) || len(subject.tokens) != len(tokens) {
+	if subject.article != tokens[0] || !reflect.DeepEqual(subject.adjectives, tokens[1:2]) || subject.noun != tokens[2] || len(subject.tokens) != len(tokens) {
 		t.Fatalf("subject did not consume source order: %+v", subject)
 	}
 	if subject.phrase == nil || subject.phrase.obj == nil || subject.phrase.obj.noun != tokens[4] {

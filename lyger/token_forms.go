@@ -218,9 +218,7 @@ func (c *grammarFormCollector) visit(node any) {
 		}
 		c.visit(node.subject)
 		c.visit(node.predicate)
-		for _, child := range node.clauses {
-			c.visit(child)
-		}
+		collectGrammarForms(c, node.clauses)
 	case *subjectGram:
 		if node == nil {
 			return
@@ -247,18 +245,10 @@ func (c *grammarFormCollector) visit(node any) {
 		c.visit(node.subject)
 		c.visit(node.obj)
 		c.visit(node.phrase)
-		for _, child := range node.subjects {
-			c.visit(child)
-		}
-		for _, child := range node.objects {
-			c.visit(child)
-		}
-		for _, child := range node.values {
-			c.visit(child)
-		}
-		for _, child := range node.clauses {
-			c.visit(child)
-		}
+		collectGrammarForms(c, node.subjects)
+		collectGrammarForms(c, node.objects)
+		collectGrammarForms(c, node.values)
+		collectGrammarForms(c, node.clauses)
 	case *clauseGram:
 		if node == nil {
 			return
@@ -268,45 +258,33 @@ func (c *grammarFormCollector) visit(node any) {
 		c.visit(node.obj)
 		c.visit(node.predicate)
 		c.visit(node.phrase)
-		for _, child := range node.objects {
-			c.visit(child)
-		}
-		for _, child := range node.values {
-			c.visit(child)
-		}
-		for _, child := range node.phrases {
-			c.visit(child)
-		}
-		for _, child := range node.clauses {
-			c.visit(child)
-		}
+		collectGrammarForms(c, node.objects)
+		collectGrammarForms(c, node.values)
+		collectGrammarForms(c, node.phrases)
+		collectGrammarForms(c, node.clauses)
 	case *predicateGram:
 		if node == nil {
 			return
 		}
 		c.visit(node.obj)
-		for _, child := range node.clauses {
-			c.visit(child)
-		}
-		for _, child := range node.conditionals {
-			c.visit(child)
-		}
+		collectGrammarForms(c, node.clauses)
+		collectGrammarForms(c, node.conditionals)
 	case *conditionalGram:
 		if node == nil {
 			return
 		}
-		for _, child := range node.clauses {
-			c.visit(child)
-		}
-		for _, child := range node.conditions {
-			c.visit(child)
-		}
+		collectGrammarForms(c, node.clauses)
+		collectGrammarForms(c, node.conditions)
 	case *conditionGram:
 		if node == nil {
 			return
 		}
-		for _, child := range node.values {
-			c.visit(child)
-		}
+		collectGrammarForms(c, node.values)
+	}
+}
+
+func collectGrammarForms[T any](collector *grammarFormCollector, nodes []T) {
+	for _, node := range nodes {
+		collector.visit(node)
 	}
 }

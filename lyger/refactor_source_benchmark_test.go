@@ -163,7 +163,7 @@ func BenchmarkRefactorLiteralRestoration(b *testing.B) {
 					for j := range tokens {
 						tokens[j] = &token{rawBytes: []byte(raw[j]), tType: "primitive.text", mem: &entry{Type: storagePrimitive, Primitive: &primitive{Type: valueText, Text: raw[j]}}}
 					}
-					statement := &lStatement{tokens: tokens, sGram: &statementGram{tokens: tokens, predicate: &predicateGram{tokens: tokens, obj: &objectGram{tokens: tokens, noun: tokens[0]}}}}
+					statement := &lStatement{tokens: tokens, sGram: &statementGram{tokens: tokens, predicate: &predicateGram{tokens: tokens, obj: &objectGram{nominalGram: nominalGram{tokens: tokens, noun: tokens[0]}}}}}
 					if err := statement.uncacheLiterals(pool); err != nil || !bytes.Equal(tokens[0].rawBytes, want) {
 						b.Fatalf("restore: %v", err)
 					}

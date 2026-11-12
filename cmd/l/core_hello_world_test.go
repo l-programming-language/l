@@ -22,6 +22,7 @@ import (
 
 func TestCoreHelloWorld(t *testing.T) {
 	for _, test := range []struct{ name, source, output string }{
+		{"active-overlap", "Create \"Fold|-|-ed|-ing|-er\" for Printing any Text.\nCreate \"Overlap\" as a New Basic App.\nOverlap Fold `first`.\nThe App Fold `second`.\n", "first\nsecond\n"},
 		{"literal", "Create \"Hello\" as a New Basic App.\nThe App Prints `Hello World!`.\n", "Hello World!\n"},
 		{"binding", "\"message\" is `Rain, \"quoted\" snow 雪!`.\nCreate \"Weather\" as a New Basic App.\nThe App Prints message.\n", "Rain, \"quoted\" snow 雪!\n"},
 		{"ordered", "Create \"Lines\" as a New Basic App.\nThe App Prints `first` and then Prints `second`.\n", "first\nsecond\n"},

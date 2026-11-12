@@ -66,8 +66,7 @@ func TestLiteralRestorationPreservesTokenMetadata(t *testing.T) {
 	tok.binding = &tokenBinding{Record: &record{ID: "metadata-owner"}, Root: "metadata-owner", POS: "noun", Form: "active", Possessive: true}
 	tok.bindingError = errors.New("retained diagnostic")
 	tok.mem.Runtime = &runtimeReference{OwnerID: "runtime-owner", Member: memberOutput, Source: statement}
-	tok.category, tok.subCategory, tok.class = "retained category", "retained subcategory", "retained class"
-	tok.abstract, tok.conjoined, tok.defined = true, true, true
+	tok.conjoined, tok.defined = true, true
 	before, entryBefore := *tok, *tok.mem
 	if err := statement.uncacheLiterals(prepared.TextCache); err != nil {
 		t.Fatal(err)
@@ -87,7 +86,7 @@ func TestLiteralRestorationVisitsOriginalTokensOnce(t *testing.T) {
 	const second = "`22222222-2222-2222-2222-222222222222`"
 	tokens := []*token{literalRestorationToken(t, first), literalRestorationToken(t, second)}
 	pool := map[string][]byte{first: []byte(second), second: []byte("`payload`")}
-	statement := &lStatement{tokens: tokens, sGram: &statementGram{tokens: tokens, predicate: &predicateGram{tokens: tokens, obj: &objectGram{tokens: tokens, noun: tokens[0]}}}}
+	statement := &lStatement{tokens: tokens, sGram: &statementGram{tokens: tokens, predicate: &predicateGram{tokens: tokens, obj: &objectGram{nominalGram: nominalGram{tokens: tokens, noun: tokens[0]}}}}}
 	if err := statement.uncacheLiterals(pool); err != nil {
 		t.Fatal(err)
 	}

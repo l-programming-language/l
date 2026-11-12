@@ -116,7 +116,7 @@ func TestParagraphGrammarEarlyVisibilityAndValueDescriptors(t *testing.T) {
 	lex := newLexeme("noun")
 	lex.Root = "item"
 	noun := &token{rawBytes: []byte("Item"), mem: &entry{Type: storageLexeme, Lexeme: lex}}
-	object := &objectGram{cType: "definitive", noun: noun, adjectives: tokens}
+	object := &objectGram{nominalGram: nominalGram{cType: "definitive", noun: noun, adjectives: tokens}}
 	value, _, err := object.getValue(false)
 	if err != nil {
 		t.Fatal(err)

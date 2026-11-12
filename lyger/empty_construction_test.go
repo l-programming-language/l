@@ -24,7 +24,7 @@ func TestEmptyConstructionRetainsRequiredArguments(t *testing.T) {
 			if rec == nil {
 				t.Fatal("source-defined constructor argument was not registered")
 			}
-			node := &constructionNode{Nominal: "holder", Parameters: []*objectGram{{noun: &token{binding: &tokenBinding{Record: rec}}}}}
+			node := &constructionNode{Nominal: "holder", Parameters: []*objectGram{{nominalGram: nominalGram{noun: &token{binding: &tokenBinding{Record: rec}}}}}}
 			instance, err := c.emptyConstructionSequence(node)
 			if err != nil || (instance != nil) != tc.empty {
 				t.Fatalf("empty argument = %+v, %v; want available %v", instance, err, tc.empty)
@@ -130,7 +130,7 @@ func TestEmptyConstructionUsesFirstParameter(t *testing.T) {
 		if rec == nil {
 			t.Fatalf("source-defined %s argument was not registered", name)
 		}
-		return &objectGram{noun: &token{binding: &tokenBinding{Record: rec}}}
+		return &objectGram{nominalGram: nominalGram{noun: &token{binding: &tokenBinding{Record: rec}}}}
 	}
 	for _, tc := range []struct {
 		name       string
@@ -139,7 +139,7 @@ func TestEmptyConstructionUsesFirstParameter(t *testing.T) {
 	}{
 		{"scalar before sequence", []*objectGram{parameter("Scalar"), parameter("Sequence")}, false},
 		{"sequence before scalar", []*objectGram{parameter("Sequence"), parameter("Scalar")}, true},
-		{"missing binding before sequence", []*objectGram{{noun: &token{}}, parameter("Sequence")}, false},
+		{"missing binding before sequence", []*objectGram{{nominalGram: nominalGram{noun: &token{}}}, parameter("Sequence")}, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			node := &constructionNode{Nominal: "holder", Parameters: tc.parameters}

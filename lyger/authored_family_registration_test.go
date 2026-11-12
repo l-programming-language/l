@@ -35,7 +35,7 @@ func TestAuthoredFamiliesRejectIncompleteRegistration(t *testing.T) {
 
 func TestFamilyRequirementIncludesPrivateImportsAndCore(t *testing.T) {
 	const invalid = "Define \"Facet\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\n"
-	for _, source := range []string{invalid, "Create \"Start\" for Printing any Text.\n"} {
+	for _, source := range []string{invalid, "Create \"Start\" for Printing any Text.\n", "Define \"Facet|-s|-like|-ing's\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\n", "Define \"Facet|-s|-like|-ing,\" as `<DEF>E{|Statement: ~7~|}<DEF>`.\n"} {
 		c := compileMemberResolutionSource(t, memberResolutionSource{main: "Use `local-words.l`.\n", library: "    " + source})
 		if c.Error == nil || !strings.Contains(c.Error.Error(), "family") || !strings.Contains(c.Error.Error(), "local-words.l") {
 			t.Fatalf("private imported declaration escaped validation: %v", c.Error)
@@ -206,28 +206,54 @@ func TestNativeFunctionBindingsRequireOwnInvocationFamily(t *testing.T) {
 		{"descriptive overlap", "Task|-s|-like|-like", "Tasklike"},
 	} {
 		for _, copy := range nativeFunctionFamilyCopies(alias.family, "Reader", true) {
-			for _, route := range []string{"positional action", "named action", "native body"} {
-				t.Run(alias.name+"/"+copy.name+"/"+route, func(t *testing.T) {
-					source := nativeFamilyFunction + copy.source + "Create \"Perform|-s|-ed|-ing|-er\" for " + alias.active + ".\n"
-					if route == "native body" {
-						source += "\n    Publicly create \"Exercise|-s|-d|--ing|--er\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\nReturn a New Performer.\n"
-					}
-					c := compileDefinitionSource(t, source, "native-invocation-family.l")
-					var err error
-					switch route {
-					case "positional action":
-						_, err = c.ComposeDefinition("Perform")
-					case "named action":
-						_, err = c.instantiateNamedDefinition(c.Memory["Perform"], map[string]DefinitionArgument{}, map[string]bool{}, make(map[*record]bool))
-					case "native body":
-						_, err = c.ComposeDefinition("Exercise")
-					}
-					if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "this binding's complete verb family") {
-						t.Fatalf("noun alias acquired Function invocation permission through %s: %v", route, err)
-					}
-				})
-			}
+			t.Run(alias.name+"/"+copy.name, func(t *testing.T) {
+				testNativeFunctionInvocationFamily(t, copy.source, alias.active)
+			})
 		}
+	}
+}
+
+func TestNativeFunctionInertWrappersRequireOwnInvocationFamily(t *testing.T) {
+	const marker = "Define \"Marker|-s|-like|-ing\" as `<DEF>E{|Statement: ~1~|}<DEF>`.\n"
+	for _, target := range []string{"Public Reader", "Markerlike Reader", "Reader with No Outputs", "Markerlike Reader with No Outputs"} {
+		for _, declaration := range []string{"Define \"Task|-s|-like|-ing\" as %s.\n", "\"Task|-s|-like|-ing\" is %s.\n"} {
+			t.Run(target+"/"+declaration, func(t *testing.T) {
+				testNativeFunctionInvocationFamily(t, marker+fmt.Sprintf(declaration, target), "Tasking")
+			})
+		}
+		for _, copy := range nativeFunctionFamilyCopies("Task|-s|-like|-ing", "Origin", true) {
+			// The wrapper belongs to a source definition before each alias or
+			// source-copy chain; it is never import-alias syntax.
+			source := marker + fmt.Sprintf("Define \"Origin|-s|-like|-ing\" as %s.\n", target) + copy.source
+			t.Run(target+"/chain/"+copy.name, func(t *testing.T) {
+				testNativeFunctionInvocationFamily(t, source, "Tasking")
+			})
+		}
+	}
+}
+
+func testNativeFunctionInvocationFamily(t *testing.T, declaration, action string) {
+	t.Helper()
+	for _, route := range []string{"positional action", "named action", "native body"} {
+		t.Run(route, func(t *testing.T) {
+			source := nativeFamilyFunction + declaration + "Create \"Perform|-s|-ed|-ing|-er\" for " + action + ".\n"
+			if route == "native body" {
+				source += "\n    Publicly create \"Exercise|-s|-d|--ing|--er\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\nReturn a New Performer.\n"
+			}
+			c := compileDefinitionSource(t, source, "native-invocation-family.l")
+			var err error
+			switch route {
+			case "positional action":
+				_, err = c.ComposeDefinition("Perform")
+			case "named action":
+				_, err = c.instantiateNamedDefinition(c.Memory["Perform"], map[string]DefinitionArgument{}, map[string]bool{}, make(map[*record]bool))
+			case "native body":
+				_, err = c.ComposeDefinition("Exercise")
+			}
+			if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "this binding's complete verb family") {
+				t.Fatalf("noun alias acquired Function invocation permission through %s: %v", route, err)
+			}
+		})
 	}
 }
 
@@ -248,6 +274,36 @@ func TestNativeFunctionBindingFamiliesPreserveConstructionAndCalls(t *testing.T)
 					}
 				}
 				testNativeDefinitionLibrary(t, c, "Exercise", "invocation_family", `#[path="src/invocation_family.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),7.0);}`)
+			})
+		}
+	}
+}
+
+func TestNativeFunctionCopyWrappersPreserveConstruction(t *testing.T) {
+	for _, tc := range []struct{ name, target, setup, expected string }{
+		{"new", "New Reader", "", "7.0"},
+		{"generic", "Generic Reader", "", "7.0"},
+		{"operand", "Echoer using 7", "    Publicly create \"Echo|-es|-ed|-ing|-er\" as a Generic `echo` Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n", "7.0"},
+		{"source descriptor", "Selected Reader", "Define \"Selected\" as a New Adjective describing any Reader.\nIt describes a Generic Reader.\n", "7.0"},
+		{"replacement", "Changed Reader", "Define \"Changed\" as a New Adjective describing any Reader.\nIt describes any Reader as `<DEF>E{|Statement: ~11.0~|}<DEF>`.\n", "11.0"},
+		{"wrapper", "Observed Reader", "Define \"Observed\" as a New Adjective describing any Reader.\nIt describes any Reader as `<DEF>(<@Reader@>*BOD^E{|Statement: ~crate::observe(<@Name|Label@>);~|})<DEF>`.\n", "7.0"},
+	} {
+		for _, declaration := range []string{"Define \"Task|-s|-like|-ing\" as %s.\n", "\"Task|-s|-like|-ing\" is %s.\n", "Define \"Saved|-s|-like|-ing\" as %s.\nUse Saved as \"Task|-s|-like|-ing\".\n"} {
+			t.Run(tc.name+"/"+declaration, func(t *testing.T) {
+				source := nativeFamilyFunction + tc.setup + fmt.Sprintf(declaration, tc.target) + "Create \"Perform|-s|-ed|-ing|-er\" for Tasking.\n\n    Publicly create \"Exercise|-s|-d|--ing|--er\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\nReturn a New Performer.\n"
+				c := compileDefinitionSource(t, source, "native-construction-wrapper.l")
+				defer c.definitionScope()()
+				if _, err := c.ComposeDefinition("Perform"); err != nil {
+					t.Fatal(err)
+				}
+				if _, err := c.instantiateNamedDefinition(c.Memory["Perform"], map[string]DefinitionArgument{}, map[string]bool{}, make(map[*record]bool)); err != nil {
+					t.Fatal(err)
+				}
+				observed := "0"
+				if tc.name == "wrapper" {
+					observed = "1"
+				}
+				testNativeDefinitionLibrary(t, c, "Exercise", "construction_wrapper", `static CALLS:std::sync::atomic::AtomicUsize=std::sync::atomic::AtomicUsize::new(0);pub fn observe(value:f64)->f64{assert_eq!(value,7.0);CALLS.fetch_add(1,std::sync::atomic::Ordering::SeqCst);value}#[path="src/construction_wrapper.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),`+tc.expected+`);assert_eq!(CALLS.load(std::sync::atomic::Ordering::SeqCst),`+observed+`);}`)
 			})
 		}
 	}

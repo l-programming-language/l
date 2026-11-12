@@ -381,13 +381,26 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 				return DefinitionInstance{}, false, err
 			}
 			object := selected.object
-			if object == nil || object.name != nil || object.phrase != nil || object.clause != nil {
+			if object == nil || object.name != nil || object.directivePhrase() != nil || nominalContext(nil, object.adjectives) {
 				break
 			}
 			rec = object.noun.binding.Record
 			for _, modifier := range valueModifiers(object.adjectives) {
-				if !modifier.isPossessive() {
-					rec = nil // Construction is not a transparent Function copy.
+				descriptor, err := c.descriptorFor(modifier)
+				if err != nil {
+					return DefinitionInstance{}, false, err
+				}
+				if descriptor != nil {
+					rec = nil // A selected descriptor supplies construction semantics.
+				}
+			}
+			if rec != nil {
+				node, err := c.constructObject(object, make(map[*descriptorRule]bool))
+				if err != nil {
+					return DefinitionInstance{}, false, err
+				}
+				if len(node.Arguments) > 0 {
+					rec = nil
 				}
 			}
 		}
@@ -407,7 +420,7 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 		arguments = append(arguments, argument)
 	}
 	for _, value := range action.values {
-		argument, _, err := c.staticObjectArgument(&objectGram{noun: value.noun}, nil, active, dynamic)
+		argument, _, err := c.staticObjectArgument(&objectGram{nominalGram: nominalGram{noun: value.noun}}, nil, active, dynamic)
 		if err != nil {
 			return DefinitionInstance{}, false, err
 		}

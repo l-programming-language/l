@@ -236,7 +236,10 @@ func (l *lexeme) validateFamily() error {
 }
 
 func validFamilySpelling(spelling string) bool {
-	return spelling != "" && utf8.ValidString(spelling) && !strings.ContainsAny(spelling, ".\"`|") && strings.IndexFunc(spelling, func(r rune) bool { return unicode.IsSpace(r) || unicode.IsControl(r) }) < 0
+	// A declared case must survive token loading and binding as its own word.
+	// Trailing commas mark conjunction; possessive suffixes select an owner.
+	_, possessive := possessiveOwner(spelling)
+	return !possessive && !strings.HasSuffix(spelling, ",") && spelling != "" && utf8.ValidString(spelling) && !strings.ContainsAny(spelling, ".\"`|") && strings.IndexFunc(spelling, func(r rune) bool { return unicode.IsSpace(r) || unicode.IsControl(r) }) < 0
 }
 
 // checkDescriptors scans a lexeme for a particular adverb or adjective

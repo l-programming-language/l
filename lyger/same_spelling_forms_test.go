@@ -47,9 +47,12 @@ func TestSameSpellingFormsContext(t *testing.T) {
 		for _, tc := range []struct{ source, form string }{
 			{"Read Value", "root"},
 			{"Target is Read Value", "passive"},
+			{"Target Read Value", "active"},
+			{"Target not Read Value", "active"},
 		} {
 			t.Run(fmt.Sprintf("%s/callable=%t", tc.source, callable), func(t *testing.T) {
-				statement, word := formTestStatement(t, tc.source, callable)
+				word := indexedTestWord(t, "Read", `"Read|-|-|-ing|-er"`, callable)
+				statement := boundFormStatement(t, tc.source, map[string]*record{"Read": word})
 				if err := statement.loadGram(); err != nil {
 					t.Fatal(err)
 				}
@@ -59,6 +62,23 @@ func TestSameSpellingFormsContext(t *testing.T) {
 					}
 				}
 			})
+		}
+	}
+}
+
+func TestSameSpellingActiveSource(t *testing.T) {
+	for _, active := range []string{"-", "-s"} {
+		for _, prefix := range []string{"", "Catalog's "} {
+			source := "Create \"Catalog\" as a Dictionary.\nCreate " + prefix + fmt.Sprintf("%q", "Fold|"+active+"|-ed|-ing|-er") + " for Printing any Text.\nCreate \"Worker\" as a New Basic App.\nWorker " + prefix + processLexFix("Fold", active, "postfix") + " `payload`.\n"
+			c := paragraphPublicationSource(t, source)
+			if c.Error != nil {
+				t.Fatalf("%s: %v", source, c.Error)
+			}
+			last := c.Statements[len(c.Statements)-1]
+			verb := last.sGram.predicate.clauses[0].verb
+			if verb.binding == nil || verb.binding.Form != "active" || verb.binding.Record != c.Memory[strings.ReplaceAll(prefix, "'s ", ".")+"Fold"] {
+				t.Fatalf("active caller lost selected identity: %+v", verb.binding)
+			}
 		}
 	}
 }
@@ -218,6 +238,12 @@ func TestSameSpellingFormsSpeculationIsPure(t *testing.T) {
 	}
 	if verb.binding != beforeBinding || verb.binding.Record != word || verb.binding.Form != "root" || verb.tType != beforeType || !bytes.Equal(verb.rawBytes, beforeBytes) {
 		t.Fatal("speculative clause changed its source token")
+	}
+	active := indexedTestWord(t, "Read", `"Read|-|-|-ing|-er"`, false)
+	failedActive := boundFormStatement(t, "Target Read Value unexpected", map[string]*record{"Read": active})
+	before := *failedActive.tokens[1]
+	if err := failedActive.loadGram(); err == nil || failedActive.tokens[1].binding != before.binding || failedActive.tokens[1].tType != before.tType || !bytes.Equal(failedActive.tokens[1].rawBytes, before.rawBytes) {
+		t.Fatal("failed subject-active candidate committed a form or accepted trailing garbage")
 	}
 	failed, _ := formTestStatement(t, "Target is Read Value unexpected", false)
 	if err := failed.loadGram(); err == nil {
@@ -415,47 +441,55 @@ func TestConstructedActorValueRegistersNoun(t *testing.T) {
 }
 
 func TestSameSpellingFormsBuildMemoryRetry(t *testing.T) {
-	const source = "Create \"Worker\" as a New Basic App.\nCreate \"Read|-s|-|-ing|-er\" for Showing any Thing.\n" +
-		"Define \"Item|-s|-like|-ing\" as `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
-		"Define \"Wrapped\" as a New Adjective describing any Item.\nWorker is Read a New Wrapped Item of 7.\n" +
-		"It describes any Item as `<DEF><@Item@><DEF>`.\n"
-	c := newCompilation([]byte(source), "retry-forms.l")
-	c.init(canonicalTestOptions())
-	for _, phase := range []func(){c.preProcess, c.build, c.scan} {
-		phase()
+	for _, form := range []string{"passive", "active"} {
+		source := "Create \"Worker\" as a New Basic App.\nCreate \"Read|-|-|-ing|-er\" for Showing any Thing.\n" +
+			"Define \"Item|-s|-like|-ing\" as `<DEF>KY{|Key: ~std::convert::identity~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
+			"Define \"Wrapped\" as a New Adjective describing any Item.\nWorker is Read a New Wrapped Item of 7.\n" +
+			"It describes any Item as `<DEF><@Item@><DEF>`.\n"
+		index := 2
+		if form == "active" {
+			source = strings.ReplaceAll(source, "Worker is Read", "Worker Read")
+			index = 1
+		}
+		c := newCompilation([]byte(source), "retry-forms.l")
+		c.init(canonicalTestOptions())
+		for _, phase := range []func(){c.preProcess, c.build, c.scan} {
+			phase()
+			if c.Error != nil {
+				t.Fatal(c.Error)
+			}
+		}
+		var statement *lStatement
+		for _, candidate := range testProgramStatements(c.Statements) {
+			if candidate.source.Span.Start.Line == 5 {
+				statement = candidate
+			}
+		}
+		if statement == nil {
+			t.Fatal("missing original caller")
+		}
+		verb, span := statement.tokens[index], statement.source.Span
+		var selected *record
+		failed := 0
+		c.Gram.constructorSignature = func(noun *token, modifiers []*token, named bool) (grammarArity, error) {
+			arity, err := c.constructorGrammarSignature(noun, modifiers, named)
+			if noun.scope == verb.scope && errors.Is(err, lerrors.UnresolvedReference) {
+				failed++
+				if verb.binding == nil || verb.binding.Form != "root" {
+					t.Fatal("unresolved grammar committed a speculative form")
+				}
+				selected = verb.binding.Record
+			}
+			return arity, err
+		}
+		c.analyze()
 		if c.Error != nil {
 			t.Fatal(c.Error)
 		}
-	}
-	var statement *lStatement
-	for _, candidate := range testProgramStatements(c.Statements) {
-		if candidate.source.Span.Start.Line == 5 {
-			statement = candidate
+		if failed == 0 || selected == nil || statement.tokens[index] != verb || verb.binding.Record != selected || verb.binding.Form != form || statement.source.Span != span || string(verb.rawBytes) != "Read" {
+			t.Fatalf("real unresolved-reference retry lost identity, form, or provenance: attempts=%d binding=%+v", failed, verb.binding)
 		}
-	}
-	if statement == nil {
-		t.Fatal("missing original caller")
-	}
-	verb, span := statement.tokens[2], statement.source.Span
-	var selected *record
-	failed := 0
-	c.Gram.constructorSignature = func(noun *token, modifiers []*token, named bool) (grammarArity, error) {
-		arity, err := c.constructorGrammarSignature(noun, modifiers, named)
-		if noun.scope == verb.scope && errors.Is(err, lerrors.UnresolvedReference) {
-			failed++
-			if verb.binding == nil || verb.binding.Form != "root" {
-				t.Fatal("unresolved grammar committed passive form")
-			}
-			selected = verb.binding.Record
-		}
-		return arity, err
-	}
-	c.analyze()
-	if c.Error != nil {
-		t.Fatal(c.Error)
-	}
-	if failed == 0 || selected == nil || statement.tokens[2] != verb || verb.binding.Record != selected || verb.binding.Form != "passive" || statement.source.Span != span || string(verb.rawBytes) != "Read" {
-		t.Fatalf("real unresolved-reference retry lost identity, form, or provenance: attempts=%d binding=%+v", failed, verb.binding)
+
 	}
 }
 

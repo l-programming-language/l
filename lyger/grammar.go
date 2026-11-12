@@ -300,28 +300,14 @@ func (l *lStatement) tokenize() error {
 
 // determineType of lStatement based on first verb identified.
 func (l *lStatement) determineType() {
-	for ind, sToken := range l.tokens {
-		if ind == 0 && l.sType == "" {
-			isCond, _ := sToken.isConditional()
-			if isCond {
-				l.sType = sToken.tType
-			}
+	for index, tok := range l.tokens {
+		if l.sType == "" && (index == 0 && tok.isConditional() || tok.getPOS(false) == "verbs") {
+			l.sType = tok.tType
 		}
-		if sToken.getPOS(false) == "verbs" && l.sType == "" {
-			if l.sType == "" {
-				l.sType = sToken.tType
-			}
-		}
-		if sToken.getPOS(false) == "unknown" {
+		if tok.getPOS(false) == "unknown" {
 			l.sType = "unknown"
 			break
 		}
-		/*
-			if sToken.getPOS(false) == "unknown" || sToken.tType == "nouns.NotFound.possessive" {
-					l.sType = "unknown"
-					break
-			}
-		*/
 	}
 }
 
