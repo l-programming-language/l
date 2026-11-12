@@ -256,9 +256,6 @@ func (c *grammarFormCollector) visit(node any) {
 		for _, child := range node.values {
 			c.visit(child)
 		}
-		for _, child := range node.phrases {
-			c.visit(child)
-		}
 		for _, child := range node.clauses {
 			c.visit(child)
 		}
@@ -271,9 +268,6 @@ func (c *grammarFormCollector) visit(node any) {
 		c.visit(node.obj)
 		c.visit(node.predicate)
 		c.visit(node.phrase)
-		for _, child := range node.subjects {
-			c.visit(child)
-		}
 		for _, child := range node.objects {
 			c.visit(child)
 		}
@@ -301,7 +295,6 @@ func (c *grammarFormCollector) visit(node any) {
 		if node == nil {
 			return
 		}
-		c.visit(node.clause)
 		for _, child := range node.clauses {
 			c.visit(child)
 		}

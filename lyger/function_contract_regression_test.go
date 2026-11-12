@@ -49,14 +49,6 @@ func TestFunctionConstructorContractRejectsStaticSubstitution(t *testing.T) {
 	}
 }
 
-var functionContractReads = map[string]string{
-	"Thing":   "Define \"saved\" as a New Thing of Respond.\nDefine \"Selected\" as a New Echo from saved.\n",
-	"List":    "Define \"saved\" as a New List of a New Thing of Respond.\nDefine \"Selected\" as a New Echo from saved at 0.\n",
-	"Map":     "Define \"saved\" as a New Map of Thing.\nPut Respond in saved as `key`.\nDefine \"Selected\" as a New Echo from saved at `key`.\n",
-	"Pointer": "Define \"saved\" as a New Pointer of a New Thing of Respond.\nDefine \"Selected\" as a New Echo from saved.\n",
-	"result":  functionSource("Select|-s|-ed|-ing|-or", "", "Thing", "Define \"boxed\" as a New Thing of Respond.\nReturn boxed.") + "Select as \"saved\".\nDefine \"Selected\" as a New Echo from saved.\n",
-}
-
 func TestFunctionReturnRejectsDifferentConstructorContract(t *testing.T) {
 	prefix := functionContractSource(t)
 	index := strings.LastIndex(prefix, "Return Value.")

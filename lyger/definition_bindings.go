@@ -75,7 +75,6 @@ type DefinitionArgument struct {
 	typeAtom     string
 	formal       *definitionParameter // exact source declaration parameter, carried only by its invocation
 	processType  *DefinitionArgument  // declared type of a structured Process input; never an executable operand
-	index        *uint64
 	sequence     []DefinitionInstance
 	source       SourceSpan
 	dependencies []DefinitionInstance
@@ -559,7 +558,7 @@ func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error
 	}
 	if expected == "" || expected == "syllable" || slot.Type == "Atoms" {
 		if argument.atoms != nil {
-			if argument.Text != "" || argument.reference != "" || argument.typeAtom != "" || argument.index != nil || argument.Definition != nil || len(argument.sequence) != 0 || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
+			if argument.Text != "" || argument.reference != "" || argument.typeAtom != "" || argument.Definition != nil || len(argument.sequence) != 0 || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
 				return "", lerrors.TypeMismatch.Errorf("atom list cannot contain a definition or another value")
 			}
 			values := make([]string, len(*argument.atoms))
@@ -577,9 +576,6 @@ func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error
 		}
 		if argument.typeAtom != "" {
 			return argument.metadataAtom()
-		}
-		if argument.index != nil {
-			return argument.propertyAtom()
 		}
 		if argument.reference != "" {
 			return argument.referenceAtom()
@@ -743,7 +739,7 @@ func (argument DefinitionArgument) nativeType() (DefinitionArgument, error) {
 		if argument.source.Path == "" {
 			argument.source = argument.Definition.Span
 		}
-	} else if argument.Kind == "Text" && argument.reference == "" && argument.atoms == nil && len(argument.sequence) == 0 && argument.index == nil && len(argument.Syllables) == 0 && len(argument.Props) == 0 && len(argument.Texts) == 0 {
+	} else if argument.Kind == "Text" && argument.reference == "" && argument.atoms == nil && len(argument.sequence) == 0 && len(argument.Syllables) == 0 && len(argument.Props) == 0 && len(argument.Texts) == 0 {
 		name = argument.Text
 	}
 	if !validDefinitionNativeType(name) {
@@ -760,13 +756,9 @@ func definitionTypeArgument(name string) DefinitionArgument {
 	return DefinitionArgument{Kind: definitionArgSyllable.String(), typeAtom: name}
 }
 
-func definitionIndexArgument(index uint64) DefinitionArgument {
-	return DefinitionArgument{Kind: definitionArgSyllable.String(), index: &index}
-}
-
 func (argument DefinitionArgument) metadataAtom() (string, error) {
 	if argument.typeAtom != "" {
-		if !validDefinitionNativeType(argument.typeAtom) || argument.reference != "" || argument.Text != "" || argument.Definition != nil || len(argument.sequence) != 0 || argument.atoms != nil || argument.index != nil || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
+		if !validDefinitionNativeType(argument.typeAtom) || argument.reference != "" || argument.Text != "" || argument.Definition != nil || len(argument.sequence) != 0 || argument.atoms != nil || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
 			return "", lerrors.TypeMismatch.Errorf("type atom requires one resolved type")
 		}
 		return argument.typeAtom, nil
@@ -776,7 +768,7 @@ func (argument DefinitionArgument) metadataAtom() (string, error) {
 
 func (argument DefinitionArgument) referenceAtom() (string, error) {
 	kind, _ := parseDefinitionArgKindFolded(argument.Kind)
-	if kind != definitionArgSyllable && kind != definitionArgText && kind != definitionArgNumber && kind != definitionArgTruth && kind != definitionArgNull || argument.reference == "" || argument.Text != "" || argument.Definition != nil || len(argument.sequence) != 0 || argument.atoms != nil || argument.typeAtom != "" || argument.index != nil || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
+	if kind != definitionArgSyllable && kind != definitionArgText && kind != definitionArgNumber && kind != definitionArgTruth && kind != definitionArgNull || argument.reference == "" || argument.Text != "" || argument.Definition != nil || len(argument.sequence) != 0 || argument.atoms != nil || argument.typeAtom != "" || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
 		return "", lerrors.TypeMismatch.Errorf("reference cannot contain a value or definition")
 	}
 	for _, path := range strings.Split(argument.reference, "::") {
@@ -801,12 +793,6 @@ func (argument DefinitionArgument) propertyAtom() (string, error) {
 	}
 	if argument.Definition != nil || len(argument.sequence) != 0 || argument.atoms != nil || argument.typeAtom != "" || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
 		return "", lerrors.TypeMismatch.Errorf("property value cannot contain a definition or collection")
-	}
-	if argument.index != nil {
-		if argument.Kind != definitionArgSyllable.String() || argument.Text != "" {
-			return "", lerrors.TypeMismatch.Errorf("index atom requires one unsigned value")
-		}
-		return strconv.FormatUint(*argument.index, 10), nil
 	}
 	kind, _ := parseDefinitionArgKindFolded(argument.Kind)
 	switch kind {

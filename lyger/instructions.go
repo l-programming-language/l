@@ -674,7 +674,7 @@ func (b *instructionBuilder) conditional(conditional *conditionalGram, ctx instr
 	if current.Condition.Operator == "has" {
 		branchContext.owner = current.Condition.Left
 	}
-	current.Then, err = b.clauses(conditional.orderedClauses(), branchContext)
+	current.Then, err = b.clauses(conditional.clauses, branchContext)
 	return current, err
 }
 
@@ -689,7 +689,7 @@ func (b *instructionBuilder) statement(statement *lStatement, ctx instructionCon
 			}
 			switch term.Name {
 			case "conditional.other":
-				instructions, err := b.clauses(conditional.orderedClauses(), ctx)
+				instructions, err := b.clauses(conditional.clauses, ctx)
 				return instructions, true, err
 			case "conditional.if":
 				if branch != nil {
@@ -705,7 +705,7 @@ func (b *instructionBuilder) statement(statement *lStatement, ctx instructionCon
 					return nil, false, lerrors.Syntax.Errorf("else has no unmatched conditional")
 				}
 				var err error
-				branch.Else, err = b.clauses(conditional.orderedClauses(), ctx)
+				branch.Else, err = b.clauses(conditional.clauses, ctx)
 				if err != nil {
 					return nil, false, err
 				}

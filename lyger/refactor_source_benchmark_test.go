@@ -227,7 +227,7 @@ func BenchmarkRefactorGrammarSequence(b *testing.B) {
 				if err != nil {
 					b.Fatal(err)
 				}
-				objects, _, err := buildGrammarObjects(term, statement.tokens, gram)
+				objects, _, err := buildBoundedGrammarObjects(term, statement.tokens, gram, grammarArity{})
 				if err != nil || len(objects) != count {
 					b.Fatalf("sequence returned %d objects: %v", len(objects), err)
 				}

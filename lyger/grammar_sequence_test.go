@@ -78,7 +78,7 @@ func TestGrammarSequenceRetainsLongestPrefixAndSortedTies(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	objects, separators, err := buildGrammarObjects(term, tokens, gram)
+	objects, separators, err := buildBoundedGrammarObjects(term, tokens, gram, grammarArity{})
 	if err != nil {
 		t.Fatal(err)
 	}

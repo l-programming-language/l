@@ -41,22 +41,6 @@ func (f *sourceFunction) signature() runtimeTypeRef {
 	return result
 }
 
-func (c *Compilation) reserveFunctionParameter(statement *lStatement, tok *token) {
-	if c.Scope.declarations[tok] != nil {
-		return
-	}
-	position := 0
-	for index, current := range statement.tokens {
-		if current == tok {
-			position = index
-			break
-		}
-	}
-	declaration := &scopeDeclaration{SubjectID: tok.declarationRoot(), Token: tok, TokenIndex: position, Scope: tok.scope}
-	tok.scope.declarations = append(tok.scope.declarations, declaration)
-	c.Scope.declarations[tok] = declaration
-}
-
 func runtimeRecord(tok *token, typ runtimeTypeRef, statement *lStatement) (*record, error) {
 	kind, category := checkType([]byte(typ.Kind.String()))
 	if typ.Kind == valueError {
@@ -212,14 +196,10 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: target, Record: function.Record})
 		for i, input := range node.Inputs {
 			token := node.InputTokens[i]
-			argument := definitionReferenceArgument(input.Key)
-			argument.source = statement.source.Span
-			noun := newLexeme("noun")
-			if err := noun.reLabel(string(token.rawBytes)); err != nil {
+			parameter, err := nativeReferenceRecord(statement, token, input.Key)
+			if err != nil {
 				return true, err
 			}
-			parameter := &record{ID: input.Key, Type: "lexeme.noun.generic", Value: &entry{Type: storageLexeme, Lexeme: noun}, definitionArgument: &argument}
-			c.reserveFunctionParameter(statement, token)
 			prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: token, Record: parameter})
 		}
 		prepared.functions = append(prepared.functions, function)
@@ -252,7 +232,6 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		if err != nil {
 			return true, err
 		}
-		c.reserveFunctionParameter(statement, parameter.noun)
 		function.Inputs = append(function.Inputs, functionParameter{record, typ})
 		prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: parameter.noun, Record: record})
 	}

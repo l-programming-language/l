@@ -42,8 +42,3 @@ const functionMapSource = "Define \"callbacks\" as a New Map of Echo.\nPut Echo 
 func TestFunctionSignatureMap(t *testing.T) {
 	requireFunctionPlan(t, identityFunction+functionMapSource)
 }
-
-func functionMapExtractionSource() string {
-	source := identityFunction + strings.Replace(functionMapSource, "Define \"replay|-s|-ed|-ing|-er\"", "Define \"boxed\" as a New Thing of callbacks.\nDefine \"copied\" as a New Map of Echo from boxed.\nDefine \"replay|-s|-ed|-ing|-er\"", 1)
-	return strings.Replace(source, "from callbacks at", "from copied at", 1)
-}

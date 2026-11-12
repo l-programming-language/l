@@ -47,18 +47,6 @@ func (selected tokenSelection) remaining(source []*token) []*token {
 	return result
 }
 
-func (selected tokenSelection) firstRun(source []*token) []*token {
-	var result []*token
-	for _, tok := range source {
-		if selected[tok] {
-			result = append(result, tok)
-		} else if len(result) > 0 {
-			break
-		}
-	}
-	return result
-}
-
 // A nested grammar consumes a prefix. Its parent owns the remaining suffix.
 func grammarPrefix(tokens, remaining []*token) ([]*token, error) {
 	count := len(tokens) - len(remaining)
@@ -89,6 +77,58 @@ func buildGrammarChild[T interface{ build() error }](destination *T, initialize 
 		*destination = node
 	}
 	return err
+}
+
+// Repeated children and their separators share one successful parse boundary.
+func buildGrammarChildren[T any](destination *[]T, separators *[]*token, parse func(grammarTerm, []*token, *grammar) ([]T, []*token, error), term grammarTerm, tokens []*token, gram *grammar) error {
+	children, conjunctions, err := parse(term, tokens, gram)
+	if err == nil {
+		*destination = append(*destination, children...)
+		*separators = append(*separators, conjunctions...)
+	}
+	return err
+}
+
+// Conditional groups retain their source splitter and initialize every child
+// before building any, so a rejected group cannot publish earlier children.
+func buildGrammarGroups[T interface{ build() error }](term grammarTerm, tokens []*token, gram *grammar, initialize func(string, []*token, *grammar) (T, error), split func([]*token) ([][]*token, []*token, error)) ([]T, []*token, error) {
+	groups := [][]*token{tokens}
+	var separators []*token
+	if term.Multiple {
+		if len(tokens) == 0 {
+			return nil, nil, lerrors.Syntax.Errorf("error: %ss initialized with empty slice of tokens", term.Family)
+		}
+		var err error
+		groups, separators, err = split(tokens)
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+	var children []T
+	for _, group := range groups {
+		child, err := initialize(term.Name, group, gram)
+		if err != nil {
+			return nil, nil, err
+		}
+		children = append(children, child)
+	}
+	for _, child := range children {
+		if err := child.build(); err != nil {
+			return nil, nil, err
+		}
+	}
+	return children, separators, nil
+}
+
+func buildGrammarConditions(term grammarTerm, tokens []*token, gram *grammar) ([]*conditionGram, []*token, error) {
+	return buildGrammarGroups(term, tokens, gram, initConditionGram, identifyConditionSequences)
+}
+
+func buildGrammarConditionals(term grammarTerm, tokens []*token, gram *grammar) ([]*conditionalGram, []*token, error) {
+	return buildGrammarGroups(term, tokens, gram, initConditionalGram, func(tokens []*token) ([][]*token, []*token, error) {
+		groups, err := identifyConditionalSequences(tokens)
+		return groups, nil, err
+	})
 }
 
 // buildGrammarPrefix applies a node's selected rule, then commits its consumed
@@ -272,7 +312,6 @@ func (s phraseGram) clone() phraseGram {
 	s.values = append([]*valueGram(nil), s.values...)
 	s.subjects = append([]*subjectGram(nil), s.subjects...)
 	s.markers = append([]*token(nil), s.markers...)
-	s.phrases = append([]*phraseGram(nil), s.phrases...)
 	s.prepositions = append([]*token(nil), s.prepositions...)
 	s.clauses = append([]*clauseGram(nil), s.clauses...)
 	s.conjunctions = append([]*token(nil), s.conjunctions...)
@@ -282,8 +321,6 @@ func (s phraseGram) clone() phraseGram {
 
 func (s clauseGram) clone() clauseGram {
 	s.values = append([]*valueGram(nil), s.values...)
-	s.subjects = append([]*subjectGram(nil), s.subjects...)
-	s.markers = append([]*token(nil), s.markers...)
 	s.phrases = append([]*phraseGram(nil), s.phrases...)
 	s.adverbs = append([]*token(nil), s.adverbs...)
 	s.prepositions = append([]*token(nil), s.prepositions...)
@@ -348,16 +385,6 @@ func grammarSequence[T any](tokens []*token, multiple bool, parse func([]*token)
 		remaining = next
 	}
 	return values, separators, nil
-}
-
-func buildGrammarObjects(term grammarTerm, tokens []*token, gram *grammar) ([]*objectGram, []*token, error) {
-	return grammarSequence(tokens, term.Multiple, func(input []*token) (*objectGram, []*token, error) {
-		object, err := buildGrammarNode(initObjectGram(term.Name, input, gram))
-		if err != nil {
-			return nil, nil, err
-		}
-		return object, object.tokens, nil
-	})
 }
 
 func buildGrammarClauses(term grammarTerm, tokens []*token, gram *grammar) ([]*clauseGram, []*token, error) {

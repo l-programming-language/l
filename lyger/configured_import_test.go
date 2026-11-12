@@ -279,7 +279,11 @@ func TestConfiguredDictionaryImportBindings(t *testing.T) {
 		t.Run(fmt.Sprint(namespace), func(t *testing.T) {
 			root := t.TempDir()
 			cfg := configuredImportAssets(t, root, [3]string{"Adopt", "via", "named"})
-			installTestDictionary(t, cfg.Resources.(fstest.MapFS), "catalog", "Catalog", "Create \"Catalog\" named a Dictionary.\nCreate Catalog's \"Emit|-s|-ted|-ting|-ter\" for Printing any Text.\n")
+			files, ok := cfg.Resources.(fstest.MapFS)
+			if !ok {
+				t.Fatal("configured import fixture requires map resources")
+			}
+			installTestDictionary(t, files, "catalog", "Catalog", "Create \"Catalog\" named a Dictionary.\nCreate Catalog's \"Emit|-s|-ted|-ting|-ter\" for Printing any Text.\n")
 			source := "Adopt Catalog's Emit via `catalog` named \"Display|-s|-ed|-ing|-er\".\n"
 			if namespace {
 				source = "Adopt Catalog via `catalog`.\nAdopt Catalog's Emit named \"Display|-s|-ed|-ing|-er\".\n"

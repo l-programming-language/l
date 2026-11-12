@@ -21,7 +21,6 @@ func TestRecordRuntimeTypeRejectsMalformedStorage(t *testing.T) {
 	}
 }
 
-const runtimeAppReadSource = "Create \"Worker\" as a New Basic App.\nThe App Prints `child`.\nDefine \"apps\" as a New List of App.\nPut Worker in apps.\nDefine \"selected\" as a New App from apps at 0.\nExecute selected.\nShow selected's Output.\n"
 const runtimeFunctionReadSource = "Define \"callbacks\" as a New List of Echo.\nDefine \"Replay|-s|-ed|-ing|-er\" as a New Echo from callbacks at 0.\nReplay `value` as \"Result\".\nShow Result.\n"
 
 func TestRuntimeReadPreservesRequestedIdentity(t *testing.T) {

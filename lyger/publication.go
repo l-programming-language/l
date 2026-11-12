@@ -50,16 +50,6 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 		}
 		staged := *rec
 		rec = &staged
-		if declaration.Alias == nil && rec.Value != nil && rec.Value.Lexeme != nil && rec.Value.Lexeme.Value == "" && len(rec.Value.Lexeme.Actions) > 0 {
-			inputs, err := c.sourceActionInputs(stmt, tok)
-			if err != nil {
-				return err
-			}
-			value := *rec.Value
-			value.Lexeme = value.Lexeme.cloneUse()
-			value.Lexeme.Inputs = inputs
-			rec.Value = &value
-		}
 		if rec.Value != nil && rec.Value.Lexeme != nil && rec.Value.Lexeme.Type == roleOutput.String() {
 			ref := rec.Value.Runtime
 			if ref == nil || ref.Member != memberOutput {
@@ -76,7 +66,7 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 		if err != nil {
 			return err
 		}
-		destination, err := declaration.Visibility.destination(reservation.Scope, reservation.Scope.unitRoot())
+		destination, err := declaration.Visibility.destination(tok.scope, tok.scope.unitRoot())
 		if err != nil {
 			return err
 		}
@@ -119,6 +109,9 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 			}
 		}
 		for name, existing := range destination.records {
+			if existing == declaration.Record && prepared.processBindings[tok] != nil {
+				continue
+			}
 			if rejectDuplicate && prior == nil && strings.EqualFold(name, id) {
 				prior = existing
 			}
@@ -185,6 +178,18 @@ func (c *Compilation) publishRegistration(stmt *lStatement, prepared statementRe
 		}
 		returns[index] = selected
 	}
+	for tok, reservation := range prepared.processBindings {
+		scope, original := reservation.Scope, c.Scope.declarations[tok]
+		moveProcessReservation(original, scope)
+		for index, binding := range scope.declarations {
+			if binding == reservation {
+				scope.declarations[index] = original
+				scope.declarations = scope.declarations[:len(scope.declarations)-1]
+				break
+			}
+		}
+		scope.reservations, scope.indexedDeclarations = nil, 0
+	}
 	for _, publication := range pending {
 		publication.commit(c, stmt)
 	}
@@ -235,7 +240,9 @@ func (p declarationPublication) commit(c *Compilation, stmt *lStatement) {
 	}
 	p.reservation.Record = rec
 	c.Semantics.Subjects[p.declaration.Token], c.Semantics.Declarations[rec] = rec, stmt
-	stmt.records = append(stmt.records, rec)
+	if rec.definitionArgument == nil || rec.definitionArgument.processType == nil {
+		stmt.records = append(stmt.records, rec)
+	}
 	if p.value.Type == valueApp && c.Semantics.Aliases[rec] == nil && rec.Value.Runtime == nil {
 		app := p.value.Data.(*App) //nolint:errcheck // Declaration preparation validates the tagged payload before this atomic commit.
 		app.ID = id

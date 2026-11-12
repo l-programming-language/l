@@ -47,19 +47,16 @@ func (sb *subjectGram) getDeclareLabel() (string, error) {
 	return "", lerrors.Syntax.Errorf("%s", "subject noun value not declarative: "+string(sb.noun.rawBytes))
 }
 
-// isLexical determines whether the subject declaration or definition type is both lexical and/or determinate
-func (sb *subjectGram) isLexical() (bool, bool) {
-	if sb.cType == "type" || sb.cType == "list" || sb.cType == "dict" {
-		return false, true
-	} else if sb.cType == "definitional" {
-		return true, true
-	} else if sb.cType == "declarative" || sb.cType == "directive" || sb.cType == "utilization" {
-		if sb.phrase != nil {
-			return sb.phrase.isLexical()
-		}
-		return true, false
+// isLexical determines whether the declaration supplies a lexical definition.
+func (sb *subjectGram) isLexical() bool {
+	switch sb.cType {
+	case "definitional":
+		return true
+	case "declarative", "directive", "utilization":
+		return sb.phrase == nil || sb.phrase.cType == "definitional" || sb.phrase.sType == "phrase.directive"
+	default:
+		return false
 	}
-	return false, false
 }
 
 // extractedDeclaration keeps the defining source token with its semantic record.
@@ -79,8 +76,7 @@ func (sb *subjectGram) getDeclaration() (extractedDeclaration, error) {
 	if sb == nil || sb.noun == nil || sb.phrase == nil {
 		return extractedDeclaration{}, lerrors.Syntax.Errorf("subject declaration requires a noun and value phrase")
 	}
-	lexical, _ := sb.isLexical()
-	recEntry, valType, err := sb.phrase.getValue(lexical)
+	recEntry, valType, err := sb.phrase.getValue(sb.isLexical())
 	if err != nil {
 		return extractedDeclaration{}, err
 	}
@@ -221,18 +217,6 @@ func (sb *objectGram) getValue(lexical bool) (*entry, string, error) {
 		return sb.noun.mem, "iterative.dict", nil
 	}
 	return nil, "", lerrors.Unsupported.Errorf("cannot extract value from object %q", sb.cType)
-}
-
-// isLexical determines whether the phraseGram declaration or definition type is both lexical and/or determinate
-func (sb *phraseGram) isLexical() (bool, bool) {
-	if sb.cType == "definitional" {
-		return true, true
-	}
-	if sb.sType == "phrase.directive" {
-		return true, true
-	}
-	// TODO LATER MAY NEED TO SUB GRAMMAR LEXICALITY CHECK
-	return false, false
 }
 
 // getValue returns a record entry and valueType for the assignable value of the phraseGram

@@ -152,26 +152,6 @@ func initConditionGram(sType string, tokens []*token, gram *grammar) (*condition
 	return &r, nil
 }
 
-func initConditionGrams(sType string, tokens []*token, gram *grammar) ([]*conditionGram, []*token, error) {
-	var r []*conditionGram
-	if len(tokens) == 0 {
-		return r, tokens, lerrors.Syntax.Errorf("error: conditions initialized with empty slice of tokens")
-	}
-	compoundSequences, conjuncts, err := identifyConditionSequences(tokens)
-	if err != nil {
-		return r, conjuncts, err
-	}
-	formatType := strings.Replace(strings.Replace(sType, "[", "", -1), "]", "", -1)
-	for _, cs := range compoundSequences {
-		initGram, initErr := initConditionGram(formatType, cs, gram)
-		if initErr != nil {
-			return r, conjuncts, initErr
-		}
-		r = append(r, initGram)
-	}
-	return r, conjuncts, nil
-}
-
 // conditionalGram holds data for the noun being acted in a statement
 type conditionalGram struct {
 	sType        string
@@ -183,24 +163,13 @@ type conditionalGram struct {
 	conditions   []*conditionGram
 	conjunctions []*token // and / or
 	adverb       *token   // i.e. "then"
-	clause       *clauseGram
 	gram         *grammar
 	clauses      []*clauseGram
-}
-
-func (conditional *conditionalGram) orderedClauses() []*clauseGram {
-	if len(conditional.clauses) == 0 && conditional.clause != nil {
-		return []*clauseGram{conditional.clause}
-	}
-	return conditional.clauses
 }
 
 // getUnassociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
 func (sb *conditionalGram) getUnassociatedTokens() []*token {
 	selected := selectLexicalTokens(sb.evaluations, sb.conjunctions, []*token{sb.adverb})
-	if sb.clause != nil {
-		selected.add(sb.clause.tokens...)
-	}
 	for _, c := range sb.conditions {
 		selected.add(c.tokens...)
 	}
@@ -250,39 +219,10 @@ func (sb *conditionalGram) loadTyping(sType string) error {
 func (sb *conditionalGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyClause:
-		clauses, separators, err := buildGrammarClauses(term, sb.getUnassociatedTokens(), sb.gram)
-		if err != nil {
-			return err
-		}
-		sb.clauses = append(sb.clauses, clauses...)
-		if len(clauses) > 0 && sb.clause == nil {
-			sb.clause = clauses[0]
-		}
-		sb.conjunctions = append(sb.conjunctions, separators...)
+		return buildGrammarChildren(&sb.clauses, &sb.conjunctions, buildGrammarClauses, term, sb.getUnassociatedTokens(), sb.gram)
 
 	case term.Kind == termGrammar && term.Family == familyCondition:
-		var conditions []*conditionGram
-		var conjunctions []*token
-		if term.Multiple {
-			var err error
-			conditions, conjunctions, err = initConditionGrams(term.Name, sb.getUnassociatedTokens(), sb.gram)
-			if err != nil {
-				return err
-			}
-		} else {
-			condition, err := initConditionGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-			if err != nil {
-				return err
-			}
-			conditions = append(conditions, condition)
-		}
-		for _, condition := range conditions {
-			if err := condition.build(); err != nil {
-				return err
-			}
-		}
-		sb.conditions = append(sb.conditions, conditions...)
-		sb.conjunctions = append(sb.conjunctions, conjunctions...)
+		return buildGrammarChildren(&sb.conditions, &sb.conjunctions, buildGrammarConditions, term, sb.getUnassociatedTokens(), sb.gram)
 
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
@@ -386,26 +326,6 @@ func initConditionalGram(sType string, tokens []*token, gram *grammar) (*conditi
 	}
 	r.rule = g
 	return &r, nil
-}
-
-func initConditionalGrams(sType string, tokens []*token, gram *grammar) ([]*conditionalGram, error) {
-	var r []*conditionalGram
-	if len(tokens) == 0 {
-		return r, lerrors.Syntax.Errorf("error: conditionals initialized with empty slice of tokens")
-	}
-	compoundSequences, err := identifyConditionalSequences(tokens)
-	if err != nil {
-		return r, err
-	}
-	formatType := strings.Replace(strings.Replace(sType, "[", "", -1), "]", "", -1)
-	for _, cs := range compoundSequences {
-		initGram, initErr := initConditionalGram(formatType, cs, gram)
-		if initErr != nil {
-			return r, initErr
-		}
-		r = append(r, initGram)
-	}
-	return r, nil
 }
 
 // valueGram holds data for the primitive noun being acted in a statement
@@ -537,19 +457,6 @@ func (sb *subjectGram) getUnassociatedTokens() []*token {
 		selected.add(sb.phrase.tokens...)
 	}
 	return selected.remaining(sb.tokens)
-}
-
-// getAssociatedTokens recursively returns a slice of ordered token currently unassigned to sub-grammar
-func (sb *subjectGram) getAssociatedTokens(update bool) []*token {
-	selected := selectLexicalTokens(sb.adjectives, []*token{sb.article, sb.noun})
-	if sb.phrase != nil {
-		selected.add(sb.phrase.tokens...)
-	}
-	associatedTokens := selected.firstRun(sb.tokens)
-	if update {
-		sb.tokens = associatedTokens
-	}
-	return associatedTokens
 }
 
 func (sb *subjectGram) gramSwitch(term grammarTerm) error {
@@ -835,7 +742,6 @@ type phraseGram struct {
 	values      []*valueGram
 	subjects    []*subjectGram
 	markers     []*token
-	phrases     []*phraseGram
 	objectLimit grammarArity
 }
 
@@ -920,9 +826,6 @@ func (sb *phraseGram) getUnassociatedTokens() []*token {
 	for _, value := range sb.values {
 		selected.add(value.tokens...)
 	}
-	for _, phrase := range sb.phrases {
-		selected.add(phrase.tokens...)
-	}
 	selected.add(sb.markers...)
 	return selected.remaining(sb.tokens)
 }
@@ -930,12 +833,7 @@ func (sb *phraseGram) getUnassociatedTokens() []*token {
 func (sb *phraseGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyValue:
-		values, separators, err := buildGrammarValues(term, sb.getUnassociatedTokens(), sb.gram)
-		if err != nil {
-			return err
-		}
-		sb.values = append(sb.values, values...)
-		sb.conjunctions = append(sb.conjunctions, separators...)
+		return buildGrammarChildren(&sb.values, &sb.conjunctions, buildGrammarValues, term, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familySubject:
 		subjects, separators, err := grammarSequence(sb.getUnassociatedTokens(), term.Multiple, func(input []*token) (*subjectGram, []*token, error) {
 			if sb.gType == "phrase.signature" {
@@ -983,12 +881,7 @@ func (sb *phraseGram) gramSwitch(term grammarTerm) error {
 	case term.Kind == termGrammar && term.Family == familyPhrase:
 		return buildGrammarChild(&sb.phrase, initPhraseGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyClause:
-		clauses, conjunctions, err := buildGrammarClauses(term, sb.getUnassociatedTokens(), sb.gram)
-		if err != nil {
-			return err
-		}
-		sb.clauses = append(sb.clauses, clauses...)
-		sb.conjunctions = append(sb.conjunctions, conjunctions...)
+		return buildGrammarChildren(&sb.clauses, &sb.conjunctions, buildGrammarClauses, term, sb.getUnassociatedTokens(), sb.gram)
 
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
@@ -1068,11 +961,9 @@ type clauseGram struct {
 	gram         *grammar
 	conjunctions []*token
 
-	objects  []*objectGram
-	values   []*valueGram
-	subjects []*subjectGram
-	markers  []*token
-	phrases  []*phraseGram
+	objects []*objectGram
+	values  []*valueGram
+	phrases []*phraseGram
 }
 
 func (clause *clauseGram) orderedObjects() []*objectGram {
@@ -1159,28 +1050,19 @@ func (sb *clauseGram) getUnassociatedTokens() []*token {
 	for _, object := range sb.objects {
 		selected.add(object.tokens...)
 	}
-	for _, subject := range sb.subjects {
-		selected.add(subject.tokens...)
-	}
 	for _, value := range sb.values {
 		selected.add(value.tokens...)
 	}
 	for _, phrase := range sb.phrases {
 		selected.add(phrase.tokens...)
 	}
-	selected.add(sb.markers...)
 	return selected.remaining(sb.tokens)
 }
 
 func (sb *clauseGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyValue:
-		values, separators, err := buildGrammarValues(term, sb.getUnassociatedTokens(), sb.gram)
-		if err != nil {
-			return err
-		}
-		sb.values = append(sb.values, values...)
-		sb.conjunctions = append(sb.conjunctions, separators...)
+		return buildGrammarChildren(&sb.values, &sb.conjunctions, buildGrammarValues, term, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyPredicate:
 		return buildGrammarChild(&sb.predicate, initPredicateGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familySubject:
@@ -1225,12 +1107,7 @@ func (sb *clauseGram) gramSwitch(term grammarTerm) error {
 		}
 		sb.phrases = append(sb.phrases, phrase)
 	case term.Kind == termGrammar && term.Family == familyClause:
-		clauses, conjunctions, err := buildGrammarClauses(term, sb.getUnassociatedTokens(), sb.gram)
-		if err != nil {
-			return err
-		}
-		sb.clauses = append(sb.clauses, clauses...)
-		sb.conjunctions = append(sb.conjunctions, conjunctions...)
+		return buildGrammarChildren(&sb.clauses, &sb.conjunctions, buildGrammarClauses, term, sb.getUnassociatedTokens(), sb.gram)
 
 	case term.Kind == termCase:
 		if sb.cType == "UNKNOWN" {
@@ -1362,38 +1239,13 @@ func (sb *predicateGram) gramSwitch(term grammarTerm) error {
 	case term.Kind == termGrammar && term.Family == familyObject:
 		return buildGrammarChild(&sb.obj, initObjectGram, term.Name, sb.getUnassociatedTokens(), sb.gram)
 	case term.Kind == termGrammar && term.Family == familyClause:
-		clauses, conjunctions, err := buildGrammarClauses(term, sb.getUnassociatedTokens(), sb.gram)
-		if err != nil {
-			return err
-		}
-		sb.clauses = append(sb.clauses, clauses...)
-		sb.conjunctions = append(sb.conjunctions, conjunctions...)
+		return buildGrammarChildren(&sb.clauses, &sb.conjunctions, buildGrammarClauses, term, sb.getUnassociatedTokens(), sb.gram)
 
 	case term.Kind == termGrammar && term.Family == familyConditional:
-		var conditionals []*conditionalGram
-		if term.Multiple {
-			condGrams, conditionErr := initConditionalGrams(term.Name, sb.getUnassociatedTokens(), sb.gram)
-			if conditionErr != nil {
-				return conditionErr
-			}
-			conditionals = append(conditionals, condGrams...)
-		} else {
-			condGram, conditionErr := initConditionalGram(term.Name, sb.getUnassociatedTokens(), sb.gram)
-			if conditionErr != nil {
-				return conditionErr
-			}
-			conditionals = append(conditionals, condGram)
-		}
-		for _, conditional := range conditionals {
-			if err := conditional.build(); err != nil {
-				return err
-			}
-			sb.conditionals = append(sb.conditionals, conditional)
-		}
+		return buildGrammarChildren(&sb.conditionals, &sb.conjunctions, buildGrammarConditionals, term, sb.getUnassociatedTokens(), sb.gram)
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Type: "+term.className())
 	}
-	return nil
 }
 
 // lexSwitch inits associates tokens to clauseGram fields based on the decoded term and token order
@@ -1513,37 +1365,14 @@ func (sg *statementGram) getUnassociatedTokens() []*token {
 func (sg *statementGram) gramSwitch(term grammarTerm) error {
 	switch {
 	case term.Kind == termGrammar && term.Family == familyClause:
-		clauses, conjunctions, err := buildGrammarClauses(term, sg.getUnassociatedTokens(), sg.gram)
-		if err != nil {
-			return err
-		}
-		sg.clauses = append(sg.clauses, clauses...)
-		sg.conjunctions = append(sg.conjunctions, conjunctions...)
+		return buildGrammarChildren(&sg.clauses, &sg.conjunctions, buildGrammarClauses, term, sg.getUnassociatedTokens(), sg.gram)
 	case term.Kind == termGrammar && term.Family == familyPredicate:
-		predGram, predErr := initPredicateGram(term.Name, sg.getUnassociatedTokens(), sg.gram)
-		if predErr != nil {
-			return predErr
-		}
-		sg.predicate = predGram
-		predErr = sg.predicate.build()
-		if predErr != nil {
-			return predErr
-		}
+		return buildGrammarChild(&sg.predicate, initPredicateGram, term.Name, sg.getUnassociatedTokens(), sg.gram)
 	case term.Kind == termGrammar && term.Family == familySubject:
-		subGram, subErr := initSubjectGram(term.Name, sg.getUnassociatedTokens(), sg.gram)
-		if subErr != nil {
-			return subErr
-		}
-		sg.subject = subGram
-		subErr = sg.subject.build()
-		if subErr != nil {
-			return subErr
-		}
-		_ = sg.subject.getAssociatedTokens(true)
+		return buildGrammarChild(&sg.subject, initSubjectGram, term.Name, sg.getUnassociatedTokens(), sg.gram)
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Type: "+term.className())
 	}
-	return nil
 }
 
 // build identifies and inits & builds pointers to subjectGram and predicateGram for subject and predicate

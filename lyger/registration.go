@@ -89,8 +89,7 @@ func (s registrationSite) declaration() (extractedDeclaration, error) {
 	if err != nil {
 		return extractedDeclaration{}, err
 	}
-	lexical, _ := s.subject.isLexical()
-	if lexical && extracted.Record.Value.Type == storageLexeme && s.clause != nil {
+	if s.subject.isLexical() && extracted.Record.Value.Type == storageLexeme && s.clause != nil {
 		extracted.Record.Value.Lexeme.POS = s.clause.cType
 	}
 	if err := s.subject.finishDeclaration(extracted.Record); err != nil {

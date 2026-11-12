@@ -83,20 +83,3 @@ func assertMemberSourceBuild(t *testing.T, bundle Logiceme.Executable, text stri
 	}
 	buildReturnedBundle(t, bundle)
 }
-
-func assertParagraphSourceSyntax(t *testing.T, contents [][]byte, paths []string, printed *string) {
-	t.Helper()
-	bundle := Logiceme.Executable{ByteArrays: [][][]byte{contents}, MapArrays: [][]string{paths}}
-	main := observeBundleMain(t, bundle).Function(t, "main")
-	unit := len(main.Result) == 0 || observedUnitOutput(main.Result)
-	// The runtime-owned native entry returns process status; ordinary App
-	// entry functions remain unit. Both are checked by rustc below.
-	status := printed == nil && strings.ReplaceAll(nativetest.RustTokensText(main.Result), " ", "") == "->ExitCode"
-	if len(main.Parameters) != 0 || (!unit && !status) {
-		t.Fatal("paragraph main signature")
-	}
-	if printed != nil {
-		observedText(t, main.Body, *printed)
-	}
-	buildReturnedBundle(t, bundle)
-}

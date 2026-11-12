@@ -48,7 +48,7 @@ func isProcessDefinitionTemplate(template *DefinitionTemplate) bool {
 		template.parts[1].slot != nil && strings.TrimSpace(template.parts[2].text) == ""
 }
 
-func (c *Compilation) prepareProcessInputs(stmt *lStatement) error {
+func (c *Compilation) prepareProcessInputs(stmt *lStatement, prepared *statementRegistration) error {
 	seen := make(map[*objectGram]bool)
 	var object func(*objectGram) error
 	phrase := func(p *phraseGram) error {
@@ -72,7 +72,7 @@ func (c *Compilation) prepareProcessInputs(stmt *lStatement) error {
 				return err
 			}
 			if process {
-				if err := c.bindProcessInputs(stmt, o); err != nil {
+				if err := c.bindProcessInputs(stmt, o, prepared); err != nil {
 					return err
 				}
 			}
@@ -88,13 +88,14 @@ func (c *Compilation) prepareProcessInputs(stmt *lStatement) error {
 		if err := object(site.valueObject()); err != nil {
 			return err
 		}
-		if site.subject != nil && site.subject.noun != nil && site.subject.noun.scope != nil && site.subject.noun.isDeclare() && site.subject.noun.scope.kind == lexicalProcess && c.Semantics.Subjects[site.subject.noun] == nil {
-			var prepared statementRegistration
-			if handled, err := c.prepareDefinitionBindingSite(stmt, site, &prepared); err != nil {
-				return err
-			} else if handled {
-				if err := c.publishRegistration(stmt, prepared); err != nil {
+		if site.subject != nil && site.subject.noun != nil {
+			if binding := prepared.processBindings[site.subject.noun]; binding != nil && binding.Record == nil {
+				if handled, err := c.prepareDefinitionBindingSite(stmt, site, prepared); err != nil {
 					return err
+				} else if handled {
+					binding.Record = prepared.declarations[len(prepared.declarations)-1].Record
+					binding.Record.storageScope = binding.Scope
+					binding.Scope.storeBinding(binding.Record.ID, binding.Record)
 				}
 			}
 		}
@@ -110,13 +111,10 @@ func (c *Compilation) prepareProcessInputs(stmt *lStatement) error {
 	})
 }
 
-func (c *Compilation) bindProcessInputs(stmt *lStatement, object *objectGram) error {
+func (c *Compilation) bindProcessInputs(stmt *lStatement, object *objectGram, prepared *statementRegistration) error {
 	signature, body := object.signaturePhrase(), object.directivePhrase()
 	if signature != nil && len(signature.orderedObjects()) != 0 {
 		return lerrors.Unsupported.Errorf("structured Process inputs do not declare callable outputs")
-	}
-	if len(body.tokens) > 0 && body.tokens[0].scope.kind == lexicalProcess && body.tokens[0].scope != object.noun.scope {
-		return nil // The same statement can wait for another lexical dependency.
 	}
 	scope := &lexicalScope{kind: lexicalProcess, unit: object.noun.scope.unit, parent: object.noun.scope, records: make(map[string]*record), source: stmt.source.Span}
 	var subjects []*subjectGram
@@ -135,38 +133,31 @@ func (c *Compilation) bindProcessInputs(stmt *lStatement, object *objectGram) er
 			return lerrors.Unsupported.Errorf("Process input requires an explicit native type or selected native declaration")
 		}
 		tok := input.noun
-		word := newLexeme("noun")
-		if err := word.reLabel(string(tok.rawBytes)); err != nil {
+		rec, err := nativeReferenceRecord(stmt, tok, "")
+		if err != nil {
 			return err
 		}
-		if _, exists := scope.records[word.Root]; exists {
-			return lerrors.DuplicateDeclaration.Errorf("duplicate Process input %s", word.Root)
+		if _, exists := scope.records[rec.ID]; exists {
+			return lerrors.DuplicateDeclaration.Errorf("duplicate Process input %s", rec.ID)
 		}
-		argument := definitionReferenceArgument("")
-		argument.source = stmt.source.Span
 		declaredType := definitionTypeArgument(nativeType)
 		declaredType.source = stmt.source.Span
 		if dependency != nil {
 			declaredType.dependencies = append(declaredType.dependencies, *dependency)
 		}
-		argument.processType = &declaredType
-		rec := &record{ID: word.Root, Type: "lexeme.noun.generic", Value: &entry{Type: storageLexeme, Lexeme: word}, definitionArgument: &argument, storageScope: scope}
-		reservation := c.Scope.declarations[tok]
-		if reservation == nil {
-			return lerrors.Internal.Errorf("Process input %s has no reserved declaration", word.Root)
+		rec.definitionArgument.processType = &declaredType
+		rec.storageScope = scope
+		reservation, err := prepared.processToken(c, tok, scope)
+		if err != nil {
+			return err
 		}
-		moveProcessReservation(reservation, scope)
 		reservation.Record = rec
 		scope.storeBinding(rec.ID, rec)
-		tok.scope = scope
-		c.Semantics.Subjects[tok], c.Semantics.Declarations[rec] = rec, stmt
+		prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: tok, Record: rec})
 	}
 	for index, tok := range body.tokens {
-		tok.scope = scope
-		if tok.isDeclare() {
-			if reservation := c.Scope.declarations[tok]; reservation != nil && reservation.Scope != scope {
-				moveProcessReservation(reservation, scope)
-			}
+		if _, err := prepared.processToken(c, tok, scope); err != nil {
+			return err
 		}
 		if !tok.isDeclare() {
 			if index > 0 {
@@ -184,6 +175,34 @@ func (c *Compilation) bindProcessInputs(stmt *lStatement, object *objectGram) er
 		}
 	}
 	return nil
+}
+
+// Only tokens are borrowed during preparation. Reservations and records remain
+// in fresh Process scopes until the whole statement passes publication checks.
+func (prepared *statementRegistration) processToken(c *Compilation, tok *token, scope *lexicalScope) (*scopeDeclaration, error) {
+	if prepared.processTokens == nil {
+		prepared.processTokens = make(map[*token]token)
+		prepared.processBindings = make(map[*token]*scopeDeclaration)
+	}
+	if _, saved := prepared.processTokens[tok]; !saved {
+		prepared.processTokens[tok] = *tok
+	}
+	tok.scope = scope
+	if !tok.isDeclare() {
+		return nil, nil
+	}
+	reservation := prepared.processBindings[tok]
+	if reservation == nil {
+		original := c.Scope.declarations[tok]
+		if original == nil {
+			return nil, lerrors.Internal.Errorf("Process declaration %q has no reserved declaration", tok.rawBytes)
+		}
+		copy := *original
+		reservation = &copy
+		prepared.processBindings[tok] = reservation
+	}
+	moveProcessReservation(reservation, scope)
+	return reservation, nil
 }
 
 func moveProcessReservation(reservation *scopeDeclaration, scope *lexicalScope) {

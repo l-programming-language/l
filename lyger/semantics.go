@@ -107,9 +107,11 @@ func definitionLiteral(tokens []*token) (*token, error) {
 
 // A statement is prepared in full before any semantic relationships are published.
 type statementRegistration struct {
-	declarations []extractedDeclaration
-	descriptors  []*descriptorDefinition
-	functions    []*sourceFunction
+	declarations    []extractedDeclaration
+	descriptors     []*descriptorDefinition
+	functions       []*sourceFunction
+	processTokens   map[*token]token
+	processBindings map[*token]*scopeDeclaration
 }
 
 func (d *descriptorDefinition) clone() *descriptorDefinition {
@@ -327,6 +329,16 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 			return statementRegistration{}, err
 		}
 		value := declaration.Record.Value
+		if declaration.Alias == nil && value.Lexeme != nil && value.Lexeme.Value == "" && len(value.Lexeme.Actions) > 0 {
+			formals, err := sourceParametersIn(stmt, site.parameterTokens())
+			if err != nil {
+				return statementRegistration{}, err
+			}
+			value.Lexeme.Inputs = make([]string, len(formals))
+			for index, formal := range formals {
+				value.Lexeme.Inputs[index] = formal.Name
+			}
+		}
 		var typed *objectGram
 		if runtime := value.Runtime; runtime != nil && runtimeReadPhrase(runtime.Expression) != nil {
 			typed = runtime.Expression
@@ -351,16 +363,23 @@ func (c *Compilation) prepareRegistration(stmt *lStatement, sites []registration
 	return prepared, nil
 }
 
-func (c *Compilation) registerStatement(stmt *lStatement) error {
-	if err := c.prepareProcessInputs(stmt); err != nil {
-		return err
-	}
+func (c *Compilation) registerStatement(stmt *lStatement) (err error) {
 	sites, err := stmt.sGram.registrationSites()
 	if err != nil {
 		return err
 	}
 	prepared, err := c.prepareRegistration(stmt, sites)
 	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			for tok, original := range prepared.processTokens {
+				*tok = original
+			}
+		}
+	}()
+	if err = c.prepareProcessInputs(stmt, &prepared); err != nil {
 		return err
 	}
 	return c.publishRegistration(stmt, prepared)

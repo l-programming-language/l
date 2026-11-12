@@ -17,11 +17,6 @@ func observeBundleSources(t *testing.T, b Logiceme.Executable) map[string]*nativ
 	return nativetest.ObserveRustBundle(t, b.ByteArrays, b.MapArrays)
 }
 
-func observeBundleMain(t *testing.T, b Logiceme.Executable) *nativetest.RustSource {
-	t.Helper()
-	return nativetest.ObserveRustMain(t, b.ByteArrays, b.MapArrays)
-}
-
 func observeCalls(tokens []nativetest.RustToken) []nativetest.RustCall {
 	var out []nativetest.RustCall
 	for _, call := range nativetest.RustCalls(tokens) {

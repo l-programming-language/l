@@ -129,28 +129,6 @@ func (c *Compilation) descriptorGrammarReady(descriptor *record, target nominalI
 	return nil
 }
 
-func (c *Compilation) sourceActionInputs(statement *lStatement, target *token) ([]string, error) {
-	sites, err := statement.sGram.registrationSites()
-	if err != nil {
-		return nil, err
-	}
-	for _, site := range sites {
-		if site.subject == nil || site.subject.noun != target {
-			continue
-		}
-		formals, err := sourceParametersIn(statement, site.parameterTokens())
-		if err != nil {
-			return nil, err
-		}
-		inputs := make([]string, len(formals))
-		for index, formal := range formals {
-			inputs[index] = formal.Name
-		}
-		return inputs, nil
-	}
-	return nil, nil
-}
-
 func buildBoundedGrammarObjects(term grammarTerm, tokens []*token, gram *grammar, limit grammarArity) ([]*objectGram, []*token, error) {
 	count := 0
 	return grammarSequence(tokens, term.Multiple, func(input []*token) (*objectGram, []*token, error) {

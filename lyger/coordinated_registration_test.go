@@ -2,11 +2,97 @@ package Lyger
 
 import (
 	"bytes"
+	"maps"
 	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
 )
+
+func TestProcessRegistrationFailureIsAtomic(t *testing.T) {
+	for _, tc := range []struct{ source, diagnostic string }{
+		{"Define \"Bare\" as a New Process with Inputs of \"payload\" as `String` for Printing Payload.", "family"},
+		{"Define \"Body|-ies|-like|-ing\" as a New Process with Inputs of \"payload\" as `String` and \"bad|-s\" as `String` for Printing Payload.", "family"},
+		{"Define \"Body|-ies|-like|-ing\" as a New Process with Inputs of \"payload\" as `String` for Creating \"local|-s\" as a New Process for Printing Payload.", "family"},
+		{"Define \"Body|-ies|-like|-ing\" as a New Process with Inputs of \"payload\" as `String` and \"payload\" as `String` for Printing Payload.", "duplicate"},
+		{"Define \"Payloads\" as `outside`.\nDefine \"Body|-ies|-like|-ing\" as a New Process with Inputs of \"Payload|-s|-like|-ing\" as `String` and \"Payloads|-s|-like|-ing\" as `String` for Printing Payloads.", "ambiguous"},
+	} {
+		t.Run(tc.source, func(t *testing.T) {
+			c := paragraphPublicationSource(t, tc.source)
+			if c.Error == nil || !strings.Contains(c.Error.Error(), tc.diagnostic) {
+				t.Fatalf("invalid Process did not reject with %s: %v", tc.diagnostic, c.Error)
+			}
+			var failed *lStatement
+			for _, statement := range c.Statements {
+				if statement.source.Unit.Kind == SourceProgram {
+					failed = statement
+				}
+			}
+			if failed == nil {
+				t.Fatal("missing failed statement")
+			}
+			before := make(map[*token]token)
+			reservations := make(map[*scopeDeclaration]scopeDeclaration)
+			for _, tok := range failed.tokens {
+				before[tok] = *tok
+				if reservation := c.Scope.declarations[tok]; reservation != nil {
+					reservations[reservation] = *reservation
+				}
+			}
+			subjects, declarations := maps.Clone(c.Semantics.Subjects), maps.Clone(c.Semantics.Declarations)
+			for attempt := 0; attempt < 2; attempt++ {
+				if err := c.registerStatement(failed); err == nil {
+					t.Fatal("invalid registration succeeded on retry")
+				}
+				if !reflect.DeepEqual(subjects, c.Semantics.Subjects) || !reflect.DeepEqual(declarations, c.Semantics.Declarations) {
+					t.Fatal("failed retry changed published semantic relationships")
+				}
+				for _, tok := range failed.tokens {
+					if !reflect.DeepEqual(*tok, before[tok]) {
+						t.Errorf("failed retry changed token %q", tok.rawBytes)
+					}
+					if c.Semantics.Subjects[tok] != nil || tok.scope.kind == lexicalProcess {
+						t.Errorf("failed registration published or moved %q", tok.rawBytes)
+					}
+					if reservation := c.Scope.declarations[tok]; reservation != nil && (reservation.Record != nil || reservation.Scope != tok.scope || !reflect.DeepEqual(*reservation, reservations[reservation])) {
+						t.Errorf("failed registration changed reservation %q", tok.rawBytes)
+					}
+				}
+				for _, statement := range c.Semantics.Declarations {
+					if statement == failed {
+						t.Error("failed registration retained declaration provenance")
+					}
+				}
+				if len(failed.records) != 0 {
+					t.Fatal("failed registration published ordered records")
+				}
+			}
+		})
+	}
+}
+
+func TestProcessRegistrationNestedShadowing(t *testing.T) {
+	c := paragraphPublicationSource(t, "Define \"payload\" as `outside`.\nDefine \"Body|-ies|-like|-ing\" as a New Process with Inputs of \"payload\" as `String` for Printing Payload and then Processing a New Process with Inputs of \"payload\" as `String` for Printing Payload.")
+	if c.Error != nil {
+		t.Fatal(c.Error)
+	}
+	var inputs []*record
+	for _, tok := range c.Statements[len(c.Statements)-1].tokens {
+		if rec := c.Semantics.Subjects[tok]; rec != nil && rec.definitionArgument != nil && rec.definitionArgument.processType != nil {
+			inputs = append(inputs, rec)
+			reservation := c.Scope.declarations[tok]
+			if reservation.Record != rec || reservation.Scope != tok.scope || rec.storageScope != tok.scope || c.Semantics.Declarations[rec] != c.Statements[len(c.Statements)-1] {
+				t.Fatal("Process input lost lexical identity or source provenance")
+			}
+		}
+		if string(tok.rawBytes) == "Payload" && (len(inputs) == 0 || tok.binding == nil || tok.binding.Record != inputs[len(inputs)-1]) {
+			t.Fatalf("Process reference selected a different scope: binding=%+v", tok.binding)
+		}
+	}
+	if len(inputs) != 2 || inputs[0] == inputs[1] || inputs[1].storageScope.parent != inputs[0].storageScope || c.Memory["payload"] == inputs[0] {
+		t.Fatal("nested Processes did not retain independent input scopes")
+	}
+}
 
 func TestCoordinatedRegistrationAliasAndScalar(t *testing.T) {
 	for _, tc := range []struct {

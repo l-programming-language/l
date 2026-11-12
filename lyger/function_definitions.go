@@ -7,6 +7,17 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
+// Native inputs and local results carry source-owned reference labels.
+func nativeReferenceRecord(statement *lStatement, tok *token, name string) (*record, error) {
+	word := newLexeme("noun")
+	if err := word.reLabel(string(tok.rawBytes)); err != nil {
+		return nil, err
+	}
+	argument := definitionReferenceArgument(name)
+	argument.source = statement.source.Span
+	return &record{ID: word.Root, Type: "lexeme.noun.generic", Value: &entry{Type: storageLexeme, Lexeme: word}, definitionArgument: &argument}, nil
+}
+
 // A local constructor declaration names its result through the selected
 // definition's existing name slot. The binding is lexical and source-owned.
 func (c *Compilation) prepareDefinitionBindingSite(statement *lStatement, site registrationSite, prepared *statementRegistration) (bool, error) {
@@ -28,16 +39,14 @@ func (c *Compilation) prepareDefinitionBindingSite(statement *lStatement, site r
 	if err != nil {
 		return true, err
 	}
-	word := newLexeme("noun")
-	if err := word.reLabel(string(target.rawBytes)); err != nil {
+	rec, err := nativeReferenceRecord(statement, target, node.Name)
+	if err != nil {
 		return true, err
 	}
 	if node.Name == "" {
-		node.Name = sourceModuleName(strings.ToLower(word.Root))
+		node.Name = sourceModuleName(strings.ToLower(rec.ID))
 	}
-	argument := definitionReferenceArgument(node.Name)
-	argument.source = statement.source.Span
-	rec := &record{ID: word.Root, Type: "lexeme.noun.generic", Value: &entry{Type: storageLexeme, Lexeme: word}, definitionArgument: &argument, staticConstructor: node}
+	rec.definitionArgument.reference, rec.staticConstructor = node.Name, node
 	prepared.declarations = append(prepared.declarations, extractedDeclaration{Token: target, Record: rec})
 	return true, nil
 }

@@ -279,17 +279,15 @@ test('theme persistence, correct logos, copy controls and local cross-links', as
   await expect(page).toHaveURL(`http://127.0.0.1:4321${pageRoute('docs/cli-build.md')}`);
 });
 
-test('release installation command copies intact and the retained bootstrap is served unchanged', async ({ page, context, request }) => {
+test('checkout build command copies intact and the retained bootstrap is served unchanged', async ({ page, context, request }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/docs/cli/installation/');
   const command = [
-    "curl --fail --location --proto '=https' --tlsv1.2 \\",
-    '  https://github.com/l-programming-language/l/releases/download/v0.0.1/install-release.sh \\',
-    '  --output install-release.sh &&',
-    'bash ./install-release.sh --version 0.0.1 --with-toolchain &&',
-    'export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH" &&',
-    'l --version',
+    'scripts/l-go build -mod=readonly -o /tmp/l ./cmd/l',
+    '/tmp/l --version',
+    '/tmp/l build demo/basic/main.l',
+    './demo/basic/main',
   ].join('\n');
   await page.locator('.expressive-code .copy button').first().click();
   expect((await page.evaluate(() => navigator.clipboard.readText())).trimEnd()).toBe(command);
@@ -297,8 +295,8 @@ test('release installation command copies intact and the retained bootstrap is s
   const script = await request.get('/install.sh');
   expect(script.status()).toBe(200);
   expect(await script.body()).toEqual(await fs.readFile('public/install.sh'));
-  await page.getByRole('link', { name: 'download and inspect', exact: true }).click();
-  await expect(page).toHaveURL(/\/docs\/cli\/installation-options\/#download-and-inspect$/);
+  await page.getByRole('link', { name: 'Installation options', exact: true }).click();
+  await expect(page).toHaveURL(/\/docs\/cli\/installation-options\/$/);
 });
 
 test('mobile navigation and visible keyboard focus', async ({ page }) => {

@@ -361,8 +361,36 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 	}
 	// Directives require the selected binding's invocation family. Nominal
 	// construction reaches instantiateSourceCall through its own role check.
-	if binding := action.verb.binding.Record; binding.function != nil && binding.function.Native && !binding.hasInvocationFamily() {
-		return DefinitionInstance{}, false, lerrors.Syntax.Errorf("Function invocation requires this binding's complete verb family")
+	if binding := action.verb.binding.Record; !binding.hasInvocationFamily() {
+		seen := make(map[*record]bool)
+		for rec := binding; rec != nil; {
+			canonical, err := canonicalRecord(rec, c.Semantics.Aliases)
+			if err != nil {
+				return DefinitionInstance{}, false, err
+			}
+			rec = canonical
+			if rec.function != nil && rec.function.Native {
+				return DefinitionInstance{}, false, lerrors.Syntax.Errorf("Function invocation requires this binding's complete verb family")
+			}
+			if seen[rec] {
+				return DefinitionInstance{}, false, lerrors.Cycle.Errorf("recursive definition invocation: %s", rec.ID)
+			}
+			seen[rec] = true
+			selected, err := c.Semantics.selectedDefinition(rec)
+			if err != nil {
+				return DefinitionInstance{}, false, err
+			}
+			object := selected.object
+			if object == nil || object.name != nil || object.phrase != nil || object.clause != nil {
+				break
+			}
+			rec = object.noun.binding.Record
+			for _, modifier := range valueModifiers(object.adjectives) {
+				if !modifier.isPossessive() {
+					rec = nil // Construction is not a transparent Function copy.
+				}
+			}
+		}
 	}
 	var arguments []DefinitionArgument
 	var ledger []DefinitionBinding
