@@ -1096,12 +1096,15 @@ func (sb *clauseGram) loadTyping(sType string) error {
 		return err
 	}
 	parts := strings.Split(sb.sType, ".")
-	head := clauseHead(sb.tokens)
-	if head != nil && len(parts) > 1 {
-		form := parts[1]
+	form := ""
+	if len(parts) > 1 {
+		form = parts[1]
 		if len(parts) > 2 {
 			form = parts[2]
 		}
+	}
+	head := clauseHeadForForm(sb.tokens, form)
+	if head != nil && form != "" {
 		sb.verbForm = head.grammaticalForm(form)
 		// Source bindings own their declared morphology; configured native
 		// operation roles retain their existing grammar contract.
@@ -1268,7 +1271,13 @@ func (sb *clauseGram) lexSwitch(term grammarTerm) error {
 		if sb.verb != nil {
 			return nil
 		}
-		return term.associateLexicalToken(sb.getUnassociatedTokens(), &sb.verb, lexicalMatchClass)
+		available := sb.getUnassociatedTokens()
+		if sb.verbForm != nil && len(available) > 0 && term.matchesLexical(sb.verbForm.projected(available[0]), lexicalMatchClass) {
+			// Validate the speculative role, but retain the source occurrence.
+			sb.verb = available[0]
+			return nil
+		}
+		return term.associateLexicalToken(available, &sb.verb, lexicalMatchClass)
 	default:
 		return lerrors.InvalidConfiguration.Errorf("%s", "Unhandled Type: "+term.className())
 	}

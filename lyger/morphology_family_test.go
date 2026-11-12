@@ -339,3 +339,166 @@ func TestMorphologyDescriptiveCollisionContext(t *testing.T) {
 		t.Fatalf("same-root modifier and noun roles = %v", roles)
 	}
 }
+
+func TestMorphologyNounActiveOverlap(t *testing.T) {
+	for _, tc := range []struct{ label, spelling string }{
+		{"Parcel|-s|-like|-s", "Parcels"},
+		{"Parcel|-s|-like|-like", "Parcellike"},
+		{"Parcel|-s|-like|-", "Parcel"},
+		{"Parcel|-s|-like|-ing", "Parceling"},
+	} {
+		t.Run(tc.spelling, func(t *testing.T) {
+			source := "Define \"" + tc.label + "\" as `<DEF>E{|Statement: ~<@Value|Text@>~|}<DEF>`.\n" +
+				"Create \"Fold|-s|-ed|-ing|-er\" for " + tc.spelling + " any Text.\n\n" +
+				"    Publicly create \"Exercise|-s|-d|--ing|--er\" as a Generic `exercise` Function with No Inputs and Outputs of `&'static str`.\n" +
+				"Return a New Folder of `payload`.\n"
+			compilation := compileMemberResolutionSource(t, memberResolutionSource{main: source})
+			if compilation.Error != nil {
+				t.Fatal(compilation.Error)
+			}
+			var calls int
+			for _, statement := range testProgramStatements(compilation.Statements) {
+				for _, tok := range statement.tokens {
+					if string(tok.rawBytes) == tc.spelling {
+						calls++
+						if tok.binding == nil || tok.binding.Record != compilation.Memory["Parcel"] || tok.binding.Form != "active" || tok.getPOS(true) != "verb" {
+							t.Fatalf("noun application lost its selected active role: %+v", tok.binding)
+						}
+					}
+				}
+			}
+			if calls != 1 {
+				t.Fatalf("observed %d noun applications, want one", calls)
+			}
+			testNativeDefinitionLibrary(t, compilation, "Exercise", "noun_active", `#[path="src/noun_active.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),"payload");}`)
+		})
+	}
+}
+
+func morphologyNounRecord(t *testing.T, id, label string) *record {
+	t.Helper()
+	word := newLexeme("noun")
+	if err := word.declareFamily(label); err != nil {
+		t.Fatal(err)
+	}
+	if err := word.define([]byte("<DEF>E{|Statement: ~<@Value|Text@>~|}<DEF>")); err != nil {
+		t.Fatal(err)
+	}
+	return &record{ID: id, Value: &entry{Type: storageLexeme, Lexeme: word}}
+}
+
+func TestMorphologyNounActiveGrammarViews(t *testing.T) {
+	for _, tc := range []struct{ label, spelling, initial string }{
+		{`"Parcel|-s|-like|-s"`, "Parcels", "plural"},
+		{`"Parcel|-s|-like|-like"`, "Parcellike", "descriptive"},
+		{`"Parcel|-s|-like|-"`, "Parcel", "root"},
+		{`"Parcel|-s|-like|-ing"`, "Parceling", "active"},
+	} {
+		for _, grammar := range []string{"clause.applicative", "clause.generic.applicative"} {
+			for _, prefix := range []string{"", "not Catalog's "} {
+				t.Run(tc.spelling+"/"+grammar+"/"+prefix, func(t *testing.T) {
+					id := "Parcel"
+					if prefix != "" {
+						id = "Catalog.Parcel"
+					}
+					selected := morphologyNounRecord(t, id, tc.label)
+					records := map[string]*record{id: selected}
+					if prefix != "" {
+						// The owner also has an active/root overlap. Its possessive
+						// must remain a prefix, and the foreign homonym must stay foreign.
+						owner := morphologyNounRecord(t, "Catalog", `"Catalog|-s|-like|-"`)
+						owner.members = map[string]*record{id: selected}
+						records["Catalog"] = owner
+						records["Parcel"] = morphologyNounRecord(t, "Parcel", tc.label)
+					}
+					statement := boundFormStatement(t, prefix+tc.spelling+" Value", records)
+					head := statement.tokens[len(statement.tokens)-2]
+					before, category, raw := head.binding, head.tType, bytes.Clone(head.rawBytes)
+					if before == nil || before.Record != selected || before.Form != tc.initial {
+						t.Fatalf("context-free lookup changed before grammar: %+v", before)
+					}
+					clause, err := initClauseGram(grammar, statement.tokens, statement.gram)
+					if err == nil {
+						err = clause.build()
+					}
+					if err != nil {
+						t.Fatal(err)
+					}
+					if clause.verb != head || len(clause.tokens) != len(statement.tokens) {
+						t.Fatal("applicative grammar did not retain the complete original clause")
+					}
+					if head.binding != before || head.tType != category || !bytes.Equal(head.rawBytes, raw) {
+						t.Fatal("speculative applicative grammar changed its source token")
+					}
+					accepted := &statementGram{clauses: []*clauseGram{clause}}
+					if err := accepted.commitForms(); err != nil {
+						t.Fatal(err)
+					}
+					if head.binding.Record != selected || head.binding.Form != "active" || head.getPOS(true) != "verb" || !bytes.Equal(head.rawBytes, raw) {
+						t.Fatalf("accepted clause changed identity or lost its active form: %+v", head.binding)
+					}
+					if prefix != "" && (statement.tokens[1].binding.Form != "root" || !statement.tokens[1].isPossessive()) {
+						t.Fatal("applicative context consumed its possessive owner")
+					}
+				})
+			}
+		}
+	}
+}
+
+func TestMorphologyNounActiveRetry(t *testing.T) {
+	for _, tc := range []struct{ label, spelling string }{
+		{`"Parcel|-s|-like|-s"`, "Parcels"},
+		{`"Parcel|-s|-like|-like"`, "Parcellike"},
+		{`"Parcel|-s|-like|-"`, "Parcel"},
+	} {
+		t.Run(tc.spelling, func(t *testing.T) {
+			selected := morphologyNounRecord(t, "Parcel", tc.label)
+			statement := boundFormStatement(t, `Create "Fold|-s|-ed|-ing|-er" for `+tc.spelling+" Value Target", map[string]*record{"Parcel": selected})
+			head := statement.tokens[len(statement.tokens)-3]
+			before, category, raw := head.binding, head.tType, bytes.Clone(head.rawBytes)
+			if err := statement.loadGram(); err == nil {
+				t.Fatal("trailing garbage was accepted")
+			}
+			if head.binding != before || head.tType != category || !bytes.Equal(head.rawBytes, raw) {
+				t.Fatal("failed applicative statement committed a form")
+			}
+			statement.tokens = statement.tokens[:len(statement.tokens)-1]
+			statement.determineType()
+			if err := statement.loadGram(); err != nil {
+				t.Fatal(err)
+			}
+			if head.binding.Record != selected || head.binding.Form != "active" || !bytes.Equal(head.rawBytes, raw) {
+				t.Fatalf("successful retry lost its canonical noun application: %+v", head.binding)
+			}
+		})
+	}
+}
+
+func TestMorphologyNounActiveRequiresContextAndDeclaredForm(t *testing.T) {
+	for _, tc := range []struct{ label, spelling, role, grammar string }{
+		{`"Parcel|-s|-like|-ing"`, "Parcels", "plural", "clause.applicative"},
+		{`"Parcel|-s|-like|-ing"`, "Parcellike", "descriptive", "clause.generic.applicative"},
+		{`"Parcel|-s|-like|-ing"`, "Parcel", "root", "clause.applicative"},
+		{`"Parcel|-s|-like|-s"`, "Parcels", "plural", "clause.imperative"},
+		{`"Parcel|-s|-like|-like"`, "Parcellike", "descriptive", "clause.passive"},
+		{`"Parcel|-s|-like|-"`, "Parcel", "root", "clause"},
+	} {
+		t.Run(tc.spelling+"/"+tc.grammar, func(t *testing.T) {
+			selected := morphologyNounRecord(t, "Parcel", tc.label)
+			statement := boundFormStatement(t, tc.spelling+" Value", map[string]*record{"Parcel": selected})
+			head := statement.tokens[0]
+			before, category := head.binding, head.tType
+			clause, err := initClauseGram(tc.grammar, statement.tokens, statement.gram)
+			if err == nil {
+				err = clause.build()
+			}
+			if err == nil {
+				t.Fatal("noun was promoted without a declared applicable form and context")
+			}
+			if head.binding != before || head.binding.Record != selected || head.binding.Form != tc.role || head.tType != category {
+				t.Fatal("rejected clause changed the context-free noun role")
+			}
+		})
+	}
+}

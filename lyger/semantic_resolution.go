@@ -97,6 +97,9 @@ func canonicalRecord(rec *record, aliases map[*record]*record) (*record, error) 
 }
 
 func (r semanticResolver) lookup(tok *token) (*tokenBinding, lookupState, error) {
+	if tok.numericLiteral {
+		return nil, lookupAbsent, nil
+	}
 	scope := tok.scope
 	if scope == nil {
 		return nil, lookupAbsent, lerrors.Internal.Errorf("reference %q has no lexical scope", tok.rawBytes)
@@ -236,6 +239,9 @@ func nativeMemberFor(ownerType valueType, lex *lexeme) (nativeMember, bool) {
 }
 
 func (r semanticResolver) member(owner semanticOwner, tok *token, source *lStatement) (memberResolution, bool, error) {
+	if err := validateAuthoredName(tok.rawBytes); err != nil {
+		return memberResolution{}, false, err
+	}
 	qualified := []byte(owner.Namespace + "." + string(tok.rawBytes))
 	var binding *tokenBinding
 	var err error
@@ -244,6 +250,7 @@ func (r semanticResolver) member(owner semanticOwner, tok *token, source *lState
 	} else {
 		query := *tok
 		query.rawBytes = qualified
+		query.numericLiteral = false
 		binding, _, err = r.lookup(&query)
 	}
 	if err != nil {

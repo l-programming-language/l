@@ -30,6 +30,7 @@ type token struct {
 	bindingError       error
 	scope              *lexicalScope
 	rangeError         error // Provisional primitive failure until names resolve.
+	numericLiteral     bool  // Authored dotted Number; immutable across binding retries.
 }
 
 // isPossessive returns whether the token is possessive or now
@@ -182,19 +183,21 @@ func (t *token) loadEntry() error {
 		t.tType = "primitive." + strings.ToLower(prim.Type.String())
 		return nil
 	}
-	// 2) Check if token is an explicit data type (Primitive, Applicative, Iterative, Lexical)
-	tType, tCat := checkType(t.rawBytes)
-	if tType != "Unknown" && tCat != storageUnknown {
-		t.mem = initEntry(tType, tCat)
-		t.tType = "type." + strings.ToLower(tCat.String()) + "." + strings.ToLower(tType)
-		return nil
-	}
-	// 3) Lookup if token is a primitive lexeme
-	l, lCat, lErr := t.gram.lex.lookup(t.rawBytes)
-	if lErr == nil {
-		t.mem = &entry{Type: storageLexeme, Lexeme: l}
-		t.tType = lCat
-		return nil
+	if !t.numericLiteral {
+		// 2) Check if token is an explicit data type (Primitive, Applicative, Iterative, Lexical)
+		tType, tCat := checkType(t.rawBytes)
+		if tType != "Unknown" && tCat != storageUnknown {
+			t.mem = initEntry(tType, tCat)
+			t.tType = "type." + strings.ToLower(tCat.String()) + "." + strings.ToLower(tType)
+			return nil
+		}
+		// 3) Lookup if token is a primitive lexeme
+		l, lCat, lErr := t.gram.lex.lookup(t.rawBytes)
+		if lErr == nil {
+			t.mem = &entry{Type: storageLexeme, Lexeme: l}
+			t.tType = lCat
+			return nil
+		}
 	}
 	// 4) Else load an unknown primitive for now
 	if errors.Is(primErr, strconv.ErrRange) {

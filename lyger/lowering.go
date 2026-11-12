@@ -359,6 +359,11 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 	if action.verb == nil || action.verb.binding == nil {
 		return DefinitionInstance{}, false, lerrors.UnresolvedReference.Errorf("source operation has no definition")
 	}
+	// Directives require the selected binding's invocation family. Nominal
+	// construction reaches instantiateSourceCall through its own role check.
+	if binding := action.verb.binding.Record; binding.function != nil && binding.function.Native && !binding.hasInvocationFamily() {
+		return DefinitionInstance{}, false, lerrors.Syntax.Errorf("Function invocation requires this binding's complete verb family")
+	}
 	var arguments []DefinitionArgument
 	var ledger []DefinitionBinding
 	used := false

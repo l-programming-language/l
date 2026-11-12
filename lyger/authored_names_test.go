@@ -72,6 +72,10 @@ func TestAuthoredDotNotationImportsRejectBeforeExpansion(t *testing.T) {
 				"Use Value from `missing.l` as \"Tools.Value\".",
 				"Use Value from `missing.l` as \"Tools\\u002eValue\".",
 				"Use Tools.Value from `missing-dictionary`.",
+				"Use 1.2 from `missing.l`.",
+				"Use 1.2 from `missing.l` as \"Value\".",
+				"Use 1.0e999 from `missing-dictionary`.",
+				"Use Tools's 0x1.8p2 from `missing.l` as \"Value\".",
 			} {
 				t.Run(source, func(t *testing.T) {
 					result, err := compileTestSource(t, "\n  "+source+"\n", nil, options)
@@ -79,6 +83,29 @@ func TestAuthoredDotNotationImportsRejectBeforeExpansion(t *testing.T) {
 						t.Fatalf("import must reject dotted source names before opening its dependency: %v", err)
 					}
 				})
+			}
+		})
+	}
+}
+
+func TestAuthoredNumericDotsRejectInMemberPositions(t *testing.T) {
+	const prefix = "Create \"Tools\" as a Dictionary.\n" +
+		"Create Tools's \"1\" as a Dictionary.\n" +
+		"Use Tools's 1 as \"Branch\".\n"
+	for _, tc := range []struct{ name, declaration, use string }{
+		{"possessed value", "Define Branch's \"2\" as `member`.\n", "Show Tools's 1.2.\n"},
+		{"possessed action", "Create Branch's \"0e999|-s|-ed|-ing|-er\" for Showing any Text.\n", "Tools's 1.0e999 `called`.\n"},
+		{"subject action", "Create Branch's \"0e999|-s|-ed|-ing|-er\" for Showing any Text.\n", "Tools 1.0e999 `called`.\n"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			source := prefix + tc.declaration + tc.use
+			c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "numeric-member.l")
+			c.Make()
+			if !errors.Is(c.Error, lerrors.Syntax) || !strings.Contains(c.Error.Error(), "numeric-member.l:5:1") || !strings.Contains(c.Error.Error(), "dot-qualified") {
+				t.Fatalf("explicit member name escaped strict validation: %v", c.Error)
+			}
+			if c.Program != nil || len(c.ASMBytes) != 0 || !bytes.Equal(c.MainBytes, []byte(source)) {
+				t.Fatal("invalid member spelling published output or changed source")
 			}
 		})
 	}

@@ -21,12 +21,20 @@ func validateAuthoredName(raw []byte) error {
 			return nil // Declaration parsing owns malformed quoted labels.
 		}
 		word = label
-	} else if _, err := strconv.ParseFloat(word, 64); err == nil || errors.Is(err, strconv.ErrRange) {
-		// Overflow remains a provisional numeric error until bindings resolve.
-		return nil
 	}
 	if strings.ContainsRune(word, '.') {
 		return lerrors.Syntax.Errorf("dot-qualified authored names are invalid: %q; use grammatical possessives or an explicitly scoped alias", word)
 	}
 	return nil
+}
+
+// A dotted numeric spelling in source is a literal, never a qualified name.
+// Keep that classification through resolution, including range-error candidates.
+func authoredNumericLiteral(raw []byte) bool {
+	word := strings.TrimSuffix(string(raw), ",")
+	if !strings.ContainsRune(word, '.') {
+		return false
+	}
+	_, err := strconv.ParseFloat(word, 64)
+	return err == nil || errors.Is(err, strconv.ErrRange)
 }

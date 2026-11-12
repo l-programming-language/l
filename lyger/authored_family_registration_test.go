@@ -1,9 +1,12 @@
 package Lyger
 
 import (
+	"errors"
 	"strings"
 	"testing"
 	"testing/fstest"
+
+	"github.com/l-programming-language/l/lerrors"
 )
 
 func TestAuthoredFamiliesRejectIncompleteRegistration(t *testing.T) {
@@ -166,6 +169,59 @@ func TestNativeDataAliasesRemainData(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			c := compileDefinitionSource(t, tc.source, "data-alias.l")
 			testNativeDefinitionLibrary(t, c, "Exercise", "data_alias", `pub fn fallback()->String{String::new()}#[path="src/data_alias.rs"]mod generated;fn main(){`+tc.observer+`}`)
+		})
+	}
+}
+
+func TestNativeFunctionBindingsRequireOwnInvocationFamily(t *testing.T) {
+	const function = "    Publicly create \"Read|-s|-|-ing|-er\" as a Generic `read` Function with No Inputs and Outputs of `f64`.\nReturn 7.\n\n"
+	for _, alias := range []struct{ name, family, active string }{
+		{"distinct", "Task|-s|-like|-ing", "Tasking"},
+		{"root overlap", "Task|-s|-like|-", "Task"},
+		{"plural overlap", "Task|-s|-like|-s", "Tasks"},
+		{"descriptive overlap", "Task|-s|-like|-like", "Tasklike"},
+	} {
+		for _, route := range []string{"positional action", "named action", "native body"} {
+			t.Run(alias.name+"/"+route, func(t *testing.T) {
+				source := function + "Use Reader as \"" + alias.family + "\".\nCreate \"Perform|-s|-ed|-ing|-er\" for " + alias.active + ".\n"
+				if route == "native body" {
+					source += "\n    Publicly create \"Exercise|-s|-d|--ing|--er\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\nReturn a New Performer.\n"
+				}
+				c := compileDefinitionSource(t, source, "native-invocation-family.l")
+				var err error
+				switch route {
+				case "positional action":
+					_, err = c.ComposeDefinition("Perform")
+				case "named action":
+					_, err = c.instantiateNamedDefinition(c.Memory["Perform"], map[string]DefinitionArgument{}, map[string]bool{}, make(map[*record]bool))
+				case "native body":
+					_, err = c.ComposeDefinition("Exercise")
+				}
+				if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "this binding's complete verb family") {
+					t.Fatalf("noun alias acquired Function invocation permission through %s: %v", route, err)
+				}
+			})
+		}
+	}
+}
+
+func TestNativeFunctionBindingFamiliesPreserveConstructionAndCalls(t *testing.T) {
+	const function = "    Publicly create \"Read|-s|-|-ing|-er\" as a Generic `read` Function with No Inputs and Outputs of `f64`.\nReturn 7.\n\n"
+	for _, tc := range []struct{ name, alias, action, result string }{
+		{"noun constructor", "Use Reader as \"Task|-s|-like|-ing\".\n", "", "Task"},
+		{"overlapping noun constructor", "Use Reader as \"Task|-s|-like|-s\".\n", "", "Tasks"},
+		{"explicit invocation family", "Use Read as \"Task|-s|-ed|-ing|-er\".\n", "Create \"Perform|-s|-ed|-ing|-er\" for Tasking.\n", "Performer"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			source := function + tc.alias + tc.action + "\n    Publicly create \"Exercise|-s|-d|--ing|--er\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\nReturn a New " + tc.result + ".\n"
+			c := compileDefinitionSource(t, source, "native-invocation-control.l")
+			if tc.action != "" {
+				instance, err := c.instantiateNamedDefinition(c.Memory["Perform"], map[string]DefinitionArgument{}, map[string]bool{}, make(map[*record]bool))
+				if err != nil || !strings.Contains(instance.Expression, "Key: ~(read)~") {
+					t.Fatalf("named source action lost its explicit invocation family: %s, %v", instance.Expression, err)
+				}
+			}
+			testNativeDefinitionLibrary(t, c, "Exercise", "invocation_family", `#[path="src/invocation_family.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),7.0);}`)
 		})
 	}
 }

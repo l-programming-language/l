@@ -299,6 +299,9 @@ func (r semanticResolver) bindStatementMembers(statement *lStatement) (bool, err
 		if action.getPOS(true) == "preposition" {
 			break
 		}
+		if err := validateAuthoredName(action.rawBytes); err != nil {
+			return false, err
+		}
 		member, _, err := r.lookupMember(subject.binding.Record, action.rawBytes)
 		if err != nil {
 			return false, err

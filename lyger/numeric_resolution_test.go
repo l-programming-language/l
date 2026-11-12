@@ -317,3 +317,93 @@ func TestNumericResolutionDeferredCauseIdentity(t *testing.T) {
 		})
 	}
 }
+
+func TestDottedNumericLiteralsIgnoreQualifiedBindings(t *testing.T) {
+	for _, tc := range []struct{ owner, member, raw string }{
+		{"1", "2", "1.2"}, {"-1", "2", "-1.2"}, {"0x1", "8p2", "0x1.8p2"},
+	} {
+		t.Run(tc.raw, func(t *testing.T) {
+			source := "Create \"" + tc.owner + "\" as a Dictionary.\n" +
+				"Define " + tc.owner + "'s \"" + tc.member + "\" as `member`.\n" +
+				"\"Quantity\" is " + tc.raw + ", and \"Other\" is 7.\n" +
+				"Show " + tc.owner + "'s " + tc.member + ".\n"
+			c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
+			if c.Error != nil {
+				t.Fatal(c.Error)
+			}
+			want, err := strconv.ParseFloat(tc.raw, 64)
+			if err != nil {
+				t.Fatal(err)
+			}
+			quantity := c.Memory["Quantity"].Value.Primitive
+			if quantity == nil || quantity.Type != valueNumber || quantity.Number != want {
+				t.Fatalf("numeric literal resolved as a qualified member: %+v", quantity)
+			}
+			statements := testProgramStatements(c.Statements)
+			number := statements[2].tokens[2]
+			if number.binding != nil || !number.conjoined || string(number.rawBytes) != tc.raw {
+				t.Fatalf("numeric source token acquired a binding or lost its comma: %+v", number)
+			}
+			if rec, err := c.resolver().reference(number); err != nil || rec != nil {
+				t.Fatalf("later reference lookup reinterpreted a numeric literal: %+v, %v", rec, err)
+			}
+			member := c.Memory[tc.raw]
+			use := statements[3].tokens[2]
+			if member == nil || use.binding == nil || use.binding.Record != member {
+				t.Fatal("possessive numeric member lost its canonical identity")
+			}
+			internal := &token{rawBytes: []byte(tc.raw), scope: c.Scope.Root}
+			binding, state, err := c.resolver().lookup(internal)
+			if err != nil || state != lookupFound || binding == nil || binding.Record != member {
+				t.Fatalf("internal dotted identity was restricted: %v, %s, %v", binding, state, err)
+			}
+		})
+	}
+}
+
+func TestDottedNumericOverflowKeepsCauseAcrossResolution(t *testing.T) {
+	for _, configured := range []bool{false, true} {
+		name := "qualified member"
+		if configured {
+			name = "configured vocabulary"
+		}
+		t.Run(name, func(t *testing.T) {
+			const source = "Create \"1\" as a Dictionary.\nDefine 1's \"0e999\" as `member`.\n\"Quantity\" is 1.0e999.\n"
+			c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "numeric-overflow.l")
+			if configured {
+				word := c.Gram.lex.Verbs["observative"]
+				word.Root = "1.0e999"
+				c.Gram.lex.Verbs["observative"] = word
+			}
+			c.scan()
+			if c.Error != nil {
+				t.Fatal(c.Error)
+			}
+			statement := testProgramStatements(c.Statements)[2]
+			number := statement.tokens[2]
+			cause := number.rangeError
+			var original *strconv.NumError
+			if !errors.As(cause, &original) || original.Num != "1.0e999" {
+				t.Fatalf("numeric token lost its range cause during scanning: %v", cause)
+			}
+			c.analyze()
+			var terminal *strconv.NumError
+			if !errors.Is(c.Error, strconv.ErrRange) || !errors.As(c.Error, &terminal) || terminal != original || !strings.Contains(c.Error.Error(), "numeric-overflow.l:3:1: tokenize:") {
+				t.Fatalf("qualified/configured collision replaced numeric failure: %v", c.Error)
+			}
+			if number.binding != nil || number.rangeError != cause || string(number.rawBytes) != "1.0e999" || !bytes.Equal(c.MainBytes, []byte(source)) || c.Program != nil {
+				t.Fatal("numeric resolution changed token identity, source, or published output")
+			}
+		})
+	}
+}
+
+func TestDottedNumericCallCannotResolveAnAction(t *testing.T) {
+	const source = "Create \"1\" as a Dictionary.\n" +
+		"Create 1's \"0e999|-s|-ed|-ing|-er\" for Showing any Text.\n" +
+		"1.0e999 `called`.\n"
+	c := compileMemberResolutionSource(t, memberResolutionSource{main: source})
+	if !errors.Is(c.Error, strconv.ErrRange) || !strings.Contains(c.Error.Error(), "main.l:3:1") || c.Program != nil || len(c.ASMBytes) != 0 {
+		t.Fatalf("dotted numeric call acquired an invocation binding: %v", c.Error)
+	}
+}

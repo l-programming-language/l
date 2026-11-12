@@ -66,9 +66,9 @@ An active noun form can serve as an applicative verb, a descriptive noun form as
 
 ## Literal and token precedence
 
-Token loading first recognizes Text, exact lowercase `true` or `false`, quoted identifiers, and numeric candidates. Then native types and configured vocabulary participate. A numeric-range candidate can remain provisional while source-defined names resolve. If a configured or source binding supplies that spelling, the compiler does not prematurely replace it with a numeric error. Unresolved explicit members remain reference failures.
+Token loading first recognizes Text, exact lowercase `true` or `false`, quoted identifiers, and numeric candidates. A dotted numeric token remains a Number or numeric-range error even when its spelling matches an internal qualified identity. Explicit name positions, including imports and possessive members, reject dots instead of treating them as numeric exemptions.
 
-A declared name with numeric-looking spelling remains a name if binding resolves it. Otherwise a numeric range error retains its original cause. Recognition does not convert an overflowing Number into a successful value.
+Native types and configured vocabulary retain their roles. Dot-free numeric-looking names such as `1e999` can resolve to configured or source bindings before a provisional range error becomes final. Unresolved explicit members remain reference failures. Otherwise numeric range errors retain their original cause and source location.
 
 Grammar patterns such as `%~%` and `?~?` name typed token categories. They are not instructions to surround ordinary numbers and Truth literals with those characters. The actual source examples use `7`, `-12.5`, `true`, and `false`.
 

@@ -151,8 +151,17 @@ func associateNominalAdjectives(term grammarTerm, available []*token, adjectives
 
 // clauseHead observes the same adverb/possessive prefix accepted by grammar.
 func clauseHead(tokens []*token) *token {
+	return clauseHeadForForm(tokens, "")
+}
+
+// Only an explicit applicative context can promote a selected noun's active
+// form; ordinary lookup and the possessive owner retain their original roles.
+func clauseHeadForForm(tokens []*token, form string) *token {
 	for _, tok := range tokens {
 		if tok.getPOS(true) == "verb" {
+			return tok
+		}
+		if form == "applicative" && !tok.isPossessive() && tok.binding != nil && tok.binding.POS == "noun" && tok.grammaticalForm(form) != nil {
 			return tok
 		}
 		if tok.getPOS(true) != "adverb" && !tok.isPossessive() {
