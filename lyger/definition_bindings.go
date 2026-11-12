@@ -71,6 +71,7 @@ type DefinitionArgument struct {
 	Texts        []string
 	Definition   *DefinitionInstance
 	reference    string
+	callable     *callableReference
 	atoms        *[]DefinitionArgument
 	typeAtom     string
 	formal       *definitionParameter // exact source declaration parameter, carried only by its invocation
@@ -211,6 +212,11 @@ func ParseDefinitionTemplate(raw []byte, span SourceSpan) (*DefinitionTemplate, 
 		template.parts, err = template.parseParts(body)
 		if err != nil {
 			return nil, err
+		}
+	}
+	for index, slot := range template.Slots {
+		if slot.Type == "Callable" && (index != 0 || len(template.Slots) != 2 || template.Slots[1].Type != "Atoms") {
+			return nil, template.failure(lerrors.Syntax.Errorf("Callable requires one callable slot followed by terminal Atoms"))
 		}
 	}
 	return template, nil
@@ -389,6 +395,19 @@ func (t *DefinitionTemplate) identitySlot() *DefinitionSlot {
 // Instantiate binds every slot by name. Values are emitted only at parsed slot
 // locations, so a replacement never reinterprets argument text as another slot.
 func (t *DefinitionTemplate) Instantiate(bindings map[string]DefinitionArgument) (DefinitionInstance, error) {
+	if len(t.Slots) == 2 && t.Slots[0].Type == "Callable" {
+		target, _ := bindings[t.Slots[0].Name].boundResult()
+		if err := target.validateCallable(); err != nil {
+			return DefinitionInstance{}, t.failure(err)
+		}
+		arguments := bindings[t.Slots[1].Name]
+		if arguments.atoms == nil {
+			return DefinitionInstance{}, t.failure(lerrors.TypeMismatch.Errorf("Atoms requires an ordered metadata atom list"))
+		}
+		if err := target.callable.function.checkArgumentCount(len(*arguments.atoms)); err != nil {
+			return DefinitionInstance{}, t.failure(err)
+		}
+	}
 	instance := DefinitionInstance{Original: bytes.Clone(t.Original), Span: t.Span, Dependencies: append([]DefinitionInstance(nil), t.dependencies...)}
 	values := make(map[string]string, len(t.Slots))
 	referenceIdentity := false
@@ -541,6 +560,12 @@ func pureDefinitionSequence(actions []DefinitionInstance) []DefinitionInstance {
 }
 
 func (argument DefinitionArgument) renderFor(slot DefinitionSlot) (string, error) {
+	if slot.Type == "Callable" {
+		if err := argument.validateCallable(); err != nil {
+			return "", err
+		}
+		return argument.referenceAtom()
+	}
 	expected, actual := strings.ToLower(slot.Type), strings.ToLower(argument.Kind)
 	kind, _ := parseDefinitionArgKindFolded(argument.Kind)
 	if slot.Type == "Label" {

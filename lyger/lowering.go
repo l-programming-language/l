@@ -362,47 +362,12 @@ func (c *Compilation) instantiateSourceAction(action *clauseGram, active, dynami
 	// Directives require the selected binding's invocation family. Nominal
 	// construction reaches instantiateSourceCall through its own role check.
 	if binding := action.verb.binding.Record; !binding.hasInvocationFamily() {
-		seen := make(map[*record]bool)
-		for rec := binding; rec != nil; {
-			canonical, err := canonicalRecord(rec, c.Semantics.Aliases)
-			if err != nil {
-				return DefinitionInstance{}, false, err
-			}
-			rec = canonical
-			if rec.function != nil && rec.function.Native {
-				return DefinitionInstance{}, false, lerrors.Syntax.Errorf("Function invocation requires this binding's complete verb family")
-			}
-			if seen[rec] {
-				return DefinitionInstance{}, false, lerrors.Cycle.Errorf("recursive definition invocation: %s", rec.ID)
-			}
-			seen[rec] = true
-			selected, err := c.Semantics.selectedDefinition(rec)
-			if err != nil {
-				return DefinitionInstance{}, false, err
-			}
-			object := selected.object
-			if object == nil || object.name != nil || object.directivePhrase() != nil || nominalContext(nil, object.adjectives) {
-				break
-			}
-			rec = object.noun.binding.Record
-			for _, modifier := range valueModifiers(object.adjectives) {
-				descriptor, err := c.descriptorFor(modifier)
-				if err != nil {
-					return DefinitionInstance{}, false, err
-				}
-				if descriptor != nil {
-					rec = nil // A selected descriptor supplies construction semantics.
-				}
-			}
-			if rec != nil {
-				node, err := c.constructObject(object, make(map[*descriptorRule]bool))
-				if err != nil {
-					return DefinitionInstance{}, false, err
-				}
-				if len(node.Arguments) > 0 {
-					rec = nil
-				}
-			}
+		function, err := c.nativeFunctionReference(binding)
+		if err != nil {
+			return DefinitionInstance{}, false, err
+		}
+		if function != nil {
+			return DefinitionInstance{}, false, lerrors.Syntax.Errorf("Function invocation requires this binding's complete verb family")
 		}
 	}
 	var arguments []DefinitionArgument
@@ -493,6 +458,23 @@ func (c *Compilation) definitionOperand(object *objectGram, active, dynamic map[
 			}
 			if rec.Value != nil && rec.Value.Type == storageLexeme {
 				child, used, err := compose(object)
+				if err == nil && child.result != nil && child.result.callable != nil {
+					selected, selectionErr := c.Semantics.selectedDefinition(rec)
+					if selectionErr != nil {
+						return DefinitionArgument{}, false, selectionErr
+					}
+					reference, referenceErr := c.transparentReference(object)
+					if referenceErr != nil {
+						return DefinitionArgument{}, false, referenceErr
+					}
+					if selected.object != nil || reference != nil {
+						// Reading an authored value definition selects that label's
+						// family, not the permission of the value it forwards.
+						value, proof := *child.result, *child.result.callable
+						proof.binding = object.noun.binding.Record
+						value.callable, child.result = &proof, &value
+					}
+				}
 				return DefinitionArgument{Kind: definitionArgDefinition.String(), Definition: &child}, used, err
 			}
 		}

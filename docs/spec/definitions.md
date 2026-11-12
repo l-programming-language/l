@@ -68,7 +68,9 @@ Main constructs a Function inside an Object inside a Service. Basic supplies tha
 
 <!-- example:definitions-callable-core -->
 
-Process composes ordered Syllables through W. Function supplies FW/Func metadata: Name, typed Inputs, output types and an instantiated Process. Source Function declarations use this selected definition too. Function-local Return binds its builtin member after checking source results.
+Process composes ordered Syllables through W. Function supplies FW/Func metadata: Name, typed Inputs, output types and an instantiated Process. Source Function declarations use this selected definition too. Function-local Return binds its selected constructor's member after checking source results.
+
+[Invoke](../reference/word-glossary.md#word-builtin-invoke) is a core root verb, separate from Function construction. Native-backed source Function calls use the selected core Invoke definition and its Callable/Atoms contract. Its actor form Invoker can supply a call expression in a native composition. An ordinary runtime Function value is not a Callable target, and invocation does not restore runtime orchestration or callbacks.
 
 A structured Process can declare typed Inputs for a selected pattern or iteration body. The [Process contract](../reference/word-glossary.md#word-builtin-process) specifies scope, cardinality and native type/borrow checking. The [native guide](../guide/native-definitions.md#keep-branch-data-inside-its-process) explains their ownership. A Process has no callable outputs or capture runtime.
 
@@ -101,13 +103,16 @@ A body may be one expression, a JSON string array representing a word, or an arr
 | Props | Typed native property records |
 | Texts | Ordered native type/output text collection |
 | Type | Native type atom or selected source type declaration, retaining its dependency |
+| Callable | Selected binding with a complete verb family, resolved to a native-backed source Function |
 | Atoms | Ordered scalar/name/reference arguments, never an executable body |
 | Label | Validated result identifier, distinct from an assignment target |
 | Definition | Instantiated definition with identity and grouping |
 
 Native Thing slots accept Text, Number, Truth and Null without converting them to strings. Core Log requires Text for its single output call. Preserve explicit [value ownership](values.md#conversion-and-aliasing-boundaries); a generic slot does not provide removed runtime values.
 
-Type, Atoms and Label are frontend roles using existing AML metadata. Nested constructors bind results once, in operand order, before the consuming word. Composition slots retain their selected definitions. Native and ordinary Functions share body lowering and bind their own invocation words. Dependencies retain canonical source ownership.
+Type, Callable, Atoms and Label are frontend roles using existing AML metadata. Nested constructors bind results once, in operand order, before the consuming word. Composition slots retain their selected definitions. Native and ordinary Functions share body lowering and bind their own invocation words. Dependencies retain canonical source ownership.
+
+A template using Callable has exactly two ordered slots: Callable followed by terminal Atoms. Their declared roles and order establish the pair, regardless of labels. The Atoms operand count must match the selected Function's inputs, including zero-input and multiple-input signatures. Callable resolves a source binding, not Text containing a Rust name or path. Canonical resolution does not replace the requirement that the original selected binding have a complete verb family: complete verb aliases and copies qualify, while single-label storage and noun aliases do not. The resolved target must be a native-backed source Function, so this role does not admit ordinary runtime Function values. The [native guide](../guide/native-definitions.md#apply-a-selected-native-function) shows the core Invoke application.
 
 Definition arguments use a finite binary64 encoder.
 It emits the shortest round-trip decimal with an explicit `_f64` suffix,

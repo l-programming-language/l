@@ -7,6 +7,26 @@ import (
 	Logiceme "github.com/l-programming-language/l/logiceme"
 )
 
+func TestCallableSlotContract(t *testing.T) {
+	for _, body := range []string{
+		`KY{|Key: ~<@Target|Callable@>~|}`,
+		`KY{|Key: ~<@Target|Callable@>~, Inputs: ~<@Values|Text@>~|}`,
+		`KY{|Inputs: ~&[<@Values|Atoms@>]&~, Key: ~<@Target|Callable@>~|}`,
+		`KY{|Key: ~<@Target|Callable@>~, Inputs: ~&[<@Other|Callable@>, <@Values|Atoms@>]&~|}`,
+		`KY{|Key: ~<@Target|Callable@>~, Inputs: ~&[<@Values|Atoms@>]&~, Receiver: ~<@Receiver@>~|}`,
+	} {
+		if _, err := ParseDefinitionTemplate([]byte(body), SourceSpan{}); err == nil || !strings.Contains(err.Error(), "Callable") {
+			t.Errorf("invalid callable interface accepted: %s: %v", body, err)
+		}
+	}
+	template := parseTestDefinition(t, `<DEF>KY{|Key: ~(<@Callee|Callable@>)~, Inputs: ~&[<@Values|Atoms@>]&~|}<DEF>`)
+	for _, target := range []DefinitionArgument{{Kind: "Text", Text: "std::convert::identity"}, definitionReferenceArgument("read"), {Kind: "Number", Text: "7"}} {
+		if _, err := template.Instantiate(map[string]DefinitionArgument{"Callee": target, "Values": definitionAtomListArgument()}); err == nil {
+			t.Errorf("unproven callable accepted: %+v", target)
+		}
+	}
+}
+
 func TestSourceCompositionBindsEachConstructor(t *testing.T) {
 	source := "Define \"Emit|-s|-ted|-ting|-ter\" to `<DEF>BOD^E{|Statement: ~println!(\"{}\", <@Value|Text@>);~|}<DEF>`.\n" +
 		"Create \"Report|-s|-ed|-ing|-er\" for Processing a New Emitter of `first` and then Processing a New Emitter of `second`.\n" +

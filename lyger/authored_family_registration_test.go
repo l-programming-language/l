@@ -10,6 +10,167 @@ import (
 	"github.com/l-programming-language/l/lerrors"
 )
 
+func TestCoreInvokeIdentity(t *testing.T) {
+	c := compileDefinitionSource(t, "Define \"Value\" as 7.\n", "invoke-identity.l")
+	root, err := c.builtinRecord("Invoke")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, form := range []string{"Invoke", "Invokes", "Invoked", "Invoking", "Invoker"} {
+		if binding, ok := root.binding(newBindingQuery([]byte(form))); !ok || binding.Record != root {
+			t.Fatalf("%s lost canonical Invoke identity", form)
+		}
+	}
+	if _, err := c.builtinRecord("Function.Invoke"); err == nil {
+		t.Fatal("retired Function member remains")
+	}
+}
+
+func TestCoreInvokeCallableBindings(t *testing.T) {
+	for _, tc := range []struct {
+		name, declarations, target string
+		allowed                    bool
+	}{
+		{"root", "", "Read", true},
+		{"actor reference", "", "Reader", true},
+		{"verb alias", "Use Read as \"Relay|-s|-ed|-ing|-er\".\n", "Relay", true},
+		{"verb copy", "Define \"Relay|-s|-ed|-ing|-er\" as Read.\n", "Relay", true},
+		{"noun alias", "Use Reader as \"Task|-s|-like|-ing\".\n", "Task", false},
+		{"noun copy", "Define \"Task|-s|-like|-ing\" as Reader.\n", "Task", false},
+		{"inert wrapper", "Define \"Marker|-s|-like|-ing\" as `<DEF>E{|Statement: ~1~|}<DEF>`.\nDefine \"Task|-s|-like|-ing\" as Markerlike Reader.\n", "Task", false},
+		{"inert signature", "Define \"Task|-s|-like|-ing\" as Reader with No Outputs.\n", "Task", false},
+		{"alias chain", "Define \"Original|-s|-like|-ing\" as Reader.\nUse Original as \"Task|-s|-like|-ing\".\n", "Task", false},
+	} {
+		for _, route := range []string{"actor", "action", "wrapper"} {
+			t.Run(tc.name+"/"+route, func(t *testing.T) {
+				body := "Return a New Invoker of " + tc.target + ".\n"
+				declarations := tc.declarations
+				if route == "action" {
+					body = "Invoke " + tc.target + ".\nReturn 7.\n"
+				} else if route == "wrapper" {
+					declarations += "Create \"Perform|-s|-ed|-ing|-er\" for Invoking " + tc.target + ".\n"
+					body = "Return a New Performer.\n"
+				}
+				c := compileDefinitionSource(t, nativeFamilyFunction+declarations+"\n    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\n"+body, "core-invoke-bindings.l")
+				_, err := c.ComposeDefinition("Exercise")
+				if !tc.allowed {
+					if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "this binding's complete verb family") {
+						t.Fatalf("invalid callable binding: %v", err)
+					}
+					return
+				}
+				if err != nil {
+					t.Fatal(err)
+				}
+				testNativeDefinitionLibrary(t, c, "Exercise", "core_invoke", `#[path="src/core_invoke.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),7.0);}`)
+			})
+		}
+	}
+}
+
+func TestCoreInvokeRuntimeValuesRemainUnavailable(t *testing.T) {
+	for _, label := range []string{"Saved", "Replay|-s|-ed|-ing|-er"} {
+		name, _, _ := strings.Cut(label, "|")
+		source := identityFunction + "Define \"" + label + "\" as Echo.\n\n    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\nReturn a New Invoker of " + name + " and `value`.\n"
+		c := compileDefinitionSource(t, source, "invoke-runtime.l")
+		if _, err := c.ComposeDefinition("Exercise"); !errors.Is(err, lerrors.Unsupported) || !strings.Contains(err.Error(), "runtime value") {
+			t.Fatalf("runtime callable acquired executable support: %v", err)
+		}
+		if label == "Saved" && c.Memory[name].hasInvocationFamily() {
+			t.Fatal("ordinary Function storage acquired invocation permission")
+		}
+	}
+}
+
+func TestCoreInvokeIdentityForwarding(t *testing.T) {
+	const forward = "Define \"Forward|-s|-ed|-ing|-er\" to `<DEF><@Value@><DEF>`.\n"
+	for _, tc := range []struct {
+		name, declarations, body string
+		allowed                  bool
+	}{
+		{"expression", "", "Return a New Invoker of a New Forwarder of Read.\n", true},
+		{"noun binding", "Define \"Task|-s|-like|-ing\" as a New Forwarder of Read.\n", "Return a New Invoker of Task.\n", false},
+		{"noun construction", "Define \"Task|-s|-like|-ing\" as a New Forwarder of Read.\n", "Return a New Invoker of a New Task.\n", false},
+		{"source formal", "Define \"Task|-s|-like|-ing\" as a New Forwarder of Read.\nCreate \"Apply|--ies|--ied|-ing|--ier\" for Invoking any Thing.\n", "Apply Task.\nReturn 7.\n", false},
+		{"constructed formal", "Define \"Task|-s|-like|-ing\" as a New Forwarder of Read.\nCreate \"Apply|--ies|--ied|-ing|--ier\" for Invoking any Thing.\n", "Apply a New Task.\nReturn 7.\n", false},
+		{"forwarded expression", "Create \"Apply|--ies|--ied|-ing|--ier\" for Invoking any Thing.\n", "Apply a New Forwarder of Read.\nReturn 7.\n", true},
+		{"action result expression", "Create \"Yield|-s|-ed|-ing|-er\" for Forwarding Read.\n", "Return a New Invoker of a New Yielder.\n", true},
+		{"action result noun alias", "Create \"Yield|-s|-ed|-ing|-er\" for Forwarding Read.\nUse Yielder as \"Task|-s|-like|-ing\".\n", "Return a New Invoker of Task.\n", false},
+		{"action alias formal", "Create \"Yield|-s|-ed|-ing|-er\" for Forwarding Read.\nUse Yielder as \"Task|-s|-like|-ing\".\nCreate \"Apply|--ies|--ied|-ing|--ier\" for Invoking any Thing.\n", "Apply Task.\nReturn 7.\n", false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			c := compileDefinitionSource(t, nativeFamilyFunction+forward+tc.declarations+"\n    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\n"+tc.body, "invoke-forwarding.l")
+			_, err := c.ComposeDefinition("Exercise")
+			if !tc.allowed {
+				if !errors.Is(err, lerrors.Syntax) || !strings.Contains(err.Error(), "this binding's complete verb family") {
+					t.Fatalf("authored binding gained the inner Function's authority: %v", err)
+				}
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			testNativeDefinitionLibrary(t, c, "Exercise", "invoke_forwarding", `#[path="src/invoke_forwarding.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),7.0);}`)
+		})
+	}
+}
+
+func TestCoreInvokeNativeEffectsAndOwnership(t *testing.T) {
+	for _, tc := range []struct{ name, source, observer string }{
+		{"ordered", "Define \"Note|-s|-d|--ing|-r\" to `<DEF>KY{|Key: ~crate::note~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n\n" +
+			"    Publicly create \"Read|-s|-|-ing|-er\" as a Generic `read` Function with Inputs of \"First\" as `f64` and \"Second\" as `f64` and Outputs of `f64`.\nReturn First.\n\n" +
+			"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\nReturn a New Invoker of Read and a New Noter of 1 and a New Noter of 2.\n",
+			`static SEEN:std::sync::Mutex<Vec<f64>>=std::sync::Mutex::new(Vec::new());pub fn note(value:f64)->f64{SEEN.lock().unwrap().push(value);value}fn main(){assert_eq!(generated::exercise(),1.0);assert_eq!(generated::exercise(),1.0);assert_eq!(*SEEN.lock().unwrap(),vec![1.0,2.0,1.0,2.0]);}`},
+		{"owned", "    Publicly create \"Echo|-es|-ed|-ing|-er\" as a Generic `echo` Function with Inputs of \"Value\" as `crate::Payload` and Outputs of `crate::Payload`.\nReturn Value.\n\n" +
+			"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic `exercise` Function with Inputs of \"Value\" as `crate::Payload` and Outputs of `crate::Payload`.\nReturn a New Invoker of Echo and Value.\n",
+			`static DROPS:std::sync::atomic::AtomicUsize=std::sync::atomic::AtomicUsize::new(0);pub struct Payload(Box<u8>);impl Drop for Payload{fn drop(&mut self){DROPS.fetch_add(1,std::sync::atomic::Ordering::SeqCst);}}fn main(){let value=Payload(Box::new(7));let pointer=&*value.0 as *const u8;let output=generated::exercise(value);assert_eq!(&*output.0 as *const u8,pointer);assert_eq!(DROPS.load(std::sync::atomic::Ordering::SeqCst),0);drop(output);assert_eq!(DROPS.load(std::sync::atomic::Ordering::SeqCst),1);}`},
+		{"borrowed unit", "Define \"Append|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~Vec::push~, Inputs: ~&[<@Values@>, 7_u8]&~|}<DEF>`.\n\n" +
+			"    Publicly create \"Touch|-es|-ed|-ing|-er\" as a Generic `touch` Function with Inputs of \"Values\" as `&mut Vec<u8>` and No Outputs.\nAppend Values.\n\n" +
+			"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic `exercise` Function with Inputs of \"Values\" as `&mut Vec<u8>` and No Outputs.\nInvoke Touch and Values.\nInvoke Touch and Values.\n",
+			`fn main(){let mut values=vec![9];generated::exercise(&mut values);assert_eq!(values,vec![9,7,7]);}`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			c := compileDefinitionSource(t, tc.source, "invoke-effects.l")
+			testNativeDefinitionLibrary(t, c, "Exercise", "invoke_effects", `#[path="src/invoke_effects.rs"]mod generated;`+tc.observer)
+		})
+	}
+}
+
+func TestCoreInvokeArguments(t *testing.T) {
+	const prefix = "Define \"Relay|-s|-ed|-ing|-er\" to `<DEF>KY{|Key: ~(<@Callee|Callable@>)~, Inputs: ~&[<@Values|Atoms@>]&~|}<DEF>`.\n\n    Publicly create \"Read|-s|-|-ing|-er\" as a Generic `read` Function with Inputs of \"Value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n"
+	for _, tc := range []struct {
+		name, target string
+		want         string
+	}{
+		{"one", "Read and 7", ""},
+		{"independent slots", "Read and 7", ""},
+		{"missing", "Read", "requires 1 arguments, got 0"},
+		{"extra", "Read and 7 and 8", "requires 1 arguments, got 2"},
+		{"text", "`read` and 7", "Callable"},
+		{"native path", "`std::convert::identity` and 7", "Callable"},
+		{"number", "7 and 8", "Callable"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			actor := "Invoker"
+			if tc.name == "independent slots" {
+				actor = "Relayer"
+			}
+			c := compileDefinitionSource(t, prefix+"    Publicly create \"Exercise|-s|-d|--ing|-r\" as a Generic `exercise` Function with No Inputs and Outputs of `f64`.\nReturn a New "+actor+" of "+tc.target+".\n", "core-invoke-arguments.l")
+			_, err := c.ComposeDefinition("Exercise")
+			if tc.want != "" {
+				if err == nil || !strings.Contains(err.Error(), tc.want) {
+					t.Fatalf("expected %s: %v", tc.want, err)
+				}
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			testNativeDefinitionLibrary(t, c, "Exercise", "core_invoke_arguments", `#[path="src/core_invoke_arguments.rs"]mod generated;fn main(){assert_eq!(generated::exercise(),7.0);}`)
+		})
+	}
+}
+
 func TestAuthoredFamiliesRejectIncompleteRegistration(t *testing.T) {
 	for _, source := range []string{
 		"Create \"Start\" for Building any App and then Running it.",

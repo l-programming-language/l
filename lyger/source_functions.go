@@ -13,7 +13,6 @@ type functionParameter struct {
 type sourceFunction struct {
 	Native       bool
 	Constructor  *constructionNode
-	Invoke       *record
 	aliases      map[*record]*record
 	Definition   *record
 	Return       *record
@@ -165,20 +164,14 @@ func (c *Compilation) prepareFunctionSite(statement *lStatement, site registrati
 		return true, err
 	}
 	function := &sourceFunction{Native: native, aliases: c.Semantics.Aliases, Header: statement, Scope: scope, Definition: definition}
-	for _, name := range []string{"Return", "Invoke"} {
-		binding, _, err := c.resolver().lookupMember(definition, []byte(name))
-		if err != nil {
-			return true, err
-		}
-		if binding == nil {
-			return true, lerrors.UnresolvedReference.Errorf("Function constructor has no %s definition", name)
-		}
-		if name == "Return" {
-			function.Return = binding.Record
-		} else {
-			function.Invoke = binding.Record
-		}
+	binding, _, err := c.resolver().lookupMember(definition, []byte("Return"))
+	if err != nil {
+		return true, err
 	}
+	if binding == nil {
+		return true, lerrors.UnresolvedReference.Errorf("Function constructor has no Return definition")
+	}
+	function.Return = binding.Record
 	constructor := *object
 	if !native {
 		constructor.phrase = nil // Runtime signatures are resolved below; descriptors still belong to the constructor.

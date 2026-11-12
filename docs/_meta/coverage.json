@@ -8860,8 +8860,8 @@
         "Returner"
       ],
       "classification": 15,
-      "evidenceSet": 263,
-      "note": 75
+      "evidenceSet": 265,
+      "note": 80
     },
     {
       "id": "builtin:retain",
@@ -9073,8 +9073,8 @@
         "Creator"
       ],
       "classification": 15,
-      "evidenceSet": 265,
-      "note": 80
+      "evidenceSet": 266,
+      "note": 81
     },
     {
       "id": "builtin:define",
@@ -9122,8 +9122,8 @@
         "Definer"
       ],
       "classification": 15,
-      "evidenceSet": 266,
-      "note": 81
+      "evidenceSet": 267,
+      "note": 82
     },
     {
       "id": "builtin:describe",
@@ -9220,7 +9220,7 @@
         "User"
       ],
       "classification": 15,
-      "evidenceSet": 267,
+      "evidenceSet": 268,
       "note": 48
     },
     {
@@ -9739,13 +9739,13 @@
         "Errors"
       ],
       "classification": 11,
-      "evidenceSet": 268,
+      "evidenceSet": 269,
       "note": 75
     },
     {
-      "id": "builtin:function.invoke",
-      "name": "Function.Invoke",
-      "doc": "docs/reference/word-glossary.md#functioninvoke",
+      "id": "builtin:invoke",
+      "name": "Invoke",
+      "doc": "docs/reference/word-glossary.md#word-builtin-invoke",
       "word": {
         "partOfSpeech": "verb",
         "audience": "authoring",
@@ -9788,9 +9788,9 @@
         "Invoking",
         "Invoker"
       ],
-      "classification": 15,
-      "evidenceSet": 263,
-      "note": 75
+      "classification": 16,
+      "evidenceSet": 270,
+      "note": 83
     },
     {
       "id": "builtin:delegate",
@@ -9872,7 +9872,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -9906,7 +9906,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -9940,7 +9940,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -9974,9 +9974,9 @@
           }
         }
       },
-      "classification": 16,
-      "evidenceSet": 269,
-      "note": 82
+      "classification": 17,
+      "evidenceSet": 271,
+      "note": 84
     },
     {
       "id": "grammar-word:have",
@@ -10023,7 +10023,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10072,7 +10072,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10101,7 +10101,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10130,7 +10130,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10159,7 +10159,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10188,7 +10188,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10217,7 +10217,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10246,7 +10246,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10275,7 +10275,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10304,7 +10304,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10333,7 +10333,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10362,7 +10362,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10391,7 +10391,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10420,7 +10420,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10449,7 +10449,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10478,7 +10478,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10507,7 +10507,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10536,7 +10536,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10565,7 +10565,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10599,7 +10599,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10628,7 +10628,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10657,7 +10657,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10686,7 +10686,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10715,7 +10715,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10744,7 +10744,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10773,7 +10773,7 @@
           }
         }
       },
-      "classification": 16,
+      "classification": 17,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10802,7 +10802,7 @@
           }
         }
       },
-      "classification": 17,
+      "classification": 18,
       "evidenceSet": 256,
       "note": 75
     },
@@ -10851,247 +10851,247 @@
         "Printing",
         "Printer"
       ],
-      "classification": 18,
-      "evidenceSet": 270
+      "classification": 16,
+      "evidenceSet": 272
     },
     {
       "id": "logeme.segment.B",
       "name": "B / declare",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 19,
-      "evidenceSet": 271
+      "evidenceSet": 273
     },
     {
       "id": "logeme.segment.A",
       "name": "A / declaration",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 19,
-      "evidenceSet": 272
+      "evidenceSet": 274
     },
     {
       "id": "logeme.segment.D",
       "name": "D / calculate",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 19,
-      "evidenceSet": 273
+      "evidenceSet": 275
     },
     {
       "id": "logeme.segment.E",
       "name": "E / calculation",
       "doc": "docs/reference/logemes/calculations.md#e-and-d-calculations",
       "classification": 19,
-      "evidenceSet": 274
+      "evidenceSet": 276
     },
     {
       "id": "logeme.segment.G",
       "name": "G / evaluate",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 19,
-      "evidenceSet": 275
+      "evidenceSet": 277
     },
     {
       "id": "logeme.segment.I",
       "name": "I / evaluation",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 19,
-      "evidenceSet": 276
+      "evidenceSet": 278
     },
     {
       "id": "logeme.segment.F",
       "name": "F / define",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 19,
-      "evidenceSet": 277
+      "evidenceSet": 279
     },
     {
       "id": "logeme.segment.O",
       "name": "O / definition",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 19,
-      "evidenceSet": 278
+      "evidenceSet": 280
     },
     {
       "id": "logeme.segment.H",
       "name": "H / describe",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 19,
-      "evidenceSet": 279
+      "evidenceSet": 281
     },
     {
       "id": "logeme.segment.U",
       "name": "U / description",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 19,
-      "evidenceSet": 280
+      "evidenceSet": 282
     },
     {
       "id": "logeme.segment.K",
       "name": "K / operate",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 19,
-      "evidenceSet": 281
+      "evidenceSet": 283
     },
     {
       "id": "logeme.segment.W",
       "name": "W / operation",
       "doc": "docs/reference/logemes/callables.md#w-and-k-ordered-operations",
       "classification": 19,
-      "evidenceSet": 282
+      "evidenceSet": 284
     },
     {
       "id": "logeme.segment.P",
       "name": "P / iterate",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 19,
-      "evidenceSet": 283
+      "evidenceSet": 285
     },
     {
       "id": "logeme.segment.X",
       "name": "X / iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 19,
-      "evidenceSet": 284
+      "evidenceSet": 286
     },
     {
       "id": "logeme.segment.M",
       "name": "M / instantiate",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 19,
-      "evidenceSet": 285
+      "evidenceSet": 287
     },
     {
       "id": "logeme.segment.Y",
       "name": "Y / instantiation",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 19,
-      "evidenceSet": 286
+      "evidenceSet": 288
     },
     {
       "id": "logeme.segment.C",
       "name": "C / execute",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 19,
-      "evidenceSet": 287
+      "evidenceSet": 289
     },
     {
       "id": "logeme.segment.V",
       "name": "V / execution",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 19,
-      "evidenceSet": 288
+      "evidenceSet": 290
     },
     {
       "id": "logeme.family.declaration-adapters",
       "name": "A/BA/DA/KA/HA/GA/MA/PA",
       "doc": "docs/reference/logemes/declarations.md#a-and-b-declaration",
       "classification": 20,
-      "evidenceSet": 289
+      "evidenceSet": 291
     },
     {
       "id": "logeme.family.definition-adapters",
       "name": "O/OB/FO/FOB/KO/KOB/DO/DOB/GO/GOB/MO/MOB/CO/COB/BO/BOD/BOK/BOH/BOG/BOM/BOP/BOC",
       "doc": "docs/reference/logemes/declarations.md#o-and-f-definition",
       "classification": 20,
-      "evidenceSet": 290
+      "evidenceSet": 292
     },
     {
       "id": "logeme.family.literal-file",
       "name": "EA complete literal file",
       "doc": "docs/reference/logemes/declarations.md#ea-complete-literal-file",
       "classification": 20,
-      "evidenceSet": 291
+      "evidenceSet": 293
     },
     {
       "id": "logeme.family.communication",
       "name": "CE communication calculations",
       "doc": "docs/reference/logemes/calculations.md#communication-calculations",
       "classification": 19,
-      "evidenceSet": 292
+      "evidenceSet": 294
     },
     {
       "id": "logeme.family.description",
       "name": "U/MU description and updates",
       "doc": "docs/reference/logemes/calculations.md#u-and-h-descriptions",
       "classification": 19,
-      "evidenceSet": 293
+      "evidenceSet": 295
     },
     {
       "id": "logeme.family.selection",
       "name": "I/GE/GI ordered selection",
       "doc": "docs/reference/logemes/selection.md#i-and-g-evaluation",
       "classification": 20,
-      "evidenceSet": 294
+      "evidenceSet": 296
     },
     {
       "id": "logeme.family.readiness",
       "name": "CI/BI/OC/DOC readiness selection",
       "doc": "docs/reference/logemes/selection.md#ci-and-bi-bounded-readiness-selection",
       "classification": 19,
-      "evidenceSet": 295
+      "evidenceSet": 297
     },
     {
       "id": "logeme.family.callables",
       "name": "W/FW/BW/KY/KO/KOB callables",
       "doc": "docs/reference/logemes/callables.md#invocation-through-ky",
       "classification": 19,
-      "evidenceSet": 296
+      "evidenceSet": 298
     },
     {
       "id": "logeme.family.iteration",
       "name": "X/I/OG/DOG/PO four-category iteration",
       "doc": "docs/reference/logemes/iteration.md#x-and-p-four-supported-categories",
       "classification": 20,
-      "evidenceSet": 297
+      "evidenceSet": 299
     },
     {
       "id": "logeme.family.unsupported-loops",
       "name": "Three-part loops",
       "doc": "docs/reference/logemes/iteration.md#unsupported-forms-and-native-failures",
       "classification": 21,
-      "evidenceSet": 298
+      "evidenceSet": 300
     },
     {
       "id": "logeme.family.instantiation",
       "name": "Y/HY empty and populated records",
       "doc": "docs/reference/logemes/instantiation.md#y-and-m-records-and-values",
       "classification": 20,
-      "evidenceSet": 299
+      "evidenceSet": 301
     },
     {
       "id": "logeme.family.traits",
       "name": "MY required signatures",
       "doc": "docs/reference/logemes/instantiation.md#required-trait-signatures",
       "classification": 19,
-      "evidenceSet": 300
+      "evidenceSet": 302
     },
     {
       "id": "logeme.family.generics",
       "name": "Local FW/HY/MY/Y/named KY parameters",
       "doc": "docs/reference/logemes/metadata.md#lifetimes-and-generictypes",
       "classification": 19,
-      "evidenceSet": 301
+      "evidenceSet": 303
     },
     {
       "id": "logeme.family.scheduling",
       "name": "V/MV scheduling",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 19,
-      "evidenceSet": 302
+      "evidenceSet": 304
     },
     {
       "id": "logeme.family.deferred",
       "name": "Deferred metadata",
       "doc": "docs/reference/logemes/instantiation.md#deferred-is-rejected",
       "classification": 21,
-      "evidenceSet": 298
+      "evidenceSet": 300
     },
     {
       "id": "logeme.family.futures",
       "name": "CV/DV/CO/COB future composition",
       "doc": "docs/reference/logemes/instantiation.md#v-and-c-scheduling",
       "classification": 22,
-      "evidenceSet": 303,
-      "note": 83
+      "evidenceSet": 305,
+      "note": 85
     }
   ],
   "schemaVersion": 3,
@@ -11172,12 +11172,14 @@
     "The -os option is currently rejected.",
     "Version 2 evidence records selected compilation inputs, tool observations, the actual Cargo invocation, artifact digests and companion generation. Evidence is written before executable publication. Failed Cargo invocations and later publication failures remain distinguishable; the App is not run and native behavior is not certified.",
     "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
-    "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence. Invocation uses the selected core root Invoke definition; only Return remains a constructor member. The Callable role accepts native-backed source Functions under their complete invocation family, not ordinary runtime Function values.",
     "An authored noun family requires root, plural, descriptive and active forms. Missing, empty, malformed, surplus or all-identical expanded families reject. Ordinary value, parameter and result labels and non-callable applicational names may remain single labels. Configured JSON vocabulary retains its existing forms. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
     "An authored verb family requires root, active, passive, applicative and objective forms, including source actions and named Functions. At least one expanded derived form differs from its root case-insensitively; individual forms may share spellings. Configured JSON vocabulary keeps its existing forms. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
-    "Core Function is a complete authored noun family providing the selected typed callable construction. Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Core Function is a complete authored noun family providing the selected typed callable construction. Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence. Invocation uses the selected core root Invoke definition; only Return remains a constructor member. The Callable role accepts native-backed source Functions under their complete invocation family, not ordinary runtime Function values.",
+    "Return remains a member of the selected Function constructor and binds after source result checks. Invoke is a separate core root verb. This declaration and its compiler witnesses do not establish ordinary runtime Function execution.",
     "Create selects declaration roles before family validation. Source actions and named Function invocations require complete verb families; lexical noun constructions require complete noun families. Ordinary values and non-callable applicational names remain labels. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
     "Define distinguishes ordinary value bindings from lexical definitions. Framed native definitions select noun or verb roles from their declaration form and require complete families; Function data copies do not implicitly declare invocation verbs. Dot-qualified authored references, declarations and import aliases reject with source attribution. Text, comments, numbers, paths, native/template contents and internal identities retain their separate meanings and bytes. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+    "Core Invoke is a root verb for native-authoring application, separate from Function construction. Callable requires the selected binding's complete verb family and a resolved native-backed source Function; a following terminal Atoms slot supplies the checked argument count. Complete verb aliases and copies qualify. Single-label storage, noun aliases, Text native names or paths, and ordinary runtime Function values reject. Slot roles and order determine the pair. The selected source definition and canonical dependencies are retained; no runtime callback, lifecycle or capture support is claimed.",
     "An ordinary value assignment retains its value category; a complete framed definition on its right declares a noun family. A stored Function value under one label does not acquire a new invocation family. Shared form spellings retain canonical identity and are selected by grammatical context. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
     "CV constructs one unscheduled future. Local Capture selects Infer or Move. DV awaits one native or composed operand in async context. CO/COB bind one value. Rust enforces ownership and typing. This adds no async-FW modifier or Function dispatcher."
   ],
@@ -13666,7 +13668,8 @@
         "lyger/authored_family_registration_test.go",
         "lyger/function_invocation_words_test.go",
         "lyger/same_spelling_forms_test.go",
-        "lyger/morphology_family_test.go"
+        "lyger/morphology_family_test.go",
+        "lyger/function_member_composition_test.go"
       ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "checkedStages": [
@@ -13766,7 +13769,23 @@
       "witnesses": [
         "lyger/authored_family_registration_test.go",
         "lyger/function_invocation_words_test.go",
-        "lyger/morphology_family_test.go"
+        "lyger/morphology_family_test.go",
+        "lyger/function_member_composition_test.go"
+      ],
+      "evidence": "static-declaration-inspection; no-execution-claim",
+      "checkedStages": [
+        "static-declaration-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "builtins/eng/core.l",
+        "lyger/source_functions.go"
+      ],
+      "witnesses": [
+        "lyger/function_return_composition_test.go",
+        "lyger/function_member_composition_test.go"
       ],
       "evidence": "static-declaration-inspection; no-execution-claim",
       "checkedStages": [
@@ -13843,6 +13862,29 @@
       ],
       "witnesses": [],
       "evidence": "static-declaration-inspection; no-execution-claim",
+      "checkedStages": [
+        "static-declaration-inspection"
+      ],
+      "executedStages": []
+    },
+    {
+      "sources": [
+        "builtins/eng/core.l",
+        "lyger/definition_bindings.go",
+        "lyger/function_definitions.go",
+        "lyger/source_functions.go",
+        "lyger/lowering.go",
+        "lyger/native_composition.go",
+        "lyger/word_families.go",
+        "lyger/builtin_bindings.go",
+        "lyger/source_descriptors.go"
+      ],
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/composed_constructor_test.go",
+        "lyger/function_member_composition_test.go"
+      ],
+      "evidence": "static-declaration-inspection; existing-witness-not-run; no-execution-claim",
       "checkedStages": [
         "static-declaration-inspection"
       ],
@@ -14483,6 +14525,11 @@
       "support": "partial"
     },
     {
+      "kind": "builtin",
+      "role": "explanatory",
+      "support": "supported"
+    },
+    {
       "kind": "grammar-word",
       "role": "explanatory",
       "support": "partial"
@@ -14491,11 +14538,6 @@
       "kind": "grammar-word",
       "role": "explanatory",
       "support": "rejected"
-    },
-    {
-      "kind": "builtin",
-      "role": "explanatory",
-      "support": "supported"
     },
     {
       "kind": "logeme",
@@ -14521,18 +14563,18 @@
   "sourceHashes": {
     "lexicon/eng/vocabulary.json": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c",
     "lyger/utilities.go": "983a90ab216d8e565ea18bd4fbfbe980095bd621aba752d71f0ba93a5f4b0d40",
-    "builtins/eng/core.l": "7f4128a219466116c6371d9e79ba6332c8cbfcd977edd98165c63ec1e86ccd8b",
-    "lyger/definition_bindings.go": "005db56993a6e3567feae5f5c40c1d75728b8ce423ed594f58aa8db5aeb0617b",
-    "lyger/source_functions.go": "ab3d26463bdc3165d342947453f50af4dced25f1f7909c18ba62e37c580f4569",
+    "builtins/eng/core.l": "ab7b40904901e1a1b3736c131247bc5ade337d2dc099a857eb88b07125053125",
+    "lyger/definition_bindings.go": "e1f9620bed75d9a6055925007b0c86cf511725e7f999312a31beaf86119d1643",
+    "lyger/source_functions.go": "60bcf48563ba76df5a10f71675d6944328439b37516cba39da151b8adc46efd1",
     "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
     "lyger/runtime_types.go": "68e235a0c65f596b91f5e2a6326b260f5722d772547f914d011a917384dd7bb0",
     "lyger/binding.go": "12ec1f499d9d63e469ceef62b3487dc4e7927d23a6fe60e8df70a723894b89a2",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
-    "lyger/function_definitions.go": "f221af06ddb210136ca4fca064117282d892ce0e9d045993c9f62ccf0a0c9063",
-    "lyger/lowering.go": "ca6f102431f550add818f36cbfa7e718b5773f5a5edbe418a63d50261838f067",
+    "lyger/function_definitions.go": "08cca2ec62e3db95731b99bff08a55232be34a6be812df725e5004167e165fdf",
+    "lyger/lowering.go": "8cd5c06a90d73a68acb5b9b69916f2012a7c6fb3cc36631ea92b8437a3ee5397",
     "lyger/token_forms.go": "5b7700f6f57f2d3d122310241e572579156a739785ada163ef2d07f80eda13c9",
     "lyger/native_bindings.go": "8d84fb1a479c721cdf04803d3e96ff0b371f17c286c8edf8f82a749c189ce9db",
-    "lyger/native_composition.go": "ddaefeb909467b13b7c5d61e32c4a04e20e2a7a04c5c2e2a6dc110160c82e579",
+    "lyger/native_composition.go": "2fc09276079f68c54f1ddf74c3450cbc55836a0c633545d0e875709f1e68b7d2",
     "lyger/word_families.go": "fd88e14af504bec33fd6914e71365e40910b59ed94b33b83578518cad7ac96a6",
     "lyger/lexical_types.go": "a62b2acc1e4981ee9a364f980ffdb45d1f6af56146f9c33560377f5ab06950ce",
     "lyger/grammar_extraction.go": "327898de705a5c29dd073ef8ef5372f3d0d3f78d94bd04038036d29b79c7760c",
@@ -14543,6 +14585,8 @@
     "lyger/grammar.go": "a70f120dea002e1bf256a520e14c01e9cd6a30c99871e18e728d6acb8d77618d",
     "lyger/builder.go": "62964b71f110d8ca51c725d708eedd150945d43b5233b96089f0ab6adda56738",
     "lyger/semantics.go": "131a6dd8a353a2bd204617e3e9b8ea44b71753afaacb004b4730de13f817b67e",
+    "lyger/builtin_bindings.go": "000b82c6180290edeb46a3a7850957926588c924eddf5424a5432cfd2ccb7b00",
+    "lyger/source_descriptors.go": "73dc0e3c1cd387dd7f41fa07b03a22ad77321c68b70c7a6b6860c9b4fc51fad5",
     "builtins/segments/consonants/declare.lu": "238a28a617b63ebf6be151f572d45c7a716cf58609b7a7c1e38c9ed9fbe656fc",
     "builtins/README.md": "7562ff675896a6734f3d835c85e195fffc546925bec98007a796bd43642039d1",
     "builtins/segments/vowels/declaration.lu": "ed27a9aef1575f5f28f779aa9b6dd792310897de8149e3d4ee97b286aaf379c1",

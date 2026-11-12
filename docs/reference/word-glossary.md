@@ -341,6 +341,8 @@ Declare a Function source template with typed inputs and outputs. The retained c
 
 <!-- word-definition:builtin:function -->
 
+Function owns its selected [Return](#functionreturn) definition. The root [Invoke](#word-builtin-invoke) verb applies a checked native-backed source Function and is not a Function member. See [Function construction and ownership](../spec/definitions.md#process-function-and-return).
+
 ## Generic
 
 <a id="word-builtin-generic"></a>
@@ -421,17 +423,23 @@ Name an ordered Function parameter or a typed binding supplied to a structured P
 
 <!-- word-definition:builtin:input -->
 
-## Function's Invoke
+## Invoke
 
-<a id="functioninvoke"></a>
+<a id="word-builtin-invoke"></a>
 
-<a id="word-builtin-function-invoke"></a>
+<!-- word:builtin:invoke -->
 
-<!-- word:builtin:function.invoke -->
+Apply a selected native-backed source Function to its ordered argument atoms through the core native call template.
 
-Provide the retained native call template for a selected Function target and argument atoms. Runtime callable values are unavailable.
+<!-- word-definition:builtin:invoke -->
 
-<!-- word-definition:builtin:function.invoke -->
+**Usage:** Core loads this root verb without an import. In native authoring, the first operand selects a [Callable](../spec/definitions.md#typed-slots), and the remaining operands supply its checked argument count, including zero arguments. The selected binding must carry its own complete verb family and resolve to a native-backed source Function. A complete verb alias or copy qualifies. A single value label, noun alias, Text containing a native name or path, and an ordinary runtime Function value do not.
+
+**Example:** The [native invocation fragment](../guide/native-definitions.md#apply-a-selected-native-function) uses the actor form Invoker inside a native-backed Function body, with one argument and a returned result.
+
+**Behavior:** Callable and the following terminal Atoms slot are paired by their roles and order. Their labels do not select behavior. Target selection preserves canonical source ownership, and arguments bind once in source order. The action form executes the call and discards its result; the actor form Invoker supplies the result as an expression. This native-authoring operation supplies no runtime callbacks, lifecycle or capture support.
+
+**Compose with:** [Function](#word-builtin-function) supplies the selected callable's signature and body. [Function's Return](#functionreturn) remains constructor-specific and returns from that selected Function.
 
 ## Is
 
@@ -718,6 +726,8 @@ Provide the retained native Arc clone template. The declaration does not restore
 Provide the retained native return template for a selected Function definition. This declaration alone does not establish executable runtime Function support.
 
 <!-- word-definition:builtin:function.return -->
+
+Return belongs to the selected Function constructor and binds after its source results are checked. The root [Invoke](#word-builtin-invoke) verb has separate ownership and does not change that return contract.
 
 ## Run
 

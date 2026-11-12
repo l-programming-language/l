@@ -27,7 +27,7 @@
         "start": 9,
         "end": 12
       },
-      "sha256": "7f4128a219466116c6371d9e79ba6332c8cbfcd977edd98165c63ec1e86ccd8b",
+      "sha256": "ab7b40904901e1a1b3736c131247bc5ade337d2dc099a857eb88b07125053125",
       "lang": "l"
     },
     {
@@ -65,7 +65,7 @@
       "source": "builtins/eng/core.l",
       "classification": "fragment",
       "description": "Retained core Process, Function and Return declaration templates. Runtime Function support is not implied.",
-      "sha256": "7f4128a219466116c6371d9e79ba6332c8cbfcd977edd98165c63ec1e86ccd8b",
+      "sha256": "ab7b40904901e1a1b3736c131247bc5ade337d2dc099a857eb88b07125053125",
       "validation": "static-source-inspection; no-execution-claim",
       "witnesses": [],
       "lang": "l",
@@ -73,6 +73,18 @@
         "start": 3,
         "end": 5
       }
+    },
+    {
+      "id": "native-invoke",
+      "source": "docs/examples/native-invoke.l",
+      "classification": "fragment",
+      "description": "Native-authoring source fragment based on TestCoreInvokeArguments: a Generic Function uses Invoker with one checked argument. It is not a standalone App or runtime Function example.",
+      "sha256": "d80fbb28099d0f679f9fd563b16243d87ca9863e114e8b4ae5c9c8b760c62d95",
+      "validation": "static-source-inspection; existing-witness-not-run; no-execution-claim",
+      "witnesses": [
+        "lyger/authored_family_registration_test.go"
+      ],
+      "lang": "l"
     }
   ]
 }

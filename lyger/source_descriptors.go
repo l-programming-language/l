@@ -136,7 +136,7 @@ func templateHeader(template *DefinitionTemplate, constructor, named bool) defin
 			continue
 		}
 		header.fixed = header.fixed && slot.Type != "Syllables" && slot.Type != "Atoms"
-		header.parameters = append(header.parameters, definitionParameter{DefinitionSlot: slot, Forward: template.identitySlot() != nil, Value: template.metadataSlots[slot.Name] && (slot.Type == "" || slot.Type == "Atoms")})
+		header.parameters = append(header.parameters, definitionParameter{DefinitionSlot: slot, Forward: template.identitySlot() != nil, Value: template.metadataSlots[slot.Name] && (slot.Type == "" || slot.Type == "Atoms" || slot.Type == "Callable")})
 	}
 	return header
 }
@@ -321,19 +321,6 @@ func (c *Compilation) sourceHeader(rec *record, named bool, active map[*record]b
 	header.parameters, err = c.sourceParameters(rec)
 	if err != nil || len(header.parameters) > 0 {
 		return header, err
-	}
-	// Invocation contracts accept the selected target's argument list. Their
-	// source implementation is checked against that named contract on expansion.
-	for declared := range c.Semantics.Declarations {
-		if function := declared.function; function != nil {
-			invoke, err := canonicalRecord(function.Invoke, c.Semantics.Aliases)
-			if err != nil {
-				return header, err
-			}
-			if invoke == rec {
-				return definitionHeader{}, nil
-			}
-		}
 	}
 	var objects []*objectGram
 	if object := shape.object; object != nil {

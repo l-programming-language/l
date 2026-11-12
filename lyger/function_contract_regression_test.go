@@ -10,22 +10,22 @@ import (
 )
 
 // A distinct source constructor has the same Rust signature but owns different
-// executable compositions. Its marker must survive every accepted transfer.
+// Return compositions. Its marker must survive every accepted transfer.
 func functionContractSource(t *testing.T) string {
 	t.Helper()
 	core, err := fs.ReadFile(canonicalTestOptions().Resources, "builtins/eng/core.l")
 	if err != nil {
 		t.Fatal(err)
 	}
-	const invocation = "Key: ~(<@Target@>)~"
-	if strings.Count(string(core), invocation) != 1 {
-		t.Fatal("constructor contract fixture requires the selected Function invocation")
+	const returned = "Statement: ~return <@Statement@>;~"
+	if strings.Count(string(core), returned) != 1 {
+		t.Fatal("constructor contract fixture requires the selected Function Return")
 	}
 	var words []string
 	for _, line := range strings.Split(string(core), "\n") {
 		if strings.HasPrefix(line, `Define "Function`) || strings.HasPrefix(line, `Define any Function's`) {
 			line = strings.Replace(line, "Function", "Routine", 1)
-			words = append(words, strings.ReplaceAll(line, invocation, "Key: ~(/* selected Routine */ <@Target@>)~"))
+			words = append(words, strings.ReplaceAll(line, returned, "Statement: ~return /* selected Routine */ <@Statement@>;~"))
 		}
 	}
 	return strings.Join(words, "\n") + "\n\n" + identityFunction +

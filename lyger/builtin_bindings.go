@@ -451,7 +451,7 @@ func (c *Compilation) instantiateTemplate(template *DefinitionTemplate, argument
 		bindings[name] = argument
 	}
 	for _, slot := range template.Slots {
-		if template.metadataSlots[slot.Name] && (slot.Type == "" || slot.Type == "Atoms") {
+		if template.metadataSlots[slot.Name] && (slot.Type == "" || slot.Type == "Atoms" || slot.Type == "Callable") {
 			argument, err := c.atomArgument(bindings[slot.Name])
 			if err != nil {
 				return DefinitionInstance{}, err

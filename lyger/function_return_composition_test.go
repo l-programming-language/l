@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 	"testing"
+	"testing/fstest"
 
 	"github.com/l-programming-language/l/lerrors"
 )
@@ -23,7 +24,7 @@ func directiveClauses(statement *lStatement) []*clauseGram {
 
 func TestRecursiveReturnRejectsUnresolvedMember(t *testing.T) {
 	source := "Define \"Alternate|-s|-ive|--ing\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n" +
-		"Create \"Repeat|-s|-ed|-ing|-er\" for Repeating any Number.\nCreate Alternate's \"Return|-s|-ed|-ing|-er\" for Repeating any Number.\nUse Function's Invoke as Alternate's \"Invoke|-s|-d|--ing|--er\".\n\n" +
+		"Create \"Repeat|-s|-ed|-ing|-er\" for Repeating any Number.\nCreate Alternate's \"Return|-s|-ed|-ing|-er\" for Repeating any Number.\n\n" +
 		"    Publicly create \"Choose|-s|----se|--ing|-r\" as a Generic `choose` Alternate with No Inputs and Outputs of `f64`.\nReturn 7.\n"
 	c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "composed-return-cycle.l")
 	c.Make()
@@ -59,7 +60,7 @@ func TestCompatibleOwnedReturn(t *testing.T) {
 
 func TestActorRejectsForeignReturn(t *testing.T) {
 	source := "Define \"Alternate|-s|-ive|--ing\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n" +
-		"Use Function's Return as Alternate's \"Return|-s|-ed|-ing|-er\".\nUse Function's Invoke as Alternate's \"Invoke|-s|-d|--ing|--er\".\n\n" +
+		"Use Function's Return as Alternate's \"Return|-s|-ed|-ing|-er\".\n\n" +
 		"    Publicly create \"Own|-s|-ed|-ing|-er\" as a Generic Alternate with Inputs of \"value\" as `f64` and Outputs of `f64`.\nPublicly create \"Finish|-es|-ed|-ing|-er\" for Returning any Number.\nReturn Value.\n\n" +
 		"Create \"Forward|-s|-ed|-ing|-er\" for Processing a New Finisher of any Number.\n\n" +
 		"    Publicly create \"Respond|-s|-ed|-ing|-er\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nForward Value.\n"
@@ -91,8 +92,7 @@ func TestNativeActionRejectsForeignReturn(t *testing.T) {
 		"shared Return alias": "Use Function's Return as Alternate's \"Return|-s|-ed|-ing|-er\".\n",
 	} {
 		t.Run(name, func(t *testing.T) {
-			source := "Define \"Alternate|-s|-ive|--ing\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n" + returned +
-				"Use Function's Invoke as Alternate's \"Invoke|-s|-d|--ing|--er\".\n\n" +
+			source := "Define \"Alternate|-s|-ive|--ing\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n" + returned + "\n" +
 				"    Publicly create \"Own|-s|-ed|-ing|-er\" as a Generic Alternate with Inputs of \"value\" as `f64` and Outputs of `f64`.\nPublicly create \"Finish|-es|-ed|-ing|-er\" for Returning any Thing.\nReturn Value.\n\n" +
 				"    Publicly create \"Respond|-s|-ed|-ing|-er\" as a Generic Function with Inputs of \"value\" as `f64` and Outputs of `f64`.\nFinish Value.\n"
 			c := NewLygerService(canonicalTestOptions()).NewCompilation([]byte(source), "foreign-native-return.l")
@@ -110,8 +110,7 @@ func TestComposedReturnDelegation(t *testing.T) {
 			source := "Define \"Alternate|-s|-ive|--ing\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n" +
 				"Define \"Witness|-es|-like|-ing\" as `<DEF>KY{|Key: ~crate::selected~, Inputs: ~&[<@Value@>]&~|}<DEF>`.\n" +
 				"Create \"Finish|-es|-ed|-ing|-er\" for Function's Returning any Number.\n" +
-				"Create Alternate's \"Return|-s|-ed|-ing|-er\" for " + delegate + " a New Witness of any Number.\n" +
-				"Use Function's Invoke as Alternate's \"Invoke|-s|-d|--ing|--er\".\n\n" +
+				"Create Alternate's \"Return|-s|-ed|-ing|-er\" for " + delegate + " a New Witness of any Number.\n\n" +
 				"    Publicly create \"Choose|-s|----se|--ing|-r\" as a Generic `choose` Alternate with No Inputs and Outputs of `f64`.\nReturn 7.\n"
 			c := compileDefinitionSource(t, source, "composed-return-delegation.l")
 			if _, err := c.ComposeDefinition("Choose"); err != nil {
@@ -123,12 +122,22 @@ func TestComposedReturnDelegation(t *testing.T) {
 }
 
 func TestFunctionInvocationUsesEnclosingReturnComposition(t *testing.T) {
+	files := dictionaryIndexFilesystem(t)
+	const core = "builtins/eng/core.l"
+	const invocation = "Key: ~(<@Target|Callable@>)~"
+	if strings.Count(string(files[core].Data), invocation) != 1 {
+		t.Fatal("invocation fixture requires the selected core Invoke definition")
+	}
+	files[core] = &fstest.MapFile{Data: []byte(strings.Replace(string(files[core].Data), invocation, "Key: ~(/* selected invocation */ <@Target|Callable@>)~", 1))}
 	source := "Define \"Alternate|-s|-ive|--ing\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func|}^(<@Process@>)<DEF>`.\n" +
-		"Define any Alternate's \"Return|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~return /* callee */ <@Statement@>;~|}<DEF>`.\n" +
-		"Define any Alternate's \"Invoke|-s|-d|--ing|--er\" to `<DEF>KY{|Key: ~(/* selected invocation */ <@Target@>)~, Inputs: ~&[<@Arguments|Atoms@>]&~|}<DEF>`.\n\n" +
+		"Define any Alternate's \"Return|-s|-ed|-ing|-er\" to `<DEF>BOD^E{|Statement: ~return /* callee */ <@Statement@>;~|}<DEF>`.\n\n" +
 		"    Publicly create \"Finish|-es|-ed|-ing|-er\" as a Generic `supply` Alternate with Inputs of \"value\" as `f64` and Outputs of `f64`.\nReturn Value.\n\n" +
 		"    Publicly create \"Call|-s|-ed|-ing|-er\" as a Generic `caller` Function with No Inputs and Outputs of `f64`.\nReturn a New Finisher of 7.\n"
-	c := compileDefinitionSource(t, source, "enclosing-return.l")
+	c := NewLygerService(Options{Resources: files}).NewCompilation([]byte(source), "enclosing-return.l")
+	c.Make()
+	if c.Error != nil {
+		t.Fatal(c.Error)
+	}
 	caller, err := c.ComposeDefinition("Call")
 	if err != nil {
 		t.Fatal(err)

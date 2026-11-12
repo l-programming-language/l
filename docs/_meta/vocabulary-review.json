@@ -14,7 +14,7 @@
     "lyger/process_inputs.go": "7eb38086266da7268cdc8cf1235cd11d42b3c57eee12a1bf29ec1a2bbcdf75de",
     "lyger/runtime_values_source.go": "2b4c234b780146e05a80f5dbf90156d6f98fe2934935ebf76f2647430136a60b",
     "lyger/semantics.go": "131a6dd8a353a2bd204617e3e9b8ea44b71753afaacb004b4730de13f817b67e",
-    "lyger/source_functions.go": "ab3d26463bdc3165d342947453f50af4dced25f1f7909c18ba62e37c580f4569",
+    "lyger/source_functions.go": "60bcf48563ba76df5a10f71675d6944328439b37516cba39da151b8adc46efd1",
     "lyger/token_forms.go": "5b7700f6f57f2d3d122310241e572579156a739785ada163ef2d07f80eda13c9",
     "lyger/utilities.go": "983a90ab216d8e565ea18bd4fbfbe980095bd621aba752d71f0ba93a5f4b0d40",
     "lyger/word_families.go": "fd88e14af504bec33fd6914e71365e40910b59ed94b33b83578518cad7ac96a6"

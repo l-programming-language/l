@@ -70,7 +70,7 @@ func TestFunctionMemberSentence(t *testing.T) {
 func TestFunctionReturnUsesBoundMember(t *testing.T) {
 	c := executableTestResult(t, memberResolutionSource{main: identityFunction}).Compilation
 	for _, function := range c.Semantics.Functions {
-		if function.Definition == nil || function.Return == nil || function.Invoke == nil {
+		if function.Definition == nil || function.Return == nil {
 			t.Fatal("Function lost its source definitions")
 		}
 		if len(function.Body) != 1 || function.Body[0].Kind != instructionReturn || function.Body[0].SourceToken.binding.Record != function.Return {

@@ -30,6 +30,11 @@ func (e *nativeInstructionComposer) instructions(body []*orchestrationInstructio
 				}
 				step.Expression, step.Words = strings.Join(step.Words[0], "*"), nil
 			}
+			// An expression used as a statement still executes once. Frozen
+			// declaration forms own discarding its result and punctuation.
+			if form, err := definitionValueBindingForm(step); err == nil {
+				step.Expression = form + "{|Key: ~_~|}^(" + step.Expression + ")"
+			}
 			steps = append(steps, step)
 		}
 	}

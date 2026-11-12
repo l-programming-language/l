@@ -13,7 +13,7 @@ import (
 )
 
 const parametricConstructorSource = "Define \"Parameterised|-s|-like|---ing\" as `<DEF>FW{|Func{Key: <@Name|Text@>, Inputs: <@Inputs|Props@>, Outputs: <@Outputs|Texts@>}Func, GenericTypes: ~<@Types|Type@>~|}^(<@Process@>)<DEF>`.\n" +
-	"Use Function's Return as Parameterised's \"Return|-s|-ed|-ing|-er\".\nUse Function's Invoke as Parameterised's \"Invoke|-s|-d|--ing|--er\".\n"
+	"Use Function's Return as Parameterised's \"Return|-s|-ed|-ing|-er\".\n"
 
 func TestLeadingCompositionGroup(t *testing.T) {
 	for source, want := range map[string]string{

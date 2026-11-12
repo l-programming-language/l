@@ -5,25 +5,27 @@
   ],
   "executedStages": [],
   "sourceHashes": {
-    "builtins/eng/core.l": "7f4128a219466116c6371d9e79ba6332c8cbfcd977edd98165c63ec1e86ccd8b",
+    "builtins/eng/core.l": "ab7b40904901e1a1b3736c131247bc5ade337d2dc099a857eb88b07125053125",
     "lexicon/eng/vocabulary.json": "813f9a15964c30ba66c95b4537ee1700589fac22a874016198d1353d9596fe9c",
     "lyger/authored_names.go": "62c89f7e5ad9651e34db707347fd103776b51c2b4b13c5aa02f8d07dc9fd36a3",
     "lyger/binding.go": "12ec1f499d9d63e469ceef62b3487dc4e7927d23a6fe60e8df70a723894b89a2",
     "lyger/builder.go": "62964b71f110d8ca51c725d708eedd150945d43b5233b96089f0ab6adda56738",
-    "lyger/definition_bindings.go": "005db56993a6e3567feae5f5c40c1d75728b8ce423ed594f58aa8db5aeb0617b",
+    "lyger/builtin_bindings.go": "000b82c6180290edeb46a3a7850957926588c924eddf5424a5432cfd2ccb7b00",
+    "lyger/definition_bindings.go": "e1f9620bed75d9a6055925007b0c86cf511725e7f999312a31beaf86119d1643",
     "lyger/function_composition.go": "42082f318421fd4a4e1566579f074597849c37d64d8f72a8c3038adc08f52287",
-    "lyger/function_definitions.go": "f221af06ddb210136ca4fca064117282d892ce0e9d045993c9f62ccf0a0c9063",
+    "lyger/function_definitions.go": "08cca2ec62e3db95731b99bff08a55232be34a6be812df725e5004167e165fdf",
     "lyger/grammar.go": "a70f120dea002e1bf256a520e14c01e9cd6a30c99871e18e728d6acb8d77618d",
     "lyger/grammar_extraction.go": "327898de705a5c29dd073ef8ef5372f3d0d3f78d94bd04038036d29b79c7760c",
     "lyger/grammar_types.go": "5cee8e4907c9e827cb301f2802f0ec56719730428b4c443837b81632be2f4f97",
     "lyger/lexical_types.go": "a62b2acc1e4981ee9a364f980ffdb45d1f6af56146f9c33560377f5ab06950ce",
-    "lyger/lowering.go": "ca6f102431f550add818f36cbfa7e718b5773f5a5edbe418a63d50261838f067",
+    "lyger/lowering.go": "8cd5c06a90d73a68acb5b9b69916f2012a7c6fb3cc36631ea92b8437a3ee5397",
     "lyger/native_bindings.go": "8d84fb1a479c721cdf04803d3e96ff0b371f17c286c8edf8f82a749c189ce9db",
-    "lyger/native_composition.go": "ddaefeb909467b13b7c5d61e32c4a04e20e2a7a04c5c2e2a6dc110160c82e579",
+    "lyger/native_composition.go": "2fc09276079f68c54f1ddf74c3450cbc55836a0c633545d0e875709f1e68b7d2",
     "lyger/runtime_types.go": "68e235a0c65f596b91f5e2a6326b260f5722d772547f914d011a917384dd7bb0",
     "lyger/scope.go": "09f0205d2f9a6e9959e24148685975fa58c07dd3fa8634fdfe575ca2fbd80d3c",
     "lyger/semantics.go": "131a6dd8a353a2bd204617e3e9b8ea44b71753afaacb004b4730de13f817b67e",
-    "lyger/source_functions.go": "ab3d26463bdc3165d342947453f50af4dced25f1f7909c18ba62e37c580f4569",
+    "lyger/source_descriptors.go": "73dc0e3c1cd387dd7f41fa07b03a22ad77321c68b70c7a6b6860c9b4fc51fad5",
+    "lyger/source_functions.go": "60bcf48563ba76df5a10f71675d6944328439b37516cba39da151b8adc46efd1",
     "lyger/token_forms.go": "5b7700f6f57f2d3d122310241e572579156a739785ada163ef2d07f80eda13c9",
     "lyger/types.go": "667c8e349b66253dd4f8297ff1980d981b86f275d1a0dba247b616fda9b0dd75",
     "lyger/utilities.go": "983a90ab216d8e565ea18bd4fbfbe980095bd621aba752d71f0ba93a5f4b0d40",
@@ -696,9 +698,10 @@
         "lyger/authored_family_registration_test.go",
         "lyger/function_invocation_words_test.go",
         "lyger/same_spelling_forms_test.go",
-        "lyger/morphology_family_test.go"
+        "lyger/morphology_family_test.go",
+        "lyger/function_member_composition_test.go"
       ],
-      "notes": "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+      "notes": "Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence. Invocation uses the selected core root Invoke definition; only Return remains a constructor member. The Callable role accepts native-backed source Functions under their complete invocation family, not ordinary runtime Function values.",
       "evidence": "static-declaration-inspection; no-execution-claim",
       "wordRef": "builtin:function"
     },
@@ -1805,10 +1808,11 @@
       "witnesses": [
         "lyger/authored_family_registration_test.go",
         "lyger/function_invocation_words_test.go",
-        "lyger/morphology_family_test.go"
+        "lyger/morphology_family_test.go",
+        "lyger/function_member_composition_test.go"
       ],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Core Function is a complete authored noun family providing the selected typed callable construction. Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence.",
+      "notes": "Core Function is a complete authored noun family providing the selected typed callable construction. Named Function invocations require explicit five-form verb families. A single ordinary label can store or forward a Function value; a newly named invocation, including an invoked Function parameter or result, declares its own complete family. The current CLI builds one standalone App with core Print and Text; this is compiler analysis, not runtime evidence. Invocation uses the selected core root Invoke definition; only Return remains a constructor member. The Callable role accepts native-backed source Functions under their complete invocation family, not ordinary runtime Function values.",
       "word": {
         "partOfSpeech": "noun",
         "formRoles": {
@@ -1854,11 +1858,15 @@
       "support": "partial",
       "doc": "docs/reference/word-glossary.md#functionreturn",
       "sources": [
-        "builtins/eng/core.l"
+        "builtins/eng/core.l",
+        "lyger/source_functions.go"
       ],
-      "witnesses": [],
+      "witnesses": [
+        "lyger/function_return_composition_test.go",
+        "lyger/function_member_composition_test.go"
+      ],
       "evidence": "static-declaration-inspection; no-execution-claim",
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
+      "notes": "Return remains a member of the selected Function constructor and binds after source result checks. Invoke is a separate core root verb. This declaration and its compiler witnesses do not establish ordinary runtime Function execution.",
       "word": {
         "partOfSpeech": "verb",
         "formRoles": {
@@ -2949,18 +2957,30 @@
       ]
     },
     {
-      "id": "builtin:function.invoke",
+      "id": "builtin:invoke",
       "kind": "builtin",
-      "name": "Function.Invoke",
+      "name": "Invoke",
       "role": "explanatory",
-      "support": "partial",
-      "doc": "docs/reference/word-glossary.md#functioninvoke",
+      "support": "supported",
+      "doc": "docs/reference/word-glossary.md#word-builtin-invoke",
       "sources": [
-        "builtins/eng/core.l"
+        "builtins/eng/core.l",
+        "lyger/definition_bindings.go",
+        "lyger/function_definitions.go",
+        "lyger/source_functions.go",
+        "lyger/lowering.go",
+        "lyger/native_composition.go",
+        "lyger/word_families.go",
+        "lyger/builtin_bindings.go",
+        "lyger/source_descriptors.go"
       ],
-      "witnesses": [],
-      "notes": "Declared meanings and compiler analysis are retained. The current CLI builds one standalone App with core Print and Text.",
-      "evidence": "static-declaration-inspection; no-execution-claim",
+      "witnesses": [
+        "lyger/authored_family_registration_test.go",
+        "lyger/composed_constructor_test.go",
+        "lyger/function_member_composition_test.go"
+      ],
+      "notes": "Core Invoke is a root verb for native-authoring application, separate from Function construction. Callable requires the selected binding's complete verb family and a resolved native-backed source Function; a following terminal Atoms slot supplies the checked argument count. Complete verb aliases and copies qualify. Single-label storage, noun aliases, Text native names or paths, and ordinary runtime Function values reject. Slot roles and order determine the pair. The selected source definition and canonical dependencies are retained; no runtime callback, lifecycle or capture support is claimed.",
+      "evidence": "static-declaration-inspection; existing-witness-not-run; no-execution-claim",
       "word": {
         "partOfSpeech": "verb",
         "audience": "authoring",

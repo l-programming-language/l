@@ -51,9 +51,38 @@ func (c *Compilation) prepareDefinitionBindingSite(statement *lStatement, site r
 	return true, nil
 }
 
+type callableReference struct {
+	binding  *record
+	function *sourceFunction
+}
+
+func (argument DefinitionArgument) validateCallable() error {
+	proof := argument.callable
+	if proof == nil || proof.binding == nil || proof.function == nil || !proof.function.Native || argument.reference == "" || argument.atoms != nil || argument.typeAtom != "" || argument.Text != "" || argument.Definition != nil || len(argument.sequence) != 0 || len(argument.Syllables) != 0 || len(argument.Props) != 0 || len(argument.Texts) != 0 {
+		return lerrors.TypeMismatch.Errorf("Callable requires a resolved native-backed Function reference")
+	}
+	if !proof.binding.hasInvocationFamily() {
+		return lerrors.Syntax.Errorf("Function invocation requires this binding's complete verb family")
+	}
+	return nil
+}
+
+func (function *sourceFunction) checkArgumentCount(count int) error {
+	if count != len(function.Constructor.Inputs) {
+		return lerrors.InvalidInput.Errorf("Function %s requires %d arguments, got %d", function.Record.ID, len(function.Constructor.Inputs), count)
+	}
+	return nil
+}
+
+func callableArgument(binding *record, function *sourceFunction) DefinitionArgument {
+	argument := definitionReferenceArgument(function.Constructor.Name)
+	argument.callable = &callableReference{binding: binding, function: function}
+	return argument
+}
+
 func (c *Compilation) invokeFunctionDefinition(function *sourceFunction, args []DefinitionArgument, active, dynamic map[*record]bool) (DefinitionInstance, error) {
-	if len(args) != len(function.Constructor.Inputs) {
-		return DefinitionInstance{}, lerrors.InvalidInput.Errorf("Function %s requires %d arguments, got %d", function.Record.ID, len(function.Constructor.Inputs), len(args))
+	if err := function.checkArgumentCount(len(args)); err != nil {
+		return DefinitionInstance{}, err
 	}
 	header, err := c.sourceHeader(function.Record, false, nil)
 	if err != nil {
@@ -63,11 +92,15 @@ func (c *Compilation) invokeFunctionDefinition(function *sourceFunction, args []
 	if err != nil {
 		return DefinitionInstance{}, err
 	}
-	bindings := map[string]DefinitionArgument{"Target": definitionReferenceArgument(function.Constructor.Name), "Arguments": definitionAtomListArgument(args...)}
+	invoke, err := c.builtinRecord("Invoke")
+	if err != nil {
+		return DefinitionInstance{}, err
+	}
+	bindings := map[string]DefinitionArgument{"Target": callableArgument(function.Record, function), "Arguments": definitionAtomListArgument(args...)}
 	used := make(map[string]bool)
-	invocation, err := c.instantiateSourceCall(function.Invoke, nil, bindings, used, active, dynamic)
+	invocation, err := c.instantiateSourceCall(invoke, nil, bindings, used, active, dynamic)
 	if err == nil {
-		err = validateDefinitionArguments(function.Invoke, bindings, used)
+		err = validateDefinitionArguments(invoke, bindings, used)
 	}
 	if err != nil {
 		return DefinitionInstance{}, err
@@ -87,25 +120,17 @@ func (c *Compilation) invokeFunctionDefinition(function *sourceFunction, args []
 // A bare Function word supplies its canonical callable reference. Construction
 // remains explicit through the initialization modifier or supplied operands.
 func (c *Compilation) functionReferenceArgument(object *objectGram, active, dynamic map[*record]bool) (DefinitionArgument, bool, error) {
-	if object == nil || object.noun == nil || object.noun.binding == nil || object.name != nil || object.phrase != nil || object.clause != nil {
-		return DefinitionArgument{}, false, nil
-	}
-	for _, modifier := range object.adjectives {
-		if modifier.hasRole("adjective", "initialization") {
-			return DefinitionArgument{}, false, nil
-		}
-	}
-	rec, err := canonicalRecord(object.noun.binding.Record, c.Semantics.Aliases)
+	binding, err := c.transparentReference(object)
 	if err != nil {
 		return DefinitionArgument{}, false, err
 	}
-	function := rec.function
-	if function == nil || !function.Native {
-		return DefinitionArgument{}, false, nil
+	function, err := c.nativeFunctionReference(binding)
+	if err != nil || function == nil {
+		return DefinitionArgument{}, false, err
 	}
-	argument := definitionReferenceArgument(function.Constructor.Name)
+	argument := callableArgument(binding, function)
 	argument.source = c.operandSource(object.noun)
-	if !active[rec] {
+	if !active[function.Record] {
 		definition, err := c.functionDefinition(function, active, dynamic)
 		if err != nil {
 			return DefinitionArgument{}, false, err
@@ -113,6 +138,55 @@ func (c *Compilation) functionReferenceArgument(object *objectGram, active, dyna
 		argument.dependencies = append(argument.dependencies, definition)
 	}
 	return argument, true, nil
+}
+
+// These are reference-only views. Construction and descriptor transformations
+// retain their own semantics instead of acquiring another word's call authority.
+func (c *Compilation) transparentReference(object *objectGram) (*record, error) {
+	if object == nil || object.noun == nil || object.noun.binding == nil || object.name != nil || object.directivePhrase() != nil || nominalContext(nil, object.adjectives) {
+		return nil, nil
+	}
+	for _, modifier := range valueModifiers(object.adjectives) {
+		descriptor, err := c.descriptorFor(modifier)
+		if err != nil || descriptor != nil {
+			return nil, err
+		}
+	}
+	node, err := c.constructObject(object, make(map[*descriptorRule]bool))
+	if err != nil || len(node.Arguments) != 0 {
+		return nil, err
+	}
+	return object.noun.binding.Record, nil
+}
+
+func (c *Compilation) nativeFunctionReference(rec *record) (*sourceFunction, error) {
+	seen := make(map[*record]bool)
+	for rec != nil {
+		var err error
+		rec, err = canonicalRecord(rec, c.Semantics.Aliases)
+		if err != nil {
+			return nil, err
+		}
+		if rec.function != nil && rec.function.Native {
+			return rec.function, nil
+		}
+		if seen[rec] {
+			return nil, lerrors.Cycle.Errorf("recursive definition invocation: %s", rec.ID)
+		}
+		seen[rec] = true
+		if c.Semantics.Declarations[rec] == nil {
+			return nil, nil
+		}
+		selected, err := c.Semantics.selectedDefinition(rec)
+		if err != nil {
+			return nil, err
+		}
+		rec, err = c.transparentReference(selected.object)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return nil, nil
 }
 
 func (c *Compilation) functionDefinition(function *sourceFunction, active, dynamic map[*record]bool) (result DefinitionInstance, resultErr error) {
